@@ -1,0 +1,116 @@
+/* NEW */
+.pwe_dependent-hidden {
+    display: none !important;
+}
+
+#vc_ui-panel-edit-element[data-vc-shortcode="pwelement"],
+#vc_ui-panel-edit-element[data-vc-shortcode="pwe_katalog"],
+#vc_ui-panel-edit-element[data-vc-shortcode="pwe_media_gallery"] {
+    
+
+    .backend-area-full-width {
+        width: 100% !important;
+    }
+    .backend-area-half-width {
+        min-width: 50% !important;
+        width: 50% !important;
+    }
+
+    .vc_edit-form-tab {
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .vc_column {
+        justify-content: space-between;
+    }
+
+    .main-options {
+        min-width: 220px !important;
+        width: 15% !important;
+    }
+
+    .main-param-group {
+        .vc_param_group-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+    .main-options,
+    .backend-textarea,
+    .backend-textfield {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        padding: 5px !important;
+
+        .wpb_element_label,
+        .edit_form_line {
+            width: 100%;
+            text-align: center;
+            margin: 0;
+        }
+    }
+
+    .backend-textarea,
+    .backend-textfield {
+        padding: 7px;
+        min-width: 300px !important;
+        width: 15% !important;
+    }
+
+    .backend-basic-checkbox {
+        padding: 7px;
+        min-width: 150px !important;
+        width: 15% !important;
+    }
+
+    .main-param-group,
+    .backend-textfield {
+        .edit_form_line {
+            width: 100% !important;
+        }
+    }
+
+    .backend-textarea {
+        textarea {
+            height: 150px !important;
+        }
+    }
+
+    .backend-basic-checkbox {
+
+        .wpb_element_label,
+        .edit_form_line {
+            width: 100%;
+            text-align: -webkit-center;
+            height: 30px;
+        }
+
+        .edit_form_line .on-off-switch {
+            float: none;
+        }
+    }
+
+
+
+
+    .media-gallery-dropdown-thumbs-width {
+        width: calc(33.33% - 5px) !important;
+        .wpb_element_label,
+        .edit_form_line {
+            width: 100% !important;
+        }
+    }
+    .media-gallery-breakpoint {
+        width: calc(50% - 5px) !important;
+        .wpb_element_label,
+        .edit_form_line {
+            width: 100% !important;
+        }
+    }
+}
+
+/* NEW END */
