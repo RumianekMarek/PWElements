@@ -58,7 +58,7 @@ class PWElementHomeGallery extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
-                'heading' => __('Rgstration button URL', 'pwelement'),
+                'heading' => __('Registration button URL', 'pwelement'),
                 'param_name' => 'button_url',
                 'description' => __('Set up a pwe button url'),
                 'param_holder_class' => 'backend-textfield',
@@ -72,9 +72,9 @@ class PWElementHomeGallery extends PWElements {
             array(
                 'type' => 'textarea',
                 'group' => 'PWE Element',
-                'heading' => __('Text for desctop', 'pwelement'),
-                'param_name' => 'desctop_text',
-                'description' => __('Set up a pwe desctop description'),
+                'heading' => __('Text for desktop', 'pwelement'),
+                'param_name' => 'desktop_text',
+                'description' => __('Set up a pwe desktop description'),
                 'param_holder_class' => 'backend-textarea',
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -139,7 +139,8 @@ class PWElementHomeGallery extends PWElements {
                 ),
                 'save_always' => true,
                 'admin_label' => true
-              ),
+            ),
+
         );
         return $element_output;
     }
@@ -180,6 +181,7 @@ class PWElementHomeGallery extends PWElements {
         $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
         $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important;';
         $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important;';
+        $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
         $gallery_title = ($atts['header_text'] != '') ? $atts['header_text'] : self::languageChecker('[trade_fair_desc]','[trade_fair_desc_eng]');
 
@@ -188,7 +190,7 @@ class PWElementHomeGallery extends PWElements {
         if(self::checkForMobile()){
             $gallery_text = ($atts['mobile_text'] != '') ? $atts['mobile_text'] : self::mainText();
         } else {
-            $gallery_text = ($atts['desctop_text'] != '') ? $atts['desctop_text'] : self::mainText();
+            $gallery_text = ($atts['desktop_text'] != '') ? $atts['desktop_text'] : self::mainText();
         }
 
         $btn_gallery_text = ($atts['button_text'] != '') 
@@ -210,15 +212,22 @@ class PWElementHomeGallery extends PWElements {
 
         $output .= '
             <style>
-            
-            .row-parent:has(.pwelement_' . self::$rnd_id . ' #pweGallery) {
-                background: ' . self::$accent_color . ';
-            }
-            .pwelement_' . self::$rnd_id . ' .pwe-btn{
-                ' . $btn_text_color 
-                . $btn_color
-                . $btn_shadow_color . '
+            .pwelement_' . self::$rnd_id . ' .pwe-btn {
+                ' . $btn_text_color . '
+                ' . $btn_color . '
+                ' . $btn_shadow_color . '
+                ' . $btn_border . '
                 margin: auto 0; 
+            }
+            .pwelement_' . self::$rnd_id . ' .pwe-btn:hover {
+                color: #000000 !important;
+                background-color: #ffffff !important;
+                border: 1px solid #000000 !important;
+            }
+            .row-parent:has(.pwelement_' . self::$rnd_id . ' .pwe-container-gallery) {
+                background: ' . self::$accent_color . ';
+                max-width: 100%;
+                padding: 0 !important;
             }
             .pwe-gallery-wrapper {
                 max-width: 1200px;
@@ -308,10 +317,10 @@ class PWElementHomeGallery extends PWElements {
                                     <span>'.
                                         self::languageChecker(
                                             <<<PL
-                                                <a class="pwe-btn btn border-width-0 btn-flat" href="/galeria/" alt="link do galerii">Przejdź do galerii</a>
+                                                <a class="pwe-link btn pwe-btn" href="/galeria/" alt="link do galerii">Przejdź do galerii</a>
                                             PL,
                                             <<<EN
-                                                <a class="pwe-btn btn border-width-0 btn-flat" href="/en/gallery/" alt="link to gallery">Go to gallery</a>
+                                                <a class="pwe-link btn pwe-btn" href="/en/gallery/" alt="link to gallery">Go to gallery</a>
                                             EN
                                         )
                                 .'</span>
@@ -323,17 +332,18 @@ class PWElementHomeGallery extends PWElements {
                             <div class="pwe-gallery-desc shadow-black">
                                 <div class="pwe-gallery-desc-content single-block-padding pwe-align-left">
                                     <h3 style="margin: 0;"> ' .$gallery_title . ' </h3>
-                                    <p>' . $gallery_text . '</p>
-                                    <a class="btn border-width-0 shadow-black btn-accent btn-flat" href="' . $btn_gallery_url . '" alt="link do rejestracji">' . $btn_gallery_text . '</a>
+                                    <p>' . $gallery_text . '</p>';
+                                    if ($atts['hide_button'] != 'true') {
+                                        $output .= '<a style="margin-top: 18px;" class="pwe-link btn shadow-black btn-accent" href="' . $btn_gallery_url . '" alt="link do rejestracji">' . $btn_gallery_text . '</a>';
+                                    }
+                                $output .= '
                                 </div>
                             </div>';
                             
                             if($atts['add_timer']){
-                                $countdown_class = new PWElementMainCoutdown;
-                                
-                                $output .='<div class="uncode-wrapper uncode-countdown timer-countdown" id"timerToGallery">
-                                    ' .$countdown_class::output($atts) . '
-                                </div>';
+                                $output .='<div class="uncode-wrapper uncode-countdown timer-countdown" id="timerToGallery">';
+                                    $output .= PWElementMainCountdown::output($atts);
+                                $output .= '</div>';
                             }
                             
                             $output .= '</div>

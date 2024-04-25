@@ -25,6 +25,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Background kolor (default akcent)', 'pwelement'),
                 'param_name' => 'sticky_buttons_cropped_background',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -36,28 +37,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Aspect ratio (default 21/9)', 'pwelement'),
                 'param_name' => 'sticky_buttons_aspect_ratio',
-                'save_always' => true,
-                'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementStickyButtons',
-                ),
-            ),
-            array(
-                'type' => 'colorpicker',
-                'group' => 'PWE Element',
-                'heading' => __('Background full size kolor (default white)', 'pwelement'),
-                'param_name' => 'sticky_buttons_full_size_background',
-                'save_always' => true,
-                'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementStickyButtons',
-                ),
-            ),
-            array(
-                'type' => 'textfield',
-                'group' => 'PWE Element',
-                'heading' => __('Aspect ratio full size (default 1/1)', 'pwelement'),
-                'param_name' => 'sticky_buttons_aspect_ratio_full_size',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -69,17 +49,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Font size buttons (default 12px)', 'pwelement'),
                 'param_name' => 'sticky_buttons_font_size',
-                'save_always' => true,
-                'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementStickyButtons',
-                ),
-            ),
-            array(
-                'type' => 'textfield',
-                'group' => 'PWE Element',
-                'heading' => __('Font size full size buttons (default 16px)', 'pwelement'),
-                'param_name' => 'sticky_buttons_font_size_full_size',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -91,6 +61,43 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Width buttons (default 170px)', 'pwelement'),
                 'param_name' => 'sticky_buttons_width',
+                'param_holder_class' => 'backend-area-one-fourth-width',
+                'save_always' => true,
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'colorpicker',
+                'group' => 'PWE Element',
+                'heading' => __('Background full size kolor (default white)', 'pwelement'),
+                'param_name' => 'sticky_buttons_full_size_background',
+                'param_holder_class' => 'backend-area-one-fourth-width',
+                'save_always' => true,
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Aspect ratio full size (default 1/1)', 'pwelement'),
+                'param_name' => 'sticky_buttons_aspect_ratio_full_size',
+                'param_holder_class' => 'backend-area-one-fourth-width',
+                'save_always' => true,
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Font size full size buttons (default 16px)', 'pwelement'),
+                'param_name' => 'sticky_buttons_font_size_full_size',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -102,6 +109,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Width full width buttons (default 170px)', 'pwelement'),
                 'param_name' => 'sticky_full_width_buttons_width',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -113,6 +121,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Hide all sections except the first one', 'pwelement'),
                 'param_name' => 'sticky_hide_sections',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
@@ -125,6 +134,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Show dropdown buttons', 'pwelement'),
                 'param_name' => 'sticky_buttons_dropdown',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
@@ -137,6 +147,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Show full size buttons', 'pwelement'),
                 'param_name' => 'sticky_buttons_full_size',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'description' => __('Turn on full size images', 'pwelement'),
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
@@ -151,30 +162,32 @@ class PWElementStickyButtons extends PWElements {
                 'heading' => __('Name parameter for sections & rows', 'pwelement'),
                 'description' => __('Default "konferencja". Enter this name into a section or row as a class (Ex. link "domain/wydarzenia/?konferencja=szkolenie")', 'pwelement'),
                 'param_name' => 'sticky_buttons_parameter',
+                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementStickyButtons',
                 ),
-              ),
+            ),
             array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'param_name' => 'sticky_buttons',
+                'heading' => __('Buttons', 'pwelement'),
                 'dependency' => array(
                   'element' => 'pwe_element',
                   'value' => 'PWElementStickyButtons',
                 ),
                 'params' => array(
                     array(
-                        'type' => 'attach_images',
+                        'type' => 'attach_image',
                         'heading' => __('Select Image', 'pwelement'),
                         'param_name' => 'sticky_buttons_images',
                         'save_always' => true,
                         'admin_label' => true
                     ),
                     array(
-                        'type' => 'attach_images',
+                        'type' => 'attach_image',
                         'heading' => __('Select Full Size Image', 'pwelement'),
                         'param_name' => 'sticky_buttons_full_size_images',
                         'save_always' => true,

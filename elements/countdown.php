@@ -138,6 +138,18 @@ class PWElementMainCountdown extends PWElements {
                     ),
                 ),
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Hide change register button', 'pwelement'),
+                'param_name' => 'show_register_bar',
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMainCountdown',
+                ),
+                'save_always' => true,
+                'admin_label' => true
+            ),
         );
 
         return $element_output;
@@ -218,27 +230,27 @@ class PWElementMainCountdown extends PWElements {
         $output_button = array(
             'countdown_btn_text' => self::languageChecker(
                 <<<PL
-                    Zarejestruj się<br>Odbierz darmowy bilet
+                    Zostań wystawcą
                 PL,
                 <<<EN
-                    Register<br>Get a free ticket
+                    Book a stand
                 EN
             ),
              'countdown_btn_url' => self::languageChecker(
                 <<<PL
-                    /rejestracja/
+                    /zostan-wystawca/
                 PL,
                 <<<EN
-                    /en/registration/
+                    /en/become-an-exhibitor
                 EN
             )
         );
 
-        $output_defoult[0] = array_merge($output_time_start_def, $output_button);
-        $output_defoult[1] = array_merge($output_time_end_def, $output_button);
-        $output_defoult[2] = array_merge($output_time_start_next_year, $output_button);
+        $output_default[0] = array_merge($output_time_start_def, $output_button);
+        $output_default[1] = array_merge($output_time_end_def, $output_button);
+        $output_default[2] = array_merge($output_time_start_next_year, $output_button);
 
-        return $output_defoult;
+        return $output_default;
     }
 
     /**
@@ -250,8 +262,11 @@ class PWElementMainCountdown extends PWElements {
     public static function output($atts, $content = '') {
         $countdown = vc_param_group_parse_atts($atts['countdowns']);        
         foreach($countdown as $main_id => $main_value){
+            if (($atts['custom_timer'] == 'true' || $atts["add_timer"] == 'true') && $main_value["countdown_end"] == '') {
+                $main_value["countdown_end"] = do_shortcode('[trade_fair_datetotimer]');
+            }
             foreach($main_value as $id => $key){
-                $countdown[$main_id][$id] = do_shortcode($key);
+                $countdown[$main_id][$id] = do_shortcode($key);     
             }
         }
         
@@ -277,6 +292,10 @@ class PWElementMainCountdown extends PWElements {
 
         $flex_direction = ($right_countdown[0]['countdown_column'] == true) ? 'flex-direction: column;' : '';
 
+        // if ($atts['custom_timer'] == 'true' && $atts['countdown_end'] == '') {
+        //     $countdown_end = do_shortcode('[trade_fair_enddata]');
+        // }
+
         $output .= 
         '<style>
             .row-parent:has(.pwelement_' . self::$rnd_id . ') {
@@ -293,19 +312,16 @@ class PWElementMainCountdown extends PWElements {
                         margin: 9px;
                         font-size: ' . $countdown_font_size . ';
                     }
-
                     .pwe-btn{
                         ' . $btn_text_color 
                         . $btn_color
                         . $btn_shadow_color . '
                         margin: 9px; 
                     }
-
                     .pwe-timer-text {
                         font-weight: ' . $countdown_font_weight . ';
                         text-transform: uppercase;
                     }
-
                     .countdown-container {                    
                         display: flex;
                         justify-content: space-evenly;
@@ -336,15 +352,15 @@ class PWElementMainCountdown extends PWElements {
 
             $output .= '</style>';
                 
-            $output .='<div id="main-timer" class="countdown-container">';
+            $output .='<div id="main-timer" class="countdown-container" data-show-register-bar="'. $atts['show_register_bar'] .'">';
 
-            if ($right_countdown[0]['turn_off_countdown_text'] != true) {    
+            if ($right_countdown[0]['turn_off_countdown_text'] != true && $right_countdown[0]['countdown_text'] != '') {    
                 $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
             };
                 $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
                             ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ' . $date_dif->s . ' sekund 
                         </p>';
-            if ($right_countdown[0]['turn_off_countdown_button'] != true) {
+            if ($right_countdown[0]['turn_off_countdown_button'] != true && $right_countdown[0]['countdown_btn_text'] != '') {
                 $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
             };
             $output .='</div>';

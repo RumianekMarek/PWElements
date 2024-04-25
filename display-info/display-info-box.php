@@ -450,7 +450,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         $modal_img_size = !empty($atts['modal_img_size']) ? 'width: '.$atts['modal_img_size'].';' : 'width: 120px;';
         $bio_text = !empty($atts['bio_text']) ? 'color: '.$atts['bio_text'].'!important;' : 'color: white !important;';
         $title_size = !empty($atts['title_size']) ? ' font-size: '.$atts['title_size'].'!important; ' : '';
-        
+
         
         $event_title = str_replace('``','"', $event_title);
         $event_time = str_replace('``','"', $event_time);

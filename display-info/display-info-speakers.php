@@ -105,7 +105,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 'type' => 'checkbox',
                 'group' => 'options',
                 'heading' => __('Photo as square', 'pwe_display_info'),
-                'param_name' => 'info_speakers_photo_squer',
+                'param_name' => 'info_speakers_photo_square',
                 'description' => __('Check to show photos as square.', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
@@ -126,59 +126,214 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
      */
     public static function output($atts, $content = null) {
 
-        $rn = rand(10000, 99999);
+        $rnd = rand(10000, 99999);
+
         extract( shortcode_atts( array(
-            'border_radius' => '',
-            'border_style' => '',
-            'border_color' => '',
+            'info_speakers_speakers' => '',
             'info_speakers_lect_color' => '',
+            'info_speakers_modal_img_size' => '',
             'info_speakers_bio_color' => '',
-            'title_color' => '',
-            'info_speakers_photo_squer' => '',
+            'info_speakers_bio_text' => '',
+            'info_speakers_photo_square' => '',
         ), $atts ) );
 
-        $locale = get_locale();
+        $info_speakers_lect_color = empty($info_speakers_lect_color) ? 'black' : $info_speakers_lect_color;
+        $info_speakers_modal_img_size = empty($info_speakers_modal_img_size) ? '150px' : $info_speakers_modal_img_size;
+        $info_speakers_bio_color = empty($info_speakers_bio_color) ? 'black' : $info_speakers_bio_color;
+        $info_speakers_bio_text = empty($info_speakers_bio_text) ? 'white' : $info_speakers_bio_text;
+        $info_speakers_photo_square = $info_speakers_photo_square != true ? '50%' : '0';
 
-        $lecture_id = !empty($atts['lecture_id']) ? $atts['lecture_id'] : $rn;
+        $output = '
+        <style>
+            #info-speaker-'. self::$rnd_id .' {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 18px;
+                
+                .pwe-speaker {
+                    width: 15%;
+                    min-width: 150px;
+                    display: flex;
+                    flex-direction: column;
+                    text-align: center;
+                    justify-content: space-between;
+                }
+                .pwe-speaker-name {
+                    color: '. $info_speakers_lect_color .';
+                }
+                .pwe-speaker-img {
+                    width: ' . $info_speakers_modal_img_size .';
+                    border-radius: '. $info_speakers_photo_square .';
+                    margin: 0 auto;
+                }
+                .pwe-speaker-btn {
+                    margin: 10px auto !important;
+                    box-shadow: 4px 4px 0px -1px #777;
+                    background-color: '. $info_speakers_bio_color .';
+                    color: '. $info_speakers_bio_text .';
+                    border: 1px solid black;
+                    padding: 6px 16px;
+                    font-weight: 600;
+                    width: 80px;
+                    transition: .3s ease;
+                }
+                .pwe-speaker-btn:hover {
+                    box-shadow: 4px 4px 0px -1px black;
+                    color: black;
+                    background-color: white;
+                }
+            }
+            .pwe-speaker-modal {
+                position: fixed;
+                z-index: 9999;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background-color: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s;
+            }
+            .pwe-speaker-modal.is-visible {
+                opacity: 1;
+                visibility: visible;
+            }
+            .pwe-speaker-modal-content {
+                position: relative;
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                border-radius: 20px;
+                overflow-y: auto;
+                width: 80%;
+                max-width: 500px;
+                max-height: 90%;
+                transition: transform 0.3s;
+                transform: scale(0);
+            }
+            .pwe-speaker-modal.is-visible .pwe-speaker-modal-content {
+                transform: scale(1);
+            }
+            .pwe-speaker-modal-image {
+                border-radius: 10px;
+            }
+            .pwe-speaker-modal-close {
+                position: absolute;
+                right: 18px;
+                top: -6px;
+                color: #000;
+                float: right;
+                font-size: 50px;
+                font-weight: bold;
+                transition: transform 0.3s;
+            }
+            .pwe-speaker-modal-close:hover,
+            .pwe-speaker-modal-close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+                transform: scale(1.2);
+            }
+        </style>';
 
-        $speakers = urldecode($atts['info_speakers_speakers']);
-        $speakers = json_decode($speakers);
+        $speakers_urldecode = urldecode($info_speakers_speakers);
+        $speakers_json = json_decode($speakers_urldecode, true);
+        if (is_array($speakers_json)) {
+            foreach ($speakers_json as $speaker){
+                $speaker_image = $speaker["speaker_image"];
+                $speaker_name = $speaker["speaker_name"];
+                $speaker_bio = $speaker["speaker_bio"];
 
-        foreach ($speakers as $id => $speaker){
-            $speakers[$id]->speaker_image = wp_get_attachment_image_src($speaker->speaker_image, 'full')[0];
-        }
+                $speaker_image_src = wp_get_attachment_url($speaker_image);   
 
-        $info_speakers_modal_img_size = !empty($atts['info_speakers_modal_img_size']) ? 'width: '.$atts['info_speakers_modal_img_size'].';' : 'width: 120px;';
-        $info_speakers_bio_text = !empty($atts['info_speakers_bio_text']) ? 'color: '.$atts['info_speakers_bio_text'].'!important;' : '';
-        
-        $event_title = str_replace('``','"', $event_title);
+                $item_speaker_id = 'pweSpeaker-' . $rnd;
+                $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">
+                                <img class="pwe-speaker-img" src="'. $speaker_image_src .'">
+                                <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>
+                                <p class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</p>';
+                                if(!empty($speaker_bio)){
+                                    $output .='<button class="pwe-speaker-btn">BIO</button>';
+                                }
+                $output .='</div>';
+            }
+        } 
 
-        $uncode_options = get_option('uncode');
+        $output .='
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const speakers = document.querySelectorAll("#'. $item_speaker_id .'");
+                
+                speakers.forEach((speaker) => {
+                    const img = speaker.querySelector(".pwe-speaker-img");
+                    const name = speaker.querySelector(".pwe-speaker-name");
+                    const desc = speaker.querySelector(".pwe-speaker-desc");
+                    const btn = speaker.querySelector(".pwe-speaker-btn");
 
-        $css_file = plugins_url('display-info.css', __FILE__);
-        $css_version = filemtime(plugin_dir_url( __FILE__ ) . 'display-info.css');
-        wp_enqueue_style('info_box-css', $css_file, array(), $css_version);
+                    if (!desc || desc.textContent.trim() === "" && desc.children.length === 0) {
+                        speaker.style.justifyContent = "flex-start";
+                    }
+                    
+                    if (btn) {
+                        btn.addEventListener("click", function() {
+                            const modalDiv = document.createElement("div");
+                            modalDiv.className = "pwe-speaker-modal";
+                            modalDiv.innerHTML = `
+                                <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
+                                    <span class="pwe-speaker-modal-close">&times;</span>
+                                    <img class="pwe-speaker-modal-image" src="${img.src}" alt="Speaker Image" style="width:100%; max-width:150px;">
+                                    <h5 class="pwe-speaker-modal-title">${name.textContent}</h5>
+                                    <p class="pwe-speaker-modal-desc">${desc.textContent}</p>
+                                </div>
+                            `;
+                            
+                            document.body.appendChild(modalDiv);
+                            requestAnimationFrame(() => {
+                                modalDiv.classList.add("is-visible");
+                            });
+                            disableScroll();
 
-        $js_file = plugins_url('speakers-info.js', __FILE__);
-        $js_version = filemtime(plugin_dir_url(__FILE__) . 'speakers-info.js');
-        wp_enqueue_script('speakers_box-js', $js_file, array('jquery'), $js_version, true);
-        wp_localize_script('speakers_box-js', 'speakers' , $speakers);
+                            // Close modal
+                            modalDiv.querySelector(".pwe-speaker-modal-close").addEventListener("click", function() {
+                                modalDiv.classList.remove("is-visible");
+                                setTimeout(() => {
+                                    modalDiv.remove();
+                                    enableScroll();
+                                }, 300); // Czekaj na zakończenie animacji przed usunięciem
+                            });
 
-        $output = '<div id="speakersInfo-'.$rn.'" class="speakersInfo">';
-        foreach($speakers as $id => $speak){
-            $output .= '
-                    <div class="custom-speaker '.$speak->speaker_name.'">
-                        <img class="custom-speaker-img" src="'.$speak->speaker_image.'" style="'.$info_speakers_modal_img_size.'">
-                        <h5 style="margin-top: 9px;">'.$speak->speaker_name.'</h5>';
-                        if(!empty($speak->speaker_bio)){
-                            $output .='<button class="speakers-bio btn btn-sm btn-default lecture-btn" data-target="'.$id.'" style="background-color:'.$info_speakers_bio_color.' !important; '.$info_speakers_bio_text.'">BIO</button>';
-                        }
-                    $output .='</div>';
-        }
-        $output .= '</div>';
+                            modalDiv.addEventListener("click", function(event) {
+                                if (event.target === modalDiv) {
+                                    modalDiv.classList.remove("is-visible");
+                                    setTimeout(() => {
+                                        modalDiv.remove();
+                                        enableScroll();
+                                    }, 300);
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+
+            // Functions to turn scrolling off and on
+            function disableScroll() {
+                document.body.style.overflow = "hidden";
+                document.documentElement.style.overflow = "hidden";
+            }
+            function enableScroll() {
+                document.body.style.overflow = "";
+                document.documentElement.style.overflow = "";
+            }
+        </script>';
+
         return $output;
-            
-
     }
 }
 

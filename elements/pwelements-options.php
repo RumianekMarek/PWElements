@@ -49,7 +49,6 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'wydarzenia-ogolne.php';
         require_once plugin_dir_path(__FILE__) . 'posts.php';
         require_once plugin_dir_path(__FILE__) . 'footer.php';
-        // require_once plugin_dir_path(__FILE__) . 'gallery-slider.php';
         require_once plugin_dir_path(__FILE__) . 'generator-wystawcow.php';
         require_once plugin_dir_path(__FILE__) . 'registration.php';
         require_once plugin_dir_path(__FILE__) . 'registration-content.php';
@@ -203,7 +202,6 @@ class PWElements {
                         ...PWElementPosts::initElements(),
                         ...PWElementMainCountdown::initElements(),
                         ...PWElementFooter::initElements(),
-                        // ...PWElementGallerySlider::initElements(),
                         ...PWElementGenerator::initElements(),
                         ...PWElementRegistration::initElements(),
                         ...PWElementRegContent::initElements(),
@@ -238,7 +236,6 @@ class PWElements {
             'Footer'                         => 'PWElementFooter',
             'For Exhibitors'                 => 'PWElementForExhibitors',
             'For Visitors'                   => 'PWElementForVisitors',
-            // 'Gallery Slider'                 => 'PWElementGallerySlider',
             'Generator wystawcow'            => 'PWElementGenerator',
             'Grupy zorganizowane'            => 'PWElementGroups',
             'Informacje organizacyjne'       => 'PWElementOrgInfo',
@@ -288,7 +285,6 @@ class PWElements {
             'PWElementFooter'           => 'footer.php',
             'PWElementForExhibitors'    => 'for-exhibitors.php',
             'PWElementForVisitors'      => 'for-visitors.php',
-            // 'PWElementGallerySlider'    => 'gallery-slider.php',
             'PWElementGenerator'        => 'generator-wystawcow.php',
             'PWElementGroups'           => 'grupy.php',
             'PWElementOrgInfo'          => 'org-information.php',

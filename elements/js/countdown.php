@@ -20,83 +20,126 @@ class PWECountdown {
      */
     private static function countingDown($timer, $target_id = '') {
         if($target_id != ""){
-        echo '
-        <script>
-            {
-            const timer = ' . json_encode($timer) .';
-            const locale = "' . get_locale() .'";
-            for(i=0;i<timer.length; i++){
-                timer[i]["countdown_end"] = timer[i]["countdown_end"].replace(/\//g, "-").replace(" ", "T");
-            };
-            let j = 0;
-            jQuery(document).ready(function($) {
-                const intervals = {};
+            echo '
+            <script>
+                {
+                    const timer = ' . json_encode($timer) .';
+                    const locale = "' . get_locale() .'";
+                    for(i=0;i<timer.length; i++){
+                        timer[i]["countdown_end"] = timer[i]["countdown_end"].replace(/\//g, "-").replace(" ", "T");
+                    };
+                    let j = 0;
+                    jQuery(document).ready(function($) {
+                        const intervals = {};
 
-                function updateCountdownStop(elementId) {
-                    clearInterval(intervals[elementId]);
-                }
-
-                function pluralizePolish(count, singular, plural, pluralGenitive) {
-                    if (count === 1 || (count % 10 === 1 && count % 100 !== 11)) {
-                        return `${count} ${singular}`;
-                    } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
-                        return `${count} ${plural}`;
-                    } else {
-                        return `${count} ${pluralGenitive}`;
-                    }
-                }
-
-                function pluralizeEnglish(count, noun) {
-                    return `${count} ${noun}${count !== 1 ? "s" : ""}`;
-                }
-
-                function updateCountdown(elementId) {
-                    intervals[elementId] = setInterval(function() { 
-                        if(timer[j] != null){
-                            const rightNow = new Date();
-                            const endTime = new Date(timer[j]["countdown_end"]);
-                            endTime.setHours(endTime.getHours());
-                            const distance = endTime - rightNow;
-
-                            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                            let endMessage = "";
-                            if (locale == "pl_PL") {
-                                endMessage = pluralizePolish(days, "dzień", "dni", "dni") + " " +
-                                             pluralizePolish(hours, "godzina", "godziny", "godzin") + " " +
-                                             pluralizePolish(minutes, "minuta", "minuty", "minut") + " " +
-                                             pluralizePolish(seconds, "sekunda", "sekundy", "sekund").trim();
-                            } else {
-                                endMessage = pluralizeEnglish(days, "day") + " " +
-                                             pluralizeEnglish(hours, "hour") + " " +
-                                             pluralizeEnglish(minutes, "minute") + " " +
-                                             pluralizeEnglish(seconds, "second").trim();
-                            }
-
-                            if(distance < 0){
-                                j++;
-                                if(timer[j] != null && timer[j]["countdown_text"] != ""){
-                                    $("#timer-header-text-' . $target_id .'").text(timer[j]["countdown_text"]);
-                                    $("#timer-button-' . $target_id . '").text(timer[j]["countdown_btn_text"]);
-                                    $("#timer-button-' . $target_id . '").attr("href", timer[j]["countdown_btn_url"]);
-                                }
-                            } else {
-                                // const endMessage = days + " dni " + hours + " godzin " + minutes + " minut " + seconds + " sekund ";
-                                $("#pwe-countdown-timer-' . $target_id .'").text(endMessage);
-                            }
-                        } else {
-                            updateCountdownStop(' . $target_id . ');
-                            $("#pwe-countdown-timer-' . $target_id .'").parent().hide(0);
+                        function updateCountdownStop(elementId) {
+                            clearInterval(intervals[elementId]);
                         }
-                    } , 1000);
+
+                        function pluralizePolish(count, singular, plural, pluralGenitive) {
+                            if (count === 1 || (count % 10 === 1 && count % 100 !== 11)) {
+                                return `${count} ${singular}`;
+                            } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
+                                return `${count} ${plural}`;
+                            } else {
+                                return `${count} ${pluralGenitive}`;
+                            }
+                        }
+
+                        function pluralizeEnglish(count, noun) {
+                            return `${count} ${noun}${count !== 1 ? "s" : ""}`;
+                        }
+
+                        function updateCountdown(elementId) {
+                            intervals[elementId] = setInterval(function() { 
+                                if(timer[j] != null){
+                                    const rightNow = new Date();
+                                    const endTime = new Date(timer[j]["countdown_end"]);
+                                    endTime.setHours(endTime.getHours());
+                                    const distance = endTime - rightNow;
+
+                                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                    let endMessage = "";
+                                    if (locale == "pl_PL") {
+                                        endMessage = pluralizePolish(days, "dzień", "dni", "dni") + " " +
+                                                    pluralizePolish(hours, "godzina", "godziny", "godzin") + " " +
+                                                    pluralizePolish(minutes, "minuta", "minuty", "minut") + " " +
+                                                    pluralizePolish(seconds, "sekunda", "sekundy", "sekund").trim();
+                                    } else {
+                                        endMessage = pluralizeEnglish(days, "day") + " " +
+                                                    pluralizeEnglish(hours, "hour") + " " +
+                                                    pluralizeEnglish(minutes, "minute") + " " +
+                                                    pluralizeEnglish(seconds, "second").trim();
+                                    }
+
+                                    if(distance < 0){
+                                        j++;
+                                        if(timer[j] != null && timer[j]["countdown_text"] != ""){
+                                            $("#timer-header-text-' . $target_id .'").text(timer[j]["countdown_text"]);
+                                            $("#timer-button-' . $target_id . '").text(timer[j]["countdown_btn_text"]);
+                                            $("#timer-button-' . $target_id . '").attr("href", timer[j]["countdown_btn_url"]);
+                                        }
+                                    } else {
+                                        $("#pwe-countdown-timer-' . $target_id .'").text(endMessage);
+                                    }
+                                } else {
+                                    updateCountdownStop(' . $target_id . ');
+                                    $("#pwe-countdown-timer-' . $target_id .'").parent().hide(0);
+                                }
+                            } , 1000);
+                        }
+                        updateCountdown(' . $target_id . ');
+
+                        // Change button on sticky main timer
+                        function handleClassChange(mutationsList, observer) {
+                            for (let mutation of mutationsList) {
+                                if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                                    const targetElement = mutation.target;
+                                    const customBtn = document.getElementById("timer-button-' . $target_id . '");
+                                    const hasStuckedClass = targetElement.classList.contains("is_stucked");
+                                    const buttonLink = customBtn.href;
+                                    if (hasStuckedClass) {
+                                        if (buttonLink.includes("/en/")) {
+                                            customBtn.innerHTML = "<span>REGISTER<br/>Get a free ticket</span>";
+                                            customBtn.href = "/en/registration/";
+                                        } else {
+                                            customBtn.innerHTML = "<span>Zarejestruj się<br/>Odbierz darmowy bilet</span>";
+                                            customBtn.href = "/rejestracja/";
+                                        }
+                                    } else {
+                                        if (buttonLink.includes("/en/")) {
+                                            customBtn.innerHTML = "<span>Book a stand</span>";
+                                            customBtn.href = "/en/become-an-exhibitor";
+                                        } else {
+                                            customBtn.innerHTML = "<span>Zostań wystawcą</span>";
+                                            customBtn.href = "/zostan-wystawca/";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        let is_stucked = false;
+                        const targetElement = document.querySelector(".sticky-element");
+                        const mainTimerElement = document.querySelector("#main-timer");
+                        const observer = new MutationObserver(handleClassChange);
+
+                        if (mainTimerElement) {
+                            const config = { attributes: true, attributeFilter: ["class"] };
+                            const showRegisterBarValue = mainTimerElement.getAttribute("data-show-register-bar");
+                            if(targetElement && showRegisterBarValue !== "true") {
+                                observer.observe(targetElement, config);
+                                targetElement.setAttribute("data-is-stucked", is_stucked);
+                            }
+                        }
+                    });
                 }
-                updateCountdown(' . $target_id . ');
-            });
-            }
-        </script>';
+
+            </script>';
         }
     }
 

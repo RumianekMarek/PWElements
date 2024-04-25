@@ -159,6 +159,14 @@ class PWELogotypes {
                             'save_always' => true
                         ),    
                         array(
+                            'type' => 'attach_images',
+                            'group' => 'PWE Element',
+                            'heading' => __('Select Images', 'pwelement'),
+                            'param_name' => 'logotypes_media',
+                            'description' => __('Choose images from the media library.', 'pwelement'),
+                            'save_always' => true,
+                        ),
+                        array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
                             'heading' => esc_html__('Logotypes catalog', 'pwelement'),

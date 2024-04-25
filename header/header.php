@@ -38,9 +38,10 @@ class PWEHeader {
                         // colors setup
                         array(
                             'type' => 'dropdown',
+                            'group' => 'PWE Element',
                             'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwelements'),
                             'param_name' => 'text_color',
-                            'param_holder_class' => 'main-options',
+                            'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
                             'description' => __('Select text color for the element.', 'pwelements'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
@@ -52,6 +53,7 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'textfield',
+                            'group' => 'PWE Element',
                             'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwelements'),
                             'param_name' => 'text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
@@ -61,9 +63,10 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'dropdown',
+                            'group' => 'PWE Element',
                             'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwelements'),
                             'param_name' => 'text_shadow_color',
-                            'param_holder_class' => 'main-options',
+                            'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
                             'description' => __('Select shadow text color for the element.', 'pwelements'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
@@ -74,6 +77,7 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'textfield',
+                            'group' => 'PWE Element',
                             'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwelements'),
                             'param_name' => 'text_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
@@ -83,9 +87,10 @@ class PWEHeader {
                         ),                        
                         array(
                             'type' => 'dropdown',
+                            'group' => 'PWE Element',
                             'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwelements'),
                             'param_name' => 'btn_color',
-                            'param_holder_class' => 'main-options',
+                            'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
                             'description' => __('Select button color for the element.', 'pwelements'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
@@ -96,6 +101,7 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'textfield',
+                            'group' => 'PWE Element',
                             'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwelements'),
                             'param_name' => 'btn_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
@@ -105,9 +111,10 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'dropdown',
+                            'group' => 'PWE Element',
                             'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwelements'),
                             'param_name' => 'btn_text_color',
-                            'param_holder_class' => 'main-options',
+                            'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
                             'description' => __('Select button text color for the element.', 'pwelements'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
@@ -118,6 +125,7 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'textfield',
+                            'group' => 'PWE Element',
                             'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwelements'),
                             'param_name' => 'btn_text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
@@ -127,9 +135,10 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'dropdown',
+                            'group' => 'PWE Element',
                             'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwelements'),
                             'param_name' => 'btn_shadow_color',
-                            'param_holder_class' => 'main-options',
+                            'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
                             'description' => __('Select button shadow color for the element.', 'pwelements'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
@@ -140,6 +149,7 @@ class PWEHeader {
                         ),
                         array(
                             'type' => 'textfield',
+                            'group' => 'PWE Element',
                             'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwelements'),
                             'param_name' => 'btn_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
@@ -155,7 +165,6 @@ class PWEHeader {
                             'admin_label' => true,
                             'save_always' => true,
                             'value' => array(__('True', 'pwelement') => 'true',),
-                            'param_holder_class' => 'backend-area-half-width',
                         ),
                         array(
                             'type' => 'dropdown',
@@ -167,7 +176,6 @@ class PWEHeader {
                               'Center' => 'center',
                               'Bottom' => 'bottom'
                             ),
-                            'param_holder_class' => 'backend-area-half-width',
                         ),
                         array(
                             'type' => 'checkbox',
@@ -214,6 +222,7 @@ class PWEHeader {
                             'heading' => __('Conferences custom title', 'pwelement'),
                             'description' => __('Default (Konferencje - PL), (Conferences - EN)', 'pwelement'),
                             'param_name' => 'pwe_header_conferences_title',
+                            'param_holder_class' => 'backend-textarea-raw-html',
                             'save_always' => true,
                             'value' => base64_encode($pwe_header_conferences_title),
                         ),
@@ -286,68 +295,8 @@ class PWEHeader {
                             ),
                         ),
                         array(
-                            'type' => 'checkbox',
-                            'group' => 'Congress widget',
-                            'heading' => __('Turn off widget', 'pwelement'),
-                            'param_name' => 'pwe_congress_widget_off',
-                            'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Title widget', 'pwelement'),
-                            'description' => __('', 'pwelement'),
-                            'param_name' => 'pwe_congress_widget_title',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Button text', 'pwelement'),
-                            'description' => __('', 'pwelement'),
-                            'param_name' => 'pwe_congress_widget_button',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Button link', 'pwelement'),
-                            'description' => __('', 'pwelement'),
-                            'param_name' => 'pwe_congress_widget_button_link',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Buttons width', 'pwelement'),
-                            'description' => __('', 'pwelement'),
-                            'param_name' => 'pwe_congress_widget_buttons_width',
-                            'save_always' => true,
-                        ),
-                        array(
                             'type' => 'param_group',
-                            'group' => 'Congress widget',
-                            'heading' => __('Congress items', 'pwelement'),
-                            'param_name' => 'pwe_congress_widget_items',
-                            'params' => array(
-                                array(
-                                    'type' => 'attach_image',
-                                    'heading' => __('Congress image', 'pwelement'),
-                                    'param_name' => 'congress_item_image',
-                                    'save_always' => true,
-                                ),
-                                array(
-                                    'type' => 'textfield',
-                                    'heading' => __('Congress link', 'pwelement'),
-                                    'param_name' => 'congress_item_link',
-                                    'save_always' => true,
-                                ),
-                            ),
-                        ),
-                        array(
-                            'type' => 'param_group',
-                            'group' => 'PWE Element',
+                            'group' => 'Logotypes',
                             'heading' => __('Logotypes', 'pwelement'),
                             'param_name' => 'pwe_header_logotypes',
                             'params' => array(
@@ -393,6 +342,83 @@ class PWEHeader {
                                     'heading' => __('Logotypes width (___px)', 'pwelement'),
                                     'param_name' => 'logotypes_items_width',
                                     'save_always' => true,
+                                ),
+                            ),
+                        ),
+                        array(
+                            'type' => 'checkbox',
+                            'group' => 'Congress widget',
+                            'heading' => __('Turn off widget', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_off',
+                            'save_always' => true,
+                            'value' => array(__('True', 'pwelement') => 'true',),
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'group' => 'Congress widget',
+                            'heading' => __('Title widget', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_title',
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'group' => 'Congress widget',
+                            'heading' => __('Button text', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_button',
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'group' => 'Congress widget',
+                            'heading' => __('Button link', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_button_link',
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'group' => 'Congress widget',
+                            'heading' => __('Buttons width', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_buttons_width',
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'colorpicker',
+                            'group' => 'Congress widget',
+                            'heading' => __('Congress accent color', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_color',
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'param_group',
+                            'group' => 'Congress widget',
+                            'heading' => __('Congress items', 'pwelement'),
+                            'param_name' => 'pwe_congress_widget_items',
+                            'params' => array(
+                                array(
+                                    'type' => 'attach_image',
+                                    'heading' => __('Congress image', 'pwelement'),
+                                    'param_name' => 'congress_item_image',
+                                    'save_always' => true,
+                                ),
+                                array(
+                                    'type' => 'textfield',
+                                    'heading' => __('Congress link', 'pwelement'),
+                                    'param_name' => 'congress_item_link',
+                                    'save_always' => true,
+                                ),
+                                array(
+                                    'type' => 'textfield',
+                                    'heading' => __('Caption text', 'pwelement'),
+                                    'param_name' => 'congress_item_caption',
+                                    'save_always' => true,
+                                ),
+                                array(
+                                    'type' => 'checkbox',
+                                    'group' => 'Congress widget',
+                                    'heading' => __('Turn off caption', 'pwelement'),
+                                    'param_name' => 'congress_item_caption_off',
+                                    'save_always' => true,
+                                    'value' => array(__('True', 'pwelement') => 'true',),
                                 ),
                             ),
                         ),
@@ -792,11 +818,13 @@ class PWEHeader {
                     max-width: 1200px;
                     width: 100%;
                     margin: 0 auto;
-                    padding: 18px 18px 36px;
+                    padding: 0 18px 36px;
                     gap: 18px;
+                    opacity: 0;
                 }
                 .pwe-header .pwe-association {
-                    padding: 0 36px;
+                    padding: 0 18px 36px;
+                    opacity: 0;
                 }
 
                 @media (max-width:1200px) {
@@ -1029,21 +1057,25 @@ class PWEHeader {
 
                     $output .= '</div>';
 
-                    if ($pwe_congress_widget_off != 'true') {
-                        require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
-                    }
+                    if ($pwe_header_simple_mode != 'true') {
 
-                    // Accompanying Fairs
-                    if ($association_fair_logo_white == 'true') {
-                        $output .= '<style>
-                                        .pwe-association-logotypes .pwe-as-logo,
-                                        .pwe-association-logotypes .slides div {
-                                            filter: brightness(0) invert(1);
-                                            transition: all .3s ease;
-                                        }
-                                    </style>';
+                        if ($pwe_congress_widget_off != 'true') {
+                            require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
+                        }
+
+                        // Accompanying Fairs
+                        if ($association_fair_logo_white == 'true') {
+                            $output .= '<style>
+                                            .pwe-association-logotypes .pwe-as-logo,
+                                            .pwe-association-logotypes .slides div {
+                                                filter: brightness(0) invert(1);
+                                                transition: all .3s ease;
+                                            }
+                                        </style>';
+                        }
+                        $output .= PWElementAssociates::output($atts);
+                        
                     }
-                    $output .= PWElementAssociates::output($atts);
 
                     
                     $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
@@ -1093,6 +1125,20 @@ class PWEHeader {
                             const pweLogotypesElement = document.querySelector(".pwelement_'.SharedProperties::$rnd_id.' .pwe-header-logotypes");
                             if ((pweLogotypesElement && pweLogotypesElement.children.length === 0)) {
                                 pweLogotypesElement.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
+                            }
+
+                            // Lazy loading effect
+                            if (document.querySelector(".pwe-header-logotypes")) {
+                                const logotypesElements = document.querySelectorAll(".pwe-header-logotypes");
+                                logotypesElements.forEach(item => {
+                                    item.style.opacity = 1;
+                                    item.style.transition = "opacity 0.3s ease";
+                                });
+                            }
+                            if (document.querySelector(".pwe-association")) {
+                                const associationElement = document.querySelector(".pwe-association");
+                                associationElement.style.opacity = 1;
+                                associationElement.style.transition = "opacity 0.3s ease";
                             }
                         });
                     </script>';
