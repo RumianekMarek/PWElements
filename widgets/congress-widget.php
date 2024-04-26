@@ -1,17 +1,17 @@
 <?php
 
-$pwe_congress_widget_buttons_width = ($pwe_congress_widget_buttons_width == '') ? '200px' : $pwe_congress_widget_buttons_width;
-
 if (get_locale() == 'pl_PL') {
     $pwe_congress_widget_title = ($pwe_congress_widget_title == '') ? 'Konferencje' : $pwe_congress_widget_title;
-    $pwe_pwe_congress_widget_button_link = ($pwe_pwe_congress_widget_button_link == '') ? '/wydarzenia/' : $pwe_pwe_congress_widget_button_link;
+    $pwe_congress_widget_button_link = ($pwe_congress_widget_button_link == '') ? '/rejestracja/' : $pwe_congress_widget_button_link;
     $pwe_congress_widget_button = ($pwe_congress_widget_button == '') ? 'WEŹ UDZIAŁ' : $pwe_congress_widget_button;
 } else {
     $pwe_congress_widget_title = ($pwe_congress_widget_title == '') ? 'Conference' : $pwe_congress_widget_title;
-    $pwe_pwe_congress_widget_button_link = ($pwe_pwe_congress_widget_button_link == '') ? '/en/conferences/' : $pwe_pwe_congress_widget_button_link;
+    $pwe_congress_widget_button_link = ($pwe_congress_widget_button_link == '') ? '/en/registration/' : $pwe_congress_widget_button_link;
     $pwe_congress_widget_button = ($pwe_congress_widget_button == '') ? 'TAKE PART' : $pwe_congress_widget_button;
 }
-$pwe_congress_widget_color = ($pwe_congress_widget_color == '') ? '' : $pwe_congress_widget_color;
+
+$pwe_congress_widget_buttons_width = ($pwe_congress_widget_buttons_width == '') ? '200px' : $pwe_congress_widget_buttons_width;
+$pwe_congress_widget_color = $pwe_congress_widget_color == '' ? $btn_color : $pwe_congress_widget_color;
 
 $output .= '
     <style>
@@ -60,31 +60,40 @@ $output .= '
             align-self: center;
         }
         .header-conference-button,
+        .header-conference-button h2,
         .header-conference-item {
             transition: .3s ease;
-            
         }
         .header-conference-item:hover {
             transform: scale(1.05);
         }
         .header-conference-title h2,
         .header-conference-button h2 {
-            color: white;
             margin: 0;
         }
         .header-conference-title h2 {
-            text-shadow: 0 0 5px black;
-            font-size: 18px;
+            color: '. $text_color .';
+            text-shadow: 2px 2px '. $text_shadow .';
+            font-size: 20px;
         }
         .header-conference-button {
-            border: unset !important;
+            background-color: '. $btn_color .';
+            box-shadow: '. $btn_shadow_color .';
+            border: '. $btn_color .'; 
             border-radius: 0 !important;
-            background-color: '. $pwe_congress_widget_color .';
             padding: 5px 10px;
-            box-shadow: 7px 7px 0px -5px white !important;
         }
         .header-conference-button h2 {
             font-size: 18px;
+            color: '. $btn_text_color .';
+        }
+        .header-conference-button:hover {
+            background-color: #ffffff !important;
+            border: 1px solid #000000 !important;
+            box-shadow: 9px 9px 0px -5px '. $btn_color .';
+            h2 {
+                color: #000000 !important;
+            }
         }
 
         @media (max-width:1200px) {
@@ -131,27 +140,25 @@ $output .= '
                     $congress_item_image = $item["congress_item_image"];
                     $congress_item_link = $item["congress_item_link"];
                     $congress_item_caption = $item["congress_item_caption"];
-                    $congress_item_caption_off = $item["congress_item_caption_off"];
 
                     $congress_image_url = wp_get_attachment_url($congress_item_image);
                     $target_blank_congress = (strpos($congress_item_link, 'http') !== false) ? 'target="blank"' : '';
 
                     if (get_locale() == 'pl_PL') {
                         $congress_item_caption = ($congress_item_caption == '') ? 'Dowiedz się więcej' : $congress_item_caption;
+                        $congress_item_link = ($congress_item_link == '') ? '/wydarzenia/' : $congress_item_link;
                     } else {
                         $congress_item_caption = ($congress_item_caption == '') ? 'Find out more' : $congress_item_caption;
+                        $congress_item_link = ($congress_item_link == '') ? '/en/conferences/' : $congress_item_link;
                     }
 
                     $output .= '
-                        <div class="header-conference-item">
-                            <a href="'. $congress_item_link .'"'. $target_blank_congress .'>
-                                <img src="'. $congress_image_url .'" alt="congress button">';
-                                if ($congress_item_caption_off != true) {
-                                    $output .= '<span class="header-conference-caption">'. $congress_item_caption .'</span>';
-                                }
-                                $output .= '
-                            </a>
-                        </div>'; 
+                    <div class="header-conference-item">
+                        <a href="'. $congress_item_link .'"'. $target_blank_congress .'>
+                            <img src="'. $congress_image_url .'" alt="congress button">
+                            <span class="header-conference-caption">'. $congress_item_caption .'</span>
+                        </a>
+                    </div>'; 
                 }  
                 
             $output .= '    
@@ -163,35 +170,14 @@ $output .= '
             </div>
         </div>';
 
-        if ($pwe_congress_widget_color == '') {
-            $output .= '
+        $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    const pweHeaderButton = document.querySelector("#pweBtnRegistration a");
-                    if (pweHeaderButton) {
-                        const pweHeaderButtonColor = window.getComputedStyle(pweHeaderButton).backgroundColor;
-                
-                        const conferenceItems = document.querySelectorAll(".header-conference-item");
-                        conferenceItems.forEach(item => {
-                            item.style.borderColor = pweHeaderButtonColor;
-                        });
-                
-                        const conferenceCaptions = document.querySelectorAll(".header-conference-caption");
-                        conferenceCaptions.forEach(caption => {
-                            caption.style.color = pweHeaderButtonColor;
-                        });
-                
-                        const conferenceButton = document.querySelector(".header-conference-button");
-                        conferenceButton.style.backgroundColor = pweHeaderButtonColor;
-                    }
-
                     const pweHeaderWidget = document.querySelector(".header-conference");
                     pweHeaderWidget.style.opacity = 1;
                     pweHeaderWidget.style.transition = "opacity 0.3s ease";
                 });
-            </script>
-            ';  
-        }
+            </script>';
     }
 
 return $output;
