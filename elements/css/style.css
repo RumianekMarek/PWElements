@@ -7,11 +7,9 @@
 .row-parent:has(#niePrzegap) {
     padding: 0 !important;
 }
-
 .full-width:has(.pwelement) {
     padding: 0 !important;
 }
-
 .half-block-padding-top {
     padding-top: 18px !important;
 }

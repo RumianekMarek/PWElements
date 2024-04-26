@@ -357,6 +357,8 @@ class PWEHeader {
                             'type' => 'textfield',
                             'group' => 'Congress widget',
                             'heading' => __('Title widget', 'pwelement'),
+                            'description' => __('Default (Konferencje - PL), (Conference - EN)', 'pwelement'),
+                            'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_title',
                             'save_always' => true,
                         ),
@@ -364,6 +366,8 @@ class PWEHeader {
                             'type' => 'textfield',
                             'group' => 'Congress widget',
                             'heading' => __('Button text', 'pwelement'),
+                            'description' => __('Default (WEŹ UDZIAŁ - PL), (TAKE PART - EN)', 'pwelement'),
+                            'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_button',
                             'save_always' => true,
                         ),
@@ -371,6 +375,8 @@ class PWEHeader {
                             'type' => 'textfield',
                             'group' => 'Congress widget',
                             'heading' => __('Button link', 'pwelement'),
+                            'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwelement'),
+                            'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_button_link',
                             'save_always' => true,
                         ),
@@ -378,6 +384,8 @@ class PWEHeader {
                             'type' => 'textfield',
                             'group' => 'Congress widget',
                             'heading' => __('Buttons width', 'pwelement'),
+                            'description' => __('Default 200px', 'pwelement'),
+                            'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_buttons_width',
                             'save_always' => true,
                         ),
@@ -385,6 +393,7 @@ class PWEHeader {
                             'type' => 'colorpicker',
                             'group' => 'Congress widget',
                             'heading' => __('Congress accent color', 'pwelement'),
+                            'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_color',
                             'save_always' => true,
                         ),
@@ -403,22 +412,16 @@ class PWEHeader {
                                 array(
                                     'type' => 'textfield',
                                     'heading' => __('Congress link', 'pwelement'),
+                                    'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwelement'),
                                     'param_name' => 'congress_item_link',
                                     'save_always' => true,
                                 ),
                                 array(
                                     'type' => 'textfield',
                                     'heading' => __('Caption text', 'pwelement'),
+                                    'description' => __('Default (Dowiedz się więcej - PL), (Find out more - EN)', 'pwelement'),
                                     'param_name' => 'congress_item_caption',
                                     'save_always' => true,
-                                ),
-                                array(
-                                    'type' => 'checkbox',
-                                    'group' => 'Congress widget',
-                                    'heading' => __('Turn off caption', 'pwelement'),
-                                    'param_name' => 'congress_item_caption_off',
-                                    'save_always' => true,
-                                    'value' => array(__('True', 'pwelement') => 'true',),
                                 ),
                             ),
                         ),
@@ -691,6 +694,7 @@ class PWEHeader {
             'pwe_congress_widget_button' => '',
             'pwe_congress_widget_button_link' => '',
             'pwe_congress_widget_buttons_width' => '',
+            'pwe_congress_widget_color' => '',
             'pwe_congress_widget_items' => '',
         ), $atts ));
 
@@ -699,157 +703,164 @@ class PWEHeader {
 
         $output = '
             <style>
-                .row-parent:has(.pwe-header) {
+                .row-parent:has(.pwelement_'. SharedProperties::$rnd_id.' .pwe-header) {
                     max-width: 100%;
                     padding: 0 !important;  
                 }
-                .pwe-header-wrapper {
-                    min-height: 60vh;
-                    max-width: 1200px;
-                    margin: 0 auto; 
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
-                .pwe-header-container:before {
-                    content: "";
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background-color: '. $pwe_header_overlay_color .';
-                    opacity: '. $pwe_header_overlay_range .';
-                    z-index: 0;
-                }
-                .header-wrapper-column {
-                    max-width: 750px;
-                    justify-content: space-evenly;
-                    align-items: center;
-                    display: flex;
-                    flex-direction: column; 
-                    padding: 36px 18px;
-                }
-                .pwe-header-background {
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center;
-                }
-                .pwe-header-logo {
-                    max-width: '. $pwe_header_logo_width .'px !important;
-                    width: 100%;
-                    height: auto;
-                    z-index: 1;
-                }
-                .header-button a {
-                    padding: 0 !important;
-                    height: 70px;
-                    display: flex;
-                    flex-flow: column;
-                    align-items: center;
-                    justify-content: center;
-                    text-transform: uppercase;
-                    z-index: 1;
-                }
-                .pwe-header-buttons {
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                    gap: 20px;
-                    padding: 18px 0;
-                }
-                .pwe-header .pwe-btn-container {
-                    width: 320px;
-                    height: 75px;
-                    padding: 0;
-                }
-                .pwe-header .pwe-btn {
-                    background-color: '. $btn_color .';
-                    color: '. $btn_text_color .';
-                    box-shadow: '. $btn_shadow_color .';
-                    border: '. $btn_border .';                  
-                    width: 100%;
-                    height: 100%;
-                    transform: scale(1) !important;
-                    transition: .3s ease;
-                    font-size: 15px;
-                    font-weight: 700;
-                    padding: 6px 18px !important;
-                }
-                .pwe-header .pwe-btn:hover {
-                    color: #000000 !important;
-                    background-color: #ffffff !important;
-                    border: 1px solid #000000 !important;
-                    box-shadow: 9px 9px 0px -5px '. $btn_color .';
-                }
-                .pwe-header-text {
-                    padding: 18px 0;
-                    z-index: 1;
-                }
-                .pwe-header-text :is(h1, h2), 
-                .pwe-header .pwe-logotypes-title h4 {
-                    color: '. $text_color .';
-                    text-shadow: 2px 2px '. $text_shadow .';
-                    text-transform: uppercase;
-                    text-align: center;
-                    width: auto;
-                }
-                .pwe-header .pwe-logotypes-title {
-                    justify-content: center;
-                }
-                .pwe-header .pwe-logotypes-title h4 {
-                    box-shadow: 9px 9px 0px -6px '. $text_color .';
-                }
-                .pwe-header-text h1 {
-                    font-size: 30px;
-                }
-                .pwe-header-text h2 {
-                    font-size: 36px;
-                }
-                .pwe-header .pwe-container-logotypes-gallery {
-                    position: relative;
-                    z-index: 1;
-                }
-                .pwe-header-logotypes {
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                    max-width: 1200px;
-                    width: 100%;
-                    margin: 0 auto;
-                    padding: 0 18px 36px;
-                    gap: 18px;
-                    opacity: 0;
-                }
-                .pwe-header .pwe-association {
-                    padding: 0 18px 36px;
-                    opacity: 0;
-                }
-
-                @media (max-width:1200px) {
+                .pwelement_'. SharedProperties::$rnd_id .' {
+                    .pwe-header-wrapper {
+                        min-height: 60vh;
+                        max-width: 1200px;
+                        margin: 0 auto; 
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .pwe-header-container:before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: '. $pwe_header_overlay_color .';
+                        opacity: '. $pwe_header_overlay_range .';
+                        z-index: 0;
+                    }
+                    .header-wrapper-column {
+                        max-width: 750px;
+                        justify-content: space-evenly;
+                        align-items: center;
+                        display: flex;
+                        flex-direction: column; 
+                        padding: 36px 18px;
+                    }
+                    .pwe-header-background {
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                    }
+                    .pwe-header-logo {
+                        max-width: '. $pwe_header_logo_width .'px !important;
+                        width: 100%;
+                        height: auto;
+                        z-index: 1;
+                    }
+                    .header-button a {
+                        padding: 0 !important;
+                        height: 70px;
+                        display: flex;
+                        flex-flow: column;
+                        align-items: center;
+                        justify-content: center;
+                        text-transform: uppercase;
+                        z-index: 1;
+                    }
+                    .pwe-header-buttons {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        gap: 20px;
+                        padding: 18px 0;
+                    }
+                    .pwe-header .pwe-btn-container {
+                        width: 320px;
+                        height: 75px;
+                        padding: 0;
+                    }
+                    .pwe-header .pwe-btn {
+                        background-color: '. $btn_color .';
+                        color: '. $btn_text_color .';
+                        box-shadow: '. $btn_shadow_color .';
+                        border: '. $btn_border .';                  
+                        width: 100%;
+                        height: 100%;
+                        transform: scale(1) !important;
+                        transition: .3s ease;
+                        font-size: 15px;
+                        font-weight: 600;
+                        padding: 6px 18px !important;
+                        letter-spacing: 0.1em;
+                        text-align: center;
+                    }
+                    .pwe-header .pwe-btn:hover {
+                        color: #000000 !important;
+                        background-color: #ffffff !important;
+                        border: 1px solid #000000 !important;
+                        box-shadow: 9px 9px 0px -5px '. $btn_color .';
+                    }
+                    .pwe-header-text {
+                        padding: 18px 0;
+                        z-index: 1;
+                    }
+                    .pwe-header-text :is(h1, h2), 
+                    .pwe-header .pwe-logotypes-title h4 {
+                        color: '. $text_color .';
+                        text-shadow: 2px 2px '. $text_shadow .';
+                        text-transform: uppercase;
+                        text-align: center;
+                        width: auto;
+                    }
+                    .pwe-header .pwe-logotypes-title {
+                        justify-content: center;
+                    }
+                    .pwe-header .pwe-logotypes-title h4 {
+                        box-shadow: 9px 9px 0px -6px '. $text_color .';
+                    }
+                    .pwe-header-text h1 {
+                        font-size: 30px;
+                    }
+                    .pwe-header-text h2 {
+                        font-size: 36px;
+                    }
+                    .pwe-header .pwe-container-logotypes-gallery {
+                        position: relative;
+                        z-index: 1;
+                    }
                     .pwe-header-logotypes {
-                        max-width: 100%;
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        max-width: 1200px;
+                        width: 100%;
+                        margin: 0 auto;
+                        padding: 0 18px 36px;
+                        gap: 18px;
+                        opacity: 0;
+                    }
+                    .pwe-header .pwe-association {
+                        padding: 0 18px 36px;
+                        opacity: 0;
+                    }
+                }
+                @media (max-width:960px) {
+                    .row-parent:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-header) {
+                        padding: 0 !important;  
                     }
                 }
                 @media (min-width: 300px) and (max-width: 1200px) {
-                    .pwe-header-text h1 {
-                        font-size: calc(24px + (30 - 24) * ( (100vw - 300px) / (1200 - 300) ));
-                    }
-                    .pwe-header-text h2 {
-                        font-size: calc(28px + (36 - 28) * ( (100vw - 300px) / (1200 - 300) ));
+                    .pwelement_'.SharedProperties::$rnd_id.' {
+                        .pwe-header-text h1 {
+                            font-size: calc(24px + (30 - 24) * ( (100vw - 300px) / (1200 - 300) ));
+                        }
+                        .pwe-header-text h2 {
+                            font-size: calc(28px + (36 - 28) * ( (100vw - 300px) / (1200 - 300) ));
+                        }
                     }
                 }
                 @media (max-width:700px) {
-                    .pwe-header-logotypes .pwe-container-logotypes-gallery {
-                        width: 100% !important;
-                    }
-                    .pwe-header .pwe-btn-container {
-                        width: 260px;
-                        height: 70px;
-                    }
-                    .pwe-header .btn {
-                        font-size: 13px;
+                    .pwelement_'.SharedProperties::$rnd_id.' {
+                        .pwe-header-logotypes .pwe-container-logotypes-gallery {
+                            width: 100% !important;
+                        }
+                        .pwe-header .pwe-btn-container {
+                            width: 260px;
+                            height: 70px;
+                        }
+                        .pwe-header .btn {
+                            font-size: 13px;
+                        }
                     }
                 }   
             </style>';
@@ -1073,7 +1084,7 @@ class PWEHeader {
                                             }
                                         </style>';
                         }
-                        $output .= PWElementAssociates::output($atts);
+                        $output .= PWElementAssociates::output($atts, 'header');
                         
                     }
 

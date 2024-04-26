@@ -52,7 +52,7 @@ class PWElementAdditionalLogotypes extends SharedProperties {
             ), 
             array(
                 'type' => 'param_group',
-                'group' => 'PWE Element',
+                'group' => 'Links',
                 'heading' => __('Add link', 'pwelement'),
                 'param_name' => 'logotypes_files',
                 'params' => array(

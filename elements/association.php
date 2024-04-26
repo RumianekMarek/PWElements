@@ -44,31 +44,19 @@ class PWElementAssociates extends PWElements {
     * @return wpdb Obiekt bazy danych
     */
     private static function connectToDatabase() {
-        $database_host = 'localhost';
-        $database_name = 'warsawexpo_dodatkowa';
-        $database_user = 'warsawexpo_admin-dodatkowy';
-        $database_password = 'N4c-TsI+I4-C56@q';
-
-        $custom_db = new wpdb($database_user, $database_password, $database_name, $database_host);
-        
-        // Sprawdź, czy połączenie zostało ustanowione poprawnie
-        if (!empty($custom_db->error)) {
+        if ($_SERVER['SERVER_ADDR'] != '94.152.207.180') {
+            $database_host = 'localhost';
+            $database_name = 'warsawexpo_dodatkowa';
+            $database_user = 'warsawexpo_admin-dodatkowy';
+            $database_password = 'N4c-TsI+I4-C56@q';
+        } else {
+            $database_host = 'localhost';
             $database_name = 'automechanicawar_dodatkowa';
             $database_user = 'automechanicawar_admin-dodatkowa';
             $database_password = '9tL-2-88UAnO_x2e';
-
-            $custom_db = new wpdb($database_user, $database_password, $database_name, $database_host);
-            
-            // Sprawdź, czy połączenie zostało ustanowione poprawnie
-            if (!empty($custom_db->error)) {
-                echo '<script>console.log("Błąd połączenia z bazą danych.")</script>';
-                return null;
-            } else {
-                return $custom_db;
-            }
-        } else {
-            return $custom_db;
         }
+        $custom_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+        return $custom_db;
     }
 
     /**
@@ -104,8 +92,8 @@ class PWElementAssociates extends PWElements {
     * 
     * @return string @output 
     */
-    public static function output($atts) {
-
+    public static function output($atts, $pwe_el = null) {
+        echo'<script>console.log("'. $pwe_el .'");</script>';
         extract( shortcode_atts( array(
             'association_fair_logo_white' => '',
         ), $atts ));
@@ -142,11 +130,9 @@ class PWElementAssociates extends PWElements {
         if (!empty($sorted)) {
             $output .= 
             '<style>
-                .row-container:has(.pwe-association) {
+                .row-container:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-association),
+                .row-container:has(.pwelement_'.self::$rnd_id.' .pwe-association) {
                     background-color: '. self::$fair_colors['Accent'] .';
-                }
-                .wpb_column:has(.pwe-association) {
-                    padding: 0 !important;
                 }
                 .pwe-association {
                     position: relative;
@@ -157,6 +143,7 @@ class PWElementAssociates extends PWElements {
                     justify-content: center;
                 }
                 .pwe-association-title h2 {
+                    text-shadow: 2px 2px black !important;
                     box-shadow: 9px 9px 0px -6px white !important;
                     color: white;
                     margin: 0;
@@ -212,15 +199,17 @@ class PWElementAssociates extends PWElements {
                         if (self::checkForMobile() == '1'){
                             $slider_array = array();
                             foreach($sorted as $logo){
-                                $slider_array[] = array(
-                                    'img' => $logo['img'],
-                                    'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site'])
-                                );
-
-                                // echo '<pre>';
-                                // var_dump(end($slider_array)['img']);
-                                // var_dump(end($slider_array)['site']); 
-                                // echo '</pre>';
+                                if(get_locale() == 'pl_PL') {
+                                    $slider_array[] = array(
+                                        'img' => $logo['img'],
+                                        'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site'])
+                                    );
+                                } else {
+                                    $slider_array[] = array(
+                                        'img' => $logo['img'],
+                                        'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']) . "/en"
+                                    );
+                                }
                             }   
                                                  
                             require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
@@ -228,7 +217,9 @@ class PWElementAssociates extends PWElements {
 
                         } else { 
                             foreach ($sorted as $id => $logo){
-                                $logosUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']);
+                                if(get_locale() == 'pl_PL') {
+                                    $logosUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']);
+                                } else $logosUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']) . "/en";
                                 if($id == 'primary'){
                                     $output .= '
                                         <a class="as-primary" target="_blank" href="'. $logosUrl .'">
