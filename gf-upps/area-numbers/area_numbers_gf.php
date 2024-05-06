@@ -18,6 +18,7 @@ class GFAreaNumbersField {
      */
     function frontend_init() {
         require_once( plugin_dir_path( __FILE__ ) . 'area-frontend.php' );
+        require_once( plugin_dir_path( __FILE__ ) . 'area-codes.php' );
     }
 
     /**

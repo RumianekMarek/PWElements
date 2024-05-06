@@ -47,6 +47,7 @@ class GFAreaNumbersFrontend {
             'elements' =>  $field_arr
         ));
 
+        echo '<script src="https://unpkg.com/imask"></script>';
 	}
 }
 

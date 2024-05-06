@@ -71,9 +71,9 @@ jQuery(document).ready(function ($) {
                     if (localLangKat == "pl-PL") {
                         modalBox += (targetExhibitor["Telefon"]) ? `<p>Numer telefonu: <b><a href="tel:${targetExhibitor['Telefon']}">${targetExhibitor['Telefon']}</a></b></p>` : "";
 
-                        modalBox += (targetExhibitor["Email"]) ? `<p>Adres Email: <b><a href="tel:${targetExhibitor['Email']}">${targetExhibitor['Email']}</a></b></p>` : "";
+                        modalBox += (targetExhibitor["Email"]) ? `<p>Adres Email: <b><a href="mailto:${targetExhibitor['Email']}">${targetExhibitor['Email']}</a></b></p>` : "";
 
-                        modalBox += (exhibitorsUrl) ? `<p>Strona www: <b><a href="tel:${exhibitorsUrl}">${exhibitorsUrl}</a></b></p>` : "";
+                        modalBox += (exhibitorsUrl) ? `<p>Strona www: <b><a target="_blank" href="${exhibitorsUrl}">${exhibitorsUrl}</a></b></p>` : "";
 
                         modalBox += (targetExhibitor["Numer_stoiska"]) ? `<p>Stoisko: ${targetExhibitor['Numer_stoiska']}</p>` : "";
 
@@ -86,9 +86,9 @@ jQuery(document).ready(function ($) {
                     } else {
                         modalBox += (targetExhibitor["Telefon"]) ? `<p>Phone number: <b><a href="tel:${targetExhibitor['Telefon']}">${targetExhibitor['Telefon']}</a></b></p>` : "";
 
-                        modalBox += (targetExhibitor["Email"]) ? `<p>E-mail adress: <b><a href="tel:${targetExhibitor['Email']}">${targetExhibitor['Email']}</a></b></p>` : "";
+                        modalBox += (targetExhibitor["Email"]) ? `<p>E-mail adress: <b><a href="mailto:${targetExhibitor['Email']}">${targetExhibitor['Email']}</a></b></p>` : "";
 
-                        modalBox += (exhibitorsUrl) ? `<p>Web page: <b><a href="tel:${exhibitorsUrl}">${exhibitorsUrl}</a></b></p>` : "";
+                        modalBox += (exhibitorsUrl) ? `<p>Web page: <b><a target="_blank" href="${exhibitorsUrl}">${exhibitorsUrl}</a></b></p>` : "";
 
                         modalBox += (targetExhibitor["Numer_stoiska"]) ? `<p>Stand: ${targetExhibitor['Numer_stoiska']}</p>` : "";
 

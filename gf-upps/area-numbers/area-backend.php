@@ -19,11 +19,7 @@ class GFAreaNumbersBackend {
 				<select name="area_default_country_value" id="area_default_country_value" onChange="SetFieldProperty('defaultCountryGField', this.value);">
 					<?php
 						foreach ( GFAreaCodes::get_countries() as $value => $name ) {
-							if($value == 'DEF'){
-								echo '<option value="' . $value . '">' . $name . '</option>'; 
-							} else {
-								echo '<option value="' . $value . '">' . $name . '</option>'; 
-							}
+							echo '<option value="' . $value . '">' . $name . '</option>'; 
 						}
 					?>
 				</select>

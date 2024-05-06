@@ -176,6 +176,7 @@ class PWEHeader {
                               'Center' => 'center',
                               'Bottom' => 'bottom'
                             ),
+                            'std' => 'center',
                         ),
                         array(
                             'type' => 'checkbox',
@@ -904,35 +905,31 @@ class PWEHeader {
             if ($pwe_header_simple_mode == 'true') {
                 $output .= '
                     <style>
-                        .header-wrapper-column {
-                            padding: 36px;
-                        }
-                        .pwe-header-wrapper {
-                            min-height: auto !important;
-                        }
-                        .pwe-header-text {
-                            display: flex;
-                            flex-direction: column-reverse;
-                        }
-                        .pwe-header-text h2 {
-                            font-size: calc(28px + (40 - 28) * ( (100vw - 300px) / (1200 - 300) ));
-                        }
-                        @media (min-width:960px) {
-                            .pwe-header-background {
-                                background-position: top;
+                        .pwelement_'. SharedProperties::$rnd_id .' {
+                            .header-wrapper-column {
+                                padding: 36px;
                             }
                             .pwe-header-wrapper {
-                                min-height: 350px !important;
-                                height: 350px;
+                                min-height: auto !important;
                             }
-                            .header-wrapper-column {
-                                max-width: 1200px;
-                                flex-direction: row;
+                            .pwe-header-text {
+                                display: flex;
+                                flex-direction: column-reverse;
+                            }
+                            .pwe-header-text h2 {
+                                font-size: calc(28px + (40 - 28) * ( (100vw - 300px) / (1200 - 300) ));
                             }
                         }
                         @media (min-width:960px) {
-                            .header-wrapper-column {
-                                gap: 100px;
+                            .pwelement_'. SharedProperties::$rnd_id .' {
+                                .pwe-header-wrapper {
+                                    min-height: 350px !important;
+                                    height: 350px;
+                                }
+                                .header-wrapper-column {
+                                    max-width: 1200px;
+                                    flex-direction: row;
+                                }
                             }
                         }
                     </style>
@@ -942,15 +939,17 @@ class PWEHeader {
             if ($pwe_header_logo_marg_pag == 'true') {
                 $output .= '
                     <style>
-                        .header-wrapper-column {
-                            padding: 0 18px 36px;
-                        }
-                        .pwe-header-text {
-                            padding: 0 0 18px;
-                        }
-                        .pwe-header-text h1 {
-                            margin: 0;
-                        }
+                        .pwelement_'. SharedProperties::$rnd_id .' {
+                            .header-wrapper-column {
+                                padding: 0 18px 36px;
+                            }
+                            .pwe-header-text {
+                                padding: 0 0 18px;
+                            }
+                            .pwe-header-text h1 {
+                                margin: 0;
+                            }
+                        } 
                     </style>
                 ';
             }
@@ -960,8 +959,10 @@ class PWEHeader {
                 if (in_array($position, explode(',', $pwe_header_bg_position))) {
                     $output .= '
                         <style>
-                            .pwe-header-background {
-                                background-position: '. $position .' !important;
+                            .pwelement_'. SharedProperties::$rnd_id .' {
+                                .pwe-header-background {
+                                    background-position: '. $position .' !important;
+                                }
                             }
                         </style>
                     ';
@@ -1084,7 +1085,7 @@ class PWEHeader {
                                             }
                                         </style>';
                         }
-                        $output .= PWElementAssociates::output($atts, 'header');
+                        $output .= PWElementAssociates::output($atts);
                         
                     }
 

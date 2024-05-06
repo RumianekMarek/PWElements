@@ -92,8 +92,7 @@ class PWElementAssociates extends PWElements {
     * 
     * @return string @output 
     */
-    public static function output($atts, $pwe_el = null) {
-        echo'<script>console.log("'. $pwe_el .'");</script>';
+    public static function output($atts) {
         extract( shortcode_atts( array(
             'association_fair_logo_white' => '',
         ), $atts ));

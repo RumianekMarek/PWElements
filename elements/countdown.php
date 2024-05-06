@@ -192,10 +192,10 @@ class PWElementMainCountdown extends PWElements {
             'countdown_end' => do_shortcode('[trade_fair_datetotimer]'),
             'countdown_text' => self::languageChecker(
                 <<<PL
-                    Do targów pozostało:
+                Do targów pozostało:
                 PL,
                 <<<EN
-                    Until the start of the fair:
+                Until the start of the fair:
                 EN
             )
         );
@@ -204,10 +204,10 @@ class PWElementMainCountdown extends PWElements {
             'countdown_end' => do_shortcode('[trade_fair_enddata]'),
             'countdown_text' => self::languageChecker(
                 <<<PL
-                    Do końca targów pozostało:
+                Do końca targów pozostało:
                 PL,
                 <<<EN
-                    Until the end of the fair:
+                Until the end of the fair:
                 EN
             )
         );
@@ -219,10 +219,10 @@ class PWElementMainCountdown extends PWElements {
             'countdown_end' => $countdown_next_year,
             'countdown_text' => self::languageChecker(
                 <<<PL
-                    Do targów pozostało:
+                Do targów pozostało:
                 PL,
                 <<<EN
-                    Until the start of the fair:
+                Until the start of the fair:
                 EN
             )
         );
@@ -230,18 +230,18 @@ class PWElementMainCountdown extends PWElements {
         $output_button = array(
             'countdown_btn_text' => self::languageChecker(
                 <<<PL
-                    Zostań wystawcą
+                Zostań wystawcą
                 PL,
                 <<<EN
-                    Book a stand
+                Book a stand
                 EN
             ),
              'countdown_btn_url' => self::languageChecker(
                 <<<PL
-                    /zostan-wystawca/
+                /zostan-wystawca/
                 PL,
                 <<<EN
-                    /en/become-an-exhibitor
+                /en/become-an-exhibitor
                 EN
             )
         );
@@ -274,6 +274,8 @@ class PWElementMainCountdown extends PWElements {
         $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
         $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important;';
         $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important;';
+
+        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         
         if($atts['custom_timer'] || $atts["add_timer"]){
             $right_countdown = self::getRightData($countdown);
@@ -283,8 +285,12 @@ class PWElementMainCountdown extends PWElements {
 
         $countdown_bg = ($right_countdown[0]['turn_off_countdown_bg'] == 'true') ? 'inherit' : self::$accent_color;
         $countdown_width = ($right_countdown[0]['countdown_limit_width'] == 'true') ? '1200px' : '100%';
-        $countdown_font_size = self::findColor($right_countdown[0]['countdown_font_size'], '18px');
-        $countdown_font_weight = self::findColor($right_countdown[0]['countdown_weight'], '700');
+        $countdown_font_weight = ($right_countdown[0]['countdown_weight'] == '') ? '700' : $right_countdown[0]['countdown_weight'];
+
+        if ($mobile != 1) {
+            $countdown_font_size = ($right_countdown[0]['countdown_font_size'] == '') ? '18px' : $right_countdown[0]['countdown_font_size'];
+        } else $countdown_font_size = ($right_countdown[0]['countdown_font_size'] == '') ? '16px' : $right_countdown[0]['countdown_font_size'];
+        $countdown_font_size = str_replace("px", "", $countdown_font_size);
         
         $ending_date = new DateTime($right_countdown[0]['countdown_end']);
         
@@ -309,18 +315,20 @@ class PWElementMainCountdown extends PWElements {
                 .pwelement_' . self::$rnd_id . '{
                     #main-timer p {
                         ' . $text_color . '
-                        margin: 9px;
-                        font-size: ' . $countdown_font_size . ';
+                        margin: 9px auto;
+                        font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
                     }
-                    .pwe-btn{
+                    .pwe-btn {
                         ' . $btn_text_color 
                         . $btn_color
                         . $btn_shadow_color . '
-                        margin: 9px; 
+                        margin: 9px 18px; 
+                        transform: scale(1) !important;
                     }
                     .pwe-timer-text {
                         font-weight: ' . $countdown_font_weight . ';
                         text-transform: uppercase;
+                        margin: 9px auto;
                     }
                     .countdown-container {                    
                         display: flex;
@@ -357,9 +365,9 @@ class PWElementMainCountdown extends PWElements {
             if ($right_countdown[0]['turn_off_countdown_text'] != true && $right_countdown[0]['countdown_text'] != '') {    
                 $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
             };
-                $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                            ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ' . $date_dif->s . ' sekund 
-                        </p>';
+            $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                        ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ' . $date_dif->s . ' sekund 
+                    </p>';
             if ($right_countdown[0]['turn_off_countdown_button'] != true && $right_countdown[0]['countdown_btn_text'] != '') {
                 $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
             };
