@@ -3,7 +3,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI:
  * Description: Adding a new element to the website PRO.
- * Version: 1.3.2
+ * Version: 1.4
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  */
@@ -13,6 +13,7 @@ class PWElementsPlugin {
         // Czyszczenie pamięci wp_rocket
         add_action( 'upgrader_process_complete', array( $this, 'clearWpRocketCacheOnPluginUpdate' ), 10, 2 );
         $this->initClasses();
+        $this->init();
     }
 
     private function initClasses() {
@@ -51,17 +52,25 @@ class PWElementsPlugin {
         }
     }
     
-    public static function init() {
-        // Dodaj akcję do czyszczenia pamięci podręcznej WP Rocket po aktualizacji wtyczki
-        add_action( 'upgrader_process_complete', array( 'YourClassName', 'clear_wp_rocket_cache_on_plugin_update' ), 10, 2 );
-
+    private function init() {
         // Adres autoupdate
-        include_once plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php';
+        include( plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php');
         $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-            'https://github.com/RumianekMarek/PWElement',
+            'https://github.com/RumianekMarek/pwelements',
             __FILE__,
             'pwelements'
         );
+
+        $myUpdateChecker->getVcsApi()->enableReleaseAssets();
+
+        // // Adres autoupdate
+        // $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+        //     'https://github.com/RumianekMarek/Custom-Element',
+        //     __FILE__,
+        //     'custom-element'
+        // );
+
+        // $myUpdateChecker->getVcsApi()->enableReleaseAssets();
     }
 }
 
