@@ -8,28 +8,24 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         const createPattern = (unknown = false) => {
             if (unknown === true) {
                 const pattern = '+999999999';
-                console.log(pattern.replace(new RegExp("[0-9]", "g"), "9"));
                 return pattern.replace(new RegExp("[0-9]", "g"), "9");
             }
             const titles = $('.iti__selected-flag').attr('title').split('+');
             const pattern = '+' + titles[1] + ' ' + $(phone_id).attr('placeholder');
-            console.log(pattern.replace(new RegExp("[0-9]", "g"), "9"));
             return pattern.replace(new RegExp("[0-9]", "g"), "9");
         }
 
-        const updatePhone = (title, number = '') => {
+        const updatePhone = (title, paste = false) => {
             main_pattern = createPattern();
             newValue = title.split('+');
-            if (!$(phone_id).val().startsWith('+')) {
-                $(phone_id).val('+' + $(phone_id).val());
+
+            if (!$(phone_id).val().startsWith('+') || $(phone_id).val().length > 4 || paste === true) {
+                console.log(title + paste + 'paste');
+                $(phone_id).val('+' + newValue[1] + ' ');
             }
 
-            if ($(phone_id).val().startsWith(newValue[1]) || $(phone_id).val().startsWith('+' + newValue[1])) {
-            } else {
-                $(phone_id).val('+' + newValue[1] + ' ');
-                if (main_pattern[$(phone_id).val().length] === '(') {
-                    $(phone_id).val($(phone_id).val() + '(');
-                }
+            if (main_pattern[$(phone_id).val().length] === '(') {
+                $(phone_id).val($(phone_id).val() + '(');
             }
         }
 
@@ -39,12 +35,13 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
                     if ($(mutation.target).attr('title') == 'Unknown') {
                         main_pattern = createPattern(true);
                     } else if ($(phone_id).val().length < 1) {
-                        updatePhone($(mutation.target).attr('title'), $(phone_id).val());
-                        // } else if ($(mutation.target).attr('title') != old_title) {
-                        //     updatePhone($(mutation.target).attr('title'), '');
+                        updatePhone($(mutation.target).attr('title'));
                     } else {
-                        console.log($(mutation.target).attr('title'));
-                        main_pattern = createPattern();
+                        if (old_title != $(mutation.target).attr('title')) {
+                            updatePhone($(mutation.target).attr('title'));
+                            old_title = $(mutation.target).attr('title');
+                            main_pattern = createPattern();
+                        }
                     }
                 }
             }
@@ -58,30 +55,16 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
 
             }
 
-
-
             $(phone_id).intlTelInput(options);
 
             var targetUL = document.querySelector('.iti__selected-flag');
 
             updatePhone($(targetUL).attr('title'));
             old_title = $(targetUL).attr('title')
-            console.log('old - ' + old_title);
             var config = { attributes: true };
             observer.observe(targetUL, config);
-            setTimeout(function () { main_pattern = createPattern() }, 200);
+            setTimeout(function () { main_pattern = createPattern() }, 500);
         }
-
-        // const checkPattern = (number, pattern) => {
-        //     for (i = 0; i < number.length; i++) {
-        //         if (pattern[i] != number[i]) {
-        //             console.log(pattern[i] + ' ' + number[i]);
-        //             if (pattern[i] === '9' && !/[0-9]/.test(number[i])) {
-        //                 delete number[i];
-        //             } elseif ()
-        //         }
-        //     }
-        // }
 
         $(phone_id).on('input', function () {
             if (!$(this).val().startsWith('+')) {
@@ -106,6 +89,13 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
                     $(this).val($(this).val() + main_pattern[$(this).val().length]);
                 }
             }
+        });
+
+        $(phone_id).on('paste', function (event) {
+            const pastedText = (event.originalEvent.clipboardData || window.clipboardData).getData('text');
+            if (/[^+\d()]/u.test(pastedText)) {
+                event.preventDefault();
+            };
         });
 
         $(phone_id).attr('type', 'tel');
