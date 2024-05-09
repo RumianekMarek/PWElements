@@ -10,7 +10,7 @@ if (get_locale() == 'pl_PL') {
     $pwe_congress_widget_button = ($pwe_congress_widget_button == '') ? 'TAKE PART' : $pwe_congress_widget_button;
 }
 
-$pwe_congress_widget_buttons_width = ($pwe_congress_widget_buttons_width == '') ? '200px' : $pwe_congress_widget_buttons_width;
+$pwe_congress_widget_buttons_width = ($pwe_congress_widget_buttons_width == '') ? '240px' : $pwe_congress_widget_buttons_width;
 $pwe_congress_widget_color = $pwe_congress_widget_color == '' ? $btn_color : $pwe_congress_widget_color;
 
 $output .= '
@@ -47,7 +47,7 @@ $output .= '
             padding: 0 0 4px;
         }
         .header-conference-item img {
-            width: 150px;
+            width: 180px;
         }
         .header-conference-caption {
             font-size: 12px;
@@ -75,6 +75,8 @@ $output .= '
             color: '. $text_color .';
             text-shadow: 2px 2px '. $text_shadow .';
             font-size: 20px;
+            max-width: 240px;
+            text-align: center;
         }
         .header-conference-button {
             background-color: '. $btn_color .';

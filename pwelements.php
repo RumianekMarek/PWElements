@@ -3,7 +3,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI:
  * Description: Adding a new element to the website PRO.
- * Version: 1.4
+ * Version: 1.5
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  */
@@ -55,22 +55,14 @@ class PWElementsPlugin {
     private function init() {
         // Adres autoupdate
         include( plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php');
+        
         $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-            'https://github.com/RumianekMarek/pwelements',
+            'https://github.com/RumianekMarek/PWElements',
             __FILE__,
-            'pwelements'
+            'PWElements'
         );
 
         $myUpdateChecker->getVcsApi()->enableReleaseAssets();
-
-        // // Adres autoupdate
-        // $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-        //     'https://github.com/RumianekMarek/Custom-Element',
-        //     __FILE__,
-        //     'custom-element'
-        // );
-
-        // $myUpdateChecker->getVcsApi()->enableReleaseAssets();
     }
 }
 
