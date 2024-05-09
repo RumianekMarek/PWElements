@@ -835,11 +835,6 @@ class PWEHeader {
                         opacity: 0;
                     }
                 }
-                @media (max-width:960px) {
-                    .row-parent:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-header) {
-                        padding: 0 !important;  
-                    }
-                }
                 @media (min-width: 300px) and (max-width: 1200px) {
                     .pwelement_'.SharedProperties::$rnd_id.' {
                         .pwe-header-text h1 {
@@ -850,7 +845,10 @@ class PWEHeader {
                         }
                     }
                 }
-                @media (max-width:700px) {
+                @media (max-width:960px) {
+                    .row-parent:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-header) {
+                        padding: 0 !important;  
+                    }
                     .pwelement_'.SharedProperties::$rnd_id.' {
                         .pwe-header-logotypes .pwe-container-logotypes-gallery {
                             width: 100% !important;
@@ -859,7 +857,7 @@ class PWEHeader {
                             width: 260px;
                             height: 70px;
                         }
-                        .pwe-header .btn {
+                        .pwe-header .pwe-btn {
                             font-size: 13px;
                         }
                     }
@@ -1015,7 +1013,7 @@ class PWEHeader {
                                         $output .='</div>';
                                 }
                                 if (in_array('ticket', explode(',', $pwe_header_button_on))) {
-                                    $output .= '<div id="custopweBtnTickets" class="pwe-btn-container header-button">';
+                                    $output .= '<div id="pweBtnTickets" class="pwe-btn-container header-button">';
                                         $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_tickets_button_link .'" '. 
                                                         self::languageChecker(
                                                             <<<PL
@@ -1034,7 +1032,7 @@ class PWEHeader {
                                     } else {
                                         $pwe_header_conferences_title = urldecode(base64_decode($pwe_header_conferences_title));
                                     }
-                                    $output .= '<div id="custopweBtnConferences" class="pwe-btn-container header-button">';
+                                    $output .= '<div id="pweBtnConferences" class="pwe-btn-container header-button">';
                                     $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_conferences_button_link .'" '. $target_blank .' title="'.
                                                     self::languageChecker(
                                                         <<<PL

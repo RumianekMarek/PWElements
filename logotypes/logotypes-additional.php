@@ -76,6 +76,7 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                         'param_name' => 'logotype_color',
                         'save_always' => true,
                         'admin_label' => true,
+                        'value' => array(__('True', 'pwelement') => 'true',),
                     ),
                     array(
                         'type' => 'textfield',
@@ -169,17 +170,6 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                 }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title {
                     justify-content: center;
-                }
-                
-                /* FOR HEADER OLD */
-                #page-header .pwe-logotypes-gallery-wrapper{
-                    padding-bottom: 36px; 
-                }
-                #page-header .pwelement_'. SharedProperties::$rnd_id .' .pwe-logotypes-title {
-                    justify-content: center;
-                }
-                #page-header .pwe-logotypes-title h4 {
-                    color: white;
                 }
                 
             </style>';

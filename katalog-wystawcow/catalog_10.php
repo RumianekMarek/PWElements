@@ -26,7 +26,7 @@ class PWECatalog10 extends PWECatalog {
             <div id="top10" class="custom-catalog main-heading-text">
                 <h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['title'], $atts['format']).'</h2>
                 <div class="img-container-top10">';
-                    if (($atts["slider_desctop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )){
+                    if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )){
                         $slider_array = array();
                         foreach($exhibitors as $exhibitor){
                             $slider_array[] = array(

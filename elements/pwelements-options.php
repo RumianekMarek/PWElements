@@ -53,6 +53,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'registration.php';
         require_once plugin_dir_path(__FILE__) . 'registration-content.php';
         require_once plugin_dir_path(__FILE__) . 'association.php';
+        require_once plugin_dir_path(__FILE__) . 'zaproszenie.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -206,6 +207,7 @@ class PWElements {
                         ...PWElementRegistration::initElements(),
                         ...PWElementRegContent::initElements(),
                         ...PWElementAssociates::initElements(),
+                        ...PWElementInvite::initElements(),
                     ),
                 ),
             ));
@@ -258,6 +260,7 @@ class PWElements {
             'Wydarzenia ogólne'              => 'PWElementConferences',
             'Wypromuj się na targach'        => 'PWElementPromot',
             'Zabudowa'                       => 'PWElementStand',
+            'Zaproszenie'                    => 'PWElementInvite',
         );
     }
 
@@ -306,6 +309,7 @@ class PWElements {
             'PWElementConferences'      => 'wydarzenia-ogolne.php',
             'PWElementPromot'           => 'promote-yourself.php',
             'PWElementStand'            => 'zabudowa.php',
+            'PWElementInvite'           => 'zaproszenie.php',
         );
     }
 

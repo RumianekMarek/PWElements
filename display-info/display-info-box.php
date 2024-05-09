@@ -22,22 +22,10 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
 
         $element_output = array(
             array(
-                'type' => 'textfield',
-                'group' => 'main',
-                'heading' => __('Custom Id', 'pwe_display_info'),
-                'param_name' => 'lecture_id',
-                'description' => __('Custom ID will by added to main lecture ID.', 'pwe_display_info'),
-                'admin_label' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
                 'type' => 'checkbox',
                 'group' => 'main',
                 'heading' => __('Simple form', 'pwe_display_info'),
-                'param_name' => 'simple_mode',
+                'param_name' => 'info_box_simple_mode',
                 'description' => __('To display in simpler form.', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
@@ -50,7 +38,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 'type' => 'textfield',
                 'group' => 'main',
                 'heading' => __('Title', 'pwe_display_info'),
-                'param_name' => 'event_title',
+                'param_name' => 'info_box_event_title',
                 'save_always' => true,
                 'admin_label' => true,
                 'dependency' => array(
@@ -62,7 +50,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 'type' => 'textfield',
                 'group' => 'main',
                 'heading' => __('Event time', 'pwe_display_info'),
-                'param_name' => 'event_time',
+                'param_name' => 'info_box_event_time',
                 'save_always' => true,
                 'admin_label' => true,
                 'dependency' => array(
@@ -83,10 +71,23 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 ),
             ),
             array(
+                'type' => 'textarea_raw_html',
+                'group' => 'main',
+                'heading' => __('Show more text', 'pwe_display_info'),
+                'param_name' => 'info_box_show_more',
+                'description' => __('Hidden text', 'pwe_display_info'),
+                'param_holder_class' => 'backend-textarea-raw-html',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoBox',
+                ),
+            ),
+            array(
                 'heading' => __('Speakers', 'pwe_display_info'),
                 'group' => 'main',
                 'type' => 'param_group',
-                'param_name' => 'speakers',
+                'param_name' => 'info_box_speakers',
                 'save_always' => true,
                 'params' => array(
                     array(
@@ -117,9 +118,9 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             array(
                 'type' => 'textfield',
                 'group' => 'options',
-                'heading' => __('Border Radius', 'pwe_display_info'),
-                'param_name' => 'border_radius',
-                'description' => __('Outside border radius(px or %).', 'pwe_display_info'),
+                'heading' => __('Info Box Style', 'pwe_display_info'),
+                'param_name' => 'info_box_styles',
+                'description' => __('Example: "border: 1px solid red; border-radius: 10px; padding: 18px; box-shadow: 4px 4px 7px 2px; ..."', 'pwe_display_info'),
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -129,81 +130,8 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             array(
                 'type' => 'textfield',
                 'group' => 'options',
-                'heading' => __('Border Width', 'pwe_display_info'),
-                'param_name' => 'border_width',
-                'description' => __('Outside border width.', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
-                'type' => 'textfield',
-                'group' => 'options',
-                'heading' => __('Border Style', 'pwe_display_info'),
-                'param_name' => 'border_style',
-                'description' => __('Outside style (example -> solid).', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
-                'type' => 'colorpicker',
-                'group' => 'options',
-                'heading' => __('Border Color', 'pwe_display_info'),
-                'param_name' => 'border_color',
-                'description' => __('Outside border color.', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
-                'type' => 'colorpicker',
-                'group' => 'options',
-                'heading' => __('Lecturers color', 'pwe_display_info'),
-                'param_name' => 'lect_color',
-                'description' => __('Color for lecturers names.', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
-                'type' => 'checkbox',
-                'group' => 'options',
-                'heading' => __('Shadow', 'pwe_display_info'),
-                'param_name' => 'shadow',
-                'description' => __('Check to display shadow. ONLY full catalog.', 'pwe_display_info'),
-                'admin_label' => true,
-                'value' => array(__('True', 'pwe_display_info') => 'true',),
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
-                'type' => 'colorpicker',
-                'group' => 'options',
-                'heading' => __('Tile Color', 'pwe_display_info'),
-                'param_name' => 'title_color',
-                'description' => __('Color for buton lecture Title.', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoBox',
-                ),
-            ),
-            array(
-                'type' => 'textfield',
-                'group' => 'options',
-                'heading' => __('Tile size', 'pwe_display_info'),
-                'param_name' => 'title_size',
+                'heading' => __('Title size', 'pwe_display_info'),
+                'param_name' => 'info_box_title_size',
                 'description' => __('Title font size.', 'pwe_display_info'),
                 'save_always' => true,
                 'dependency' => array(
@@ -215,7 +143,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 'type' => 'checkbox',
                 'group' => 'options',
                 'heading' => __('Tittle on top', 'pwe_display_info'),
-                'param_name' => 'title_top',
+                'param_name' => 'info_box_title_top',
                 'description' => __('Check to move Title to top of Lecturers.', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
@@ -225,10 +153,25 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 ),
             ),
             array(
-                'type' => 'textarea',
-                'group' => 'pop-UP',
-                'heading' => __('Modal info for pictures', 'pwe_display_info'),
-                'param_name' => 'event_modal',
+                'type' => 'colorpicker',
+                'group' => 'options',
+                'heading' => __('Lecturers color', 'pwe_display_info'),
+                'param_name' => 'info_box_lect_color',
+                'description' => __('Color for lecturers names.', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-one-third-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoBox',
+                ),
+            ),
+            array(
+                'type' => 'colorpicker',
+                'group' => 'options',
+                'heading' => __('Title Color', 'pwe_display_info'),
+                'param_name' => 'info_box_title_color',
+                'description' => __('Color for buton lecture Title.', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-one-third-width',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -238,9 +181,10 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             array(
                 'type' => 'textfield',
                 'group' => 'options',
-                'heading' => __('BIO Img size', 'pwe_display_info'),
-                'param_name' => 'modal_img_size',
-                'description' => __('Size of the Img for "BIO" description. max 300px', 'pwe_display_info'),
+                'heading' => __('Bio container width (desktop)', 'pwe_display_info'),
+                'param_name' => 'info_box_bio_container_width_desktop',
+                'description' => __('Default 20%;', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-one-third-width',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -248,11 +192,12 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 ),
             ),
             array(
-                'type' => 'colorpicker',
+                'type' => 'textfield',
                 'group' => 'options',
-                'heading' => __('BIO BTN Color', 'pwe_display_info'),
-                'param_name' => 'bio_color',
-                'description' => __('Color for buton "BIO".', 'pwe_display_info'),
+                'heading' => __('Image modal width (desktop)', 'pwe_display_info'),
+                'param_name' => 'info_box_modal_img_width_desktop',
+                'description' => __('Default 150px;', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-half-width',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -260,11 +205,12 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 ),
             ),
             array(
-                'type' => 'colorpicker',
+                'type' => 'textfield',
                 'group' => 'options',
-                'heading' => __('BIO BTN Text Color', 'pwe_display_info'),
-                'param_name' => 'bio_text',
-                'description' => __('Color for text on buton "BIO" .', 'pwe_display_info'),
+                'heading' => __('Image modal width (mobile)', 'pwe_display_info'),
+                'param_name' => 'info_box_modal_img_width_mobile',
+                'description' => __('Default 120px;', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-half-width',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -274,21 +220,21 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             array(
                 'type' => 'checkbox',
                 'group' => 'options',
-                'heading' => __('Photo/Bio box', 'pwe_display_info'),
-                'param_name' => 'photo_box',
-                'description' => __('Check to show Photo/Bio box at left side.', 'pwe_display_info'),
+                'heading' => __('Hide Photo/BIO block ', 'pwe_display_info'),
+                'param_name' => 'info_box_hide_photo',
+                'description' => __('Check to hide photo.', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
                 'dependency' => array(
                     'element' => 'display_info_format',
                     'value' => 'PWEDisplayInfoBox',
                 ),
-                ),
+            ),
             array(
                 'type' => 'checkbox',
                 'group' => 'options',
                 'heading' => __('Photo as square', 'pwe_display_info'),
-                'param_name' => 'photo_squer',
+                'param_name' => 'info_box_photo_square',
                 'description' => __('Check to show photos as square.', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
@@ -307,30 +253,30 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
      * 
      * @param array @atts options
      */
-    private static function speakerImageMini($speakers_images) {
-        if (count($speakers_images) < 1){
-            $speaker_html = '<div class="speakers"></div>';
+    private static function speakerImageMini($speaker_images) {
+        if (count($speaker_images) < 1){
+            $speaker_html = '<div class="pwe-box-speakers"></div>';
         } else {
-            $speaker_html = '<div class="speakers-img">';
-            $haed_images = array_filter($speakers_images);
-            $haed_images = array_values($haed_images);
+            $speaker_html = '<div class="pwe-box-speakers-img">';
+            $head_images = array_filter($speaker_images);
+            $head_images = array_values($head_images);
 
-            for ($i = 0; $i < count($haed_images); $i++) {    
+            for ($i = 0; $i < count($head_images); $i++) {    
                         
-                if (isset($haed_images[$i])) {
-                    $image_src = wp_get_attachment_image_src($haed_images[$i], 'full');
+                if (isset($head_images[$i])) {
+                    $image_src = wp_get_attachment_image_src($head_images[$i], 'full');
 
                     
                     if ($image_src) {
-                        if (!$photo_squer){
+                        if (!$info_box_photo_squer){
                             $b_radius = 'border-radius: 50%;';
                         }
                         $z_index = (1 + $i);
                         $margin_top_index = '';
                         
-                        $max_width_index = "35%";
+                        $max_width_index = "50%";
                         
-                        switch (count($haed_images)) {
+                        switch (count($head_images)) {
                             case 1:
                                 $top_index = "unset";
                                 $left_index = "unset";
@@ -342,13 +288,13 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                     case 0:
                                         $margin_top_index = "margin-top : 20px";
                                         $max_width_index = "50%";
-                                        $top_index = "-30px";
+                                        $top_index = "-20px";
                                         $left_index = "10px";
                                         break;
                         
                                     case 1:
                                         $max_width_index = "50%";
-                                        $top_index = "-10px";
+                                        $top_index = "0";
                                         $left_index = "-10px";
                                         break;
                                 }
@@ -357,8 +303,8 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                             case 3:
                                 switch ($i) {
                                     case 0:
-                                        $top_index = "15px";
-                                        $left_index = "unset";
+                                        $top_index = "0";
+                                        $left_index = "15px";
                                         break;
                         
                                     case 1:
@@ -395,7 +341,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                 }
                         }
                         
-                        $speaker_html .= '<img class="speaker" src="' . esc_url($image_src[0]) . '" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; '.$b_radius.' z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
+                        $speaker_html .= '<img class="pwe-box-speaker" src="' . esc_url($image_src[0]) . '" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; '.$b_radius.' z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
                     }
                 }
             }
@@ -410,160 +356,479 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
      * @param array @atts options
      */
     public static function output($atts, $content = null) {
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
+        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], '#777');
+        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
 
-        $rn = rand(10000, 99999);
+        $rnd = rand(10000, 99999);
 
         extract( shortcode_atts( array(
-            'simple_mode' => '',
-            'event_time' => '',
-            'event_title' => '',
-            'border_radius' => '',
-            'border_style' => '',
-            'border_color' => '',
-            'lect_color' => '',
-            'bio_color' => '',
-            'title_color' => '',
-            'shadow' => '',
-            'photo_box' => '',
-            'photo_squer' => '',
-            'title_top' => '',
-            
+            'info_box_simple_mode' => '',
+            'info_box_event_time' => '',
+            'info_box_event_title' => '',
+            'info_box_speakers' => '',
+            'info_box_show_more' => '',
+            'info_box_styles' => '',
+            'info_box_lect_color' => '',
+            'info_box_title_color' => '',
+            'info_box_title_size' => '',
+            'info_box_bio_container_width_desktop' => '',
+            'info_box_modal_img_width_desktop' => '',
+            'info_box_modal_img_width_mobile' => '',
+            'info_box_hide_photo' => '',
+            'info_box_title_top' => '', 
+            'info_box_photo_square' => '',
         ), $atts ));
 
-        $locale = get_locale();
+        if ($info_box_simple_mode != true) {
+            $info_box_lect_color = empty($info_box_lect_color) ? 'black' : $info_box_lect_color;
+        } else $info_box_lect_color = empty($info_box_lect_color) ? self::$accent_color : $info_box_lect_color;
 
-        $lecture_id = !empty($atts['lecture_id']) ? $atts['lecture_id'] : $rn;
+        $info_box_bio_btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important';
+        $info_box_bio_btn_text = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . ' !important;';
 
-        $speakers = vc_param_group_parse_atts($atts['speakers']);
+        $info_box_bio_container_width_desktop = empty($info_box_bio_container_width_desktop) ? '200px' : $info_box_bio_container_width_desktop;
 
-        $event_desc = wpb_js_remove_wpautop($content, true);
+        $info_box_modal_img_width_desktop = empty($info_box_modal_img_width_desktop) ? '150px' : $info_box_modal_img_width_desktop;
+        $info_box_modal_img_width_mobile = empty($info_box_modal_img_width_mobile) ? '120px' : $info_box_modal_img_width_mobile;
+        $info_box_title_size = empty($info_box_title_size) ? '18px' : $info_box_title_size;
+        $info_box_photo_square = $info_box_photo_square != true ? '50%' : '0';
 
-        $border_radius = ($atts['border_radius']) ? 'border-radius: '.$atts['border_radius'].';': '';
-        $border_width = !empty($atts['border_width']) ? $atts['border_width'] : '0';
-        $border_style = !empty($atts['border_style']) ? $atts['border_style'] : 'solid';
-        $border_color = !empty($atts['border_color']) ? $atts['border_color'] : '#000000';
-        $lect_color = !empty($atts['lect_color']) ? 'color: '.$atts['lect_color'].';' : 'color: #000000;';
-        $bio_color = !empty($atts['bio_color']) ? $atts['bio_color'] : '#000000';
-        $title_color = !empty($atts['title_color']) ? $atts['title_color'] : '#000000';
-        $shadow = !empty($atts['shadow']) ? 'box-shadow: 4px 4px 7px 2px;' : '';
-        $photo_box = !empty($atts['photo_box']) ? $atts['photo_box'] : '';
-        $modal_img_size = !empty($atts['modal_img_size']) ? 'width: '.$atts['modal_img_size'].';' : 'width: 120px;';
-        $bio_text = !empty($atts['bio_text']) ? 'color: '.$atts['bio_text'].'!important;' : 'color: white !important;';
-        $title_size = !empty($atts['title_size']) ? ' font-size: '.$atts['title_size'].'!important; ' : '';
-
-        
-        $event_title = str_replace('``','"', $event_title);
-        $event_time = str_replace('``','"', $event_time);
-        $event_desc = str_replace('<script>','', $event_desc);
-
-        $speakers_images = array('speaker');
-
-        $uncode_options = get_option('uncode');
-
-        foreach($speakers as $main_id => $speaker){
-            foreach($speaker as $id => $key){
-                if($id == 'speaker_name'){
-                    $speakers_names[$main_id] = $key;
+        $output = '
+        <style>
+            #info-box-'. self::$rnd_id .' {
+                display: flex;
+                gap: 18px;
+                '. $info_box_styles .'
+                
+                .pwe-box-speakers {
+                    width: '. $info_box_bio_container_width_desktop .';
+                    min-width: '. $info_box_bio_container_width_desktop .';
+                    display: flex;
+                    flex-direction: column;
+                    text-align: center;
                 }
-                if($id == 'speaker_image'){
-                    $speakers_images[$main_id] = $key;
+                .pwe-box-speaker {
+                    border: 2px solid gray;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
                 }
-                if($id == 'speaker_bio'){
-                    $speakers_bios[$main_id] = $key;
+                .pwe-box-info {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 10px;
                 }
+                .pwe-box-speakers-img {
+                    border-radius: '. $info_box_photo_square .';
+                }
+                .pwe-box-speaker-btn {
+                    margin: 10px auto !important;
+                    box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
+                    background-color: '. $btn_color .';
+                    color: '. $btn_text_color .';
+                    border: '. $btn_border .';
+                    padding: 6px 16px;
+                    font-weight: 600;
+                    width: 80px;
+                    transition: .3s ease;
+                }
+                .pwe-box-speaker-btn:hover {
+                    box-shadow: 4px 4px 0px -1px black !important;
+                    color: black !important;
+                    background-color: white !important;
+                }
+                .pwe-box-lecture-time,
+                .pwe-box-lecture-title,
+                .pwe-box-lecturer-name {
+                    margin: 0;
+                }
+                .pwe-box-lecture-desc p {
+                    font-size: 15px;
+                    margin: 8px 0 0;
+                }
+            }
+            #pweBoxModal-'. $rnd .' {
+                position: fixed;
+                z-index: 9999;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background-color: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                visibility: hidden;
+                transition: opacity 0.3s, visibility 0.3s;
+
+                .pwe-box-modal-content {
+                    position: relative;
+                    background-color: #fefefe;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    border-radius: 20px;
+                    overflow-y: auto;
+                    width: 90%;
+                    max-width: 800px;
+                    max-height: 90%;
+                    transition: transform 0.3s;
+                    transform: scale(0);
+                }
+                .pwe-box-modal-close {
+                    position: absolute;
+                    right: 18px;
+                    top: -6px;
+                    color: #000;
+                    float: right;
+                    font-size: 50px;
+                    font-weight: bold;
+                    transition: transform 0.3s;
+                    font-family: cursive;
+                }
+                .pwe-box-modal-close:hover,
+                .pwe-box-modal-close:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
+                    transform: scale(1.2);
+                }
+                .pwe-box-modal-content {
+                    display:flex; 
+                    flex-direction: column;
+                    align-items:center; 
+                    padding:20px;
+                    gap: 18px;
+                }
+                .pwe-box-modal-speaker {
+                    width: 100%;
+                    display: flex;
+                    gap: 18px;
+                }
+                .pwe-box-modal-image {
+                    min-width: '. $info_box_modal_img_width_desktop .';
+                    max-width: '. $info_box_modal_img_width_desktop .';
+                }
+                .pwe-box-modal-name {
+                    margin: 0;
+                }
+                .pwe-modal-hr-container {
+                    width: 100%;
+                }
+                .pwe-modal-hr {
+                    margin: 6px 0;
+                    border: 0;
+                    width: 100%;
+                    height: 1px;
+                    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, .75)), to(rgba(0, 0, 0, 0)));
+                    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .75), rgba(0, 0, 0, 0));
+                }
+            }
+            #pweBoxModal-'. $rnd .'.is-visible {
+                opacity: 1;
+                visibility: visible;
+
+                .pwe-box-modal-content {
+                    transform: scale(1);
+                }
+                .pwe-box-modal-image {
+                    border-radius: 10px;
+                }
+            }
+            @media (max-width:650px) {
+                #info-box-'. self::$rnd_id .' {
+                    flex-direction: column;
+
+                    .pwe-box-speakers {
+                        width: 100% !important;
+                        max-width: 300px;
+                        margin: 0 auto;
+                    }
+                    .pwe-box-speaker {
+                        width: 150px;
+                    }
+                    .pwe-box-info {
+                        width: 100% !important;
+                    }
+                }
+                #pweBoxModal-'. $rnd .' {
+                    .pwe-box-modal-speaker {
+                        flex-direction: column;
+                    }
+                    .pwe-box-modal-speaker-img {
+                        text-align: center;
+                    }
+                    .pwe-box-modal-image {
+                        min-width: '. $info_box_modal_img_width_mobile .';
+                        max-width: '. $info_box_modal_img_width_mobile .';
+                    }
+                    .pwe-box-modal-bio {
+                        font-size: 14px;
+                    }
+                    .pwe-box-modal-name {
+                        text-align: center;
+                    }
+                }
+            }
+        </style>';
+
+        // Main content field
+        $info_box_event_desc = wpb_js_remove_wpautop($content, true);
+
+        // Show more content field
+        $info_box_show_more_decoded = base64_decode($info_box_show_more);// Decoding Base64
+        $info_box_show_more_decoded = urldecode($info_box_show_more_decoded); // Decoding URL
+        $info_box_event_hidden_desc = wpb_js_remove_wpautop($info_box_show_more_decoded, true);// Remowe wpautop
+
+        // Create arrays
+        $speaker_images = [];
+        $speaker_names = [];
+        $speaker_bio = [];
+
+        // Decoding and get speakers data
+        $speakers_urldecode = urldecode($info_box_speakers);
+        $speakers_json = json_decode($speakers_urldecode, true);
+        if (is_array($speakers_json)) {
+            foreach ($speakers_json as $key => $speaker){
+                $speaker_images[] = $speaker["speaker_image"];
+                $speaker_names[] = $speaker["speaker_name"];
+                $speaker_bio[] = $speaker["speaker_bio"];
+
+                // Image src for modal
+                $images = $speaker["speaker_image"];
+                $speaker_images_src = wp_get_attachment_url($images); 
+                $speakers_json[$key]['speaker_image_url'] = $speaker_images_src;
             }
         }
-        if (!$simple_mode){
 
-            $modal_html = '<div class="modal-lecturers">';
-
-            if($photo_box){
-                foreach($speakers_bios as $id => $bio){
-                    if(!empty($bio)){
-                        $modal_desc = true;
-                        $modal_lecturer_display = '';
-                        $modal_html .= '<div class="lecturer" '.$modal_lecturer_display.'><div class="modal-image">';
-
-                        if(!empty($speakers_images[$id])){
-                            $image_src = wp_get_attachment_image_src($speakers_images[$id], 'full');
-                            $modal_html .= '<img class="alignleft" src="'.$image_src[0].'" style="'.$modal_img_size.'">';
-                        }
-
-                        $modal_html .= '<h3 style="'.$lect_color.'">'.$speakers_names[$id].'</h3>';
-                        $modal_html .= '<p style="text-align: unset; margin-left:18px;">'.$bio.'</p>';
-                        $modal_html .= '</div></div>';
-                    }
-                }
-
-                $output .= '<div id="lecture-'.$lecture_id.'" class="chevron-slide" style="'.$shadow.' border:'.$border_width.' '.$border_style.' '.$border_color.'; '.$border_radius.'">
-                        <div class="head-container">
-                        ' . self::speakerImageMini($speakers_images);
-            
-                if ($modal_desc){
-                    if (count($speakers_images) < 3){
-                        $output .=
-                                '<button class="lecturers-bio btn btn-sm lecture-btn" style="background-color:'.$bio_color.' !important; '.$bio_text.'">BIO</button>';
-                    } else {
-                        $output .=
-                                '<button class="lecturers-bio lecturers-triple btn btn-sm lecture-btn" style="background-color:'.$bio_color.' !important; '.$bio_text.'">BIO</button>';
-                    }
-                }
-                $output .= '</div>';
-                $output .= '<div class="text-container" style="width: 75%;">';
-            } else {
-                $output .= '<div id="lecture-'.$lecture_id.'" class="chevron-slide" style="'.$shadow.' border:'.$border_width.' '.$border_style.' '.$border_color.'; '.$border_radius.'">
-                        <div class="text-container" style="width: 90%;">';
-            }
-            if($speakers_names){
-                $speak_display = array_filter($speakers_names, function($value) {
-                    return $value !== "";
-                });
-            
-                $display_speakers = implode(', ', $speak_display);
-                $display_speakers = str_replace(';,','<br>',$display_speakers);
-            }
-
-            if($title_top != ''){
-                $output .= '<h4 class="lectur-time">' . $event_time . '</h4>
-                        <h3 class="inside-title" style="'.$title_size.'color:'.$title_color.';">' . $event_title . '</h3>
-                        <h5 class="lecturer-name" style="'.$lect_color.'">'.$display_speakers.'</h5>';
-            } else {
-                $output .= '<h4 class="lectur-time">' . $event_time . '</h4>
-                <h5 class="lecturer-name" style="'.$lect_color.'">'.$display_speakers.'</h5> 
-                <h3 class="inside-title" style="'.$title_size.'color:'.$title_color.';">' . $event_title . '</h3>';
-            }
-
-            if($event_desc != ''){
-                $output .='<div class="inside-text" style="max-height: 120px;"><p>' . $event_desc . '</p></div>
-                            <p class="open-desc" style="display:none"><i class="text-accent-color fa fa-chevron-down fa-1x fa-fw"></i>';
-                                if ($locale == 'pl_PL') {
-                                    $output .= 'Czytaj więcej';
-                                } else {
-                                    $output .= 'Read more';
+        // Output content
+        if ($info_box_simple_mode != true) {
+            if ($info_box_hide_photo != true) {
+                if(!empty($speaker_names[0])){
+                    $output .= '
+                    <div id="pweBoxSpeakers-'. $rnd .'" class="pwe-box-speakers">';
+                        if(!empty($speaker_images[0])){
+                            $output .= self::speakerImageMini($speaker_images);
+                        } else {
+                            $output .= '
+                            <style>
+                                #pweBoxSpeakers-'. $rnd .' {
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
                                 }
-                                $output .= '<i class="text-accent-color fa fa-chevron-down fa-1x fa-fw"></i>
-                            </p>';        
+                            </style>';
+                        }
+                        if(!empty($speaker_bio[0])){
+                            $output .='<button class="pwe-box-speaker-btn">BIO</button>';
+                        }
+                    $output .= '
+                    </div>';
+                } else {
+                    $output .= '
+                    <style>
+                        #info-box-'. self::$rnd_id .' {
+                            width: 100% !important;
+                            .pwe-box-info {
+                                width: 100% !important;  
+                            }
+                        }
+                    </style>';
+                }
             }
-            $output .='</div>
-                        <div id="info-modal" class="info-modal" style="display:none;">
-                            <div class="info-modal-content">
-                            '.$modal_html.'
-                            </div>
-                            <i class="fa fa-times-circle-o fa-2x fa-fw info-close"></i>
-                        </div>
-                    </div>
-                </div>';
-        } else {
-
-            $simple_speakers = implode(', ', $speakers_names);
             
-            $output .= '<div id="lecture-'.$lecture_id.'" class="simple-lecture">
-                            <h5 class="simple-lecture-hour">'.$event_time.'</h5>
-                            <div class="simple-lecture-text">
-                                <h5>'.$event_title.'</h5>
-                                <p class="text-accent-color">'.$simple_speakers.'</p>
-                            </div>
-                        </div>';
+            $output .= '
+            <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">';
+                if($info_box_title_top == true) {
+                    $output .= '<h4 class="pwe-box-lecture-time">' . $info_box_event_time . '</h4>
+                                <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
+                                <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>
+                                <div class="pwe-box-lecture-desc" style="">';
+                                    $output .= $info_box_event_desc;
+                                    if (!empty($info_box_event_hidden_desc)) {
+                                        $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                                        $output .= '
+                                            <div style="display: none;">'. $info_box_event_hidden_desc .'</div>
+                                            <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
+                                    } $output .= '
+                                </div>';
+                } else {
+                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
+                                <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">' . implode('<br>', $speaker_names) .'</h5>
+                                <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
+                                <div class="pwe-box-lecture-desc" style="">';
+                                    $output .= $info_box_event_desc;
+                                    if (!empty($info_box_event_hidden_desc)) {
+                                        $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                                        $output .= '
+                                            <div style="display: none;">'. $info_box_event_hidden_desc .'</div>
+                                            <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
+                                    } $output .= '
+                                </div>';
+                }
+            $output .= '
+            </div>';
+            
+            $speakers = json_encode($speakers_json);
+
+            $output .= '
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const infoBox = document.querySelector("#info-box-'. self::$rnd_id .'");
+                    const speakers = ' . $speakers . ';
+                    const speakersBtn = infoBox.querySelector(".pwe-box-speaker-btn");
+
+                    // Create a new modal if the BIO button is clicked
+                    if (speakersBtn) {
+                        speakersBtn.addEventListener("click", function() {
+                            const modalDiv = document.createElement("div");
+                            modalDiv.className = "pwe-box-modal";
+                            modalDiv.id = "pweBoxModal-'. $rnd .'";
+                            modalDiv.innerHTML = `
+                                <div class="pwe-box-modal-content">
+                                    <span class="pwe-box-modal-close">&times;</span>
+                                </div>
+                            `;
+                            const modalContent = modalDiv.querySelector(".pwe-box-modal-content");
+
+                            // Using innerHTML to add speakers
+                            let speakersHTML = "";
+                            speakers.forEach(speaker => {
+                                let speakerBlock = `<div class="pwe-box-modal-speaker">`;
+
+                                if (speaker.speaker_image_url != "") {
+                                    speakerBlock += `
+                                        <div class="pwe-box-modal-speaker-img">
+                                            <img src="${speaker.speaker_image_url}" alt="Speaker Image" class="pwe-box-modal-image">
+                                        </div>
+                                    `;
+                                }
+
+                                speakerBlock += `
+                                    <div class="pwe-box-modal-speaker-text">
+                                        <h5 class="pwe-box-modal-name">${speaker.speaker_name}</h5>
+                                        <p class="pwe-box-modal-bio">${speaker.speaker_bio}</p>
+                                    </div>
+                                </div>`;
+
+                                speakersHTML += speakerBlock;
+                            });
+
+                            // Add a speaker info to the modal content container 
+                            modalContent.innerHTML += speakersHTML;
+                            // Add modal to body
+                            document.body.appendChild(modalDiv);
+
+                            // Add <hr> after each element
+                            const allSpeakers = modalContent.querySelectorAll(".pwe-box-modal-speaker");
+                            if (allSpeakers.length > 1) {
+                                allSpeakers.forEach((speaker, index) => {
+                                    // Add <hr> after each element that is not the last one
+                                    if (index < allSpeakers.length - 1) {
+                                        // Create <hr> element
+                                        const hrModalContainer = document.createElement("div");
+                                        hrModalContainer.className = "pwe-modal-hr-container";
+                                        const hrModal = document.createElement("hr");
+                                        hrModal.className = "pwe-modal-hr";
+                                        hrModalContainer.appendChild(hrModal);
+                                        speaker.parentNode.insertBefore(hrModalContainer, speaker.nextSibling);
+                                    }
+                                });
+                            }
+
+                            // Set 90% width for element
+                            const modalSpeakers = modalDiv.querySelectorAll(".pwe-box-modal-speaker .pwe-box-modal-name");
+                            if (modalSpeakers.length > 0) {
+                                modalSpeakers[0].style.width = "90%";
+                            }
+
+                            requestAnimationFrame(() => {
+                                modalDiv.classList.add("is-visible");
+                            });
+                            disableScroll();
+
+                            // Close modal
+                            modalDiv.querySelector(".pwe-box-modal-close").addEventListener("click", function() {
+                                modalDiv.classList.remove("is-visible");
+                                setTimeout(() => {
+                                    modalDiv.remove();
+                                    enableScroll();
+                                }, 300); // Wait for the animation to finish before removing
+                            });
+
+                            // If the modal is closed, remove the modal
+                            modalDiv.addEventListener("click", function(event) {
+                                if (event.target === modalDiv) {
+                                    modalDiv.classList.remove("is-visible");
+                                    setTimeout(() => {
+                                        modalDiv.remove();
+                                        enableScroll();
+                                    }, 300);
+                                }
+                            });
+                        });
+                    }
+
+                    // Disable page scrolling if the module is active
+                    function disableScroll() {
+                        document.body.style.overflow = "hidden";
+                        document.documentElement.style.overflow = "hidden";
+                    }
+                    // Enable page scrolling if the module is inactive
+                    function enableScroll() {
+                        document.body.style.overflow = "";
+                        document.documentElement.style.overflow = "";
+                    }
+                });
+
+            </script>';
+
+        } else {
+            // Output simple mode content
+            $output .= ' 
+            <style>
+                #info-box-'. self::$rnd_id .' {
+                    width: 100% !important;
+            
+                    .pwe-box-info {
+                        width: 100% !important;  
+                        flex-direction: row;
+                        justify-content: start;
+                        gap: 18px;
+                    }
+                    .pwe-box-lecture-time-container {
+                        width: 25%;
+                    }
+                    .pwe-box-lecture-info-container {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 18px;
+                    }
+                    .pwe-box-lecturer-name {
+                        font-weight: 500;
+                    }
+                    @media (max-width:960px) {
+                        .pwe-box-info {
+                            flex-direction: column !important;
+                        }
+                    }
+                }
+            </style> 
+
+            <div class="pwe-box-info">';
+                $output .= '
+                    <div class="pwe-box-lecture-time-container">
+                        <h4 class="pwe-box-lecture-time">' . $info_box_event_time . '</h4>
+                    </div>
+                    <div class="pwe-box-lecture-info-container">
+                        <h4 class="pwe-box-lecture-title" style="color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
+                        <h5 class="pwe-box-lecturer-name" style="color:' . $info_box_lect_color . ';">' . implode('<br>', $speaker_names) . '</h5>
+                    </div>';
+            $output .= '
+            </div>';
         }
 
         return $output;

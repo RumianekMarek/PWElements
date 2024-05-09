@@ -56,7 +56,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             array(
                 'type' => 'colorpicker',
                 'group' => 'options',
-                'heading' => __('Lecturers color', 'pwe_display_info'),
+                'heading' => __('Color name', 'pwe_display_info'),
                 'param_name' => 'info_speakers_lect_color',
                 'description' => __('Color for lecturers names.', 'pwe_display_info'),
                 'save_always' => true,
@@ -68,33 +68,9 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             array(
                 'type' => 'textfield',
                 'group' => 'options',
-                'heading' => __('BIO Img size', 'pwe_display_info'),
-                'param_name' => 'info_speakers_modal_img_size',
-                'description' => __('Size of the Img for "BIO" description. max 300px', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoSpeakers',
-                ),
-            ),
-            array(
-                'type' => 'colorpicker',
-                'group' => 'options',
-                'heading' => __('BIO BTN Color', 'pwe_display_info'),
-                'param_name' => 'info_speakers_bio_color',
-                'description' => __('Color for buton "BIO".', 'pwe_display_info'),
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoSpeakers',
-                ),
-            ),
-            array(
-                'type' => 'colorpicker',
-                'group' => 'options',
-                'heading' => __('BIO BTN Text Color', 'pwe_display_info'),
-                'param_name' => 'info_speakers_bio_text',
-                'description' => __('Color for text on buton "BIO" .', 'pwe_display_info'),
+                'heading' => __('Width element', 'pwe_display_info'),
+                'param_name' => 'info_speakers_element_width',
+                'description' => __('Width element', 'pwe_display_info'),
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -125,22 +101,22 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
      * @param array @atts options
      */
     public static function output($atts, $content = null) {
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
+        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], '#777');
+        $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
 
         $rnd = rand(10000, 99999);
 
         extract( shortcode_atts( array(
             'info_speakers_speakers' => '',
             'info_speakers_lect_color' => '',
-            'info_speakers_modal_img_size' => '',
-            'info_speakers_bio_color' => '',
-            'info_speakers_bio_text' => '',
+            'info_speakers_element_width' => '',
             'info_speakers_photo_square' => '',
         ), $atts ) );
 
         $info_speakers_lect_color = empty($info_speakers_lect_color) ? 'black' : $info_speakers_lect_color;
-        $info_speakers_modal_img_size = empty($info_speakers_modal_img_size) ? '150px' : $info_speakers_modal_img_size;
-        $info_speakers_bio_color = empty($info_speakers_bio_color) ? 'black' : $info_speakers_bio_color;
-        $info_speakers_bio_text = empty($info_speakers_bio_text) ? 'white' : $info_speakers_bio_text;
+        $info_speakers_element_width = empty($info_speakers_element_width) ? '150px' : $info_speakers_element_width;
         $info_speakers_photo_square = $info_speakers_photo_square != true ? '50%' : '0';
 
         $output = '
@@ -153,7 +129,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 gap: 18px;
                 
                 .pwe-speaker {
-                    width: 15%;
+                    width: '. $info_speakers_element_width .';
                     min-width: 150px;
                     display: flex;
                     flex-direction: column;
@@ -164,16 +140,18 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     color: '. $info_speakers_lect_color .';
                 }
                 .pwe-speaker-img {
-                    width: ' . $info_speakers_modal_img_size .';
+                    width: 100%;
                     border-radius: '. $info_speakers_photo_square .';
                     margin: 0 auto;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
                 }
                 .pwe-speaker-btn {
                     margin: 10px auto !important;
-                    box-shadow: 4px 4px 0px -1px #777;
-                    background-color: '. $info_speakers_bio_color .';
-                    color: '. $info_speakers_bio_text .';
-                    border: 1px solid black;
+                    box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
+                    background-color: '. $btn_color .';
+                    color: '. $btn_text_color .';
+                    border: '. $btn_border .';
                     padding: 6px 16px;
                     font-weight: 600;
                     width: 80px;
@@ -185,7 +163,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     background-color: white;
                 }
             }
-            .pwe-speaker-modal {
+            #pweSpeakerModal-'. $rnd .' {
                 position: fixed;
                 z-index: 9999;
                 left: 0;
@@ -199,47 +177,50 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 align-items: center;
                 visibility: hidden;
                 transition: opacity 0.3s, visibility 0.3s;
+
+                .pwe-speaker-modal-content {
+                    position: relative;
+                    background-color: #fefefe;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    border-radius: 20px;
+                    overflow-y: auto;
+                    width: 80%;
+                    max-width: 500px;
+                    max-height: 90%;
+                    transition: transform 0.3s;
+                    transform: scale(0);
+                }
+                .pwe-speaker-modal-close {
+                    position: absolute;
+                    right: 18px;
+                    top: -6px;
+                    color: #000;
+                    float: right;
+                    font-size: 50px;
+                    font-weight: bold;
+                    transition: transform 0.3s;
+                    font-family: cursive;
+                }
+                .pwe-speaker-modal-close:hover,
+                .pwe-speaker-modal-close:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
+                    transform: scale(1.2);
+                }
             }
-            .pwe-speaker-modal.is-visible {
+            #pweSpeakerModal-'. $rnd .'.is-visible {
                 opacity: 1;
                 visibility: visible;
-            }
-            .pwe-speaker-modal-content {
-                position: relative;
-                background-color: #fefefe;
-                margin: 15% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                border-radius: 20px;
-                overflow-y: auto;
-                width: 80%;
-                max-width: 500px;
-                max-height: 90%;
-                transition: transform 0.3s;
-                transform: scale(0);
-            }
-            .pwe-speaker-modal.is-visible .pwe-speaker-modal-content {
-                transform: scale(1);
-            }
-            .pwe-speaker-modal-image {
-                border-radius: 10px;
-            }
-            .pwe-speaker-modal-close {
-                position: absolute;
-                right: 18px;
-                top: -6px;
-                color: #000;
-                float: right;
-                font-size: 50px;
-                font-weight: bold;
-                transition: transform 0.3s;
-            }
-            .pwe-speaker-modal-close:hover,
-            .pwe-speaker-modal-close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-                transform: scale(1.2);
+
+                .pwe-speaker-modal-content {
+                    transform: scale(1);
+                }
+                .pwe-speaker-modal-image {
+                    border-radius: 10px;
+                }
             }
         </style>';
 
@@ -284,6 +265,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                         btn.addEventListener("click", function() {
                             const modalDiv = document.createElement("div");
                             modalDiv.className = "pwe-speaker-modal";
+                            modalDiv.id = "pweSpeakerModal-'. $rnd .'";
                             modalDiv.innerHTML = `
                                 <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
                                     <span class="pwe-speaker-modal-close">&times;</span>

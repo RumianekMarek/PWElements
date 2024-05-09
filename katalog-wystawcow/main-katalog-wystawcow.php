@@ -241,9 +241,9 @@ class PWECatalog {
                     ),
                     array(
                         'type' => 'checkbox',
-                        'heading' => __('Slider desctop', 'pwe_katalog'),
-                        'param_name' => 'slider_desctop',
-                        'description' => __('Check if you want to display in slider on desctop.', 'pwe_katalog'),
+                        'heading' => __('Slider desktop', 'pwe_katalog'),
+                        'param_name' => 'slider_desktop',
+                        'description' => __('Check if you want to display in slider on desktop.', 'pwe_katalog'),
                         'param_holder_class' => 'backend-basic-checkbox',
                         'admin_label' => true,
                         'save_always' => true,

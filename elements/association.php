@@ -126,6 +126,17 @@ class PWElementAssociates extends PWElements {
             }
         }
 
+        $unique_id = rand(10000, 99999);
+        $element_unique_id = 'pweAssociation-' . $unique_id;
+
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') .' !important';
+        
+        if ($text_color == "" || $text_color == "#000000 !important" || $text_color == "black !important") {
+            $text_shadow = "white";
+        } else {
+            $text_shadow = "black";
+        }
+
         if (!empty($sorted)) {
             $output .= 
             '<style>
@@ -133,6 +144,7 @@ class PWElementAssociates extends PWElements {
                 .row-container:has(.pwelement_'.self::$rnd_id.' .pwe-association) {
                     background-color: '. self::$fair_colors['Accent'] .';
                 }
+
                 .pwe-association {
                     position: relative;
                     width: 100%;
@@ -141,10 +153,10 @@ class PWElementAssociates extends PWElements {
                     display: flex;
                     justify-content: center;
                 }
-                .pwe-association-title h2 {
-                    text-shadow: 2px 2px black !important;
-                    box-shadow: 9px 9px 0px -6px white !important;
-                    color: white;
+                #'. $element_unique_id .' .pwe-association-title h2 {
+                    color: '. $text_color .';
+                    text-shadow: 2px 2px '. $text_shadow .';
+                    box-shadow: 9px 9px 0px -6px '. $text_color .';
                     margin: 0;
                 }
                 .pwe-association-logotypes {
@@ -179,9 +191,9 @@ class PWElementAssociates extends PWElements {
                                 }
                             </style>';
             }
-
+            
             $output .= '
-                <div id="pweAssociation" class="pwe-association">
+                <div id="'. $element_unique_id .'" class="pwe-association">
                     <div class="main-heading-text pwe-association-title">
                         <h2>'. 
                             self::languageChecker(

@@ -71,6 +71,19 @@ class PWElementProfile extends PWElements {
                 ),
             ),
             array(
+                'type' => 'textarea_raw_html',
+                'group' => 'PWE Element',
+                'heading' => __('Show more text', 'pwelement'),
+                'param_name' => 'profile_show_more',
+                'description' => __('Hidden text', 'pwelement'),
+                'param_holder_class' => 'backend-textarea-raw-html',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementProfile',
+                ),
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'param_name' => 'profile_images',
@@ -247,6 +260,7 @@ class PWElementProfile extends PWElements {
             'profile_border' => '',
             'profile_background' => '',
             'profile_reverse_block' => '',
+            'profile_show_more' => '',
             'profile_tickets_button_link' => '',
             'profile_register_button_link' => '',
             'profile_exhibitors_button_link' => '',
@@ -255,7 +269,13 @@ class PWElementProfile extends PWElements {
             'profile_padding_element' => '',
         ), $atts ));
 
+        // Main content field
         $profile_content = wpb_js_remove_wpautop($content, true);
+
+        // Show more content field
+        $profile_show_more_decoded = base64_decode($profile_show_more);// Decoding Base64
+        $profile_show_more_decoded = urldecode($profile_show_more_decoded); // Decoding URL
+        $profile_hidden_content = wpb_js_remove_wpautop($profile_show_more_decoded, true);// Remowe wpautop
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
@@ -346,7 +366,7 @@ class PWElementProfile extends PWElements {
                 .pwe-profile-text-block {
                     display: flex;
                     flex-direction: column;
-                    gap: 18px;
+                    
                 }
                 .pwe-profile-text-block h4 {
                     font-size: 20px !important;
@@ -401,6 +421,11 @@ class PWElementProfile extends PWElements {
                     height: 40px;
                     float: right;
                 }
+                .pwe-hidden-content ul,
+                .pwe-hidden-content,
+                .pwe-see-more {
+                    margin: 0 !important;
+                }
                 @media (max-width: 960px) {
                     .pwe-profile-content {
                         flex-direction: column;
@@ -441,9 +466,15 @@ class PWElementProfile extends PWElements {
                     <div class="pwe-profile-content">
                         <div class="pwe-profile-text-block pwe-profile-block">';
                             if ($custom_profile_title) {
-                                $output .= '<div '. $custom_profile_class_title .'><h4 class="pwe-uppercase" style="'. $text_color .'";>'. $custom_profile_title .'</h4></div>';
+                                $output .= '<div '. $custom_profile_class_title .'><h4 class="pwe-uppercase" style="padding-bottom: 18px;'. $text_color .'";>'. $custom_profile_title .'</h4></div>';
                             }
-                            $output .= '<div style="'. $text_color .'";>'. $profile_content .'</div>
+                            $output .= '<div style="'. $text_color .'";>'. $profile_content .'</div>';
+                            if (!empty($profile_hidden_content)) {
+                                $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                                $output .= '
+                                    <div class="pwe-hidden-content" style="display: none; '. $text_color .'">'. $profile_hidden_content .'</div>
+                                    <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
+                            } $output .= '
                         </div>
                         <div class="pwe-profile-images-block pwe-profile-block">
                             <div class="pwe-profile-images-wrapper image-shadow">';
