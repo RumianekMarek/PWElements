@@ -69,13 +69,14 @@ class PWELogotypesSlider {
                                     $imgNumber = ($i - count($media_url));
                                     $imageStyles = "background-image:url(".$media_url[$imgNumber]['img'].");";
                                 }
-                                
+
+                                $imageId = ($media_url[$imgNumber]['id'] && !empty($media_url[$imgNumber]['id']) && $media_url[$imgNumber]['id'] == 'primary') ? 'as-' . $media_url[$imgNumber]['id'] : '';
                                 $imageUrl = $media_url[$imgNumber]['site'];
                                 $imageClass = $media_url[$imgNumber]['class'] ? $media_url[$imgNumber]['class'] : '';
                                 $imageStyle = $media_url[$imgNumber]['style'] ? $media_url[$imgNumber]['style'] : '';
-                        
+
                                 if (!empty($imageUrl)){
-                                        $output .= '<a href="'. $imageUrl .'" target="_blank" class="image-container"><div class="'.$imageClass.'" style="'.$imageStyles . ' ' . $imageStyle.'"></div></a>';
+                                        $output .= '<a href="'. $imageUrl .'" target="_blank" class="image-container '. $imageId .'"><div class="'.$imageClass.'" style="'.$imageStyles . ' ' . $imageStyle.'"></div></a>';
                                 } else {
                                         $output .= '<div class="image-container '.$imageClass.'" style="'.$imageStyles . ' ' . $imageStyle.'"></div>';
                                 }
