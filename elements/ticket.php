@@ -171,11 +171,11 @@ class PWElementTicket extends PWElements {
      * @param array @atts options
      */
     public static function output($atts, $content = null) {
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . ' !important;';
-        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '! important; border-width: 0 !important;';
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . ' !important;';
-        $btn_shadow_color = '9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . ' !important;';
-        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . ' !important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
+        $btn_shadow_color = '9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
+        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
 
         extract( shortcode_atts( array(
             'ticket_title_checkbox' => '',
@@ -285,6 +285,13 @@ class PWElementTicket extends PWElements {
                     font-size: 14px;
                     font-weight: 600;
                     text-transform: uppercase;
+                    transition: .3s ease
+                }
+                .pwe-btn:hover {
+                    color: white !important;
+                    background-color: black;
+                    box-shadow: 9px 9px 0px -5px '. $btn_color .';
+                    border: 1px solid black;
                 }
                 .pwe-ticket-footer-block {
                     background-color: '. self::$accent_color .';

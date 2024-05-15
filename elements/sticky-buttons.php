@@ -173,6 +173,18 @@ class PWElementStickyButtons extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
+                'heading' => __('Custom scroll margin top (without px)', 'pwelement'),
+                'param_name' => 'sticky_buttons_scroll_top',
+                'param_holder_class' => 'backend-area-one-fourth-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
                 'heading' => __('Name parameter for sections & rows', 'pwelement'),
                 'description' => __('Default "konferencja". Enter this name into a section or row as a class (Ex. link "domain/wydarzenia/?konferencja=szkolenie")', 'pwelement'),
                 'param_name' => 'sticky_buttons_parameter',
@@ -267,6 +279,7 @@ class PWElementStickyButtons extends PWElements {
             'sticky_full_width_buttons_width' => '',
             'sticky_buttons_parameter' => '',
             'sticky_buttons_scroll' => '',
+            'sticky_buttons_scroll_top' => '',
         ), $atts ));   
         
         $sticky_buttons_width = ($sticky_buttons_width == '') ? '170px' : $sticky_buttons_width;
@@ -569,6 +582,7 @@ class PWElementStickyButtons extends PWElements {
                 window.onload = function() {
                     const pweElement = document.querySelector(".pwelement_'.self::$rnd_id.'");
                     const stickyScroll = "'. $sticky_buttons_scroll .'";
+                    const stickyScrollTop = "'. $sticky_buttons_scroll_top .'";
                     const btnLinks = ' . json_encode($buttons_links_json) . ';
                     const btnsId = ' . json_encode($buttons_id_json) . ';
                     const stickyButtonsDropdown = ' . json_encode($sticky_buttons_dropdown) . ';
@@ -760,16 +774,19 @@ class PWElementStickyButtons extends PWElements {
                         document.querySelectorAll(".custom-image-button").forEach(function(button) {
                             let customScrollTop;
                 
-                            if (containerPageHeader) {
-                                customScrollTop = containerPageHeader.offsetHeight;
-                            } else if (containerCustomHeader) {
-                                customScrollTop = containerCustomHeader.offsetHeight;
+                            if (stickyScrollTop == "") {
+                                if (containerPageHeader) {
+                                    customScrollTop = containerPageHeader.offsetHeight;
+                                } else if (containerCustomHeader) {
+                                    customScrollTop = containerCustomHeader.offsetHeight;
+                                } else {
+                                    customScrollTop = 0;
+                                }
+                                customScrollTop += pweElement.offsetHeight;
                             } else {
-                                customScrollTop = 0;
+                                customScrollTop = stickyScrollTop;
                             }
-
-                            customScrollTop += pweElement.offsetHeight;
-            
+                            
                             if (document.querySelectorAll("header.menu-transparent").length > 0 && desktop) {
                                 customScrollTop -= containerMasthead.offsetHeight;
                             }

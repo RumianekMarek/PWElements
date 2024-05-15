@@ -135,7 +135,7 @@ class PWElementInvite extends PWElements {
 
             $htmlcont_to_pdf = '
                 <div style="width:1200px; height:1750px; text-align:center;">
-                <br><br>
+                <br><br><br><br>
                     <div style="padding-top: 100px; width: 600px; display:flex; align-items: center; justify-content: center; gap: 40px;">
                         <img style="width: 60px; height:60px;" src="/wp-content/plugins/PWElements/media/logo_pwe_black.png">
                         <span style="font-size: 50px; color: goldenrod; font-weight: 600; align-self:middle;">&</span>
@@ -146,7 +146,7 @@ class PWElementInvite extends PWElements {
                         <strong> ' . $_POST['input1'] . ' </strong><br>
                         w imieniu swoim i Ptak Warsaw Expo ma zaszczyt zaprosić Państwa na:
                     </p>
-                    <br>
+                    <br><br>
                     <img style="width:0; height:80px;" src="/doc/logo-color.png">
                     <br><br>
                     <p style="width:600px; font-size: 16px; text-align: center;">
@@ -158,14 +158,14 @@ class PWElementInvite extends PWElements {
                     <br>
                     w Ptak Warsaw Expo
                     </p>
-                    <br>
+                    <br><br><br>
                     <p style="width:600px; font-size: 16px; text-align: center;">
                     Wieczór Branżowy który odbędzie się w dniu:
                     <br>
                     <strong> ' . $wieczor . '</strong>
                     , o godz. <strong>20:00</strong>
                     </p>
-                    <br><br><br><br>
+                    <br>
                     <img style="width:0; height: 80px" src="/wp-content/plugins/PWElements/media/logo_sen.png">
                     <br>
                     <p style="width:600px; font-size: 16px; text-align: center; line-height:3">

@@ -21,29 +21,35 @@ class PWElementGenerator extends PWElements {
     public static function initElements() {
         $element_output = array(
             array(
-                'type' => 'textfield',
+                'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => esc_html__('Worker form id', 'pwelement'),
+                'heading' => __('Worker form (left)', 'pwelement'),
                 'param_name' => 'worker_form_id',
-                'description' => __('Worker form id for generator exhibitors', 'pwelement'),
                 'save_always' => true,
+                'value' => array_merge(
+                  array('Wybierz' => ''),
+                  self::$fair_forms,
+                ),
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementGenerator',
                 ),
-              ),
-              array(
-                'type' => 'textfield',
+            ),
+            array(
+                'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => esc_html__('Guest form id', 'pwelement'),
+                'heading' => __('Guest form (right)', 'pwelement'),
                 'param_name' => 'guest_form_id',
-                'description' => __('Guest form id for generator exhibitors', 'pwelement'),
                 'save_always' => true,
+                'value' => array_merge(
+                  array('Wybierz' => ''),
+                  self::$fair_forms,
+                ),
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementGenerator',
                 ),
-              ),
+            ),
         );
         return $element_output;
     }
@@ -92,6 +98,15 @@ class PWElementGenerator extends PWElements {
         $output = '
         <style>
             .pwelement_' . self::$rnd_id . ' {
+                .gform_validation_errors {
+                    display: none;
+                }
+                .gform_legacy_markup_wrapper li.gfield.gfield_error {
+                    border-top: none;
+                    border-bottom: none;
+                    padding-bottom: 0;
+                    padding-top: 0;
+                }
                 .heading-text :is(h3, a){
                     color: '. $text_color .';
                 }
@@ -183,7 +198,7 @@ class PWElementGenerator extends PWElements {
                     /* min-width: 800px; */
                     max-width: 1200px;
                     margin: 30px auto 0;
-                    height: 680px;
+                    height: 700px;
                     top: 50%;
                     -moz-transition: all 0.5s;
                     -o-transition: all 0.5s;
@@ -225,7 +240,7 @@ class PWElementGenerator extends PWElements {
                 .container .container-forms .container-info .info-item {
                     text-align: center;
                     width: 800px;
-                    height: 680px;
+                    height: 700px;
                     display: inline-block;
                     vertical-align: top;
                     color: #fff;
@@ -258,7 +273,7 @@ class PWElementGenerator extends PWElements {
                 }
                 .container-info .info-item button, 
                 .gform_footer input[type="submit"] {
-                    margin-top: 25px !important;
+                    margin: 0 !important;
                     color: white !important;
                     font-weight: 800;
                     font-size: 24px !important;
@@ -317,7 +332,7 @@ class PWElementGenerator extends PWElements {
                     left: 0px;
                     top: 0px;
                     width: 400px;
-                    height: 680px;
+                    height: 700px;
                     -moz-transition: all 0.5s;
                     -o-transition: all 0.5s;
                     -webkit-transition: all 0.5s;
@@ -442,13 +457,12 @@ class PWElementGenerator extends PWElements {
                         .container .container-form {
                             width: 100%;
                             height: 380px;
-        
                         }
                         .container .container-forms .container-info .info-item {
                             position: absolute;
                             top: 350px;
                             width: 100%;
-                            height: 730px;
+                            height: 780px;
                             padding-top: 40px;
                         }
                         .container .container-form {
@@ -474,12 +488,25 @@ class PWElementGenerator extends PWElements {
                             padding-left: 0px !important; 
                             padding-right: 0;
                         }
+                        .gform-body {
+                            padding: 16px 16px 0 16px;
+                        }
+                        .gform_footer input[type=submit] {
+                            font-size: 16px !important;
+                        }
+                        .custom-tech-support-text {
+                            margin: 36px 0 !important;
+                        }
                     }
                 }
                 @media (max-width:400px) {
                     .pwelement_' . self::$rnd_id . ' {
                         .pwe-generator-wystawcow h2 {
-                            font-size: 24px !important;
+                            font-size: 18px !important;
+                        }
+                        ginput_container .gform-body input[type="text"],
+                        ginput_container .gform-body input[type="email"] {
+                            font-size: 12px !important;
                         }
                         .heading-text h3 {
                             font-size: 18px;
@@ -529,7 +556,7 @@ class PWElementGenerator extends PWElements {
                                                 $output .= 'GENERATE AN ID FOR YOURSELF <br> AND YOUR COWORKERS'; 
                                             } $output .= '               
                                             </h2>
-                                        [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]
+                                            [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]
                                         </div>
                                     </div>
                                 </div>
@@ -537,15 +564,30 @@ class PWElementGenerator extends PWElements {
                         <div class="info-item info-item-right">
                             <div class="table">
                                 <div class="table-cell">
-                                    <h4 class="guest-info">';
+                                        <h4 class="guest-info">';
                                         if(get_locale() == 'pl_PL'){ 
                                             $output .= 'Goście upoważnieni są do wejścia na teren targów<br> od godziny 10:00</h4>
-                                            <div class="forms-container-form__right"><h2>WYGENERUJ IDENTYFIKATOR</br>DLA SWOICH GOŚCI!</h2>'; 
+                                            <div class="forms-container-form__right"><h2>WYGENERUJ IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!</h2>'; 
                                         } else { 
                                             $output .= 'Visitors are entitled to enter the fairgrounds<br> from 10:00</h4>
-                                            <div class="forms-container-form__right"><h2>GENERATE AN INVITE FOR YOUR GUESTS!</h2>'; 
+                                            <div class="forms-container-form__right"><h2>GENERATE A VIP INVITATION</br>FOR YOUR GUESTS!</h2>'; 
                                         } $output .= '
-                                        [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]
+                                        [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]';
+                                        if(get_locale() == 'pl_PL'){ 
+                                            $output .= '<p style="color: black;">
+                                                            <span><b>Identyfikator VIP uprawnia do:</b></span><br>
+                                                            * Bezpłatnego skorzystania ze strefy VIP ROOM<br>
+                                                            * Uczestnictwa we wszystkich konferencjach branżowych<br>
+                                                            * Dedykowanej kolejki
+                                                        </p>'; 
+                                        } else { 
+                                            $output .= '<p style="color: black;">
+                                                            <span><b>VIP ID entitles you to:</b></span><br>
+                                                            * Free use of the VIP ROOM zone<br>
+                                                            * Participation in all industry conferences<br>
+                                                            * Dedicated queue
+                                                        </p>'; 
+                                        } $output .= '
                                     </div>
                                 </div>
                             </div>
@@ -554,18 +596,17 @@ class PWElementGenerator extends PWElements {
                         <div class="container-form">
                             <div class="form-item form-item-element-left log-in">
                                 <div class="table">
-                                    <div class="table-cell">
-                                        <h2>';
+                                    <div class="table-cell">';
                                         if(get_locale() == 'pl_PL'){
                                             if($new_content){
-                                                $output .= 'WYGENERUJ IDENTYFIKATOR DLA SIEBIE I OBSŁUGI STOISKA</h2>';
+                                                $output .= '<h2>WYGENERUJ IDENTYFIKATOR DLA SIEBIE I OBSŁUGI STOISKA</h2>';
                                             } else {
-                                                $output .= 'WYGENERUJ IDENTYFIKATOR DLA SIEBIE I SWOICH PRACOWNIKÓW</h2>
+                                                $output .= '<h2>WYGENERUJ IDENTYFIKATOR DLA SIEBIE I SWOICH PRACOWNIKÓW</h2>
                                                 <h3>JEŚLI CHCESZ ZAPROSIĆ NA WYDARZENIE SWOICH WSPÓŁPRACOWNIKÓW, WYPEŁNIJ FORMULARZ</h3>';
                                             }
-                                        } else $output .= 'GENERATE AN ID FOR YOURSELF AND YOUR COWORKERS';
+                                        } else $output .= '<h2>GENERATE AN ID FOR YOURSELF AND YOUR COWORKERS</h2>';
                                         $output .= '<button class="forms-container-info__btn btn-exh">';
-                                        $output .= ($locale == 'pl_PL') ? 'KLIKNIJ' : 'CHANGE';
+                                        $output .= (get_locale() == 'pl_PL') ? 'KLIKNIJ' : 'CHANGE';
                                         $output .= '</button>
                                         <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/bg.png"/>
                                     </div>
@@ -574,12 +615,12 @@ class PWElementGenerator extends PWElements {
                             <div class="form-item form-item-element-right sign-up">
                                 <div class="table">
                                     <div class="table-cell">';
-                                        $output .= (get_locale() == 'pl_PL') ? '<h2>WYGENERUJ IDENTYFIKATOR DLA SWOICH GOŚCI</h2>' : '<h2>GENERATE AN INVITE FOR YOUR GUESTS!</h2>';
-                                        if($locale == 'pl_PL'){
+                                        $output .= (get_locale() == 'pl_PL') ? '<h2>WYGENERUJ IDENTYFIKATOR VIP DLA SWOICH GOŚCI!</h2>' : '<h2>GENERATE A VIP INVITATION FOR YOUR GUESTS!</h2>';
+                                        if(get_locale() == 'pl_PL'){
                                             $output .= (!$new_content) ? '<h3>JEŚLI CHCESZ ZAPROSIĆ NA WYDARZENIE SWOICH NAJWAŻNIEJSZYCH GOŚCI, KLIENTÓW LUB KONTRACHENTÓW, WYPEŁNIJ FORMULARZ</h3>' : '';
                                         }
                                         $output .= '<button class="forms-container-info__btn btn-exh">';
-                                        $output .= ($locale == 'pl_PL') ? 'KLIKNIJ' : 'CHANGE';
+                                        $output .= (get_locale() == 'pl_PL') ? 'KLIKNIJ' : 'CHANGE';
                                         $output .= '</button>
                                         <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/bg.png" />
                                     </div>

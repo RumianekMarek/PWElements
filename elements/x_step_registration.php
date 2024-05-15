@@ -15,9 +15,15 @@ class PWElementXForm extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-        //$_SESSION['fair_name'] = do_shortcode()
     }    
     
+    /**
+     * Adding Scripts
+     */
+    public function addingScripts(){
+
+    }
+
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.
@@ -39,29 +45,54 @@ class PWElementXForm extends PWElements {
                     'value' => 'PWElementXForm',
                 ),
             ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Potwierdzenie rejestracji', 'pwelement'),
+                'param_name' => 'confirmation_url',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementXForm',
+                ),
+            ),
         );
         return $element_output;
     }
 
+    /**
+     * Sprawdza poprawność adresu e-mail.
+     *
+     * @param string $email Adres e-mail do sprawdzenia.
+     * @return bool Zwraca true, jeśli adres e-mail jest poprawny, w przeciwnym razie false.
+     */
+    private static function isValidEmail($email) {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    /**
+     * Sprawdza poprawność numeru telefonu.
+     *
+     * @param string $phone Numer telefonu do sprawdzenia.
+     * @return bool Zwraca true, jeśli numer telefonu jest poprawny, w przeciwnym razie false.
+     */
+    private static function isValidPhone($phone) {
+        if (preg_match('/^[0-9\s\+\(\)]+$/', $phone)) {
+            $cleanedPhone = preg_replace('/[^0-9]/', '', $phone);
+            return strlen($cleanedPhone) >= 9 && strlen($cleanedPhone) <= 11;
+        }
+        
+        return false;
+    }
     /**
      * Static method to generate the HTML for Email.
      * Returns the HTML output as a string.
      * 
      * @param array @atts options
      */
-    public static function x_form_check($poster, $x_form_id) {
+    public static function x_form_check($x_form_id) {
 
-        if (method_exists('GFAPI', 'get_forms')) {
-            echo '<script>console.log("'.$x_form_id.'")</script>';
-            
-            $x_form_entries = GFAPI::get_entries($x_form_id);
-        }
-        
-        foreach($poster as $id => $key){
-            echo '<script>console.log("'.$id.' '.$key.'")</script>';
-        }
-
-        if (!$email_send && $form_good){
+        if (!$_SESSION['email_send']){
             $inside_id_data = array(
                 'form_id' => $x_form_id,
                 '1' => sanitize_text_field($_POST['email']),
@@ -85,10 +116,8 @@ class PWElementXForm extends PWElements {
                 do_shortcode(self::Email_1($qr_code_url)),
                 array('Content-Type: text/html; charset=UTF-8', 'From ' . do_shortcode("[trade_fair_rejestracja]"))
             );
-            $email_send = true;
-        }
-
-        return $email_send;
+            $_SESSION['email_send'] = true;
+        } 
     }
     
     /**
@@ -98,6 +127,7 @@ class PWElementXForm extends PWElements {
      * @param array @atts options
      */
     public static function Email_1($qr_code_url) {
+
         $email_output = '
             <!DOCTYPE html>
             <html lang="en">
@@ -227,15 +257,38 @@ class PWElementXForm extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
+        $confirmation_url = ($atts['confirmation_url']) ? $atts['confirmation_url'] : '/potwierdzenie-rejestracji';
         $x_form_id = self::findFormsID($atts['x_form_name']);
-        var_Dump($_POST);
-        if (isset($_POST['step-1-submit']) && self::x_form_check($_POST, $x_form_id)){
+        var_dump($_POST);
 
-            $output = '
+        $output = '
                 <style>
-                    #xForm.form-container {
-                            background: lightgray;
+                    #xForm {
+                        background-image: url(/wp-content/plugins/PWElements/media/badgemockup.jpg);
+                        height: 790px;
+                        background-size: cover;
 
+                        img, div.form-1{
+                            width: 430px;
+                            position: absolute;
+                            left: 50%;
+                            transform: translateX(-50%);
+                        }
+                        .form-1 {
+                            height:550px;
+                            padding:10px 75px;
+                            background-color: lightgray;
+                            top: 217px;
+
+                            input:not(.checkbox){
+                                margin: 9px 0 0;
+                                width:100%;
+                            }
+                        }
+                        .form-1-image {
+                            top: 160px;
+                            z-index: 10;
+                        }
                         #registration{
                             margin-top:36px;
                         }
@@ -248,10 +301,22 @@ class PWElementXForm extends PWElements {
                             flex-direction: row;
                             align-items: center;
                         }
+                        .form3-half {
+                            display: flex;
+                            gap: 10px;
+                        }
                     }
                 </style>
+                <div id="xForm">
+            ';
 
-                <div id="xForm" class="form-2">
+        if (isset($_POST['step-1-submit'])) {
+            $_SESSION['step'] = 'step-1-submit';
+
+            self::x_form_check($x_form_id);
+
+            $output .= '
+                <div class="form-2">
                     <h5> Krok 2 z 3</h5>
                     <h2 class="h1 text-color-jevc-color">Twój bilet został<br>wygenerowany<br>pomyślnie!</h2>
                     <p>Otrzymasz go na wskazany adres e-mail.<br>Może to potrwać kilka minut.</p>
@@ -260,7 +325,7 @@ class PWElementXForm extends PWElements {
                         <button class="btn exhibitor-yes" name="exhibitor-yes">Tak, jestem zainteresowany</button>
                         <button class="btn exhibitor-no" name="exhibitor-no">Nie dziękuję</button>
                     </form>
-                </div>
+                </div></div>
             ';
             
             return $output;
@@ -268,34 +333,29 @@ class PWElementXForm extends PWElements {
 
         if (isset($_POST['exhibitor-no'])){
 
-            $output = '
-                <div id="xForm" class="form-3">
+            $output .= '
+
+                <div class="form-3">
                     <h3>Podaj adres, na który mamy wysłać<br>darmowy pakiet powitalny VIP</h3>
                     <p>Otrzymasz bezpłatny spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingową.</p>
                     <form id="form3" action="" method="post">
                         <div class="form3-half">
-                            <label>Imię</label>
                             <input type="text" class="imie" name="imie" placeholder="Imię">
-                            <label>Nazwisko</label>
                             <input type="text" class="nazwisko" name="nazwisko" placeholder="Nazwisko">
                         </div>
-                        <label>Ulica</label>
                         <input type="text" class="ulica" name="ulica">
                         <div class="form3-half">
-                            <label>Numer budynku</label>
                             <input type="text" class="budynek" name="budynek" placeholder="Numer budynku">
-                            <label>Numer mieszkania</label>
                             <input type="text" class="mieszkanie" name="mieszkanie" placeholder="Numer mieszkania">
                         </div>
                         <div class="form3-half">
-                            <label>Kod pocztowy</label>
                             <input type="text" class="kod_pocztowy" name="kod_pocztowy" placeholder="Kod pocztowy">
-                            <label>Miasto</label>
                             <input type="text" class="miasto" name="miasto" placeholder="Miasto">
                         </div>
                         <button name="form3" class="btn">Wyslij</button>
                     </form>
-                </div>
+                </div></div>
+
             ';
 
             return $output;
@@ -310,42 +370,32 @@ class PWElementXForm extends PWElements {
             $updated = GFAPI::update_entry($entry);
         }
 
-        $output = '
-            <style>
-                #xForm.form-container {
-                        background: lightgray;
-
-                    #registration{
-                        margin-top:36px;
-                    }
-                    label{
-                        font-weight: 700;
-                        font-size: 15px;
-                    }
-                    .consent-container {
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
-                    }
-                }
-            </style>
-            <div id="xForm" class="form-1">
+        $output .= '
+            <image class="form-1-image" src="/wp-content/plugins/PWElements/media/badge_head.png">
+            <div class="form-1">
                 <h2 class="h1 text-color-jevc-color">Twój bilet<br>na targi</h2>
-                <form id="registration" method="post" action="">
+                <form id="registration" method="post" action="' . $confirmation_url . '">
                     <label>Email</label>
                     <input type="email" class="email" name="email" placeholder="Email" required>
+                    <p class="mail-error">&nbsp;</p>
                     <label>Numer telefonu</label>
                     <input type="tel" class="phone" name="phone" placeholder="Numer telefonu" required>
+                    <p class="tel-error">&nbsp;</p>
                     <div class="consent-container">
-                        <input type="checkbox" class="consent" name="consent" required>
+                        <input class="checkbox" type="checkbox" class="consent" name="consent" required>
                         <span class="consent-text">
                             Zgoda na przetwarzanie przez PTAK WARSAW EXPO sp. z o.o. moich danych osobowych w celach marketingowych i wysyłki wiadomości.
                         </span>
                     </div>
                     <button name="step-1-submit" class="btn">Wyślij darmowy bilet</button>
                 </form>
-            </div>
+            </div></div>
         ';
+
+        $js_file = plugins_url('js/form-checker.js', __FILE__);
+        $js_version = filemtime(plugin_dir_path(__FILE__) . 'js/form-checker.js');
+        wp_enqueue_script('form-checker-js', $js_file, array('jquery'), $js_version, true);
+
         return $output;
     }
 }
