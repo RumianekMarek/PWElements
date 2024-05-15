@@ -16,13 +16,20 @@ class GFAreaNumbersBackend {
 					<?php _e("Default country", "gravityforms"); ?>
 					<?php gform_tooltip("area_default_tooltips"); ?>
 				</label>
+				<ul>
+					<li>
+						<input type="checkbox" id="spf_enable_value" onclick="SetFieldProperty('smartPhoneFieldGField', this.checked);" checked/>
+						<label for="spf_enable_value" class="inline"><?php _e("Enable", "gravityforms"); ?></label>
+					</li>
+				</ul>
 				<select name="area_default_country_value" id="area_default_country_value" onChange="SetFieldProperty('defaultCountryGField', this.value);">
 					<?php
-						foreach ( GFAreaCodes::get_countries() as $value => $name ) {
-							echo '<option value="' . $value . '">' . $name . '</option>'; 
-						}
+					foreach (GFAreaCodes::get_countries() as $value => $name) {
+						echo '<option value="' . $value . '">' . $name . '</option>';
+					}
 					?>
 				</select>
+
 			</li>
             <?php
         }

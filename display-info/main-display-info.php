@@ -75,10 +75,10 @@ class PWEDisplayInfo {
                         array(
                             'type' => 'dropdown',
                             'group' => 'options',
-                            'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwelement'),
+                            'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwe_display_info'),
                             'param_name' => 'btn_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select button color for the element.', 'pwelement'),
+                            'description' => __('Select button color for the element.', 'pwe_display_info'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_color_manual_hidden',
@@ -89,20 +89,20 @@ class PWEDisplayInfo {
                         array(
                             'type' => 'textfield',
                             'group' => 'options',
-                            'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwelement'),
+                            'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwe_display_info'),
                             'param_name' => 'btn_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button color for the element.', 'pwelement'),
+                            'description' => __('Write hex number for button color for the element.', 'pwe_display_info'),
                             'value' => '',
                             'save_always' => true
                         ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'options',
-                            'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwelement'),
+                            'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwe_display_info'),
                             'param_name' => 'btn_text_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select button text color for the element.', 'pwelement'),
+                            'description' => __('Select button text color for the element.', 'pwe_display_info'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_text_color_manual_hidden',
@@ -113,20 +113,20 @@ class PWEDisplayInfo {
                         array(
                             'type' => 'textfield',
                             'group' => 'options',
-                            'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwelement'),
+                            'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwe_display_info'),
                             'param_name' => 'btn_text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button text color for the element.', 'pwelement'),
+                            'description' => __('Write hex number for button text color for the element.', 'pwe_display_info'),
                             'value' => '',
                             'save_always' => true
                         ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'options',
-                            'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwelement'),
+                            'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwe_display_info'),
                             'param_name' => 'btn_shadow_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select button shadow color for the element.', 'pwelement'),
+                            'description' => __('Select button shadow color for the element.', 'pwe_display_info'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_shadow_color_manual_hidden',
@@ -137,10 +137,10 @@ class PWEDisplayInfo {
                         array(
                             'type' => 'textfield',
                             'group' => 'options',
-                            'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwelement'),
+                            'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_display_info'),
                             'param_name' => 'btn_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button shadow color for the element.', 'pwelement'),
+                            'description' => __('Write hex number for button shadow color for the element.', 'pwe_display_info'),
                             'value' => '',
                             'save_always' => true
                         ),

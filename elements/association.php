@@ -112,7 +112,7 @@ class PWElementAssociates extends PWElements {
                 $img_source = 'https://' . $to_sort[0]->fair_web . '/doc/' . $to_sort[0]->fair_logo;
             }
             if($to_sort[0]->fair_name != $name){
-                if($id != 'primary'){
+                if($id !== 'primary'){
                     $sorted[] = array(
                         'img' => self::languageChecker($img_source, $img_en_source),
                         'site'=> $to_sort[0]->fair_web
@@ -184,10 +184,13 @@ class PWElementAssociates extends PWElements {
 
             if ($association_fair_logo_white == 'true') {
                 $output .= '<style>
-                                .pwe-association-logotypes .pwe-as-logo,
+                                .pwe-association-logotypes .as-side .pwe-as-logo,
                                 .pwe-association-logotypes .slides div {
                                     filter: brightness(0) invert(1);
                                     transition: all .3s ease;
+                                }
+                                .pwe-association-logotypes .slides .as-primary div {
+                                    filter: inherit;
                                 }
                             </style>';
             }
@@ -209,14 +212,16 @@ class PWElementAssociates extends PWElements {
                     <div class="pwe-association-logotypes">';
                         if (self::checkForMobile() == '1'){
                             $slider_array = array();
-                            foreach($sorted as $logo){
+                            foreach($sorted as $id => $logo){
                                 if(get_locale() == 'pl_PL') {
                                     $slider_array[] = array(
-                                        'img' => $logo['img'],
+                                        'id'   => $id,
+                                        'img'  => $logo['img'],
                                         'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site'])
                                     );
                                 } else {
                                     $slider_array[] = array(
+                                        'id'   => $id,
                                         'img' => $logo['img'],
                                         'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']) . "/en"
                                     );
@@ -231,7 +236,7 @@ class PWElementAssociates extends PWElements {
                                 if(get_locale() == 'pl_PL') {
                                     $logosUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']);
                                 } else $logosUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']) . "/en";
-                                if($id == 'primary'){
+                                if($id === 'primary'){
                                     $output .= '
                                         <a class="as-primary" target="_blank" href="'. $logosUrl .'">
                                             <div class="pwe-as-logo" style="background-image: url(' . $logo['img'] . ');"></div>

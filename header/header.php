@@ -17,6 +17,8 @@ class PWEHeader {
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
         
         add_action('vc_before_init', array($this, 'inputRange'));
+        add_action('vc_before_init', array($this, 'pweCheckbox'));
+
         add_action('init', array($this, 'initVCMapHeader'));
         add_shortcode('pwe_header', array($this, 'PWEHeaderOutput'));
     }
@@ -28,9 +30,9 @@ class PWEHeader {
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
             vc_map(array(
-                'name' => __('PWE Header', 'pwelements'),
+                'name' => __('PWE Header', 'pwe_header'),
                 'base' => 'pwe_header',
-                'category' => __('PWE Elements', 'pwelements'),
+                'category' => __('PWE Elements', 'pwe_header'),
                 'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
                 'admin_enqueue_js' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendscript.js',
                 'params' => array_merge(
@@ -39,10 +41,10 @@ class PWEHeader {
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
-                            'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwe_header'),
                             'param_name' => 'text_color',
                             'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
-                            'description' => __('Select text color for the element.', 'pwelements'),
+                            'description' => __('Select text color for the element.', 'pwe_header'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'text_color_manual_hidden',
@@ -54,20 +56,20 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwe_header'),
                             'param_name' => 'text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for text color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for text color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
-                            'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwe_header'),
                             'param_name' => 'text_shadow_color',
                             'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
-                            'description' => __('Select shadow text color for the element.', 'pwelements'),
+                            'description' => __('Select shadow text color for the element.', 'pwe_header'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'text_color_manual_hidden',
@@ -78,20 +80,20 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_header'),
                             'param_name' => 'text_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for text shadow color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for text shadow color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true,
                         ),                        
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
-                            'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwe_header'),
                             'param_name' => 'btn_color',
                             'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
-                            'description' => __('Select button color for the element.', 'pwelements'),
+                            'description' => __('Select button color for the element.', 'pwe_header'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_color_manual_hidden',
@@ -102,20 +104,20 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwe_header'),
                             'param_name' => 'btn_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for button color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true
                         ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
-                            'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwe_header'),
                             'param_name' => 'btn_text_color',
                             'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
-                            'description' => __('Select button text color for the element.', 'pwelements'),
+                            'description' => __('Select button text color for the element.', 'pwe_header'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_text_color_manual_hidden',
@@ -126,20 +128,20 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwe_header'),
                             'param_name' => 'btn_text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button text color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for button text color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true
                         ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
-                            'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwe_header'),
                             'param_name' => 'btn_shadow_color',
                             'param_holder_class' => 'backend-fields backend-area-one-fifth-width',
-                            'description' => __('Select button shadow color for the element.', 'pwelements'),
+                            'description' => __('Select button shadow color for the element.', 'pwe_header'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_shadow_color_manual_hidden',
@@ -150,26 +152,26 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_header'),
                             'param_name' => 'btn_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button shadow color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for button shadow color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true
                         ),    
                         array(
                             'type' => 'checkbox',
                             'group' => 'PWE Element',
-                            'heading' => __('Simple mode', 'pwelement'),
+                            'heading' => __('Simple mode', 'pwe_header'),
                             'param_name' => 'pwe_header_simple_mode',
                             'admin_label' => true,
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_header') => 'true',),
                         ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
-                            'heading' => __('Background position', 'pwelement'),
+                            'heading' => __('Background position', 'pwe_header'),
                             'param_name' => 'pwe_header_bg_position',
                             'value' => array(
                               'Top' => 'top',
@@ -181,38 +183,38 @@ class PWEHeader {
                         array(
                             'type' => 'checkbox',
                             'group' => 'PWE Element',
-                            'heading' => __('Turn on buttons', 'pwelement'),
+                            'heading' => __('Turn on buttons', 'pwe_header'),
                             'param_name' => 'pwe_header_button_on',
-                            'description' => __('Select options to display button:', 'pwelement'),
+                            'description' => __('Select options to display button:', 'pwe_header'),
                             'admin_label' => true,
                             'save_always' => true,
                             'value' => array(
-                              __('register', 'pwelement') => 'register',
-                              __('ticket', 'pwelement') => 'ticket',
-                              __('conference', 'pwelement') => 'conference',
+                              __('register', 'pwe_header') => 'register',
+                              __('ticket', 'pwe_header') => 'ticket',
+                              __('conference', 'pwe_header') => 'conference',
                             ),
                         ),
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Tickets button link', 'pwelement'),
-                            'description' => __('Default (/bilety/ - PL), (/en/tickets/ - EN)', 'pwelement'),
+                            'heading' => __('Tickets button link', 'pwe_header'),
+                            'description' => __('Default (/bilety/ - PL), (/en/tickets/ - EN)', 'pwe_header'),
                             'param_name' => 'pwe_header_tickets_button_link',
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Register button link', 'pwelement'),
-                            'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwelement'),
+                            'heading' => __('Register button link', 'pwe_header'),
+                            'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwe_header'),
                             'param_name' => 'pwe_header_register_button_link',
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => __('Conferences button link', 'pwelement'),
-                            'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwelement'),
+                            'heading' => __('Conferences button link', 'pwe_header'),
+                            'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwe_header'),
                             'param_name' => 'pwe_header_conferences_button_link',
                             'save_always' => true,
                             
@@ -220,8 +222,8 @@ class PWEHeader {
                         array(
                             'type' => 'textarea_raw_html',
                             'group' => 'PWE Element',
-                            'heading' => __('Conferences custom title', 'pwelement'),
-                            'description' => __('Default (Konferencje - PL), (Conferences - EN)', 'pwelement'),
+                            'heading' => __('Conferences custom title', 'pwe_header'),
+                            'description' => __('Default (Konferencje - PL), (Conferences - EN)', 'pwe_header'),
                             'param_name' => 'pwe_header_conferences_title',
                             'param_holder_class' => 'backend-textarea-raw-html',
                             'save_always' => true,
@@ -230,14 +232,14 @@ class PWEHeader {
                         array(
                             'type' => 'colorpicker',
                             'group' => 'PWE Element',
-                            'heading' => __('Overlay color', 'pwelement'),
+                            'heading' => __('Overlay color', 'pwe_header'),
                             'param_name' => 'pwe_header_overlay_color',
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'input_range',
                             'group' => 'PWE Element',
-                            'heading' => __('Overlay opacity', 'pwelement'),
+                            'heading' => __('Overlay opacity', 'pwe_header'),
                             'param_name' => 'pwe_header_overlay_range',
                             'value' => '0',
                             'min' => '0',
@@ -248,16 +250,16 @@ class PWEHeader {
                         array(
                             'type' => 'checkbox',
                             'group' => 'PWE Element',
-                            'heading' => __('Main logo color', 'pwelement'),
+                            'heading' => __('Main logo color', 'pwe_header'),
                             'param_name' => 'pwe_header_logo_color',
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_header') => 'true',),
                         ),
                         array(
                             'type' => 'input_range',
                             'group' => 'PWE Element',
-                            'heading' => __('Max width logo (px)', 'pwelement'),
-                            'description' => __('Default 400px', 'pwelement'),
+                            'heading' => __('Max width logo (px)', 'pwe_header'),
+                            'description' => __('Default 400px', 'pwe_header'),
                             'param_name' => 'pwe_header_logo_width',
                             'value' => '400',
                             'min' => '100',
@@ -268,27 +270,27 @@ class PWEHeader {
                         array(
                             'type' => 'checkbox',
                             'group' => 'PWE Element',
-                            'heading' => __('No margin&padding main logo', 'pwelement'),
+                            'heading' => __('No margin&padding main logo', 'pwe_header'),
                             'param_name' => 'pwe_header_logo_marg_pag',
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_header') => 'true',),
                         ),
                         array(
                             'type' => 'param_group',
                             'group' => 'PWE Element',
-                            'heading' => __('Additional buttons', 'pwelement'),
+                            'heading' => __('Additional buttons', 'pwe_header'),
                             'param_name' => 'pwe_header_buttons',
                             'params' => array(
                                 array(
                                     'type' => 'textfield',
-                                    'heading' => __('URL', 'pwelement'),
+                                    'heading' => __('URL', 'pwe_header'),
                                     'param_name' => 'pwe_header_button_link',
                                     'save_always' => true,
                                     'admin_label' => true
                                 ),
                                 array(
                                     'type' => 'textarea',
-                                    'heading' => __('Text', 'pwelement'),
+                                    'heading' => __('Text', 'pwe_header'),
                                     'param_name' => 'pwe_header_button_text',
                                     'save_always' => true,
                                     'admin_label' => true
@@ -298,32 +300,32 @@ class PWEHeader {
                         array(
                             'type' => 'param_group',
                             'group' => 'Logotypes',
-                            'heading' => __('Logotypes', 'pwelement'),
+                            'heading' => __('Logotypes', 'pwe_header'),
                             'param_name' => 'pwe_header_logotypes',
                             'params' => array(
                                 array(
                                 'type' => 'attach_images',
-                                'heading' => __('Logotypes catalog', 'pwelement'),
+                                'heading' => __('Logotypes catalog', 'pwe_header'),
                                 'param_name' => 'logotypes_media',
                                 'save_always' => true,
                                 ),
                                 array(
                                     'type' => 'textfield',
-                                    'heading' => __('Logotypes catalog', 'pwelement'),
+                                    'heading' => __('Logotypes catalog', 'pwe_header'),
                                     'param_name' => 'logotypes_catalog',
-                                    'description' => __('Put catalog name in /doc/ where are logotypes.', 'pwelement'),
+                                    'description' => __('Put catalog name in /doc/ where are logotypes.', 'pwe_header'),
                                     'save_always' => true,
                                 ),
                                 array(
                                     'type' => 'textfield',
-                                    'heading' => __('Logotypes Title', 'pwelement'),
+                                    'heading' => __('Logotypes Title', 'pwe_header'),
                                     'param_name' => 'logotypes_title',
-                                    'description' => __('Set title to diplay over the gallery', 'pwelement'),
+                                    'description' => __('Set title to diplay over the gallery', 'pwe_header'),
                                     'save_always' => true,
                                 ),
                                 array(
                                     'type' => 'input_range',
-                                    'heading' => __('Gallery width (%)', 'pwelement'),
+                                    'heading' => __('Gallery width (%)', 'pwe_header'),
                                     'param_name' => 'logotypes_width',
                                     'value' => '100',
                                     'min' => '0',
@@ -333,14 +335,14 @@ class PWEHeader {
                                 ),
                                 array(
                                     'type' => 'checkbox',
-                                    'heading' => __('Turn off slider', 'pwelement'),
+                                    'heading' => __('Turn off slider', 'pwe_header'),
                                     'param_name' => 'logotypes_slider_off',
                                     'save_always' => true,
-                                    'value' => array(__('True', 'pwelement') => 'true',),
+                                    'value' => array(__('True', 'pwe_header') => 'true',),
                                 ),
                                 array(
                                     'type' => 'textfield',
-                                    'heading' => __('Logotypes width (___px)', 'pwelement'),
+                                    'heading' => __('Logotypes width (___px)', 'pwe_header'),
                                     'param_name' => 'logotypes_items_width',
                                     'save_always' => true,
                                 ),
@@ -349,16 +351,16 @@ class PWEHeader {
                         array(
                             'type' => 'checkbox',
                             'group' => 'Congress widget',
-                            'heading' => __('Turn off widget', 'pwelement'),
+                            'heading' => __('Turn off widget', 'pwe_header'),
                             'param_name' => 'pwe_congress_widget_off',
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_header') => 'true',),
                         ),
                         array(
                             'type' => 'textfield',
                             'group' => 'Congress widget',
-                            'heading' => __('Title widget', 'pwelement'),
-                            'description' => __('Default (Konferencje - PL), (Conference - EN)', 'pwelement'),
+                            'heading' => __('Title widget', 'pwe_header'),
+                            'description' => __('Default (Konferencje - PL), (Conference - EN)', 'pwe_header'),
                             'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_title',
                             'save_always' => true,
@@ -366,8 +368,8 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'Congress widget',
-                            'heading' => __('Button text', 'pwelement'),
-                            'description' => __('Default (WEŹ UDZIAŁ - PL), (TAKE PART - EN)', 'pwelement'),
+                            'heading' => __('Button text', 'pwe_header'),
+                            'description' => __('Default (WEŹ UDZIAŁ - PL), (TAKE PART - EN)', 'pwe_header'),
                             'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_button',
                             'save_always' => true,
@@ -375,8 +377,8 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'Congress widget',
-                            'heading' => __('Button link', 'pwelement'),
-                            'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwelement'),
+                            'heading' => __('Button link', 'pwe_header'),
+                            'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwe_header'),
                             'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_button_link',
                             'save_always' => true,
@@ -384,8 +386,8 @@ class PWEHeader {
                         array(
                             'type' => 'textfield',
                             'group' => 'Congress widget',
-                            'heading' => __('Buttons width', 'pwelement'),
-                            'description' => __('Default 200px', 'pwelement'),
+                            'heading' => __('Buttons width', 'pwe_header'),
+                            'description' => __('Default 200px', 'pwe_header'),
                             'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_buttons_width',
                             'save_always' => true,
@@ -393,7 +395,7 @@ class PWEHeader {
                         array(
                             'type' => 'colorpicker',
                             'group' => 'Congress widget',
-                            'heading' => __('Congress accent color', 'pwelement'),
+                            'heading' => __('Congress accent color', 'pwe_header'),
                             'param_holder_class' => 'backend-area-one-fourth-width',
                             'param_name' => 'pwe_congress_widget_color',
                             'save_always' => true,
@@ -401,26 +403,26 @@ class PWEHeader {
                         array(
                             'type' => 'param_group',
                             'group' => 'Congress widget',
-                            'heading' => __('Congress items', 'pwelement'),
+                            'heading' => __('Congress items', 'pwe_header'),
                             'param_name' => 'pwe_congress_widget_items',
                             'params' => array(
                                 array(
                                     'type' => 'attach_image',
-                                    'heading' => __('Congress image', 'pwelement'),
+                                    'heading' => __('Congress image', 'pwe_header'),
                                     'param_name' => 'congress_item_image',
                                     'save_always' => true,
                                 ),
                                 array(
                                     'type' => 'textfield',
-                                    'heading' => __('Congress link', 'pwelement'),
-                                    'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwelement'),
+                                    'heading' => __('Congress link', 'pwe_header'),
+                                    'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwe_header'),
                                     'param_name' => 'congress_item_link',
                                     'save_always' => true,
                                 ),
                                 array(
                                     'type' => 'textfield',
-                                    'heading' => __('Caption text', 'pwelement'),
-                                    'description' => __('Default (Dowiedz się więcej - PL), (Find out more - EN)', 'pwelement'),
+                                    'heading' => __('Caption text', 'pwe_header'),
+                                    'description' => __('Default (Dowiedz się więcej - PL), (Find out more - EN)', 'pwe_header'),
                                     'param_name' => 'congress_item_caption',
                                     'save_always' => true,
                                 ),
@@ -429,25 +431,34 @@ class PWEHeader {
                         array(
                             'type' => 'checkbox',
                             'group' => 'Aditional options',
-                            'heading' => __('Logotypes color', 'pwelement'),
+                            'heading' => __('Logotypes color', 'pwe_header'),
                             'param_name' => 'logotypes_slider_logo_color',
-                            'description' => __('Check if you want to change the logotypes white to color. ', 'pwelement'),
+                            'description' => __('Check if you want to change the logotypes white to color. ', 'pwe_header'),
                             'admin_label' => true,
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_header') => 'true',),   
                         ),
                         array(
                             'type' => 'checkbox',
                             'group' => 'Aditional options',
-                            'heading' => __('Association fair logo white', 'pwelement'),
+                            'heading' => __('Association fair logo white', 'pwe_header'),
                             'param_name' => 'association_fair_logo_white',
-                            'description' => __('Check if you want to change the logotypes color to white. ', 'pwelement'),
+                            'description' => __('Check if you want to change the logotypes color to white. ', 'pwe_header'),
                             'admin_label' => true,
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_header') => 'true',),
                         ),
                         // Add additional options from class extends
                         ...PWElementAdditionalLogotypes::additionalArray(),
+                        // array(
+                        //     "type" => "pwe_checkbox",
+                        //     'group' => 'test',
+                        //     "heading" => __("Custom Checkbox", "pwe_header"),
+                        //     "param_name" => "test",
+                        //     "description" => __("Enable or disable feature.", "pwe_header"),
+                        //     'admin_label' => true,
+                        //     'save_always' => true,
+                        // ),
                     )
                 ),
             ));
@@ -636,7 +647,6 @@ class PWEHeader {
             vc_add_shortcode_param( 'input_range', array('PWEHeader', 'input_range_field_html') );
         }
     }
-    
     public static function input_range_field_html( $settings, $value ) {
         $id = uniqid('range_');
         return '<div class="pwe-input-range">'
@@ -653,6 +663,33 @@ class PWEHeader {
             . '<span id="value_' . esc_attr( $id ) . '">' . esc_attr( $value ) . '</span>'
             . '</div>';
     }
+
+    /**
+     * Adding custom checkbox element
+     */
+    function pweCheckbox() {
+        if (function_exists('vc_add_shortcode_param')) {
+            vc_add_shortcode_param('pwe_checkbox', array('PWEHeader', 'pwe_checkbox_html'));
+        }
+    }
+    /**
+     * Generate HTML for custom checkbox
+     */
+    public static function pwe_checkbox_html($settings, $value) {
+        $checked = $value === 'true' ? 'checked' : '';
+        $id = uniqid('pwe_checkbox_');
+    
+        return '<div class="pwe-checkbox">'
+            . '<input type="checkbox" '
+            . 'id="' . esc_attr($id) . '" '
+            . 'name="' . esc_attr($settings['param_name']) . '" '
+            . 'class="wpb_vc_param_value ' . esc_attr($settings['param_name']) . ' ' . esc_attr($settings['type']) . '_field" '
+            . 'value="true" '
+            . $checked
+            . ' onclick="this.value = this.checked ? \'true\' : \'\';" />'
+            . '</div>';
+    }
+
     
     /**
      * Output method for PWelement shortcode.
@@ -697,7 +734,10 @@ class PWEHeader {
             'pwe_congress_widget_buttons_width' => '',
             'pwe_congress_widget_color' => '',
             'pwe_congress_widget_items' => '',
+            // 'test' => '',
         ), $atts ));
+
+        // var_dump($test);
 
         $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '400px' : $pwe_header_logo_width;
         $pwe_header_logo_width = str_replace("px", "", $pwe_header_logo_width);
@@ -1076,10 +1116,13 @@ class PWEHeader {
                         // Accompanying Fairs
                         if ($association_fair_logo_white == 'true') {
                             $output .= '<style>
-                                            .pwe-association-logotypes .pwe-as-logo,
+                                            .pwe-association-logotypes .as-side .pwe-as-logo,
                                             .pwe-association-logotypes .slides div {
                                                 filter: brightness(0) invert(1);
                                                 transition: all .3s ease;
+                                            }
+                                            .pwe-association-logotypes .slides .as-primary div {
+                                                filter: inherit;
                                             }
                                         </style>';
                         }

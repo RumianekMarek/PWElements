@@ -39,9 +39,9 @@ class PWELogotypes {
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
             vc_map(array(
-                'name' => __('PWE Logotypes', 'pwelements'),
+                'name' => __('PWE Logotypes', 'pwe_logotypes'),
                 'base' => 'pwe_logotypes',
-                'category' => __('PWE Elements', 'pwelements'),
+                'category' => __('PWE Elements', 'pwe_logotypes'),
                 'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
                 'admin_enqueue_js' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendscript.js',
                 'params' => array_merge(
@@ -49,10 +49,10 @@ class PWELogotypes {
                         // colors setup
                         array(
                             'type' => 'dropdown',
-                            'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwe_logotypes'),
                             'param_name' => 'text_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select text color for the element.', 'pwelements'),
+                            'description' => __('Select text color for the element.', 'pwe_logotypes'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'text_color_manual_hidden',
@@ -63,19 +63,19 @@ class PWELogotypes {
                         ),
                         array(
                             'type' => 'textfield',
-                            'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwe_logotypes'),
                             'param_name' => 'text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for text color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for text color for the element.', 'pwe_logotypes'),
                             'value' => '',
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'dropdown',
-                            'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwe_logotypes'),
                             'param_name' => 'text_shadow_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select shadow text color for the element.', 'pwelements'),
+                            'description' => __('Select shadow text color for the element.', 'pwe_logotypes'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'text_color_manual_hidden',
@@ -85,19 +85,19 @@ class PWELogotypes {
                         ),
                         array(
                             'type' => 'textfield',
-                            'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_logotypes'),
                             'param_name' => 'text_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for text shadow color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for text shadow color for the element.', 'pwe_logotypes'),
                             'value' => '',
                             'save_always' => true,
                         ),                        
                         array(
                             'type' => 'dropdown',
-                            'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwe_logotypes'),
                             'param_name' => 'btn_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select button color for the element.', 'pwelements'),
+                            'description' => __('Select button color for the element.', 'pwe_logotypes'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_color_manual_hidden',
@@ -107,19 +107,19 @@ class PWELogotypes {
                         ),
                         array(
                             'type' => 'textfield',
-                            'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwe_logotypes'),
                             'param_name' => 'btn_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for button color for the element.', 'pwe_logotypes'),
                             'value' => '',
                             'save_always' => true
                         ),
                         array(
                             'type' => 'dropdown',
-                            'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwe_logotypes'),
                             'param_name' => 'btn_text_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select button text color for the element.', 'pwelements'),
+                            'description' => __('Select button text color for the element.', 'pwe_logotypes'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_text_color_manual_hidden',
@@ -129,19 +129,19 @@ class PWELogotypes {
                         ),
                         array(
                             'type' => 'textfield',
-                            'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write button text color <a href="#" onclick="yourFunction(`btn_text_color`, `btn_text_color_manual_hidden`)">Pallet</a>', 'pwe_logotypes'),
                             'param_name' => 'btn_text_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button text color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for button text color for the element.', 'pwe_logotypes'),
                             'value' => '',
                             'save_always' => true
                         ),
                         array(
                             'type' => 'dropdown',
-                            'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwelements'),
+                            'heading' => __('Select button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color_manual_hidden`, `btn_shadow_color`)">Hex</a>', 'pwe_logotypes'),
                             'param_name' => 'btn_shadow_color',
                             'param_holder_class' => 'main-options',
-                            'description' => __('Select button shadow color for the element.', 'pwelements'),
+                            'description' => __('Select button shadow color for the element.', 'pwe_logotypes'),
                             'value' => $this->findPalletColors(),
                             'dependency' => array(
                                 'element' => 'btn_shadow_color_manual_hidden',
@@ -151,46 +151,46 @@ class PWELogotypes {
                         ),
                         array(
                             'type' => 'textfield',
-                            'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwelements'),
+                            'heading' => __('Write button shadow color <a href="#" onclick="yourFunction(`btn_shadow_color`, `btn_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_logotypes'),
                             'param_name' => 'btn_shadow_color_manual_hidden',
                             'param_holder_class' => 'main-options pwe_dependent-hidden',
-                            'description' => __('Write hex number for button shadow color for the element.', 'pwelements'),
+                            'description' => __('Write hex number for button shadow color for the element.', 'pwe_logotypes'),
                             'value' => '',
                             'save_always' => true
                         ),    
                         array(
                             'type' => 'attach_images',
                             'group' => 'PWE Element',
-                            'heading' => __('Select Images', 'pwelement'),
+                            'heading' => __('Select Images', 'pwe_logotypes'),
                             'param_name' => 'logotypes_media',
-                            'description' => __('Choose images from the media library.', 'pwelement'),
+                            'description' => __('Choose images from the media library.', 'pwe_logotypes'),
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => esc_html__('Logotypes catalog', 'pwelement'),
+                            'heading' => esc_html__('Logotypes catalog', 'pwe_logotypes'),
                             'param_name' => 'logotypes_catalog',
-                            'description' => __('Put catalog name in /doc/ where are logotypes.', 'pwelement'),
+                            'description' => __('Put catalog name in /doc/ where are logotypes.', 'pwe_logotypes'),
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => esc_html__('Title', 'pwelement'),
+                            'heading' => esc_html__('Title', 'pwe_logotypes'),
                             'param_name' => 'logotypes_title',
-                            'description' => __('Set title to diplay over the gallery', 'pwelement'),
+                            'description' => __('Set title to diplay over the gallery', 'pwe_logotypes'),
                             'save_always' => true,
                         ),
                         array(
                             'type' => 'checkbox',
                             'group' => 'Aditional options',
-                            'heading' => __('Logotypes white', 'pwelement'),
+                            'heading' => __('Logotypes white', 'pwe_logotypes'),
                             'param_name' => 'logotypes_slider_logo_white',
-                            'description' => __('Check if you want to change the logotypes color to white. ', 'pwelement'),
+                            'description' => __('Check if you want to change the logotypes color to white. ', 'pwe_logotypes'),
                             'admin_label' => true,
                             'save_always' => true,
-                            'value' => array(__('True', 'pwelement') => 'true',),
+                            'value' => array(__('True', 'pwe_logotypes') => 'true',),
                         ),
                         // Add additional options from class extends
                         ...PWElementAdditionalLogotypes::additionalArray(),

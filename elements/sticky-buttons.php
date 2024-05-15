@@ -157,6 +157,20 @@ class PWElementStickyButtons extends PWElements {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Turn off auto scrolling', 'pwelement'),
+                'param_name' => 'sticky_buttons_scroll',
+                'param_holder_class' => 'backend-area-one-fourth-width',
+                'description' => __('Turn on full size images', 'pwelement'),
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Name parameter for sections & rows', 'pwelement'),
@@ -252,6 +266,7 @@ class PWElementStickyButtons extends PWElements {
             'sticky_buttons_width' => '',
             'sticky_full_width_buttons_width' => '',
             'sticky_buttons_parameter' => '',
+            'sticky_buttons_scroll' => '',
         ), $atts ));   
         
         $sticky_buttons_width = ($sticky_buttons_width == '') ? '170px' : $sticky_buttons_width;
@@ -265,6 +280,7 @@ class PWElementStickyButtons extends PWElements {
             <style>
                 .pwelement_'.self::$rnd_id.' {
                     opacity: 0;
+                    transition: opacity 0.3s ease;
                 }
                 #page-header {
                     position: relative;
@@ -313,10 +329,10 @@ class PWElementStickyButtons extends PWElements {
                     }
                 }
                 .custom-sticky-buttons-cropped .custom-sticky-button-item {
-                    width: ' . $sticky_buttons_width . ' !important;
+                    max-width: ' . $sticky_buttons_width . ' !important;
                 }
                 .custom-sticky-buttons-full-size .custom-sticky-button-item {
-                    width: ' . $sticky_full_width_buttons_width . ' !important;
+                    max-width: ' . $sticky_full_width_buttons_width . ' !important;
                 }
                 .custom-sticky-button-item:hover {
                     transform: scale(1.1);
@@ -359,10 +375,14 @@ class PWElementStickyButtons extends PWElements {
                         flex-wrap: wrap;
                         justify-content: center;
                         margin: 0 auto;
-                        gap: 10px;
+                        gap: 20px;
                     }
-                    .custom-sticky-button-item img {
-                        width: 100%;
+                    
+                    .custom-sticky-buttons-cropped .custom-sticky-button-item {
+                        max-width: 150px !important;
+                    }
+                    .custom-sticky-buttons-full-size .custom-sticky-button-item {
+                        max-width: 150px !important;
                     }
                     .custom-sticky-button-item:hover {
                         transform: unset;
@@ -379,7 +399,7 @@ class PWElementStickyButtons extends PWElements {
                 }
                 .konferencja {
                     display: none;
-                    scroll-margin-top: 40px;
+                    scroll-margin-top: 36px;
                 }
             </style>';
 
@@ -417,7 +437,7 @@ class PWElementStickyButtons extends PWElements {
 
             $output .= '<div id="stickyButtons" class="custom-container-sticky-buttons">';
                 if ($sticky_buttons_full_size === "true") {
-                    $output .= '<div class="custom-sticky-buttons-full-size" style="display: none; background-color:'. $sticky_buttons_full_size_background .'!important;">';
+                    $output .= '<div class="custom-sticky-buttons-full-size" background-color:'. $sticky_buttons_full_size_background .'!important;">';
                     
                     if (is_array($sticky_buttons_json)) {
                         foreach ($sticky_buttons_json as $sticky_button) {
@@ -430,10 +450,21 @@ class PWElementStickyButtons extends PWElements {
                             $image_full_size_url = wp_get_attachment_url($attachment_full_size_img_id);
                             $full_size_buttons_urls[] = $image_full_size_url;
 
+                            $target_blank = (strpos($link, 'http') !== false) ? 'target="blank"' : '';
+
+                            $section_id = str_replace("-btn", "", $button_id);
+
+                            $output .= '<style>
+                                #'. $section_id .' {
+                                    opacity: 0;
+                                }
+                            </style>';
+
+
                             if (!empty($image_full_size_url)) {
                                 if (!empty($link)) {
                                     $output .= '<div class="custom-sticky-button-item">
-                                                    <a href="'. $link .'"><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'"></a>
+                                                    <a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'"></a>
                                                 </div>';
                                 } else {
                                     $output .= '<div class="custom-sticky-button-item">
@@ -443,7 +474,7 @@ class PWElementStickyButtons extends PWElements {
                             } else {
                                 if (!empty($link)) {
                                     $output .= '<div class="custom-sticky-button-item">
-                                                    <a href="'. $link .'"><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div></a>
+                                                    <a href="'. $link .'" '. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div></a>
                                                 </div>';
                                 } else {
                                     $output .= '<div class="custom-sticky-button-item">
@@ -460,11 +491,11 @@ class PWElementStickyButtons extends PWElements {
                 }
                 $output .= '
                 <div class="sticky custom-sticky-buttons-cropped-container">
-                    <div class="custom-sticky-head-container style-accent-bg" style="display: none; background-color:'. $sticky_buttons_cropped_background .'!important">
+                    <div class="custom-sticky-head-container style-accent-bg" background-color:'. $sticky_buttons_cropped_background .'!important">
                         <h4 class="custom-sticky-head-text" style="'. $text_color .' !important;">Wybierz kongres &nbsp;</h4>
                         <i class="fa fa-chevron-down fa-1x fa-fw" style="'. $text_color .' !important;"></i>
                     </div>
-                    <div class="custom-sticky-buttons-cropped style-accent-bg" style="display: none; background-color:'. $sticky_buttons_cropped_background .'!important">';
+                    <div class="custom-sticky-buttons-cropped style-accent-bg" background-color:'. $sticky_buttons_cropped_background .'!important">';
 
                         if (is_array($sticky_buttons_json)) {
                             foreach ($sticky_buttons_json as $sticky_button) {
@@ -480,10 +511,20 @@ class PWElementStickyButtons extends PWElements {
                                 $buttons_id[] = $button_id;
                                 $buttons_links[] = $link;
 
+                                $target_blank = (strpos($link, 'http') !== false) ? 'target="blank"' : '';
+
+                                $section_id = str_replace("-btn", "", $button_id);
+
+                                $output .= '<style>
+                                    #'. $section_id .' {
+                                        opacity: 0;
+                                    }
+                                </style>';
+
                                 if (!empty($image_url)) {
                                     if (!empty($link)) {
                                         $output .= '<div class="custom-sticky-button-item">';
-                                            $output .= '<a href="'. $link .'"><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'"></a>';
+                                            $output .= '<a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'"></a>';
                                         $output .= '</div>';
                                     } else {
                                         $output .= '<div class="custom-sticky-button-item">';
@@ -493,7 +534,7 @@ class PWElementStickyButtons extends PWElements {
                                 } else {
                                     if (!empty($link)) {
                                         $output .= '<div class="custom-sticky-button-item">';
-                                            $output .= '<a href="'. $link .'"><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div></a>';
+                                            $output .= '<a href="'. $link .'"'. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div></a>';
                                         $output .= '</div>';
                                     } else {
                                         $output .= '<div class="custom-sticky-button-item">';
@@ -526,24 +567,24 @@ class PWElementStickyButtons extends PWElements {
             $output .= '<script>
 
                 window.onload = function() {
+                    const pweElement = document.querySelector(".pwelement_'.self::$rnd_id.'");
+                    const stickyScroll = "'. $sticky_buttons_scroll .'";
                     const btnLinks = ' . json_encode($buttons_links_json) . ';
                     const btnsId = ' . json_encode($buttons_id_json) . ';
                     const stickyButtonsDropdown = ' . json_encode($sticky_buttons_dropdown) . ';
                     const stickyButtonsFullSize = ' . json_encode($sticky_buttons_full_size) . ';
-                    const tilesCroppedContainer = document.querySelector(".custom-sticky-buttons-cropped-container");
-                    const tilesCropped = document.querySelector(".custom-sticky-buttons-cropped");
-                    const tilesFullSize = document.querySelector(".custom-sticky-buttons-full-size");
+                    const tilesCroppedContainer = pweElement.querySelector(".custom-sticky-buttons-cropped-container");
+                    const tilesCropped = pweElement.querySelector(".custom-sticky-buttons-cropped");
+                    const tilesFullSize = pweElement.querySelector(".custom-sticky-buttons-full-size");
+                    const stickyHeadContainer = pweElement.querySelector(".custom-sticky-head-container");
                     const containerMasthead = document.querySelector("#masthead .menu-container");
                     const containerPageHeader = document.querySelector("#page-header");
-                    const containerCustomHeader = document.querySelector("#customHeader");
+                    const containerCustomHeader = document.querySelector("#pweHeader");
                     const adminBar = document.querySelector("#wpadminbar");
                     const desktop = ' . json_encode($mobile === 0) . ';
                     const mobile = ' . json_encode($mobile === 1) . ';
-                    const stickyHeadContainer = document.querySelector(".custom-sticky-head-container");
-
-                    let customElement = document.querySelector(".pwelement_'.self::$rnd_id.'");
-                    customElement.style.opacity = 1;
-                    customElement.style.transition = "opacity 0.3s ease";
+                    
+                    pweElement.style.opacity = 1;
 
                     const hideElement = (element) => {
                         element.style.display = "none";
@@ -654,6 +695,7 @@ class PWElementStickyButtons extends PWElements {
                                 btnsIdArray.forEach(function(btnId) {
                                     const trimmedBtnId = btnId.trim();
                                     const vcRow = document.getElementById(trimmedBtnId);
+                                    vcRow.classList.add("sticky-section");
                                     if (vcRow) {
                                         vcRow.classList.add("hide-section");
                                     }
@@ -714,61 +756,33 @@ class PWElementStickyButtons extends PWElements {
                         });
                     }
 
-                    document.querySelectorAll(".custom-image-button").forEach(function(button) {
-                        let customScrollTop;
-            
-                        if (containerPageHeader) {
-                            customScrollTop = containerPageHeader.offsetHeight;
-                        } else if (containerCustomHeader) {
-                            customScrollTop = containerCustomHeader.offsetHeight;
-                        } else {
-                            customScrollTop = containerMasthead.offsetHeight;
-                        }
-        
-                        if (document.querySelectorAll("header.menu-transparent").length > 0 && desktop) {
-                            customScrollTop -= containerMasthead.offsetHeight;
-                        }
-        
-                        customScrollTop += "px";
-                        
-                        const scrollTopValue = parseInt(customScrollTop);
-                        button.addEventListener("click", function() {
-                            window.scrollTo({ top: scrollTopValue, behavior: "smooth" });
-                        });
-                    });
-
-                    function handleQueryParam() {
-                        // Pobierz parametr "konferencja" z aktualnego adresu URL
-                        var urlParams = new URLSearchParams(window.location.search);
-                        var conferenceParam = urlParams.get("konferencja");
-                    
-                        // Sprawdź, czy istnieje parametr "konferencja"
-                        if (conferenceParam) {
-                            // Pokaż elementy o klasie "konferencja" z odpowiednim id, ukryj pozostałe
-                            var allElements = document.querySelectorAll(".konferencja");
-                            allElements.forEach(function (element) {
-                                if (element.id === conferenceParam) {
-                                    element.style.display = "block";
-                                    // Przewiń do elementu o id z kotwicy
-                                    element.scrollIntoView({ behavior: "smooth" });
-                                } else {
-                                    element.style.display = "none";
-                                }
-                            });
-                        
-                            // Dodaj klasę .active do elementu z id z kotwicy + -btn
-                            var activeBtn = document.getElementById(conferenceParam + "-btn");
-                            if (activeBtn) {
-                                activeBtn.classList.add("active");
-                            }
-                        }
-                    }
-                    
-                    // Wywołaj funkcję obsługi przy załadowaniu strony
-                    document.addEventListener("DOMContentLoaded", handleQueryParam);
+                    if (stickyScroll !== "true") {
+                        document.querySelectorAll(".custom-image-button").forEach(function(button) {
+                            let customScrollTop;
                 
-                    // Nasłuchuj zmiany parametru "konferencja" w adresie URL
-                    window.addEventListener("popstate", handleQueryParam);
+                            if (containerPageHeader) {
+                                customScrollTop = containerPageHeader.offsetHeight;
+                            } else if (containerCustomHeader) {
+                                customScrollTop = containerCustomHeader.offsetHeight;
+                            } else {
+                                customScrollTop = 0;
+                            }
+
+                            customScrollTop += pweElement.offsetHeight;
+            
+                            if (document.querySelectorAll("header.menu-transparent").length > 0 && desktop) {
+                                customScrollTop -= containerMasthead.offsetHeight;
+                            }
+            
+                            customScrollTop += "px";
+                            
+                            const scrollTopValue = parseInt(customScrollTop);
+                            button.addEventListener("click", function() {
+                                window.scrollTo({ top: scrollTopValue, behavior: "smooth" });
+                                // button.scrollIntoView({ behavior: "smooth" });
+                            });
+                        });
+                    }
                     
                     if (stickyButtonsDropdown === "true") {
 
@@ -788,22 +802,6 @@ class PWElementStickyButtons extends PWElements {
                                 toggleMenu($(this));
                             });
 
-                            // // Obsługa najechania myszką na .custom-sticky-head-container tylko dla szerokości >= 1300px
-                            // if ($(window).width() >= 1300) {
-                            //     $congressMenuSlide.find(".custom-sticky-head-container").mouseenter(function () {
-                            //         if (!$(this).closest(".custom-sticky-buttons-cropped-container").find(".custom-sticky-buttons-cropped").is(":visible")) {
-                            //             toggleMenu($(this));
-                            //         }
-                            //     });
-                            // }
-
-                            // // Obsługa opuszczenia obszaru .custom-container-sticky-buttons myszką
-                            // $congressMenuSlide.mouseleave(function () {
-                            //     if ($(this).find(".custom-sticky-buttons-cropped").is(":visible")) {
-                            //         toggleMenu($(this).find(".custom-sticky-head-container"));
-                            //     }
-                            // });
-
                             function toggleMenu($container) {
                                 $container.closest(".custom-sticky-buttons-cropped-container").find(".custom-sticky-buttons-cropped").slideToggle();
                                 $container.find("i").toggleClass("fa-chevron-down fa-chevron-up");
@@ -822,46 +820,65 @@ class PWElementStickyButtons extends PWElements {
                                     $congressMenuSlide.find(".custom-sticky-head-container").off("mouseenter"); // Wyłącz event handler dla węższego ekranu
                                 }
                             });
-            
+
+                            // Obsługa przewijania strony
+                            $(window).on("scroll", function() {
+                                $(".custom-sticky-buttons-cropped").slideUp();
+                                $(".custom-sticky-buttons-cropped-container .custom-sticky-head-container i").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+                            });
                         });
 
                     } else {
                         document.querySelector(".custom-sticky-head-container").style.display = "none";
                         
                     }
+
+                    const stickySections = document.querySelectorAll(".sticky-section");
+                    stickySections.forEach(function (section) {
+                        section.style.opacity = 1;  
+                    })
+
                 }
 
                 // Parameter for anchor
                 function handleQueryParam() {
-                    // Get the parameter from the current URL
-                    var urlParams = new URLSearchParams(window.location.search);
-                    var conferenceParam = urlParams.get("'. $sticky_buttons_parameter .'");
+                    setTimeout(() => {
+                        // Get the parameter from the current URL
+                        var urlParams = new URLSearchParams(window.location.search);
+                        var conferenceParam = urlParams.get("'. $sticky_buttons_parameter .'");
 
-                    // Check if "konferencja" parameter exists
-                    if (conferenceParam) {
-                        // Show elements class with the appropriate id, hide the rest
-                        var allElements = document.querySelectorAll(".'. $sticky_buttons_parameter .'");
-                        allElements.forEach(function (element) {
-                            if (element.id === conferenceParam) {
-                            element.style.display = "block";
-                            // Scroll to the element with id from the anchor
-                            element.scrollIntoView({ behavior: "smooth" });
-                            } else {
-                            element.style.display = "none";
+                        // Check if parameter exists
+                        if (conferenceParam) {
+                            // Show elements class with the appropriate id, hide the rest
+                            var allElements = document.querySelectorAll(".'. $sticky_buttons_parameter .'");
+                            allElements.forEach(function (element) {
+                                if (element.id === conferenceParam) {
+                                    element.style.display = "block";
+                                    element.classList.remove("hide-section");
+                                    setTimeout(() => {
+                                        element.style.opacity = 1;  
+                                    }, 100);
+                                    if ("'. $sticky_buttons_scroll .'" !== "true") {
+                                        // Scroll to the element with id from the anchor
+                                        element.scrollIntoView({ behavior: "smooth" });
+                                    }
+                                } else {
+                                    element.style.display = "none"; 
+                                }
+                            });
+
+                            // Add a .active class to the element with anchor id + -btn
+                            var activeBtn = document.getElementById(conferenceParam + "-btn");
+                            if (activeBtn) {
+                                activeBtn.classList.add("active");
                             }
-                        });
-
-                        // Add a .active class to the element with anchor id + -btn
-                        var activeBtn = document.getElementById(conferenceParam + "-btn");
-                        if (activeBtn) {
-                            activeBtn.classList.add("active");
                         }
-                    }
+                    }, 500);
                 }
 
                 // Call the handler function when the page is loaded
                 document.addEventListener("DOMContentLoaded", handleQueryParam);
-                // Listen for changes to the "conference" parameter in the URL
+                // Listen for changes to the conference parameter in the URL
                 window.addEventListener("popstate", handleQueryParam);
 
             </script>';

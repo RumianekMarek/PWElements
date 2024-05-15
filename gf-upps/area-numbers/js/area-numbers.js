@@ -4,6 +4,7 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         let area_code = area_data.elements["input_" + form_id][1];
         var main_pattern = '';
         var old_title = '';
+        let errorAfter = false;
 
         const createPattern = (unknown = false) => {
             if (unknown === true) {
@@ -12,6 +13,8 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
             }
             const titles = $('.iti__selected-flag').attr('title').split('+');
             const pattern = '+' + titles[1] + ' ' + $(phone_id).attr('placeholder');
+            $('#validation_phone').remove();
+            errorAfter = false;
             return pattern.replace(new RegExp("[0-9]", "g"), "9");
         }
 
@@ -20,7 +23,6 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
             newValue = title.split('+');
 
             if (!$(phone_id).val().startsWith('+') || $(phone_id).val().length > 4 || paste === true) {
-                console.log(title + paste + 'paste');
                 $(phone_id).val('+' + newValue[1] + ' ');
             }
 
@@ -34,6 +36,7 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'title') {
                     if ($(mutation.target).attr('title') == 'Unknown') {
                         main_pattern = createPattern(true);
+                        old_title = 'Unknown';
                     } else if ($(phone_id).val().length < 1) {
                         updatePhone($(mutation.target).attr('title'));
                     } else {
@@ -66,6 +69,25 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
             setTimeout(function () { main_pattern = createPattern() }, 500);
         }
 
+        const errorPhoneCheck = (event) => {
+            event.preventDefault();
+            const phoneInput = $(event.target).parent().parent().find(phone_id);
+            if (phoneInput.val().length >= main_pattern.length) {
+                $(event.target).parent().parent().submit();
+            } else {
+                if (errorAfter == false) {
+                    const errorDiv = $('<span>')
+                        .attr('id', 'validation_phone')
+                        .addClass('gfield_description validation_message gfield_validation_message')
+                        .text('Wypełnić według wzoru' + main_pattern);
+
+                    $(phone_id).parent().parent().after(errorDiv);
+
+                    errorAfter = true;
+                }
+            }
+        }
+
         $(phone_id).on('input', function () {
             if (!$(this).val().startsWith('+')) {
                 const targetUL = document.querySelector('.iti__selected-flag');
@@ -94,8 +116,17 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         $(phone_id).on('paste', function (event) {
             const pastedText = (event.originalEvent.clipboardData || window.clipboardData).getData('text');
             if (/[^+\d()]/u.test(pastedText)) {
-                event.preventDefault();
             };
+        });
+
+        $('form').has(phone_id).find('.gform_button').on('click', function (event) {
+            errorPhoneCheck(event);
+        });
+
+        $('form').on('keypress', phone_id, function (event) {
+            if (event.which === 13) {
+                errorPhoneCheck(event);
+            }
         });
 
         $(phone_id).attr('type', 'tel');

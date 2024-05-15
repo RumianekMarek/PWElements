@@ -210,6 +210,10 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     cursor: pointer;
                     transform: scale(1.2);
                 }
+                .pwe-speaker-modal-title,
+                .pwe-speaker-modal-desc {
+                    margin: 18px 0 0;
+                }
             }
             #pweSpeakerModal-'. $rnd .'.is-visible {
                 opacity: 1;
@@ -270,8 +274,8 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                                 <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
                                     <span class="pwe-speaker-modal-close">&times;</span>
                                     <img class="pwe-speaker-modal-image" src="${img.src}" alt="Speaker Image" style="width:100%; max-width:150px;">
-                                    <h5 class="pwe-speaker-modal-title">${name.textContent}</h5>
-                                    <p class="pwe-speaker-modal-desc">${desc.textContent}</p>
+                                    <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>
+                                    <p class="pwe-speaker-modal-desc">${desc.innerHTML}</p>
                                 </div>
                             `;
                             

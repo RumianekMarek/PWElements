@@ -53,7 +53,9 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'registration.php';
         require_once plugin_dir_path(__FILE__) . 'registration-content.php';
         require_once plugin_dir_path(__FILE__) . 'association.php';
+        require_once plugin_dir_path(__FILE__) . 'x_step_registration.php';
         require_once plugin_dir_path(__FILE__) . 'zaproszenie.php';
+        require_once plugin_dir_path(__FILE__) . 'ticket.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -208,6 +210,29 @@ class PWElements {
                         ...PWElementRegContent::initElements(),
                         ...PWElementAssociates::initElements(),
                         ...PWElementInvite::initElements(),
+                        ...PWElementXForm::initElements(),
+                        ...PWElementTicket::initElements(),
+                        array(
+                            'type' => 'param_group',
+                            'group' => 'Replace Strings',
+                            'param_name' => 'pwe_replace',
+                            'params' => array(
+                                array(
+                                    'type' => 'textarea',
+                                    'heading' => __('Input HTML', 'pwelement'),
+                                    'param_name' => 'input_replace_html',
+                                    'save_always' => true,
+                                    'admin_label' => true
+                                ),
+                                array(
+                                    'type' => 'textarea',
+                                    'heading' => __('Output HTML', 'pwelement'),
+                                    'param_name' => 'output_replace_html',
+                                    'save_always' => true,
+                                    'admin_label' => true
+                                ),
+                            ),
+                        ),
                     ),
                 ),
             ));
@@ -254,11 +279,13 @@ class PWElements {
             'Registration'                   => 'PWElementRegistration',
             'Registration content'           => 'PWElementRegContent',
             'Sticky buttons'                 => 'PWElementStickyButtons',
+            'Ticket'                         => 'PWElementTicket',
             'Videos'                         => 'PWElementVideos',
             'Voucher'                        => 'PWElementVoucher',
             'Visitors Benefits'              => 'PWElementVisitorsBenefits',
             'Wydarzenia ogólne'              => 'PWElementConferences',
             'Wypromuj się na targach'        => 'PWElementPromot',
+            'X-form'                         => 'PWElementXForm',
             'Zabudowa'                       => 'PWElementStand',
             'Zaproszenie'                    => 'PWElementInvite',
         );
@@ -303,11 +330,13 @@ class PWElements {
             'PWElementProfile'          => 'profile.php',
             'PWElementSocials'          => 'socialMedia.php',
             'PWElementStickyButtons'    => 'sticky-buttons.php',
+            'PWElementTicket'           => 'ticket.php',
             'PWElementVideos'           => 'videos.php',
             'PWElementVoucher'          => 'voucher.php',
             'PWElementVisitorsBenefits' => 'visitors-benefits.php',
             'PWElementConferences'      => 'wydarzenia-ogolne.php',
             'PWElementPromot'           => 'promote-yourself.php',
+            'PWElementXForm'            => 'x_step_registration.php', 
             'PWElementStand'            => 'zabudowa.php',
             'PWElementInvite'           => 'zaproszenie.php',
         );
@@ -404,6 +433,26 @@ class PWElements {
         }
         return $pwe_forms_array;
     }  
+
+    /**
+     * Finding all target form id
+     *
+     * @param string $form_name 
+     * @return string
+     */
+    public static function findFormsID($form_name){
+        $pwe_form_id = '';
+        if (method_exists('GFAPI', 'get_forms')) {
+            $pwe_forms = GFAPI::get_forms();
+            foreach ($pwe_forms as $form) {
+                if ($form['title'] === $form_name){
+                    $pwe_form_id = $form['id'];
+                    break;
+                }
+            }
+        }
+        return $pwe_form_id;
+    }
 
     /**
      * Mobile displayer check
@@ -541,7 +590,18 @@ class PWElements {
         // PWelement output
         extract( shortcode_atts( array(
             'pwe_element' => '',
+            'pwe_replace' => '',
         ), $atts ));
+
+        // Replace strings
+        $pwe_replace_urldecode = urldecode($pwe_replace);
+        $pwe_replace_json = json_decode($pwe_replace_urldecode, true);
+        $input_replace_array_html = array();
+        $output_replace_array_html = array();
+        foreach ($pwe_replace_json as $replace_item) {
+            $input_replace_array_html[] = $replace_item["input_replace_html"];
+            $output_replace_array_html[] = $replace_item["output_replace_html"];
+        }
 
         if ($this->findClassElements()[$pwe_element]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$pwe_element];
@@ -561,6 +621,10 @@ class PWElements {
         $output = do_shortcode($output);
         
         $file_cont = '<div class="pwelement pwelement_'.self::$rnd_id.'">' . $output . '</div>';
+
+        if ($input_replace_array_html && $output_replace_array_html) {
+            $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);
+        }
 
         return $file_cont;
     }

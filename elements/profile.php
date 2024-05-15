@@ -473,7 +473,7 @@ class PWElementProfile extends PWElements {
                                 $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
                                 $output .= '
                                     <div class="pwe-hidden-content" style="display: none; '. $text_color .'">'. $profile_hidden_content .'</div>
-                                    <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
+                                    <p class="pwe-see-more" style="cursor: pointer; '. $text_color .'">'. $showMore .'</p>';
                             } $output .= '
                         </div>
                         <div class="pwe-profile-images-block pwe-profile-block">

@@ -399,6 +399,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         <style>
             #info-box-'. self::$rnd_id .' {
                 display: flex;
+                text-align: left;
                 gap: 18px;
                 '. $info_box_styles .'
                 
@@ -418,7 +419,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
-                    gap: 10px;
+                    gap: 18px;
                 }
                 .pwe-box-speakers-img {
                     border-radius: '. $info_box_photo_square .';
@@ -552,6 +553,11 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     }
                     .pwe-box-info {
                         width: 100% !important;
+                    }
+                    .pwe-box-lecture-time,
+                    .pwe-box-lecture-title,
+                    .pwe-box-lecturer-name {
+                        text-align: center;
                     }
                 }
                 #pweBoxModal-'. $rnd .' {
