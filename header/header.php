@@ -748,160 +748,155 @@ class PWEHeader {
                     max-width: 100%;
                     padding: 0 !important;  
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' {
-                    .pwe-header-wrapper {
-                        min-height: 60vh;
-                        max-width: 1200px;
-                        margin: 0 auto; 
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        align-items: center;
-                    }
-                    .pwe-header-container:before {
-                        content: "";
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        background-color: '. $pwe_header_overlay_color .';
-                        opacity: '. $pwe_header_overlay_range .';
-                        z-index: 0;
-                    }
-                    .header-wrapper-column {
-                        max-width: 750px;
-                        justify-content: space-evenly;
-                        align-items: center;
-                        display: flex;
-                        flex-direction: column; 
-                        padding: 36px 18px;
-                    }
-                    .pwe-header-background {
-                        background-size: cover;
-                        background-repeat: no-repeat;
-                        background-position: center;
-                    }
-                    .pwe-header-logo {
-                        max-width: '. $pwe_header_logo_width .'px !important;
-                        width: 100%;
-                        height: auto;
-                        z-index: 1;
-                    }
-                    .header-button a {
-                        padding: 0 !important;
-                        height: 70px;
-                        display: flex;
-                        flex-flow: column;
-                        align-items: center;
-                        justify-content: center;
-                        text-transform: uppercase;
-                        z-index: 1;
-                    }
-                    .pwe-header-buttons {
-                        display: flex;
-                        flex-wrap: wrap;
-                        justify-content: center;
-                        gap: 20px;
-                        padding: 18px 0;
-                    }
-                    .pwe-header .pwe-btn-container {
-                        width: 320px;
-                        height: 75px;
-                        padding: 0;
-                    }
-                    .pwe-header .pwe-btn {
-                        background-color: '. $btn_color .';
-                        color: '. $btn_text_color .';
-                        box-shadow: '. $btn_shadow_color .';
-                        border: '. $btn_border .';                  
-                        width: 100%;
-                        height: 100%;
-                        transform: scale(1) !important;
-                        transition: .3s ease;
-                        font-size: 15px;
-                        font-weight: 600;
-                        padding: 6px 18px !important;
-                        letter-spacing: 0.1em;
-                        text-align: center;
-                    }
-                    .pwe-header .pwe-btn:hover {
-                        color: #000000 !important;
-                        background-color: #ffffff !important;
-                        border: 1px solid #000000 !important;
-                        box-shadow: 9px 9px 0px -5px '. $btn_color .';
-                    }
-                    .pwe-header-text {
-                        padding: 18px 0;
-                        z-index: 1;
-                    }
-                    .pwe-header-text :is(h1, h2), 
-                    .pwe-header .pwe-logotypes-title h4 {
-                        color: '. $text_color .';
-                        text-shadow: 2px 2px '. $text_shadow .';
-                        text-transform: uppercase;
-                        text-align: center;
-                        width: auto;
-                    }
-                    .pwe-header .pwe-logotypes-title {
-                        justify-content: center;
-                    }
-                    .pwe-header .pwe-logotypes-title h4 {
-                        box-shadow: 9px 9px 0px -6px '. $text_color .';
-                    }
-                    .pwe-header-text h1 {
-                        font-size: 30px;
-                    }
-                    .pwe-header-text h2 {
-                        font-size: 36px;
-                    }
-                    .pwe-header .pwe-container-logotypes-gallery {
-                        position: relative;
-                        z-index: 1;
-                    }
-                    .pwe-header-logotypes {
-                        display: flex;
-                        flex-wrap: wrap;
-                        justify-content: center;
-                        max-width: 1200px;
-                        width: 100%;
-                        margin: 0 auto;
-                        padding: 0 18px 36px;
-                        gap: 18px;
-                        opacity: 0;
-                    }
-                    .pwe-header .pwe-association {
-                        padding: 0 18px 36px;
-                        opacity: 0;
-                    }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                    min-height: 60vh;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
                 }
-                @media (min-width: 300px) and (max-width: 1200px) {
-                    .pwelement_'.SharedProperties::$rnd_id.' {
-                        .pwe-header-text h1 {
-                            font-size: calc(24px + (30 - 24) * ( (100vw - 300px) / (1200 - 300) ));
-                        }
-                        .pwe-header-text h2 {
-                            font-size: calc(28px + (36 - 28) * ( (100vw - 300px) / (1200 - 300) ));
-                        }
-                    }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-container:before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: '. $pwe_header_overlay_color .';
+                    opacity: '. $pwe_header_overlay_range .';
+                    z-index: 0;
                 }
-                @media (max-width:960px) {
-                    .row-parent:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-header) {
-                        padding: 0 !important;  
-                    }
-                    .pwelement_'.SharedProperties::$rnd_id.' {
-                        .pwe-header-logotypes .pwe-container-logotypes-gallery {
-                            width: 100% !important;
-                        }
-                        .pwe-header .pwe-btn-container {
-                            width: 260px;
-                            height: 70px;
-                        }
-                        .pwe-header .pwe-btn {
-                            font-size: 13px;
-                        }
-                    }
+                .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                    max-width: 750px;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 36px 18px;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                    max-width: '. $pwe_header_logo_width .'px !important;
+                    width: 100%;
+                    height: auto;
+                    z-index: 1;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .header-button a {
+                    padding: 0 !important;
+                    height: 70px;
+                    display: flex;
+                    flex-flow: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-transform: uppercase;
+                    z-index: 1;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-buttons {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 20px;
+                    padding: 18px 0;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                    width: 320px;
+                    height: 75px;
+                    padding: 0;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn {
+                    background-color: '. $btn_color .';
+                    color: '. $btn_text_color .';
+                    box-shadow: '. $btn_shadow_color .';
+                    border: '. $btn_border .';
+                    width: 100%;
+                    height: 100%;
+                    transform: scale(1) !important;
+                    transition: .3s ease;
+                    font-size: 15px;
+                    font-weight: 600;
+                    padding: 6px 18px !important;
+                    letter-spacing: 0.1em;
+                    text-align: center;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn:hover {
+                    color: #000000 !important;
+                    background-color: #ffffff !important;
+                    border: 1px solid #000000 !important;
+                    box-shadow: 9px 9px 0px -5px '. $btn_color .';
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                    padding: 18px 0;
+                    z-index: 1;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), .pwe-header .pwe-logotypes-title h4 {
+                    color: '. $text_color .';
+                    text-shadow: 2px 2px '. $text_shadow .';
+                    text-transform: uppercase;
+                    text-align: center;
+                    width: auto;
+                }             
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title {
+                    justify-content: center;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4 {
+                    box-shadow: 9px 9px 0px -6px '. $text_color .';
                 }   
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                    font-size: 30px;
+                } 
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                    font-size: 36px;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-container-logotypes-gallery {
+                    position: relative;
+                    z-index: 1;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logotypes {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    max-width: 1200px;
+                    width: 100%;
+                    margin: 0 auto;
+                    padding: 0 18px 36px;
+                    gap: 18px;
+                    opacity: 0;
+                }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-association {
+                    padding: 0 18px 36px;
+                    opacity: 0;
+                }
+
+                @media (min-width: 300px) and (max-width: 1200px) {
+                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-text h1 {
+                        font-size: calc(24px + (30 - 24) * ( (100vw - 300px) / (1200 - 300) ));
+                    }
+                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-text h2 {
+                        font-size: calc(28px + (36 - 28) * ( (100vw - 300px) / (1200 - 300) ));
+                    }
+                }
+                
+                @media (max-width: 960px) {
+                    .row-parent:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-header) {
+                        padding: 0 !important;
+                    }
+                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-logotypes .pwe-container-logotypes-gallery {
+                        width: 100% !important;
+                    }
+                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header .pwe-btn-container {
+                        width: 260px;
+                        height: 70px;
+                    }
+                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header .pwe-btn {
+                        font-size: 13px;
+                    }
+                }
             </style>';
  
             $partnerImages = glob($_SERVER['DOCUMENT_ROOT'] . '/doc/partnerzy/*.{jpeg,jpg,png,webp,JPG,PNG,JPEG,WEBP}', GLOB_BRACE);
@@ -943,53 +938,51 @@ class PWEHeader {
             if ($pwe_header_simple_mode == 'true') {
                 $output .= '
                     <style>
-                        .pwelement_'. SharedProperties::$rnd_id .' {
-                            .header-wrapper-column {
-                                padding: 36px;
+                        .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                            padding: 36px;
+                        }
+                        
+                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                            min-height: auto !important;
+                        }
+                        
+                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                            display: flex;
+                            flex-direction: column-reverse;
+                        }
+                        
+                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                            font-size: calc(28px + (40 - 28) * ( (100vw - 300px) / (1200 - 300) ));
+                        }
+                        
+                        @media (min-width: 960px) {
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                                min-height: 350px !important;
+                                height: 350px;
                             }
-                            .pwe-header-wrapper {
-                                min-height: auto !important;
-                            }
-                            .pwe-header-text {
-                                display: flex;
-                                flex-direction: column-reverse;
-                            }
-                            .pwe-header-text h2 {
-                                font-size: calc(28px + (40 - 28) * ( (100vw - 300px) / (1200 - 300) ));
+                            .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                                max-width: 1200px;
+                                flex-direction: row;
                             }
                         }
-                        @media (min-width:960px) {
-                            .pwelement_'. SharedProperties::$rnd_id .' {
-                                .pwe-header-wrapper {
-                                    min-height: 350px !important;
-                                    height: 350px;
-                                }
-                                .header-wrapper-column {
-                                    max-width: 1200px;
-                                    flex-direction: row;
-                                }
-                            }
-                        }
-                    </style>
-                ';
+                    </style>';
             }
 
             if ($pwe_header_logo_marg_pag == 'true') {
                 $output .= '
                     <style>
-                        .pwelement_'. SharedProperties::$rnd_id .' {
-                            .header-wrapper-column {
-                                padding: 0 18px 36px;
-                            }
-                            .pwe-header-text {
-                                padding: 0 0 18px;
-                            }
-                            .pwe-header-text h1 {
-                                margin: 0;
-                            }
-                        } 
-                    </style>
-                ';
+                        .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                            padding: 0 18px 36px;
+                        }
+                        
+                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                            padding: 0 0 18px;
+                        }
+                        
+                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                            margin: 0;
+                        }
+                    </style>';
             }
 
             $positions = ['top', 'center', 'bottom'];
@@ -997,13 +990,10 @@ class PWEHeader {
                 if (in_array($position, explode(',', $pwe_header_bg_position))) {
                     $output .= '
                         <style>
-                            .pwelement_'. SharedProperties::$rnd_id .' {
-                                .pwe-header-background {
-                                    background-position: '. $position .' !important;
-                                }
-                            }
-                        </style>
-                    ';
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                                background-position: '. $position .' !important;
+                            } 
+                        </style>';
                     break;
                 }
             }
