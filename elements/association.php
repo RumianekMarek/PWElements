@@ -140,11 +140,9 @@ class PWElementAssociates extends PWElements {
         if (!empty($sorted)) {
             $output .= 
             '<style>
-                .row-container:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-association),
-                .row-container:has(.pwelement_'.self::$rnd_id.' .pwe-association) {
+                .row-container:has(#'. $element_unique_id .') {
                     background-color: '. self::$fair_colors['Accent'] .';
                 }
-
                 .pwe-association {
                     position: relative;
                     width: 100%;
@@ -266,7 +264,6 @@ class PWElementAssociates extends PWElements {
                     if (pweElementRow !== null && pweAssociation == false && !isInPweHeader) {
                         pweElementRow.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
                     }
-
                 });
             }
             </script>';
