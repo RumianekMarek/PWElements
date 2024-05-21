@@ -29,26 +29,27 @@ class PWElementDonwload extends PWElements {
 
         $output .= '
         <style>
-        #download {
-            display:flex;
-            align-items: center;
-            color:white; 
-            border: 0;
-            max-width: 500px;
-            margin: auto;
-        }
-        .pwelement_'.self::$rnd_id.' #download :is(h3, a){
-            '.$text_color.'
-        }
-
-        ' . $filter . '
-
-        @media (max-width:959px){
-            .t-m-display-none{
-                display:none;
+            #download {
+                display:flex;
+                align-items: center;
+                color:white; 
+                border: 0;
+                max-width: 500px;
+                margin: auto;
             }
-        }
+            .pwelement_'.self::$rnd_id.' #download :is(h3, a){
+                '.$text_color.'
+            }
+
+            ' . $filter . '
+
+            @media (max-width:959px){
+                .t-m-display-none{
+                    display:none;
+                }
+            }
         </style>
+        
         <div id="download" class="pwe-download-container style-accent-bg shadow-black single-block-padding">
             <div class="single-media-wrapper wpb_column t-m-display-none half-block-padding" style="flex:1;">
                 <img src="/wp-content/plugins/PWElements/media/download-icon.png" alt="ikonka pobierania"/>

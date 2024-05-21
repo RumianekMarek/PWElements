@@ -212,76 +212,76 @@ class PWElementHomeGallery extends PWElements {
 
         $output .= '
             <style>
-            .pwelement_' . self::$rnd_id . ' .pwe-btn {
+            .pwelement_'. self::$rnd_id .' .pwe-btn {
                 ' . $btn_text_color . '
                 ' . $btn_color . '
                 ' . $btn_shadow_color . '
                 ' . $btn_border . '
                 margin: auto 0; 
             }
-            .pwelement_' . self::$rnd_id . ' .pwe-btn:hover {
+            .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
                 color: #000000 !important;
                 background-color: #ffffff !important;
                 border: 1px solid #000000 !important;
             }
-            .row-parent:has(.pwelement_' . self::$rnd_id . ' .pwe-container-gallery) {
+            .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-gallery) {
                 background: ' . self::$accent_color . ';
                 max-width: 100%;
                 padding: 0 !important;
             }
-            .pwe-gallery-wrapper {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-wrapper {
                 max-width: 1200px;
                 margin: 0 auto;
                 padding: 0 36px;
             }
-            .pwe-gallery-section {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
                 width: 100%;
                 display: flex;
                 justify-content: center;
                 gap: 36px;
             }
-            .pwe-gallery-thumbs-wrapper, .pwe-gallery-desc-wrapper{
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper, .pwe-gallery-desc-wrapper{
                 width: 50%;
             }
-            .pwe-gallery-thumbs {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs {
                 display: flex;
                 flex-direction: column;
                 width: 100%;
             }
-            .pwe-gallery-desc {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc {
                 background-color: #eaeaea;
             }
-            .pwe-gallery-desc-wrapper .pwe-btn-container, 
-            .pwe-gallery-thumbs-wrapper .pwe-btn-container {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container, 
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper .pwe-btn-container {
                 display: flex;
                 justify-content: left;
                 text-align: center;
             } 
-            .pwe-gallery-thumbs-top, 
-            .pwe-gallery-thumbs-bottom {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top, 
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom {
                 display: flex;
                 flex-wrap: wrap;
                 width: 100%;
             }
-            .pwe-gallery-thumbs-top img, 
-            .pwe-gallery-thumbs-bottom img {
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top img, 
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom img {
                 width: 50%;
                 padding: 5px;
             }
             @media (max-width: 960px) {
-                .pwe-gallery-section {
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
                     flex-direction: column;
                 }
-                .pwe-gallery-thumbs-wrapper {
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper {
                     width: 100%;
                 }
-                .pwe-gallery-desc-wrapper {
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper {
                     width: 100%;
                 }
             }
             @media (max-width: 500px) {
-                .pwe-gallery-desc-wrapper .pwe-btn-container, 
-                .pwe-gallery-thumbs-wrapper .pwe-btn-container {
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container, 
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper .pwe-btn-container {
                     justify-content: center;
                 }
             }

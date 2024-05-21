@@ -121,50 +121,47 @@ class PWElementRegistration extends PWElements {
         
         $output = '
         <style> 
-            .pwelement_'. self::$rnd_id .' {
-                .gform_wrapper input[type="submit"] {
-                    opacity: 0;
-                }
-                .gform_wrapper :is(label, .gfield_description), .show-consent,
-                .gform_legacy_markup_wrapper .gfield_required {
-                    color: '. $text_color .';
-                }
-                .pwe-registration .gform-body ul,
-                .uncell:has(.img-container-top10) {
-                    padding: 0 !important;
-                }
-                .pwe-registration-column {
-                    padding: 36px;
-                    height: 100%;
-                }
-                .row-container:has(.img-container-top10) #top10 {
-                    padding: 36px;
-                    box-shadow: 9px 9px 0px -5px black;
-                    border: 2px solid;
-                    height: 100%;
-                }
-                .row-container:has(.img-container-top10) .uncol,
-                .row-container:has(.img-container-top10) .uncell,
-                .row-container:has(.img-container-top10) .uncont,
-                .custom_element:has(.pwe-registration),
-                .pwe-registration {
-                    height: 100%;
-                }
-                .pwe-registration-title h4, .pwe-registration-text p {
-                    color: '. $text_color .';
-                }
-                .pwe-registration-title h4 {
-                    margin-top: 0 !important;
-                    box-shadow: 9px 9px 0px -6px '. $text_color .';
-                }
+            .pwelement_'. self::$rnd_id .' .gform_wrapper input[type="submit"] {
+                opacity: 0;
             }
-            
+            .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description),
+            .pwelement_'. self::$rnd_id .' .gform_legacy_markup_wrapper .gfield_required, 
+            .pwelement_'. self::$rnd_id .' .show-consent {
+                color: '. $text_color .';
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-registration .gform-body ul,
+            .uncell:has(.img-container-top10) {
+                padding: 0 !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-registration-column {
+                padding: 36px;
+                height: 100%;
+            }
+            .row-container:has(.img-container-top10) #top10 {
+                padding: 36px;
+                box-shadow: 9px 9px 0px -5px black;
+                border: 2px solid;
+                height: 100%;
+            }
+            .pwelement_'. self::$rnd_id .':has(.pwe-registration),
+            .pwelement_'. self::$rnd_id .' .pwe-registration,
+            .row-container:has(.img-container-top10) .uncol,
+            .row-container:has(.img-container-top10) .uncell,
+            .row-container:has(.img-container-top10) .uncont {
+                height: 100%;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-registration-title h4, 
+            .pwelement_'. self::$rnd_id .' .pwe-registration-text p {
+                color: '. $text_color .';
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-registration-title h4 {
+                margin-top: 0 !important;
+                box-shadow: 9px 9px 0px -6px '. $text_color .';
+            }
             @media (max-width: 450px) {
-                .pwelement_'. self::$rnd_id .' {
-                    input[type="submit"] {
-                        padding: 12px 20px !important;
-                        font-size: 3.3vw !important;
-                    }
+                .pwelement_'. self::$rnd_id .' input[type="submit"] {
+                    padding: 12px 20px !important;
+                    font-size: 3.3vw !important;
                 }
             }
         </style>';

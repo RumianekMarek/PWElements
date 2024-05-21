@@ -21,39 +21,39 @@ class PWElementVisitorsBenefits extends PWElements {
         
         $output .='
             <style>
-                .pwelement_' . self::$rnd_id . ' #visitorsBenefits :is(h3, h4){
+                .pwelement_' . self::$rnd_id . ' #visitorsBenefits :is(h3, h4) {
                     ' . $text_color . '
                 }
-                .pwe-visitors-benefits-row {
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-row {
                     padding-top: 18px;
                     width: 100%;
                     text-align: center;
                 }
-                .pwe-visitors-benefits {
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits {
                     width: 100%;
                     display: flex;
                     justify-content: center;
                     gap: 36px;
                 }
-                .pwe-visitors-benefits-item {
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item {
                     width: 33%;
                 }
                 @media (max-width:768px) {
-                    .pwe-visitors-benefits {
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits {
                         gap: 18px;
                     }
-                    .pwe-visitors-benefits-item-heading h4 {
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item-heading h4 {
                         font-size: 16px;
                     }
                 }
                 @media (max-width:570px) {
-                    .pwe-visitors-benefits {
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits {
                         flex-direction: column;
                     }
-                    .pwe-visitors-benefits-item {
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item {
                         width: 100%;
                     }  
-                    .pwe-visitors-benefits-item-heading h4 {
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item-heading h4 {
                         font-size: 20px;
                     }
                 } 

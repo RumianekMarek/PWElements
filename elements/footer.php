@@ -305,7 +305,15 @@ class PWElementFooter extends PWElements {
                         break;
                     }
                 }
-            }         
+            }      
+            
+            // // Dodanie nowej pozycji do menu $menu_3_en
+            // $new_menu_item = (object) array(
+            //     'title' => 'Become an agent',
+            //     'url' => 'https://warsawexpo.eu/en/forms-for-agents/'
+            // );
+            // $menu_3_en_items = wp_get_nav_menu_items($menu_3_en);
+            // array_push($menu_3_en_items, $new_menu_item);
 
             function generateFooterNav($locale, $menus, $footer_logo_color_invert) {
                 $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
@@ -353,10 +361,46 @@ class PWElementFooter extends PWElements {
             } elseif (isset($menu_1_en, $menu_2_en, $menu_3_en)) {
                 $output .= generateFooterNav('en_US', [$menu_1_en, $menu_2_en, $menu_3_en], $footer_logo_color_invert);
             }
-            
-            
 
         $output .= '</div>';
+
+        if (get_locale() == "en_US") {
+            $output .= '
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+
+                    // Top main menu "For exhibitors"
+                    const mainMenu = document.querySelector("ul.menu-primary-inner");
+                    const secondChild = mainMenu.children[1];
+                    const dropMenu = secondChild.querySelector("ul.drop-menu");
+
+                    // Create new element li
+                    const newMenuItem = document.createElement("li");
+                    newMenuItem.id = "menu-item-99999";
+                    newMenuItem.className = "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
+                    newMenuItem.innerHTML = `<a title="Become an agent" target="_blank" href="https://warsawexpo.eu/en/forms-for-agents/">Become an agent</a>`;
+
+                    // Add new element
+                    dropMenu.appendChild(newMenuItem);
+
+                    // --------------------------------------------
+
+                    // Bottom main menu "For exhibitors"
+                    const footerMenu = document.querySelector(".pwe-footer-nav-right-column");
+                    const footerThirdChild = footerMenu.children[2];
+                    const footerMenuChild = footerThirdChild.querySelector(".pwe-footer-nav-column .menu");
+
+                    // Create new element li
+                    const newFooterMenuItem = document.createElement("li");
+                    newFooterMenuItem.id = "menu-item-99999";
+                    newFooterMenuItem.className = "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
+                    newFooterMenuItem.innerHTML = `<a title="Become an agent" target="_blank" href="https://warsawexpo.eu/en/forms-for-agents/">Become an agent</a>`;
+
+                    // Add new element
+                    footerMenuChild.appendChild(newFooterMenuItem);
+                });
+            </script>';
+        }
 
         return $output;
 

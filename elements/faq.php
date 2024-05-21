@@ -28,42 +28,42 @@ class PWElementFaq extends PWElements {
 
         $output = '
             <style>
-                .row-parent:has(.pwelement_' . self::$rnd_id . ' #faq) {
+                .row-parent:has(.pwelement_'. self::$rnd_id .' #faq) {
                     width: 100%;
                     padding: 0 !important;
                 }
-                .pwe-faq-wrapper {
+                .pwelement_'. self::$rnd_id .' .pwe-faq-wrapper {
                     max-width: 1200px;
                     margin: 0 auto;
                     padding: 36px;
                 }
-                .pwelement_' . self::$rnd_id . ' .pytanie-odpowiedz{
+                .pwelement_'. self::$rnd_id .' .pytanie-odpowiedz{
                     max-width: 750px; 
                     ' . $border_color . '
                 }
-                .pwelement_' . self::$rnd_id . ' .pwe-container-faq h4 {
+                .pwelement_'. self::$rnd_id .' .pwe-container-faq h4 {
                         padding: 0 10px 5px 0;
                         ' . $title_shadow_color . '
                     }
-                .pytanie::after{
+                    .pwelement_'. self::$rnd_id .' .pytanie::after{
                     content: ">";
                     float: right;
                     top: 50%;
                     transform: rotate(0);
                     transition: transform 200ms ease-out;
                 }
-                .active.pytanie::after{
+                .pwelement_'. self::$rnd_id .' .active.pytanie::after{
                     transform: rotate(90deg);
                 }
-                .pytanie{
+                .pwelement_'. self::$rnd_id .' .pytanie{
                     cursor:pointer;
                 }
-                .odpowiedz{
+                .pwelement_'. self::$rnd_id .' .odpowiedz{
                     padding-top: 0px !important;
                     margin-left: 20px;
                     display: none;
                 }
-                .pwelement_' . self::$rnd_id . '  #faq :is(.pytanie, .odpowiedz, a, h4){
+                .pwelement_'. self::$rnd_id .'  #faq :is(.pytanie, .odpowiedz, a, h4){
                     ' . $text_color . '
                 }
             </style>

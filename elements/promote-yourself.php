@@ -76,7 +76,7 @@ class PWElementPromot extends PWElements {
                     max-width: 45%;
                     margin:18px;
                 }
-                .pwe-btn {
+                .pwelement_'. self::$rnd_id .' .pwe-btn {
                     ' . $btn_text_color
                     . $btn_color
                     . $btn_shadow_color

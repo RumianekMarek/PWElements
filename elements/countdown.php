@@ -312,51 +312,47 @@ class PWElementMainCountdown extends PWElements {
 
         if (count($right_countdown)){
         $output .= '
-                .pwelement_' . self::$rnd_id . '{
-                    #main-timer p {
-                        ' . $text_color . '
-                        margin: 9px auto;
-                        font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
-                    }
-                    .pwe-btn {
-                        ' . $btn_text_color 
-                        . $btn_color
-                        . $btn_shadow_color . '
-                        margin: 9px 18px; 
-                        transform: scale(1) !important;
-                    }
-                    .pwe-timer-text {
-                        font-weight: ' . $countdown_font_weight . ';
-                        text-transform: uppercase;
-                        margin: 9px auto;
-                    }
-                    .countdown-container {                    
-                        display: flex;
-                        justify-content: space-evenly;
-                        flex-wrap: wrap;
-                        ' . $flex_direction . '
-                        align-items: center;
-                        max-width: 1200px;
-                        margin: 0 auto;
-                    }
-                    .pwe-countdown-timer {
-                        min-width: 450px;
-                        text-align: center;
-                    }
+            .pwelement_'. self::$rnd_id .' #main-timer p {
+                ' . $text_color . '
+                margin: 9px auto;
+                font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-btn {
+                ' . $btn_text_color 
+                . $btn_color
+                . $btn_shadow_color . '
+                margin: 9px 18px; 
+                transform: scale(1) !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-timer-text {
+                font-weight: ' . $countdown_font_weight . ';
+                text-transform: uppercase;
+                margin: 9px auto;
+            }
+            .pwelement_'. self::$rnd_id .' .countdown-container {                    
+                display: flex;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+                ' . $flex_direction . '
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
+                min-width: 450px;
+                text-align: center;
+            }
+            @media (max-width:570px){
+                .pwelement_'. self::$rnd_id .' .countdown-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
+                    align-items: baseline;
                 }
-                @media (max-width:570px){
-                    .pwelement_' . self::$rnd_id . '{
-                        .countdown-container {
-                            display: flex;
-                            flex-wrap: wrap;
-                            justify-content: space-evenly;
-                            align-items: baseline;
-                        }
-                        .pwe-countdown-timer {
-                            min-width: 100%;
-                        }
-                    }
-                }';
+                .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
+                    min-width: 100%;
+                }  
+            }';
 
             $output .= '</style>';
                 

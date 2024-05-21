@@ -88,31 +88,28 @@ class PWElementRegContent extends PWElements {
         
         $output = '
         <style>
-            .row-container:has(.pwelement_'. self::$rnd_id .') {
-                .gform_wrapper input[type="submit"] {
-                    opacity: 0;
-                }
-                .pwe-form-title h4, .pwe-form-text p {
-                    color: '. $text_color .';
-                }
-                .pwe-form-title h4 {
-                    margin-top: 0 !important;
-                    box-shadow: 9px 9px 0px -6px '. $text_color .';
-                }
-                .gform_wrapper :is(label, .gfield_description), .show-consent,
-                .gform_legacy_markup_wrapper .gfield_required {
-                    color: '. $text_color .';
-                }
-                .gform-body ul {
-                    padding: 0 !important;
-                }
+            .row-container:has(.pwelement_'. self::$rnd_id .') .gform_wrapper input[type="submit"] {
+                opacity: 0;
+            }
+            .row-container:has(.pwelement_'. self::$rnd_id .') .pwe-form-title h4, .pwe-form-text p {
+                color: '. $text_color .';
+            }
+            .row-container:has(.pwelement_'. self::$rnd_id .') .pwe-form-title h4 {
+                margin-top: 0 !important;
+                box-shadow: 9px 9px 0px -6px '. $text_color .';
+            }
+            .row-container:has(.pwelement_'. self::$rnd_id .') .gform_wrapper :is(label, .gfield_description), 
+            .row-container:has(.pwelement_'. self::$rnd_id .') .gform_legacy_markup_wrapper .gfield_required,
+            .row-container:has(.pwelement_'. self::$rnd_id .') .show-consent {
+                color: '. $text_color .';
+            }
+            .row-container:has(.pwelement_'. self::$rnd_id .') .gform-body ul {
+                padding: 0 !important;
             }
             @media (max-width: 450px) {
-                .row-container:has(.pwelement_'. self::$rnd_id .') {
-                    input[type="submit"] {
-                        padding: 12px 20px !important;
-                        font-size: 3.3vw !important;
-                    }
+                .row-container:has(.pwelement_'. self::$rnd_id .') input[type="submit"] {
+                    padding: 12px 20px !important;
+                    font-size: 3.3vw !important;
                 }
             }
         </style>

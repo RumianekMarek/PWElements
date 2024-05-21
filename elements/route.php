@@ -21,97 +21,92 @@ class PWElementRoute extends PWElements {
         
         $output .='
             <style>
-                .pwelement_' . self::$rnd_id . '{
-                     #dojazd :is(h4, h5, p){
-                        ' . $text_color . '
-                    }
-
-                    .pwe-route-title-wrapper h4 {
-                        width: auto !important;
-                    }
-
-                    .pwe-route-transport-item-img {
-                        display: flex;
-                        align-items: center;
-                        padding-right: 18px;
-                    }
-
-                    .pwe-route-transport-item-img img {
-                        width: 60px !important;
-                        min-width: 60px;
-                    }
-
-                    .pwe-route-image-bg {
-                        aspect-ratio: 16/9;
-                        background-position: center;
-                        background-size: cover;
-                    }
-                    .pwe-route-image-bg h3 {
-                        font-size: 22px !important;
-                        max-width: 90%;
-                        padding: 8px;
-                        margin: 0;
-                    }
-                    .pwe-route-area-wrapper {
-                        padding-top: 36px;
-                        display: flex;
-                        gap: 36px;
-                        flex-direction: column;
-                    }
-                    .pwe-route-area-block {
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        align-items: center;
-                        gap: 18px;
-                    }
-                    .pwe-route-area-block img {
-                        width: 80px;
-                        padding: 0 18px;
-                    }
-                    .pwe-route-area-item-text {
-                        align-items: center;
-                    }
-                    .pwe-route-area-item-text h5 {
-                        margin: 0;
-                    }
+                .pwelement_'. self::$rnd_id .' #dojazd :is(h4, h5, p){
+                    ' . $text_color . '
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-route-title-wrapper h4 {
+                    width: auto !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-transport-item-img {
+                    display: flex;
+                    align-items: center;
+                    padding-right: 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-transport-item-img img {
+                    width: 60px !important;
+                    min-width: 60px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-image-bg {
+                    aspect-ratio: 16/9;
+                    background-position: center;
+                    background-size: cover;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-image-bg h3 {
+                    font-size: 22px !important;
+                    max-width: 90%;
+                    padding: 8px;
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-area-wrapper {
+                    padding-top: 36px;
+                    display: flex;
+                    gap: 36px;
+                    flex-direction: column;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-area-block {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-area-block img {
+                    width: 80px;
+                    padding: 0 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-area-item-text {
+                    align-items: center;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-area-item-text h5 {
+                    margin: 0;
+                }
+                
                 @media (max-width:960px) {
-                    #route{
+                    .pwelement_'. self::$rnd_id .' #route {
                         padding: 36px 0;
                     }
-                    .pwe-route-transport-wrapper, 
-                    .pwe-route-area-wrapper {
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-wrapper, 
+                    .pwelement_'. self::$rnd_id .' .pwe-route-area-wrapper {
                         flex-direction: column;
                     }
-                    .custom-half-width {
+                    .pwelement_'. self::$rnd_id .' .custom-half-width {
                         width: 100% !important;
                     }
-                    .pwe-route-image-bg h3 {
+                    .pwelement_'. self::$rnd_id .' .pwe-route-image-bg h3 {
                         font-size: 18px !important;
                     }
-                    .pwe-route-area-block {
+                    .pwelement_'. self::$rnd_id .' .pwe-route-area-block {
                         padding: 36px 0;
                     }
                 }
-                @media (max-width:600px){
-                    .pwe-align-center {
+                @media (max-width:600px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-align-center {
                         font-size: 16px !important;
                     }
-                    .pwe-route-transport-item {
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-item {
                         flex-direction: column;
                     }
-                    .pwe-route-transport-block h5{
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-block h5{
                         margin: 0;
                     }
-                    .pwe-route-transport-block img{
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-block img{
                         margin: 27px 0 0;
                     }
-                    .pwe-route-transport-item-text {
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-item-text {
                         text-align: center;
                     }
-                    .pwe-route-transport-item-img,
-                    .pwe-route-transport-item-text h5 {
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-item-img,
+                    .pwelement_'. self::$rnd_id .' .pwe-route-transport-item-text h5 {
                         padding: 0;
                         width: inherit !important;
                         justify-content: center;

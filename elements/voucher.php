@@ -40,17 +40,18 @@ class PWElementVoucher extends PWElements {
                     background-color: #ffffff !important;
                     border: 1px solid #000000 !important;
                 }
-                .pwe-container-voucher {
+                .pwelement_'. self::$rnd_id .' .pwe-container-voucher {
                     display:flex;
                     flex-wrap: wrap;
                     justify-content: center;
                 }
                 @media (max-width:960px) {
-                    .pwe-container-voucher {
+                    .pwelement_'. self::$rnd_id .' .pwe-container-voucher {
                         flex-direction: column;
                     }
                 }
             </style>
+            
             <div id="PWEvoucher"class="pwe-container-voucher">
                 <div class="uncode-single-media-wrapper half-block-padding pwe-min-media-wrapper" style="flex:1;">
                     <div class="image-shadow"><div class="t-entry-visual"><img style="vertical-align: bottom;" src="/wp-content/plugins/PWElements/media/voucher.webp" alt="grafika przykładowego vouchera"/></div></div>

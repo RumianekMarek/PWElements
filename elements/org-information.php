@@ -29,12 +29,12 @@ class PWElementOrgInfo extends PWElements {
 
         $output .= '
             <style>
-                .row-parent:has(.pwelement_' . self::$rnd_id . ' #orgInfo) {
+                .row-parent:has(.pwelement_'. self::$rnd_id .' #orgInfo) {
                     max-width: 100%;
                     padding: 0 !important;
                 }
 
-                .pwelement_' . self::$rnd_id . ' .orgInfo-header-text{
+                .pwelement_'. self::$rnd_id .' .orgInfo-header-text{
                     ' . $text_color . '
                     text-shadow: 2px 2px ' . $text_color_shadow . ';
                 }

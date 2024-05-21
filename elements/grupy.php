@@ -24,16 +24,14 @@ class PWElementGroups extends PWElements {
 
         $output = '
             <style>
-                .pwelement_' . self::$rnd_id . ' {
-                    .pwe-container-grupy :is(h4, p , a){
-                        color:' . $text_color . ';
-                    }
-                    .pwe-container-grupy h4 {
-                        padding: 0 10px 5px 0;
-                        box-shadow: 9px 9px 0px -6px ' . $text_color . ';
-                    }
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy :is(h4, p , a){
+                    color:' . $text_color . ';
                 }
-                .pwe-container-grupy a{
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy h4 {
+                    padding: 0 10px 5px 0;
+                    box-shadow: 9px 9px 0px -6px ' . $text_color . ';
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy a{
                     text-decoration: underline;
                 }
             </style>

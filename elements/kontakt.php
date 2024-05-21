@@ -49,51 +49,50 @@ class PWElementContact extends PWElements {
 
         $output .= '
             <style>
-                .raw-pwe-container{
+                .pwelement_'. self::$rnd_id .' .raw-pwe-container{
                     display:flex; 
                     align-items: center;
                     gap: 18px;
                 }
-                .pwe-container-contact img{
-                    max-width:150px !important;
+                .pwelement_'. self::$rnd_id .' .pwe-container-contact img{
+                    max-width: 150px !important;
                 }
 
-                .pwelement_' . self::$rnd_id . ' .uncode_text_column :is(p, a),
-                .pwelement_' . self::$rnd_id . ' .heading-text h4{
+                .pwelement_'. self::$rnd_id .' .uncode_text_column :is(p, a),
+                .pwelement_'. self::$rnd_id .' .heading-text h4{
                     ' . $text_color . '
                 }
-                .pwe-container-contact .main-heading-text {
-                padding-top: 0;
+                .pwelement_'. self::$rnd_id .' .pwe-container-contact .main-heading-text {
+                    padding-top: 0;
                 }
                 @media (max-width:860px){
-                    .uncell:has(.pwe-container-contact) {
+                    .uncell:has(.pwelement_'. self::$rnd_id .' .pwe-container-contact) {
                         padding: 36px 18px 36px 18px !important;
                     }
-                    .raw-pwe-container{
+                    .pwelement_'. self::$rnd_id .' .raw-pwe-container{
                         flex-wrap: wrap;
                         justify-content: center;
                         text-align: center;
                         flex-direction: column;
                     }
-                    .raw-pwe-container p{ 
+                    .pwelement_'. self::$rnd_id .' .raw-pwe-container p{ 
                         min-width: 160px;
                     }
                 }';
 
         if ($atts["horizontal"] == "true") {
             $output .= '
-                .pwe-container-contact-items {
+                .pwelement_'. self::$rnd_id .' .pwe-container-contact-items {
                     display: flex; 
                     flex-wrap: wrap;
                     justify-content: space-evenly;
                 }
-
-                .raw-pwe-container {
+                .pwelement_'. self::$rnd_id .' .raw-pwe-container {
                     flex-direction: column;
                     text-align: center;
                     flex: 1;
                 }
-                .half-block-padding{
+                .pwelement_'. self::$rnd_id .' .half-block-padding{
                     padding: 9px 0;
                 }';
         }

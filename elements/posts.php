@@ -180,28 +180,28 @@ class PWElementPosts extends PWElements {
                 margin: 0 auto; 
                 padding: 36px;  
             } 
-            .pwe-posts-title h4 {
-                margin: 0 0 36px;
-            }
-            .pwe-posts {
+            .pwelement_'. self::$rnd_id .' .pwe-posts {
                 display: flex;
                 justify-content: center;
                 gap: 18px;
                 padding-bottom: 18px;
                 opacity: 0;
             }
-            .pwe-post-title {
+            .pwelement_'. self::$rnd_id .' .pwe-post-title {
                 margin: 0;
                 padding: 10px 0 0 10px;
             }
-            .pwe-post-thumbnail .image-container {
+            .pwelement_'. self::$rnd_id .' .pwe-posts-title h4 {
+                margin: 0 0 36px;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
                 width: 100%;
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: center;
                 aspect-ratio: '. $posts_ratio .';
             }
-            .pwe-posts .slides {
+            .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
                 align-items: flex-start !important;
                 gap: 16px;
             }
@@ -215,27 +215,26 @@ class PWElementPosts extends PWElements {
         // Display all categories across the full width of the page
         if ($posts_full_width === 'true' && $mobile != 1) {
             $output .= '<style>
-                            .pwe-posts-wrapper {
-                                max-width: 100% !important;  
-                                padding: 36px 0 !important; 
-                            }
-                            .pwe-posts-title {
-                                max-width: 1200px;
-                                margin: 0 auto;
-                                padding-left: 36px;
-                            }
-                            .pwe-posts .slides {
-                                margin-right: 36px !important;
-                                gap: 36px !important;
-                            }
-                            .pwe-post .t-entry-visual,
-                            .pwe-post .image-container,
-                            .pwe-post .pwe-post-thumbnail {
-                                min-width: 300px !important;
-                                max-width: 300px !important;
-                            }
-
-                        </style>';
+                .pwelement_'. self::$rnd_id .' .pwe-posts-wrapper {
+                    max-width: 100% !important;  
+                    padding: 36px 0 !important; 
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-posts-title {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding-left: 36px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
+                    margin-right: 36px !important;
+                    gap: 36px !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post .t-entry-visual,
+                .pwelement_'. self::$rnd_id .' .pwe-post .image-container,
+                .pwelement_'. self::$rnd_id .' .pwe-post .pwe-post-thumbnail {
+                    min-width: 300px !important;
+                    max-width: 300px !important;
+                }
+            </style>';
         }   
         
         $output .= '<div id="pwePosts" class="pwe-container-posts">

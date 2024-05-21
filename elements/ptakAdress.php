@@ -39,7 +39,7 @@ class PWElementAddress extends PWElements {
                 .row-container:has(#socialMedia) #ptakAdress {
                     max-width: 500px;
                 }
-                .pwelement_' . self::$rnd_id. '  #ptakAdress li{
+                #ptakAdress li {
                     ' . $text_color . '
                 }
                 .pwe-text-ptakAdress li {

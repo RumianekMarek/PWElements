@@ -29,30 +29,30 @@ class PWElementStand extends PWElements {
         
         $output = '
             <style>
-                .pwelement_'.self::$rnd_id.' .pwe-btn {
+                .pwelement_'. self::$rnd_id .' .pwe-btn {
                     '. $btn_text_color
                     . $btn_color
                     . $btn_shadow_color
                     . $btn_border .'
                 }
-                .pwelement_'.self::$rnd_id.' .pwe-btn:hover {
+                .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
                     color: #000000 !important;
                     background-color: #ffffff !important;
                     border: 1px solid #000000 !important;
                 }
-                .pwe-container-stand {
+                .pwelement_'. self::$rnd_id .' .pwe-container-stand {
                     display:flex;
                     flex-wrap: wrap;
                     justify-content: center;
                 }
                 @media (max-width:960px) {
-                    .pwe-container-stand{
+                    .pwelement_'. self::$rnd_id .' .pwe-container-stand {
                         flex-direction: column;
                     }
-                    .pwe-container-stand .pwe-block-1 {
+                    .pwelement_'. self::$rnd_id .' .pwe-container-stand .pwe-block-1 {
                         order:2;
                     }
-                    .pwe-container-stand .pwe-block-2 {
+                    .pwelement_'. self::$rnd_id .' .pwe-container-stand .pwe-block-2 {
                         order:1;
                     }
                 }

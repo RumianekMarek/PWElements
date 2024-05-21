@@ -336,84 +336,84 @@ class PWElementProfile extends PWElements {
 
         $output = '
             <style>
-                .pwelement_' . self::$rnd_id . ' .pwe-btn {
+                .pwelement_'. self::$rnd_id .' {
+                    margin: 0 !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn {
                     ' . $btn_text_color . '
                     ' . $btn_color . '
                     ' . $btn_shadow_color . '
                     ' . $btn_border . '
                 }
-                .pwelement_' . self::$rnd_id . ' .pwe-btn:hover {
+                .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
                     color: #000000 !important;
                     background-color: #ffffff !important;
                     border: 1px solid #000000 !important;
                 }
-                .pwelement_' . self::$rnd_id . ' {
-                    margin: 0 !important;
-                }
-                .row-parent:has(.pwelement_' . self::$rnd_id . ' .pwe-container-profile) {
+                .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-profile) {
                     max-width: 100%;
                     padding: 0 !important;  
                 }
-                .pwelement_' . self::$rnd_id . ' .pwe-profile-wrapper {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-wrapper {
                     max-width: 1200px;
                     margin: 0 auto;
                     padding: ' . $profile_padding_element . ';   
                 }
-                .pwe-profile-content {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     display: flex;
                     gap: 36px;
                 }
-                .pwe-profile-text-block {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-text-block {
                     display: flex;
                     flex-direction: column;
                     
                 }
-                .pwe-profile-text-block h4 {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-text-block h4 {
                     font-size: 20px !important;
                     font-weight: 600 !important;
                     text-transform: uppercase !important;
                 }
-                .pwe-profile-images-block {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-images-block {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                 }
-                .pwe-profile-images-wrapper {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-images-wrapper {
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     flex-direction: column;
                     gap: 36px;
                 }
-                .pwelement_' . self::$rnd_id . ' .pwe-profile-image {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-image {
                     object-fit: cover;
                     width: ' . $profile_img_max_width . ';
                     aspect-ratio: ' . $profile_img_aspect_ratio . ';
                 }
-                .pwe-profile-block {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-block {
                     width: 50%;
                     margin: 0 auto;
                 }
-                .pwe-profile-buttons {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-buttons {
                     display: flex;
                     flex-wrap: wrap;
                     justify-content: space-around;
                     padding: 18px 0;
                 }
-                .pwelement_' . self::$rnd_id . ' .pwe-link {
+                .pwelement_'. self::$rnd_id .' .pwe-link {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
                 }
-                .pwelement_' . self::$rnd_id . ' .profile-box-shadow-left {
+                .pwelement_'. self::$rnd_id .' .profile-box-shadow-left {
                     margin-left: -10px;
                     margin-bottom: -31px;
                     box-shadow: -3px -3px ' . $profile_shadow . ';
                     width: 170px !important;
                     height: 40px;
                 }
-                .pwelement_' . self::$rnd_id . ' .profile-box-shadow-right {
+                .pwelement_'. self::$rnd_id .' .profile-box-shadow-right {
                     margin-right: -10px;
                     margin-top: -46px;
                     box-shadow: 3px 3px ' . $profile_shadow . ';
@@ -421,21 +421,21 @@ class PWElementProfile extends PWElements {
                     height: 40px;
                     float: right;
                 }
-                .pwe-hidden-content ul,
-                .pwe-hidden-content,
-                .pwe-see-more {
+                .pwelement_'. self::$rnd_id .' .pwe-hidden-content ul,
+                .pwelement_'. self::$rnd_id .' .pwe-hidden-content,
+                .pwelement_'. self::$rnd_id .' .pwe-see-more {
                     margin: 0 !important;
                 }
                 @media (max-width: 960px) {
-                    .pwe-profile-content {
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                         flex-direction: column;
                     }
-                    .pwe-profile-block {
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-block {
                         width: 100% !important;
                     }
                 }
                 @media (max-width: 600px) {
-                    .pwelement_' . self::$rnd_id . ' .pwe-profile-image {
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-image {
                         width: 100%;
                     }
                 }
@@ -444,14 +444,14 @@ class PWElementProfile extends PWElements {
         if ($mobile) {
             $output .= '
             <style>
-                .pwelement_' . self::$rnd_id . ' .pwe-profile-content {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     flex-direction: column-reverse;
                 }
             </style>';
         } else if ($profile_reverse_block == 'true') {
             $output .= '
             <style>
-                .pwelement_' . self::$rnd_id . ' .pwe-profile-content {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     flex-direction: row-reverse;
                 }
             </style>';
@@ -591,7 +591,7 @@ class PWElementProfile extends PWElements {
         if ($mobile == 1) {
             $output .= '<script>
                 {
-                    const imagesProfiles = document.querySelector(".pwelement_' . self::$rnd_id . ' .custom-profile-images-wrapper");
+                    const imagesProfiles = document.querySelector(".pwelement_'. self::$rnd_id .' .custom-profile-images-wrapper");
                     if (imagesProfiles && imagesProfiles.children.length > 1) {
                         for (let i = 1; i < imagesProfiles.children.length; i++) {
                             imagesProfiles.children[i].style.display = "none";

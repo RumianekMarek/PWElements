@@ -67,29 +67,29 @@ class PWElementConferences extends PWElements {
                     color: '. $text_color .';
                     text-shadow: 2px 2px '. $text_shadow .';
                 }
-                .pwe-conferences-header {
+                .pwelement_'. self::$rnd_id .' .pwe-conferences-header {
                     background-image:url("'. (file_exists($_SERVER["DOCUMENT_ROOT"] . "/doc/background.webp") ? "/doc/background.webp" : "/doc/background.jpg") .'"); 
                     background-position: center; 
                     background-size: cover;
                     background-repeat: no-repeat;
                     padding: 100px 18px;
                 }
-                .pwe-conferences-header h1 {
+                .pwelement_'. self::$rnd_id .' .pwe-conferences-header h1 {
                     max-width: 1128px;
                     margin: 0 auto;
                 }
-                .pwe-conferences-header h1 span {
+                .pwelement_'. self::$rnd_id .' .pwe-conferences-header h1 span {
                     font-size: 54px;
                 }
-                .pwe-conferences-logotypes h2 {
+                .pwelement_'. self::$rnd_id .' .pwe-conferences-logotypes h2 {
                     margin: 0;
                 }
                 @media (min-width: 300px) and (max-width: 1200px) {
-                    .pwe-conferences-header h1 span {
+                    .pwelement_'. self::$rnd_id .' .pwe-conferences-header h1 span {
                         font-size: calc(24px + (54 - 24) * ( (100vw - 300px) / (1200 - 300) ));
                     }
                 }
-                .pwe-conferences-logotypes .custom-logotypes-gallery-wrapper{
+                .pwelement_'. self::$rnd_id .' .pwe-conferences-logotypes .custom-logotypes-gallery-wrapper{
                     padding-top: 0 !important;
                 }
             </style>

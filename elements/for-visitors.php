@@ -57,44 +57,44 @@ class PWElementForVisitors extends PWElements {
 
         $output .= '
             <style>
-                .pwelement_' . self::$rnd_id . ' #forVisitors p{
+                .pwelement_' . self::$rnd_id . ' #forVisitors p {
                     ' . $text_color . '
                 }
-
                 .pwelement_'.self::$rnd_id.' .pwe-btn {
                     '. $btn_text_color
                     . $btn_color
                     . $btn_shadow_color
                     . $btn_border .'
                 }
-
-                .pwe-content-visitors-item{
+                .pwelement_'. self::$rnd_id .' .pwe-content-visitors-item {
                     width: 100%;
                     display:flex;
                     justify-content: center;
                     gap: 36px;
                     padding-bottom: 36px;
-                e-visitors-image-block, .pwe-visitors-text-block{
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-image-block, 
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-text-block{
                     width: 50%;
                 }
-                .pwe-image-block img {
+                .pwelement_'. self::$rnd_id .' .pwe-image-block img {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
                     ' . $img_shadow . '
                 }
                 @media (max-width:768px){
-                    .pwe-content-visitors-item {
+                    .pwelement_'. self::$rnd_id .' .pwe-content-visitors-item {
                         flex-direction: column;
                     }
-                    .pwe-column-reverse{
+                    .pwelement_'. self::$rnd_id .' .pwe-column-reverse{
                         flex-direction: column-reverse;
                     }
-                    .pwe-image-block,
-                    .pwe-visitors-text-block {
+                    .pwelement_'. self::$rnd_id .' .pwe-image-block,
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-text-block {
                         width: 100%;
                     }
-                    .pwe-visitors-text {
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-text {
                         padding: 18px 0;
                     }
                 }

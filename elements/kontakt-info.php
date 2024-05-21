@@ -117,16 +117,16 @@ class PWElementContactInfo extends PWElements {
                 .pwelement_'.self::$rnd_id.' #contact-info :is(a, p, h4, b){
                     ' . $text_color . '
                 }
-                .raw-pwe-container {
+                .pwelement_'. self::$rnd_id .' .raw-pwe-container {
                     display: flex;
                     align-items: center;
                 }
-                .pwe-container-contact-info-items .pwe-contact-image-container {
+                .pwelement_'. self::$rnd_id .' .pwe-container-contact-info-items .pwe-contact-image-container {
                     width: 150px;
                     height: 120px;
                     text-align: center;
                 }
-                .pwe-container-contact-info-items .pwe-contact-image-container .contact-info-img-pwe{
+                .pwelement_'. self::$rnd_id .' .pwe-container-contact-info-items .pwe-contact-image-container .contact-info-img-pwe{
                     height: inherit;
                 }
             </style>
@@ -149,7 +149,7 @@ class PWElementContactInfo extends PWElements {
                     $output .= '</h4>
                 </div>';
 
-            foreach($contact_items as $id => $contact){
+            foreach($contact_items as $id => $contact) {
                 $output .= '<div class="raw-pwe-container pwe-container-contact-info-items half-block-padding">
                                 <div class="pwe-contact-image-container">';
                                     if ($contact['url']){

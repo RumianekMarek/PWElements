@@ -205,7 +205,7 @@ class PWElementInvite extends PWElements {
                         background-color: #ffffff !important;
                         border: 1px solid #000000 !important;
                     }
-                    input {
+                    .pwelement_'. self::$rnd_id .' input {
                         width: 40%;
                         margin-bottom: 18px;
                     }

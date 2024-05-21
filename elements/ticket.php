@@ -240,67 +240,66 @@ class PWElementTicket extends PWElements {
 
         $output = '
         <style>
-            .pwelement_' . self::$rnd_id . ' {
+            .pwelement_'. self::$rnd_id .' {
                 width: 100%;
                 padding: 0 9px;
-
-                .pwe-ticket-container {
-                    padding: 18px 0;
-                }
-
-                .pwe-ticket-wrapper {
-                    text-align: center;
-                    background-color: white;
-                    border-radius: 25px 25px 0 25px;
-                }
-                .pwe-ticket-header-block {
-                    background-color: '. self::$accent_color .';
-                    padding: 36px;
-                    border-top-left-radius: 25px;
-                    border-top-right-radius: 25px;
-                    h3 {
-                        margin: 0;
-                        width: inherit;
-                        color: white;
-                    }
-                }
-                .pwe-ticket-price-block {
-                    font-size: 45px;
-                    padding: 18px;
-                    color: #008000;
-                }
-                .pwe-ticket-info-block {
-                    min-height: '. $ticket_info_height .';
-                    padding: 18px 0;
-                    h1, h2, h3, h4, h5 {
-                        margin: 0 auto;
-                    }
-                }
-                .pwe-btn {
-                    color: '. $btn_text_color .';
-                    background-color:'. $btn_color .';
-                    box-shadow:'. $btn_shadow_color .';
-                    border:'. $btn_border .';
-                    padding: 18px 0;
-                    font-size: 14px;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    transition: .3s ease
-                }
-                .pwe-btn:hover {
-                    color: white !important;
-                    background-color: black;
-                    box-shadow: 9px 9px 0px -5px '. $btn_color .';
-                    border: 1px solid black;
-                }
-                .pwe-ticket-footer-block {
-                    background-color: '. self::$accent_color .';
-                    border-bottom-left-radius: 25px;
-                    padding: 10px;
-                    color: white;
-                    min-height: 40px;
-                }
             }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-container {
+                padding: 18px 0;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-wrapper {
+                text-align: center;
+                background-color: white;
+                border-radius: 25px 25px 0 25px;
+                box-shadow: 5px 5px 15px black;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-header-block {
+                background-color: '. self::$accent_color .';
+                padding: 36px;
+                border-top-left-radius: 24px;
+                border-top-right-radius: 24px;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-header-block h3 {
+                margin: 0;
+                width: inherit;
+                color: white;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-price-block {
+                font-size: 45px;
+                padding: 18px;
+                color: #008000;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-info-block {
+                min-height: '. $ticket_info_height .';
+                padding: 18px 0;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-info-block :is(h1, h2, h3, h4, h5) {
+                margin: 0 auto;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-btn {
+                color: '. $btn_text_color .';
+                background-color:'. $btn_color .';
+                box-shadow:'. $btn_shadow_color .';
+                border:'. $btn_border .';
+                padding: 18px 0;
+                font-size: 14px;
+                font-weight: 600;
+                text-transform: uppercase;
+                transition: .3s ease
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
+                color: white !important;
+                background-color: black;
+                box-shadow: 9px 9px 0px -5px '. $btn_color .';
+                border: 1px solid black;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-footer-block {
+                background-color: '. self::$accent_color .';
+                border-bottom-left-radius: 24px;
+                padding: 10px;
+                color: white;
+                min-height: 40px;
+            }    
         </style>';
 
         $output .= '

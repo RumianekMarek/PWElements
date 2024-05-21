@@ -93,31 +93,31 @@ class PWElementVideos extends PWElements {
 
         $output = '
             <style>
-                .custom-container-videos {
+                .pwelement_'. self::$rnd_id .' .custom-container-videos {
                     display: flex;
                     flex-direction: column;
                     gap: 36px;
                 }
-                .custom-videos-title h4 {
+                .pwelement_'. self::$rnd_id .' .custom-videos-title h4 {
                     margin: 0;
                 }
-                .custom-videos {
+                .pwelement_'. self::$rnd_id .' .custom-videos {
                     display: flex;
                     justify-content: space-around;
                     flex-wrap: wrap;
                     gap: 36px;
                 }
-                .custom-video-item {
+                .pwelement_'. self::$rnd_id .' .custom-video-item {
                     width: 47%;
                 }
-                .custom-video-item p {
+                .pwelement_'. self::$rnd_id .' .custom-video-item p {
                     font-size: 18px;
                 }
                 @media (max-width:960px) {
-                    .custom-videos {
+                    .pwelement_'. self::$rnd_id .' .custom-videos {
                         flex-direction: column;
                     }
-                    .custom-video-item {
+                    .pwelement_'. self::$rnd_id .' .custom-video-item {
                         width: 100%;
                     }
                 }

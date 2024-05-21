@@ -54,47 +54,46 @@ class PWElementExhibitors extends PWElements {
         $output .= '
             <style>
 
-            .pwelement_' . self::$rnd_id . ' .image-shadow{
+            .pwelement_'. self::$rnd_id .' .image-shadow {
                 box-shadow: 9px 9px 0px -6px ' . self::$fair_colors['Accent'] . ';
             }
-            .pwe-container-exhibitors-benefits{
+            .pwelement_'. self::$rnd_id .' .pwe-container-exhibitors-benefits {
                 margin: 0 auto;
             }
-            .pwe-row-benefits {
+            .pwelement_'. self::$rnd_id .' .pwe-row-benefits {
                 width: 100%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
             }
-            .pwe-benefits {
+            .pwelement_'. self::$rnd_id .' .pwe-benefits {
                 width: 100%;
                 display: flex;
                 gap: 36px;
             }
-            .pwe-benefit-item {
+            .pwelement_'. self::$rnd_id .' .pwe-benefit-item {
                 width: 33%;
             }
-            .pwelement_' . self::$rnd_id . ' .pwe-benefit-img img {
+            .pwelement_'. self::$rnd_id .' .pwe-benefit-img img {
                 width: 100%;
             }
-            .pwelement_' . self::$rnd_id . ' .pwe-benefit-text p {
+            .pwelement_'. self::$rnd_id .' .pwe-benefit-text p {
                 padding:18px 0;
                 ' . $text_color . '
             }
-
-            .pwe-button{
+            .pwelement_'. self::$rnd_id .' .pwe-button {
                 '.$btn_text_color 
                 .$btn_color 
                 .$btn_shadow_color.'
             }
-            .pwe-border-top-left{
+            .pwelement_'. self::$rnd_id .' .pwe-border-top-left {
                 box-shadow: -3px -3px ' . $border_color . ';
                 margin-left: -18px;
                 width: 170px !important;
                 height: 40px;
             }
 
-            .pwe-border-bottom-right{
+            .pwelement_'. self::$rnd_id .' .pwe-border-bottom-right {
                 box-shadow: 3px 3px ' . $border_color . ';
                 margin-right: -18px;
                 width: 170px !important;
@@ -103,10 +102,10 @@ class PWElementExhibitors extends PWElements {
             }
 
             @media (max-width:570px) {
-                .pwe-benefits {
+                .pwelement_'. self::$rnd_id .' .pwe-benefits {
                     flex-direction: column;
                 }
-                .pwe-benefit-item {
+                .pwelement_'. self::$rnd_id .' .pwe-benefit-item {
                     width: 100%;
                 }  
             }

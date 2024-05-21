@@ -57,10 +57,10 @@ class PWElementForExhibitors extends PWElements {
                     ' . $text_color . '
                 }
 
-                .pwe-container-forexhibitors {
+                .pwelement_'. self::$rnd_id .' .pwe-container-forexhibitors {
                     margin: 0 auto;
                 }
-                .pwe-content-forexhibitors-item{
+                .pwelement_'. self::$rnd_id .' .pwe-content-forexhibitors-item{
                     width: 100%;
                     display:flex;
                     justify-content: center;
@@ -68,10 +68,11 @@ class PWElementForExhibitors extends PWElements {
                     padding-bottom: 36px;
                 }
                 
-                .pwe-forexhibitors-image-block, .pwe-forexhibitors-text-block{
+                .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-image-block, 
+                .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block{
                     width: 50%;
                 }
-                .pwe-forexhibitors-image-block img {
+                .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-image-block img {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
@@ -79,17 +80,17 @@ class PWElementForExhibitors extends PWElements {
                 }
 
                 @media (max-width:768px) {
-                    .pwe-content-forexhibitors-item{
+                    .pwelement_'. self::$rnd_id .' .pwe-content-forexhibitors-item{
                         flex-direction: column;
                     }
-                    .column-reverse {
+                    .pwelement_'. self::$rnd_id .' .column-reverse {
                         flex-direction: column-reverse !important;
                     }
-                    .pwe-forexhibitors-image-block,
+                    .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-image-block,
                     .pwe-forexhibitors-text-block {
                         width: 100%;
                     }
-                    .pwe-forexhibitors-text {
+                    .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text {
                         padding: 18px 0;
                     }  
                 }

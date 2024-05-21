@@ -31,13 +31,13 @@ class PWElementSocials extends PWElements {
         
         $output .= '
                 <style>
-                    .pwelement_' . self::$rnd_id . ' .pwe-btn {
+                    .pwelement_'. self::$rnd_id .' .pwe-btn {
                         ' . $btn_text_color
                         . $btn_color
                         . $btn_shadow_color
                         . $btn_border .'
                     }
-                    #socialMedia{
+                    #socialMedia {
                         display: flex;
                         flex-direction: column;
                         align-items: center;
@@ -49,7 +49,7 @@ class PWElementSocials extends PWElements {
                         min-width: 250px;
                         position: relative;
                     }
-                    .pwelement_' . self::$rnd_id . ' :is(#socialMedia h4, .pwe-block-socialMedia ul){
+                    .pwelement_' . self::$rnd_id . ' :is(#socialMedia h4, .pwe-block-socialMedia ul) {
                         margin-top:0 !important;
                         ' . $text_color . '
                     }
@@ -106,7 +106,12 @@ class PWElementSocials extends PWElements {
                         .'</ul> 
                     </div>
 
-                    <span><a class="pwe-facebook pwe-link btn border-width-0 shadow-black btn-accent btn-flat" href="[trade_fair_facebook]" alt="facebook link" target="_blank"><i class="fa fa-facebook fa-1x fa-fw"></i>&nbsp;Facebook</a></span>
+                    <span>
+                        <a class="pwe-facebook pwe-link btn border-width-0 shadow-black btn-accent btn-flat" href="[trade_fair_facebook]" alt="facebook link" target="_blank">
+                            <i class="fa fa-facebook fa-1x fa-fw"></i>
+                            &nbsp;Facebook
+                        </a>
+                    </span>
                 </div>';
         return $output;
     }
