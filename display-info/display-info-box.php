@@ -13,7 +13,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
     public function __construct() {
         parent::__construct();
     }
-
+ 
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.
@@ -341,7 +341,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                 }
                         }
                         
-                        $speaker_html .= '<img class="pwe-box-speaker" src="' . esc_url($image_src[0]) . '" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; '.$b_radius.' z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
+                        $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src[0]) .'" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; '.$b_radius.' z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
                     }
                 }
             }
@@ -359,7 +359,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
         $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], '#777');
-        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
+        $btn_border = '1px solid '. self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
 
         $rnd = rand(10000, 99999);
 
@@ -385,8 +385,8 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             $info_box_lect_color = empty($info_box_lect_color) ? 'black' : $info_box_lect_color;
         } else $info_box_lect_color = empty($info_box_lect_color) ? self::$accent_color : $info_box_lect_color;
 
-        $info_box_bio_btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important';
-        $info_box_bio_btn_text = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . ' !important;';
+        $info_box_bio_btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .'!important';
+        $info_box_bio_btn_text = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') .' !important;';
 
         $info_box_bio_container_width_desktop = empty($info_box_bio_container_width_desktop) ? '200px' : $info_box_bio_container_width_desktop;
 
@@ -402,54 +402,54 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 text-align: left;
                 gap: 18px;
                 '. $info_box_styles .'
-                
-                .pwe-box-speakers {
-                    width: '. $info_box_bio_container_width_desktop .';
-                    min-width: '. $info_box_bio_container_width_desktop .';
-                    display: flex;
-                    flex-direction: column;
-                    text-align: center;
-                }
-                .pwe-box-speaker {
-                    border: 2px solid gray;
-                    aspect-ratio: 1/1;
-                    object-fit: cover;
-                }
-                .pwe-box-info {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    gap: 18px;
-                }
-                .pwe-box-speakers-img {
-                    border-radius: '. $info_box_photo_square .';
-                }
-                .pwe-box-speaker-btn {
-                    margin: 10px auto !important;
-                    box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
-                    background-color: '. $btn_color .';
-                    color: '. $btn_text_color .';
-                    border: '. $btn_border .';
-                    padding: 6px 16px;
-                    font-weight: 600;
-                    width: 80px;
-                    transition: .3s ease;
-                }
-                .pwe-box-speaker-btn:hover {
-                    box-shadow: 4px 4px 0px -1px black !important;
-                    color: black !important;
-                    background-color: white !important;
-                }
-                .pwe-box-lecture-time,
-                .pwe-box-lecture-title,
-                .pwe-box-lecturer-name {
-                    margin: 0;
-                }
-                .pwe-box-lecture-desc p {
-                    font-size: 15px;
-                    margin: 8px 0 0;
-                }
             }
+            #info-box-'. self::$rnd_id .' .pwe-box-speakers {
+                width: '. $info_box_bio_container_width_desktop .';
+                min-width: '. $info_box_bio_container_width_desktop .';
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-speaker {
+                border: 2px solid gray;
+                aspect-ratio: 1/1;
+                object-fit: cover;
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 18px;
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-speakers-img {
+                border-radius: '. $info_box_photo_square .';
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-speaker-btn {
+                margin: 10px auto !important;
+                box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
+                background-color: '. $btn_color .';
+                color: '. $btn_text_color .';
+                border: '. $btn_border .';
+                padding: 6px 16px;
+                font-weight: 600;
+                width: 80px;
+                transition: .3s ease;
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-speaker-btn:hover {
+                box-shadow: 4px 4px 0px -1px black !important;
+                color: black !important;
+                background-color: white !important;
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-lecture-time,
+            #info-box-'. self::$rnd_id .' .pwe-box-lecture-title,
+            #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name {
+                margin: 0;
+            }
+            #info-box-'. self::$rnd_id .' .pwe-box-lecture-desc p {
+                font-size: 15px;
+                margin: 8px 0 0;
+            }
+
             #pweBoxModal-'. $rnd .' {
                 position: fixed;
                 z-index: 9999;
@@ -464,119 +464,115 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 align-items: center;
                 visibility: hidden;
                 transition: opacity 0.3s, visibility 0.3s;
-
-                .pwe-box-modal-content {
-                    position: relative;
-                    background-color: #fefefe;
-                    margin: 15% auto;
-                    padding: 20px;
-                    border: 1px solid #888;
-                    border-radius: 20px;
-                    overflow-y: auto;
-                    width: 90%;
-                    max-width: 800px;
-                    max-height: 90%;
-                    transition: transform 0.3s;
-                    transform: scale(0);
-                }
-                .pwe-box-modal-close {
-                    position: absolute;
-                    right: 18px;
-                    top: -6px;
-                    color: #000;
-                    float: right;
-                    font-size: 50px;
-                    font-weight: bold;
-                    transition: transform 0.3s;
-                    font-family: cursive;
-                }
-                .pwe-box-modal-close:hover,
-                .pwe-box-modal-close:focus {
-                    color: black;
-                    text-decoration: none;
-                    cursor: pointer;
-                    transform: scale(1.2);
-                }
-                .pwe-box-modal-content {
-                    display:flex; 
-                    flex-direction: column;
-                    align-items:center; 
-                    padding:20px;
-                    gap: 18px;
-                }
-                .pwe-box-modal-speaker {
-                    width: 100%;
-                    display: flex;
-                    gap: 18px;
-                }
-                .pwe-box-modal-image {
-                    min-width: '. $info_box_modal_img_width_desktop .';
-                    max-width: '. $info_box_modal_img_width_desktop .';
-                }
-                .pwe-box-modal-name {
-                    margin: 0;
-                }
-                .pwe-modal-hr-container {
-                    width: 100%;
-                }
-                .pwe-modal-hr {
-                    margin: 6px 0;
-                    border: 0;
-                    width: 100%;
-                    height: 1px;
-                    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, .75)), to(rgba(0, 0, 0, 0)));
-                    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .75), rgba(0, 0, 0, 0));
-                }
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-content {
+                position: relative;
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                border-radius: 20px;
+                overflow-y: auto;
+                width: 90%;
+                max-width: 800px;
+                max-height: 90%;
+                transition: transform 0.3s;
+                transform: scale(0);
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-close {
+                position: absolute;
+                right: 18px;
+                top: -6px;
+                color: #000;
+                float: right;
+                font-size: 50px;
+                font-weight: bold;
+                transition: transform 0.3s;
+                font-family: cursive;
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-close:hover,
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+                transform: scale(1.2);
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                gap: 18px;
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-speaker {
+                width: 100%;
+                display: flex;
+                gap: 18px;
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-image {
+                min-width: '. $info_box_modal_img_width_desktop .';
+                max-width: '. $info_box_modal_img_width_desktop .';
+            }
+            #pweBoxModal-'. $rnd .' .pwe-box-modal-name {
+                margin: 0;
+            }
+            #pweBoxModal-'. $rnd .' .pwe-modal-hr-container {
+                width: 100%;
+            }
+            #pweBoxModal-'. $rnd .' .pwe-modal-hr {
+                margin: 6px 0;
+                border: 0;
+                width: 100%;
+                height: 1px;
+                background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, .75)), to(rgba(0, 0, 0, 0)));
+                background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .75), rgba(0, 0, 0, 0));
             }
             #pweBoxModal-'. $rnd .'.is-visible {
                 opacity: 1;
                 visibility: visible;
-
-                .pwe-box-modal-content {
-                    transform: scale(1);
-                }
-                .pwe-box-modal-image {
-                    border-radius: 10px;
-                }
+            }
+            #pweBoxModal-'. $rnd .'.is-visible .pwe-box-modal-content {
+                transform: scale(1);
+            }
+            #pweBoxModal-'. $rnd .'.is-visible .pwe-box-modal-image {
+                border-radius: 10px;
             }
             @media (max-width:650px) {
                 #info-box-'. self::$rnd_id .' {
                     flex-direction: column;
-
-                    .pwe-box-speakers {
-                        width: 100% !important;
-                        max-width: 300px;
-                        margin: 0 auto;
-                    }
-                    .pwe-box-speaker {
-                        width: 150px;
-                    }
-                    .pwe-box-info {
-                        width: 100% !important;
-                    }
-                    .pwe-box-lecture-time,
-                    .pwe-box-lecture-title,
-                    .pwe-box-lecturer-name {
-                        text-align: center;
-                    }
                 }
-                #pweBoxModal-'. $rnd .' {
-                    .pwe-box-modal-speaker {
-                        flex-direction: column;
-                    }
-                    .pwe-box-modal-speaker-img {
-                        text-align: center;
-                    }
-                    .pwe-box-modal-image {
-                        min-width: '. $info_box_modal_img_width_mobile .';
-                        max-width: '. $info_box_modal_img_width_mobile .';
-                    }
-                    .pwe-box-modal-bio {
-                        font-size: 14px;
-                    }
-                    .pwe-box-modal-name {
-                        text-align: center;
-                    }
+                #info-box-'. self::$rnd_id .' .pwe-box-speakers {
+                    width: 100% !important;
+                    max-width: 300px;
+                    margin: 0 auto;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-speaker {
+                    width: 150px;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-info {
+                    width: 100% !important;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-time,
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-title,
+                #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name {
+                    text-align: center;
+                }
+
+                #pweBoxModal-'. $rnd .' .pwe-box-modal-speaker {
+                    flex-direction: column;
+                }
+                #pweBoxModal-'. $rnd .' .pwe-box-modal-speaker-img {
+                    text-align: center;
+                }
+                #pweBoxModal-'. $rnd .' .pwe-box-modal-image {
+                    min-width: '. $info_box_modal_img_width_mobile .';
+                    max-width: '. $info_box_modal_img_width_mobile .';
+                }
+                #pweBoxModal-'. $rnd .' .pwe-box-modal-bio {
+                    font-size: 14px;
+                }
+                #pweBoxModal-'. $rnd .' .pwe-box-modal-name {
+                    text-align: center;
                 }
             }
         </style>';
@@ -638,9 +634,9 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     <style>
                         #info-box-'. self::$rnd_id .' {
                             width: 100% !important;
-                            .pwe-box-info {
-                                width: 100% !important;  
-                            }
+                        }
+                        #info-box-'. self::$rnd_id .' .pwe-box-info {
+                            width: 100% !important;  
                         }
                     </style>';
                 }
@@ -649,7 +645,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             $output .= '
             <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">';
                 if($info_box_title_top == true) {
-                    $output .= '<h4 class="pwe-box-lecture-time">' . $info_box_event_time . '</h4>
+                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
                                 <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
                                 <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>
                                 <div class="pwe-box-lecture-desc" style="">';
@@ -663,7 +659,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                 </div>';
                 } else {
                     $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
-                                <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">' . implode('<br>', $speaker_names) .'</h5>
+                                <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>
                                 <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
                                 <div class="pwe-box-lecture-desc" style="">';
                                     $output .= $info_box_event_desc;
@@ -684,7 +680,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     const infoBox = document.querySelector("#info-box-'. self::$rnd_id .'");
-                    const speakers = ' . $speakers . ';
+                    const speakers = '. $speakers .';
                     const speakersBtn = infoBox.querySelector(".pwe-box-speaker-btn");
 
                     // Create a new modal if the BIO button is clicked
@@ -798,28 +794,27 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             <style>
                 #info-box-'. self::$rnd_id .' {
                     width: 100% !important;
-            
-                    .pwe-box-info {
-                        width: 100% !important;  
-                        flex-direction: row;
-                        justify-content: start;
-                        gap: 18px;
-                    }
-                    .pwe-box-lecture-time-container {
-                        width: 25%;
-                    }
-                    .pwe-box-lecture-info-container {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 18px;
-                    }
-                    .pwe-box-lecturer-name {
-                        font-weight: 500;
-                    }
-                    @media (max-width:960px) {
-                        .pwe-box-info {
-                            flex-direction: column !important;
-                        }
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-info {
+                    width: 100% !important;  
+                    flex-direction: row;
+                    justify-content: start;
+                    gap: 18px;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-time-container {
+                    width: 25%;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-info-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 18px;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name {
+                    font-weight: 500;
+                }
+                @media (max-width:960px) {
+                    #info-box-'. self::$rnd_id .' .pwe-box-info {
+                        flex-direction: column !important;
                     }
                 }
             </style> 
@@ -827,11 +822,11 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             <div class="pwe-box-info">';
                 $output .= '
                     <div class="pwe-box-lecture-time-container">
-                        <h4 class="pwe-box-lecture-time">' . $info_box_event_time . '</h4>
+                        <h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
                     </div>
                     <div class="pwe-box-lecture-info-container">
                         <h4 class="pwe-box-lecture-title" style="color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
-                        <h5 class="pwe-box-lecturer-name" style="color:' . $info_box_lect_color . ';">' . implode('<br>', $speaker_names) . '</h5>
+                        <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>
                     </div>';
             $output .= '
             </div>';

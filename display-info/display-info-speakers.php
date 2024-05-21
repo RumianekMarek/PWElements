@@ -13,7 +13,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
     public function __construct() {
         parent::__construct();
     }
-
+ 
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.
@@ -127,42 +127,42 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 justify-content: center;
                 flex-wrap: wrap;
                 gap: 18px;
-                
-                .pwe-speaker {
-                    width: '. $info_speakers_element_width .';
-                    min-width: 150px;
-                    display: flex;
-                    flex-direction: column;
-                    text-align: center;
-                    justify-content: space-between;
-                }
-                .pwe-speaker-name {
-                    color: '. $info_speakers_lect_color .';
-                }
-                .pwe-speaker-img {
-                    width: 100%;
-                    border-radius: '. $info_speakers_photo_square .';
-                    margin: 0 auto;
-                    aspect-ratio: 1/1;
-                    object-fit: cover;
-                }
-                .pwe-speaker-btn {
-                    margin: 10px auto !important;
-                    box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
-                    background-color: '. $btn_color .';
-                    color: '. $btn_text_color .';
-                    border: '. $btn_border .';
-                    padding: 6px 16px;
-                    font-weight: 600;
-                    width: 80px;
-                    transition: .3s ease;
-                }
-                .pwe-speaker-btn:hover {
-                    box-shadow: 4px 4px 0px -1px black;
-                    color: black;
-                    background-color: white;
-                }
             }
+            #info-speaker-'. self::$rnd_id .' .pwe-speaker {
+                width: '. $info_speakers_element_width .';
+                min-width: 150px;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                justify-content: space-between;
+            }
+            #info-speaker-'. self::$rnd_id .' .pwe-speaker-name {
+                color: '. $info_speakers_lect_color .';
+            }
+            #info-speaker-'. self::$rnd_id .' .pwe-speaker-img {
+                width: 100%;
+                border-radius: '. $info_speakers_photo_square .';
+                margin: 0 auto;
+                aspect-ratio: 1/1;
+                object-fit: cover;
+            }
+            #info-speaker-'. self::$rnd_id .' .pwe-speaker-btn {
+                margin: 10px auto !important;
+                box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
+                background-color: '. $btn_color .';
+                color: '. $btn_text_color .';
+                border: '. $btn_border .';
+                padding: 6px 16px;
+                font-weight: 600;
+                width: 80px;
+                transition: .3s ease;
+            }
+            #info-speaker-'. self::$rnd_id .' .pwe-speaker-btn:hover {
+                box-shadow: 4px 4px 0px -1px black;
+                color: black;
+                background-color: white;
+            }
+            
             #pweSpeakerModal-'. $rnd .' {
                 position: fixed;
                 z-index: 9999;
@@ -177,54 +177,53 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 align-items: center;
                 visibility: hidden;
                 transition: opacity 0.3s, visibility 0.3s;
-
-                .pwe-speaker-modal-content {
-                    position: relative;
-                    background-color: #fefefe;
-                    margin: 15% auto;
-                    padding: 20px;
-                    border: 1px solid #888;
-                    border-radius: 20px;
-                    overflow-y: auto;
-                    width: 80%;
-                    max-width: 500px;
-                    max-height: 90%;
-                    transition: transform 0.3s;
-                    transform: scale(0);
-                }
-                .pwe-speaker-modal-close {
-                    position: absolute;
-                    right: 18px;
-                    top: -6px;
-                    color: #000;
-                    float: right;
-                    font-size: 50px;
-                    font-weight: bold;
-                    transition: transform 0.3s;
-                    font-family: cursive;
-                }
-                .pwe-speaker-modal-close:hover,
-                .pwe-speaker-modal-close:focus {
-                    color: black;
-                    text-decoration: none;
-                    cursor: pointer;
-                    transform: scale(1.2);
-                }
-                .pwe-speaker-modal-title,
-                .pwe-speaker-modal-desc {
-                    margin: 18px 0 0;
-                }
             }
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-content {
+                position: relative;
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                border-radius: 20px;
+                overflow-y: auto;
+                width: 80%;
+                max-width: 500px;
+                max-height: 90%;
+                transition: transform 0.3s;
+                transform: scale(0);
+            }
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-close {
+                position: absolute;
+                right: 18px;
+                top: -6px;
+                color: #000;
+                float: right;
+                font-size: 50px;
+                font-weight: bold;
+                transition: transform 0.3s;
+                font-family: cursive;
+            }
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-close:hover,
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+                transform: scale(1.2);
+            }
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-title,
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-desc {
+                margin: 18px 0 0;
+            }
+            
             #pweSpeakerModal-'. $rnd .'.is-visible {
                 opacity: 1;
                 visibility: visible;
-
-                .pwe-speaker-modal-content {
-                    transform: scale(1);
-                }
-                .pwe-speaker-modal-image {
-                    border-radius: 10px;
-                }
+            }
+            #pweSpeakerModal-'. $rnd .'.is-visible .pwe-speaker-modal-content {
+                transform: scale(1);
+            }
+            #pweSpeakerModal-'. $rnd .'.is-visible .pwe-speaker-modal-image {
+                border-radius: 10px;
             }
         </style>';
 

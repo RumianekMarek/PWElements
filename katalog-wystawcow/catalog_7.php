@@ -28,9 +28,7 @@ class PWECatalog7 extends PWECatalog {
                             );
                         }                        
                         require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
-                        var_dump($slider_array);
                         $output .= PWELogotypesSlider::sliderOutput($slider_array);
-
                     } else { 
                         foreach ($exhibitors as $exhibitor){
                             $exhibitorsUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www']);
