@@ -164,7 +164,7 @@ class PWEMediaGallery {
                             'element' => 'thumbnails_width_desktop_hidden',
                             'value' => array(''),
                         ),
-                    ),
+                    ), 
                     array(
                         'type' => 'textfield',
                         'heading' => __('Thumbnail width (desktop) <a href="#" onclick="yourFunction(`media_gallery_thumbnails_width_desktop`, `thumbnails_width_desktop_hidden`)">SELECT</a>', 'pwe_media_gallery'),
@@ -346,7 +346,7 @@ class PWEMediaGallery {
         $media_gallery_breakpoint_mobile = ($media_gallery_breakpoint_mobile == '') ? '480' : $media_gallery_breakpoint_mobile;
 
         // Set gap for images
-        $media_gallery_gap = (empty($media_gallery_gap)) ? '10' : $media_gallery_gap;
+        $media_gallery_gap = (empty($media_gallery_gap)) ? '5' : $media_gallery_gap;
 
         // Removing px if it exists
         $media_gallery_breakpoint_tablet = str_replace("px", "", $media_gallery_breakpoint_tablet);
@@ -381,7 +381,7 @@ class PWEMediaGallery {
                                                 column-gap: 0;
                                             }
                                             #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                padding: '. $media_gallery_gap / 2 .'px;
+                                                padding: '. $media_gallery_gap .'px;
                                             }
                                             @media (min-width: '. ($media_gallery_breakpoint_tablet + 1) .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery {
@@ -455,6 +455,10 @@ class PWEMediaGallery {
                                                 display: flex;
                                                 flex-wrap: wrap;
                                                 gap: '. $media_gallery_gap .'px;
+                                            }
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image img {
+                                                width: 100%;
+                                                height: 100%;
                                             }
                                             @media (min-width: '. ($media_gallery_breakpoint_tablet + 1) .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery-image {
