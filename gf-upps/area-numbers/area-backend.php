@@ -6,7 +6,7 @@ class GFAreaNumbersBackend {
         add_action( 'gform_field_standard_settings', array($this,'gf_area_number_settings'), 10, 2 );
 		add_action( 'gform_editor_js', array($this,'gf_area_number_script') );
 		add_filter( 'gform_tooltips', array($this,'gf_area_number_tooltips') );
-		// add_action( 'admin_enqueue_scripts', array( $this, 'gf_area_number_admin_scripts' ) );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'gf_area_number_admin_scripts' ) );
     }
 
 	function gf_area_number_settings ( $position, $form_id ) {

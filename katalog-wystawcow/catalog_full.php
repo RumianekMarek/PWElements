@@ -63,6 +63,11 @@ class PWECatalogFull extends PWECatalog {
                     box-shadow: 9px 9px 0px -5px '. $btn_color .';
                     border: 1px solid black;
                 }
+                @media (min-width:960px) {
+                    #katalog-'. self::$rnd_id .' #full {
+                        margin-left: 36px 
+                    }
+                }
             </style>
 
             <div id="full">

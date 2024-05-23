@@ -5,16 +5,20 @@ class GFAreaNumbersFrontend {
 	function __construct() {
         add_action( 'gform_enqueue_scripts', array($this, 'area_enqueue_scripts'), 10, 2 );
 	}
-	
+
 	function area_enqueue_scripts($form, $is_ajax) {
 
 		$form_id = $form['id'];
 		$field_arr = [];
         
 		foreach($form['fields'] as $field) {
-			if (property_exists($field, 'smartPhoneFieldGField') && $field->smartPhoneFieldGField) {
+            if (property_exists($field, 'smartPhoneFieldGField') && $field->smartPhoneFieldGField) {
+                $field['displayOnly'] = true;
+
                 $fieldId = "input_{$field->formId}";
-                
+
+                add_filter( 'gform_field_content_' . $field->formId . '_' . $field->id , array($this, 'field_disabled'), 10, 5 );
+
                 $field_arr[$fieldId] = [];
                 
                 $field_arr[$fieldId][] = "#{$fieldId}_{$field->id}";
@@ -49,6 +53,10 @@ class GFAreaNumbersFrontend {
 
         echo '<script src="https://unpkg.com/imask"></script>';
 	}
+
+    function field_disabled($content){
+        return str_replace('<input', '<input disabled', $content);
+    }
 }
 
 new GFAreaNumbersFrontend();
