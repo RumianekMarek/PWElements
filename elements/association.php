@@ -93,6 +93,19 @@ class PWElementAssociates extends PWElements {
     * @return string @output 
     */
     public static function output($atts) {
+        $conf_site = '';
+        if(get_locale() == 'pl_PL') {
+            $conf_site = '/wydarzenia/';
+        } else {
+            $url_event = 'https://' . do_shortcode("[trade_fair_domainadress]") . '/en/conferences/';
+            $headers = @get_headers($url_event);
+            if (strpos($headers[0], '404') === false) {
+                $conf_site = '/en/conferences/';
+            } else {
+                $conf_site = '/en/event/';
+            }
+        }
+
         extract( shortcode_atts( array(
             'association_fair_logo_white' => '',
         ), $atts ));
@@ -224,8 +237,17 @@ class PWElementAssociates extends PWElements {
                                         'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $logo['site']) . "/en"
                                     );
                                 }
-                            }   
-                                                 
+                            }
+
+                            // For new header uncoment if need
+                            // if(file_exists(ABSPATH . '/doc/logo-conference.webp')){
+                            //     $slider_array[] = array(
+                            //         'id'   => count($slider_array),
+                            //         'img' => '/doc/logo-conference.webp',
+                            //         'site' => $conf_site
+                            //     );    
+                            // }  
+          
                             require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
                             $output .= PWELogotypesSlider::sliderOutput($slider_array);
 
@@ -246,6 +268,13 @@ class PWElementAssociates extends PWElements {
                                         </a>';
                                 }
                             }
+
+                            // For new header uncoment if need
+                            // if(file_exists(ABSPATH . '/doc/logo-conference.webp')){
+                            // $output .= '<a class="as-side" target="_blank" href="' . $conf_site . '">
+                            //                 <div class="pwe-as-logo" style="background-image: url(/doc/logo-conference.webp);"></div>
+                            //             </a>';    
+                            // }  
                         }
             $output .= '
                     </div>
