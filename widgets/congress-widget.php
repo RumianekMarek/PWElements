@@ -17,16 +17,17 @@ $output .= '
     <style>
         .header-conference {
             position: absolute;
-            top: 36px;
-            right: 36px;
+            top: 10px;
+            right: 0;
             display: flex;
             justify-content: center;
             flex-direction: column;
             gap: 0;
             opacity: 0;
+            z-index: 2;
         }
         .header-conference-items {
-            padding: 18px;
+            padding: 10px;
             gap: 18px;
             display: flex;
             justify-content: center;
@@ -34,7 +35,7 @@ $output .= '
             align-items: end;
         }
         .header-conference-item {
-            width: '. $pwe_congress_widget_buttons_width .';
+            width: 180px;
             background: white;
             border-radius: 22px;
             border: 2px solid '. $pwe_congress_widget_color .';
@@ -47,7 +48,8 @@ $output .= '
             padding: 0 0 4px;
         }
         .header-conference-item img {
-            width: 180px;
+            width: 170px;
+            padding: 8px;
         }
         .header-conference-caption {
             font-size: 12px;
@@ -72,9 +74,8 @@ $output .= '
             margin: 0;
         }
         .header-conference-title h2 {
-            color: '. $text_color .';
-            text-shadow: 2px 2px '. $text_shadow .';
-            font-size: 20px;
+            color: black;
+            font-size: 18px;
             max-width: 240px;
             text-align: center;
         }
@@ -93,9 +94,9 @@ $output .= '
             background-color: #ffffff !important;
             border: 1px solid #000000 !important;
             box-shadow: 9px 9px 0px -5px '. $btn_color .';
-            h2 {
-                color: #000000 !important;
-            }
+        }
+        .header-conference-button:hover h2 {
+            color: #000000 !important;
         }
 
         @media (max-width:1200px) {
@@ -108,19 +109,20 @@ $output .= '
             }
             .header-conference-items {
                 flex-direction: row !important;
-            }
-        }
-        @media (max-width:1200px) {
-            .header-conference {
-                position: relative;
-                top: 0;
-                right: 0;
-                gap: 0;
-                padding-bottom: 36px; 
-            }
-            .header-conference-items {
-                flex-direction: row;
                 flex-wrap: wrap;
+                padding: 18px;
+            }
+            .header-conference-item {
+                width: '. $pwe_congress_widget_buttons_width .'; 
+            }
+            .header-conference-item img {
+                width: 180px;
+            }
+            .header-conference-title h2 {
+                display: block;
+                color: '. $text_color .';
+                text-shadow: 2px 2px '. $text_shadow .';
+                font-size: 20px;
             }
         }
     </style>';
@@ -129,7 +131,30 @@ $output .= '
 
     $pwe_congress_widget_items_urldecode = urldecode($pwe_congress_widget_items);
     $pwe_congress_widget_items_json = json_decode($pwe_congress_widget_items_urldecode, true);
-    if (is_array($pwe_congress_widget_items_json) && !empty($pwe_congress_widget_items_json[0]['congress_item_image'])) {
+
+    if (count($pwe_congress_widget_items_json) > 1) {
+        $output .= '
+            <style>
+                .header-conference {
+                    top: 36px;
+                    right: 36px;
+                }
+                .header-conference-item {
+                    width: 240px;
+                }
+                .header-conference-item img {
+                    width: 180px;
+                }
+                .header-conference-title h2 {
+                    display: block;
+                    color: '. $text_color .';
+                    text-shadow: 2px 2px '. $text_shadow .';
+                    font-size: 20px;
+                }
+            </style>';
+    }
+
+    if (is_array($pwe_congress_widget_items_json) && !empty($pwe_congress_widget_items_json[0]['congress_item_image'])) {        
 
         $output .= '
         <div class="header-conference">
