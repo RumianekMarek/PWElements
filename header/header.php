@@ -872,6 +872,19 @@ class PWEHeader {
                     padding: 0 18px 36px;
                     opacity: 0;
                 }
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-curled-sheet {
+                    z-index: 1;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 400px;
+                }
+
+                @media (max-width: 1200px) {
+                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-curled-sheet {
+                        display: none;
+                    }
+                }
 
                 @media (min-width: 300px) and (max-width: 1200px) {
                     .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-text h1 {
@@ -1140,7 +1153,12 @@ class PWEHeader {
                     }
                     
                     if ($pwe_header_simple_mode != 'true') {
-                        require_once plugin_dir_path(__FILE__) . 'header-widget.php';
+                        require_once plugin_dir_path(__FILE__) . '/../widgets/parking-widget.php';
+
+                        if (count($pwe_congress_widget_items_json) < 2) {
+                            $output .= '<div class="pwe-header-curled-sheet"><img src="/wp-content/plugins/PWElements/media/zawijas.png" alt="zawijas"></div>';
+                        } 
+
                     }
                     
                 $output .= '</div>

@@ -17,6 +17,20 @@ class PWECatalog10 extends PWECatalog {
 
         $output .= '
         <style>
+            .row-container:has(.pwe-registration) .exhibitors-catalog {
+                border: 2px solid #564949 !important;
+                margin-top: 0 !important;
+
+            }
+            .row-container:has(.pwe-registration) :is(.wpb_column, .uncol, .uncoltable, .uncont, .exhibitors-catalog, .custom-catalog){
+                height: inherit !important;
+            }
+            .row-container:has(.pwe-registration) #top10 {
+                margin-top: 45px !important;
+            }
+            .row-container:has(.pwe-registration) .img-container-top10 {
+                height: 80%;
+            }
             .pwe-text-color{
                 text-align: center;
                 ' . $text_color . '
