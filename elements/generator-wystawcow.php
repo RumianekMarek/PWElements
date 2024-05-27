@@ -454,6 +454,7 @@ class PWElementGenerator extends PWElements {
             }
             .pwe-generator-wystawcow .guest-info-icon-block img {
                 height: 50px;
+                object-fit: contain;
             }
             .pwe-generator-wystawcow .guest-info-icon-block p,
             .pwe-generator-wystawcow .gen-text {

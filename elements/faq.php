@@ -44,8 +44,8 @@ class PWElementFaq extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-container-faq h4 {
                         padding: 0 10px 5px 0;
                         ' . $title_shadow_color . '
-                    }
-                    .pwelement_'. self::$rnd_id .' .pytanie::after{
+                }
+                .pwelement_'. self::$rnd_id .' .pytanie::after{
                     content: ">";
                     float: right;
                     top: 50%;

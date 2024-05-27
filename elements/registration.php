@@ -90,6 +90,45 @@ class PWElementRegistration extends PWElements {
      * 
      * @param array @atts options
      */
+    public static function custom_css_1() {
+        $css_output = '
+            <style>
+                .pwelement_' . self::$rnd_id . ' .pwe-registration-column{
+                    background-color: #e8e8e8;
+                    padding: 18px 36px;
+                    border: 2px solid #564949;
+                }
+                .pwelement_' . self::$rnd_id . ' input{
+                    border: 2px solid #564949 !important;
+                    box-shadow: none !important;
+                    line-height: 1 !important;
+                }
+                .pwelement_' . self::$rnd_id . ' :is(label, label span, .gform_legacy_markup_wrapper .gfield_required){
+                    color: black !important;
+                }
+                .pwelement_' . self::$rnd_id . ' input:not([type=checkbox]){
+                    border-radius: 11px !important;
+                }
+                .pwelement_' . self::$rnd_id . ' input[type=checkbox]{
+                    border-radius: 2px !important;
+                }
+                .pwelement_' . self::$rnd_id . ' input[type=submit]{
+                    background-color: #A6CE39 !important;
+                    border-width: 1px !important;
+                }
+                .pwelement_' .self::$rnd_id. ' .gform_fields{
+                    padding-left: 0 !important;
+                }
+            </style>
+        ';
+        return $css_output;
+    }
+    /**
+     * Static method to generate the HTML output for the PWE Element.
+     * Returns the HTML output as a string.
+     * 
+     * @param array @atts options
+     */
     public static function output($atts) {
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . ' !important';
 
@@ -166,6 +205,8 @@ class PWElementRegistration extends PWElements {
             }
         </style>';
 
+        $output = self::custom_css_1();
+
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         if ($mobile != 1) {
             $output .= '<style>
@@ -178,7 +219,7 @@ class PWElementRegistration extends PWElements {
 
         $output .= '
         <div id="'. $element_unique_id .'" class="pwe-registration">
-            <div class="pwe-registration-column style-accent-bg shadow-black">
+            <div class="pwe-registration-column">
                 <div id="pweFormContent" class="pwe-form-content">
                     <div class="pwe-registration-title main-heading-text">
                         <h4 class="custom-uppercase"><span>'. $registration_title .'</span></h4>
