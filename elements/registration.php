@@ -103,7 +103,7 @@ class PWElementRegistration extends PWElements {
                     box-shadow: none !important;
                     line-height: 1 !important;
                 }
-                .pwelement_' . self::$rnd_id . ' :is(label, label span, .gform_legacy_markup_wrapper .gfield_required){
+                .pwelement_' . self::$rnd_id . ' :is(label, label span, .gform_legacy_markup_wrapper .gfield_required, .gfield_description){
                     color: black !important;
                 }
                 .pwelement_' . self::$rnd_id . ' input:not([type=checkbox]){
@@ -130,7 +130,7 @@ class PWElementRegistration extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . ' !important';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . ' !important';
 
         extract( shortcode_atts( array(
             'registration_title' => '',
