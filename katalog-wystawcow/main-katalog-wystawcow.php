@@ -473,7 +473,7 @@ class PWECatalog {
                     Katalog wystawców 
                 PL,
                 <<<EN
-                    Exhibitor Catalog
+                    Exhibitor Catalog 
                 EN
             ) . $title;
         } elseif ($format == 'PWECatalog21' || $format == 'PWECatalog10'){
@@ -482,7 +482,7 @@ class PWECatalog {
                     Wystawcy 
                 PL,
                 <<<EN
-                    Exhibitors
+                    Exhibitors 
                 EN
             ) . (($title) ? $title : do_shortcode('[trade_fair_catalog_year]'));
         } elseif ($format == 'PWECatalog7'){
