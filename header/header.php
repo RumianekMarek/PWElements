@@ -1154,7 +1154,6 @@ class PWEHeader {
                     
                     if ($pwe_header_simple_mode != 'true') {
                         require_once plugin_dir_path(__FILE__) . '/../widgets/parking-widget.php';
-                        
                         if (count($pwe_congress_widget_items_json) == 1 && !empty($congress_image_url)) {
                             $output .= '<div class="pwe-header-curled-sheet"><img src="/wp-content/plugins/PWElements/media/zawijas.png" alt="zawijas"></div>';
                         } 
