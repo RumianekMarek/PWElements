@@ -40,6 +40,19 @@ class PWElementMainCountdown extends PWElements {
                 'admin_label' => true
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Turn off background', 'pwelement'),
+                'param_name' => 'turn_off_timer_bg',
+                'description' => __('Enable to create custom timer'),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMainCountdown',
+                ),
+                'save_always' => true,
+                'admin_label' => true
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'heading' => __('Add countdown', 'pwelement'),
@@ -302,57 +315,81 @@ class PWElementMainCountdown extends PWElements {
         //     $countdown_end = do_shortcode('[trade_fair_enddata]');
         // }
 
-        $output .= 
-        '<style>
-            .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                background: ' . $countdown_bg . '; 
-                max-width: ' . $countdown_width . ';
-                padding: 0 !important;
-            } ';
+        if ($atts['custom_timer'] != true) {
+            $output .= '
+            <style>
+                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                    opacity: 0;
+                }
+            </style>';
+        }
 
+        if ($atts['turn_off_timer_bg'] == true) {
+            $output .= 
+            '<style>
+                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                    background: inherit;
+                    max-width: ' . $countdown_width . ';
+                    padding: 0 !important;
+                }';
+        } else {
+            $output .= 
+            '<style>
+                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                    background: ' . $countdown_bg . ';
+                    max-width: ' . $countdown_width . ';
+                    padding: 0 !important;
+                }';
+        }
+        
         if (count($right_countdown)){
-        $output .= '
-            .pwelement_'. self::$rnd_id .' #main-timer p {
-                ' . $text_color . '
-                margin: 9px auto;
-                font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-btn {
-                ' . $btn_text_color 
-                . $btn_color
-                . $btn_shadow_color . '
-                margin: 9px 18px; 
-                transform: scale(1) !important;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-timer-text {
-                font-weight: ' . $countdown_font_weight . ';
-                text-transform: uppercase;
-                margin: 9px auto;
-            }
-            .pwelement_'. self::$rnd_id .' .countdown-container {                    
-                display: flex;
-                justify-content: space-evenly;
-                flex-wrap: wrap;
-                ' . $flex_direction . '
-                align-items: center;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
-                min-width: 450px;
-                text-align: center;
-            }
-            @media (max-width:570px){
-                .pwelement_'. self::$rnd_id .' .countdown-container {
+            $output .= '
+                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                    background: ' . $countdown_bg . '; 
+                    max-width: ' . $countdown_width . ';
+                    padding: 0 !important;
+                }
+                .pwelement_'. self::$rnd_id .' #main-timer p {
+                    ' . $text_color . '
+                    margin: 9px auto;
+                    font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn {
+                    ' . $btn_text_color 
+                    . $btn_color
+                    . $btn_shadow_color . '
+                    margin: 9px 18px; 
+                    transform: scale(1) !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-timer-text {
+                    font-weight: ' . $countdown_font_weight . ';
+                    text-transform: uppercase;
+                    margin: 9px auto;
+                }
+                .pwelement_'. self::$rnd_id .' .countdown-container {                    
                     display: flex;
-                    flex-wrap: wrap;
                     justify-content: space-evenly;
-                    align-items: baseline;
+                    flex-wrap: wrap;
+                    ' . $flex_direction . '
+                    align-items: center;
+                    max-width: 1200px;
+                    margin: 0 auto;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
-                    min-width: 100%;
-                }  
-            }';
+                    min-width: 450px;
+                    text-align: center;
+                }
+                @media (max-width:570px){
+                    .pwelement_'. self::$rnd_id .' .countdown-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: space-evenly;
+                        align-items: baseline;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
+                        min-width: 100%;
+                    }  
+                }';
 
             $output .= '</style>';
                 
@@ -374,6 +411,18 @@ class PWElementMainCountdown extends PWElements {
         } else {
             $output .= '</style>';
         }
+
+        $output .= '
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                if (document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')")) {
+                    const countdownEl = document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')");
+                    countdownEl.style.opacity = 1;
+                    countdownEl.style.transition = "opacity 0.3s ease";
+                }
+            });
+        </script>';
+
         return $output;
     }
 }

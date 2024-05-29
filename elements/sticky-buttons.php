@@ -121,7 +121,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Hide all sections except the first one', 'pwelement'),
                 'param_name' => 'sticky_hide_sections',
-                'param_holder_class' => 'backend-area-one-fourth-width',
+                'param_holder_class' => 'backend-area-one-fifth-width',
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
@@ -134,7 +134,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Show dropdown buttons', 'pwelement'),
                 'param_name' => 'sticky_buttons_dropdown',
-                'param_holder_class' => 'backend-area-one-fourth-width',
+                'param_holder_class' => 'backend-area-one-fifth-width',
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
@@ -147,7 +147,7 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Show full size buttons', 'pwelement'),
                 'param_name' => 'sticky_buttons_full_size',
-                'param_holder_class' => 'backend-area-one-fourth-width',
+                'param_holder_class' => 'backend-area-one-fifth-width',
                 'description' => __('Turn on full size images', 'pwelement'),
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
@@ -161,8 +161,22 @@ class PWElementStickyButtons extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Turn off auto scrolling', 'pwelement'),
                 'param_name' => 'sticky_buttons_scroll',
-                'param_holder_class' => 'backend-area-one-fourth-width',
+                'param_holder_class' => 'backend-area-one-fifth-width',
                 'description' => __('Turn on full size images', 'pwelement'),
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Hide buttons mini', 'pwelement'),
+                'param_name' => 'sticky_buttons_mini_hide',
+                'param_holder_class' => 'backend-area-one-fifth-width',
+                'description' => __('Hide buttons mini', 'pwelement'),
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
@@ -265,6 +279,7 @@ class PWElementStickyButtons extends PWElements {
             'sticky_buttons_font_size_full_size' => '',
             'sticky_buttons_width' => '',
             'sticky_full_width_buttons_width' => '',
+            'sticky_buttons_mini_hide' => '',
             'sticky_buttons_parameter' => '',
             'sticky_buttons_scroll' => '',
         ), $atts ));   
@@ -330,12 +345,14 @@ class PWElementStickyButtons extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-cropped .custom-sticky-button-item {
                     max-width: ' . $sticky_buttons_width . ' !important;
+                    min-width: ' . $sticky_buttons_width . ' !important;
                 }
                 .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-full-size .custom-sticky-button-item {
                     max-width: ' . $sticky_full_width_buttons_width . ' !important;
+                    min-width: ' . $sticky_full_width_buttons_width . ' !important;
                 }
                 .pwelement_'. self::$rnd_id .' .custom-sticky-button-item:hover {
-                    transform: scale(1.1);
+                    transform: scale(1.1) !important;
                 }
                 .pwelement_'. self::$rnd_id .' .custom-sticky-button-item span {
                     padding: 5px;
@@ -370,7 +387,23 @@ class PWElementStickyButtons extends PWElements {
                     transition: 0.3s ease !important;
                 }
                 .pwelement_'. self::$rnd_id .' .custom-sticky-button-item {
+                    position: relative;
+                    display: inline-block;
                     transition: ease .3s;
+                }
+                .pwelement_'. self::$rnd_id .' .custom-image-button {
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                }
+                .pwelement_'. self::$rnd_id .' .custom-image-button-text {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: white;
+                    padding: 5px 10px;
+                    font-size: 16px;
                 }
                 .pwelement_'. self::$rnd_id .' .sticky-pin {
                     position: fixed !important;
@@ -390,10 +423,12 @@ class PWElementStickyButtons extends PWElements {
                         gap: 20px;
                     }
                     .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-cropped .custom-sticky-button-item {
-                        max-width: 150px !important;
+                        max-width: 140px !important;
+                        min-width: 140px !important;
                     }
                     .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-full-size .custom-sticky-button-item {
-                        max-width: 150px !important;
+                        max-width: 140px !important;
+                        min-width: 140px !important;
                     }
                     .pwelement_'. self::$rnd_id .' .custom-sticky-button-item:hover {
                         transform: unset;
@@ -459,26 +494,28 @@ class PWElementStickyButtons extends PWElements {
                                 #'. $section_id .' {
                                     opacity: 0;
                                 }
-                            </style>';
+                            </style>';                   
 
                             if (!empty($image_full_size_url)) {
                                 if (!empty($link)) {
-                                    $output .= '<div class="custom-sticky-button-item">
-                                                    <a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'"></a>
+                                    $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                                    <a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'"></a>
+                                                    <div class="custom-image-button-text">'. $button_text .'</div>
                                                 </div>';
                                 } else {
-                                    $output .= '<div class="custom-sticky-button-item">
-                                                    <img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'">
+                                    $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                                    <img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'">
+                                                    <div class="custom-image-button-text">'. $button_text .'</div>
                                                 </div>';
                                 }
                             } else {
                                 if (!empty($link)) {
-                                    $output .= '<div class="custom-sticky-button-item">
-                                                    <a href="'. $link .'" '. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div></a>
+                                    $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                                    <a href="'. $link .'" '. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div></a>
                                                 </div>';
                                 } else {
-                                    $output .= '<div class="custom-sticky-button-item">
-                                                    <div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div>
+                                    $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                                    <div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div>
                                                 </div>';
                                 }
                             }
@@ -489,7 +526,9 @@ class PWElementStickyButtons extends PWElements {
 
                     $output .= '</div>';
                 }
-                $output .= '
+
+                
+            $output .= '
                 <div class="sticky custom-sticky-buttons-cropped-container">
                     <div class="custom-sticky-head-container style-accent-bg" background-color:'. $sticky_buttons_cropped_background .'!important">
                         <h4 class="custom-sticky-head-text" style="'. $text_color .' !important;">Wybierz kongres &nbsp;</h4>
@@ -521,27 +560,38 @@ class PWElementStickyButtons extends PWElements {
                                     }
                                 </style>';
 
+                                if ($sticky_buttons_mini_hide == true) {
+                                    $output .= '<style>
+                                        #'. $element_unique_id .' .custom-sticky-buttons-cropped-container {
+                                            display: none !important;
+                                        }
+                                    </style>';
+                                }
+
                                 if (!empty($image_url)) {
                                     if (!empty($link)) {
-                                        $output .= '<div class="custom-sticky-button-item">';
-                                            $output .= '<a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'"></a>';
-                                        $output .= '</div>';
+                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                                        <a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'"></a>
+                                                        <div class="custom-image-button-text">'. $button_text .'</div>
+                                                    </div>';
                                     } else {
-                                        $output .= '<div class="custom-sticky-button-item">';
-                                            $output .= ' <img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'">';
-                                        $output .= '</div>';
+                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                                        <img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'">
+                                                        <div class="custom-image-button-text">'. $button_text .'</div>
+                                                    </div>';
                                     }
                                 } else {
                                     if (!empty($link)) {
-                                        $output .= '<div class="custom-sticky-button-item">';
-                                            $output .= '<a href="'. $link .'"'. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div></a>';
+                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">';
+                                            $output .= '<a href="'. $link .'"'. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div></a>';
                                         $output .= '</div>';
                                     } else {
-                                        $output .= '<div class="custom-sticky-button-item">';
-                                            $output .= '<div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" id="' . $button_id . '-btn" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div>';
+                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">';
+                                            $output .= '<div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div>';
                                         $output .= '</div>';
                                     }   
                                 }
+                                
                             }
                         } else {
                             $output .= 'Invalid JSON data.';
@@ -556,18 +606,18 @@ class PWElementStickyButtons extends PWElements {
                     </div>
                 </div>';
 
-            $buttons_id_json = json_encode($buttons_id);
-            $buttons_links_json = json_encode($buttons_id);
-
             $buttons_cropped_image = json_encode($buttons_urls);
             $buttons_cropped_color = json_encode($buttons_colors);
+
+            $buttons_id_json = json_encode($buttons_id);
 
             $output .= '<script>
 
                 document.addEventListener("DOMContentLoaded", () => {
                     const pweElement = document.querySelector(".pwelement_'.self::$rnd_id.'");
                     const stickyScroll = "'. $sticky_buttons_scroll .'";
-                    const btnLinks = ' . json_encode($buttons_links_json) . ';
+                    const stickyMiniHide = "'. $sticky_buttons_mini_hide .'";
+                    const stickyMiniUrlsImg = "'. $image_url.'";
                     const btnsId = ' . json_encode($buttons_id_json) . ';
                     const stickyButtonsDropdown = ' . json_encode($sticky_buttons_dropdown) . ';
                     const stickyButtonsFullSize = ' . json_encode($sticky_buttons_full_size) . ';
@@ -593,14 +643,14 @@ class PWElementStickyButtons extends PWElements {
                     const setElementPosition = (element, position) => {
                         element.style.position = position;
                     };
-
+                    
                     const buttonsCroppedImage = ' . $buttons_cropped_image . ';
                     const buttonsCroppedColor = ' . $buttons_cropped_color . ';
                     const combinedArray = buttonsCroppedImage.concat(buttonsCroppedColor);
                     if (combinedArray.every(value => value === false || value === "")) {
                         hideElement(tilesCroppedContainer);
                     }
-
+                    
                     if (stickyButtonsDropdown !== "true") {
                         hideElement(stickyHeadContainer);
                         if (stickyButtonsFullSize === "true") { // dropdown on full size on
@@ -707,7 +757,7 @@ class PWElementStickyButtons extends PWElements {
                     }
 
                     if (btnsId !== "") {
-                        pweElement.querySelectorAll(".custom-image-button").forEach(function(button, index) {
+                        pweElement.querySelectorAll(".custom-sticky-button-item").forEach(function(button, index) {
 
                             button.style.transition = ".3s ease";
 
@@ -730,6 +780,19 @@ class PWElementStickyButtons extends PWElements {
                             button.addEventListener("click", function() {
                                 var targetId = button.id.replace("-btn", "");
 
+                                let customScrollTop;
+                                if (containerPageHeader) {
+                                    customScrollTop = containerPageHeader.offsetHeight;
+                                } else if (containerCustomHeader) {
+                                    customScrollTop = containerCustomHeader.offsetHeight;
+                                } else {
+                                    customScrollTop = containerMasthead.offsetHeight;
+                                }
+                                if (document.querySelectorAll("header.menu-transparent").length > 0 && desktop) {
+                                    customScrollTop -= containerMasthead.offsetHeight;
+                                }
+                                customScrollTop += "px";
+
                                 // Hide all elements of .vc_row.row-container
                                 hideSections.forEach(function(section) {
                                     section.style.display = "none";
@@ -742,8 +805,17 @@ class PWElementStickyButtons extends PWElements {
 
                                     // Scroll to the desired section
                                     if (stickyScroll !== "true") {
-                                        targetElement.style.scrollMarginTop = containerMasthead.offsetHeight + "px";
-                                        targetElement.scrollIntoView({ behavior: "smooth" });    
+                                        if (stickyButtonsFullSize == "true" && (stickyMiniUrlsImg == "" || (stickyMiniUrlsImg != "" && stickyMiniHide == "true"))) {
+                                            targetElement.style.scrollMarginTop = containerMasthead.offsetHeight + "px";
+                                            targetElement.scrollIntoView({ behavior: "smooth" }); 
+                                        } else {
+                                            pweElement.querySelectorAll(".custom-sticky-button-item").forEach(function(button) {
+                                                const scrollTopValue = parseInt(customScrollTop);
+                                                button.addEventListener("click", function() {
+                                                    window.scrollTo({ top: scrollTopValue, behavior: "smooth" });
+                                                });
+                                            });
+                                        } 
                                     }
                                 }
                                 
@@ -751,7 +823,7 @@ class PWElementStickyButtons extends PWElements {
                                     button.style.transform = "scale(1.1)";
                                 }
 
-                                pweElement.querySelectorAll(".custom-image-button").forEach(function(otherButton) {
+                                pweElement.querySelectorAll(".custom-sticky-button-item").forEach(function(otherButton) {
                                     if (otherButton !== button) {
                                         otherButton.style.transform = "scale(1)";
                                     }

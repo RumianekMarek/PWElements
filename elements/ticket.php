@@ -300,6 +300,12 @@ class PWElementTicket extends PWElements {
                 color: white;
                 min-height: 40px;
             }    
+            @media (max-width: 640px) {
+                .pwelement_'. self::$rnd_id .' .pwe-btn { 
+                    font-size: 12px;
+                    min-width: 200px !important;
+                }
+            } 
         </style>';
 
         $output .= '
