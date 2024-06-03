@@ -36,3 +36,39 @@ jQuery(document).ready(function ($) {
     //     // }, 1000);
 
 });
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     console.log("1");
+//     const mediaGalleryObserver = new MutationObserver(function(mutations) {
+//         console.log("2");
+//         mutations.forEach(function(mutation) {
+//             console.log("3");
+//             mutation.addedNodes.forEach(function(addedNode) {
+//                 console.log("4");
+//                 if (addedNode.nodeType === 1) { // Sprawdź czy to element DOM
+//                     console.log("5");
+//                     if (addedNode.classList.contains('media_gallery_layout')) {
+//                         console.log("6");
+//                         const mediaGalleryFlexSelect = addedNode.querySelector('select[data-option="flex"]');
+//                         if (mediaGalleryFlexSelect) {
+//                             console.log("7");
+//                             const mediaGalleryTextfields = addedNode.querySelectorAll('.thumbnails_height_flex');
+//                             mediaGalleryTextfields.forEach(function(textfield) {
+//                                 console.log("8");
+//                                 textfield.style.display = "none";
+//                             });
+//                         }
+//                     }
+//                 }
+//             });
+//         });
+//     });
+
+//     // Rozpoczęcie obserwacji zmian w dokumencie
+//     mediaGalleryObserver.observe(document.body, {
+//         childList: true,
+//         subtree: true
+//     });
+// });
+
+
