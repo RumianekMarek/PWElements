@@ -248,6 +248,13 @@ class PWEMediaGallerySlider {
                         let startX; // Zmienna przechowująca początkową pozycję X myszy
                         let startY; // Zmienna przechowująca początkową pozycję Y myszy
                         let slideMove = 0; // Zmienna przechowująca przesunięcie slajdu
+
+                        const links = document.querySelectorAll("#PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image");
+                        links.forEach(link => {
+                                link.addEventListener("mousedown", (e) => {
+                                e.preventDefault();
+                                });
+                        });
                         
                         // Obsługa zdarzenia wciśnięcia przycisku myszy
                         slider.addEventListener("mousedown", (e) => {

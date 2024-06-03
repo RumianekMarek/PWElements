@@ -52,7 +52,6 @@ class PWELogotypesSlider {
                         .pwe-element-logotypes-slider .slides .slide{
                                 animation: slideAnimation 0.5s ease-in-out;
                         }
-
                 </style>
                 
                 <div id="PWELogotypesSlider-'. $id_rnd .'" class="pwe-element-logotypes-slider">
@@ -76,9 +75,9 @@ class PWELogotypesSlider {
                                 $imageStyle = $media_url[$imgNumber]['style'] ? $media_url[$imgNumber]['style'] : '';
 
                                 if (!empty($imageUrl)){
-                                        $output .= '<a href="'. $imageUrl .'" target="_blank" class="image-container '. $imageId .'"><div class="'.$imageClass.'" style="'.$imageStyles . ' ' . $imageStyle.'"></div></a>';
+                                        $output .= '<a href="'. $imageUrl .'" target="_blank" class="image-container '. $imageId .'"><div class="'.$imageClass.' logo-with-link" style="'.$imageStyles . ' ' . $imageStyle.'"></div></a>';
                                 } else {
-                                        $output .= '<div class="image-container '.$imageClass.'" style="'.$imageStyles . ' ' . $imageStyle.'"></div>';
+                                        $output .= '<div class="image-container '.$imageClass.' logo-without-link" style="'.$imageStyles . ' ' . $imageStyle.'"></div>';
                                 }
                         }
 
@@ -107,7 +106,13 @@ class PWELogotypesSlider {
                                 const slides = document.querySelector("#PWELogotypesSlider-'. $id_rnd .' .slides");
                                 const images = document.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' .slides div");
 
-                                
+                                const links = document.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' a");
+                                links.forEach(link => {
+                                        link.addEventListener("mousedown", (e) => {
+                                        e.preventDefault();
+                                        });
+                                });
+
                                 let isMouseOver = false;
                                 let isDragging = false;
                                 

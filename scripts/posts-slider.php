@@ -189,6 +189,13 @@ class PWEPostsSlider {
                                         let startY;
                                         let slideMove = 0;
 
+                                        const links = document.querySelectorAll("#PWEPostsSlider-'. $id_rnd .' a");
+                                        links.forEach(link => {
+                                                link.addEventListener("mousedown", (e) => {
+                                                e.preventDefault();
+                                                });
+                                        });
+
                                         slider.addEventListener("mousedown", (e) => {
                                                 isDown = true;
                                                 slider.classList.add("active");

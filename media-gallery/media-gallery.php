@@ -97,6 +97,7 @@ class PWEMediaGallery {
                         'heading' => __('Layout', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_layout',
                         'description' => __('Action after clicking on the image', 'pwe_media_gallery'),
+                        'param_holder_class' => 'media_gallery_layout',
                         'save_always' => true,
                         'value' => array(
                             'Columns' => 'columns',
@@ -146,94 +147,97 @@ class PWEMediaGallery {
                     ),
                     array(
                         'type' => 'dropdown',
-                        'heading' => __('Thumbnail width (desktop) <a href="#" onclick="yourFunction(`thumbnails_width_desktop_hidden`, `media_gallery_thumbnails_width_desktop`)">CUSTOM</a>', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnail width (desktop', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_desktop',
                         'description' => __('Specify the thumbnail width for desktop.', 'pwe_media_gallery'),
                         'param_holder_class' => 'backend-area-one-third-width',
                         'save_always' => true,
                         'value' => array(
                             'Default' => '',
-                            '1/12 (12 columns)' => '1/12',
-                            '2/12 (6 columns)' => '2/12',
-                            '3/12 (4 columns)' => '3/12',
-                            '4/12 (3 columns)' => '4/12',
-                            '6/12 (2 columns)' => '6/12',
-                            '12/12 (1 column)' => '12/12',
+                            '12 columns' => '12',
+                            '11 columns' => '11',
+                            '10 columns' => '10',
+                            '9 columns' => '9',
+                            '8 columns' => '8',
+                            '7 columns' => '7',
+                            '6 columns' => '6',
+                            '5 columns' => '5',
+                            '4 columns' => '4',
+                            '3 columns' => '3',
+                            '2 columns' => '2',
+                            '1 column' => '1',
                         ),
-                        'dependency' => array(
-                            'element' => 'thumbnails_width_desktop_hidden',
-                            'value' => array(''),
-                        ),
-                    ), 
-                    array(
-                        'type' => 'textfield',
-                        'heading' => __('Thumbnail width (desktop) <a href="#" onclick="yourFunction(`media_gallery_thumbnails_width_desktop`, `thumbnails_width_desktop_hidden`)">SELECT</a>', 'pwe_media_gallery'),
-                        'param_name' => 'thumbnails_width_desktop_hidden',
-                        'param_holder_class' => 'backend-area-one-third-width pwe_dependent-hidden',
-                        'description' => __('Write the thumbnail width for desktop.', 'pwe_media_gallery'),
-                        'value' => '',
-                        'save_always' => true,
                     ), 
                     array(
                         'type' => 'dropdown',
-                        'heading' => __('Thumbnail width (tablet) <a href="#" onclick="yourFunction(`thumbnails_width_tablet_hidden`, `media_gallery_thumbnails_width_tablet`)">CUSTOM</a>', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnail width (tablet)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_tablet',
                         'description' => __('Specify the thumbnail width for tablet.', 'pwe_media_gallery'),
                         'param_holder_class' => 'backend-area-one-third-width',
                         'save_always' => true,
                         'value' => array(
                             'Default' => '',
-                            '1/12 (12 columns)' => '1/12',
-                            '2/12 (6 columns)' => '2/12',
-                            '3/12 (4 columns)' => '3/12',
-                            '4/12 (3 columns)' => '4/12',
-                            '6/12 (2 columns)' => '6/12',
-                            '12/12 (1 column)' => '12/12',
+                            '12 columns' => '12',
+                            '11 columns' => '11',
+                            '10 columns' => '10',
+                            '9 columns' => '9',
+                            '8 columns' => '8',
+                            '7 columns' => '7',
+                            '6 columns' => '6',
+                            '5 columns' => '5',
+                            '4 columns' => '4',
+                            '3 columns' => '3',
+                            '2 columns' => '2',
+                            '1 column' => '1',
                         ),
-                        'dependency' => array(
-                            'element' => 'thumbnails_width_tablet_hidden',
-                            'value' => array(''),
-                        ),
-                    ),
-                    array(
-                        'type' => 'textfield',
-                        'heading' => __('Thumbnail width (tablet) <a href="#" onclick="yourFunction(`media_gallery_thumbnails_width_tablet`, `thumbnails_width_tablet_hidden`)">SELECT</a>', 'pwe_media_gallery'),
-                        'param_name' => 'thumbnails_width_tablet_hidden',
-                        'param_holder_class' => 'backend-area-one-third-width pwe_dependent-hidden',
-                        'description' => __('Write the thumbnail width for tablet.', 'pwe_media_gallery'),
-                        'value' => '',
-                        'save_always' => true,
                     ), 
                     array(
                         'type' => 'dropdown',
-                        'heading' => __('Thumbnail width (mobile) <a href="#" onclick="yourFunction(`thumbnails_width_mobile_hidden`, `media_gallery_thumbnails_width_mobile`)">CUSTOM</a>', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnail width (mobile)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_mobile',
                         'description' => __('Specify the thumbnail width for mobile.', 'pwe_media_gallery'),
                         'param_holder_class' => 'backend-area-one-third-width',
                         'save_always' => true,
                         'value' => array(
                             'Default' => '',
-                            '1/12 (12 columns)' => '1/12',
-                            '2/12 (6 columns)' => '2/12',
-                            '3/12 (4 columns)' => '3/12',
-                            '4/12 (3 columns)' => '4/12',
-                            '6/12 (2 columns)' => '6/12',
-                            '12/12 (1 column)' => '12/12',
+                            '12 columns' => '12',
+                            '11 columns' => '11',
+                            '10 columns' => '10',
+                            '9 columns' => '9',
+                            '8 columns' => '8',
+                            '7 columns' => '7',
+                            '6 columns' => '6',
+                            '5 columns' => '5',
+                            '4 columns' => '4',
+                            '3 columns' => '3',
+                            '2 columns' => '2',
+                            '1 column' => '1',
                         ),
-                        'dependency' => array(
-                            'element' => 'thumbnails_width_mobile_hidden',
-                            'value' => array(''),
-                        ),
-                    ),
+                    ),   
                     array(
                         'type' => 'textfield',
-                        'heading' => __('Thumbnail width (mobile) <a href="#" onclick="yourFunction(`media_gallery_thumbnails_width_mobile`, `thumbnails_width_mobile_hidden`)">SELECT</a>', 'pwe_media_gallery'),
-                        'param_name' => 'thumbnails_width_mobile_hidden',
-                        'param_holder_class' => 'backend-area-one-third-width pwe_dependent-hidden',
-                        'description' => __('Write the thumbnail width for mobile.', 'pwe_media_gallery'),
-                        'value' => '',
+                        'heading' => __('Thumbnail height (desktop)(for flex)', 'pwe_media_gallery'),
+                        'param_name' => 'thumbnails_height_desktop',
+                        'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
+                        'description' => __('Write the thumbnail height for desktop.', 'pwe_media_gallery'),
                         'save_always' => true,
-                    ),                    
+                    ), 
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Thumbnail height (tablet)(for flex)', 'pwe_media_gallery'),
+                        'param_name' => 'thumbnails_height_tablet',
+                        'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
+                        'description' => __('Write the thumbnail height for tablet.', 'pwe_media_gallery'),
+                        'save_always' => true,
+                    ),        
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Thumbnail height (mobile)(for flex)', 'pwe_media_gallery'),
+                        'param_name' => 'thumbnails_height_mobile',
+                        'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
+                        'description' => __('Write the thumbnail height for mobile.', 'pwe_media_gallery'),
+                        'save_always' => true,
+                    ),           
                     array(
                         'type' => 'textfield',
                         'heading' => __('Breakpoint for tablet', 'pwe_media_gallery'),
@@ -364,16 +368,10 @@ class PWEMediaGallery {
                     switch ($type) {
                         case 'columns':
 
-                            // Function to calculate the columns of the thumbnail on different devices
-                            $calculateThumbnailsColumns = function ($device) {
-                                list($numerator, $denominator) = explode('/', $device);
-                                return ($denominator / $numerator);
-                            };
-
                             // Set the number of columns in the gallery
-                            $columns_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '3' : $calculateThumbnailsColumns($media_gallery_thumbnails_width_desktop);
-                            $columns_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : $calculateThumbnailsColumns($media_gallery_thumbnails_width_tablet);
-                            $columns_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : $calculateThumbnailsColumns($media_gallery_thumbnails_width_mobile);
+                            $columns_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '3' : $media_gallery_thumbnails_width_desktop;
+                            $columns_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : $media_gallery_thumbnails_width_tablet;
+                            $columns_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : $media_gallery_thumbnails_width_mobile;
 
                             $output .=  '<style>
                                             /* Columns */
@@ -402,16 +400,10 @@ class PWEMediaGallery {
                             break;
                         case 'grid':
 
-                            // Function to calculate the columns of the thumbnail on different devices
-                            $calculateThumbnailsGrid = function ($device) {
-                                list($numerator, $denominator) = explode('/', $device);
-                                return ($denominator / $numerator);
-                            };
-
                             // Set the number of columns in the gallery
-                            $grid_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '3' : $calculateThumbnailsGrid($media_gallery_thumbnails_width_desktop);
-                            $grid_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : $calculateThumbnailsGrid($media_gallery_thumbnails_width_tablet);
-                            $grid_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : $calculateThumbnailsGrid($media_gallery_thumbnails_width_mobile);
+                            $grid_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '3' : $media_gallery_thumbnails_width_desktop;
+                            $grid_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : $media_gallery_thumbnails_width_tablet;
+                            $grid_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : $media_gallery_thumbnails_width_mobile;
 
                             $output .=  '<style>
                                             /* Grid */
@@ -438,16 +430,10 @@ class PWEMediaGallery {
                             break;
                         case 'flex':
 
-                            // Function to calculate the width of the thumbnail on different devices
-                            $calculateThumbnailsFlex = function ($device) {
-                                list($numerator, $denominator) = explode('/', $device);
-                                return ($numerator / $denominator) * 100 . '%';
-                            };
-
-                            // Set the width of if images in the gallery
-                            $flex_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '33.33%' : $calculateThumbnailsFlex($media_gallery_thumbnails_width_desktop);
-                            $flex_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '50%' : $calculateThumbnailsFlex($media_gallery_thumbnails_width_tablet);
-                            $flex_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '50%' : $calculateThumbnailsFlex($media_gallery_thumbnails_width_mobile);
+                            // Set the height of if images in the gallery
+                            $thumbnails_height_desktop = ($thumbnails_height_desktop == '') ? '200px' : $thumbnails_height_desktop;
+                            $thumbnails_height_tablet = ($thumbnails_height_tablet == '') ? '200px' : $thumbnails_height_tablet;
+                            $thumbnails_height_mobile = ($thumbnails_height_mobile == '') ? '200px' : $thumbnails_height_mobile;
 
                             $output .=  '<style>
                                             /* Flexbox */
@@ -456,39 +442,38 @@ class PWEMediaGallery {
                                                 flex-wrap: wrap;
                                                 gap: '. $media_gallery_gap .'px;
                                             }
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image {
+                                                flex-grow: 1;
+                                            }
                                             #'. $media_gallery_id .' .pwe-media-gallery-image img {
                                                 width: 100%;
                                                 height: 100%;
+                                                object-fit: cover;
+                                                object-position: top;
                                             }
                                             @media (min-width: '. ($media_gallery_breakpoint_tablet + 1) .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                    width: calc('. $flex_thumbnails_desktop .' - 5px);
+                                                    height: '. $thumbnails_height_desktop .';
                                                 }
                                             }
                                             @media (max-width: '. $media_gallery_breakpoint_tablet .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                    width: calc('. $flex_thumbnails_tablet .' - 5px);
+                                                    height: '. $thumbnails_height_tablet .';
                                                 }
                                             }
                                             @media (max-width: '. $media_gallery_breakpoint_mobile .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                    width: calc('. $flex_thumbnails_mobile .' - 5px);
+                                                    height: '. $thumbnails_height_mobile .';
                                                 }
                                             } 
                                         </style>';
                             break;
                         case 'carousel':
 
-                            // Function to calculate the columns of the thumbnail on different devices
-                            $calculateThumbnailsCarousel = function ($device) {
-                                list($numerator, $denominator) = explode('/', $device);
-                                return ($denominator / $numerator);
-                            };
-
                             // Set the width of if images in the carousel
-                            $carousel_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '3' : (string) $calculateThumbnailsCarousel($media_gallery_thumbnails_width_desktop);
-                            $carousel_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : (string) $calculateThumbnailsCarousel($media_gallery_thumbnails_width_tablet);
-                            $carousel_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : (string) $calculateThumbnailsCarousel($media_gallery_thumbnails_width_mobile);
+                            $carousel_thumbnails_desktop = ($media_gallery_thumbnails_width_desktop == '') ? '3' : (string) $media_gallery_thumbnails_width_desktop;
+                            $carousel_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : (string) $media_gallery_thumbnails_width_tablet;
+                            $carousel_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : (string) $media_gallery_thumbnails_width_mobile;
 
                             $output .=  '<style>
                                             /* Carousel */
@@ -670,7 +655,7 @@ class PWEMediaGallery {
                                         // Usunięcie klasy fade-out i dodanie fade-in po zmianie źródła obrazu
                                         popupImage.classList.remove("fade-out");
                                         popupImage.classList.add("fade-in");
-                                    }, 200);
+                                    }, 100);
                                 };
 
                                 leftArrow.addEventListener("click", () => changeImage(-1));
