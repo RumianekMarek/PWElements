@@ -215,28 +215,42 @@ class PWElementTicket extends PWElements {
             $ticket_id = $element_unique_id; 
         }
 
-        $ticket_placeholder = !empty($ticket_placeholder) ? $ticket_placeholder : "Bilet dostępny wyłącznie online";
-        $ticket_button = !empty($ticket_button) ? $ticket_button : "Kup " . strtolower($ticket_title) . "!";
+        if(get_locale() == 'pl_PL') {
+            $ticket_placeholder = !empty($ticket_placeholder) ? $ticket_placeholder : "Bilet dostępny wyłącznie online";
+            $ticket_button = !empty($ticket_button) ? $ticket_button : "Kup " . strtolower($ticket_title) . "!";
+        } else {
+            $ticket_placeholder = !empty($ticket_placeholder) ? $ticket_placeholder : "Ticket available only online";
+            $ticket_button = !empty($ticket_button) ? $ticket_button : "Kup " . strtolower($ticket_title) . "!";
+        }
+        
+        
         $ticket_info_height = !empty($ticket_info_height) ? $ticket_info_height : "auto";
 
         
         $ticket_prices_urldecode = urldecode($ticket_prices );
         $ticket_prices_json = json_decode($ticket_prices_urldecode, true);
+        $old_price = '';
+        $current_price = '';
+
         if (is_array($ticket_prices_json)) {
             $todayDate = strtotime(date('Y/m/d H:i', time()));
             foreach ($ticket_prices_json as $price){
                 $countdown_start = $price["ticket_countdown_start"];
                 $countdown_end = $price["ticket_countdown_end"];
                 $new_price = $price["ticket_new_price"]; 
-
+        
                 if (strtotime($countdown_start) < $todayDate && $todayDate < strtotime($countdown_end)) {
                     $current_price = $new_price;
                     $old_price = '<span style="color: #044e9b; font-size: 30px; text-decoration: line-through; padding-right: 5px;">'. $ticket_price .'</span>';
                 } else if ($todayDate > strtotime($countdown_end)) {
                     $current_price = $ticket_price;
+                } else if ($todayDate < strtotime($countdown_start)) {
+                    $current_price = $ticket_price;
                 }
             }
-        } else $current_price = $ticket_price;
+        } else {
+            $current_price = $ticket_price;
+        }
 
         $output = '
         <style>
@@ -264,6 +278,10 @@ class PWElementTicket extends PWElements {
                 width: inherit;
                 color: white;
             }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-header-block h3 p {
+                margin: 0; 
+                font-size: 20px;
+            }
             .pwelement_'. self::$rnd_id .' .pwe-ticket-price-block {
                 font-size: 45px;
                 padding: 18px;
@@ -287,11 +305,25 @@ class PWElementTicket extends PWElements {
                 text-transform: uppercase;
                 transition: .3s ease
             }
+            .pwelement_'. self::$rnd_id .' .pwe-btn p,
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-info-block p,
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-footer-text p {
+                margin: 0;
+            }
             .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
                 color: white !important;
                 background-color: black;
                 box-shadow: 9px 9px 0px -5px '. $btn_color .';
                 border: 1px solid black;
+            }
+            .pwe-btn:focus:not(:focus-visible) {
+                background-color:'. $btn_color .' !important;
+                color: '. $btn_text_color .' !important;
+                box-shadow:'. $btn_shadow_color .' !important;
+                border:'. $btn_border .' !important;
+            }
+            .pwe-btn:focus {
+                outline: none;
             }
             .pwelement_'. self::$rnd_id .' .pwe-ticket-footer-block {
                 background-color: '. self::$accent_color .';
@@ -311,16 +343,16 @@ class PWElementTicket extends PWElements {
         $output .= '
             <div id="'. $ticket_id .'" class="pwe-ticket-container">
                 <div class="pwe-ticket-wrapper">
-                    <div class="pwe-ticket-header-block"><h3>'. $ticket_title .'</h3></div>
+                    <div class="pwe-ticket-header-block"><h3>'. wpb_js_remove_wpautop($ticket_title, true) .'</h3></div>
                     <div class="pwe-ticket-price-block">'. $old_price .'<span class="pwe-ticket-price">'. $current_price .'</span></div> 
                     <div class="pwe-ticket-placeholder-block"><span class="pwe-ticket-placeholder">'. $ticket_placeholder .'</span></div>        
                     <div class="pwe-ticket-button-block">
                         <span class="pwe-btn-container">
-                            <a href="'. $ticket_button_link .'" class="pwe-btn" target="_blank">'. $ticket_button .'</a>
+                            <a href="'. $ticket_button_link .'" class="pwe-btn" target="_blank">'. wpb_js_remove_wpautop($ticket_button, true) .'</a>
                         </span>
                     </div>
                     <div class="pwe-ticket-info-block">'. $ticket_info_content .'</div>
-                    <div class="pwe-ticket-footer-block"><span class="pwe-ticket-footer-text">'. $ticket_footer .'</span></div>
+                    <div class="pwe-ticket-footer-block"><span class="pwe-ticket-footer-text">'. wpb_js_remove_wpautop($ticket_footer, true) .'</span></div>
                 </div> 
             </div>';
 

@@ -743,8 +743,8 @@ class PWElementStickyButtons extends PWElements {
                                 btnsIdArray.forEach(function(btnId) {
                                     const trimmedBtnId = btnId.trim();
                                     const vcRow = document.getElementById(trimmedBtnId);
-                                    vcRow.classList.add("sticky-section-'. $unique_id .'");
                                     if (vcRow) {
+                                        vcRow.classList.add("sticky-section-'. $unique_id .'");
                                         vcRow.classList.add("hide-section-'. $unique_id .'");
                                     }
                                 });
