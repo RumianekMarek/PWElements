@@ -79,7 +79,7 @@ class PWElementRoute extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-route-area-wrapper {
                         flex-direction: column;
                     }
-                    .pwelement_'. self::$rnd_id .' .custom-half-width {
+                    .pwelement_'. self::$rnd_id .' .pwe-half-width {
                         width: 100% !important;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-route-image-bg h3 {

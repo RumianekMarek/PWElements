@@ -1,6 +1,6 @@
 <?php
 /**
-* Class PWOfficeCalendarElement
+* Class PWOutlookCalendarElement
 * Extends PWElements class and defines a pwe Visual Composer element.
 */
 class PWOutlookCalendarElement extends PWElements {
@@ -48,16 +48,16 @@ class PWOutlookCalendarElement extends PWElements {
 
         $linker = 'https://outlook.live.com/calendar/0/action/compose?body='.urlencode($trade_desc).'&enddt='.substr($trade_end,0,4).'-'.substr($trade_end,5,2).'-'.substr($trade_end,8,2).'T17%3A00%3A00%3A00&location='.urlencode('Aleja Katowicka 62, 05-830 Nadarzyn').'&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt='.substr($trade_start,0,4).'-'.substr($trade_start,5,2).'-'.substr($trade_start,8,2).'T10%3A00%3A00%3A00&subject='.urlencode($trade_name);
         
-        $output = '<div id="calendar-office" class="pwe-container-calendar-add text-centered">
-                    <a class="office" alt="link do kalendarza office" href="' . $linker . '" target="_blank">
-                        <img src="/wp-content/plugins/PWElements/media/outlook.png" alt="ikonka office calendar"/>
+        $output = '<div id="calendar-outlook" class="pwe-container-calendar-add text-centered">
+                    <a class="outlook" alt="link do kalendarza outlook" href="' . $linker . '" target="_blank">
+                        <img src="/wp-content/plugins/PWElements/media/outlook.png" alt="ikonka outlook calendar"/>
                         <p class="font-weight-700">'.
                         self::languageChecker(
                             <<<PL
-                            Kalendarz<br>Office
+                            Kalendarz<br>Outlook
                             PL,
                             <<<EN
-                            Office<br>Calendar
+                            Outlook<br>Calendar
                             EN
                         )
                     .'</a>

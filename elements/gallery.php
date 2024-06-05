@@ -197,10 +197,10 @@ class PWElementHomeGallery extends PWElements {
             ? $atts['button_text'] 
             : self::languageChecker(
                 <<<PL
-                    Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
+                Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
                 PL,
                 <<<EN
-                    Register<span style="display: block; font-weight: 300;">Get a free ticket</span>
+                Register<span style="display: block; font-weight: 300;">Get a free ticket</span>
                 EN    
             );
 

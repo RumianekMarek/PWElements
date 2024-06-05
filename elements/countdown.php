@@ -398,9 +398,15 @@ class PWElementMainCountdown extends PWElements {
             if ($right_countdown[0]['turn_off_countdown_text'] != true && $right_countdown[0]['countdown_text'] != '') {    
                 $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
             };
-            $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                        ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ' . $date_dif->s . ' sekund 
-                    </p>';
+            if (get_locale() == "pl_PL") {
+                $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                            ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ' . $date_dif->s . ' sekund 
+                           </p>';
+            } else {
+                $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                            ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ' . $date_dif->s . ' seconds
+                           </p>';
+            }
             if ($right_countdown[0]['turn_off_countdown_button'] != true && $right_countdown[0]['countdown_btn_text'] != '') {
                 $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
             };

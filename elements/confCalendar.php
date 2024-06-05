@@ -29,6 +29,11 @@ class PWElementConfCallendar extends PWElements {
     * @return string @output 
     */
     public static function output($atts) {
+        require_once plugin_dir_path(__FILE__) . 'calendarApple.php';
+        require_once plugin_dir_path(__FILE__) . 'calendarGoogle.php';
+        require_once plugin_dir_path(__FILE__) . 'calendarOffice.php';
+        require_once plugin_dir_path(__FILE__) . 'calendarOutlook.php';
+        
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . ' !important;';
 
         echo '<script>console.log("'.$text_color.'")</script>';

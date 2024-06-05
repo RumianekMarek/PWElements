@@ -47,7 +47,7 @@ class PWElementForExhibitors extends PWElements {
         $all_images = self::findAllImages('/doc/galeria/zdjecia_wys_odw', 6);
         
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
-        $img_shadow = 'box-shadow: 9px 9px 0px -6px ' . self::findColor(self::$main2_color,  self::$accent_color, 'black'). ' !important;';
+        // $img_shadow = 'box-shadow: 9px 9px 0px -6px ' . self::findColor(self::$main2_color,  self::$accent_color, 'black'). ' !important;';
 
         $output = '';
         
@@ -76,7 +76,7 @@ class PWElementForExhibitors extends PWElements {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
-                    ' . $img_shadow . '
+                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
                 }
 
                 @media (max-width:768px) {
@@ -87,7 +87,7 @@ class PWElementForExhibitors extends PWElements {
                         flex-direction: column-reverse !important;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-image-block,
-                    .pwe-forexhibitors-text-block {
+                    .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block {
                         width: 100%;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text {

@@ -57,7 +57,7 @@ class PWElementAddress extends PWElements {
                     }
                 }
             </style>
-            <div id="ptakAdress" class="pwe-container-ptakAdress  text-centered drive">
+            <div id="ptakAdress" class="pwe-container-ptakAdress text-centered drive">
                 <ul class="list-style-none pwe-text-ptakAdress" style="padding-left:0 !important; margin: 0 !important">
                     <li> Ptak Warsaw Expo </li>
                     <li> Al. Katowicka 62, </li>'.

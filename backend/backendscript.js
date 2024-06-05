@@ -37,38 +37,43 @@ jQuery(document).ready(function ($) {
 
 });
 
-// document.addEventListener("DOMContentLoaded", function() {
-//     console.log("1");
-//     const mediaGalleryObserver = new MutationObserver(function(mutations) {
-//         console.log("2");
-//         mutations.forEach(function(mutation) {
-//             console.log("3");
-//             mutation.addedNodes.forEach(function(addedNode) {
-//                 console.log("4");
-//                 if (addedNode.nodeType === 1) { // Sprawdź czy to element DOM
-//                     console.log("5");
-//                     if (addedNode.classList.contains('media_gallery_layout')) {
-//                         console.log("6");
-//                         const mediaGalleryFlexSelect = addedNode.querySelector('select[data-option="flex"]');
-//                         if (mediaGalleryFlexSelect) {
-//                             console.log("7");
-//                             const mediaGalleryTextfields = addedNode.querySelectorAll('.thumbnails_height_flex');
-//                             mediaGalleryTextfields.forEach(function(textfield) {
-//                                 console.log("8");
-//                                 textfield.style.display = "none";
-//                             });
-//                         }
-//                     }
-//                 }
-//             });
-//         });
-//     });
+// Change the display of fields depending on the selected selector (media-gallery.php)
+document.addEventListener("DOMContentLoaded", function() {
+    const mediaGalleryObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(addedNode) {
+                if (addedNode.nodeType === 1) {
+                    handleMediaGalleryChange();
+                }
+            });
+        });
+    });
 
-//     // Rozpoczęcie obserwacji zmian w dokumencie
-//     mediaGalleryObserver.observe(document.body, {
-//         childList: true,
-//         subtree: true
-//     });
-// });
+    function handleMediaGalleryChange() {
+        const mediaGallerySelect = document.querySelector('select.flex');
+        if (mediaGallerySelect) {
+            const mediaGalleryHeightTextfields = document.querySelectorAll('.thumbnails_height_flex');
+            const mediaGalleryWidthTextfields = document.querySelectorAll('.thumbnails_width_columns');
+            
+            const toggleTextfields = () => {
+                const isFlex = mediaGallerySelect.value === "flex";
+                mediaGalleryHeightTextfields.forEach(textfield => textfield.style.display = isFlex ? "block" : "none");
+                mediaGalleryWidthTextfields.forEach(textfield => textfield.style.display = isFlex ? "none" : "block");
+            };
+
+            toggleTextfields();
+            mediaGallerySelect.addEventListener("change", toggleTextfields);
+        }
+    }
+
+    // Start observing changes to the document
+    mediaGalleryObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+
+
+
 
 

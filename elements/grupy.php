@@ -31,8 +31,14 @@ class PWElementGroups extends PWElements {
                     padding: 0 10px 5px 0;
                     box-shadow: 9px 9px 0px -6px ' . $text_color . ';
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-container-grupy a{
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy a {
                     text-decoration: underline;
+                    color:' . $text_color . ';
+                }
+                @media (max-width:960px) {
+                    .row:has(.pwelement_'. self::$rnd_id .') {
+                        padding: 0 18px !important;
+                    } 
                 }
             </style>
             

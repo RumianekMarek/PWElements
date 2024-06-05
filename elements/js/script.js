@@ -22,14 +22,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Start observing iframes
-    document.querySelectorAll('.custom-video-item iframe[data-src]').forEach(function(PWEIframe) {
+    document.querySelectorAll('.pwe-video-item iframe[data-src]').forEach(function(PWEIframe) {
         observer.observe(PWEIframe);
     });
 });
-  
-// Added shadow for iframes
-const PWEIframes = document.querySelectorAll('.custom-video-item iframe');
-if (PWEIframes) {
-    PWEIframes.forEach((PWEIframe) => PWEIframe.classList.add('iframe-shadow'));
-}
   

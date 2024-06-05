@@ -200,6 +200,7 @@ class PWElementPosts extends PWElements {
                 background-repeat: no-repeat;
                 background-position: center;
                 aspect-ratio: '. $posts_ratio .';
+                box-shadow: 9px 9px 0px -6px [trade_fair_main2];
             }
             .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
                 align-items: flex-start !important;

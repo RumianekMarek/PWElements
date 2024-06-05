@@ -53,10 +53,18 @@ class PWElementSocials extends PWElements {
                         margin-top:0 !important;
                         ' . $text_color . '
                     }
-                    #socialMedia span{
+                    #socialMedia span {
                         padding-top: 0;
                     }
-                    .pwe-block-socialMedia{
+                    #socialMedia span a {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    #socialMedia span p {
+                        margin: 0;
+                    }
+                    .pwe-block-socialMedia {
                         display: flex;
                         align-items: center;
                         margin:18px 0 !important;
@@ -65,7 +73,7 @@ class PWElementSocials extends PWElements {
                         position: absolute;
                         left:12%;
                     }
-                    @media (max-width: 569px){
+                    @media (max-width: 569px) {
                         .pwe-facebook{
                             transform-origin: center !important;
                         }
@@ -108,8 +116,7 @@ class PWElementSocials extends PWElements {
 
                     <span>
                         <a class="pwe-facebook pwe-link btn border-width-0 shadow-black btn-accent btn-flat" href="[trade_fair_facebook]" alt="facebook link" target="_blank">
-                            <i class="fa fa-facebook fa-1x fa-fw"></i>
-                            &nbsp;Facebook
+                            <i class="fa fa-facebook fa-1x fa-fw"></i><p>Facebook</p>
                         </a>
                     </span>
                 </div>';

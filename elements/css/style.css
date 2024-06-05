@@ -7,9 +7,9 @@
 .row-parent:has(#niePrzegap) {
     padding: 0 !important;
 }
-.wpb_column:has(.pwelement) {
+/* .wpb_column:has(.pwelement) {
     padding-top: 0 !important;
-}
+} */
 .full-width:has(.pwelement) {
     padding: 0 !important;
 }

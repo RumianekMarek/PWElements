@@ -21,7 +21,7 @@ class PWElementDonwload extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
-        $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
 
         $filter = ($text_color != 'white') ? '.pwelement_'.self::$rnd_id.' #download img { filter: invert(100%); }' : '';
 
@@ -38,7 +38,7 @@ class PWElementDonwload extends PWElements {
                 margin: auto;
             }
             .pwelement_'.self::$rnd_id.' #download :is(h3, a){
-                '.$text_color.'
+                color: '.$text_color.' !important;
             }
 
             ' . $filter . '

@@ -42,7 +42,7 @@ class PWBadgeElement extends PWElements {
      */
     public static function massGenerator($badge_form_id) {
         
-        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3'])){
+        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3']) && $_POST['gform_unique_id'] != ''){         
             echo '<script>
             jQuery(function ($) {
                 const gfMessage = $(".gform_confirmation_message a");
@@ -56,6 +56,8 @@ class PWBadgeElement extends PWElements {
             </script>';
             $multi_badge = array();
             $multi_badge['form_id'] = $badge_form_id;
+  
+            $badge_domain = do_shortcode('[trade_fair_badge]');
             
             foreach ($_POST as $key => $value) {
                 
@@ -64,6 +66,10 @@ class PWBadgeElement extends PWElements {
                     $filed = $id[0][0];
                     $multi_badge[$filed] = $value;
                 }
+            }
+
+            if(strpos($multi_badge[3], $badge_domain) === false){
+                $multi_badge[3] = $badge_domain . $multi_badge[3];
             }
             
             for($i=1; $i<$_POST['multi_send']; $i++){  
@@ -121,23 +127,23 @@ class PWBadgeElement extends PWElements {
             
             if ($_GET['parametr'] === 'masowy') {
                 self::massGenerator($atts['badge_form_id']);
-            };
-
-            $output .= '<script>
-                jQuery(function ($) {
-                    const gfWraper = $("#gform_wrapper_' . $atts['badge_form_id'] . '");
-                    const gfFields = gfWraper.find(".gform_fields");
-                    const gfButton = gfWraper.find(".gform_button");
-                    gfButton.attr("name", "submit");
-                    const multiInput = $("<input>", {
-                        placeholder: "ilość identyfikatorów",
-                        type: "text",
-                        id: "multi_send",
-                        name: "multi_send"
+           
+                $output .= '<script>
+                    jQuery(function ($) {
+                        const gfWraper = $("#gform_wrapper_' . $atts['badge_form_id'] . '");
+                        const gfFields = gfWraper.find(".gform_fields");
+                        const gfButton = gfWraper.find(".gform_button");
+                        gfButton.attr("name", "submit");
+                        const multiInput = $("<input>", {
+                            placeholder: "ilość identyfikatorów",
+                            type: "text",
+                            id: "multi_send",
+                            name: "multi_send"
+                        });
+                        gfFields.append(multiInput);
                     });
-                    gfFields.append(multiInput);
-                });
-            </script>';
+                </script>';
+            };
         return $output;
     }
 }

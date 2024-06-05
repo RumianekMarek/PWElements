@@ -40,6 +40,9 @@ class PWElementStand extends PWElements {
                     background-color: #ffffff !important;
                     border: 1px solid #000000 !important;
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-min-media-wrapper {
+                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-container-stand {
                     display:flex;
                     flex-wrap: wrap;
@@ -113,11 +116,7 @@ class PWElementStand extends PWElements {
                 </div>
 
                 <div class="pwe-block-2 single-media-wrapper half-block-padding pwe-min-media-wrapper" style="flex:1;">
-                    <div class="image-shadow">
-                        <div class="t-entry-visual">
-                            <img src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
-                        </div>
-                    </div>
+                    <img src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
                 </div>
             </div>';
 

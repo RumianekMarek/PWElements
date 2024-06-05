@@ -57,6 +57,9 @@ class PWCallendarAddElement extends PWElements {
                 max-width: 100%;
                 padding: 0 !important;
             }
+            .wpb_column:has(.pwelement_'.self::$rnd_id.') {
+                padding-top: 0 !important;
+            }
             #calendar-add{
                 background: no-repeat;
                 background-size: cover;

@@ -40,6 +40,9 @@ class PWElementVoucher extends PWElements {
                     background-color: #ffffff !important;
                     border: 1px solid #000000 !important;
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-min-media-wrapper img {
+                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-container-voucher {
                     display:flex;
                     flex-wrap: wrap;
@@ -54,7 +57,7 @@ class PWElementVoucher extends PWElements {
             
             <div id="PWEvoucher"class="pwe-container-voucher">
                 <div class="uncode-single-media-wrapper half-block-padding pwe-min-media-wrapper" style="flex:1;">
-                    <div class="image-shadow"><div class="t-entry-visual"><img style="vertical-align: bottom;" src="/wp-content/plugins/PWElements/media/voucher.webp" alt="grafika przykładowego vouchera"/></div></div>
+                    <img style="vertical-align: bottom;" src="/wp-content/plugins/PWElements/media/voucher.webp" alt="grafika przykładowego vouchera"/>
                 </div>
 
                 <div class="half-block-padding" style="flex:1;">

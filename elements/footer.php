@@ -55,6 +55,9 @@ class PWElementFooter extends PWElements {
                 max-width: 100%;
                 padding: 0 !important;  
             }
+            .wpb_column:has(.pwe-footer) {
+                padding: 0 !important;  
+            }
             .pwe-footer-bg {
                 position: relative;
                 padding: 36px;

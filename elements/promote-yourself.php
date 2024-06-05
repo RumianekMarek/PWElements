@@ -71,8 +71,29 @@ class PWElementPromot extends PWElements {
         
         $output .= 
             '<style>
-                .pwe-promote-text-block img{
+                .pwe-image-container {
+                    position: relative;
+                    max-width: 45%;
                     float: right;
+                }
+                .download-hover {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: rgba(0, 0, 0, 1);
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    cursor: pointer;
+                }
+                .download-uslug:hover .download-hover,
+                .download-social:hover .download-hover {
+                    opacity: 1;
+                }
+                .pwe-promote-text-block img{
                     max-width: 45%;
                     margin:18px;
                 }
@@ -134,7 +155,27 @@ class PWElementPromot extends PWElements {
                     width: 66%;
                     margin: 0 auto;
                 }
-                @media (max-width:950px){
+                .pwe-content-promote-item__help :is(h2, a){
+                    font-size: 24px !important;
+                }
+                @media(max-width:960px) {
+                    .pwe-image-container,
+                    .pwe-promote-text-block {
+                        max-width:100% !important;
+                    }
+                    .pwe-image-container {
+                        float: unset;
+                        margin-top: 18px;
+                    }
+                    .pwe-promote-top-container {
+                        display: flex;
+                        flex-direction: column-reverse;
+                    }
+                    .download-hover {
+                        opacity: 1;
+                        top: 75%;
+                        padding: 5px 5px;
+                    }
                     .pwe-content-promote-item__help {
                         padding: 9px !important;
                         text-align: center;
@@ -153,12 +194,10 @@ class PWElementPromot extends PWElements {
                         float: unset;
                         max-width: 90%;
                     }
-                    .pwe-promote-text-block{
+                    .pwe-promote-text-block {
                         display: flex;
                         flex-direction: column;
                     }
-                    .pwe-content-promote-item__help :is(h2, a){
-                        font-size: 24px !important;
                 }
                 .promote-element-background-element {
                     background: lightgrey;
@@ -166,11 +205,51 @@ class PWElementPromot extends PWElements {
             </style>
 
             <div id="promoteYourself" >
-                <div class="pwe-content-promote-item column-reverse pwe-align-left">
-                    <div class="pwe-promote-text-block">
-                        <div class="image-shadow promote-img-contener">
-                            <img class="t-entry-visual" src="' . $promoteImage[0] . '">
-                        </div>'.
+                <div class="pwe-content-promote-item pwe-promote-top-container column-reverse pwe-align-left">
+                    <div class="pwe-image-container">
+                        <div class="promote-img-contener" style="display: flex; gap: 20px;">
+                            <div style="margin: 0 18px;" class="pwe-image-container download-uslug">'.
+                                self::languageChecker(
+                                    <<<PL
+                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-marketingowych.webp">
+                                    <div class="download-hover">
+                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-marketingowych.pdf">
+                                            <i class="fa fa-inbox2"></i>Pobierz
+                                        </a>
+                                    </div> 
+                                    PL,
+                                    <<<EN
+                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-marketingowych-en.webp">
+                                    <div class="download-hover">
+                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-marketingowych-EN.pdf">
+                                            <i class="fa fa-inbox2"></i>Download
+                                        </a>
+                                    </div>
+                                    EN
+                                ).'</div>
+                                <div style="margin: 0 18px;" class="pwe-image-container download-social">'.
+                                self::languageChecker(
+                                    <<<PL
+                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-social-media.webp">
+                                    <div class="download-hover">
+                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-social-media.pdf">
+                                            <i class="fa fa-inbox2"></i>Pobierz
+                                        </a>
+                                    </div>
+                                    PL,
+                                    <<<EN
+                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-social-media-en.webp">
+                                    <div class="download-hover">
+                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-social-media-EN.pdf">
+                                            <i class="fa fa-inbox2"></i>Download
+                                        </a>
+                                    </div>
+                                    EN
+                                ).'
+                                </div>
+                            </div>
+                        </div>
+                    <div class="pwe-promote-text-block">'.
                             self::languageChecker(
                                 <<<PL
                                     <h3>Wypromuj się na [trade_fair_name]!</h3>

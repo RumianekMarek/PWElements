@@ -389,6 +389,7 @@ class PWElementProfile extends PWElements {
                     object-fit: cover;
                     width: ' . $profile_img_max_width . ';
                     aspect-ratio: ' . $profile_img_aspect_ratio . ';
+                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-profile-block {
                     width: 50%;
@@ -477,7 +478,7 @@ class PWElementProfile extends PWElements {
                             } $output .= '
                         </div>
                         <div class="pwe-profile-images-block pwe-profile-block">
-                            <div class="pwe-profile-images-wrapper image-shadow">';
+                            <div class="pwe-profile-images-wrapper">';
 
                                 session_start();
 

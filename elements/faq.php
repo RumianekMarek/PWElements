@@ -29,7 +29,7 @@ class PWElementFaq extends PWElements {
         $output = '
             <style>
                 .row-parent:has(.pwelement_'. self::$rnd_id .' #faq) {
-                    width: 100%;
+                    max-width: 100%;
                     padding: 0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-faq-wrapper {
@@ -55,15 +55,15 @@ class PWElementFaq extends PWElements {
                 .pwelement_'. self::$rnd_id .' .active.pytanie::after{
                     transform: rotate(90deg);
                 }
-                .pwelement_'. self::$rnd_id .' .pytanie{
+                .pwelement_'. self::$rnd_id .' .pytanie {
                     cursor:pointer;
                 }
-                .pwelement_'. self::$rnd_id .' .odpowiedz{
+                .pwelement_'. self::$rnd_id .' .odpowiedz {
                     padding-top: 0px !important;
                     margin-left: 20px;
                     display: none;
                 }
-                .pwelement_'. self::$rnd_id .'  #faq :is(.pytanie, .odpowiedz, a, h4){
+                .pwelement_'. self::$rnd_id .' #faq :is(.pytanie, .odpowiedz, a, h4) {
                     ' . $text_color . '
                 }
             </style>
@@ -205,7 +205,18 @@ class PWElementFaq extends PWElements {
                         </div>
                     </div>
                 </div>
-            </div>';
+            </div>
+            
+            <script>
+                if (document.querySelector(".pwe-container-faq")) {
+                    jQuery(function ($) {
+                    $(".pytanie").click(function (event) {
+                        $(event.target.nextElementSibling).slideToggle();
+                        $(event.target).toggleClass("active");
+                    });
+                    });
+                }
+            </script>';
 
         return $output;
     }

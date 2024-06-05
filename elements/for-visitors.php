@@ -50,7 +50,7 @@ class PWElementForVisitors extends PWElements {
         $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important;';
         $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
         $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important;';
-        $img_shadow = 'box-shadow: 9px 9px 0px -6px ' . self::findColor(self::$main2_color,  self::$accent_color, 'black'). ' !important;';
+        // $img_shadow = 'box-shadow: 9px 9px 0px -6px ' . self::findColor(self::$main2_color,  self::$accent_color, 'black'). ' !important;';
 
 
         $output = '';
@@ -77,11 +77,11 @@ class PWElementForVisitors extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-visitors-text-block{
                     width: 50%;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-image-block img {
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-image-block img {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
-                    ' . $img_shadow . '
+                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
                 }
                 @media (max-width:768px){
                     .pwelement_'. self::$rnd_id .' .pwe-content-visitors-item {
@@ -90,7 +90,7 @@ class PWElementForVisitors extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-column-reverse{
                         flex-direction: column-reverse;
                     }
-                    .pwelement_'. self::$rnd_id .' .pwe-image-block,
+                    .pwelement_'. self::$rnd_id .' .pwe-visitors-image-block,
                     .pwelement_'. self::$rnd_id .' .pwe-visitors-text-block {
                         width: 100%;
                     }
@@ -102,8 +102,8 @@ class PWElementForVisitors extends PWElements {
 
             <div id="forVisitors"class="pwe-container-visitors">
                 <div class="pwe-content-visitors-item pwe-align-left">
-                    <div class="pwe-image-block uncode-single-media-wrapper">              
-                            <div class="image-shadow"><div class="t-entry-visual"><img src="' . $all_images[0] . '" alt="visitors image 1"></div></div>
+                    <div class="pwe-visitors-image-block uncode-single-media-wrapper">              
+                        <img src="' . $all_images[0] . '" alt="visitors image 1">
                     </div>
                     <div class="pwe-visitors-text-block">
                         <div class="pwe-visitors-text">
@@ -159,7 +159,7 @@ class PWElementForVisitors extends PWElements {
                             </span>
                         </div>
                     </div>
-                    <div class="pwe-image-block uncode-single-media-wrapper">              
+                    <div class="pwe-visitors-image-block uncode-single-media-wrapper">              
                         <img src="' . $all_images[1] . '"alt="visitors image 2">
                     </div>
                 </div>
