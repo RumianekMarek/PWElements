@@ -5,6 +5,9 @@
 .limit-width:has(.exhibitors-catalog #full) {
     max-width: unset !important;
 }
+.exhibitors-catalog {
+    margin-top: 0 !important; 
+}
 
 .exhibitor__header {
     display: flex;

@@ -549,6 +549,15 @@ class PWECatalog {
 
         $output_html = '';
 
+        if (empty($identification)) {
+            $output_html .= '
+            <style>
+            .row-container:has(#katalog-' . self::$rnd_id . ') {
+                display: none !important;
+            }
+            </style>';
+        }
+
         $output_html .= '
             <style>
                 #katalog-' . self::$rnd_id . '{

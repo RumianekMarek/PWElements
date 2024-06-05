@@ -38,6 +38,7 @@ class PWECatalogFull extends PWECatalog {
                 }
                 .exhibitors__buttons {
                     display: flex;
+                    flex-wrap: wrap;
                     justify-content: center;
                     gap: 18px;
                     padding-bottom: 36px;
@@ -157,7 +158,7 @@ class PWECatalogFull extends PWECatalog {
                             'url' => $item->url
                         );
                     }
-
+                    
                     $output .='
                     <div class="exhibitors__buttons">
                         <span class="pwe-btn-container">';

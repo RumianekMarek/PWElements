@@ -175,7 +175,7 @@ class PWElementAdditionalLogotypes extends SharedProperties {
             </style>';
 
             if ($logotypes_media != '' || $logotypes_catalog != '' || !empty($pwe_header_logotypes) || !empty($conf_logotypes_catalog)){
-            
+                
                 $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
                 $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
                 $header_logotypes_media_urls = [];

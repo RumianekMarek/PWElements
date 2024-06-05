@@ -976,6 +976,7 @@ class PWEHeader {
                             .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
                                 max-width: 1200px;
                                 flex-direction: row;
+                                gap: 100px;
                             }
                         }
                     </style>';
