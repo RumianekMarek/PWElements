@@ -82,10 +82,8 @@ class PWEPostsSlider {
                                         $imageUrl = $media_url[$imgNumber]['link'];
                                         $imageTitle = $media_url[$imgNumber]['title'];
                                         $output .= '<a class="pwe-post" href="'.$imageUrl.'">
-                                                        <div class="pwe-post-thumbnail image-shadow">
-                                                                <div class="t-entry-visual">
-                                                                        <div class="image-container" style="'.$imageStyles.'"></div>
-                                                                </div>
+                                                        <div class="pwe-post-thumbnail">
+                                                                <div class="image-container" style="'.$imageStyles.'"></div>
                                                         </div> 
                                                         <h5 class="pwe-post-title">'.$imageTitle.'</h5>
                                                 </a>';  

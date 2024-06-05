@@ -150,7 +150,7 @@ class PWEMediaGallery {
                         'heading' => __('Thumbnail width (desktop', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_desktop',
                         'description' => __('Specify the thumbnail width for desktop.', 'pwe_media_gallery'),
-                        'param_holder_class' => 'backend-area-one-third-width',
+                        'param_holder_class' => 'backend-area-one-third-width thumbnails_width_columns',
                         'save_always' => true,
                         'value' => array(
                             'Default' => '',
@@ -173,7 +173,7 @@ class PWEMediaGallery {
                         'heading' => __('Thumbnail width (tablet)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_tablet',
                         'description' => __('Specify the thumbnail width for tablet.', 'pwe_media_gallery'),
-                        'param_holder_class' => 'backend-area-one-third-width',
+                        'param_holder_class' => 'backend-area-one-third-width thumbnails_width_columns',
                         'save_always' => true,
                         'value' => array(
                             'Default' => '',
@@ -196,7 +196,7 @@ class PWEMediaGallery {
                         'heading' => __('Thumbnail width (mobile)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_mobile',
                         'description' => __('Specify the thumbnail width for mobile.', 'pwe_media_gallery'),
-                        'param_holder_class' => 'backend-area-one-third-width',
+                        'param_holder_class' => 'backend-area-one-third-width thumbnails_width_columns',
                         'save_always' => true,
                         'value' => array(
                             'Default' => '',
@@ -216,7 +216,7 @@ class PWEMediaGallery {
                     ),   
                     array(
                         'type' => 'textfield',
-                        'heading' => __('Thumbnail height (desktop)(for flex)', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnail height (desktop)(200px def)', 'pwe_media_gallery'),
                         'param_name' => 'thumbnails_height_desktop',
                         'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
                         'description' => __('Write the thumbnail height for desktop.', 'pwe_media_gallery'),
@@ -224,7 +224,7 @@ class PWEMediaGallery {
                     ), 
                     array(
                         'type' => 'textfield',
-                        'heading' => __('Thumbnail height (tablet)(for flex)', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnail height (tablet)(200px def)', 'pwe_media_gallery'),
                         'param_name' => 'thumbnails_height_tablet',
                         'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
                         'description' => __('Write the thumbnail height for tablet.', 'pwe_media_gallery'),
@@ -232,7 +232,7 @@ class PWEMediaGallery {
                     ),        
                     array(
                         'type' => 'textfield',
-                        'heading' => __('Thumbnail height (mobile)(for flex)', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnail height (mobile)(200px def)', 'pwe_media_gallery'),
                         'param_name' => 'thumbnails_height_mobile',
                         'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
                         'description' => __('Write the thumbnail height for mobile.', 'pwe_media_gallery'),
@@ -299,6 +299,9 @@ class PWEMediaGallery {
             'media_gallery_thumbnails_width_desktop' => '',
             'media_gallery_thumbnails_width_tablet' => '',
             'media_gallery_thumbnails_width_mobile' => '',
+            'thumbnails_height_desktop' => '',
+            'thumbnails_height_tablet' => '',
+            'thumbnails_height_mobile' => '',
             'media_gallery_breakpoint_tablet' => '',
             'media_gallery_breakpoint_mobile' => '',
         ), $atts));
