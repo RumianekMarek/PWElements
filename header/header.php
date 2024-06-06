@@ -711,6 +711,8 @@ class PWEHeader {
             $text_shadow = 'black !important;';
         }
 
+        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
+
         extract( shortcode_atts( array(
             'pwe_header_button_on' => '',
             'pwe_header_simple_mode' => '',
@@ -866,11 +868,9 @@ class PWEHeader {
                     margin: 0 auto;
                     padding: 0 18px 36px;
                     gap: 18px;
-                    opacity: 0;
                 }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-association {
                     padding: 0 18px 36px;
-                    opacity: 0;
                 }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-curled-sheet {
                     z-index: 1;
@@ -1185,21 +1185,7 @@ class PWEHeader {
                             const pweLogotypesElement = document.querySelector(".pwelement_'.SharedProperties::$rnd_id.' .pwe-header-logotypes");
                             if ((pweLogotypesElement && pweLogotypesElement.children.length === 0)) {
                                 pweLogotypesElement.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
-                            }
-
-                            // Lazy loading effect
-                            if (document.querySelector(".pwe-header-logotypes")) {
-                                const logotypesElements = document.querySelectorAll(".pwe-header-logotypes");
-                                logotypesElements.forEach(item => {
-                                    item.style.opacity = 1;
-                                    item.style.transition = "opacity 0.3s ease";
-                                });
-                            }
-                            if (document.querySelector(".pwe-association")) {
-                                const associationElement = document.querySelector(".pwe-association");
-                                associationElement.style.opacity = 1;
-                                associationElement.style.transition = "opacity 0.3s ease";
-                            }
+                            }                 
                         });
                     </script>';
         
