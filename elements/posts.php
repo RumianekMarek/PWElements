@@ -23,7 +23,7 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
-                'heading' => __('Category', 'my-pwe-plugin'),
+                'heading' => __('Category', 'pwelement'),
                 'param_name' => 'posts_category',
                 'save_always' => true,
                 'dependency' => array(
@@ -34,7 +34,7 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
-                'heading' => __('Posts count', 'my-pwe-plugin'),
+                'heading' => __('Posts count', 'pwelement'),
                 'param_name' => 'posts_count',
                 'save_always' => true,
                 'dependency' => array(
@@ -45,9 +45,9 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
-                'heading' => __('Aspect ratio', 'my-pwe-plugin'),
+                'heading' => __('Aspect ratio', 'pwelement'),
                 'param_name' => 'posts_ratio',
-                'description' => __('Default 1/1', 'my-pwe-plugin'),
+                'description' => __('Default 1/1', 'pwelement'),
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -57,9 +57,9 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
-                'heading' => __('Button link', 'my-pwe-plugin'),
+                'heading' => __('Button link', 'pwelement'),
                 'param_name' => 'posts_link',
-                'description' => __('Default aktualnosci-news', 'my-pwe-plugin'),
+                'description' => __('Default aktualnosci-news', 'pwelement'),
                 'save_always' => true,
                 'dependency' => array(
                   'element' => 'pwe_element',
@@ -69,10 +69,10 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Hide posts button', 'my-pwe-plugin'),
+                'heading' => __('Hide posts button', 'pwelement'),
                 'param_name' => 'posts_btn',
                 'save_always' => true,
-                'value' => array(__('True', 'my-pwe-plugin') => 'true',),
+                'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
                   'element' => 'pwe_element',
                   'value' => 'PWElementPosts',
@@ -81,10 +81,10 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Display all categories (<= 5 posts)', 'my-pwe-plugin'),
+                'heading' => __('Display all categories (<= 5 posts)', 'pwelement'),
                 'param_name' => 'posts_all_cat',
                 'save_always' => true,
-                'value' => array(__('True', 'my-pwe-plugin') => 'true',),
+                'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
                   'element' => 'pwe_element',
                   'value' => 'PWElementPosts',
@@ -93,11 +93,11 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Display all posts (> 5 posts)', 'my-pwe-plugin'),
+                'heading' => __('Display all posts (> 5 posts)', 'pwelement'),
                 'param_name' => 'posts_all',
-                'description' => __('View all posts in such categories (more than 5 posts)', 'my-pwe-plugin'),
+                'description' => __('View all posts in such categories (more than 5 posts)', 'pwelement'),
                 'save_always' => true,
-                'value' => array(__('True', 'my-pwe-plugin') => 'true',),
+                'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
                   'element' => 'pwe_element',
                   'value' => 'PWElementPosts',
@@ -106,10 +106,10 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Full width', 'my-pwe-plugin'),
+                'heading' => __('Full width', 'pwelement'),
                 'param_name' => 'posts_full_width',
                 'save_always' => true,
-                'value' => array(__('True', 'my-pwe-plugin') => 'true',),
+                'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
                   'element' => 'pwe_element',
                   'value' => 'PWElementPosts',

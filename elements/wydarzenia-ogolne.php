@@ -32,17 +32,56 @@ class PWElementConferences extends PWElements {
                     'value' => 'PWElementConferences',
                 ),
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => esc_html__('Get conferance from CAP', 'pwelement'),
+                'param_name' => 'conf_cap',
+                'description' => __('Set Yes if You want to get all elements from central data baze', 'pwelement'),
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementConferences',
+                ),
+            ),
         );
+
         return $element_output;
+    }
+    
+    /**
+    * Creating the connection to data dase.
+    * 
+    * @return wpdb Obiekt bazy danych
+    */
+    private static function connectToDatabase() {
+
+        if ($_SERVER['SERVER_ADDR'] != '94.152.207.180') {
+            $database_host = 'localhost';
+            $database_name = 'warsawexpo_dodatkowa';
+            $database_user = 'warsawexpo_admin-dodatkowy';
+            $database_password = 'N4c-TsI+I4-C56@q';
+        } else {
+            $database_host = 'localhost';
+            $database_name = 'automechanicawar_dodatkowa';
+            $database_user = 'automechanicawar_admin-dodatkowa';
+            $database_password = '9tL-2-88UAnO_x2e';
+        }
+        $custom_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+
+        return $custom_db;
     }
 
     /**
-     * Static method to generate the HTML output for the PWE Element.
-     * Returns the HTML output as a string.
+     * Static method to generate the HTML output_general for the PWE Element.
+     * Returns the HTML output_general as a string.
      * 
      * @param array @atts options
+     * @return string @output html
      */
-    public static function output($atts) {
+    public static function output_general($atts) {
+
+
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
 
         require_once plugin_dir_path(__FILE__) . '/../logotypes/logotypes-additional.php';
@@ -204,8 +243,159 @@ class PWElementConferences extends PWElements {
                 });
 
             </script>';
+            return $output;
+    }
 
-        return $output;
+    /**
+     * Static method to generate the HTML output_general for the PWE Element.
+     * Returns the HTML output_general as a string.
+     * 
+     * @param array @pre_data prelection
+     * @return string @output html
+     */
+    private static function cap_css() {
+        $css_output = '
+            <style>
+                .pwe-conf-day-selector{
+                    display: flex;
+                    justify-content: space-evenly;                
+                }
+                .pwe-conf-day-selector .active{
+                    font-weight: 800;
+                    color: ' . self::$accent_color . ';
+                }
+            </style>
+        ';
+
+        return $css_output;
+    }
+
+    /**
+     * Static method to generate the HTML output_general for the PWE Element.
+     * Returns the HTML output_general as a string.
+     * 
+     * @param array @pre_data prelection
+     * @return string @output html
+     */
+    private static function cap_js() {
+        $css_output = '
+            <script>
+                jQuery(document).ready(function ($){
+                    $(".pwe-conf-day").on("click", function(){
+                        $(".pwe-conf-day").each(function(){
+                            $(this).classRemove("active");
+                        })
+                        $(this).classAdd("active");
+                    })
+                })
+            </script>
+        ';
+
+        return $css_output;
+    }
+
+    /**
+     * Static method to generate the HTML output_general for the PWE Element.
+     * Returns the HTML output_general as a string.
+     * 
+     * @param array @pre_data prelection
+     * @return string @output html
+     */
+    private static function add_days($day_data) {
+        $day_count = 1;
+        $day_output .= '
+            <div class="pwe-conf-day-selector">
+        ';
+
+        foreach ($day_data as $key => $value) {         
+            $day_output .= '
+                <div class="pwe-conf-day-' . $day_count . '">
+                    <p class="pwe-conf-day">' . $key . '</p>
+                </div>
+            ';
+            $day_count++;
+        }
+
+        $day_output .= '
+            </div>
+            <hr class="pwe-conf-break">
+        ';
+
+        foreach ($day_data as $value) {
+            self::add_prelection($value);
+        }
+        return $day_output;
+    }
+
+    /**
+     * Static method to generate the HTML output_general for the PWE Element.
+     * Returns the HTML output_general as a string.
+     * 
+     * @param array @pre_data prelection
+     * @return string @output html
+     */
+    private static function add_prelection($pre_data) {
+        foreach ($pre_data as $key => $value){}
+        $pre_output ='
+            <div class="pwe-conf-pre">
+
+            </div>
+        ';
+        echo '<div><pre style="width:800px;">';
+        var_dump($pre_data);
+        echo '</pre></div>';
+        return $pre_output;
+    }
+
+    /**
+     * Static method to generate the HTML output_general for the PWE Element.
+     * Returns the HTML output_general as a string.
+     * 
+     * @param array @atts options
+     * @return string @output html
+     */
+    private static function output_cap($atts) {
+        $custom_db = self::connectToDatabase();
+
+        $name = do_shortcode('[trade_fair_name]');
+        $prepared_query = $custom_db->prepare("SELECT primary_fair FROM associates WHERE primary_fair = %s OR side1 = %s OR side2 = %s OR side3 = %s OR side4 = %s OR side5 = %s OR side6 = %s LIMIT 1", $name, $name, $name, $name, $name, $name, $name, $name);
+
+        $results = $custom_db->get_results($prepared_query);
+        $primary_fair = $results[0]->primary_fair;
+
+        $prepared_query = $custom_db->prepare("SELECT * FROM conferances WHERE conf_main_fair = %s", $primary_fair);
+
+        $conf_data = $custom_db->get_results($prepared_query);
+        $data = json_decode($conf_data[0]->conf_data);
+
+        $output_cap .= self::cap_css();
+        $output_cap .= self::cap_js();
+
+        $output_cap .= '
+            <div class="conf-data text-centered">
+                <div class="conf-header">
+                <h3> Program Kongresu </h3>
+                <p>Wybierz dzień kongresu aby sprawdzić program</p>
+            </div>
+        ';
+
+        $output_cap .= self::add_days($data);
+
+        return $output_cap;
+    }
+
+    /**
+     * Static method to generate the HTML output for the PWE Element.
+     * Returns the HTML output as a string.
+     * 
+     * @param array @atts options
+     */
+    public static function output($atts) {
+        if($atts['conf_cap'] != true){
+            return self::output_general($atts);
+        } else {
+            return self::output_cap($atts);
+        }
     }
 }
 

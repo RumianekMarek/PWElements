@@ -31,12 +31,16 @@ class PWElementXForm extends PWElements {
     public static function initElements() {
         $element_output = array(
             array(
-                'type' => 'checkbox',
+                'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => __('Ustaw YES jezeli element jest ustawiony w miejscu potwierdzenia', 'pwelement'),
-                'param_name' => 'potwierdzenie',
+                'heading' => __('Form id', 'pwelement'),
+                'param_name' => 'x_form_name',
                 'save_always' => true,
-                'value' => array(__('True', 'my-pwe-plugin') => 'true',),
+                'value' => array(
+                    'rejestracja' => 'register',
+                    'krok2' => 'step2',
+                    'potwierdzenie' => 'potwierdzenie'
+                ),
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementXForm',
@@ -106,6 +110,7 @@ class PWElementXForm extends PWElements {
         }
         return false;
     }
+    
     /**
      * Static method to generate the HTML for Email.
      * Returns the HTML output as a string.
@@ -397,7 +402,7 @@ class PWElementXForm extends PWElements {
 
                 #xForm .form-1-btn{
                     width: 100%;
-                    font-size: calc(10px + 0.6vw);
+                    font-size: calc(10px + 0.4vw);
                 }
 
                 #xForm .form-1-image {

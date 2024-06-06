@@ -40,13 +40,13 @@ class PWElementStand extends PWElements {
                     background-color: #ffffff !important;
                     border: 1px solid #000000 !important;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-min-media-wrapper {
+                .pwelement_'. self::$rnd_id .' .pwe-min-media-wrapper img {
                     box-shadow: 9px 9px 0px -6px [trade_fair_main2];
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-container-stand {
                     display:flex;
                     flex-wrap: wrap;
-                    justify-content: center;
+                    justify-content: center; 
                 }
                 @media (max-width:960px) {
                     .pwelement_'. self::$rnd_id .' .pwe-container-stand {

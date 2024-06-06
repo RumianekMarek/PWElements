@@ -32,6 +32,29 @@ class PWElementVideos extends PWElements {
                 ),
               ),
               array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Opinions', 'pwelement'),
+                'param_name' => 'pwe_video_opinions',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementVideos',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Video width', 'pwelement'),
+                'param_name' => 'pwe_video_width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementVideos',
+                ),
+              ),
+            array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'heading' => __('Youtube iframes', 'pwelement'),
@@ -41,20 +64,20 @@ class PWElementVideos extends PWElements {
                     'value' => 'PWElementVideos',
                 ),
                 'params' => array(
-                  array(
-                    'type' => 'textfield',
-                    'heading' => __('Title', 'pwelement'),
-                    'param_name' => 'video_title',
-                    'save_always' => true,
-                    'admin_label' => true
-                  ),
-                  array(
-                    'type' => 'textarea',
-                    'heading' => __('Iframe', 'pwelement'),
-                    'param_name' => 'video_iframe',
-                    'save_always' => true,
-                    'admin_label' => true
-                  ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Title', 'pwelement'),
+                        'param_name' => 'video_title',
+                        'save_always' => true,
+                        'admin_label' => true
+                    ),
+                    array(
+                        'type' => 'textarea',
+                        'heading' => __('Iframe', 'pwelement'),
+                        'param_name' => 'video_iframe',
+                        'save_always' => true,
+                        'admin_label' => true
+                    ),
                 ),
             ),
         );
@@ -75,6 +98,8 @@ class PWElementVideos extends PWElements {
 
         extract( shortcode_atts( array(
             'pwe_video_custom_title' => '',
+            'pwe_video_opinions' => '',
+            'pwe_video_width' => '',
             'pwe_videos_iframe' => '',
         ), $atts ));
 
@@ -85,14 +110,20 @@ class PWElementVideos extends PWElements {
         }
 
         if (!empty($video_iframe)) {
-            if (empty($pwe_video_custom_title)) {
-                $pwe_video_custom_title = (get_locale() == 'pl_PL') ? "Zobacz jak było na poprzednich edycjach" : "Check previous editions";
+            if ($pwe_video_opinions == 'true') {
+                $pwe_video_custom_title = (get_locale() == 'pl_PL') ? "REKOMENDACJE WYSTAWCÓW" : "EXHIBITOR RECOMMENDATIONS";
+            } else {
+                if (empty($pwe_video_custom_title)) {
+                    $pwe_video_custom_title = (get_locale() == 'pl_PL') ? "Zobacz jak było na poprzednich edycjach" : "Check previous editions";
+                }
             }
         } else {
             if (empty($pwe_video_custom_title)) {
                 $pwe_video_custom_title = (get_locale() == 'pl_PL') ? "ZOBACZ JAK WYGLĄDAJĄ NASZE POZOSTAŁE TARGI" : "SEE WHAT OUR OTHER TRADE FAIRS LOOK LIKE";     
             }
         } 
+
+        $pwe_video_width = (empty($pwe_video_width)) ? '47%' : $pwe_video_width;
 
         $output = '
             <style>
@@ -111,10 +142,11 @@ class PWElementVideos extends PWElements {
                     gap: 36px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-video-item {
-                    width: 47%;
+                    width: '. $pwe_video_width .';
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-video-item iframe {
-                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                .pwelement_'. self::$rnd_id .' .rll-youtube-player,
+                .pwelement_'. self::$rnd_id .' iframe {
+                    box-shadow: 9px 9px 0px -6px '. $main2_color .';
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-video-item p {
                     font-size: 18px;
@@ -127,7 +159,34 @@ class PWElementVideos extends PWElements {
                         width: 100%;
                     }
                 }
-            </style>
+            </style>';
+
+            if ($pwe_video_opinions == 'true') {
+                $output .= '
+                <style>
+                    @media(min-width:1115px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-video-item {
+                            width: 30%;
+                            height: 210px;
+                            position: relative;
+                            overflow: hidden;
+                            box-shadow: 9px 9px 0px -6px '. $main2_color .';
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-video-item iframe {
+                            position: absolute;
+                            top: -50px;
+                            left: 0;
+                            height: 300px;             
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-video-item p {
+                            font-size: 16px;
+                        }
+                    }  
+                </style>';
+            }
+
+            $output .= '
+
 
             <div id="pweVideos" class="pwe-container-videos">
                 <div class="pwe-videos-title main-heading-text">

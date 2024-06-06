@@ -42,7 +42,7 @@ class PWBadgeElement extends PWElements {
      */
     public static function massGenerator($badge_form_id) {
         
-        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3']) && $_POST['gform_unique_id'] != ''){         
+        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3'])){         
             echo '<script>
             jQuery(function ($) {
                 const gfMessage = $(".gform_confirmation_message a");
