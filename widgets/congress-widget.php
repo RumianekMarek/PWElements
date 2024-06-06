@@ -23,7 +23,6 @@ $output .= '
             justify-content: center;
             flex-direction: column;
             gap: 0;
-            opacity: 0;
             z-index: 2;
         }
         .header-conference-items {
@@ -197,14 +196,6 @@ $output .= '
             </div>
         </div>';
 
-        $output .= '
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const pweHeaderWidget = document.querySelector(".header-conference");
-                    pweHeaderWidget.style.opacity = 1;
-                    pweHeaderWidget.style.transition = "opacity 0.3s ease";
-                });
-            </script>';
     }
 
 return $output;
