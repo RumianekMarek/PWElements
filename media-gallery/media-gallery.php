@@ -102,7 +102,7 @@ class PWEMediaGallery {
                         'value' => array(
                             'Columns' => 'columns',
                             'Grid' => 'grid',
-                            'Flex' => 'flex',
+                            'Justify' => 'flex',
                             'Carousel' => 'carousel',
                             'Slider with thumbnails' => 'slider',
                         ),
