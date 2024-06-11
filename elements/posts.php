@@ -352,5 +352,3 @@ class PWElementPosts extends PWElements {
 
     }
 }
-
-?>

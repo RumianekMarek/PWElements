@@ -141,5 +141,3 @@ class PWElementRegContent extends PWElements {
 
     }
 }
-
-?>

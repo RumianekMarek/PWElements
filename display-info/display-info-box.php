@@ -843,7 +843,3 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         return $output;
     }
 }
-
-?>
-
-

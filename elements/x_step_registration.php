@@ -638,7 +638,6 @@ class PWElementXForm extends PWElements {
                             <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">Tak, jestem zainteresowany</button>
                             <button type="submit" class="btn exhibitor-no" name="exhibitor-no">Nie, dziękuję</button>
                         </form>
-
                     </div>
                 </div>
                 <div class="form-2-right">
@@ -673,7 +672,9 @@ class PWElementXForm extends PWElements {
      * Returns the HTML output as a string.
      */
     public static function confirmYesHtml($exh_form_id, $text_color){
-        //self::exhibitor_registering($_SESSION['entry_id'], $exhibitor);
+        if (isset($_POST['csrf_token']) && isset($_POST['email']) && $_POST['csrf_token'] === $_SESSION['csrf_token']){
+            $entry_id = self::x_form_register($reg_form_id);
+        }
             
         $yes_output .= '
             <style>
@@ -697,47 +698,77 @@ class PWElementXForm extends PWElements {
                     color: ' . $text_color . ';
                 }
 
-                // #xForm .form-3{
-                //     text-align: left;
-                //     padding: 25px 50px;
-                //     background-color: #E8E8E8;
-                //     min-height: inherit;
-                // }
+                #xForm .form-3{
+                    text-align: left;
+                    padding: 25px 50px;
+                    background-color: #E8E8E8;
+                    min-height: inherit;
+                }
 
-                // #xForm .form-3-right{
-                //     padding: 36px;
-                //     display: flex;
-                //     flex-direction: column;
-                //     align-items: center;
-                //     justify-content: center;
-                //     gap: 27px;
-                // }
+                #xForm .form-3-right{
+                    padding: 36px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 27px;
+                }
 
-                // #xForm .form-3 h3{
-                //     color: #c49a62;
-                // }
+                #xForm .form-3-left>div {
+                    text-align:left;
+                    max-width: 450px;
+                }
 
-                // #xForm .form-3 form>div{
-                //     margin-top: 18px;
-                // }
+                #xForm .form-3 h3{
+                    color: #c49a62;
+                }
+                
+                #xForm .form-3 form{
+                    margin-top: 18px;
+                }
 
-                // #xForm .form-3 label{
-                //     text-align: left;
-                //     margin: 0 0 9px 0;
-                // }
+                #xForm .form-3 form label{
+                    text-align: left;
+                    font-weight: 700;
+                }
 
-                // #xForm .form-3 div:has(button){
-                //     text-align: center;
-                // }
+                #xForm .form-3 form :is(input, textarea){
+                    margin-bottom: 18px;
+                    width: 100%;
+                    border-radius: 11px;
+                    border-color: #c49a62 !important;
+                    box-shadow: none !important;
+                }
 
-                // #xForm .form-3 span, #xForm .color-accent{
-                //     color: ' . $text_color . ';
-                // }
+                #xForm .form-3 form div:has(button){
+                    margin-top:18px;
+                    text-align: center;
+                    width: 100%;
+                }
 
-                // #xForm .form-3-left>div {
-                //     text-align:left;
-                //     max-width: 320px;
-                // }
+                #xForm .form-3 form button{
+                    color: white;
+                    background-color:' . $text_color . ';
+                    border: 1px solid ' . $text_color . ';
+                    border-radius: 11px;
+                }
+
+                #xForm .form-3 form button:hover{
+                    color: black;
+                    background-color: white;
+                    border: 1px solid ' . $text_color . ';
+                }
+
+                #xForm .form-3-right .pwe-link{
+                    color: white;
+                    background-color: black;
+                    border: 1px solid black;
+                }
+
+                #xForm .form-3-right .pwe-link:hover{
+                    color: black;
+                    background-color: white;
+                }
 
             </style>
             <div id="xForm">
@@ -751,13 +782,15 @@ class PWElementXForm extends PWElements {
                     <h3>Prosimy o podanie dodatkowych szczegółów</span></h3>
                     <p style="margin-top:36px;">Pomoże nam to w dobraniu odpowiednich warunków i usprawnieniu komunikacji.</p>
                     <form id="form3" action="" method="post">
+                        <label>Imię i nazwisko</label>
+                        <input type="text" class="imie" name="imie" placeholder="Imię i nazwisko osoby do kontaktu" required>
+                        <label>Firma</label>
                         <div>
-                            <label>Imię i nazwisko</label>
-                            <input type="text" class="imie" name="imie" placeholder="Imię i nazwisko osoby do kontaktu" required>
-                            <label>Firma</label>
-                            <input type="text" class="dane" name="dane" placeholder="NIP / Srona internetowa / Zakres / Metraż" required>
-                            <button type="submit" name="form3">Zatwierdź</button>
+                            <input type="text" class="dane" name="company-name" placeholder="Nazwa Firmy">
+                            <input type="text" class="dane" name="company-nip" placeholder="NIP">
                         </div>
+                            <textarea type="text" class="dane" name="company-adds" placeholder="Dodatkowe Informacje"></textarea>
+                            <button type="submit" name="form3">Zatwierdź</button>
                     </form>
                 </div>
                 <div class="form-3-right">

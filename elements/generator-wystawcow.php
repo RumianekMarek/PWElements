@@ -859,5 +859,3 @@ class PWElementGenerator extends PWElements {
 
     }
 }
-
-?>

@@ -321,7 +321,3 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
         return $output;
     }
 }
-
-?>
-
-

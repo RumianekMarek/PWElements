@@ -76,6 +76,4 @@ class PWAppleCalendarElement extends PWElements {
 
         return $output;
     }
-} 
-    
-?>
+}

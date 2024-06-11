@@ -472,5 +472,3 @@ class PWElementConferences extends PWElements {
         }
     }
 }
-
-?>

@@ -361,7 +361,3 @@ class PWElementTicket extends PWElements {
 
     }
 }
-
-?>
-
-

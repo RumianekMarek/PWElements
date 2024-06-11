@@ -409,7 +409,3 @@ class PWElementFooter extends PWElements {
 
     }
 }
-
-?>
-
-

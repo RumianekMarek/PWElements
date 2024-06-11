@@ -627,7 +627,3 @@ class PWElementProfile extends PWElements {
 
     }
 }
-
-?>
-
-

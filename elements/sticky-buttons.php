@@ -938,5 +938,3 @@ class PWElementStickyButtons extends PWElements {
 
     }
 }
-
-?>

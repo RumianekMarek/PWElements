@@ -229,5 +229,3 @@ class PWElementVideos extends PWElements {
 
     }
 }
-
-?>
