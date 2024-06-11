@@ -20,7 +20,6 @@ class PWECatalog10 extends PWECatalog {
             .row-container:has(.pwe-registration) .exhibitors-catalog {
                 border: 2px solid #564949 !important;
                 margin-top: 0 !important;
-
             }
             .row-container:has(.pwe-registration) :is(.wpb_column, .uncol, .uncoltable, .uncont, .exhibitors-catalog, .custom-catalog){
                 height: inherit !important;
