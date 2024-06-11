@@ -38,6 +38,9 @@ class PWElementVisitorsBenefits extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item {
                     width: 33%;
                 }
+                .pwe-visitors-benefits-item-img img {
+                    background-color: [trade_fair_main2];
+                }
                 @media (max-width:768px) {
                     .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits {
                         gap: 18px;
@@ -76,7 +79,7 @@ class PWElementVisitorsBenefits extends PWElements {
                     <div class="pwe-visitors-benefits">
 
                         <div class="pwe-visitors-benefits-item">
-                            <div class="pwe-visitors-benefits-item-img icon-accent">
+                            <div class="pwe-visitors-benefits-item-img">
                                 <img src="/wp-content/plugins/PWElements/media/lamp-b-150x150.webp" alt="lamp">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
@@ -93,7 +96,7 @@ class PWElementVisitorsBenefits extends PWElements {
                             </div>
                         </div>
                         <div class="pwe-visitors-benefits-item">
-                            <div class="pwe-visitors-benefits-item-img icon-accent">
+                            <div class="pwe-visitors-benefits-item-img">
                                 <img src="/wp-content/plugins/PWElements/media/hands-b-150x150.webp" alt="handshake">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
@@ -110,7 +113,7 @@ class PWElementVisitorsBenefits extends PWElements {
                             </div>
                         </div>
                         <div class="pwe-visitors-benefits-item">
-                            <div class="pwe-visitors-benefits-item-img icon-accent">
+                            <div class="pwe-visitors-benefits-item-img">
                                 <img src="/wp-content/plugins/PWElements/media/head-b-150x150.webp" alt="head">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">

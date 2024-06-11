@@ -46,6 +46,7 @@ class PWElementRoute extends PWElements {
                     max-width: 90%;
                     padding: 8px;
                     margin: 0;
+                    color: white;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-route-area-wrapper {
                     padding-top: 36px;
@@ -69,6 +70,11 @@ class PWElementRoute extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-route-area-item-text h5 {
                     margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-route-transport-block{
+                    box-shadow: 9px 9px 0px -5px black;
+                    border:2px solid;
+                    padding:25px 25px !important;
                 }
                 
                 @media (max-width:960px) {
@@ -111,6 +117,9 @@ class PWElementRoute extends PWElements {
                         width: inherit !important;
                         justify-content: center;
                     }
+                    .pwelement_'. self::$rnd_id .' .pwe-route-image-bg h3 {
+                        font-size: 16px !important;
+                    }
                 }
             </style>
 
@@ -133,7 +142,7 @@ class PWElementRoute extends PWElements {
                         <div class="pwe-route-area-wrapper pwe-align-left">
                             <div class="pwe-route-image-bg-block">
                                 <div style="background-image: url(/wp-content/plugins/PWElements/media/ptak.jpg);" class="pwe-route-image-bg shadow-black">
-                                    <h3 class="color-white">'.
+                                    <h3>'.
                                         self::languageChecker(
                                             <<<PL
                                                 Największy obiekt targowy w Polsce oraz Europie Środkowo-Wschodniej
@@ -145,7 +154,7 @@ class PWElementRoute extends PWElements {
                                     .'</h3>
                                 </div>
                             </div>
-                            <div class="pwe-route-area-block area">
+                            <div class="pwe-route-area-block pwe-route">
                                 <div class="pwe-route-area-item pwe-flex">
                                     <div class="pwe-route-area-item-img">
                                         <img src="/wp-content/plugins/PWElements/media/entry.png">
@@ -186,7 +195,7 @@ class PWElementRoute extends PWElements {
                         
                     </div>
 
-                    <div class="pwe-route-transport-block pwe-half-width drive">
+                    <div class="pwe-route-transport-block pwe-half-width pwe-route">
                         <div class="pwe-route-transport-item pwe-flex">
                             <div class="pwe-route-transport-item-img">
                                 <img class="pwe-full-width" src="/wp-content/plugins/PWElements/media/samolot.png">

@@ -1,6 +1,4 @@
 jQuery(document).ready(function ($) {
-    console.log(inner.form_id);
-
     const testEmail = () => {
         emailTarget = $('input[type="email"]').val();
         if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTarget)) {

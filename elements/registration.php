@@ -144,6 +144,16 @@ class PWElementRegistration extends PWElements {
                     margin-left: 0;
                     padding-left: 0;
                 }
+                /*ROZWIJANE ZGODY*/
+                .gfield_consent_description{
+                    overflow: hidden !important;
+                    max-height: auto !important;
+                    border: none !important;
+                    display: none;
+                }
+                .show-consent:hover{
+                    cursor: pointer;
+                }
                 @media (max-width:400px) {
                     .pwelement_' .self::$rnd_id. ' input[type="submit"] {
                         font-size: 12px !important;
@@ -305,7 +315,7 @@ class PWElementRegistration extends PWElements {
             }
             add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);  
         }
-
+        
         return $output;
 
     }

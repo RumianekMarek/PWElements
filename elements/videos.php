@@ -144,9 +144,8 @@ class PWElementVideos extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-video-item {
                     width: '. $pwe_video_width .';
                 }
-                .pwelement_'. self::$rnd_id .' .rll-youtube-player,
                 .pwelement_'. self::$rnd_id .' iframe {
-                    box-shadow: 9px 9px 0px -6px '. $main2_color .';
+                    box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-video-item p {
                     font-size: 18px;
@@ -166,11 +165,14 @@ class PWElementVideos extends PWElements {
                 <style>
                     @media(min-width:1115px) {
                         .pwelement_'. self::$rnd_id .' .pwe-video-item {
-                            width: 30%;
-                            height: 210px;
+                            width: 31%;
+                            height: 200px;
                             position: relative;
                             overflow: hidden;
-                            box-shadow: 9px 9px 0px -6px '. $main2_color .';
+                            box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-video-item:has(.rll-youtube-player) .rll-youtube-player {
+                            box-shadow: none !important;
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-video-item iframe {
                             position: absolute;

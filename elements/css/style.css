@@ -235,3 +235,18 @@ strong {
 .btn {
     transition: .3s ease !important;
 }
+
+@media (max-width:960px) {
+    .row-container:has(.gform_wrapper, .pwe-container-grupy) .wpb_column,
+    .row-container:has(.pwe-route) .wpb_column {
+        max-width: 555px;
+        margin: 0 auto;
+    }
+    .row-container:has(.gform_wrapper, .pwe-container-grupy) .row-parent {
+        padding: 36px 18px 36px 18px !important;
+    }
+}
+
+#mapa, #wystawcy, #konferencje, #patroni-medialni, #edycja-w-liczbach, #profil-odwiedzajacego, #profil-wystawcy, #zakres-branzowy, #faq, #stand, #voucher, #organizator, #download, #dojazd, #visitorsBenefits, #exhibitorsBenefits {
+    scroll-margin-top: 200px;
+}

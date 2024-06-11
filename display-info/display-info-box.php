@@ -490,7 +490,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 font-size: 50px;
                 font-weight: bold;
                 transition: transform 0.3s;
-                font-family: cursive;
+                font-family: monospace;
             }
             #pweBoxModal-'. $rnd .' .pwe-box-modal-close:hover,
             #pweBoxModal-'. $rnd .' .pwe-box-modal-close:focus {

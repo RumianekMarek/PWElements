@@ -81,7 +81,7 @@ class PWElementForVisitors extends PWElements {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
-                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                    box-shadow: 9px 9px 0px -6px [trade_fair_main2]; 
                 }
                 @media (max-width:768px){
                     .pwelement_'. self::$rnd_id .' .pwe-content-visitors-item {

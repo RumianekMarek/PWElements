@@ -264,6 +264,39 @@ class PWElementConferences extends PWElements {
                     font-weight: 800;
                     color: ' . self::$accent_color . ';
                 }
+                .pwe-conf-day-select{
+                    cursor: pointer;
+                }
+                .pwe-conf-pre{
+                    display: flex;
+                    flex-direction: row;
+                    margin-bottom: 18px;
+                    align-items: center;
+                }
+                .pwe-conf-head-container{
+                    width: 30%;
+                }
+                .pwe-conf-pre-text-container{
+                    text-align: left;
+                    width: 70%;
+                }
+                .pwe-conf-pre-text-container :is(h3, h4, h5, p){
+                    margin-top: 18px;
+                }
+                .speakers-img{
+                    display: flex;
+                    gap: 27px;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                img{
+                    position: relative;
+                    border-radius: 50%;
+                    z-index: 1;
+                    top: unset;
+                    left: unset;
+                    width: 40%;
+                }
             </style>
         ';
 
@@ -281,12 +314,19 @@ class PWElementConferences extends PWElements {
         $css_output = '
             <script>
                 jQuery(document).ready(function ($){
-                    $(".pwe-conf-day").on("click", function(){
-                        $(".pwe-conf-day").each(function(){
-                            $(this).classRemove("active");
+                    $(".pwe-conf-day-select").on("click", function(){
+                        $(".pwe-conf-day-select").each(function(){
+                            $(this).removeClass("active");
                         })
-                        $(this).classAdd("active");
+                        $(".pwe-conf-day").each(function(){
+                            $(this).hide();
+                        })
+                        const classChecker = $(this).attr("id");
+                        console.log($("." + classChecker));
+                        $("." + classChecker).show();
+                        $(this).addClass("active");
                     })
+
                 })
             </script>
         ';
@@ -303,14 +343,15 @@ class PWElementConferences extends PWElements {
      */
     private static function add_days($day_data) {
         $day_count = 1;
+        $day_count_pre = 1;
         $day_output .= '
             <div class="pwe-conf-day-selector">
         ';
 
         foreach ($day_data as $key => $value) {         
             $day_output .= '
-                <div class="pwe-conf-day-' . $day_count . '">
-                    <p class="pwe-conf-day">' . $key . '</p>
+                <div class="pwe-conf-day-select" id="pwe-conf-day-' . $day_count . '">
+                    <p>' . $key . '</p>
                 </div>
             ';
             $day_count++;
@@ -322,7 +363,12 @@ class PWElementConferences extends PWElements {
         ';
 
         foreach ($day_data as $value) {
-            self::add_prelection($value);
+            $day_output .= '
+                <div class="pwe-conf-day pwe-conf-day-' . $day_count_pre . '">
+                    ' . self::add_prelection($value) . '
+                </div>
+            ';
+            $day_count_pre++;
         }
         return $day_output;
     }
@@ -335,15 +381,43 @@ class PWElementConferences extends PWElements {
      * @return string @output html
      */
     private static function add_prelection($pre_data) {
-        foreach ($pre_data as $key => $value){}
-        $pre_output ='
-            <div class="pwe-conf-pre">
-
-            </div>
-        ';
-        echo '<div><pre style="width:800px;">';
-        var_dump($pre_data);
-        echo '</pre></div>';
+        $pre_count = 1;
+        foreach ($pre_data as $key => $value){
+            $pre_output .='
+                <div class="pwe-conf-pre">
+                    <div class="pwe-conf-head-container">
+                        <div class="speakers-img">';
+                            foreach($value as $url_data){
+                                if($url_data->url){
+                                    $pre_output .='<img class="speake" src="' . $url_data->url . '">';
+                                }
+                                if($url_data->desc){
+                                    $pre_output .='<button class="pwe-conf-lecturer-bio-btn btn btn-sm">BIO</button>';
+                                }
+                            }
+            $pre_output .='
+                        </div>
+                    </div>
+                    <div class="pwe-conf-pre-text-container">
+                        <h4 class="lectur-time">' . $value->time . '</h4>
+                        <h5 class="lecturer-name">';
+                    foreach($value as $lect_key => $lect_data){
+                        if (strpos($lect_key, 'legent') === 0 && $lect_data->name != '*') {
+                            $pre_output .= $lect_data->name . '<br>';
+                        }
+                    }
+            $pre_output .='
+                        </h5>
+                        <h3 class="lectur-title">' . $value->title . '</h3>
+                        <div class="inside-text">
+                            <p>' . $value->desc . '</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            ';
+            $day_count_pre++;
+        }
         return $pre_output;
     }
 

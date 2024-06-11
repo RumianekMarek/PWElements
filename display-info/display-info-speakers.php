@@ -201,7 +201,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 font-size: 50px;
                 font-weight: bold;
                 transition: transform 0.3s;
-                font-family: cursive;
+                font-family: monospace;
             }
             #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-close:hover,
             #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-close:focus {

@@ -50,19 +50,34 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function handleMediaGalleryChange() {
-        const mediaGallerySelect = document.querySelector('select.flex');
-        if (mediaGallerySelect) {
+        const mediaGallerySelects = document.querySelectorAll('select.flex, select.columns, select.grid, select.carousel, select.slider');
+        
+        if (mediaGallerySelects.length) {
             const mediaGalleryHeightTextfields = document.querySelectorAll('.thumbnails_height_flex');
             const mediaGalleryWidthTextfields = document.querySelectorAll('.thumbnails_width_columns');
             
-            const toggleTextfields = () => {
-                const isFlex = mediaGallerySelect.value === "flex";
-                mediaGalleryHeightTextfields.forEach(textfield => textfield.style.display = isFlex ? "block" : "none");
-                mediaGalleryWidthTextfields.forEach(textfield => textfield.style.display = isFlex ? "none" : "block");
+            const toggleTextfields = (mediaGallerySelect) => {
+                const isFlex = mediaGallerySelect.classList.contains("flex") && mediaGallerySelect.value === "flex";
+                const isColumns = mediaGallerySelect.classList.contains("columns") && mediaGallerySelect.value === "columns";
+                const isGrid = mediaGallerySelect.classList.contains("grid") && mediaGallerySelect.value === "grid";
+                const isCarousel = mediaGallerySelect.classList.contains("carousel") && mediaGallerySelect.value === "carousel";
+                
+                if (isFlex) {
+                    mediaGalleryHeightTextfields.forEach(textfield => textfield.style.display = "block");
+                    mediaGalleryWidthTextfields.forEach(textfield => textfield.style.display = "none");
+                } else if (isColumns || isGrid || isCarousel) {
+                    mediaGalleryHeightTextfields.forEach(textfield => textfield.style.display = "none");
+                    mediaGalleryWidthTextfields.forEach(textfield => textfield.style.display = "block");
+                } else {
+                    mediaGalleryHeightTextfields.forEach(textfield => textfield.style.display = "none");
+                    mediaGalleryWidthTextfields.forEach(textfield => textfield.style.display = "none");
+                }
             };
 
-            toggleTextfields();
-            mediaGallerySelect.addEventListener("change", toggleTextfields);
+            mediaGallerySelects.forEach(select => {
+                toggleTextfields(select);
+                select.addEventListener("change", () => toggleTextfields(select));
+            });
         }
     }
 
@@ -71,7 +86,12 @@ document.addEventListener("DOMContentLoaded", function() {
         childList: true,
         subtree: true
     });
+
+    // Initial call to handle existing elements
+    handleMediaGalleryChange();
 });
+
+
 
 
 

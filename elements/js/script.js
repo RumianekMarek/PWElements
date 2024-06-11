@@ -26,4 +26,10 @@ document.addEventListener("DOMContentLoaded", function() {
         observer.observe(PWEIframe);
     });
 });
+
+jQuery(function ($) {
+    $(".show-consent").on("click touch", function () {
+        $(this).parents( "li" ).find(".gfield_consent_description").toggle( "slow" );
+    });
+});
   
