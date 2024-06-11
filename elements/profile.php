@@ -301,9 +301,9 @@ class PWElementProfile extends PWElements {
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile"; 
             $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "1/1" : $profile_img_aspect_ratio;
             if (get_locale() == "pl_PL") {
-                $profile_header_text = "Wśród odwiedzających targi [trade_fair_name] znajdą się zaproszeni przez nas i Wystawców:";
+                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Wśród odwiedzających targi [trade_fair_name] znajdą się zaproszeni przez nas i Wystawców:</p>';
             } else {
-                $profile_header_text = "Visitors of the [trade_fair_name_eng] fair will include invited by us and the Exhibitors:";
+                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Visitors of the [trade_fair_name_eng] fair will include invited by us and the Exhibitors:</p>';
             }
             $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important;';
             $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important;';
@@ -313,18 +313,18 @@ class PWElementProfile extends PWElements {
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Profil wystawcy" : "Exhibitor profile";
             $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "1/1" : $profile_img_aspect_ratio;
             if (get_locale() == "pl_PL") {
-                $profile_header_text = "Wśród Wystawców targów [trade_fair_name] znajdą się firmy z następujących sektorów:";
+                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Wśród Wystawców targów [trade_fair_name] znajdą się firmy z następujących sektorów:</p>';
             } else {
-                $profile_header_text = "Exhibitors at [trade_fair_name_eng] will include companies from the following sectors:";
+                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Exhibitors at [trade_fair_name_eng] will include companies from the following sectors:</p>';
             }
         } else if (in_array('profile_title_scope', explode(',', $profile_title_checkbox))) {
             $profile_id = "zakres-branzowy";
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Zakres branżowy" : "Industry scope";
             $custom_profile_class_title = "class=main-heading-text";
             if (get_locale() == "pl_PL") {
-                $profile_header_text = "Podczas targów [trade_fair_name] będą reprezentowane następujące sektory i branże:";
+                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Podczas targów [trade_fair_name] będą reprezentowane następujące sektory i branże:</p>';
             } else {
-                $profile_header_text = "The following sectors and industries will be represented at [trade_fair_name_eng]:";
+                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">The following sectors and industries will be represented at [trade_fair_name_eng]:</p>';
             }
         } else if (in_array('profile_application', explode(',', $profile_title_checkbox))) {
             $profile_id = "aplikacja";
@@ -441,6 +441,10 @@ class PWElementProfile extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-hidden-content,
                 .pwelement_'. self::$rnd_id .' .pwe-see-more {
                     margin: 0 !important;
+                }
+                #zakres-branzowy .pwe-uppercase {
+                    padding: 0 12px 10px 0 !important;
+                    margin-bottom: 18px;
                 }
                 @media (max-width: 960px) {
                     .pwelement_'. self::$rnd_id .' .pwe-profile-content {
