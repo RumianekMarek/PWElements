@@ -1,3 +1,4 @@
+
 jQuery(document).ready(function ($) {
     const testEmail = () => {
         emailTarget = $('input[type="email"]').val();
@@ -43,7 +44,7 @@ jQuery(document).ready(function ($) {
                 if (response.exists) {
                     $('.mail-error').text('Email już został użyty').css('background-color', 'red');
                 } else {
-                    $('#xForm').find('form[id="registration"]').submit();
+                    //$('#xForm').find('form[id="registration"]').submit();
                 }
             },
             error: function (xhr, status, error, response) {

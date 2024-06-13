@@ -140,7 +140,19 @@ class PWElementHomeGallery extends PWElements {
                 'save_always' => true,
                 'admin_label' => true
             ),
-
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('New', 'pwelement'),
+                'param_name' => 'gallery_new',
+                'description' => __('New visual'),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementHomeGallery',
+                ),
+                'save_always' => true,
+                'admin_label' => true
+            ),
         );
         return $element_output;
     }
@@ -177,15 +189,18 @@ class PWElementHomeGallery extends PWElements {
      * @param array @right_date array off only new timers
      */
     public static function output($atts, $content = '') {
-        $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important;';
-        $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
-        $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important;';
-        $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important;';
-        $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
+        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
+        $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], $btn_color);
 
         $gallery_title = ($atts['header_text'] != '') ? $atts['header_text'] : self::languageChecker('[trade_fair_desc]','[trade_fair_desc_eng]');
 
-        extract( shortcode_atts( array('gallery_thumbnails_more' => ''), $atts ));
+        extract( shortcode_atts( array(
+            'gallery_thumbnails_more' => '',
+            'gallery_new' => '',
+        ), $atts ));
 
         if(self::checkForMobile()){
             $gallery_text = ($atts['mobile_text'] != '') ? $atts['mobile_text'] : self::mainText();
@@ -193,7 +208,8 @@ class PWElementHomeGallery extends PWElements {
             $gallery_text = ($atts['desktop_text'] != '') ? $atts['desktop_text'] : self::mainText();
         }
 
-        $btn_gallery_text = ($atts['button_text'] != '') 
+        if ($gallery_new != true) {
+            $btn_gallery_text = ($atts['button_text'] != '') 
             ? $atts['button_text'] 
             : self::languageChecker(
                 <<<PL
@@ -203,7 +219,41 @@ class PWElementHomeGallery extends PWElements {
                 Register<span style="display: block; font-weight: 300;">Get a free ticket</span>
                 EN    
             );
+        } else {
+            $btn_gallery_text = ($atts['button_text'] != '') 
+            ? $atts['button_text'] 
+            : self::languageChecker(
+                <<<PL
+                Zarejestruj swój udział
+                PL,
+                <<<EN
+                Register your participation
+                EN    
+            );
+        }
 
+        // Function to change color brightness (taking color in hex format)
+        function adjustBrightness($hex, $steps) {
+            // Convert hex to RGB
+            $hex = str_replace('#', '', $hex);
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+
+            // Shift RGB values
+            $r = max(0, min(255, $r + $steps));
+            $g = max(0, min(255, $g + $steps));
+            $b = max(0, min(255, $b + $steps));
+
+            // Convert RGB back to hex
+            return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT)
+                    . str_pad(dechex($g), 2, '0', STR_PAD_LEFT)
+                    . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+        }
+
+        // Change brightness using adjustBrightness
+        $darker_btn_color = adjustBrightness($btn_color, -20);
+    
         $btn_gallery_url = ($atts['button_text'] != '') ? $atts['button_text'] : self::languageChecker('/rejestracja/', '/en/registration/');
 
         $all_images = ($gallery_thumbnails_more == 'true') ? self::findAllImages('/doc/galeria/mini', 6) : self::findAllImages('/doc/galeria/mini', 4);
@@ -213,10 +263,10 @@ class PWElementHomeGallery extends PWElements {
         $output .= '
             <style>
             .pwelement_'. self::$rnd_id .' .pwe-btn {
-                ' . $btn_text_color . '
-                ' . $btn_color . '
-                ' . $btn_shadow_color . '
-                ' . $btn_border . '
+                color: #ffffff;
+                background-color: #000000;
+                border: 1px solid #000000;
+                box-shadow: 9px 9px 0px -5px white;
                 margin: auto 0; 
             }
             .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
@@ -268,6 +318,16 @@ class PWElementHomeGallery extends PWElements {
                 width: 50%;
                 padding: 5px;
             }
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content .pwe-link {
+                color: '. $btn_text_color .' !important;
+                background-color: '. $btn_color .' !important;
+                border: 1px solid '. $btn_border .' !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content .pwe-link:hover {
+                color: '. $btn_text_color .' !important;
+                background-color: '. $darker_btn_color .' !important;
+                border: 1px solid '. $darker_btn_color .' !important;
+            }
             @media (max-width: 960px) {
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
                     flex-direction: column;
@@ -285,8 +345,25 @@ class PWElementHomeGallery extends PWElements {
                     justify-content: center;
                 }
             }
-            </style>
-            
+            </style>';
+
+            if ($gallery_new == true) {
+                $output .= '
+                    <style>
+                    .pwelement_'. self::$rnd_id .' .gallery-link-btn .pwe-link {
+                        background-color: rgba(255, 255, 255, 0.3) !important;
+                        box-shadow: unset !important;
+                        color: '. $btn_text_color .' !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .gallery-link-btn .pwe-link:hover {
+                        background-color: rgba(255, 255, 255, 0.2) !important;
+                        color: #ffffff !important;
+                    }
+                    </style>
+                ';
+            }
+
+            $output .= '
             <div id="pweGallery" class="pwe-container-gallery style-accent-bg">
                 <div class="pwe-gallery-wrapper double-bottom-padding single-top-padding">
                     <div class="pwe-row-border">
@@ -313,8 +390,7 @@ class PWElementHomeGallery extends PWElements {
                                     }
                                     $output .='
                                 </div>
-                                <div class="pwe-btn-container gallery-link-btn">
-                                    <span>'.
+                                    <span class="pwe-btn-container gallery-link-btn">'.
                                         self::languageChecker(
                                             <<<PL
                                                 <a class="pwe-link btn pwe-btn" href="/galeria/" alt="link do galerii">Przejdź do galerii</a>
@@ -324,7 +400,6 @@ class PWElementHomeGallery extends PWElements {
                                             EN
                                         )
                                 .'</span>
-                                </div>
                             </div>
                         </div>
             
@@ -334,7 +409,9 @@ class PWElementHomeGallery extends PWElements {
                                     <h3 style="margin: 0;"> ' .$gallery_title . ' </h3>
                                     <p>' . $gallery_text . '</p>';
                                     if ($atts['hide_button'] != 'true') {
-                                        $output .= '<a style="margin-top: 18px;" class="pwe-link btn shadow-black btn-accent" href="' . $btn_gallery_url . '" alt="link do rejestracji">' . $btn_gallery_text . '</a>';
+                                        $output .= '<span class="pwe-btn-container register-link-btn">
+                                                        <a style="margin-top: 18px;" class="pwe-link btn shadow-black" href="' . $btn_gallery_url . '" alt="link do rejestracji">' . $btn_gallery_text . '</a>
+                                                    </span>';
                                     }
                                 $output .= '
                                 </div>

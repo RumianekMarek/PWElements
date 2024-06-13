@@ -56,7 +56,8 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'x_step_registration.php';
         require_once plugin_dir_path(__FILE__) . 'zaproszenie.php';
         require_once plugin_dir_path(__FILE__) . 'ticket.php';
-        // require_once plugin_dir_path(__FILE__) . 'numbers.php';
+        require_once plugin_dir_path(__FILE__) . 'numbers.php';
+        // require_once plugin_dir_path(__FILE__) . 'confSection.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -213,7 +214,8 @@ class PWElements {
                         ...PWElementInvite::initElements(),
                         ...PWElementXForm::initElements(),
                         ...PWElementTicket::initElements(),
-                        // ...PWElementNumbers::initElements(),
+                        ...PWElementNumbers::initElements(),
+                        // ...PWElementConfSection::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -271,7 +273,7 @@ class PWElements {
             'Informacje kontaktowe'          => 'PWElementContactInfo',
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
             'Kontakt'                        => 'PWElementContact',
-            // 'Liczby'                         => 'PWElementNumbers',
+            'Liczby'                         => 'PWElementNumbers',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
             'Mapka dojazdu'                  => 'PWElementRoute',
             'Nie przegap'                    => 'PWElementDontMiss',
@@ -281,6 +283,7 @@ class PWElements {
             'Ramka Facebook'                 => 'PWElementSocials',
             'Registration'                   => 'PWElementRegistration',
             'Registration content'           => 'PWElementRegContent',
+            'Sekcja konferencji'             => 'PWElementConfSection',
             'Sticky buttons'                 => 'PWElementStickyButtons',
             'Ticket'                         => 'PWElementTicket',
             'Videos'                         => 'PWElementVideos',
@@ -312,6 +315,7 @@ class PWElements {
             'PWOutlookCalendarElement'  => 'calendarOutlook.php',
             'PWOfficeCalendarElement'   => 'calendarOffice.php',
             'PWElementConfCallendar'    => 'confCalendar.php',
+            'PWElementConfSection'      => 'confSection.php',
             'PWElementDonwload'         => 'download.php',
             'PWElementExhibitors'       => 'exhibitors-benefits.php',
             'PWElementFaq'              => 'faq.php',
@@ -327,7 +331,7 @@ class PWElements {
             'PWElementRoute'            => 'route.php',
             'PWElementRegistration'     => 'registration.php',
             'PWElementRegContent'       => 'registration-content.php',
-            // 'PWElementNumbers'          => 'numbers.php',
+            'PWElementNumbers'          => 'numbers.php',
             'PWElementDontMiss'         => 'niePrzegap.php',
             'PWElementOrganizer'        => 'organizator.php',
             'PWElementPosts'            => 'posts.php',

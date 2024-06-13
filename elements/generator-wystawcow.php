@@ -378,6 +378,7 @@ class PWElementGenerator extends PWElements {
             }
             .pwe-generator-wystawcow .guest-info h5 {
                 width: auto !important;
+                color: black !important;
             }
             .pwe-generator-wystawcow .custom-tech-support-text {
                 padding-top: 36px !important;
@@ -672,7 +673,7 @@ class PWElementGenerator extends PWElements {
                                                         <p>'. 
                                                         self::languageChecker(
                                                             <<<PL
-                                                                Dedykowanego wejście
+                                                                Dedykowanego wejścia
                                                             PL,
                                                             <<<EN
                                                                 Dedicated entrance

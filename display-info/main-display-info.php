@@ -145,6 +145,18 @@ class PWEDisplayInfo {
                             'save_always' => true
                         ),
                         // color END
+                        array(
+                            'type' => 'textarea_raw_html',
+                            'group' => 'CSS',
+                            'heading' => __('Custom css', 'pwelement'),
+                            'param_name' => 'display_info_css',
+                            'description' => __('Hidden text', 'pwelement'),
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'display_info_format',
+                                'value' => array('PWEDisplayInfoBox', 'PWEDisplayInfoSpeakers'),
+                            ),
+                        ),
                     ),
                 ),
             ));
@@ -266,7 +278,13 @@ class PWEDisplayInfo {
         extract( shortcode_atts( array(
             'display_info_format' => '',
             'display_info_custom_id' => '',
+            'display_info_css' => '',
         ), $atts ));
+
+        $display_info_css_decoded = base64_decode($display_info_css);// Decoding Base64
+        $display_info_css_code = urldecode($display_info_css_decoded); // Decoding URL
+
+
 
         self::$rnd_id = !empty($display_info_custom_id) ? $display_info_custom_id : rand(10000, 99999);
 
@@ -287,9 +305,11 @@ class PWEDisplayInfo {
         
         $output = do_shortcode($output);
 
+        $output_html = '<style>'. $display_info_css_code .'</style>';
+
         $display_info_word = $display_info_format == 'PWEDisplayInfoBox' ? 'box' : 'speaker';
 
-        $output_html = '<div id="info-'. $display_info_word .'-'. self::$rnd_id .'" class="info-'. $display_info_word .'">' . $output . '</div>';
+        $output_html .= '<div id="info-'. $display_info_word .'-'. self::$rnd_id .'" class="info-'. $display_info_word .'">' . $output . '</div>';
 
         return $output_html;
     }

@@ -22,6 +22,54 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
 
         $element_output = array(
             array(
+                'type' => 'checkbox',
+                'group' => 'main',
+                'heading' => __('Turn on slider', 'pwe_display_info'),
+                'param_name' => 'info_speakers_slider_on',
+                'admin_label' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'options',
+                'heading' => __('Hide bio text', 'pwe_display_info'),
+                'param_name' => 'info_speakers_bio_text_hide',
+                'admin_label' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'options',
+                'heading' => __('Hide bio button', 'pwe_display_info'),
+                'param_name' => 'info_speakers_bio_btn_hide',
+                'admin_label' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'options',
+                'heading' => __('Full text bio', 'pwe_display_info'),
+                'param_name' => 'info_speakers_bio_full_text',
+                'admin_label' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
                 'heading' => __('Speakers', 'pwe_display_info'),
                 'group' => 'main',
                 'type' => 'param_group',
@@ -68,6 +116,17 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             array(
                 'type' => 'textfield',
                 'group' => 'options',
+                'heading' => __('Max width image', 'pwe_display_info'),
+                'param_name' => 'info_speakers_max_width_img',
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'options',
                 'heading' => __('Width element', 'pwe_display_info'),
                 'param_name' => 'info_speakers_element_width',
                 'description' => __('Width element', 'pwe_display_info'),
@@ -85,6 +144,71 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 'description' => __('Check to show photos as square.', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'options',
+                'heading' => __('Display items for desktop', 'pwe_display_info'),
+                'param_name' => 'info_speakers_display_items_desktop',
+                'description' => __('Default 3', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-one-third-width',
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),      
+            array(
+                'type' => 'textfield',
+                'group' => 'options',
+                'heading' => __('Display items for tablet', 'pwe_display_info'),
+                'param_name' => 'info_speakers_display_items_tablet',
+                'description' => __('Default 2', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-one-third-width',
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'options',
+                'heading' => __('Display items for mobile', 'pwe_display_info'),
+                'param_name' => 'info_speakers_display_items_mobile',
+                'description' => __('Default 1', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-one-third-width',
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'options',
+                'heading' => __('Breakpoint for tablet', 'pwe_display_info'),
+                'param_name' => 'info_speakers_breakpoint_tablet',
+                'description' => __('Default 768px', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-half-width',
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ), 
+            array(
+                'type' => 'textfield',
+                'group' => 'options',
+                'heading' => __('Breakpoint for mobile', 'pwe_display_info'),
+                'param_name' => 'info_speakers_breakpoint_mobile',
+                'description' => __('Default 420px', 'pwe_display_info'),
+                'param_holder_class' => 'backend-area-half-width',
+                'admin_label' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
                     'value' => 'PWEDisplayInfoSpeakers',
@@ -109,11 +233,31 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
         $rnd = rand(10000, 99999);
 
         extract( shortcode_atts( array(
+            'info_speakers_slider_on' => '',
+            'info_speakers_bio_btn_hide' => '',
+            'info_speakers_bio_text_hide' => '',
+            'info_speakers_bio_full_text' => '',
+            'info_speakers_max_width_img' => '',
+            'info_speakers_display_items_desktop' => '',
+            'info_speakers_display_items_tablet' => '',
+            'info_speakers_display_items_mobile' => '',
+            'info_speakers_breakpoint_tablet' => '',
+            'info_speakers_breakpoint_mobile' => '',
             'info_speakers_speakers' => '',
             'info_speakers_lect_color' => '',
             'info_speakers_element_width' => '',
             'info_speakers_photo_square' => '',
         ), $atts ) );
+
+        $info_speakers_options = array();
+        $info_speakers_options[] = array(
+            "display_items_desktop" => $info_speakers_display_items_desktop,
+            "display_items_tablet" => $info_speakers_display_items_tablet,
+            "display_items_mobile" => $info_speakers_display_items_mobile,
+            "breakpoint_tablet" => $info_speakers_breakpoint_tablet,
+            "breakpoint_mobile" => $info_speakers_breakpoint_mobile,
+            "max_width_img" => $info_speakers_max_width_img,
+        );
 
         $info_speakers_lect_color = empty($info_speakers_lect_color) ? 'black' : $info_speakers_lect_color;
         $info_speakers_element_width = empty($info_speakers_element_width) ? '150px' : $info_speakers_element_width;
@@ -162,7 +306,6 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 color: black;
                 background-color: white;
             }
-            
             #pweSpeakerModal-'. $rnd .' {
                 position: fixed;
                 z-index: 9999;
@@ -214,7 +357,6 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-desc {
                 margin: 18px 0 0;
             }
-            
             #pweSpeakerModal-'. $rnd .'.is-visible {
                 opacity: 1;
                 visibility: visible;
@@ -227,8 +369,21 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             }
         </style>';
 
+        if ($info_speakers_bio_btn_hide == true) {
+            $output .= '<style>.pwe-speaker-btn { display: none !important; }</style>';
+        }
+        if ($info_speakers_bio_full_text == true) {
+            $output .= '<style>.pwe-speaker-desc { display: flex !important; } .pwe-speaker-first-sentence { display: none !important; }</style>';
+        }
+        if ($info_speakers_bio_text_hide == true) {
+            $output .= '<style>.pwe-speaker-desc { display: none !important; } .pwe-speaker-first-sentence { display: none !important; }</style>';
+        }
+
         $speakers_urldecode = urldecode($info_speakers_speakers);
         $speakers_json = json_decode($speakers_urldecode, true);
+
+        $info_speakers_slider = array();
+
         if (is_array($speakers_json)) {
             foreach ($speakers_json as $speaker){
                 $speaker_image = $speaker["speaker_image"];
@@ -238,85 +393,108 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $speaker_image_src = wp_get_attachment_url($speaker_image);   
 
                 $item_speaker_id = 'pweSpeaker-' . $rnd;
-                $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">
-                                <img class="pwe-speaker-img" src="'. $speaker_image_src .'">
-                                <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>
-                                <p class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</p>';
-                                if(!empty($speaker_bio)){
-                                    $output .='<button class="pwe-speaker-btn">BIO</button>';
-                                }
-                $output .='</div>';
-            }
-        } 
 
-        $output .='
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const speakers = document.querySelectorAll("#'. $item_speaker_id .'");
+                if ($info_speakers_slider_on != true) {
+                    $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">
+                                    <img class="pwe-speaker-img" src="'. $speaker_image_src .'">
+                                    <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>
+                                    <p class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</p>';
+                                    if(!empty($speaker_bio)){
+                                        $output .='<button class="pwe-speaker-btn">BIO</button>';
+                                    }
+                    $output .='</div>';
+                }
                 
-                speakers.forEach((speaker) => {
-                    const img = speaker.querySelector(".pwe-speaker-img");
-                    const name = speaker.querySelector(".pwe-speaker-name");
-                    const desc = speaker.querySelector(".pwe-speaker-desc");
-                    const btn = speaker.querySelector(".pwe-speaker-btn");
+                $info_speakers_slider[] = array(
+                    "img" => $speaker_image_src,
+                    "name" => $speaker_name,
+                    "bio" => $speaker_bio
+                );
+            }
 
-                    if (!desc || desc.textContent.trim() === "" && desc.children.length === 0) {
-                        speaker.style.justifyContent = "flex-start";
-                    }
+            if ($info_speakers_slider_on == true) {         
+                include_once plugin_dir_path(__FILE__) . '/../scripts/speakers-slider.php';
+                $output .= PWESpeakersSlider::sliderOutput($info_speakers_slider, 3000, $info_speakers_options);
+            }
+        }   
+       
+        $output .='
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const speakers = document.querySelectorAll("#info-speaker-'. self::$rnd_id .' .pwe-speaker");
                     
-                    if (btn) {
-                        btn.addEventListener("click", function() {
-                            const modalDiv = document.createElement("div");
-                            modalDiv.className = "pwe-speaker-modal";
-                            modalDiv.id = "pweSpeakerModal-'. $rnd .'";
-                            modalDiv.innerHTML = `
-                                <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
-                                    <span class="pwe-speaker-modal-close">&times;</span>
-                                    <img class="pwe-speaker-modal-image" src="${img.src}" alt="Speaker Image" style="width:100%; max-width:150px;">
-                                    <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>
-                                    <p class="pwe-speaker-modal-desc">${desc.innerHTML}</p>
-                                </div>
-                            `;
-                            
-                            document.body.appendChild(modalDiv);
-                            requestAnimationFrame(() => {
-                                modalDiv.classList.add("is-visible");
-                            });
-                            disableScroll();
+                    speakers.forEach((speaker) => {
+                        const img = speaker.querySelector(".pwe-speaker-img");
+                        const name = speaker.querySelector(".pwe-speaker-name");
+                        const desc = speaker.querySelector(".pwe-speaker-desc");
+                        const btn = speaker.querySelector(".pwe-speaker-btn");
 
-                            // Close modal
-                            modalDiv.querySelector(".pwe-speaker-modal-close").addEventListener("click", function() {
-                                modalDiv.classList.remove("is-visible");
-                                setTimeout(() => {
-                                    modalDiv.remove();
-                                    enableScroll();
-                                }, 300); // Czekaj na zakończenie animacji przed usunięciem
-                            });
+                        if (!desc || desc.textContent.trim() === "" && desc.children.length === 0) {
+                            speaker.style.justifyContent = "flex-start";
+                        }
 
-                            modalDiv.addEventListener("click", function(event) {
-                                if (event.target === modalDiv) {
+                        if (img.src == undefined) {
+                            const backgroundImage = window.getComputedStyle(img).getPropertyValue("background-image");
+                            // Extracting the URL from the background-image value in the slider
+                            const urlMatch = backgroundImage.match(/url\\(\\"?(.*?)\\"?\\)/);
+                            const imageUrl = urlMatch ? urlMatch[1] : null;
+                            img.src = imageUrl;
+                        }
+                        
+                        if (btn) {
+                            btn.addEventListener("click", function() {
+                                const modalDiv = document.createElement("div");
+                                modalDiv.className = "pwe-speaker-modal";
+                                modalDiv.id = "pweSpeakerModal-'. $rnd .'";
+                                modalDiv.innerHTML = `
+                                    <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
+                                        <span class="pwe-speaker-modal-close">&times;</span>
+                                        <img class="pwe-speaker-modal-image" src="${img.src}" alt="Speaker Image" style="width:100%; max-width:150px;">
+                                        <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>
+                                        <p class="pwe-speaker-modal-desc">${desc.innerHTML}</p>
+                                    </div>
+                                `;
+                                
+                                document.body.appendChild(modalDiv);
+                                requestAnimationFrame(() => {
+                                    modalDiv.classList.add("is-visible");
+                                });
+                                disableScroll();
+
+                                // Close modal
+                                modalDiv.querySelector(".pwe-speaker-modal-close").addEventListener("click", function() {
                                     modalDiv.classList.remove("is-visible");
                                     setTimeout(() => {
                                         modalDiv.remove();
                                         enableScroll();
-                                    }, 300);
-                                }
-                            });
-                        });
-                    }
-                });
-            });
+                                    }, 300); // Czekaj na zakończenie animacji przed usunięciem
+                                });
 
-            // Functions to turn scrolling off and on
-            function disableScroll() {
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-            }
-            function enableScroll() {
-                document.body.style.overflow = "";
-                document.documentElement.style.overflow = "";
-            }
-        </script>';
+                                modalDiv.addEventListener("click", function(event) {
+                                    if (event.target === modalDiv) {
+                                        modalDiv.classList.remove("is-visible");
+                                        setTimeout(() => {
+                                            modalDiv.remove();
+                                            enableScroll();
+                                        }, 300);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+
+                // Functions to turn scrolling off and on
+                function disableScroll() {
+                    document.body.style.overflow = "hidden";
+                    document.documentElement.style.overflow = "hidden";
+                }
+                function enableScroll() {
+                    document.body.style.overflow = "";
+                    document.documentElement.style.overflow = "";
+                }
+            </script>
+        ';
 
         return $output;
     }

@@ -1,4 +1,5 @@
-<?php 
+<?php
+session_start();
 
 /**
  * Class PWElementXForm
@@ -121,6 +122,27 @@ class PWElementXForm extends PWElements {
      * @param string $email Adres e-mail do sprawdzenia.
      * @return bool Zwraca true, jeśli adres e-mail jest poprawny, w przeciwnym razie false.
      */
+    public static function redirectTo($url) {
+        if (!headers_sent()) {
+            header('Location: ' . $url);
+            exit();
+        } else {
+            echo "<script type='text/javascript'>";
+            echo "window.location.href='$url';";
+            echo "</script>";
+            echo "<noscript>";
+            echo "<meta http-equiv='refresh' content='0;url=$url' />";
+            echo "</noscript>";
+            exit();
+        }
+    }
+
+    /**
+     * Sprawdza poprawność adresu e-mail.
+     *
+     * @param string $email Adres e-mail do sprawdzenia.
+     * @return bool Zwraca true, jeśli adres e-mail jest poprawny, w przeciwnym razie false.
+     */
     private static function isValidEmail($email) {
         return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
     }
@@ -146,6 +168,7 @@ class PWElementXForm extends PWElements {
      * @param array @atts options
      */
     public static function x_form_register($reg_form_id) {
+
             if(!GFAPI::form_id_exists($reg_form_id)){
                 echo '<script>console.log("coś nie tak bo nie ma formularza")</script>';
                 return;
@@ -167,7 +190,7 @@ class PWElementXForm extends PWElements {
             );
 
             $entry_id = GFAPI::add_entry($inside_id_data);
-
+            
             return $entry_id;
             // $_SESSION['entry_id'] = $entry_id;
 
@@ -351,11 +374,61 @@ class PWElementXForm extends PWElements {
     }
 
     /**
+     * Static method to send request to become exhibitor.
+     * This method registering crone action. 
+     * 
+     * @param string @entry_id entry id to send
+     */
+    public static function add_side_entry($reg_form_id, $post_data){
+        var_dump($post_data);
+        if(!GFAPI::form_id_exists($reg_form_id)){
+            echo '<script>console.log("coś nie tak bo nie ma formularza")</script>';
+            return false;
+        } 
+        // if($_SESSION['updated']){
+        //    return true;
+        // }
+
+        $form_checker = GFAPI::get_form($reg_form_id);
+
+        foreach($form_checker['fields'] as $field){
+            if (strpos(strtolower($field->label), 'nazwisko') !== false || strpos(strtolower($field->label), 'name') !== false){
+                $name_id = $field->id;
+            } else if (strpos(strtolower($field->label),'nazwa') !== false || strpos(strtolower($field->label),'company') !== false){
+                $company_id = $field->id;
+            } else if (strpos(strtolower($field->label),'nip') !== false){
+                $nip_id = $field->id;
+            }  else if (strpos(strtolower($field->label),'more') !== false ){
+                $adds_id = $field->id;
+            }  else if (strpos(strtolower($field->label),'adres') !== false ){
+                $adres_id = $field->id;
+            }
+        }
+        
+        $inside_id_data = array(
+            'form_id' => $post_data["exh_entry_id"],
+        );
+        if($name_id != ''){ GFAPI::update_entry_field($post_data["exh_entry_id"], $name_id, ($post_data["imie"] . ' ' . $post_data["nazwisko"])); }
+        if($company_id != ''){ GFAPI::update_entry_field($post_data["exh_entry_id"], $company_id, $post_data["company-name"]); }
+        if($nip_id != ''){ GFAPI::update_entry_field($post_data["exh_entry_id"], $nip_id, $post_data["company-nip"]); }
+        if($adds_id != ''){ GFAPI::update_entry_field($post_data["exh_entry_id"], $adds_id, $post_data["company-adds"]); }
+
+        if($adres_id != ''){ GFAPI::update_entry_field($post_data["exh_entry_id"], $sdres_id, 
+            ($post_data["ulica"] . ' ' . $post_data["budynek"] . ' ' . $post_data["mieszkanie"] . ' ' . $post_data["kod_pocztowy"] . ' ' . $post_data["miasto"])); }
+
+        return true;
+    }
+
+    /**
      * Static method to display registration form (form1).
      * Returns the HTML output as a string.
      */
     public static function registrationHtml($reg_form_id, $step2_url){
-        $reg_output .= '
+        $captcha_public_key = get_option('rg_gforms_captcha_public_key');
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    
+        $reg_output = '
+            <script src="https://www.google.com/recaptcha/api.js?render=' . $captcha_public_key . '"></script>
             <style>
                 .pwelement_' . self::$rnd_id . ' .form-1-top {
                     min-height: 465px;
@@ -399,13 +472,13 @@ class PWElementXForm extends PWElements {
                 .mail-error, .tel-error, .cons-error{
                     margin:0 11px;
                     width:85%;
-
+    
                 }
                 .row-container:has(.img-container-top10) .img-container-top10 div {
                     min-height: 50px;
                     margin: 10px 5px !important;
                 }
-
+    
             </style>
             <div class="form-1-top pwe-registration">
                 <div class="form-1">
@@ -429,7 +502,7 @@ class PWElementXForm extends PWElements {
                             EN
                         )
                     .'</p>
-                    <form id="registration" number="' . $x_form_id . '" method="post" action="' . $step2_url . '">
+                    <form id="registration" number="' . $reg_form_id . '" method="post" action="' . $step2_url . '">
                         <input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">
                         <input type="email" class="email" name="email" placeholder="'. 
                             self::languageChecker(
@@ -473,7 +546,7 @@ class PWElementXForm extends PWElements {
                             .'</span>
                         </div>
                         <p align="center" class="cons-error"></p>
-                        <button class="form-1-btn" type="submit" name="step-1-submit">'. 
+                        <button class="form-1-btn g-recaptcha" type="submit" name="step-1-submit" data-sitekey="' . $captcha_public_key . '" data-callback="onSubmit"> '. 
                             self::languageChecker(
                                 <<<PL
                                 Odbierz darmowy bilet
@@ -487,38 +560,67 @@ class PWElementXForm extends PWElements {
                 </div>
             </div>
             <script>
-            jQuery(function ($) {
-                $(".show-consent").on("click touch", function () {
-                    console.log($(this));
-                 $(this).next().toggle( "slow" );
+                function onSubmit(token) {
+                    document.getElementById("registration").submit();
+                }
+                jQuery(function ($) {
+                    $(".show-consent").on("click touch", function () {
+                        $(this).next().toggle("slow");
+                    });
                 });
-               });
             </script>
         ';
-
+    
         $inner_array = array (
-            'form_id' => $x_form_id,
+            'form_id' => $reg_form_id,
         );
-
+    
         $js_file = plugins_url('js/form-checker.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'js/form-checker.js');
         wp_enqueue_script('form-checker-js', $js_file, array('jquery'), $js_version, true);
         wp_localize_script('form-checker-js', 'inner', $inner_array );
-
+    
         return $reg_output;
     }
+    
 
     /**
      * Static method to display seccond step form (step2).
      * Returns the HTML output as a string.
      */
-    public static function step2Html($reg_form_id, $confirmation_url, $text_color){
+    public static function step2Html($reg_form_id, $confirmation_url, $text_color){        
         if (isset($_POST['csrf_token']) && isset($_POST['email']) && $_POST['csrf_token'] === $_SESSION['csrf_token']){
-            $entry_id = self::x_form_register($reg_form_id);
+            $secret = get_option('rg_gforms_captcha_private_key');
+            $token = $_POST['g-recaptcha-response'];
+            $url = 'https://www.google.com/recaptcha/api/siteverify';
+            $data = [
+                'secret' => $secret,
+                'response' => $token
+            ];
+            $options = [
+                'http' => [
+                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method' => 'POST',
+                    'content' => http_build_query($data)
+                ]
+            ];
+            $context = stream_context_create($options);
+            $response = file_get_contents($url, false, $context);
+            $result = json_decode($response, true);
+            
+            if ($result['success']) {
+                echo '<script>console.log("Weryfikacja reCAPTCHA zakończona sukcesem!")</script>';
+                $entry_id = self::x_form_register($reg_form_id);
+                $_SESSION['captcha'] = true;
+            } else {
+                if(get_locale() == 'pl_PL'){
+                    self::redirectTo('/rejestracja');
+                } else {
+                    self::redirectTo('/registration');
+                }
+            }
         }
 
-        echo '<script>console.log("'.$confirmation_url.'")</script>';
-        
         $step2_output .= '
             <style>
                 #xForm {
@@ -634,6 +736,9 @@ class PWElementXForm extends PWElements {
                         <h3 class="wystawca">Czy chcesz zostać <span>wystawcą</span><br>targów [trade_fair_name] ?</h3>
 
                         <form id="exhibitor-question" method="post" action="' . $confirmation_url . '">
+                            <input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">
+                            <input type="hidden" name="email" value="'.$_POST['email'].'">
+                            <input type="hidden" name="phone" value="'.$_POST['phone'].'">
                             <input type="hidden" name="entry_id" value="'.$entry_id.'">
                             <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">Tak, jestem zainteresowany</button>
                             <button type="submit" class="btn exhibitor-no" name="exhibitor-no">Nie, dziękuję</button>
@@ -671,11 +776,15 @@ class PWElementXForm extends PWElements {
      * Static method to display seccond step form (step2).
      * Returns the HTML output as a string.
      */
-    public static function confirmYesHtml($exh_form_id, $text_color){
-        if (isset($_POST['csrf_token']) && isset($_POST['email']) && $_POST['csrf_token'] === $_SESSION['csrf_token']){
-            $entry_id = self::x_form_register($reg_form_id);
+    public static function confirmYesHtml($atts, $exh_form_id, $text_color){
+
+        if (isset($_POST['csrf_token']) && isset($_POST['exhibitor-yes']) && $_POST['csrf_token'] === $_SESSION['csrf_token']){
+            $exh_entry_id = self::x_form_register($exh_form_id);
+        } else if (isset($_POST['csrf_token']) && isset($_POST['exhibitors-form']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
+            $exh_confirmation = self::add_side_entry($exh_form_id, $_POST);
+            $_SESSION['updated'] = true;
         }
-            
+        
         $yes_output .= '
             <style>
                 #xForm{
@@ -777,22 +886,35 @@ class PWElementXForm extends PWElements {
                         <h2 class="text-color-jevc-color">Dziękujemy za rejestrację chęci udziału Państwa firmy na targach <span>[trade_fair_name]!</span></h2>
                         <p style="margin-top:36px;">Wkrótce nasz przedstawiciel skontaktuje się z Państwem, aby przedstawić ofertę wystawienniczą oraz korzyści płynące z udziału w targach.</p>
                     </div>
-                </div>
-                <div class="form-3">
-                    <h3>Prosimy o podanie dodatkowych szczegółów</span></h3>
-                    <p style="margin-top:36px;">Pomoże nam to w dobraniu odpowiednich warunków i usprawnieniu komunikacji.</p>
-                    <form id="form3" action="" method="post">
-                        <label>Imię i nazwisko</label>
-                        <input type="text" class="imie" name="imie" placeholder="Imię i nazwisko osoby do kontaktu" required>
-                        <label>Firma</label>
-                        <div>
-                            <input type="text" class="dane" name="company-name" placeholder="Nazwa Firmy">
-                            <input type="text" class="dane" name="company-nip" placeholder="NIP">
-                        </div>
-                            <textarea type="text" class="dane" name="company-adds" placeholder="Dodatkowe Informacje"></textarea>
-                            <button type="submit" name="form3">Zatwierdź</button>
-                    </form>
-                </div>
+                </div>';
+
+                if(!$exh_confirmation){
+                    $yes_output .= '
+                    <div class="form-3">
+                        <h3>Prosimy o podanie dodatkowych szczegółów</span></h3>
+                        <p style="margin-top:36px;">Pomoże nam to w dobraniu odpowiednich warunków i usprawnieniu komunikacji.</p>
+                        <form id="form3" action="" method="post">
+                            <label>Imię i nazwisko</label>
+                            <input type="text" class="imie" name="imie" placeholder="Imię i nazwisko osoby do kontaktu" required>
+                            <label>Firma</label>
+                            <input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">
+                            <input type="hidden" name="exh_entry_id" value="' . $exh_entry_id . '">
+                            <div>
+                                <input type="text" class="dane" name="company-name" placeholder="Nazwa Firmy">
+                                <input type="text" class="dane" name="company-nip" placeholder="NIP">
+                            </div>
+                                <textarea type="text" class="dane" name="company-adds" placeholder="Dodatkowe Informacje"></textarea>
+                                <button type="submit" name="exhibitors-form">Zatwierdź</button>
+                        </form>
+                    </div>';
+                } else {
+                    $yes_output .= '
+                    <div class="form-3">
+                        <p>Dziękujemy za uzupełnienie danych. Do usłyszenia już wkrótce. <br> Zespół Ptak Warsaw Expo</p>
+                    </div>';
+                }
+
+                $yes_output .= '
                 <div class="form-3-right">
                     <img class="img-stand" src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
                     <h5>Dedykowana Zabudowa Targowa</h5>
@@ -819,6 +941,181 @@ class PWElementXForm extends PWElements {
      * Returns the HTML output as a string.
      */
     public static function confirmNoHtml($reg_form_id, $confirmation_url, $text_color){
+        
+        if (isset($_POST['csrf_token']) && isset($_POST['exhibitor-no']) && $_POST['csrf_token'] === $_SESSION['csrf_token']){
+        } else if (isset($_POST['csrf_token']) && isset($_POST['visitors-form']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
+            $exh_confirmation = self::add_side_entry($exh_form_id, $_POST);
+            //$_SESSION['updated'] = true;
+        }
+
+        
+        $no_output .= '
+        <style>
+                #xForm{
+                    display: flex;
+                    gap: 20px;
+                }
+                #xForm .very-strong{
+                    font-weight:700;
+                }
+
+                #xForm>div{
+                    align-content: center;
+                    min-height: 643px;
+                    width: 33%;
+                    flex: 1;
+                }
+
+                #xForm .form-3-left {
+                    text-align: -webkit-right;
+                    padding: 36px;
+                }
+
+                // #xForm .form-3-left span{
+                //     color: ' . $text_color . ';
+                // }
+
+                #xForm .form-3{
+                    text-align: left;
+                    padding: 25px 50px;
+                    background-color: #E8E8E8;
+                    min-height: inherit;
+                }
+
+                #xForm .form-3-right{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 27px;
+                }
+
+                #xForm .form-3-left>div {
+                    text-align:left;
+                    max-width: 450px;
+                }
+
+                #xForm .form-3 span{
+                    color: #c49a62;
+                }
+                
+                #xForm .form-3 form{
+                    margin-top: 18px;
+                }
+
+                #xForm .form-3 form .form3-half{
+                    display:flex;
+                    gap:9px;
+                }
+
+                #xForm .form-3 form .form3-half>div{
+                    width: 100%;
+                }
+
+                #xForm .form-3 form label{
+                    text-align: left;
+                    font-weight: 700;
+                }
+
+                #xForm .form-3 form :is(input, textarea){
+                    margin-bottom: 18px;
+                    width: 100%;
+                    border-radius: 11px;
+                    border-color: #c49a62 !important;
+                    box-shadow: none !important;
+                }
+
+                #xForm .form-3 form div:has(button){
+                    margin-top:18px;
+                    text-align: center;
+                    width: 100%;
+                }
+
+                #xForm .form-3 form button{
+                    color: white;
+                    background-color:' . $text_color . ';
+                    border: 1px solid ' . $text_color . ';
+                    border-radius: 11px;
+                }
+
+                #xForm .form-3 form button:hover{
+                    color: black;
+                    background-color: white;
+                    border: 1px solid ' . $text_color . ';
+                }
+
+                #xForm .form-3-right .pwe-link{
+                    color: white;
+                    background-color: black;
+                    border: 1px solid black;
+                }
+
+                #xForm .form-3-right .pwe-link:hover{
+                    color: black;
+                    background-color: white;
+                }
+
+            </style>
+
+            <div id="xForm">
+                <div class="form-3-left">
+                    <div>
+                        <h2 class="text-color-jevc-color">Dziękujemy za rejestrację na <br><span class="very-strong" style="display:block;">[trade_fair_name]!</span></h2>
+                        <p>Cieszymy się, że dołączasz do naszego wydarzenia, pełnego nowości rynkowych i inspiracji do zastosowania w Twojej firmie.</p><br>
+                        <p><span class="very-strong">Zachęcamy do wypełnienia</span> ostatniego formularza, dzięki temu będziemy mogli przygotować dla Was <span class="very-strong">wyjątkowy pakiet powitalny VIP</span>, który usprawni Państwapobyt na targach.</p>
+                    </div>
+                </div>
+                <div class="form-3">
+                    <h3>Podaj adres, na który mamy wysłać <span style="display:block;">darmowy pakiet powitalny VIP</span></h3>
+                    <p>Otrzymasz bezpłatny spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingową.</p>
+                    <form id="form3" action="" method="post">
+                        <input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">
+                        <input type="hidden" name="entry_id" value="' . $_POST['entry_id'] . '">
+                        <div class="form3-half">
+                            <div>
+                                <label>Imię</label>
+                                <input type="text" class="imie" name="imie" placeholder="Imię" required>
+                            </div>
+                            <div>
+                                <label>Nazwisko</label>
+                                <input type="text" class="nazwisko" name="nazwisko" placeholder="Nazwisko" required>
+                            </div>
+                        </div>
+                        <label>Ulica</label>
+                        <input type="text" class="ulica" name="ulica" placeholder="Ulica" required>
+                        <div class="form3-half">
+                            <div>
+                                <label>Numer Budynku</label>
+                                <input type="text" class="budynek" name="budynek" placeholder="Numer budynku" required>
+                            </div>
+                            <div>
+                                <label>Numer Mieszkania</label>
+                                <input type="text" class="mieszkanie" name="mieszkanie" placeholder="Numer mieszkania" required>
+                            </div>
+                        </div>
+                        <div class="form3-half">
+                            <div>
+                                <label>Kod Pocztowy</label>
+                                <input type="text" class="kod_pocztowy" name="kod_pocztowy" placeholder="Kod pocztowy" required>
+                            </div>
+                            <div>
+                                <label>Miasto</label>
+                                <input type="text" class="miasto" name="miasto" placeholder="Miasto" required>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" name="visitors-form">Zamawiam bezpłatny identyfikator</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-3-right">
+                    <img src="/doc/badge-mockup.webp">
+                </div>
+            </div>
+        </div>
+        ';
+
+        return $no_output;
     }
 
     /**
@@ -1019,66 +1316,7 @@ class PWElementXForm extends PWElements {
 
         // if (isset($_POST['exhibitor-no'])){
 
-        //     $output .= '
-        //         <div class="form-3-left">
-        //             <div>
-        //                 <h5 class="krok"> Krok <span class="color-accent">3 z 3<span></h5>
-        //                 <h2 class="h1 text-color-jevc-color">Dziękujemy za rejestrację
-        //                 na <br>[trade_fair_name]!</h2>
-        //                 <p>Cieszymy się, że dołączasz do naszego wydarzenia, pełnego nowości rynkowych i inspiracji do zastosowania w Twojej firmie.</p><br>
-        //                 <p><span class="very-strong">Zachęcamy do wypełnienia</span> ostatniego formularza, dzięki temu będziemy mogli przygotować dla Was <span class="very-strong">wyjątkowy pakiet powitalny VIP</span>, który usprawni Państwapobyt na targach.</p>
-        //             </div>
-        //         </div>
-        //         <div class="form-3">
-        //             <h3>Podaj adres, na który mamy wysłać <span>darmowy pakiet powitalny VIP</span></h3>
-        //             <p>Otrzymasz bezpłatny spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingową.</p>
-        //             <form id="form3" action="" method="post">
-        //                 <div class="form3-half">
-        //                     <div>
-        //                         <label>Imię</label>
-        //                         <input type="text" class="imie" name="imie" placeholder="Imię" required>
-        //                     </div>
-        //                     <div>
-        //                         <label>Nazwisko</label>
-        //                         <input type="text" class="nazwisko" name="nazwisko" placeholder="Nazwisko" required>
-        //                     </div>
-        //                 </div>
-        //                 <label>Ulica</label>
-        //                 <input type="text" class="ulica" name="ulica" placeholder="Ulica" required>
-        //                 <div class="form3-half">
-        //                     <div>
-        //                         <label>Numer Budynku</label>
-        //                         <input type="text" class="budynek" name="budynek" placeholder="Numer budynku" required>
-        //                     </div>
-        //                     <div>
-        //                         <label>Numer Mieszkania</label>
-        //                         <input type="text" class="mieszkanie" name="mieszkanie" placeholder="Numer mieszkania" required>
-        //                     </div>
-        //                 </div>
-        //                 <div class="form3-half">
-        //                     <div>
-        //                         <label>Kod Pocztowy</label>
-        //                         <input type="text" class="kod_pocztowy" name="kod_pocztowy" placeholder="Kod pocztowy" required>
-        //                     </div>
-        //                     <div>
-        //                         <label>Miasto</label>
-        //                         <input type="text" class="miasto" name="miasto" placeholder="Miasto" required>
-        //                     </div>
-        //                 </div>
-        //                 <div>
-        //                     <button type="submit" name="form3">Zamawiam bezpłatny identyfikator</button>
-        //                 </div>
-        //             </form>
-        //         </div>
-        //         <div class="form-3-right">
-        //             <img src="/wp-content/plugins/PWElements/media/mapka-wawa.png">
-        //         </div>
-        //     </div>
-
-        //     ';
-
-        //     return $output;
-        // }
+        //     
 
         // if (isset($_POST['form3'])){
         //     if($_SESSION['entry_id']){
@@ -1123,14 +1361,21 @@ class PWElementXForm extends PWElements {
 
         //     return $output;
         // }
+        
         if ($atts['x_form_placemant'] === 'register'){
             return self::registrationHtml($reg_form_id, $step2_url);
-        } else if ($atts['x_form_placemant'] === 'step2'){
+        } else if ($atts['x_form_placemant'] === 'step2' && $_POST['csrf_token'] != ''){
             return self::step2Html($reg_form_id, $confirmation_url, $text_color);
-        } else if ($atts['x_form_placemant'] === 'confirmation' && isset($_POST['exhibitor-yes'])){
-            return self::confirmYesHtml($exh_form_id, $text_color);
-        } else if ($atts['x_form_placemant'] === 'confirmation' && isset($_POST['exhibitor-no'])){
-            return self::confirmNoHtml($reg_form_id, $text_color);
+        } else if ($_SESSION['captcha'] && $atts['x_form_placemant'] === 'confirmation' && $_POST['csrf_token'] != '' && (isset($_POST['exhibitor-yes']) || isset($_POST['exhibitors-form']))){
+            return self::confirmYesHtml($atts, $exh_form_id, $text_color);
+        } else if ($_SESSION['captcha'] && $atts['x_form_placemant'] === 'confirmation' && $_POST['csrf_token'] != '' && isset($_POST['exhibitor-no']) || isset($_POST['visitors-form'])) {
+            return self::confirmNoHtml($atts, $reg_form_id, $text_color);
+        } else {            
+            if(get_locale() == 'pl_PL'){
+                self::redirectTo('/rejestracja');
+            } else {
+                self::redirectTo('/registration');
+            }
         }
     }
 }
