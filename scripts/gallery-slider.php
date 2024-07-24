@@ -55,31 +55,33 @@ class PWEMediaGallerySlider {
                         transform: translateX(0);
                     }
                 }
-                .pwe-media-gallery-carousel {
-                    .pwe-media-gallery-slider {
+                #PWEMediaGallerySlider-'. $id_rnd .' {
                         width: 100%;
                         overflow: hidden !important;
                         margin: 0 !important;
-                    }
-                    .slides {
+                }
+                #PWEMediaGallerySlider-'. $id_rnd .' .slides {
                         display: flex;
                         align-items: flex-start !important;
                         justify-content: space-between;
                         margin: 0 !important;
                         pointer-events: auto;
-                    }
-                    .slide {
+                }
+                #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image {
+                        margin: 5px !important;
+                }
+                #PWEMediaGallerySlider-'. $id_rnd .' .slide {
                         animation: slideAnimation 0.5s ease-in-out;
-                    }
-                    .slide img {
+                }
+                #PWEMediaGallerySlider-'. $id_rnd .' .slide img {
                         object-fit: cover;
-                    }
-                } 
+                }
+                 
             </style>';
 
         if ($media_gallery_full_width === 'true') {
                 $output .= '<style>
-                                .pwe-media-gallery-slider {
+                                #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-slider {
                                         overflow: visible !important;
                                 }
                             </style>';
@@ -114,6 +116,15 @@ class PWEMediaGallerySlider {
                                                         <img src="'. $imageUrl .'" style="'. $aspectRatio .'">
                                                     </div>';  
                                 }      
+                        } 
+                        
+                        if(is_array($media_url[$imgNumber]) && !empty($media_url[$imgNumber]["src_mini"])){
+                                $imageUrl = $media_url[$imgNumber]['src_mini'];
+
+                                $output .= '<div class="pwe-media-gallery-image">
+                                        <img src="'. $imageUrl .'">
+                                </div>';  
+                                     
                         }          
                 }
 
@@ -143,46 +154,50 @@ class PWEMediaGallerySlider {
                         $imgNumber = $i - count($media_url);
                 }
 
-                if(is_array($media_url[$imgNumber]) && !empty($media_url[$imgNumber]['img'])){
-                        $count_visible_thumbs = [
-                                'desktop' => $media_url[$imgNumber]['count-visible-thumbs-desktop'],
-                                'tablet' => $media_url[$imgNumber]['count-visible-thumbs-tablet'],
-                                'mobile' => $media_url[$imgNumber]['count-visible-thumbs-mobile']
-                        ];
-                        $breakpoints = [
-                                'tablet' => $media_url[$imgNumber]['breakpoint-tablet'],
-                                'mobile' => $media_url[$imgNumber]['breakpoint-mobile']
-                        ];
-                        
-                        $count_visible_thumbs_json = json_encode($count_visible_thumbs);
-                        $breakpoints_thumbs_json = json_encode($breakpoints);
-                }          
+                if (!empty($media_url[$imgNumber]["src_mini"])) {
+                        $imageUrl = $media_url[$imgNumber]['src_mini'];
+                }
+
+                $count_visible_thumbs = [
+                        'desktop' => $media_url[$imgNumber]['count-visible-thumbs-desktop'],
+                        'tablet' => $media_url[$imgNumber]['count-visible-thumbs-tablet'],
+                        'mobile' => $media_url[$imgNumber]['count-visible-thumbs-mobile']
+                ];
+                $breakpoints = [
+                        'tablet' => $media_url[$imgNumber]['breakpoint-tablet'],
+                        'mobile' => $media_url[$imgNumber]['breakpoint-mobile']
+                ];
+                
+                $count_visible_thumbs_json = (!empty($count_visible_thumbs)) ? json_encode($count_visible_thumbs) : "";
+                $breakpoints_thumbs_json = (!empty($breakpoints)) ? json_encode($breakpoints) : "";         
         }
 
         $output = '
         <script>
         jQuery(function ($) {   
-
                 const slider = document.querySelector("#PWEMediaGallerySlider-'.$id_rnd.'");
                 const slides = slider.querySelector(".slides");
                 const images = slides.querySelectorAll(".pwe-media-gallery-image");
                 
-                // Ustawienie flagi wskazującej, czy mysz znajduje się nad sliderem
                 let isMouseOver = false;
                 let imagesMulti = "";
 
                 const slidesWidth = slider.clientWidth;
                 
-                const countVisibleThumbs = ' . $count_visible_thumbs_json . ';
-                const breakpointsThumbs = ' . $breakpoints_thumbs_json . ';  
-                
-                // Logika wybierająca ilość obrazów do wyświetlenia w zależności od szerokości kontenera
-                if (slidesWidth <= breakpointsThumbs.mobile) {
-                        imagesMulti = countVisibleThumbs.mobile;
-                } else if (slidesWidth > breakpointsThumbs.mobile && slidesWidth <= breakpointsThumbs.tablet) {
-                        imagesMulti = countVisibleThumbs.tablet;
-                } else if (slidesWidth > breakpointsThumbs.tablet) {
-                        imagesMulti = countVisibleThumbs.desktop;
+                if ("'. $imageUrl .'" != "") {
+                        imagesMulti = 1;
+                } else {
+                        const countVisibleThumbs = ' . $count_visible_thumbs_json . ';
+                        const breakpointsThumbs = ' . $breakpoints_thumbs_json . ';  
+                        
+                        // Logika wybierająca ilość obrazów do wyświetlenia w zależności od szerokości kontenera
+                        if (slidesWidth <= breakpointsThumbs.mobile) {
+                                imagesMulti = countVisibleThumbs.mobile;
+                        } else if (slidesWidth > breakpointsThumbs.mobile && slidesWidth <= breakpointsThumbs.tablet) {
+                                imagesMulti = countVisibleThumbs.tablet;
+                        } else if (slidesWidth > breakpointsThumbs.tablet) {
+                                imagesMulti = countVisibleThumbs.desktop;
+                        }
                 }
                 
                 // Jeżeli liczba obrazków mniejsza niż ilość wyświetlonych obrazków w jednym rzędzie

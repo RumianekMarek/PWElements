@@ -134,10 +134,6 @@ $output .= '
     if (count($pwe_congress_widget_items_json) > 1) {
         $output .= '
             <style>
-                .header-conference {
-                    top: 36px;
-                    right: 36px;
-                }
                 .header-conference-item {
                     width: 240px;
                 }
@@ -150,6 +146,12 @@ $output .= '
                     text-shadow: 2px 2px '. $text_shadow .';
                     font-size: 20px;
                 }
+                @media (min-width:1200px) {
+                    .header-conference {
+                        top: 36px;
+                        right: 36px;
+                    }
+                }  
             </style>';
     }
 

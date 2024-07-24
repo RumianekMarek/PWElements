@@ -23,6 +23,10 @@ class PWESpeakersSlider {
                         $speaker_max_width_img = (empty($options[0]['max_width_img'])) ? "150px" : $options[0]['max_width_img'];
                 }
 
+                $accent_color = do_shortcode('[trade_fair_accent]');
+                $lect_color = (!empty($images_options[0]['lect_color'])) ? $images_options[0]['lect_color'] : $accent_color;
+                $bio_color = (!empty($images_options[0]['bio_color'])) ? $images_options[0]['bio_color'] : $accent_color;
+
                 $output = '
                 <style>
                         #PWESpeakersSlider-'. $id_rnd .' {
@@ -39,7 +43,7 @@ class PWESpeakersSlider {
                         }
                         #PWESpeakersSlider-'. $id_rnd .' .slides {
                                 display: flex;
-                                align-items: start;
+                                align-items: stretch;
                                 justify-content: space-between;
                                 margin: 0 !important;
                                 min-height: 0 !important;
@@ -49,6 +53,10 @@ class PWESpeakersSlider {
                         #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker {
                                 padding:0;
                                 object-fit: contain !important;
+                                flex: 1;
+                        }
+                        #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker :is(span, p, h2, h3, h4, h5) {
+                                margin: 0 !important;    
                         }
                         #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-container{
                                 margin: 5px !important;
@@ -62,6 +70,10 @@ class PWESpeakersSlider {
                         }
                         #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-name {
                                 font-size: 24px;
+                                color: '. $lect_color .';
+                        }
+                        #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-excerpt {
+                                color: '. $bio_color .';
                         }
                         @keyframes slideAnimation {
                                 from {
@@ -74,12 +86,25 @@ class PWESpeakersSlider {
                         #PWESpeakersSlider-'. $id_rnd .' .slides .slide{
                                 animation: slideAnimation 0.5s ease-in-out;
                         }
-                </style>
-                
+                </style>';
+
+                if ($options[0]['btn_hide'] == true) {
+                        $output .= '
+                        <style>
+                                #PWESpeakersSlider-'. $id_rnd .' .slides {
+                                        align-items: start !important;
+                                }
+                        </style>';
+                }
+
+                $output .= '
                 <div id="PWESpeakersSlider-'. $id_rnd .'" class="pwe-speakers-slider">
                         <div class="slides">';
                         
                         for ($i = $min_image; $i < ($max_image); $i++) {
+
+                                $id_rnd_slide = rand(10000, 99999);
+                                
                                 if($i<0){
                                         $elNumber = count($media_url) + $i;
                                         $imageStyles = "background-image:url('".$media_url[$elNumber]['img']."');";
@@ -91,19 +116,23 @@ class PWESpeakersSlider {
                                         $imageStyles = "background-image:url(".$media_url[$elNumber]['img'].");";
                                 }
 
-                                if (is_array($media_url[$elNumber]) && !empty($media_url[$elNumber]['img']) && !empty($media_url[$elNumber]['name']) && !empty($media_url[$elNumber]['bio'])){
+                                if (is_array($media_url[$elNumber]) && !empty($media_url[$elNumber]['img']) && !empty($media_url[$elNumber]['name'])){
                                         $speakerUrl = $media_url[$elNumber]['img'];
                                         $speakerName = $media_url[$elNumber]['name'];
                                         $speakerBio = $media_url[$elNumber]['bio'];
-                                        preg_match('/\s([A-Z][^\.!?]*[\.!?])/', $speakerBio, $matches);
-                                        $firstSentence = isset($matches[1]) ? $matches[1] : '';
-                                        $output .= '<div class="pwe-speaker-'. $id_rnd .' pwe-speaker pwe-speaker-container" href="'. $speakerUrl .'">
+                                        $speakerBioExcerpt = $media_url[$elNumber]['bio_excerpt'];
+
+                                        $output .= '<div class="pwe-speaker-'. $id_rnd_slide .' pwe-speaker pwe-speaker-container" href="'. $speakerUrl .'">
                                                         <div class="pwe-speaker-thumbnail">
                                                             <div class="pwe-speaker-img" style="'.$imageStyles.'"></div>
                                                         </div> 
-                                                        <h5 class="pwe-speaker-name">'. $speakerName .'</h5>
-                                                        <p class="pwe-speaker-desc" style="display: none;">'. $speakerBio .'</p>
-                                                        <p class="pwe-speaker-first-sentence" style="">'. $firstSentence .'</p>';
+                                                        <h5 class="pwe-speaker-name">'. $speakerName .'</h5>';
+                                                        if (!empty($speakerBioExcerpt)) {
+                                                                $output .= '<div class="pwe-speaker-excerpt">'. $speakerBioExcerpt .'</div>';
+                                                        }
+                                                        if (!empty($speakerBio)) {
+                                                                $output .= '<div style="display: none;" class="pwe-speaker-desc">'. $speakerBio .'</div>';
+                                                        }
                                                         if(!empty($speakerBio)){
                                                             $output .='<button class="pwe-speaker-btn">BIO</button>';
                                                         }
@@ -131,6 +160,10 @@ class PWESpeakersSlider {
                 $breakpoint_tablet = (empty($breakpoint_tablet)) ? '768' : $breakpoint_tablet;
                 $breakpoint_mobile = (empty($breakpoint_mobile)) ? '420' : $breakpoint_mobile;
 
+                $display_items_desktop_multi =(empty($options[0]['display_items_desktop'])) ? "3" : $options[0]['display_items_desktop'];
+                $display_items_tablet_multi =(empty($options[0]['display_items_tablet'])) ? "2" : $options[0]['display_items_tablet'];
+                $display_items_mobile_multi =(empty($options[0]['display_items_mobile'])) ? "1" : $options[0]['display_items_mobile'];
+
                 $media_url_count = count($media_url);
                 $min_image_adjusted = -$min_image;
 
@@ -148,11 +181,11 @@ class PWESpeakersSlider {
                                 const slidesWidth = slides.clientWidth;
                                 
                                 if (slidesWidth < '. $breakpoint_mobile .') {
-                                        imagesMulti = '. $options[0]['display_items_mobile'] .';
+                                        imagesMulti = '. $display_items_mobile_multi .';
                                 } else if (slidesWidth < '. $breakpoint_tablet .') {
-                                        imagesMulti = '. $options[0]['display_items_tablet'] .';
+                                        imagesMulti = '. $display_items_tablet_multi .';
                                 } else {
-                                        imagesMulti = '. $options[0]['display_items_desktop'] .';
+                                        imagesMulti = '. $display_items_desktop_multi .';
                                 }
                                 
                                 if(imagesMulti >=  '. $media_url_count .'){

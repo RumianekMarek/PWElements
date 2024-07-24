@@ -17,15 +17,28 @@ class PWELogotypesSlider {
          * @param int $max_image Maximum image index.
          * @return string The DOM structure as HTML.
          */
-        private static function createDOM($id_rnd, $media_url, $min_image, $max_image) {
+        private static function createDOM($id_rnd, $media_url, $min_image, $max_image, $images_options) {
+                
+                $element_id = (!empty($images_options[0]['element_id'])) ? $images_options[0]['element_id'] : '';
+                $logotypes_caption_on = (!empty($images_options[0]['logotypes_caption_on'])) ? $images_options[0]['logotypes_caption_on'] : '';
+                $header_logotypes_caption_on = (!empty($images_options[0]['header_logotypes_caption_on'])) ? $images_options[0]['header_logotypes_caption_on'] : '';
+                $logotypes_dots_off = (!empty($images_options[0]['logotypes_dots_off'])) ? $images_options[0]['logotypes_dots_off'] : '';
+                $accent_color = do_shortcode('[trade_fair_accent]');
+
+                $target_blank = (!empty($images_options[0]['target_blank'])) ? $images_options[0]['target_blank'] : '';
+
                 $output = '
                 <style>
-                        .pwe-element-logotypes-slider {
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider {
                                 width: 100%;
                                 overflow: hidden;
                                 margin: 0 !important;
                         }
-                        .pwe-element-logotypes-slider .slides {
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides {
                                 display: flex;
                                 align-items: center;
                                 justify-content: space-between;
@@ -34,11 +47,21 @@ class PWELogotypesSlider {
                                 min-width: 0 !important;
                                 pointer-events: auto;
                         }
-                        .pwe-element-logotypes-slider .slides div {
-                                padding:0;
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div {
+                                padding: 0;
                                 object-fit: contain !important;
+                                
                         }
-                        .pwe-element-logotypes-slider .slides .image-container div{
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides a,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides a,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides a {
+                                align-self: flex-start;
+                        }
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides .image-container,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides .image-container,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides .image-container {
                                 margin: 5px !important;
                         }
                         @keyframes slideAnimation {
@@ -49,39 +72,152 @@ class PWELogotypesSlider {
                                         transform: translateX(0);
                                 }
                         }
-                        .pwe-element-logotypes-slider .slides .slide{
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides .slide,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides .slide,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides .slide {
                                 animation: slideAnimation 0.5s ease-in-out;
                         }
-                </style>
+                        .pwe-element-logotypes-slider {
+                                -webkit-touch-callout: none; /* iOS Safari */
+                                -webkit-user-select: none; /* Safari */
+                                -khtml-user-select: none; /* Konqueror HTML */
+                                -moz-user-select: none; /* Firefox w przeszłości (stare wersje) */
+                                -ms-user-select: none; /* Internet Explorer (>=10) / Edge */
+                                        user-select: none; /* Aktualnie wspierane przez: Chrome, Opera and Firefox */
+                        }
+                </style>';
+
+                if ($logotypes_caption_on == true || $header_logotypes_caption_on == true) {
+                        $output .= '
+                        <style>
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div {
+                                position: relative;
+                                display: block;
+                        }
+                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div p,
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div p,
+                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div p {
+                                width: 100%;
+                                text-transform: uppercase;
+                                font-size: 12px;
+                                font-weight: 700;
+                                color: black;
+                                white-space: break-spaces;
+                                text-align: center;
+                                line-height: 1.1 !important;
+                                margin: 0;
+                                padding: 8px 16px;
+                        }';
+                }
+                $output .= '</style>';
                 
+                $output .= '
                 <div id="PWELogotypesSlider-'. $id_rnd .'" class="pwe-element-logotypes-slider">
                         <div class="slides">';
                         
-                        for ($i = $min_image; $i < ($max_image); $i++) {
-                                if($i<0){
-                                    $imgNumber = count($media_url) + $i;
-                                    $imageStyles = "background-image:url('".$media_url[$imgNumber]['img']."');";
-                                } elseif($i>=0 && $i<(count($media_url))){
-                                    $imgNumber = $i;
-                                    $imageStyles = "background-image:url('".$media_url[$imgNumber]['img']."');";
-                                } elseif($i>=(count($media_url))){
-                                    $imgNumber = ($i - count($media_url));
-                                    $imageStyles = "background-image:url(".$media_url[$imgNumber]['img'].");";
+                        $totalImages = count($media_url);
+                        $imagesRange = range($min_image, $max_image - 1);
+
+                        foreach ($imagesRange as $i) {
+                                if ($i < 0) {
+                                        $imgNumber = $totalImages + $i;
+                                } elseif ($i >= $totalImages) {
+                                        $imgNumber = $i - $totalImages;
+                                } else {
+                                        $imgNumber = $i;
                                 }
 
-                                $imageId = ($media_url[$imgNumber]['id'] && !empty($media_url[$imgNumber]['id']) && $media_url[$imgNumber]['id'] == 'primary') ? 'as-' . $media_url[$imgNumber]['id'] : '';
-                                $imageUrl = $media_url[$imgNumber]['site'];
-                                $imageClass = $media_url[$imgNumber]['class'] ? $media_url[$imgNumber]['class'] : '';
-                                $imageStyle = $media_url[$imgNumber]['style'] ? $media_url[$imgNumber]['style'] : '';
+                                $imageData = $media_url[$imgNumber];
+                                $imageStyles = "background-image:url('{$imageData['img']}');";
+                                $imageId = (!empty($imageData['id']) && $imageData['id'] == 'primary') ? 'as-' . $imageData['id'] : '';
+                                $imageUrl = $imageData['site'];
+                                $imageClass = !empty($imageData['class']) ? $imageData['class'] : '';
+                                $imageStyle = !empty($imageData['style']) ? $imageData['style'] : '';
+                                $imageCaption = $imageData['folder_name'];
+                                $imageCustomCaption = $imageData['logotypes_name'];
 
-                                if (!empty($imageUrl)){
-                                        $output .= '<a href="'. $imageUrl .'" target="_blank" class="image-container '. $imageId .'"><div class="'.$imageClass.' logo-with-link" style="'.$imageStyles . ' ' . $imageStyle.'"></div></a>';
+                                $currentDomain = $_SERVER['HTTP_HOST'];
+                                $imageDomain = parse_url($imageUrl, PHP_URL_HOST);
+
+                                if (!empty($target_blank) && $currentDomain !== $imageDomain) {
+                                        $imageTargetBlank = $target_blank;
+                                } else if ($currentDomain !== $imageDomain) {
+                                        $imageTargetBlank = $imageData['target_blank'];
+                                } else $imageTargetBlank = '';
+
+                                if (($logotypes_caption_on == true || $header_logotypes_caption_on == true) && empty($imageCustomCaption)) {
+                                        $logo_caption_text = '<p>'. $imageCaption .'</p>';
                                 } else {
-                                        $output .= '<div class="image-container '.$imageClass.' logo-without-link" style="'.$imageStyles . ' ' . $imageStyle.'"></div>';
+                                        $logo_caption_text = '<p>'. $imageCustomCaption .'</p>';
+                                }
+                                
+                                // Tworzenie HTML
+                                if (!empty($imageUrl)) {
+                                        $output .= '<div class="image-container"><a href="' . $imageUrl . '" ' . $imageTargetBlank . ' ' . $imageId . '"><div class="' . $imageClass . ' logo-with-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>'. $logo_caption_text .'</a></div>';
+                                } else {
+                                        $output .= '<div class="image-container"><div ' . $imageClass . ' logo-without-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>'. $logo_caption_text .'</div>';
                                 }
                         }
 
-                $output .= '</div></div>';
+                        $output .= '
+                        </div>';
+
+                        if ($logotypes_dots_off != true) {
+
+                                $output .= '
+                                <style>
+                                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .dots-container,
+                                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .dots-container {
+                                                display: none;
+                                                text-align: center;
+                                                margin-top: 18px !important;
+                                        }
+                                        #katalog-'. $element_id .' #top10 .pwe-element-logotypes-slider .dots-container {
+                                                display: none;
+                                                text-align: center;
+                                                margin: 18px 0 36px !important;
+                                        }
+                                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .dot,
+                                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .dot {
+                                                display: inline-block;
+                                                width: 15px;
+                                                height: 15px;
+                                                border-radius: 50%;
+                                                background-color: #bbb;
+                                                margin: 0 5px;
+                                                cursor: pointer;
+                                        }
+                                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .dot.active,
+                                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .dot.active {
+                                                background-color: '. $accent_color .';
+                                        }   
+                                </style>';
+
+                                $userAgent = $_SERVER['HTTP_USER_AGENT'];
+                                if (strpos($userAgent, 'iPhone') !== false || strpos($userAgent, 'iPad') !== false || strpos($userAgent, 'Macintosh') !== false || strpos($userAgent, 'Mac OS X') !== false) {
+                                        $output .= '
+                                        <style>
+                                                .pwelement_'. $element_id .' .pwe-element-logotypes-slider .dots-container {
+                                                        margin-top: 72px !important;
+                                                }
+                                                #katalog-'. $element_id .' .pwe-element-logotypes-slider .dots-container {
+                                                        margin-top: 36px !important;
+                                                }      
+                                        </style>';
+                                }
+                                
+                                $output .= '
+                                <div class="dots-container">
+                                        <span class="dot active"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                </div>';
+                        }
+
+                $output .= '        
+                </div>';
                 return $output;
         }
 
@@ -101,24 +237,26 @@ class PWELogotypesSlider {
 
                 $output = '
                 <script>
-                        jQuery(function ($) {                         
+                        jQuery(function ($) {
                                 const slider = document.querySelector("#PWELogotypesSlider-'. $id_rnd .'");
-                                const slides = document.querySelector("#PWELogotypesSlider-'. $id_rnd .' .slides");
-                                const images = document.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' .slides div");
+                                const slides = slider.querySelector(".slides");
+                                const images = slider.querySelectorAll(".slides div");
+                                const dotsContainer = slider.querySelector(".dots-container");
+                                const dots = slider.querySelectorAll(".dots-container .dot");
+                                const links = slider.querySelectorAll("a");
 
-                                const links = document.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' a");
                                 links.forEach(link => {
                                         link.addEventListener("mousedown", (e) => {
-                                        e.preventDefault();
+                                                e.preventDefault();
                                         });
                                 });
 
                                 let isMouseOver = false;
                                 let isDragging = false;
-                                
+
                                 let imagesMulti = "";
                                 const slidesWidth = slides.clientWidth;
-                                
+
                                 if (slidesWidth < 400) {
                                         imagesMulti = 2;
                                 } else if (slidesWidth < 600) {
@@ -128,14 +266,13 @@ class PWELogotypesSlider {
                                 } else {
                                         imagesMulti = 7;
                                 }
-                                
-                                if(imagesMulti >=  '. $media_url_count .'){
-                                        $("#PWELogotypesSlider-'. $id_rnd .' .slides").each(function(){
+
+                                if (imagesMulti >= '. $media_url_count .') {
+                                        $("#PWELogotypesSlider-'. $id_rnd .' .slides").each(function () {
                                                 $(this).css("justify-content", "center");
-                                                if ($(this).children().length > '. $media_url_count .'){
+                                                if ($(this).children().length > '. $media_url_count .') {
                                                         $(this).children().slice('. $media_url_count .').remove();
                                                 };
-
                                         });
                                         const imageWidth = Math.floor((slidesWidth - imagesMulti * 10) / imagesMulti);
                                         images.forEach((image) => {
@@ -148,40 +285,67 @@ class PWELogotypesSlider {
                                                 image.style.minWidth = imageWidth + "px";
                                                 image.style.maxWidth = imageWidth + "px";
                                         });
-                                        const slidesTransform =  (imageWidth + 10) * '. $min_image_adjusted .';
+                                        const slidesTransform = (imageWidth + 10) * '. $min_image_adjusted .';
 
                                         slides.style.transform = `translateX(-${slidesTransform}px)`;
 
+                                        if (dotsContainer) {
+                                                dotsContainer.style.display = "block";
+                                        }
+
                                         function nextSlide() {
-                                                slides.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' .image-container").forEach(function(image){
+                                                slides.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' .image-container").forEach(function (image) {
                                                         image.classList.add("slide");
-                                                })
-                                                slides.firstChild.classList.add("first-slide");
-                                                const firstSlide = slides.querySelector(".first-slide");  
+                                                });
 
-                                                slides.appendChild(firstSlide);
+                                                const firstSlide = slides.firstElementChild;
+                                                if (firstSlide) {
+                                                        firstSlide.classList.add("first-slide");
 
-                                                firstSlide.classList.remove("first-slide");
+                                                        // Przesuwamy pierwszy slajd na koniec
+                                                        slides.appendChild(firstSlide);
 
-                                                setTimeout(function() {
-                                                        slides.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' .image-container").forEach(function(image){
+                                                        setTimeout(() => {
+                                                        firstSlide.classList.remove("first-slide");
+                                                        }, '. ($slide_speed / 2) .');
+                                                }
+
+                                                // Usuwamy klasę "slide" ze wszystkich obrazów po określonym czasie
+                                                setTimeout(function () {
+                                                        slides.querySelectorAll("#PWELogotypesSlider-'. $id_rnd .' .image-container").forEach(function (image) {
                                                                 image.classList.remove("slide");
-                                                        })
+                                                        });
                                                 }, '. ($slide_speed / 2) .');
-                                        }                       
 
-                                        slider.addEventListener("mousemove", function() {
+                                                updateCurrentSlide(1);
+                                                
+                                        }
+
+
+                                        slider.addEventListener("mouseenter", function () {
                                                 isMouseOver = true;
                                         });
-                                        
-                                        slider.addEventListener("mouseleave", function() {
+
+                                        slider.addEventListener("mouseleave", function () {
                                                 isMouseOver = false;
                                         });
 
                                         let isDown = false;
                                         let startX;
-                                        let startY;
                                         let slideMove = 0;
+                                        let currentSlide = 0;
+
+                                        function updateDots() {
+                                                if (dots[currentSlide]) {
+                                                        dots.forEach(dot => dot.classList.remove("active"));
+                                                        dots[currentSlide].classList.add("active");
+                                                }
+                                        }
+
+                                        function updateCurrentSlide(delta) {
+                                                currentSlide = (currentSlide + delta + dots.length) % dots.length;
+                                                updateDots();
+                                        }
 
                                         slider.addEventListener("mousedown", (e) => {
                                                 isDown = true;
@@ -208,7 +372,7 @@ class PWELogotypesSlider {
                                                 e.preventDefault();
                                                 let preventDefaultNextTime = true;
 
-                                                $(e.target).parent().on("click", function(event) {
+                                                $(e.target).parent().on("click", function (event) {
                                                         if (preventDefaultNextTime) {
                                                                 event.preventDefault();
                                                                 preventDefaultNextTime = true;
@@ -231,7 +395,6 @@ class PWELogotypesSlider {
                                                 isDown = true;
                                                 slider.classList.add("active");
                                                 startX = e.touches[0].pageX - slider.offsetLeft;
-                                                startY = e.touches[0].pageY;
                                         });
 
                                         slider.addEventListener("touchend", () => {
@@ -243,46 +406,50 @@ class PWELogotypesSlider {
 
                                         slider.addEventListener("touchmove", (e) => {
                                                 if (!isDown) return;
-                                        
-                                                if (!e.cancelable) return; // Dodajemy ten warunek, aby uniknąć błędu
-                                        
+                                                if (!e.cancelable) return;
+
                                                 const x = e.touches[0].pageX - slider.offsetLeft;
-                                                const y = e.touches[0].pageY;
                                                 const walk = (x - startX);
-                                                const verticalDiff = Math.abs(y - startY);
-                                        
-                                                if (Math.abs(walk) > verticalDiff) { // Tylko jeśli ruch poziomy jest większy niż pionowy
-                                                e.preventDefault();
-                                                const transformWalk = slidesTransform - walk;
-                                                slides.style.transform = `translateX(-${transformWalk}px)`;
+                                                slides.style.transform = `translateX(-${slidesTransform - walk}px)`;
                                                 slideMove = (walk / imageWidth);
-                                                }
                                         });
-                                        
+
                                         const resetSlider = (slideWalk) => {
                                                 const slidesMove = Math.abs(Math.round(slideWalk));
-                                                for(i = 0; i< slidesMove; i++){
-                                                        if(slideWalk > 0){
-                                                                slides.lastChild.classList.add("last-slide");
-                                                                const lastSlide = slides.querySelector(".last-slide");  
-                                                                slides.insertBefore(lastSlide, slides.firstChild);
-                                                                lastSlide.classList.remove("last-slide");
+                                                for (let i = 0; i < slidesMove; i++) {
+                                                        if (slideWalk > 0) {
+                                                                const lastSlide = slides.lastElementChild;
+                                                                if (lastSlide) {
+                                                                        lastSlide.classList.add("last-slide");
+                                                                        slides.insertBefore(lastSlide, slides.firstChild);
+                                                                        lastSlide.classList.remove("last-slide");
+                                                                        
+                                                                        updateCurrentSlide(1);
+                                                                        
+                                                                }
                                                         } else {
-                                                                slides.firstChild.classList.add("first-slide");
-                                                                const firstSlide = slides.querySelector(".first-slide");  
-                                                                slides.appendChild(firstSlide);
-                                                                firstSlide.classList.remove("first-slide");
+                                                                const firstSlide = slides.firstElementChild;
+                                                                if (firstSlide) {
+                                                                        firstSlide.classList.add("first-slide");
+                                                                        slides.appendChild(firstSlide);
+                                                                        firstSlide.classList.remove("first-slide");
+                                                                       
+                                                                        updateCurrentSlide(1);
+                                                                        
+                                                                }
                                                         }
                                                 }
                                                 slides.style.transform = `translateX(-${slidesTransform}px)`;
                                         }
-                                        setInterval(function() {
-                                                if(!isMouseOver) { 
-                                                        nextSlide()
+
+                                        setInterval(function () {
+                                                if (!isMouseOver) {
+                                                        nextSlide();
                                                 }
                                         }, '. $slide_speed .');
                                 }
-                        });                 
+                                });
+                 
                 </script>'; 
                 return $output;
         }
@@ -294,7 +461,7 @@ class PWELogotypesSlider {
          * @param int $slide_speed Speed of the slide transition.
          * @return string The HTML output for the slider.
          */
-        public static function sliderOutput($media_url, $slide_speed = 3000) {
+        public static function sliderOutput($media_url, $slide_speed = 3000, $images_options = "") {
 
                 /*Random "id" if there is more than one element on page*/  
                 $id_rnd = rand(10000, 99999);
@@ -308,10 +475,13 @@ class PWELogotypesSlider {
                     $min_image = -count($media_url);
                 }
             
-                $output = self::createDOM($id_rnd, $media_url, $min_image, $max_image);
+                $output = self::createDOM($id_rnd, $media_url, $min_image, $max_image, $images_options);
             
                 $output .= self::generateScript($id_rnd, $media_url, $min_image, $slide_speed);
             
                 return $output;
         }
 } 
+
+
+
