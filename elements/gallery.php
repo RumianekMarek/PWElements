@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementHomeGallery
@@ -17,7 +17,7 @@ class PWElementHomeGallery extends PWElements {
 
         self::$countdown_rnd_id = rand(10000, 99999);
         self::$today_date = new DateTime();
-        
+
         require_once plugin_dir_path(__FILE__) . 'countdown.php';
     }
 
@@ -28,12 +28,58 @@ class PWElementHomeGallery extends PWElements {
     public static function initElements() {
         $element_output = array(
             array(
+                'type' => 'dropdown',
+                'heading' => __('Select link color <a href="#" onclick="yourFunction(`link_color_manual_hidden`, `link_color`)">Hex</a>', 'pwelement'),
+                'param_name' => 'link_color',
+                'param_holder_class' => 'main-options',
+                'description' => __('Select link color for the element.', 'pwelement'),
+                'value' => self::$fair_colors,
+                'dependency' => array(
+                    'element' => 'link_color_manual_hidden',
+                    'value' => array(''),
+                    'callback' => "hideEmptyElem",
+                ),
+                'save_always' => true,
+            ),
+            array(
+                'type' => 'textfield',
+                'heading' => __('Write link color <a href="#" onclick="yourFunction(`link_color`, `link_color_manual_hidden`)">Pallet</a>', 'pwelement'),
+                'param_name' => 'link_color_manual_hidden',
+                'param_holder_class' => 'main-options pwe_dependent-hidden',
+                'description' => __('Write hex number for link color for the element.', 'pwelement'),
+                'value' => '',
+                'save_always' => true,
+            ),
+            array(
+                'type' => 'dropdown',
+                'heading' => __('Select link hover color <a href="#" onclick="yourFunction(`link_hover_color_manual_hidden`, `link_hover_color`)">Hex</a>', 'pwelement'),
+                'param_name' => 'link_hover_color',
+                'param_holder_class' => 'main-options',
+                'description' => __('Select link hover color for the element.', 'pwelement'),
+                'value' => self::$fair_colors,
+                'dependency' => array(
+                    'element' => 'link_hover_color_manual_hidden',
+                    'value' => array(''),
+                    'callback' => "hideEmptyElem",
+                ),
+                'save_always' => true,
+            ),
+            array(
+                'type' => 'textfield',
+                'heading' => __('Write link hover color <a href="#" onclick="yourFunction(`link_hover_color`, `link_hover_color_manual_hidden`)">Pallet</a>', 'pwelement'),
+                'param_name' => 'link_hover_color_manual_hidden',
+                'param_holder_class' => 'main-options pwe_dependent-hidden',
+                'description' => __('Write hex number for link hover color for the element.', 'pwelement'),
+                'value' => '',
+                'save_always' => true,
+            ),            
+            array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Header text', 'pwelement'),
                 'param_name' => 'header_text',
                 'description' => __('Set up a pwe hader text'),
-                'param_holder_class' => 'backend-textfield',
+                'param_holder_class' => 'backend-area-one-third-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -47,7 +93,7 @@ class PWElementHomeGallery extends PWElements {
                 'heading' => __('Registration button text', 'pwelement'),
                 'param_name' => 'button_text',
                 'description' => __('Set up a pwe button text'),
-                'param_holder_class' => 'backend-textfield',
+                'param_holder_class' => 'backend-area-one-third-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -61,7 +107,7 @@ class PWElementHomeGallery extends PWElements {
                 'heading' => __('Registration button URL', 'pwelement'),
                 'param_name' => 'button_url',
                 'description' => __('Set up a pwe button url'),
-                'param_holder_class' => 'backend-textfield',
+                'param_holder_class' => 'backend-area-one-third-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -75,7 +121,7 @@ class PWElementHomeGallery extends PWElements {
                 'heading' => __('Text for desktop', 'pwelement'),
                 'param_name' => 'desktop_text',
                 'description' => __('Set up a pwe desktop description'),
-                'param_holder_class' => 'backend-textarea',
+                'param_holder_class' => 'backend-textarea-raw-html backend-area-one-fourth-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -89,7 +135,7 @@ class PWElementHomeGallery extends PWElements {
                 'heading' => __('Text for mobile', 'pwelement'),
                 'param_name' => 'mobile_text',
                 'description' => __('Set up a pwe mobile description'),
-                'param_holder_class' => 'backend-textarea',
+                'param_holder_class' => 'backend-textarea-raw-html backend-area-one-fourth-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -98,12 +144,36 @@ class PWElementHomeGallery extends PWElements {
                 'admin_label' => true
             ),
             array(
+                'type' => 'textarea_raw_html',
+                'group' => 'PWE Element',
+                'heading' => __('HTML Text', 'pwelement'),
+                'param_name' => 'gallery_html_text',
+                'param_holder_class' => 'backend-textarea-raw-html backend-area-one-fourth-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementHomeGallery',
+                ),
+            ),
+            array(
+                'type' => 'textarea_raw_html',
+                'group' => 'PWE Element',
+                'heading' => __('HTML Text Hidden', 'pwelement'),
+                'param_name' => 'gallery_html_text_hidden',
+                'param_holder_class' => 'backend-textarea-raw-html backend-area-one-fourth-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementHomeGallery',
+                ),
+            ),
+            array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
                 'heading' => __('Hide Button', 'pwelement'),
                 'param_name' => 'hide_button',
                 'description' => __('Turn on to hide registration button'),
-                'param_holder_class' => 'backend-basic-checkbox',
+                'param_holder_class' => 'backend-basic-checkbox backend-area-one-fourth-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -117,7 +187,7 @@ class PWElementHomeGallery extends PWElements {
                 'heading' => __('Add timer', 'pwelement'),
                 'param_name' => 'add_timer',
                 'description' => __('Add countdown timer to element'),
-                'param_holder_class' => 'backend-basic-checkbox',
+                'param_holder_class' => 'backend-basic-checkbox backend-area-one-fourth-width',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementHomeGallery',
@@ -128,23 +198,9 @@ class PWElementHomeGallery extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('6 thumbnails', 'pwelement'),
-                'param_name' => 'gallery_thumbnails_more',
-                'admin_label' => true,
-                'save_always' => true,
-                'value' => array(__('True', 'pwelement') => 'true',),
-                'dependency' => array(
-                    'element' => 'pwe_element',
-                    'value' => 'PWElementHomeGallery',
-                ),
-                'save_always' => true,
-                'admin_label' => true
-            ),
-            array(
-                'type' => 'checkbox',
-                'group' => 'PWE Element',
-                'heading' => __('New', 'pwelement'),
+                'heading' => __('Conference', 'pwelement'),
                 'param_name' => 'gallery_new',
+                'param_holder_class' => 'backend-basic-checkbox backend-area-one-fourth-width',
                 'description' => __('New visual'),
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -159,7 +215,7 @@ class PWElementHomeGallery extends PWElements {
 
     /**
      * Static private method to remove from JS out of date timer variables.
-     *      * 
+     *      *
      * @param array @right_date array off only new timers
      */
     private static function mainText() {
@@ -189,72 +245,74 @@ class PWElementHomeGallery extends PWElements {
      * @param array @right_date array off only new timers
      */
     public static function output($atts, $content = '') {
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important';
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
-        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], $btn_color);
 
-        $gallery_title = ($atts['header_text'] != '') ? $atts['header_text'] : self::languageChecker('[trade_fair_desc]','[trade_fair_desc_eng]');
+        $link_color = self::findColor($atts['link_color_manual_hidden'], $atts['link_color'], self::$main2_color) . '!important';
+        $link_hover_color = self::findColor($atts['link_hover_color_manual_hidden'], $atts['link_hover_color'], self::$accent_color) . '!important';
+
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
+        $darker_main2_btn_color = self::adjustBrightness(self::$main2_color, -20);
+        $darker_light_btn_color = self::adjustBrightness('#ffffff', -30);
+
+        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
         extract( shortcode_atts( array(
-            'gallery_thumbnails_more' => '',
             'gallery_new' => '',
+            'mobile_text' => '',
+            'desktop_text' => '',
+            'gallery_html_text' => '',
+            'gallery_html_text_hidden' => '',
         ), $atts ));
 
         if(self::checkForMobile()){
-            $gallery_text = ($atts['mobile_text'] != '') ? $atts['mobile_text'] : self::mainText();
+            $gallery_text = ($mobile_text != '') ? $mobile_text : self::mainText();
         } else {
-            $gallery_text = ($atts['desktop_text'] != '') ? $atts['desktop_text'] : self::mainText();
+            $gallery_text = ($desktop_text != '') ? $desktop_text : self::mainText();
+        }
+
+        $gallery_html_text_decoded = base64_decode($gallery_html_text);
+        $gallery_html_text_decoded = urldecode($gallery_html_text_decoded);
+        $gallery_html_text_content = wpb_js_remove_wpautop($gallery_html_text_decoded, true);
+
+        $gallery_html_text_hidden_decoded = base64_decode($gallery_html_text_hidden);
+        $gallery_html_text_hidden_decoded = urldecode($gallery_html_text_hidden_decoded);
+        $gallery_html_text_hidden_content = wpb_js_remove_wpautop($gallery_html_text_hidden_decoded, true);
+
+        if ($gallery_new != true) {
+            $btn_gallery_text = ($atts['button_text'] != '')
+            ? $atts['button_text']
+            : self::languageChecker(
+                <<<PL
+                Weź udział
+                PL,
+                <<<EN
+                Take a part
+                EN
+            );
+        } else {
+            $btn_gallery_text = ($atts['button_text'] != '')
+            ? $atts['button_text']
+            : self::languageChecker(
+                <<<PL
+                Sprawdź program
+                PL,
+                <<<EN
+                Check the program
+                EN
+            );
         }
 
         if ($gallery_new != true) {
-            $btn_gallery_text = ($atts['button_text'] != '') 
-            ? $atts['button_text'] 
-            : self::languageChecker(
-                <<<PL
-                Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
-                PL,
-                <<<EN
-                Register<span style="display: block; font-weight: 300;">Get a free ticket</span>
-                EN    
-            );
+            $gallery_title = ($atts['header_text'] != '') ? $atts['header_text'] : self::languageChecker('[trade_fair_desc]','[trade_fair_desc_eng]');
+            $btn_gallery_url = ($atts['button_url'] != '') ? $atts['button_url'] : self::languageChecker('/rejestracja/', '/en/registration/');
         } else {
-            $btn_gallery_text = ($atts['button_text'] != '') 
-            ? $atts['button_text'] 
-            : self::languageChecker(
-                <<<PL
-                Zarejestruj swój udział
-                PL,
-                <<<EN
-                Register your participation
-                EN    
-            );
+            $gallery_title = ($atts['header_text'] != '') ? $atts['header_text'] : self::languageChecker('[trade_fair_conferance]','[trade_fair_conferance_eng]');
+            $btn_gallery_url = ($atts['button_url'] != '') ? $atts['button_url'] : self::languageChecker('#program', '#program');
         }
-
-        // Function to change color brightness (taking color in hex format)
-        function adjustBrightness($hex, $steps) {
-            // Convert hex to RGB
-            $hex = str_replace('#', '', $hex);
-            $r = hexdec(substr($hex, 0, 2));
-            $g = hexdec(substr($hex, 2, 2));
-            $b = hexdec(substr($hex, 4, 2));
-
-            // Shift RGB values
-            $r = max(0, min(255, $r + $steps));
-            $g = max(0, min(255, $g + $steps));
-            $b = max(0, min(255, $b + $steps));
-
-            // Convert RGB back to hex
-            return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT)
-                    . str_pad(dechex($g), 2, '0', STR_PAD_LEFT)
-                    . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-        }
-
-        // Change brightness using adjustBrightness
-        $darker_btn_color = adjustBrightness($btn_color, -20);
-    
-        $btn_gallery_url = ($atts['button_text'] != '') ? $atts['button_text'] : self::languageChecker('/rejestracja/', '/en/registration/');
+        $gallery_title = str_replace(array('`{`', '`}`'), array('[', ']'), $gallery_title);
 
         $all_images = ($gallery_thumbnails_more == 'true') ? self::findAllImages('/doc/galeria/mini', 6) : self::findAllImages('/doc/galeria/mini', 4);
 
@@ -262,169 +320,286 @@ class PWElementHomeGallery extends PWElements {
 
         $output .= '
             <style>
-            .pwelement_'. self::$rnd_id .' .pwe-btn {
-                color: #ffffff;
-                background-color: #000000;
-                border: 1px solid #000000;
-                box-shadow: 9px 9px 0px -5px white;
-                margin: auto 0; 
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
-                color: #000000 !important;
-                background-color: #ffffff !important;
-                border: 1px solid #000000 !important;
-            }
-            .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-gallery) {
-                background: ' . self::$accent_color . ';
-                max-width: 100%;
-                padding: 0 !important;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-wrapper {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 36px;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                gap: 36px;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper, .pwe-gallery-desc-wrapper{
-                width: 50%;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc {
-                background-color: #eaeaea;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container, 
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper .pwe-btn-container {
-                display: flex;
-                justify-content: left;
-                text-align: center;
-            } 
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top, 
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom {
-                display: flex;
-                flex-wrap: wrap;
-                width: 100%;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top img, 
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom img {
-                width: 50%;
-                padding: 5px;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content .pwe-link {
-                color: '. $btn_text_color .' !important;
-                background-color: '. $btn_color .' !important;
-                border: 1px solid '. $btn_border .' !important;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content .pwe-link:hover {
-                color: '. $btn_text_color .' !important;
-                background-color: '. $darker_btn_color .' !important;
-                border: 1px solid '. $darker_btn_color .' !important;
-            }
-            @media (max-width: 960px) {
+                .pwelement_'. self::$rnd_id .' .pwe-btn-black {
+                    border-radius: 10px;
+                    color: #ffffff;
+                    background-color: '. self::$main2_color .';
+                    border: 1px solid '. self::$main2_color .';
+                    margin: auto 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn-white {
+                    border-radius: 10px;
+                    color: black;
+                    background-color: white;
+                    border: 1px solid white;
+                    margin: auto 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn-black:hover {
+                    color: '. $btn_text_color .'!important;
+                    background-color: '. $darker_main2_btn_color .'!important;
+                    border: 1px solid '. $darker_main2_btn_color .'!important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn-white:hover {
+                    color: black !important;
+                    background-color: '. $darker_light_btn_color .' !important;
+                    border: 1px solid '. $darker_light_btn_color .' !important;
+                }
+                .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-gallery) {
+                    background: ' . self::$accent_color . ';
+                    max-width: 100%;
+                    padding: 0 !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-wrapper {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 18px 36px 72px;
+                }
+
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    gap: 36px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper, .pwe-gallery-desc-wrapper{
+                    width: 50%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs {
+                    display: flex;
                     flex-direction: column;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper {
                     width: 100%;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper {
-                    width: 100%;
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc {
+                    background-color: #eaeaea;
                 }
-            }
-            @media (max-width: 500px) {
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container, 
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container,
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper .pwe-btn-container {
+                    display: flex;
+                    justify-content: left;
+                    text-align: center;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top,
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom {
+                    display: flex;
+                    flex-wrap: wrap;
+                    width: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top img,
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom img {
+                    width: 50%;
+                    padding: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content h3,
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content h3 p {
+                    font-size: 21px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content .pwe-link {
+                    color: '. $btn_text_color .' !important;
+                    background-color: '. $btn_color .' !important;
+                    border: 1px solid '. $btn_border .' !important;
+                    transform: none !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-link {
+                    transform: none !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content .pwe-link:hover {
+                    color: '. $btn_text_color .' !important;
+                    background-color: '. $darker_btn_color .' !important;
+                    border: 1px solid '. $darker_btn_color .' !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-see-more,
+                .pwelement_'. self::$rnd_id .' .pwe-hidden-content p {
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-paragraph {
+                    margin-top: 12px !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-paragraph  p {
+                    display:inline !important;
+                }
+                .pwelement_'. self::$rnd_id .' #pweGallery .pwe-gallery-desc-paragraph  a {
+                    color: '. $link_color .';
+                } 
+                .pwelement_'. self::$rnd_id .' #pweGallery .pwe-gallery-desc-paragraph  a:hover {
+                    color: '. $link_hover_color .';
+                } 
+                .pwelement_'. self::$rnd_id .' .pwe-btn-box {
+                    margin-top: 8px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
                     justify-content: center;
                 }
-            }
+                .pwelement_'. self::$rnd_id .' .pwe-btn-container {
+                    padding-top: 0 !important;
+                }   
+                @media (max-width: 960px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
+                        flex-direction: column;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper {
+                        width: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper {
+                        width: 100%;
+                    }
+                }
+                @media (max-width: 600px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top .mini-img:nth-of-type(2),
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom .mini-img:nth-of-type(1),
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom .mini-img:nth-of-type(2) {
+                        display: none;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top  .mini-img {
+                        width: 90% !important;
+                        margin:0 auto;
+                    }
+                }
+                @media (max-width: 500px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
+                        margin: -20px 0;
+                    }
+
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container,
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper .pwe-btn-container {
+                        justify-content: center;
+                    }
+                }
             </style>';
 
             if ($gallery_new == true) {
                 $output .= '
-                    <style>
-                    .pwelement_'. self::$rnd_id .' .gallery-link-btn .pwe-link {
-                        background-color: rgba(255, 255, 255, 0.3) !important;
-                        box-shadow: unset !important;
-                        color: '. $btn_text_color .' !important;
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-btn-box {
+                        justify-content: start;
                     }
-                    .pwelement_'. self::$rnd_id .' .gallery-link-btn .pwe-link:hover {
-                        background-color: rgba(255, 255, 255, 0.2) !important;
-                        color: #ffffff !important;
+                    @media (max-width: 960px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-btn-box {
+                            justify-content: center;
+                        }
                     }
-                    </style>
-                ';
+                </style>';
             }
 
             $output .= '
             <div id="pweGallery" class="pwe-container-gallery style-accent-bg">
-                <div class="pwe-gallery-wrapper double-bottom-padding single-top-padding">
+                <div class="pwe-gallery-wrapper">
                     <div class="pwe-row-border">
                         <div class="pwe-box-top-left-white"></div>
                     </div>
                     <div class="pwe-gallery-section">
                         <div class="pwe-gallery-thumbs-wrapper">
-                            <div class="pwe-gallery-thumbs">
-                                <div class="pwe-gallery-thumbs-top">
-                                    <img class="mini-img" src="' . $all_images[0] . '" alt="mini galery picture">   
-                                    <img class="mini-img" src="' . $all_images[1] . '" alt="mini galery picture">   
-                                </div>
-                                <div class="pwe-gallery-thumbs-bottom">';
-                                    if ($gallery_thumbnails_more == 'true') {
-                                        $output .='
-                                            <img class="mini-img" src="' . $all_images[2] . '" alt="mini galery picture">
-                                            <img class="mini-img" src="' . $all_images[3] . '" alt="mini galery picture"> 
-                                            <img class="mini-img" src="' . $all_images[4] . '" alt="mini galery picture">
-                                            <img class="mini-img" src="' . $all_images[5] . '" alt="mini galery picture">';
-                                    } else {
-                                        $output .='
-                                            <img class="mini-img" src="' . $all_images[2] . '" alt="mini galery picture">
-                                            <img class="mini-img" src="' . $all_images[3] . '" alt="mini galery picture">';
+                            <div class="pwe-gallery-thumbs">';
+                                if (!$mobile) {
+                                    $output .= '
+                                    <div class="pwe-gallery-thumbs-top">
+                                        <img class="mini-img" src="' . $all_images[0] . '" alt="mini galery picture">
+                                        <img class="mini-img" src="' . $all_images[1] . '" alt="mini galery picture">
+                                    </div>
+                                    <div class="pwe-gallery-thumbs-bottom">
+                                        <img class="mini-img" src="' . $all_images[2] . '" alt="mini galery picture">
+                                        <img class="mini-img" src="' . $all_images[3] . '" alt="mini galery picture">
+                                    </div>';
+                                } else {
+                                    $src_mini = array_slice($all_images, 0, 4);
+                                    $images_url = array();
+                                    foreach ($src_mini as $image) {
+
+                                        $images_url[] = array(
+                                            "src_mini" => $image,
+                                        );
                                     }
-                                    $output .='
-                                </div>
+                                    
+                                    include_once plugin_dir_path(__FILE__) . '/../scripts/gallery-slider.php';
+                                    $output .= PWEMediaGallerySlider::sliderOutput($images_url);
+                                }                               
+                            $output .= '
+                            </div>
+                            <div class="pwe-btn-box">';
+
+                            if ($gallery_hidden_buttons != true) {
+                                if ($gallery_new != true) {
+                                    if($mobile){
+                                        $output .= '
+                                        <span class="pwe-btn-container gallery-link-btn">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                    <a class="pwe-link btn pwe-btn pwe-btn-black" href="/#profil-wystawcy" alt="link do galerii">Profil Wystawcy</a>
+                                                PL,
+                                                <<<EN
+                                                    <a class="pwe-link btn pwe-btn pwe-btn-black" href="/en/#profil-wystawcy" alt="link to gallery">Exhibitor Profile</a>
+                                                EN
+                                            )
+                                        .'</span>';
+                                    }
+                                    $output .= '
                                     <span class="pwe-btn-container gallery-link-btn">'.
                                         self::languageChecker(
                                             <<<PL
-                                                <a class="pwe-link btn pwe-btn" href="/galeria/" alt="link do galerii">Przejdź do galerii</a>
+                                                <a class="pwe-link btn pwe-btn pwe-btn-white" href="/#zakres-branzowy" alt="link do galerii">Zakres branżowy</a>
                                             PL,
                                             <<<EN
-                                                <a class="pwe-link btn pwe-btn" href="/en/gallery/" alt="link to gallery">Go to gallery</a>
+                                                <a class="pwe-link btn pwe-btn pwe-btn-white" href="/en/#zakres-branzowy" alt="link to gallery">Industry scope</a>
                                             EN
                                         )
+                                    .'</span>';
+                                }
+                            }
+                            $output .= '
+                                <span class="pwe-btn-container gallery-link-btn">'.
+                                    self::languageChecker(
+                                        <<<PL
+                                            <a class="pwe-link btn pwe-btn pwe-btn-black" href="/galeria/" alt="link do galerii">Przejdź do galerii</a>
+                                        PL,
+                                        <<<EN
+                                            <a class="pwe-link btn pwe-btn pwe-btn-black" href="/en/gallery/" alt="link to gallery">Go to gallery</a>
+                                        EN
+                                    )
                                 .'</span>
                             </div>
-                        </div>
-            
+                        </div>';
+
+                        $output .= '
                         <div class="pwe-gallery-desc-wrapper">
                             <div class="pwe-gallery-desc shadow-black">
                                 <div class="pwe-gallery-desc-content single-block-padding pwe-align-left">
-                                    <h3 style="margin: 0;"> ' .$gallery_title . ' </h3>
-                                    <p>' . $gallery_text . '</p>';
+                                    <h3 style="margin: 0;"> '. wpb_js_remove_wpautop($gallery_title, true) .' </h3>
+                                    <div class="pwe-gallery-desc-paragraph">';
+
+                                        if (!empty($gallery_html_text_content)) {
+                                            $output .= '' . $gallery_html_text_content . '';
+                                            if (!empty($gallery_html_text_hidden_content)) {
+                                                $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                                                $output .= '
+                                                    <span class="pwe-hidden-content" style="display: none; color: '. $text_color .';">' . $gallery_html_text_hidden_content . '</span>
+                                                    <div class="pwe-see-more" style="cursor: pointer; color: '. $text_color .';">' . $showMore . '</div>';
+                                            }
+                                        } else {
+                                            $output .= '<p>' . $gallery_text . '</p>';
+                                        }
+
+                                    $output .= '
+                                    </div>';
+
                                     if ($atts['hide_button'] != 'true') {
                                         $output .= '<span class="pwe-btn-container register-link-btn">
-                                                        <a style="margin-top: 18px;" class="pwe-link btn shadow-black" href="' . $btn_gallery_url . '" alt="link do rejestracji">' . $btn_gallery_text . '</a>
+                                                        <a style="margin-top: 18px;" class="pwe-link pwe-btn btn" href="' . $btn_gallery_url . '" alt="link do rejestracji">' . $btn_gallery_text . '</a>
                                                     </span>';
                                     }
+
                                 $output .= '
-                                </div>
-                            </div>';
-                            
+                                    </div>
+                                </div>';
+
                             if($atts['add_timer']){
                                 $output .='<div class="uncode-wrapper uncode-countdown timer-countdown" id="timerToGallery">';
-                                    $output .= PWElementMainCountdown::output($atts);
+                                $output .= PWElementMainCountdown::output($atts);
                                 $output .= '</div>';
                             }
-                            
-                            $output .= '</div>
+
+                        $output .= '
                         </div>
+                    </div>
                     <div class="pwe-row-border">
                         <div class="pwe-box-bottom-right-white"></div>
                     </div>

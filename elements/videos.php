@@ -31,11 +31,23 @@ class PWElementVideos extends PWElements {
                     'value' => 'PWElementVideos',
                 ),
               ),
-              array(
+            array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
                 'heading' => __('Opinions', 'pwelement'),
                 'param_name' => 'pwe_video_opinions',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementVideos',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Turn off slider', 'pwelement'),
+                'param_name' => 'pwe_videos_slider_off',
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
@@ -101,6 +113,7 @@ class PWElementVideos extends PWElements {
             'pwe_video_opinions' => '',
             'pwe_video_width' => '',
             'pwe_videos_iframe' => '',
+            'pwe_videos_slider_off' => ''
         ), $atts ));
 
         $videos_urldecode = urldecode($pwe_videos_iframe);
@@ -143,14 +156,19 @@ class PWElementVideos extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-video-item {
                     width: '. $pwe_video_width .';
+                    min-width: 300px;
                 }
-                .pwelement_'. self::$rnd_id .' iframe {
+                .pwelement_'. self::$rnd_id .' iframe,
+                .pwelement_'. self::$rnd_id .' .pwe-video-default {
                     box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
+                    width: 100%;
+                    height: auto;
+                    aspect-ratio: 16 / 9;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-video-item p {
                     font-size: 18px;
                 }
-                @media (max-width:960px) {
+                @media (max-width:650px) {
                     .pwelement_'. self::$rnd_id .' .pwe-videos {
                         flex-direction: column;
                     }
@@ -174,12 +192,6 @@ class PWElementVideos extends PWElements {
                         .pwelement_'. self::$rnd_id .' .pwe-video-item:has(.rll-youtube-player) .rll-youtube-player {
                             box-shadow: none !important;
                         }
-                        .pwelement_'. self::$rnd_id .' .pwe-video-item iframe {
-                            position: absolute;
-                            top: -50px;
-                            left: 0;
-                            height: 300px;             
-                        }
                         .pwelement_'. self::$rnd_id .' .pwe-video-item p {
                             font-size: 16px;
                         }
@@ -188,42 +200,83 @@ class PWElementVideos extends PWElements {
             }
 
             $output .= '
-
-
-            <div id="pweVideos" class="pwe-container-videos">
+            <div id="pweVideos-'. self::$rnd_id .'" class="pwe-container-videos">
                 <div class="pwe-videos-title main-heading-text">
                     <h4 class="pwe-uppercase"><span>'. $pwe_video_custom_title .'</span></h4>
                 </div>  
                 <div class="pwe-videos">';
-                    if (!empty($video_iframe)) {
-                        foreach ($videos_json as $video) {
-                            $video_title = $video["video_title"];
-                            $video_iframe = $video["video_iframe"];
 
-                            $output .= '<div class="pwe-video-item">'. $video_iframe .'<p>'. $video_title .'</p></div>';
+
+                    if (empty($video_iframe)) {
+                        if (get_locale() == 'pl_PL') {
+                            $video_titles = [
+                                "Ptak Warsaw Expo | 2023",
+                                "Stolica Targów i Eventów w Polsce - Ptak Warsaw Expo"
+                            ];
+                        } else {
+                            $video_titles = [
+                                "Ptak Warsaw Expo | 2023",
+                                "The capital of fairs and events in Poland - Ptak Warsaw Expo"
+                            ];
                         }
+                        $video_iframes = [
+                            '<iframe width="560" height="315" data-src="https://www.youtube.com/embed/TgHh38jvkAY?si=pc01x3a22VkL-qoh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+                            '<iframe width="560" height="315" data-src="https://www.youtube.com/embed/-RmRpZN1mHA?si=2QHfOrz0TUkNIJwP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+                        ];
                     } else {
-                        $output .= '<div class="pwe-video-item">
-                            <iframe width="560" height="315" data-src="https://www.youtube.com/embed/TgHh38jvkAY?si=pc01x3a22VkL-qoh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                            <p>Ptak Warsaw Expo | 2023</p>
-                        </div>';
-
-                        $output .= '<div class="pwe-video-item">
-                            <iframe width="560" height="315" data-src="https://www.youtube.com/embed/-RmRpZN1mHA?si=2QHfOrz0TUkNIJwP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                            <p>'. 
-                                self::languageChecker(
-                                    <<<PL
-                                    Stolica Targów i Eventów w Polsce - Ptak Warsaw Expo
-                                    PL,
-                                    <<<EN
-                                    The Capital of Fairs and Events in Poland - Ptak Warsaw Expo
-                                    EN
-                                )
-                            .'</p>
-                        </div>';
+                        foreach ($videos_json as $video) {
+                            $video_titles[] = $video["video_title"];
+                            $video_iframes[] = $video["video_iframe"];
+                        }
                     }
-        $output .= '</div>
-        </div>';
+
+                    if (!empty($video_iframes)) {
+                        foreach ($video_iframes as $index => $video_iframe) {
+                            $video_title = $video_titles[$index];
+
+                            // Extract src from iframe
+                            preg_match('/src="([^"]+)"/', $video_iframe, $match);
+                            $src = $match[1];
+
+                            // Extract the video ID from the URL
+                            preg_match('/embed\/([^?]+)/', $src, $match);
+                            $video_id = $match[1];
+
+                            $video_plug = 'https://i.ytimg.com/vi/' . $video_id . '/sddefault.jpg';
+                            $video_autoplay = ($pwe_videos_slider_off != true) ? '?autoplay=1' : '';
+                            $video_src = 'https://www.youtube.com/embed/' . $video_id . $video_autoplay;
+                            $video_iframe_html = '<iframe class="pwe-iframe" src="' . $video_src . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+                            $video_default_html = '<div class="pwe-video-default" style="background-image: url(' . $video_plug . ');">
+                                                        <img src="/wp-content/plugins/PWElements/media/youtube-button.webp" alt="youtube play button">
+                                                </div>';
+
+                            $iframes[] = array(
+                                "title" => $video_title,
+                                "iframe" => $video_iframe,
+                                "plug" => $video_plug,
+                                "id" => $video_id,
+                                "src" => $video_src,
+                                "html" => $video_iframe_html,
+                                "default" => $video_default_html
+                            );
+
+                            if ($pwe_videos_slider_off == true) {
+                                $output .= '<div class="pwe-video-item">' . $video_iframe_html . '<p>' . $video_title . '</p></div>';
+                            }
+                        }
+
+                        $options[] = array(
+                            "element_id" => self::$rnd_id,
+                        );
+
+                        if ($pwe_videos_slider_off != true) {
+                            include_once plugin_dir_path(__FILE__) . '/../scripts/iframes-slider.php';
+                            $output .= PWEIframesSlider::sliderOutput($iframes, 3000, $options);
+                        }
+                    }
+                $output .= '
+                </div>
+            </div>';
 
         return $output;
 

@@ -220,7 +220,7 @@ class PWElementTicket extends PWElements {
             $ticket_button = !empty($ticket_button) ? $ticket_button : "Kup " . strtolower($ticket_title) . "!";
         } else {
             $ticket_placeholder = !empty($ticket_placeholder) ? $ticket_placeholder : "Ticket available only online";
-            $ticket_button = !empty($ticket_button) ? $ticket_button : "Kup " . strtolower($ticket_title) . "!";
+            $ticket_button = !empty($ticket_button) ? $ticket_button : "Buy a " . strtolower($ticket_title) . "!";
         }
         
         
@@ -242,6 +242,7 @@ class PWElementTicket extends PWElements {
                 if (strtotime($countdown_start) < $todayDate && $todayDate < strtotime($countdown_end)) {
                     $current_price = $new_price;
                     $old_price = '<span style="color: #044e9b; font-size: 30px; text-decoration: line-through; padding-right: 5px;">'. $ticket_price .'</span>';
+                    break;
                 } else if ($todayDate > strtotime($countdown_end)) {
                     $current_price = $ticket_price;
                 } else if ($todayDate < strtotime($countdown_start)) {

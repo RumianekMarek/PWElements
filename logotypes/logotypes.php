@@ -183,6 +183,21 @@ class PWELogotypes {
                             'save_always' => true,
                         ),
                         array(
+                            'type' => 'textfield',
+                            'group' => 'PWE Element',
+                            'heading' => esc_html__('Logotypes name', 'pwe_logotypes'),
+                            'param_name' => 'logotypes_name',
+                            'description' => __('Set custom name thumbnails', 'pwe_logotypes'),
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'checkbox',
+                            'group' => 'PWE Element',
+                            'heading' => __('Turn on captions', 'pwe_header'),
+                            'param_name' => 'logotypes_caption_on',
+                            'save_always' => true,
+                        ),
+                        array(
                             'type' => 'checkbox',
                             'group' => 'Aditional options',
                             'heading' => __('Logotypes white', 'pwe_logotypes'),
@@ -191,6 +206,27 @@ class PWELogotypes {
                             'admin_label' => true,
                             'save_always' => true,
                             'value' => array(__('True', 'pwe_logotypes') => 'true',),
+                        ),
+                        array(
+                            'type' => 'param_group',
+                            'group' => 'Replace Strings',
+                            'param_name' => 'pwe_replace',
+                            'params' => array(
+                                array(
+                                    'type' => 'textarea',
+                                    'heading' => __('Input HTML', 'pwelement'),
+                                    'param_name' => 'input_replace_html',
+                                    'save_always' => true,
+                                    'admin_label' => true
+                                ),
+                                array(
+                                    'type' => 'textarea',
+                                    'heading' => __('Output HTML', 'pwelement'),
+                                    'param_name' => 'output_replace_html',
+                                    'save_always' => true,
+                                    'admin_label' => true
+                                ),
+                            ),
                         ),
                         // Add additional options from class extends
                         ...PWElementAdditionalLogotypes::additionalArray(),
@@ -285,8 +321,22 @@ class PWELogotypes {
      */
     public function PWELogotypesOutput($atts, $content = null) {
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+
+        extract( shortcode_atts( array(
+            'pwe_replace' => '',
+        ), $atts ));
         
         $output = '';
+
+        // Replace strings
+        $pwe_replace_urldecode = urldecode($pwe_replace);
+        $pwe_replace_json = json_decode($pwe_replace_urldecode, true);
+        $input_replace_array_html = array();
+        $output_replace_array_html = array();
+        foreach ($pwe_replace_json as $replace_item) {
+            $input_replace_array_html[] = $replace_item["input_replace_html"];
+            $output_replace_array_html[] = $replace_item["output_replace_html"];
+        }
         
         // // Adding the result from additionalOutput to $output
         $output .= PWElementAdditionalLogotypes::additionalOutput($atts);
@@ -294,6 +344,10 @@ class PWELogotypes {
         $output = do_shortcode($output);
         
         $file_cont = '<div class="pwelement pwelement_'.SharedProperties::$rnd_id.'">' . $output . '</div>';
+
+        if ($input_replace_array_html && $output_replace_array_html) {
+            $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);
+        }
 
         return $file_cont;
     }

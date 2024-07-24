@@ -191,7 +191,7 @@ class PWElementContact extends PWElements {
                                         <<<EN
                                             Technical service of exhibitors<br>
                                         EN
-                                    );
+                                    ); 
                                 };
                                 $output .= '<a href="mailto:konsultanttechniczny@warsawexpo.eu"><span style="display:block;"> konsultanttechniczny</span><span style="display:block;">@warsawexpo.eu</span></a>
                             </p>

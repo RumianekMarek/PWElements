@@ -57,7 +57,13 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'zaproszenie.php';
         require_once plugin_dir_path(__FILE__) . 'ticket.php';
         require_once plugin_dir_path(__FILE__) . 'numbers.php';
-        // require_once plugin_dir_path(__FILE__) . 'confSection.php';
+        require_once plugin_dir_path(__FILE__) . 'confSection.php';
+        require_once plugin_dir_path(__FILE__) . 'confHeader.php'; 
+        require_once plugin_dir_path(__FILE__) . 'trends-panel.php';
+        require_once plugin_dir_path(__FILE__) . 'mapa.php'; 
+        require_once plugin_dir_path(__FILE__) . 'step2.php';
+        require_once plugin_dir_path(__FILE__) . 'pot_rej.php';
+        require_once plugin_dir_path(__FILE__) . 'pot_rej_wys.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -215,7 +221,12 @@ class PWElements {
                         ...PWElementXForm::initElements(),
                         ...PWElementTicket::initElements(),
                         ...PWElementNumbers::initElements(),
-                        // ...PWElementConfSection::initElements(),
+                        ...PWElementConfSection::initElements(),
+                        ...PWElementMapa::initElements(),
+                        ...PWElementHeaderConference::initElements(),
+                        ...PWElementPotwierdzenieRejestracji::initElements(),
+                        ...PWElementStepTwoExhibitor::initElements(),
+                        ...PWElementStepTwo::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -256,6 +267,8 @@ class PWElements {
             'Association'                    => 'PWElementAssociates',
             'Badge-Local'                    => 'PWBadgeElement',
             'Countdown'                      => 'PWElementMainCountdown',
+            'Conference Side Events'         => 'PWElementConfSideEvents',
+            'Conference Header'              => 'PWElementHeaderConference',
             'Dodaj do kalendarza'            => 'PWCallendarAddElement',
             'Dodaj do Apple Kalendarz'       => 'PWAppleCalendarElement',
             'Dodaj do Google Kalendarz'      => 'PWGoogleCalendarElement',
@@ -275,18 +288,24 @@ class PWElements {
             'Kontakt'                        => 'PWElementContact',
             'Liczby'                         => 'PWElementNumbers',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
+            'Mapa'                           => 'PWElementMapa',
             'Mapka dojazdu'                  => 'PWElementRoute',
             'Nie przegap'                    => 'PWElementDontMiss',
             'Organizator'                    => 'PWElementOrganizer',
+            'Panel trendów'                  => 'PWElementTrendsPanel',
             'Posts'                          => 'PWElementPosts',
+            'Potwierdzenie Rejestracji'      => 'PWElementPotwierdzenieRejestracji',
+            'Potwierdzenie Rejestracji Wystawcy' => 'PWElementStepTwoExhibitor',
             'Profile'                        => 'PWElementProfile',
             'Ramka Facebook'                 => 'PWElementSocials',
             'Registration'                   => 'PWElementRegistration',
             'Registration content'           => 'PWElementRegContent',
             'Sekcja konferencji'             => 'PWElementConfSection',
             'Sticky buttons'                 => 'PWElementStickyButtons',
+            'Step2'                          => 'PWElementStepTwo',
             'Ticket'                         => 'PWElementTicket',
             'Videos'                         => 'PWElementVideos',
+            'Visitors Timer'                 => 'PWElementVisitorsTimer',
             'Voucher'                        => 'PWElementVoucher',
             'Visitors Benefits'              => 'PWElementVisitorsBenefits',
             'Wydarzenia ogólne'              => 'PWElementConferences',
@@ -316,6 +335,8 @@ class PWElements {
             'PWOfficeCalendarElement'   => 'calendarOffice.php',
             'PWElementConfCallendar'    => 'confCalendar.php',
             'PWElementConfSection'      => 'confSection.php',
+            'PWElementHeaderConference' => 'confHeader.php',
+            'PWElementConfSideEvents'   => 'conf_side_events.php',
             'PWElementDonwload'         => 'download.php',
             'PWElementExhibitors'       => 'exhibitors-benefits.php',
             'PWElementFaq'              => 'faq.php',
@@ -324,6 +345,7 @@ class PWElements {
             'PWElementForVisitors'      => 'for-visitors.php',
             'PWElementGenerator'        => 'generator-wystawcow.php',
             'PWElementGroups'           => 'grupy.php',
+            'PWElementMapa'             => 'mapa.php',
             'PWElementOrgInfo'          => 'org-information.php',
             'PWElementContactInfo'      => 'kontakt-info.php',
             'PWElementContact'          => 'kontakt.php',
@@ -335,11 +357,16 @@ class PWElements {
             'PWElementDontMiss'         => 'niePrzegap.php',
             'PWElementOrganizer'        => 'organizator.php',
             'PWElementPosts'            => 'posts.php',
+            'PWElementPotwierdzenieRejestracji' => 'pot_rej.php',
             'PWElementProfile'          => 'profile.php',
             'PWElementSocials'          => 'socialMedia.php',
             'PWElementStickyButtons'    => 'sticky-buttons.php',
+            'PWElementStepTwo'          => 'step2.php',
+            'PWElementStepTwoExhibitor' => 'pot_rej_wys.php',
             'PWElementTicket'           => 'ticket.php',
+            'PWElementTrendsPanel'      => 'trends-panel.php',
             'PWElementVideos'           => 'videos.php',
+            'PWElementVisitorsTimer'    => 'visitors_timer.php',
             'PWElementVoucher'          => 'voucher.php',
             'PWElementVisitorsBenefits' => 'visitors-benefits.php',
             'PWElementConferences'      => 'wydarzenia-ogolne.php',
@@ -366,6 +393,17 @@ class PWElements {
         $js_file = plugins_url('js/script.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'js/script.js');
         wp_enqueue_script('pwelement-js', $js_file, array('jquery'), $js_version, true);
+        
+        $data_js_array = array(
+            'accent_color' => self::$accent_color,
+            'main2_color' => self::$main2_color,
+        );
+
+        // Exclusions JS
+        $exclusions_js_file = plugins_url('js/exclusions.js', __FILE__);
+        $exclusions_js_version = filemtime(plugin_dir_path(__FILE__) . 'js/exclusions.js');
+        wp_enqueue_script('exclusions-js', $exclusions_js_file, array('jquery'), $exclusions_js_version, true);
+        wp_localize_script( 'exclusions-js', 'data_js', $data_js_array ); 
     }
 
     /**
@@ -386,7 +424,7 @@ class PWElements {
      *
      * @return array
      */
-    public function findPalletColors(){
+    public function findPalletColors() {
         $uncode_options = get_option('uncode');
         $accent_uncode_color = $uncode_options["_uncode_accent_color"];
         $custom_element_colors = array();
@@ -424,6 +462,29 @@ class PWElements {
         } else {
             return $en;
         }
+    }
+
+     /**
+     * Function to change color brightness (taking color in hex format)
+     *
+     * @return array
+     */
+    public static function adjustBrightness($hex, $steps) {
+        // Convert hex to RGB
+        $hex = str_replace('#', '', $hex);
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        // Shift RGB values
+        $r = max(0, min(255, $r + $steps));
+        $g = max(0, min(255, $g + $steps));
+        $b = max(0, min(255, $b + $steps));
+
+        // Convert RGB back to hex
+        return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT)
+                . str_pad(dechex($g), 2, '0', STR_PAD_LEFT)
+                . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
     }
 
     /**

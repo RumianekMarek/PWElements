@@ -673,10 +673,10 @@ class PWElementGenerator extends PWElements {
                                                         <p>'. 
                                                         self::languageChecker(
                                                             <<<PL
-                                                                Dedykowanego wejścia
+                                                                Fast track
                                                             PL,
                                                             <<<EN
-                                                                Dedicated entrance
+                                                                Fast track
                                                             EN
                                                         )
                                                         .'</p>

@@ -58,18 +58,6 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 ),
             ),
             array(
-                'type' => 'checkbox',
-                'group' => 'options',
-                'heading' => __('Full text bio', 'pwe_display_info'),
-                'param_name' => 'info_speakers_bio_full_text',
-                'admin_label' => true,
-                'value' => array(__('True', 'pwe_display_info') => 'true',),
-                'dependency' => array(
-                    'element' => 'display_info_format',
-                    'value' => 'PWEDisplayInfoSpeakers',
-                ),
-            ),
-            array(
                 'heading' => __('Speakers', 'pwe_display_info'),
                 'group' => 'main',
                 'type' => 'param_group',
@@ -92,8 +80,17 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     ),
                     array(
                         'type' => 'textarea',
-                        'heading' => __('Bio', 'pwe_display_info'),
+                        'heading' => __('Bio excerpt', 'pwe_display_info'),
+                        'param_name' => 'speaker_bio_excerpt',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
+                        'type' => 'textarea',
+                        'heading' => __('Bio full', 'pwe_display_info'),
                         'param_name' => 'speaker_bio',
+                        'save_always' => true,
+                        'admin_label' => true,
                     ),
                 ),
                 'dependency' => array(
@@ -107,6 +104,18 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 'heading' => __('Color name', 'pwe_display_info'),
                 'param_name' => 'info_speakers_lect_color',
                 'description' => __('Color for lecturers names.', 'pwe_display_info'),
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
+                'type' => 'colorpicker',
+                'group' => 'options',
+                'heading' => __('Color bio', 'pwe_display_info'),
+                'param_name' => 'info_speakers_bio_color',
+                'description' => __('Color for lecturers bio.', 'pwe_display_info'),
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'display_info_format',
@@ -236,7 +245,6 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             'info_speakers_slider_on' => '',
             'info_speakers_bio_btn_hide' => '',
             'info_speakers_bio_text_hide' => '',
-            'info_speakers_bio_full_text' => '',
             'info_speakers_max_width_img' => '',
             'info_speakers_display_items_desktop' => '',
             'info_speakers_display_items_tablet' => '',
@@ -245,6 +253,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             'info_speakers_breakpoint_mobile' => '',
             'info_speakers_speakers' => '',
             'info_speakers_lect_color' => '',
+            'info_speakers_bio_color' => '',
             'info_speakers_element_width' => '',
             'info_speakers_photo_square' => '',
         ), $atts ) );
@@ -257,9 +266,13 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             "breakpoint_tablet" => $info_speakers_breakpoint_tablet,
             "breakpoint_mobile" => $info_speakers_breakpoint_mobile,
             "max_width_img" => $info_speakers_max_width_img,
+            "btn_hide" => $info_speakers_bio_btn_hide,
+            "lect_color" => $info_speakers_lect_color,
+            "bio_color" => $info_speakers_bio_color,
         );
 
         $info_speakers_lect_color = empty($info_speakers_lect_color) ? 'black' : $info_speakers_lect_color;
+        $info_speakers_bio_color = empty($info_speakers_bio_color) ? 'black' : $info_speakers_bio_color;
         $info_speakers_element_width = empty($info_speakers_element_width) ? '150px' : $info_speakers_element_width;
         $info_speakers_photo_square = $info_speakers_photo_square != true ? '50%' : '0';
 
@@ -270,6 +283,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 display: flex;
                 justify-content: center;
                 flex-wrap: wrap;
+                margin-top: 0 !important;
                 gap: 18px;
             }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker {
@@ -279,6 +293,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 flex-direction: column;
                 text-align: center;
                 justify-content: space-between;
+                gap: 14px;
             }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker-name {
                 color: '. $info_speakers_lect_color .';
@@ -330,7 +345,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 border-radius: 20px;
                 overflow-y: auto;
                 width: 80%;
-                max-width: 500px;
+                max-width: 700px;
                 max-height: 90%;
                 transition: transform 0.3s;
                 transform: scale(0);
@@ -370,13 +385,10 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
         </style>';
 
         if ($info_speakers_bio_btn_hide == true) {
-            $output .= '<style>.pwe-speaker-btn { display: none !important; }</style>';
-        }
-        if ($info_speakers_bio_full_text == true) {
-            $output .= '<style>.pwe-speaker-desc { display: flex !important; } .pwe-speaker-first-sentence { display: none !important; }</style>';
+            $output .= '<style>#info-speaker-'. self::$rnd_id .' .pwe-speaker-btn { display: none !important; }</style>';
         }
         if ($info_speakers_bio_text_hide == true) {
-            $output .= '<style>.pwe-speaker-desc { display: none !important; } .pwe-speaker-first-sentence { display: none !important; }</style>';
+            $output .= '<style>#info-speaker-'. self::$rnd_id .' .pwe-speaker-desc { display: none !important; } #info-speaker-'. self::$rnd_id .' .pwe-speaker-excerpt { display: none !important; }</style>';
         }
 
         $speakers_urldecode = urldecode($info_speakers_speakers);
@@ -389,6 +401,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $speaker_image = $speaker["speaker_image"];
                 $speaker_name = $speaker["speaker_name"];
                 $speaker_bio = $speaker["speaker_bio"];
+                $speaker_bio_excerpt = $speaker["speaker_bio_excerpt"];
 
                 $speaker_image_src = wp_get_attachment_url($speaker_image);   
 
@@ -408,7 +421,8 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $info_speakers_slider[] = array(
                     "img" => $speaker_image_src,
                     "name" => $speaker_name,
-                    "bio" => $speaker_bio
+                    "bio" => $speaker_bio,
+                    "bio_excerpt" => $speaker_bio_excerpt 
                 );
             }
 

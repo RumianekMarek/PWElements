@@ -29,12 +29,28 @@ class PWElementRegistration extends PWElements {
                 'value' => array(
                     'Dla odwiedzających' => 'visitors',
                     'Dla wystawców' => 'exhibitors',
-                    'Conferencja' => 'conference',
+                    'Dla wystawców v2' => 'exhibitors_v2',
                 ),
                 'std' => 'visitors',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementRegistration',
+                ),
+            ),
+            array(
+                'type' => 'dropdown',
+                'group' => 'PWE Element',
+                'heading' => __('Modes', 'pwelement'),
+                'param_name' => 'registration_modes',
+                'value' => array(
+                    'Registration mode' => 'registration_mode',
+                    'Coference mode' => 'conference_mode'
+                ),
+                'dependency' => array(
+                    'element' => 'registration_select',
+                    'value' => array(
+                        'visitors'
+                    ),
                 ),
             ),
             array(
@@ -85,7 +101,7 @@ class PWElementRegistration extends PWElements {
             array(
                 'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => __('Form id', 'pwelement'),
+                'heading' => __('Registration Form', 'pwelement'),
                 'param_name' => 'registration_form_id',
                 'save_always' => true,
                 'value' => array_merge(
@@ -110,7 +126,7 @@ class PWElementRegistration extends PWElements {
     public static function custom_css_1() {
         $css_output = '
             <style>
-                .pwelement_' . self::$rnd_id . ' .pwe-registration-column{
+                .pwelement_' . self::$rnd_id . ' .pwe-registration-column {
                     background-color: #e8e8e8;
                     padding: 18px 36px;
                     border: 2px solid #564949;
@@ -120,20 +136,20 @@ class PWElementRegistration extends PWElements {
                     box-shadow: none !important;
                     line-height: 1 !important;
                 }
-                .pwelement_' . self::$rnd_id . ' :is(label, label span, .gform_legacy_markup_wrapper .gfield_required, .gfield_description){
+                .pwelement_' . self::$rnd_id . ' :is(label, label span, .gform_legacy_markup_wrapper .gfield_required, .gfield_description) {
                     color: black !important;
                 }
-                .pwelement_' . self::$rnd_id . ' input:not([type=checkbox]){
+                .pwelement_' . self::$rnd_id . ' input:not([type=checkbox]) {
                     border-radius: 11px !important;
                 }
-                .pwelement_' . self::$rnd_id . ' input[type=checkbox]{
+                .pwelement_' . self::$rnd_id . ' input[type=checkbox] {
                     border-radius: 2px !important;
                 }
-                .pwelement_' . self::$rnd_id . ' input[type=submit]{
+                .pwelement_' . self::$rnd_id . ' input[type=submit] {
                     background-color: #A6CE39 !important;
                     border-width: 1px !important;
                 }
-                .pwelement_' .self::$rnd_id. ' .gform_fields{
+                .pwelement_' .self::$rnd_id. ' .gform_fields {
                     padding-left: 0 !important;
                 }
                 .pwelement_' .self::$rnd_id. ' .gform-field-label {
@@ -145,15 +161,41 @@ class PWElementRegistration extends PWElements {
                     margin-left: 0;
                     padding-left: 0;
                 }
+                .pwelement_' .self::$rnd_id. ' .gfield_required {
+                    display: none !important;
+                }
+                .pwelement_' .self::$rnd_id. ' .gform_button {
+                    visibility: hidden !important;
+                    width: 0 !important;
+                    height: 0 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
                 /*ROZWIJANE ZGODY*/
-                .gfield_consent_description{
+                .pwelement_' .self::$rnd_id. ' .gfield_consent_description {
                     overflow: hidden !important;
                     max-height: auto !important;
                     border: none !important;
                     display: none;
                 }
-                .show-consent:hover{
+                .pwelement_' .self::$rnd_id. ' .show-consent:hover{
                     cursor: pointer;
+                }
+                .pwelement_' .self::$rnd_id. ' .ginput_container input {
+                    margin: 0 !important;
+                }
+                .pwelement_' .self::$rnd_id. ' .gfield_label {
+                    font-size: 14px !important;
+                }
+                .pwelement_' .self::$rnd_id. ' .gfield_consent_label {
+                    padding-left: 5px;
+                }    
+                @media (max-width:650px) {
+                    .pwelement_' .self::$rnd_id. ' .gform_legacy_markup_wrapper .gform_footer {
+                        margin: 0 auto !important;
+                        padding: 0 !important;
+                        text-align: center;
+                    }
                 }
                 @media (max-width:400px) {
                     .pwelement_' .self::$rnd_id. ' input[type="submit"] {
@@ -172,7 +214,10 @@ class PWElementRegistration extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . ' !important';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') .' !important';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') .' !important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .'!important';
+        $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .' !important';
 
         global $registration_button_text, $registration_form_id;
 
@@ -182,15 +227,28 @@ class PWElementRegistration extends PWElements {
             'registration_text' => '',
             'registration_button_text' => '',
             'registration_height_logotypes' => '',
+            'registration_modes' => '',
             'registration_form_id' => '',
         ), $atts ));
 
-        if (empty($registration_height_logotypes)) {
-            $registration_height_logotypes = '50px';
+        if ($registration_modes == "conference_mode") {
+            $main_form_color = self::$accent_color;
+        } else {
+            $main_form_color = self::$main2_color;
         }
 
-        if ($registration_select == "conference") {
-            
+        $darker_btn_color = self::adjustBrightness($main_form_color, -20);
+
+        if (empty($registration_height_logotypes)) {
+            $registration_height_logotypes = '50px';
+        } 
+
+        if ($registration_select == "header_registration") {
+            if (get_locale() == 'pl_PL') {
+                $registration_button_text = ($registration_button_text == "") ? "Zarejestruj się<span style='display: block; font-weight: 300;'>Odbierz darmowy bilet</span>" : $registration_button_text;
+            } else {
+                $registration_button_text = ($registration_button_text == "") ? "Register<span style='display: block; font-weight: 300;'>Get a free ticket</span>" : $registration_button_text;
+            }
         } else if ($registration_select == "exhibitors") {
             if(get_locale() == 'pl_PL') {
                 $registration_title = ($registration_title == "") ? "DLA WYSTAWCÓW" : $registration_title;
@@ -201,16 +259,56 @@ class PWElementRegistration extends PWElements {
                 $registration_text = ($registration_text == "") ? "Ask for a stand<br>Fill out the form below and we will contact you to present preferential rates *  for the exhibition space and stand construction<br>* limited time offer" : $registration_text;
                 $registration_button_text = ($registration_button_text == "") ? "SEND" : $registration_button_text;
             }
+        } else if ($registration_select == "exhibitors_v2") {
+            if(get_locale() == 'pl_PL') {
+                $registration_button_text = ($registration_button_text == "") ? "WYGENERUJ OFERTĘ" : $registration_button_text;
+            } else {
+                $registration_button_text = ($registration_button_text == "") ? "GENERATE AN OFFER" : $registration_button_text;
+            }
         } else {
             if(get_locale() == 'pl_PL') {
                 $registration_title = ($registration_title == "") ? "DLA ODWIEDZAJĄCYCH" : $registration_title;
                 $registration_text = ($registration_text == "") ? "Wypełnij formularz i odbierz darmowy bilet" : $registration_text;
-                $registration_button_text = ($registration_button_text == "") ? "ODBIERZ DARMOWY BILET" : $registration_button_text;
+                $registration_button_text = ($registration_button_text == "") ? "Zarejestruj się<span style='display: block; font-weight: 300;'>Odbierz darmowy bilet</span>" : $registration_button_text;
             } else {
                 $registration_title = ($registration_title == "") ? "FOR VISITORS" : $registration_title;
                 $registration_text = ($registration_text == "") ? "Fill out the form and receive your free ticket" : $registration_text;
-                $registration_button_text = ($registration_button_text == "") ? "GET A FREE TICKET" : $registration_button_text;
+                $registration_button_text = ($registration_button_text == "") ? "Register<span style='display: block; font-weight: 300;'>Get a free ticket</span>" : $registration_button_text;
             }
+        }
+
+        $start_date = do_shortcode('[trade_fair_datetotimer]');
+        $end_date = do_shortcode('[trade_fair_enddata]');
+
+        // Function to transform the date
+        function transform_dates($start_date, $end_date) {
+            // Convert date strings to DateTime objects
+            $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
+            $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
+
+            // Check if the conversion was correct
+            if ($start_date_obj && $end_date_obj) {
+                // Get the day, month and year from DateTime objects
+                $start_day = $start_date_obj->format('d');
+                $end_day = $end_date_obj->format('d');
+                $month = $start_date_obj->format('m');
+                $year = $start_date_obj->format('Y');
+
+                //Build the desired format
+                $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
+                return $formatted_date;
+            } else {
+                return "Invalid dates";
+            }
+        }
+
+        // Transform the dates to the desired format
+        $formatted_date = transform_dates($start_date, $end_date);
+
+        if (self::isTradeDateExist()) {
+            $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
+        } else {
+            $actually_date = $formatted_date;  
         }
 
         // Create unique id for element
@@ -218,296 +316,84 @@ class PWElementRegistration extends PWElements {
         $element_unique_id = 'pweRegistration-' . $unique_id;
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
-        if ($mobile != 1) {
-            $output .= '<style>
-                            .row-container:has(.img-container-top10) .img-container-top10 div {
-                                min-height: '. $registration_height_logotypes .';
-                                margin: 10px 5px !important;
-                            }
-                        </style>';
-        }
 
-        if ($registration_select == "conference") {
+        $output .= '
+        <style>
+            .pwelement_'. self::$rnd_id .' #pweRegister {
+                background-color: '. $main_form_color .';
+                border: 2px solid '. $main_form_color .'; 
+                color: '. $btn_text_color .';
+            }
+            .pwelement_'. self::$rnd_id .' #pweRegister:hover {
+                background-color: '. $darker_btn_color .' !important;
+                border: 2px solid '. $darker_btn_color .' !important;
+            }
+        </style>';
+
+        if ($registration_select == "visitors") {
+
             $output .= '
             <style>
-
-                body:has(#'. $element_unique_id .' .form-3, #'. $element_unique_id .' .form-2) :is(.custom-footer-bg, .custom-footer-images-bg){
-                    display: none;
-                }
-                
-                .pwelement:has(#'. $element_unique_id .'){
-                    text-align: -webkit-center;
-                }
-                
-                #'. $element_unique_id .':has(.form-1) {
-                    background-image: url(/wp-content/plugins/PWElements/media/badge-head.png);
-                    background-repeat: round;
-                    height: 830px;
+                .row-container:has(.pwelement_'. self::$rnd_id .') {
+                    background-image: url(/doc/background.webp);
+                    background-repea: no-repeat;
+                    background-position: center;
                     background-size: cover;
-                    max-width: 545px;
                 }
-                #'. $element_unique_id .' input{
-                    box-shadow: none;
+                .exhibitors-catalog:has(#top10) {
+                    background-color: white;
+                    border: 2px solid '. $main_form_color .' !important; 
+                    border-radius: 18px;
                 }
-
-                #'. $element_unique_id .' .form-1,
-                #'. $element_unique_id .' .form-1-top {
-                    max-width: 490px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                }
-                
-                #'. $element_unique_id .' .form-1-top {
-                    width: 89.3%;
-                    position: absolute;
-                    z-index: 7;
-                    background-color: ' . self::$accent_color . ';
-                    top: 150px;
-                    height: 120px;
-                    right: 5.7%;
-                }
-
-                #'. $element_unique_id .' .form-1 {
-                    text-align: left;
-                    position: relative;
-                    height: 520px;
-                    padding: 10px calc(50px + 1vw);
-                    top: 100px;
-                    z-index: 5;
-                }
-                
-                #'. $element_unique_id .' input {
-                    border-color: #c49a62 !important;
-                    border-radius: 10px;
-                }
-                
-                #'. $element_unique_id .' input:not(.checkbox) {
-                    margin: 5px 0 0;
-                    width: 100%;
-                    padding: 10px 15px;
-                }
-                
-                #'. $element_unique_id .' p {
-                    margin-top: 0px;
-                }
-                
-                #'. $element_unique_id .' .consent-text {
-                    font-size: 11px;
-                    margin-left: 5px;
-                }
-                
-                #'. $element_unique_id .' button {
-                    text-transform: uppercase;
-                    margin-top: 20px;
-                    font-weight: 600;
-                    ' . $btn_color . '
-                    color: white;
-                    border: 1px solid white;
-                    border-radius: 11px;
-                    padding: 13px calc(10px + 1vw);
-                }
-
-                #'. $element_unique_id .' .form-1-btn{
-                    width: 100%;
-                    font-size: calc(10px + 0.6vw);
-                }
-
-                #'. $element_unique_id .' .form-1-image {
-                    position: absolute;
-                    width: calc(100px + 3vw);
-                    border-radius: 15px;
-                    top: 40%;
-                    right: 5%;
-                    z-index: 10;
-                }
-                
-                #'. $element_unique_id .' .form-1 #registration {
-                    margin-top: 36px;
-                }
-                
-                #'. $element_unique_id .' button:hover, #'. $element_unique_id .' .exhibitor-no {
-                    background: white !important;
-                    color: black;
-                    border-color: black;
-                }
-                
-                #'. $element_unique_id .' .exhibitor-no:hover{
-                    color: white;
-                    background: black !important;
-                }
-
-                #'. $element_unique_id .':has(.form-2), #'. $element_unique_id .':has(.form-3){
-                    min-height: 780px;
-                    display: flex;
-                    align-items: center;
-                }
-
-                #'. $element_unique_id .' .form-2 .krok span {
-                    ' . $text_color . '
-                }
-
-                #'. $element_unique_id .' .form-2 .wystawca span {
-                    ' . $text_color . '
-                }
-                
-                #'. $element_unique_id .' .form-2 {
-                    text-align: -webkit-right;
-                    width:50%;
-                }
-                #'. $element_unique_id .' .form-2>div {
-                    width: fit-content;
-                    text-align: left;
-                    margin:36px;
-                }
-
-                #'. $element_unique_id .' .form-2-right {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    gap: 30px;
-                    background-image: url(doc/background.webp);
-                    background-size: cover;
-                    width:50%;
-                    min-height: inherit;
-                    padding: 36px;
-                }
-                
-                #'. $element_unique_id .' .form-2-right img{
-                    width: 250px;
-                }
-
-                #'. $element_unique_id .' .form-2-right :is(h3, h4) {
-                    text-shadow: 0 0 2px black;
-                    color: white !important;
-                }
-                
-                #'. $element_unique_id .' .form-2-right :is(h3, h4) {
-                    text-shadow: 0 0 2px black;
-                    color: white !important;
-                }
-
-                #'. $element_unique_id .' label {
-                    font-weight: 700;
-                    font-size: 15px;
-                }
-                
-                #'. $element_unique_id .' .consent-container {
-                    margin-top: 5px;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                }
-                
-                #'. $element_unique_id .':has(.form-3)>div{
-                    width: 33%;
-                }
-                #'. $element_unique_id .' .form3-half {
-                    display: flex;
-                    gap: 20px;
-                }
-                #'. $element_unique_id .' .form3-half>div{
-                    flex: 1;
-                }
-                #'. $element_unique_id .' .form-3{
-                    text-align: left;
-                    padding: 25px 50px;
-                    background-color: #E8E8E8;
-                    align-content: center;
-                    min-height: inherit;
-                }
-                #'. $element_unique_id .' .form-3 div:has(button){
-                    text-align: center;
-                }
-                #'. $element_unique_id .' .form-3 span, #'. $element_unique_id .' .color-accent{
-                    ' . $text_color . '
-                }
-                #'. $element_unique_id .' .form-3 label{
-                    margin-top: 18px;
-                    float: left;
-                }
-                #'. $element_unique_id .' .form-3-left {
-                    text-align: -webkit-right;
-                    padding: 36px;
-                }
-                #'. $element_unique_id .' .form-3-left>div {
-                    text-align:left;
-                    max-width: 320px;
-                }
-                #'. $element_unique_id .' .form-3-right:has(.img-stand){
-                    padding: 36px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 27px;
-                }
-                #'. $element_unique_id .' .btn-stand{
-                    background-color: black;
-                    color:white;
-                }
-                #'. $element_unique_id .' .very-strong {
-                    font-weight: 700;
-                }
-
-                @media (min-width:640px) and (max-width: 959px){
-                    #'. $element_unique_id .':has(.form-1) {
-                        background-repeat: none;
+                @media (min-width: 959px) {
+                    .row-container:has(#pweForm) .wpb_column, 
+                    .row-container:has(#top10) .wpb_column {
+                        display: none;
                     }
-                    #'. $element_unique_id .' .form-1-top {
-                        width: 488px;
-                        left: 50%;
-                        transform: translateX(-50.5%);
+                    .wpb_column:has(#top10),
+                    .wpb_column:has(#pweForm) {
+                        display: table-cell !important;
                     }
                 }
-                @media (max-width:799px){
-                    #'. $element_unique_id .':has(.form-2) {
-                        flex-direction: column;
-                    }
-                    #'. $element_unique_id .' :is(.form-2, .form-2-right){
-                        width:100%;
-                        min-height: 0;
-                    }
-                    #'. $element_unique_id .' .form-2{
-                        text-align: -webkit-center;
-                    }
-                    #'. $element_unique_id .' .form-2-right {
-                        align-items: center;
-                    }
-                } 
+                .wpb_column #pweForm {
+                    margin: 0 auto;
+                }
+                .wpb_column:has(#pweForm) {
+                    padding: 0;
+                }
+            </style>'; 
 
-                @media (max-width:639px){
-                    #'. $element_unique_id .' .form-1-top .h1{
-                        width: calc(100px + 12vw);
+            if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE)) {
+                $output .= '
+                <style>
+                    @media (max-width: 960px) {
+                        background-image: url(/doc/header_mobile.webp);
                     }
-                    #'. $element_unique_id .' .form-1 {
-                        padding: 10px calc(30px + 1vw);
-                    }
-                    #'. $element_unique_id .' .form-1-btn {
-                        font-size: calc(9px + 0.1vw);
-                    }
-                    #'. $element_unique_id .' .form-1 #registration {
-                        margin-top: 3vw;
-                    }
-                    #'. $element_unique_id .' .form-2 .h1{
-                        font-size: calc(25px + 3vw);
-                    }
-                } 
-            </style>
-            
-        ';
+                </style>';
+            } 
+
             $output .= '
             <div id="'. $element_unique_id .'" class="pwe-registration">
-                <div class="form-1-top">
-                    <image class="form-1-image" src="/wp-content/plugins/PWElements/media/badge_qr.jpg">
-                    <div class="form-1">
-                        <h2 class="h1 text-color-jevc-color">Twój bilet<br>na targi</h2>
-                        <div class="pwe-registration-form">
-                            [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
-                        </div>
-                    </div>
+                <div class="pwe-registration-column">';
+            
+                include_once plugin_dir_path(__FILE__) . '/../elements/registration-header.php';
+                $output .= PWElementRegHeader::output($registration_form_id, $registration_modes, $registration_logo_color = "", $actually_date, $registration_name = "visitors");
+
+            $output .= '
                 </div>
-            </div>
-            ';
-        } else {
+            </div>';
+
+        } else if ($registration_select == "exhibitors") {
+
+            if ($mobile != 1) {
+                $output .= '<style>
+                                .row-container:has(.img-container-top10) .img-container-top10 div {
+                                    min-height: '. $registration_height_logotypes .';
+                                    margin: 10px 5px !important;
+                                }
+                            </style>';
+            }
+    
             $output .= self::custom_css_1();
             $output .= '
             <div id="'. $element_unique_id .'" class="pwe-registration">
@@ -525,32 +411,478 @@ class PWElementRegistration extends PWElements {
                         [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
                     </div>
                 </div>
-            </div>';   
-            
-            if (class_exists('GFAPI')) {
-                function get_form_id_by_title($title) {
-                    // Pobierz wszystkie formularze
-                    $forms = GFAPI::get_forms();
-                    foreach ($forms as $form) {
-                        if ($form['title'] === $title) {
-                            return $form['id'];
+            </div>';
+
+        } else if ($registration_select == "exhibitors_v2") {
+
+            $fair_logo = ($atts['fair_logo'] != '') ? $atts['fair_logo'] : self::languageChecker(
+                <<<PL
+                    /doc/logo-color.webp
+                PL,
+                <<<EN
+                    /doc/logo-color-en.webp
+                EN
+            );
+            $fair_logo = trim($fair_logo);
+
+
+            $output .= '
+            <style>
+                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                    max-width: 100%;
+                    padding: 0 !important;  
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-wrapper {
+                    display: flex;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-column {
+                    width: 50%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-form {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 18px 36px;
+                }
+
+                .pwelement_'. self::$rnd_id .' input[type="text"], input[type="number"], input[type="email"], input[type="tel"] {
+                    border: 2px solid;
+                    border-radius: 10px;
+                    box-shadow: none;
+                }
+                .pwelement_'. self::$rnd_id .' input[type="checkbox"] {
+                    min-width: 16px; 
+                    width: 16px; 
+                    height: 16px; 
+                    border-radius: 50%;
+                }
+                .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description) {
+                    color: black;
+                }
+                .pwelement_'. self::$rnd_id .' .gfield_consent_label span {
+                    display: inline-block !important;
+                }
+                .pwelement_'. self::$rnd_id .' input[type="number"]::-webkit-outer-spin-button,
+                .pwelement_'. self::$rnd_id .' input[type="number"]::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+                .pwelement_'. self::$rnd_id .' .gform_footer {
+                    display: flex;
+                    justify-content: center;
+                    margin: 0 auto;
+                }
+                .pwelement_' .self::$rnd_id. ' .gform_button {
+                    visibility: hidden !important;
+                    width: 0 !important;
+                    height: 0 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
+                .pwelement_' .self::$rnd_id. ' .show-consent {
+                    color: black;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-wrapper {
+                    position: relative;
+                    background-color: #ffffff;
+                    border-radius: 10px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-wrapper h4 {
+                    font-size: 16px;
+                    font-weight: 700;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-inputs {
+                    position: relative;
+                    width: 100%;
+                    height: 50px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"] {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    width: 100%;
+                    outline: none;
+                    position: absolute;
+                    padding: 0 !important;
+                    margin: auto;
+                    top: 0;
+                    bottom: 0;
+                    background-color: transparent;
+                    pointer-events: none;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-track {
+                    width: 100%;
+                    height: 5px;
+                    position: absolute;
+                    margin: auto;
+                    top: 5px;
+                    bottom: 0;
+                    border-radius: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-webkit-slider-runnable-track {
+                    color: '. self::$main2_color .';
+                    -webkit-appearance: none;
+                    height: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-moz-range-track {
+                    -moz-appearance: none;
+                    height: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-ms-track {
+                    appearance: none;
+                    height: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    height: 1.7em;
+                    width: 1.7em;
+                    background-color: '. self::$main2_color .';
+                    cursor: pointer;
+                    margin-top: -9px;
+                    pointer-events: auto;
+                    border-radius: 50%;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-moz-range-progress {
+                    background-color: '. self::$main2_color .';
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-moz-range-thumb {
+                    -webkit-appearance: none;
+                    height: 1.7em;
+                    width: 1.7em;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    background-color: '. self::$main2_color .';
+                    pointer-events: auto;
+                    border: none;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-ms-thumb {
+                    appearance: none;
+                    height: 1.7em;
+                    width: 1.7em;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    background-color: '. self::$main2_color .';
+                    pointer-events: auto;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]:active::-webkit-slider-thumb {
+                    background-color: #ffffff;
+                    border: 1px solid '. self::$main2_color .';
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-values {
+                    display: flex;
+                    gap: 12px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-values input {
+                    width: 100px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-value-label {
+                    display: flex;
+                    align-items: center;
+                    font-weight: 600;
+                    margin: 9px 0px 0px 0px 
+                }
+
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom{
+                    background-color: #f7f7f7;
+                    display: flex;
+                    justify-content: center;
+                    gap: 18px;
+                    flex-wrap: wrap;
+                    padding: 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div{
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap:9px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div > div {
+                    min-width: 200px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom img{
+                    max-height: 80px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors){
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors) p{
+                    margin-top: 0px;
+                }
+                .pwelement_'. self::$rnd_id .' .video-container {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .video-container iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    pointer-events: none;
+                }
+                @media (max-width: 960px) {
+                    .row-parent:has(#'. $element_unique_id .') {
+                        padding: 0 !important;  
+                    }
+                    .wpb_column:has(.pwelement_'. self::$rnd_id .') {
+                        max-width: 100% !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-registration-wrapper {
+                        flex-direction: column-reverse;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-registration-column {
+                        width: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .video-container {
+                        height: 440px;
+                    }
+                }
+                @media (max-width: 500px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div > div {
+                        min-width: 250px;
+                    }
+                }
+            </style>';
+
+            $output .= '
+            <div id="'. $element_unique_id .'" class="pwe-registration">
+                <div class="pwe-registration-wrapper">
+                    <div class="pwe-registration-column iframe-column">
+                        <div class="video-container">
+                            <iframe title="YouTube video player" frameborder="0" marginwidth="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" 
+                            src="https://www.youtube.com/embed/_itB_7UfqHA?si=tl27BmhUeGJsdrIf&autoplay=1&mute=1&loop=1&playlist=_itB_7UfqHA&controls=0&showinfo=0">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="pwe-registration-column form-column">
+                        <div class="pwe-registration-form">
+                            <h1>'. 
+                            self::languageChecker(
+                                <<<PL
+                                Dołącz do wystawców
+                                PL,
+                                <<<EN
+                                Join the exhibitors
+                                EN
+                            )
+                            .'</h1>
+                            [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
+                        </div>
+                    </div>
+                </div>
+                <div class="pwe-registration-bottom">
+                    <div class="logos">
+                        <div class="pwe-logo">
+                            <a href="https://warsawexpo.eu/" target="_blanc"><img src="' . plugin_dir_url(dirname( __FILE__ )) . "/media/logo_pwe_black.webp" . '"></a>
+                        </div>
+                        <div class="fair-logo">
+                            <a href="'. 
+                            self::languageChecker(
+                                <<<PL
+                                /
+                                PL,
+                                <<<EN
+                                    /en/
+                                EN
+                            )
+                            .'"><img src="' . $fair_logo . '"></a>
+                        </div>
+                    </div>
+                    <div class="numbers">
+                        <div class="for-exhibitors">
+                            <i class="fa fa-envelope-o fa-3x fa-fw"></i>
+                            <p>'. 
+                            self::languageChecker(
+                                <<<PL
+                                    "Zostań wystawcą" 
+                                PL,
+                                <<<EN
+                                    "Become an exhibitor" 
+                                EN
+                            )
+                        .'<br> <a href="tel:48 517 121 906">+48 517 121 906</a>
+                        </div>
+                        <div class="for-visitors">
+                            <i class="fa fa-phone fa-3x fa-fw"></i>
+                            <p>'. 
+                            self::languageChecker(
+                                <<<PL
+                                    "Odwiedzający" 
+                                PL,
+                                <<<EN
+                                    "Visitors" 
+                                EN
+                            )
+                        .'<br> <a href="tel:48 513 903 628">+48 513 903 628</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const sliderContainer = document.createElement("div");
+                sliderContainer.className = "input-range-container";
+                sliderContainer.innerHTML = `
+                    <div class="input-range-wrapper">
+                        <h4>'. 
+                            self::languageChecker(
+                                <<<PL
+                                Wybierz powierzchnię wystawienniczą
+                                PL,
+                                <<<EN
+                                Choose an exhibition space
+                                EN
+                            )
+                        .'</h4>
+                        <div class="input-range-inputs">
+                            <div class="input-range-track"></div>
+                            <input type="range" min="16" max="180" value="16" id="inputRange1" oninput="slideOne()">
+                            <input type="range" min="16" max="180" value="130" id="inputRange2" oninput="slideTwo()">
+                        </div>
+                        <div class="input-range-values">
+                            <span class="input-range-value-label">od</span><input type="number" maxlength="3" min="0" max="999" value="16" id="inputRangeValue1" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
+                            <span class="input-range-value-label">do</span><input type="number" maxlength="3" min="0" max="999" value="130" id="inputRangeValue2" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
+                        </div>
+                    </div>
+                `;
+
+                const form = document.querySelector(".pwelement_'. self::$rnd_id .' form");
+                const formEmail = form.querySelector(".ginput_container_email");
+
+                formEmail.insertAdjacentElement("afterend", sliderContainer);
+
+                function updateArea() {
+                    areaInput.value = minValue.value + " - " + maxValue.value + " m²";
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    slideOne();
+                    slideTwo();
+                    fillColor();
+                });
+
+                let sliderOne = document.getElementById("inputRange1");
+                let sliderTwo = document.getElementById("inputRange2");
+                let displayValOne = document.getElementById("inputRangeValue1");
+                let displayValTwo = document.getElementById("inputRangeValue2");
+                let minGap = 0;
+                let sliderTrack = document.querySelector(".input-range-track");
+                let sliderMaxValue = sliderOne.max;
+
+                function slideOne() {
+                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+                        sliderOne.value = parseInt(sliderTwo.value) - minGap;
+                    }
+                    displayValOne.value = sliderOne.value;
+                    fillColor();
+                    updateArea();
+                }
+
+                function slideTwo() {
+                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+                        sliderTwo.value = parseInt(sliderOne.value) + minGap;
+                    }
+                    displayValTwo.value = sliderTwo.value;
+                    fillColor();
+                    updateArea();
+                }
+
+                function fillColor() {
+                    let percent1 = ((sliderOne.value - sliderOne.min) / (sliderMaxValue - sliderOne.min)) * 100;
+                    let percent2 = ((sliderTwo.value - sliderTwo.min) / (sliderMaxValue - sliderTwo.min)) * 100;
+                    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , '. self::$accent_color .' ${percent1}% , '. self::$accent_color .' ${percent2}%, #dadae5 ${percent2}%)`;
+                }
+
+                function updateArea() {
+                    const areaContainer = document.getElementsByClassName("input-area")[0];
+                    if (areaContainer) {
+                        const areaInput = areaContainer.getElementsByTagName("input")[0];
+                        if (areaInput) {
+                            areaInput.value = displayValOne.value + " - " + displayValTwo.value + " m²";
                         }
                     }
-                    return null;
                 }
-                
-                function custom_gform_submit_button($button, $form) {
-                    global $registration_button_text, $registration_form_id;
-                    $registration_form_id_nmb = get_form_id_by_title($registration_form_id);
-            
-                    if ($form['id'] == $registration_form_id_nmb) {
-                        $button = '<input type="submit" id="gform_submit_button_'.$registration_form_id_nmb.'" class="gform_button button" value="'.$registration_button_text.'" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">';
-                    }
-                    return $button;
-                }
-                add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);  
-            }
+            </script>
+            ';
+
         }
+
+        if (class_exists('GFAPI')) {
+            function get_form_id_by_title($title) {
+                $forms = GFAPI::get_forms();
+                foreach ($forms as $form) {
+                    if ($form['title'] === $title) {
+                        return $form['id'];
+                    }
+                    
+                }
+                return null;
+            }
+            
+            function custom_gform_submit_button($button, $form) {
+                global $registration_button_text, $registration_form_id;
+                $registration_form_id_nmb = get_form_id_by_title($registration_form_id);
+        
+                if ($form['id'] == $registration_form_id_nmb) {
+                    $button = '<input type="submit" id="gform_submit_button_'. $registration_form_id_nmb .'" class="gform_button button" value="'.$registration_button_text.'" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
+                    <button id="pweRegister" class="btn pwe-btn">'. $registration_button_text .'</button>';
+                }
+                return $button;
+            }
+            add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);  
+        }
+
+        $output .= '
+        <script>
+            jQuery(function ($) {
+                $(".show-consent").on("click touch", function () {
+                    $(this).next().toggle("slow");
+                });
+            });
+
+            window.onload = function () {
+                var pweFormVisitors = document.querySelector("#pweRegister");
+
+                if (pweFormVisitors) {
+                    pweFormVisitors.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
+                        let telValue;
+                        const telContainer = document.getElementsByClassName("ginput_container_phone")[0];
+                        
+                        if (telContainer) {
+                            telValue = telContainer.getElementsByTagName("input")[0].value;
+                        } else {
+                            telValue = "123456789";
+                        }
+
+                        localStorage.setItem("user_email", emailValue);
+                        localStorage.setItem("user_tel", telValue);
+                        localStorage.setItem("user_direction", "rejpl");
+
+                        const areaContainer = document.getElementsByClassName("input-area")[0];
+                        if (areaContainer) {
+                            const areaValue = areaContainer.getElementsByTagName("input")[0].value;
+                            localStorage.setItem("user_area", areaValue);
+                        }
+                        
+                        const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
+                        buttonSubmit.click();
+                    });
+                }
+            }
+        </script>';
         
         return $output;
 

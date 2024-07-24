@@ -1,10 +1,13 @@
 jQuery(document).bind("gform_post_render", function (event, form_id) {
     jQuery(function ($) {
+        const getLocal = $('html').attr('lang');
         const phone_id = area_data.elements["input_" + form_id][0];
         let area_code = area_data.elements["input_" + form_id][1];
         var main_pattern = '';
         var old_title = '';
         let errorAfter = false;
+
+        const paternRegex = /[^9+()-]/;
 
         const createPattern = (unknown = false) => {
             if (unknown === true) {
@@ -33,16 +36,22 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
 
         const observer = new MutationObserver(function (mutationsList, observer) {
             for (var mutation of mutationsList) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'title') {
-                    if ($(mutation.target).attr('title') == 'Unknown') {
-                        main_pattern = createPattern(true);
-                        old_title = 'Unknown';
-                    } else if ($(phone_id).val().length < 1) {
-                        updatePhone($(mutation.target).attr('title'));
-                    } else {
-                        if (old_title != $(mutation.target).attr('title')) {
+                if (mutation.type === 'attributes') {
+                    if (mutation.attributeName === 'title') {
+                        if ($(mutation.target).attr('title') == 'Unknown') {
+                            main_pattern = createPattern(true);
+                            old_title = 'Unknown';
+                        } else if ($(phone_id).val().length < 1) {
                             updatePhone($(mutation.target).attr('title'));
-                            old_title = $(mutation.target).attr('title');
+                        } else {
+                            if (old_title != $(mutation.target).attr('title')) {
+                                updatePhone($(mutation.target).attr('title'));
+                                old_title = $(mutation.target).attr('title');
+                                main_pattern = createPattern();
+                            }
+                        }
+                    } else if (mutation.attributeName === 'placeholder') {
+                        if (paternRegex.test(main_pattern)) {
                             main_pattern = createPattern();
                         }
                     }
@@ -55,17 +64,20 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
                 initialCountry: countryCode,
                 utilsScript: "https://cleanexpo.pl/wp-content/plugins/PWElements/gf-upps/area-numbers/js/utils.js",
                 autoPlaceholder: "aggressive",
-
             }
 
             $(phone_id).intlTelInput(options);
 
             var targetUL = document.querySelector('.iti__selected-flag');
+            var targetInput = document.querySelector('.ginput_container_phone input');
 
             updatePhone($(targetUL).attr('title'));
             old_title = $(targetUL).attr('title')
-            var config = { attributes: true };
+            var config = { attributes: true, attributeFilter: ['title', 'placeholder'] };
+
             observer.observe(targetUL, config);
+            observer.observe(targetInput, config);
+
             setTimeout(function () {
                 main_pattern = createPattern();
                 $(phone_id).prop('disabled', false);
@@ -79,10 +91,15 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
                 $(event.target).parent().parent().submit();
             } else {
                 if (errorAfter == false) {
+                    let errorMessage = 'Wypełnić według wzoru ' + main_pattern;
+                    if (getLocal != 'pl-PL') {
+                        errorMessage = 'Fill in by pattern ' + main_pattern;
+                    }
+
                     const errorDiv = $('<span>')
                         .attr('id', 'validation_phone')
                         .addClass('gfield_description validation_message gfield_validation_message')
-                        .text('Wypełnić według wzoru' + main_pattern);
+                        .text(errorMessage);
 
                     $(phone_id).parent().parent().after(errorDiv);
 

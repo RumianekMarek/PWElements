@@ -58,7 +58,7 @@ jQuery(document).ready(function ($) {
 
                     let exhibitorsUrl = targetExhibitor["www"];
 
-                    if (exhibitorsUrl) {
+                    if (exhibitorsUrl && !exhibitorsUrl.startsWith('https://www.')) {
                         exhibitorsUrl = "https://" + exhibitorsUrl.replace(/^(https?|ftp):\/\/(www\.)?|(www\.)?/, "");
                     }
 

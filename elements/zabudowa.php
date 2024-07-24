@@ -21,24 +21,23 @@ class PWElementStand extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
-        $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
-        $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
-        $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important;';
-        $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
-        $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
+        $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
         
         $output = '
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-btn {
-                    '. $btn_text_color
-                    . $btn_color
-                    . $btn_shadow_color
-                    . $btn_border .'
+                    color: '. $btn_text_color .';
+                    background-color: '. $btn_color .';
+                    border: 1px solid '. $btn_border .';
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
-                    color: #000000 !important;
-                    background-color: #ffffff !important;
-                    border: 1px solid #000000 !important;
+                    color: '. $btn_text_color .';
+                    background-color: '. $darker_btn_color .'!important;
+                    border: 1px solid '. $darker_btn_color .'!important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-min-media-wrapper img {
                     box-shadow: 9px 9px 0px -6px [trade_fair_main2];
@@ -76,7 +75,7 @@ class PWElementStand extends PWElements {
                     .'</h4>
                     </div>';
                     if (!preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT'])) {
-                        $output .= '<p class="pwe-line-height" style="' . $text_color . '">'. 
+                        $output .= '<p class="pwe-line-height" style="color '. $text_color .';">'. 
                         self::languageChecker(
                             <<<PL
                             Zobacz katalog stoisk targowych i przygotuj się na udział w targach w sposób jeszcze bardziej efektywny. Dzięki temu katalogowi będziesz miał dostęp do gotowych projektów stoisk, które ułatwią Ci przygotowanie się do targów i zyskasz cenną oszczędność czasu i pieniędzy. Wybierając już gotowy projekt stoiska, będziesz mógł skupić się na innych ważnych aspektach przygotowań do targów, takich jak przygotowanie oferty, zorganizowanie transportu czy zaplanowanie działań marketingowych.

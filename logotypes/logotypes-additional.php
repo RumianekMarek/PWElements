@@ -51,6 +51,16 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
             ), 
             array(
+                'type' => 'checkbox',
+                'group' => 'Aditional options',
+                'heading' => __('Turn off dots', 'pwe_logotypes'),
+                'param_name' => 'logotypes_dots_off',
+                'description' => __('Check if you want to turn on dots.', 'pwe_logotypes'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_logotypes') => 'true',),
+            ), 
+            array(
                 'type' => 'param_group',
                 'group' => 'Links',
                 'heading' => __('Add link', 'pwe_logotypes'),
@@ -76,7 +86,6 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                         'param_name' => 'logotype_color',
                         'save_always' => true,
                         'admin_label' => true,
-                        'value' => array(__('True', 'pwe_logotypes') => 'true',),
                     ),
                     array(
                         'type' => 'textfield',
@@ -92,17 +101,22 @@ class PWElementAdditionalLogotypes extends SharedProperties {
 
     public static function additionalOutput($atts, $logotypes = null) {
 
+        $el_id = SharedProperties::$rnd_id;
+
         include_once plugin_dir_path(__FILE__) . '/../scripts/logotypes-slider.php';
 
         extract( shortcode_atts( array(
             'logotypes_media' => '',
             'logotypes_catalog' => '',
             'logotypes_title' => '',
+            'logotypes_name' => '',
+            'logotypes_caption_on' => '',
             'logotypes_position_title' => '',
             'logotypes_min_width_logo' => '',
             'logotypes_slider_full_width' => '',
             'logotypes_slider_desktop' => '',
             'logotypes_grid_mobile' => '',
+            'logotypes_dots_off' => '',
             'logotypes_slider_logo_white' => '',
             'logotypes_slider_logo_color' => '',
             'logotypes_files' => '',
@@ -127,9 +141,9 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                     gap: 10px;
                     margin-top: 18px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item,
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item div,
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-logotypes-gallery-wrapper .slides div,
+                .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item,
+                .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item div,
+                .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .slides div,
                 .pwe-conferences .pwe-logotypes-gallery-wrapper .pwe-logo-item,
                 .pwe-conferences .pwe-logotypes-gallery-wrapper .pwe-logo-item div,
                 .pwe-conferences .pwe-logotypes-gallery-wrapper .slides div {
@@ -142,11 +156,12 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                         $output .= 'min-width: 140px;';
                     }
                     $output .= '
+                    align-self: flex-start;
                     height: fit-content;
                     aspect-ratio: 3/2;
                     margin: 5px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-logotypes-title {
+                .pwelement_'. $el_id .' .pwe-logotypes-title {
                     display: flex;
                     justify-content: '. $logotypes_position_title .';
                 }
@@ -168,11 +183,35 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                 .pwe-color-logotypes div[style*="background-image"] {
                     filter: none !important;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title {
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title { 
                     justify-content: center;
                 }
-                
             </style>';
+
+            if ($logotypes_caption_on == true || $header_logotypes_caption_on == true) {
+                $output .= '
+                <style>
+                    .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item,
+                    .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item div {
+                        position: relative;
+                        display: block;
+                    }
+                    .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item p,
+                    .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item div p {
+                        width: 100%;
+                        position: absolute;
+                        bottom: -36px;
+                        text-transform: uppercase;
+                        font-size: 12px;
+                        font-weight: 700;
+                        color: black;
+                        white-space: break-spaces;
+                        text-align: center;
+                        line-height: 1.1 !important;
+                        margin: 0 !important;
+                    }
+                </style>';
+            }
 
             if ($logotypes_media != '' || $logotypes_catalog != '' || !empty($pwe_header_logotypes) || !empty($conf_logotypes_catalog)){
                 
@@ -184,16 +223,20 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                     if (isset($logotypes)) {
                         $header_logotypes_url = $logotypes["logotypes_catalog"];
                         $header_logotypes_title = $logotypes["logotypes_title"];
+                        $header_logotypes_name = $logotypes["logotypes_name"];
                         $header_logotypes_width = $logotypes["logotypes_width"];
                         $header_logotypes_media = $logotypes["logotypes_media"];
                         $header_logotypes_slider_off = $logotypes["logotypes_slider_off"];
+                        $header_logotypes_caption_on = $logotypes["logotypes_caption_on"];
                         $header_logotypes_items_width = $logotypes["logotypes_items_width"];
                     } else {
                         $header_logotypes_url = $logotypes_item["logotypes_catalog"];
                         $header_logotypes_title = $logotypes_item["logotypes_title"];
+                        $header_logotypes_name = $logotypes_item["logotypes_name"];
                         $header_logotypes_width = $logotypes_item["logotypes_width"];
                         $header_logotypes_media = $logotypes_item["logotypes_media"];
                         $header_logotypes_slider_off = $logotypes_item["logotypes_slider_off"];
+                        $header_logotypes_caption_on = $logotypes["logotypes_caption_on"];
                         $header_logotypes_items_width = $logotypes_item["logotypes_items_width"];
                     }   
                     $header_logotypes_media_ids = explode(',', $header_logotypes_media);  
@@ -217,22 +260,22 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                 if (!empty($conf_logotypes_catalog)) {
                     $logotypes_catalog = $conf_logotypes_catalog;
                 }
-        
+                
                 if (!empty($pwe_header_logotypes)) {
                     $logotypes_catalog = $header_logotypes_url;
                     $logotypes_title = $header_logotypes_title;
-                }   
-        
+                    $logotypes_name = $header_logotypes_name;
+                }
+                
+                $files = [];
+                
                 if ($logotypes_catalog == "partnerzy obiektu") {
                     $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/partnerzy-obiektu/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
                 } else if (($logotypes_catalog == "" && $logotypes_media == "") && $header_logotypes_media_urls !== "") {
                     $files = $header_logotypes_media_urls;
                 } else {
-                    $logotypes_media = explode(',', $atts['logotypes_media']);
-                    $logotypes_catalog_urls = glob($_SERVER['DOCUMENT_ROOT'] . '/doc/' . $logotypes_catalog . '/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE); 
-
-                    $files = [];
-
+                    $logotypes_media = explode(',', $logotypes_media);
+                    
                     // Add media URLs if they exist
                     if (!empty($logotypes_media)) {
                         foreach ($logotypes_media as $image_id) {
@@ -242,16 +285,42 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                             }
                         }
                     }
-
-                    // Add URLs from the directory if they exist
+                
+                    // Processing logotypes_catalog
                     if (!empty($logotypes_catalog)) {
-                        $logotypes_catalog_urls = glob($_SERVER['DOCUMENT_ROOT'] . '/doc/' . $logotypes_catalog . '/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE); 
-                        foreach ($logotypes_catalog_urls as $catalog_image_url) {
-                            $files[] = substr($catalog_image_url, strpos($catalog_image_url, '/doc/'));
+                        $logotypes_catalogs = explode(',', $logotypes_catalog);
+
+                        // Queue for processing directories
+                        $directories_to_process = [];
+                        foreach ($logotypes_catalogs as $catalog) {
+                            $catalog = trim($catalog);
+                            $directories_to_process[] = $_SERVER['DOCUMENT_ROOT'] . '/doc/' . $catalog;
+                        }
+
+                        while (!empty($directories_to_process)) {
+                            $current_directory = array_shift($directories_to_process);
+                            
+                            // Add all images from the current directory
+                            $catalog_urls = glob($current_directory . '/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
+                            foreach ($catalog_urls as $catalog_image_url) {
+                                $files[] = substr($catalog_image_url, strpos($catalog_image_url, '/doc/'));
+                            }
+        
+                            // Find subdirectories and add them to the queue
+                            $sub_directories = glob($current_directory . '/*', GLOB_ONLYDIR);
+        
+                            // Sort subdirectories by creation date
+                            usort($sub_directories, function($a, $b) {
+                                return filemtime($a) - filemtime($b);
+                            });
+        
+                            // Adding subdirectories to the queue
+                            foreach ($sub_directories as $sub_directory) {
+                                $directories_to_process[] = $sub_directory;
+                            }
                         }
                     }
-
-                } 
+                }     
                 
                 if (count($files) > 0) {
         
@@ -268,7 +337,15 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                                         #'.$element_unique_id .' {
                                             width: '.$header_logotypes_width.'%;
                                         }
-                                    </style>'; 
+                                    </style>';   
+                    }
+
+                    if (empty($logotypes_title)) {
+                        $output .= '<style>
+                                        #'. $element_unique_id .' .pwe-logotypes-title {
+                                            display: none !important;
+                                        }
+                                    </style>';            
                     }
             
                     $output .= '<div id="'. $element_unique_id .'" class="pwe-container-logotypes-gallery">
@@ -327,44 +404,70 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                                             $site = $logotype["logotype_link"];
                                             $class = ($logotype["logotype_color"] === "true") ? 'pwe-logo-original' : '';
                                             $style = ($logotype["logotype_style"] === "") ? '' : $logotype["logotype_style"];
+                                            $target_blank = (strpos($site, 'http') !== false) ? 'target="_blank"' : '';
                                             break;
-                                        }  
+                                        }   
                                     }
 
                                     // Add the HTTPS protocol if it is not included in the link
-                                    if (!empty($site) && !preg_match("~^(?:f|ht)tps?://~i", $site)) {
+                                    if (!empty($site) && !preg_match("~^(?:f|ht)tps?://~i", $site) && (strpos($site, 'http') !== false)) {
                                         $site = "https://" . $site;
-                                    }     
+                                    }   
+
+                                    // Extract folder name from the path
+                                    $folder_name = basename(dirname($image));
 
                                     //Build the final data structure for the image
                                     $updated_images_url[] = array(
                                         "img"   => $image,
                                         "site"  => $site,
                                         "class" => $class,
-                                        "style" => $style
+                                        "style" => $style,
+                                        "target_blank" => $target_blank,
+                                        "folder_name" => $folder_name,
+                                        "logotypes_name" => $logotypes_name,
+                                        "thumbnail_caption" => $thumbnail_caption        
                                     );
                                 }
+
+                                $images_options = array();
+                                $images_options[] = array(
+                                    "element_id" => $el_id,
+                                    "logotypes_caption_on" => $logotypes_caption_on,
+                                    "header_logotypes_caption_on" => $header_logotypes_caption_on,
+                                    "logotypes_dots_off" => $logotypes_dots_off
+                                );
 
                                 // Output logotypes
                                 if (count($updated_images_url) > 0) {
                                     if ($mobile != 1 && ($logotypes_slider_desktop != true) || 
                                         $mobile == 1 && (count($updated_images_url) <= 2 || $logotypes_grid_mobile == true || $header_logotypes_slider_off == true)) {
-
+                                
                                         foreach ($updated_images_url as $url) { 
+
+                                            if (($logotypes_caption_on == true || $header_logotypes_caption_on == true) && empty($logotypes_name)) {
+                                                $logo_caption_text = '<p>'. $url["folder_name"] .'</p>';
+                                            } else {
+                                                $logo_caption_text = '<p>'. $logotypes_name .'</p>';
+                                            }
+
                                             if ($header_logotypes_items_width != '') {
                                                 $logotypes_items_width = 'min-width:'. $header_logotypes_items_width .';';
                                             }
+                                            $target_blank = (strpos($url["site"], 'http') !== false) ? 'target="_blank"' : '';
                                             if (!empty($image)) {
                                                 if (!empty($url["site"])) {
-                                                    $output .= '<a target="_blank" href="'. $url["site"] .'"><div class="pwe-logo-item '. $url["class"] .'" style="background-image: url(\'' . $url["img"] . '\'); '. $url["style"] .' '. $logotypes_items_width .'"></div></a>';
+                                                    $output .= '<a '. $target_blank .' href="'. $url["site"] .'"><div class="pwe-logo-item '. $url["class"] .'" style="background-image: url(\'' . $url["img"] . '\'); '. $url["style"] .' '. $logotypes_items_width .'">'. $logo_caption_text .'</div></a>';
                                                 } else  {
-                                                    $output .= '<div class="pwe-logo-item '. $url["class"] .'" style="background-image: url(\'' . $url["img"] . '\'); '. $url["style"] .' '. $logotypes_items_width .'"></div>';
+                                                    $output .= '<div class="pwe-logo-item '. $url["class"] .'" style="background-image: url(\'' . $url["img"] . '\'); '. $url["style"] .' '. $logotypes_items_width .'">'. $logo_caption_text .'</div>';
                                                 }
                                             } 
                                         }
-
-                                    } else $output .= PWELogotypesSlider::sliderOutput($updated_images_url);
-                                }      
+                                    } else {
+                                        $output .= PWELogotypesSlider::sliderOutput($updated_images_url, 3000, $images_options);
+                                    }
+                                }
+                                      
                                     
                         $output .= '</div>
                     </div>';

@@ -19,12 +19,21 @@ class PWECountdown {
      * @param string $target_id script target countdown id
      */
     private static function countingDown($timer, $target_id = '') {
+        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
+        $local = get_locale();
+        $timer_seconds = '';
+        if(!$mobile){
+            if($local == 'pl_PL'){
+                $timer_seconds = ' + " " + pluralizePolish(seconds, "sekunda", "sekundy", "sekund").trim()';
+            } else {
+                $timer_seconds = ' + " " + pluralizeEnglish(seconds, "second").trim()';
+            }
+        }
         if($target_id != ""){
             echo '
             <script>
                 {
                     const timer = ' . json_encode($timer) .';
-                    const locale = "' . get_locale() .'";
                     for(i=0;i<timer.length; i++){
                         timer[i]["countdown_end"] = timer[i]["countdown_end"].replace(/\//g, "-").replace(" ", "T");
                     };
@@ -64,16 +73,15 @@ class PWECountdown {
                                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                                     let endMessage = "";
-                                    if (locale == "pl_PL") {
+                                    if ("' . $local . '" == "pl_PL") {
                                         endMessage = pluralizePolish(days, "dzień", "dni", "dni") + " " +
                                                     pluralizePolish(hours, "godzina", "godziny", "godzin") + " " +
-                                                    pluralizePolish(minutes, "minuta", "minuty", "minut") + " " +
-                                                    pluralizePolish(seconds, "sekunda", "sekundy", "sekund").trim();
+                                                    pluralizePolish(minutes, "minuta", "minuty", "minut") ' . $timer_seconds . ';
+                                                    
                                     } else {
                                         endMessage = pluralizeEnglish(days, "day") + " " +
                                                     pluralizeEnglish(hours, "hour") + " " +
-                                                    pluralizeEnglish(minutes, "minute") + " " +
-                                                    pluralizeEnglish(seconds, "second").trim();
+                                                    pluralizeEnglish(minutes, "minute") ' . $timer_seconds . ';
                                     }
 
                                     if(distance < 0){
@@ -101,24 +109,27 @@ class PWECountdown {
                                     const targetElement = mutation.target;
                                     const customBtn = document.getElementById("timer-button-' . $target_id . '");
                                     const hasStuckedClass = targetElement.classList.contains("is_stucked");
-                                    const buttonLink = customBtn.href;
-                                    if (hasStuckedClass) {
-                                        if (buttonLink.includes("/en/")) {
-                                            customBtn.innerHTML = "<span>REGISTER<br/>Get a free ticket</span>";
-                                            customBtn.href = "/en/registration/";
+                                    if (customBtn) {
+                                        const buttonLink = customBtn.href;
+
+                                        if (hasStuckedClass) {
+                                            if (buttonLink.includes("/en/")) {
+                                                customBtn.innerHTML = "<span>REGISTER<br/>Get a free ticket</span>";
+                                                customBtn.href = "/en/registration/";
+                                            } else {
+                                                customBtn.innerHTML = "<span>Zarejestruj się<br/>Odbierz darmowy bilet</span>";
+                                                customBtn.href = "/rejestracja/";
+                                            }
                                         } else {
-                                            customBtn.innerHTML = "<span>Zarejestruj się<br/>Odbierz darmowy bilet</span>";
-                                            customBtn.href = "/rejestracja/";
+                                            if (buttonLink.includes("/en/")) {
+                                                customBtn.innerHTML = "<span>Book a stand</span>";
+                                                customBtn.href = "/en/become-an-exhibitor";
+                                            } else {
+                                                customBtn.innerHTML = "<span>Zostań wystawcą</span>";
+                                                customBtn.href = "/zostan-wystawca/";
+                                            }
                                         }
-                                    } else {
-                                        if (buttonLink.includes("/en/")) {
-                                            customBtn.innerHTML = "<span>Book a stand</span>";
-                                            customBtn.href = "/en/become-an-exhibitor";
-                                        } else {
-                                            customBtn.innerHTML = "<span>Zostań wystawcą</span>";
-                                            customBtn.href = "/zostan-wystawca/";
-                                        }
-                                    }
+                                    }                                    
                                 }
                             }
                         }

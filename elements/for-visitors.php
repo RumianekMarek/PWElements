@@ -65,6 +65,8 @@ class PWElementForVisitors extends PWElements {
                     . $btn_color
                     . $btn_shadow_color
                     . $btn_border .'
+                    box-shadow: unset !important;
+                    border-radius: 10px !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-content-visitors-item {
                     width: 100%;
@@ -146,7 +148,7 @@ class PWElementForVisitors extends PWElements {
                         </div>
                         <div class="pwe-btn-container">
                             <span>
-                                <a class="pwe-link btn border-width-0 shadow-black btn-accent btn-flat" href='.
+                                <a class="pwe-link btn border-width-0 shadow-black btn-accent btn-flat pwe-btn" href='.
                                     self::languageChecker(
                                         <<<PL
                                             "/rejestracja/">Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet

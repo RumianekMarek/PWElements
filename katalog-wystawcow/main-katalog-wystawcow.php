@@ -259,6 +259,15 @@ class PWECatalog {
                         'save_always' => true,
                         'value' => array(__('True', 'pwe_katalog') => 'true',),
                     ),
+                    array(
+                        'type' => 'checkbox',
+                        'heading' => __('Turn off dots', 'pwe_katalog'),
+                        'param_name' => 'slider_dots_off',
+                        'description' => __('Check if you want to turn off dots.', 'pwe_katalog'),
+                        'admin_label' => true,
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_katalog') => 'true',),
+                    ), 
                 ),
             ));
         }
@@ -459,6 +468,29 @@ class PWECatalog {
         return $logos_array;
     }
 
+      /**
+     * Function to change color brightness (taking color in hex format)
+     *
+     * @return array
+     */
+    public static function adjustBrightness($hex, $steps) {
+        // Convert hex to RGB
+        $hex = str_replace('#', '', $hex);
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        // Shift RGB values
+        $r = max(0, min(255, $r + $steps));
+        $g = max(0, min(255, $g + $steps));
+        $b = max(0, min(255, $b + $steps));
+
+        // Convert RGB back to hex
+        return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT)
+                . str_pad(dechex($g), 2, '0', STR_PAD_LEFT)
+                . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+    }
+
     /**
      * Check Title for Exhibitors Catalog
      */
@@ -506,22 +538,24 @@ class PWECatalog {
      * @return string
      */
     public function PWECatalogOutput($atts, $content = null) {
-        $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
-        $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important;';
-        $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
-        $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important;';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
+        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important';
+        $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
 
         // pwe_katalog output
         extract( shortcode_atts( array(
             'format' => '',
         ), $atts ));
 
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
         if ($format == 'PWECatalogFull'){
-            $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important;';
-            $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'black') . '!important; border-width: 0 !important;';
+            $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+            $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'black') . '!important';
         } else {
-            $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
-            $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
+            $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important';
+            $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
         }
 
         include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
@@ -549,28 +583,60 @@ class PWECatalog {
 
         $output_html = '';
 
-        if (empty($identification)) {
+        if (empty($identification) && $format == 'PWECatalog10') {
             $output_html .= '
             <style>
-            .row-container:has(#katalog-' . self::$rnd_id . ') {
-                display: none !important;
-            }
-            </style>';
+                .row-container:has(#pweForm) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                    padding-top: 100px;
+                }
+                #katalog-'. self::$rnd_id .') {
+                    display: none;
+                }
+                .uncont:has(#katalog-'. self::$rnd_id .') {
+                    height: 100%;
+                }
+                .catalog-default-bg {
+                    background-position: center;
+                    background-size: cover;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 0 !important;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                }  
+                .catalog-default-bg img {
+                    width: 90%;
+                }
+                @media (max-width:960px) {
+                    .row-container:has(#pweForm) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                        padding-top: 18px;
+                    }
+                }
+            </style>
+
+            <div class="catalog-default-bg" style="background-image: url(/doc/header_mobile.*);">
+                <img src="/doc/logo.*">
+            </div>';
         }
 
         $output_html .= '
             <style>
-                #katalog-' . self::$rnd_id . '{
-                    .pwe-text-color{
-                        text-align: center;
-                        ' . $text_color . '
-                        ' . $text_shadow . '
-                    }
-                    .pwe-cutom-btn{
-                        ' .$btn_color 
-                        . $btn_shadow_color 
-                        . $btn_border . ' 
-                    }
+                #katalog-'. self::$rnd_id .' .pwe-text-color {
+                    text-align: center;
+                    color:' . $text_color . ';
+                }
+                #katalog-'. self::$rnd_id .' .custom-link {
+                    color: '. $btn_text_color .';
+                    background-color: '. $btn_color .';
+                    border: 1px solid '. $btn_border .';
+                }
+                #katalog-'. self::$rnd_id .' .custom-link:hover {
+                    color: '. $btn_text_color .';
+                    background-color: '. $darker_btn_color .'!important;
+                    border: 1px solid '. $darker_btn_color .'!important;
                 }
             </style>
 

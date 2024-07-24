@@ -84,6 +84,31 @@ class PWElementProfile extends PWElements {
                 ),
             ),
             array(
+                'type' => 'textarea_raw_html',
+                'group' => 'PWE Element',
+                'heading' => __('Text mobile', 'pwelement'),
+                'param_name' => 'profile_mobile_text',
+                'param_holder_class' => 'backend-textarea-raw-html backend-area-half-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementProfile',
+                ),
+            ),
+            array(
+                'type' => 'textarea_raw_html',
+                'group' => 'PWE Element',
+                'heading' => __('Show more text mobile', 'pwelement'),
+                'param_name' => 'profile_mobile_show_more',
+                'description' => __('Hidden text', 'pwelement'),
+                'param_holder_class' => 'backend-textarea-raw-html backend-area-half-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementProfile',
+                ),
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'param_name' => 'profile_images',
@@ -245,12 +270,11 @@ class PWElementProfile extends PWElements {
      * @param array @atts options
      */
     public static function output($atts, $content = null) {
-        $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
-        $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
-        $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important;';
-        $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
-        $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$fair_colors['Accent']) . '!important;';
-        $profile_shadow = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important';
+        $btn_border = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important';
+        $profile_shadow = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important';
 
         extract( shortcode_atts( array(
             'profile_title_checkbox' => '',
@@ -261,6 +285,8 @@ class PWElementProfile extends PWElements {
             'profile_background' => '',
             'profile_reverse_block' => '',
             'profile_show_more' => '',
+            'profile_mobile_text' => '',
+            'profile_mobile_show_more' => '',
             'profile_tickets_button_link' => '',
             'profile_register_button_link' => '',
             'profile_exhibitors_button_link' => '',
@@ -276,6 +302,14 @@ class PWElementProfile extends PWElements {
         $profile_show_more_decoded = base64_decode($profile_show_more);// Decoding Base64
         $profile_show_more_decoded = urldecode($profile_show_more_decoded); // Decoding URL
         $profile_hidden_content = wpb_js_remove_wpautop($profile_show_more_decoded, true);// Remowe wpautop
+
+        $profile_mobile_text_decoded = base64_decode($profile_mobile_text);// Decoding Base64
+        $profile_mobile_text_decoded = urldecode($profile_mobile_text_decoded); // Decoding URL
+        $profile_mobile_content = wpb_js_remove_wpautop($profile_mobile_text_decoded, true);// Remowe wpautop
+
+        $profile_mobile_show_more_decoded = base64_decode($profile_mobile_show_more);// Decoding Base64
+        $profile_mobile_show_more_decoded = urldecode($profile_mobile_show_more_decoded); // Decoding URL
+        $profile_mobile_show_more_hidden = wpb_js_remove_wpautop($profile_mobile_show_more_decoded, true);// Remowe wpautop
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
@@ -299,32 +333,33 @@ class PWElementProfile extends PWElements {
         if (in_array('profile_title_visitors', explode(',', $profile_title_checkbox))) {
             $profile_id = "profil-odwiedzajacego";
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile"; 
-            $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "1/1" : $profile_img_aspect_ratio;
+            $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "auto" : $profile_img_aspect_ratio;
             if (get_locale() == "pl_PL") {
-                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Wśród odwiedzających targi [trade_fair_name] znajdą się zaproszeni przez nas i Wystawców:</p>';
+                $profile_header_text = '<p class="profile-header-text" style="color: '. $text_color .';">Wśród odwiedzających targi [trade_fair_name] znajdą się zaproszeni przez nas i Wystawców:</p>';
             } else {
-                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Visitors of the [trade_fair_name_eng] fair will include invited by us and the Exhibitors:</p>';
+                $profile_header_text = '<p class="profile-header-text" style="color: '. $text_color .';">Visitors of the [trade_fair_name_eng] fair will include invited by us and the Exhibitors:</p>';
             }
-            $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important;';
-            $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important;';
-            $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
+            $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
+            $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important';
+            $btn_border = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
         } else if (in_array('profile_title_exhibitors', explode(',', $profile_title_checkbox))) {
             $profile_id = "profil-wystawcy";
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Profil wystawcy" : "Exhibitor profile";
-            $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "1/1" : $profile_img_aspect_ratio;
+            $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "auto" : $profile_img_aspect_ratio;
             if (get_locale() == "pl_PL") {
-                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Wśród Wystawców targów [trade_fair_name] znajdą się firmy z następujących sektorów:</p>';
+                $profile_header_text = '<p class="profile-header-text" style="color: '. $text_color .';">Wśród Wystawców targów [trade_fair_name] znajdą się firmy z następujących sektorów:</p>';
             } else {
-                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Exhibitors at [trade_fair_name_eng] will include companies from the following sectors:</p>';
+                $profile_header_text = '<p class="profile-header-text" style="color: '. $text_color .';">Exhibitors at [trade_fair_name_eng] will include companies from the following sectors:</p>';
             }
         } else if (in_array('profile_title_scope', explode(',', $profile_title_checkbox))) {
             $profile_id = "zakres-branzowy";
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Zakres branżowy" : "Industry scope";
             $custom_profile_class_title = "class=main-heading-text";
+            $profile_img_aspect_ratio = ($profile_img_aspect_ratio == '') ? "auto" : $profile_img_aspect_ratio;
             if (get_locale() == "pl_PL") {
-                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">Podczas targów [trade_fair_name] będą reprezentowane następujące sektory i branże:</p>';
+                $profile_header_text = '<p class="profile-header-text" style="color: '. $text_color .';">Podczas targów [trade_fair_name] będą reprezentowane następujące sektory i branże:</p>';
             } else {
-                $profile_header_text = '<p class="profile-header-text" style="'. $text_color .'">The following sectors and industries will be represented at [trade_fair_name_eng]:</p>';
+                $profile_header_text = '<p class="profile-header-text" style="color: '. $text_color .';">The following sectors and industries will be represented at [trade_fair_name_eng]:</p>';
             }
         } else if (in_array('profile_application', explode(',', $profile_title_checkbox))) {
             $profile_id = "aplikacja";
@@ -349,21 +384,22 @@ class PWElementProfile extends PWElements {
             $profile_id = $element_unique_id;
         }
 
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
         $output = '
             <style>
                 .pwelement_'. self::$rnd_id .' {
                     margin: 0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-btn {
-                    ' . $btn_text_color . '
-                    ' . $btn_color . '
-                    ' . $btn_shadow_color . '
-                    ' . $btn_border . '
+                    color: '. $btn_text_color .';
+                    background-color: '. $btn_color .';
+                    border: 1px solid '. $btn_border .';
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
-                    color: #000000 !important;
-                    background-color: #ffffff !important;
-                    border: 1px solid #000000 !important;
+                    color: '. $btn_text_color .';
+                    background-color: '. $darker_btn_color .'!important;
+                    border: 1px solid '. $darker_btn_color .'!important;
                 }
                 .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-profile) {
                     max-width: 100%;
@@ -449,9 +485,13 @@ class PWElementProfile extends PWElements {
                 @media (max-width: 960px) {
                     .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                         flex-direction: column;
+                        gap: 0 !important;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-profile-block {
                         width: 100% !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-image {
+                        aspect-ratio: auto !important;
                     }
                 }
                 @media (max-width: 600px) {
@@ -466,6 +506,9 @@ class PWElementProfile extends PWElements {
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     flex-direction: column-reverse;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-profile-text-block p:first-of-type {
+                    display: none;
                 }
             </style>';
         } else if ($profile_reverse_block == 'true') {
@@ -486,16 +529,30 @@ class PWElementProfile extends PWElements {
                     <div class="pwe-profile-content">
                         <div class="pwe-profile-text-block pwe-profile-block">';
                             if ($custom_profile_title) {
-                                $output .= '<div '. $custom_profile_class_title .'><h4 class="pwe-uppercase" style="padding-bottom: 18px;'. $text_color .'";>'. $custom_profile_title .'</h4></div>';
+                                $output .= '<div '. $custom_profile_class_title .'><h4 class="pwe-uppercase" style="padding-bottom: 18px; color: '. $text_color .';">'. $custom_profile_title .'</h4></div>';
                             }
+
                             $output .= $profile_header_text;
-                            $output .= '<div style="'. $text_color .'";>'. $profile_content .'</div>';
-                            if (!empty($profile_hidden_content)) {
-                                $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
-                                $output .= '
-                                    <div class="pwe-hidden-content" style="display: none; '. $text_color .'">'. $profile_hidden_content .'</div>
-                                    <p class="pwe-see-more" style="cursor: pointer; '. $text_color .'">'. $showMore .'</p>';
-                            } $output .= '
+
+                            if ($mobile == 1 && !empty($profile_mobile_content)) {
+                                $output .= '<div style="color: '. $text_color .';";>'. $profile_mobile_content .'</div>';
+                                if (!empty($profile_mobile_show_more_hidden)) {
+                                    $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                                    $output .= '
+                                        <div class="pwe-hidden-content" style="display: none; color: '. $text_color .';">'. $profile_mobile_show_more_hidden .'</div>
+                                        <p class="pwe-see-more" style="cursor: pointer; color: '. $text_color .';">'. $showMore .'</p>';
+                                }
+                            } else {
+                                $output .= '<div style="color: '. $text_color .';">'. $profile_content .'</div>';
+                                if (!empty($profile_hidden_content)) {
+                                    $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                                    $output .= '
+                                        <div class="pwe-hidden-content" style="display: none; color: '. $text_color .';">'. $profile_hidden_content .'</div>
+                                        <p class="pwe-see-more" style="cursor: pointer; color: '. $text_color .';">'. $showMore .'</p>';
+                                }
+                            }
+                            
+                        $output .= '
                         </div>
                         <div class="pwe-profile-images-block pwe-profile-block">
                             <div class="pwe-profile-images-wrapper">';
@@ -576,10 +633,10 @@ class PWElementProfile extends PWElements {
                                             <a class="pwe-link btn pwe-btn" href="'. $profile_register_button_link .'"'. 
                                             self::languageChecker(
                                                 <<<PL
-                                                alt="link do rejestracji">Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet
+                                                alt="link do rejestracji">Weź udział
                                                 PL,
                                                 <<<EN
-                                                alt="link to registration">Register<span style="display: block; font-weight: 300;">Get a free ticket
+                                                alt="link to registration">Take a part
                                                 EN
                                             )
                                             .'</a>  

@@ -26,15 +26,20 @@ class PWECatalog7 extends PWECatalog {
                                 'img' => $exhibitor['URL_logo_wystawcy'],
                                 'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www'])
                             );
-                        }                        
+                        }         
+                        $images_options = array();
+                        $images_options[] = array(
+                            "element_id" => self::$rnd_id,
+                            "logotypes_dots_off" => $atts["slider_dots_off"]  
+                        );                 
                         require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
-                        $output .= PWELogotypesSlider::sliderOutput($slider_array);
+                        $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
                     } else { 
                         foreach ($exhibitors as $exhibitor){
                             $exhibitorsUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www']);
                             $output .= '
                                 <a target="_blank" href="'. $exhibitorsUrl .'">
-                                    <div style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
+                                    <div class="cat-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
                                 </a>';
                         }
                     }

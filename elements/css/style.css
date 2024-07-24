@@ -7,12 +7,14 @@
 .row-parent:has(#niePrzegap) {
     padding: 0 !important;
 }
+
 /* .wpb_column:has(.pwelement) {
     padding-top: 0 !important;
 } */
 .full-width:has(.pwelement) {
     padding: 0 !important;
 }
+
 .half-block-padding-top {
     padding-top: 18px !important;
 }
@@ -52,6 +54,12 @@
     transform-origin: center !important;
     min-width: 240px;
     margin: 3px;
+}
+
+.row-parent .pwelement .pwe-btn {
+    border-radius: 10px !important;
+    box-shadow: unset !important;
+    transform: none !important;
 }
 
 .link-text-underline :is(a, a span) {
@@ -226,10 +234,10 @@ strong {
 
 .main-heading-text :is(h2, h3, h4),
 .secondary-heading-text :is(h2, h3, h4) {
-    font-size: 20px !important;
+    font-size: 18px !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
-
+    color: black;
 }
 
 .btn {
@@ -237,16 +245,40 @@ strong {
 }
 
 @media (max-width:960px) {
+
     .row-container:has(.gform_wrapper, .pwe-container-grupy) .wpb_column,
     .row-container:has(.pwe-route) .wpb_column {
         max-width: 555px;
         margin: 0 auto;
     }
+
     .row-container:has(.gform_wrapper, .pwe-container-grupy) .row-parent {
         padding: 36px 18px 36px 18px !important;
     }
 }
 
-#mapa, #wystawcy, #konferencje, #patroni-medialni, #edycja-w-liczbach, #profil-odwiedzajacego, #profil-wystawcy, #zakres-branzowy, #faq, #stand, #voucher, #organizator, #download, #dojazd, #visitorsBenefits, #exhibitorsBenefits {
+#mapa,
+#wystawcy,
+#konferencje,
+#patroni-medialni,
+#edycja-w-liczbach,
+#profil-odwiedzajacego,
+#profil-wystawcy,
+#zakres-branzowy,
+#faq,
+#stand,
+#voucher,
+#organizator,
+#download,
+#dojazd,
+#visitorsBenefits,
+#exhibitorsBenefits {
     scroll-margin-top: 200px;
+}
+
+.participate-button {
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-weight: 700;
 }

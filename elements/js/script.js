@@ -1,6 +1,6 @@
-// Lazy load for iframes
-// The video will load when you hover over it
 document.addEventListener("DOMContentLoaded", function() {
+    // Lazy load for iframes
+    // The video will load when you hover over it
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
@@ -26,4 +26,24 @@ document.addEventListener("DOMContentLoaded", function() {
         observer.observe(PWEIframe);
     });
 });
-  
+
+
+/* Show more/less */
+jQuery(function ($) { 
+    let hiddenContentPWE = true; 
+
+    $(".pwe-see-more").click(function(event) {
+        let currentText = $(event.target).text();
+        if (pweScriptData.locale === "pl_PL") {
+            $(event.target).text(currentText === "więcej..." ? "ukryj..." : "więcej...");
+        } else {
+            $(event.target).text(currentText === "more..." ? "hidden..." : "more...");
+        }
+        hiddenContentPWE = !hiddenContentPWE;  
+        $(event.target).prev().slideToggle();
+    }); 
+});
+
+
+
+

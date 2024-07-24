@@ -166,7 +166,7 @@ class PWElementMainCountdown extends PWElements {
         );
 
         return $element_output;
-    }
+    } 
 
     
     /**
@@ -283,10 +283,10 @@ class PWElementMainCountdown extends PWElements {
             }
         }
         
-        $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important;';
-        $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
-        $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important;';
-        $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'white') . '!important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         
@@ -350,16 +350,21 @@ class PWElementMainCountdown extends PWElements {
                     padding: 0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' #main-timer p {
-                    ' . $text_color . '
+                    color: '. $btn_text_color .';
                     margin: 9px auto;
                     font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-btn {
-                    ' . $btn_text_color 
-                    . $btn_color
-                    . $btn_shadow_color . '
+                    color: '. $btn_text_color .';
+                    background-color: '. $btn_color .';
+                    border: 1px solid '. $btn_color .';
                     margin: 9px 18px; 
                     transform: scale(1) !important;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
+                    color: '. $btn_text_color .';
+                    background-color: '. $darker_btn_color .'!important;
+                    border: 1px solid '. $darker_btn_color .'!important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-timer-text {
                     font-weight: ' . $countdown_font_weight . ';
@@ -390,6 +395,12 @@ class PWElementMainCountdown extends PWElements {
                         min-width: 100%;
                     }  
                 }';
+                $output .= '
+                @media (max-width:959px){
+                    .wpb_column:has(.pwelement_'. self::$rnd_id .') {
+                        padding-top: 0 !important;
+                    }
+                }';
 
             $output .= '</style>';
                 
@@ -400,12 +411,22 @@ class PWElementMainCountdown extends PWElements {
             };
             if (get_locale() == "pl_PL") {
                 $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                            ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ' . $date_dif->s . ' sekund 
-                           </p>';
+                            ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
+                            if(!$mobile){
+                                $output .= $date_dif->s . ' sekund 
+                                           </p>';
+                            } else {
+                                $output .= '</p>';
+                            }
             } else {
                 $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                            ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ' . $date_dif->s . ' seconds
-                           </p>';
+                            ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
+                            if(!$mobile){
+                                $output .= $date_dif->s . ' seconds
+                                        </p>';
+                            } else {
+                                $output .= '</p>';
+                            }
             }
             if ($right_countdown[0]['turn_off_countdown_button'] != true && $right_countdown[0]['countdown_btn_text'] != '') {
                 $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';

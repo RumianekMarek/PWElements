@@ -5,8 +5,9 @@
 .limit-width:has(.exhibitors-catalog #full) {
     max-width: unset !important;
 }
+
 .exhibitors-catalog {
-    margin-top: 0 !important; 
+    margin-top: 0 !important;
 }
 
 .exhibitor__header {
@@ -284,9 +285,12 @@
     gap: 10px;
 }
 
-.img-container div,
-.img-container-top21 div,
-.img-container-recently7 div {
+.img-container .cat-img,
+.img-container-top21 .cat-img,
+.img-container-recently7 .cat-img,
+.img-container .slides div,
+.img-container-top21 .slides div,
+.img-container-recently7 .slides div {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -306,13 +310,20 @@
     gap: 6px;
 }
 
-.img-container-top10 div {
+.img-container-top10 .cat-img,
+.img-container-top10 .slides div {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    min-height: 130px;
+    min-height: 72px;
     min-width: 170px;
-    margin: 15px 10px;
+    padding: 10px 5px;
+    margin: 5px;
+}
+.img-container-top10 a,
+.img-container-top10 .slides a   {
+    display: flex;
+    align-items: center;
 }
 
 .img-container-top10 .tickets {
@@ -342,4 +353,9 @@
 #top10,
 #top21 {
     margin-top: 0px !important;
+}
+
+.custom-link {
+    box-shadow: unset !important;
+    border-radius: 10px !important;
 }

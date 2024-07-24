@@ -185,6 +185,33 @@ class PWElementStickyButtons extends PWElements {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Show info text show', 'pwelement'),
+                'param_name' => 'sticky_buttons_info_text_show',
+                'param_holder_class' => 'backend-area-one-fifth-width',
+                'description' => __('Nad: Wybierz jeden z poniższych aby dowiedzieć się więcej. / Select one of the following to find out more. Pod: Więcej wydarzeń konferencyjnych pojawi się wkrótce. / More conference events will follow soon.', 'pwelement'),
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Show info text bottom', 'pwelement'),
+                'param_name' => 'sticky_buttons_info_text_bottom',
+                'param_holder_class' => 'backend-area-one-fifth-width',
+                'description' => __('PL: Więcej wydarzeń konferencyjnych pojawi się wkrótce. / EN: More conference events will follow soon.', 'pwelement'),
+                'save_always' => true,
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Name parameter for sections & rows', 'pwelement'),
@@ -282,6 +309,8 @@ class PWElementStickyButtons extends PWElements {
             'sticky_buttons_mini_hide' => '',
             'sticky_buttons_parameter' => '',
             'sticky_buttons_scroll' => '',
+            'sticky_buttons_info_text_show' => '',
+            'sticky_buttons_info_text_bottom' => '',
         ), $atts ));   
         
         $sticky_buttons_width = ($sticky_buttons_width == '') ? '170px' : $sticky_buttons_width;
@@ -290,6 +319,12 @@ class PWElementStickyButtons extends PWElements {
         $sticky_buttons_font_size = ($sticky_buttons_font_size == '') ? '12px' : $sticky_buttons_font_size; 
 
         $sticky_buttons_parameter = ($sticky_buttons_parameter == '') ? 'konferencja' : $sticky_buttons_parameter;
+
+        if (get_locale() == 'pl_PL') {
+            $sticky_buttons_info_text_bottom = (empty($sticky_buttons_info_text_bottom)) ? 'Więcej wydarzeń konferencyjnych pojawi się wkrótce.' : $sticky_buttons_info_text_bottom;
+        } else {
+            $sticky_buttons_info_text_bottom = (empty($sticky_buttons_info_text_bottom)) ? 'More conference events will follow soon.' : $sticky_buttons_info_text_bottom;
+        }
 
         $output = '
             <style>
@@ -405,6 +440,22 @@ class PWElementStickyButtons extends PWElements {
                     padding: 5px 10px;
                     font-size: 16px;
                 }
+                .pwelement_'. self::$rnd_id .' .sticky-buttons-info-top,
+                .pwelement_'. self::$rnd_id .' .sticky-buttons-info-bottom {
+                    position: relative;
+                    z-index: 11;
+                    background: white;
+                    display: flex;
+                    justify-content: center;
+                    text-align: center;
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .sticky-buttons-info-top {
+                    padding: 18px 36px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .sticky-buttons-info-bottom {
+                    padding: 0 36px 18px;
+                }
                 .pwelement_'. self::$rnd_id .' .sticky-pin {
                     position: fixed !important;
                     top: 0;
@@ -473,6 +524,17 @@ class PWElementStickyButtons extends PWElements {
 
             $output .= '<div id="'. $element_unique_id .'" class="custom-container-sticky-buttons">';
                 if ($sticky_buttons_full_size === "true") {
+                    if ($sticky_buttons_info_text_show == true) {
+                        $output .= '<p class="sticky-buttons-info-top">'. 
+                        self::languageChecker(
+                            <<<PL
+                            Wybierz jeden z poniższych aby dowiedzieć się więcej.
+                            PL,
+                            <<<EN
+                            Select one of the following to find out more.
+                            EN
+                        ) .'</p>';
+                    }
                     $output .= '<div class="custom-sticky-buttons-full-size" background-color:'. $sticky_buttons_full_size_background .'!important;">';
                     
                     if (is_array($sticky_buttons_json)) {
@@ -523,7 +585,7 @@ class PWElementStickyButtons extends PWElements {
                     } else {
                         $output .= 'Invalid JSON data.';
                     }
-
+                    
                     $output .= '</div>';
                 }
 
@@ -603,7 +665,11 @@ class PWElementStickyButtons extends PWElements {
                         }    
 
                         $output .= '</div>
-                    </div>
+                    </div>';
+                    if ($sticky_buttons_info_text_show == true) {
+                        $output .= '<p class="sticky-buttons-info-bottom">'. $sticky_buttons_info_text_bottom .'</p>';
+                    }
+                $output .= '
                 </div>';
 
             $buttons_cropped_image = json_encode($buttons_urls);
@@ -761,7 +827,7 @@ class PWElementStickyButtons extends PWElements {
 
                             button.style.transition = ".3s ease";
 
-                            var hideSections = document.querySelectorAll(".page-wrapper .vc_row.row-container.hide-section-'. $unique_id .'");
+                            var hideSections = document.querySelectorAll(".page-wrapper .row-container.hide-section-'. $unique_id .'");
 
                             // Hide all sections except the first one
                             if ("' . $sticky_hide_sections . '" === "true") {
@@ -793,7 +859,7 @@ class PWElementStickyButtons extends PWElements {
                                 }
                                 customScrollTop += "px";
 
-                                // Hide all elements of .vc_row.row-container
+                                // Hide all elements of .row-container
                                 hideSections.forEach(function(section) {
                                     section.style.display = "none";
                                 });
@@ -919,7 +985,7 @@ class PWElementStickyButtons extends PWElements {
                             });
 
                             // Add a .active class to the element with anchor id + -btn
-                            var activeBtn = pweElement.getElementById(conferenceParam + "-btn");
+                            var activeBtn = document.getElementById(conferenceParam + "-btn");
                             if (activeBtn) {
                                 activeBtn.classList.add("active");
                             }

@@ -86,6 +86,8 @@ class PWElementExhibitors extends PWElements {
                 '.$btn_text_color 
                 .$btn_color 
                 .$btn_shadow_color.'
+                box-shadow: unset !important;
+                border-radius: 10px !important;
             }
             .pwelement_'. self::$rnd_id .' .pwe-border-top-left {
                 box-shadow: -3px -3px ' . $border_color . ';
