@@ -583,7 +583,7 @@ class PWECatalog {
 
         $output_html = '';
 
-        $exhibitors_top10 = self::logosChecker($identification, "PWECatalog10");
+        $exhibitors_top10 = ($identification) ? self::logosChecker($identification, "PWECatalog10") : 0;
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
             $output_html .= '
             <style>
