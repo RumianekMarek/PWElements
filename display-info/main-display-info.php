@@ -20,6 +20,10 @@ class PWEDisplayInfo {
             }
         }
         
+        // Hook actions
+        add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
+        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
+
         add_action('init', array($this, 'initVCMapPWEDisplayInfo'));
         add_shortcode('pwe_display_info', array($this, 'PWEDisplayInfoOutput'));
     }
@@ -193,6 +197,29 @@ class PWEDisplayInfo {
      */
     public static function checkForMobile(){
         return (preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']));
+    }
+
+    /**
+     * Adding Styles
+     */
+    public function addingStyles(){
+        $css_file = plugins_url('display-info.css', __FILE__);
+        $css_version = filemtime(plugin_dir_path(__FILE__) . 'display-info.css');
+        wp_enqueue_style('pwe-display-info-css', $css_file, array(), $css_version);
+    }
+
+    /**
+     * Adding Scripts
+     */
+    public function addingScripts($atts){
+        $js_file = plugins_url('display-info.js', __FILE__);
+        $js_version = filemtime(plugin_dir_path(__FILE__) . 'display-info.js');
+        wp_enqueue_script('pwe-display-info-js', $js_file, array('jquery'), $js_version, true);
+
+        $locale = get_locale();
+        wp_localize_script('pwe-display-info-js', 'pweScriptData', array(
+            'locale' => $locale
+        ));
     }
 
     /**
