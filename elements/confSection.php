@@ -304,6 +304,7 @@ class PWElementConfSection extends PWElements {
                         margin: 0;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-conference-info-column {
+                        text-align: start;
                         width: 65%;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-conference-logo-column {

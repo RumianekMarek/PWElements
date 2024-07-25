@@ -1603,6 +1603,11 @@ class PWEHeader {
                                 text-align: center;
                                 font-weight: 700;
                             }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), 
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4, 
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-title h2 {
+                                text-shadow: 0 0 1px '. $text_shadow .';
+                            } 
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h2 {
                                 margin: 0;
                                 font-size: 28px !important;

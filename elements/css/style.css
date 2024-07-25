@@ -282,3 +282,8 @@ strong {
     border-radius: 5px;
     font-weight: 700;
 }
+
+.gform_legacy_markup_wrapper .gf_invisible, .gform_legacy_markup_wrapper .gfield_visibility_hidden, .gfield--type-captcha .gform-field-label {
+    visibility:hidden !important;
+    height:0 !important;
+}

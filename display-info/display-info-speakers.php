@@ -411,7 +411,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">
                                     <img class="pwe-speaker-img" src="'. $speaker_image_src .'">
                                     <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>
-                                    <p class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</p>';
+                                    <div class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</div>';
                                     if(!empty($speaker_bio)){
                                         $output .='<button class="pwe-speaker-btn">BIO</button>';
                                     }
@@ -465,7 +465,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                                         <span class="pwe-speaker-modal-close">&times;</span>
                                         <img class="pwe-speaker-modal-image" src="${img.src}" alt="Speaker Image" style="width:100%; max-width:150px;">
                                         <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>
-                                        <p class="pwe-speaker-modal-desc">${desc.innerHTML}</p>
+                                        <div class="pwe-speaker-modal-desc">${desc.innerHTML}</div>
                                     </div>
                                 `;
                                 

@@ -583,43 +583,14 @@ class PWECatalog {
 
         $output_html = '';
 
-        if (empty($identification) && $format == 'PWECatalog10') {
+        $exhibitors_top10 = self::logosChecker($identification, "PWECatalog10");
+        if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
             $output_html .= '
             <style>
-                .row-container:has(#pweForm) .wpb_column:has(#katalog-'. self::$rnd_id .') {
-                    padding-top: 100px;
-                }
-                #katalog-'. self::$rnd_id .') {
-                    display: none;
-                }
-                .uncont:has(#katalog-'. self::$rnd_id .') {
-                    height: 100%;
-                }
-                .catalog-default-bg {
-                    background-position: center;
-                    background-size: cover;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 0 !important;
-                    width: 100%;
-                    height: 100%;
-                    position: absolute;
-                    top: 0;
-                }  
-                .catalog-default-bg img {
-                    width: 90%;
-                }
-                @media (max-width:960px) {
-                    .row-container:has(#pweForm) .wpb_column:has(#katalog-'. self::$rnd_id .') {
-                        padding-top: 18px;
-                    }
-                }
-            </style>
-
-            <div class="catalog-default-bg" style="background-image: url(/doc/header_mobile.*);">
-                <img src="/doc/logo.*">
-            </div>';
+                .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                    display: none !important;
+                } 
+            </style>';
         }
 
         $output_html .= '

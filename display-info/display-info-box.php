@@ -797,7 +797,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 #info-box-'. self::$rnd_id .' {
                     width: 100% !important;
                     padding: 10px;
-                    margin-top: 18px;
+                    margin: 0;
                     border-radius: 5px;
                 }
                 .wpb_column #info-box-'. self::$rnd_id .':nth-of-type(2n) {

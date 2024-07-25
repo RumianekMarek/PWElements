@@ -385,6 +385,26 @@ class PWElementRegistration extends PWElements {
 
         } else if ($registration_select == "exhibitors") {
 
+            $output .= '
+            <style>
+                @media (min-width: 959px) {
+                    .row-container:has(#'. $element_unique_id .') .wpb_column, 
+                    .row-container:has(#top10) .wpb_column {
+                        display: none;
+                    }
+                    .wpb_column:has(#top10),
+                    .wpb_column:has(#'. $element_unique_id .') {
+                        display: table-cell !important;
+                    }
+                }
+                .wpb_column #'. $element_unique_id .' {
+                    margin: 0 auto;
+                }
+                #'. $element_unique_id .' {
+                    max-width: 555px !important;
+                }    
+            </style>';
+
             if ($mobile != 1) {
                 $output .= '<style>
                                 .row-container:has(.img-container-top10) .img-container-top10 div {

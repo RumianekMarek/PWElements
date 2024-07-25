@@ -126,7 +126,7 @@ class PWElementAssociates extends PWElements {
             if (strpos($headers[0], '404') === false) {
                 $conf_site = '/en/conferences/';
             } else {
-                $conf_site = '/en/event/';
+                $conf_site = '/en/events/';
             }
         }
 
@@ -235,7 +235,6 @@ class PWElementAssociates extends PWElements {
                         text-align: center !important;
                         margin-top: 0 !important;
                         box-shadow: none !important;
-                        text-shadow: none !important;
                         text-transform: inherit !important;
                     }
             </style>';

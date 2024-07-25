@@ -30,20 +30,6 @@ class PWECatalog10 extends PWECatalog {
             .row-container:has(.pwe-registration) .img-container-top10 {
                 height: 85%;
             }
-            .custom-catalog-bg {
-                width: 100%;
-                height: 100%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .custom-catalog-bg img {
-                max-width: 300px;
-                padding: 18px 0;
-            }
         </style>
 
         <div id="top10" class="custom-catalog main-heading-text">';
