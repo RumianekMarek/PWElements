@@ -23,6 +23,9 @@ class PWEIframesSlider {
                 
                 $output = '
                 <style>
+                        .row-parent:has(.pwelement_'. $element_id .') {
+                                overflow: hidden !important;
+                        }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-videos-slider {
                             position: relative;
                             width: 100%;
@@ -37,7 +40,7 @@ class PWEIframesSlider {
                             min-height: 0 !important;
                             min-width: 0 !important;
                             pointer-events: auto;
-                            gap: 30px;
+                            gap: 26px;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-item {
                             position: relative;
@@ -97,7 +100,15 @@ class PWEIframesSlider {
                         }
                         .pwelement_'. $element_id .' .slides .slide-left {
                                 animation: slideInLeft 0.5s ease-in-out;
-                        }     
+                        }   
+                        @media (max-width: 1200px) {
+                                .row-parent:has(.pwelement_'. $element_id .') {
+                                        overflow: visible !important;
+                                }
+                                .pwelement_'. $element_id .' .pwe-videos .slides {
+                                        gap: 31px;
+                                }
+                        }   
                 </style>';
 
 

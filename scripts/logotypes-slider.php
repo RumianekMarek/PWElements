@@ -93,7 +93,6 @@ class PWELogotypesSlider {
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div,
                         #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div,
                         .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div {
-                                position: relative;
                                 display: block;
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div p,
@@ -107,7 +106,7 @@ class PWELogotypesSlider {
                                 white-space: break-spaces;
                                 text-align: center;
                                 line-height: 1.1 !important;
-                                margin: 0;
+                                margin: 5px;
                                 padding: 8px 16px;
                         }';
                 }
