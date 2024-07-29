@@ -608,25 +608,34 @@ class PWElementRegistration extends PWElements {
                     margin: 9px 0px 0px 0px 
                 }
 
-                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom{
-                    background-color: #f7f7f7;
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom {
+                    background-color: #f4f4f4;
                     display: flex;
-                    justify-content: center;
+                    justify-content: space-around;
                     gap: 18px;
                     flex-wrap: wrap;
                     padding: 18px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div{
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div {
                     display: flex;
                     justify-content: center;
                     flex-wrap: wrap;
                     gap:9px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div > div {
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .logos,
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .numbers {
+                    justify-content: space-around;
+                    width: 49%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .logos div {
+                    min-width: auto;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .numbers div {
                     min-width: 200px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom img{
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom img {
                     max-height: 80px;
+                    object-fit: contain;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors){
                     display: flex;
@@ -635,6 +644,16 @@ class PWElementRegistration extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors) p{
                     margin-top: 0px;
+                }
+                .pwelement_'. self::$rnd_id .' .iframe-column {
+                    position: relative;
+                }
+                .pwelement_'. self::$rnd_id .' .iframe-column img {
+                    position: absolute;
+                    left: 18px;
+                    bottom: 18px;
+                    z-index: 1;
+                    width: 70px;
                 }
                 .pwelement_'. self::$rnd_id .' .video-container {
                     position: relative;
@@ -656,6 +675,7 @@ class PWElementRegistration extends PWElements {
                     }
                     .wpb_column:has(.pwelement_'. self::$rnd_id .') {
                         max-width: 100% !important;
+                        padding: 0 !important;  
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-registration-wrapper {
                         flex-direction: column-reverse;
@@ -663,12 +683,19 @@ class PWElementRegistration extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-registration-column {
                         width: 100%;
                     }
+                    .pwelement_'. self::$rnd_id .' .iframe-column img {
+                        display: none;
+                    }
                     .pwelement_'. self::$rnd_id .' .video-container {
-                        height: 440px;
+                        display: none;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .logos,
+                    .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .numbers {
+                        width: 100%;
                     }
                 }
                 @media (max-width: 500px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-registration-bottom div > div {
+                    .pwelement_'. self::$rnd_id .' .pwe-registration-bottom .numbers div {
                         min-width: 250px;
                     }
                 }
@@ -678,11 +705,13 @@ class PWElementRegistration extends PWElements {
             <div id="'. $element_unique_id .'" class="pwe-registration">
                 <div class="pwe-registration-wrapper">
                     <div class="pwe-registration-column iframe-column">
+                        <img class="logo-pwe" src="/wp-content/plugins/PWElements/media/logo_pwe.webp">
                         <div class="video-container">
-                            <iframe title="YouTube video player" frameborder="0" marginwidth="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" 
-                            src="https://www.youtube.com/embed/_itB_7UfqHA?si=tl27BmhUeGJsdrIf&autoplay=1&mute=1&loop=1&playlist=_itB_7UfqHA&controls=0&showinfo=0">
-                            </iframe>
+                            <iframe src="https://www.youtube.com/embed/49KljiYGLA0?si=rDFQfo6rApq_fbZJ&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=49KljiYGLA0" 
+                            title="YouTube video player" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
                         </div>
                     </div>
                     <div class="pwe-registration-column form-column">

@@ -193,14 +193,11 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                 <style>
                     .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item,
                     .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item div {
-                        position: relative;
                         display: block;
                     }
                     .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item p,
                     .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item div p {
                         width: 100%;
-                        position: absolute;
-                        bottom: -36px;
                         text-transform: uppercase;
                         font-size: 12px;
                         font-weight: 700;
@@ -208,7 +205,8 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                         white-space: break-spaces;
                         text-align: center;
                         line-height: 1.1 !important;
-                        margin: 0 !important;
+                        margin: 5px;
+                        padding: 8px 16px;
                     }
                 </style>';
             }

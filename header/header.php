@@ -397,20 +397,13 @@ class PWEHeader {
                             'type' => 'input_range',
                             'group' => 'Options',
                             'heading' => __('Max width logo (px)', 'pwe_header'),
-                            'description' => __('Default 400px', 'pwe_header'),
+                            'description' => __('Default 260px', 'pwe_header'),
                             'param_name' => 'pwe_header_logo_width',
-                            'value' => '400',
+                            'value' => '260',
                             'min' => '100',
                             'max' => '600',
                             'step' => '1',
                             'save_always' => true,
-                            'dependency' => array(
-                                'element' => 'pwe_header_modes',
-                                'value' => array(
-                                    '',
-                                    'simple_mode'
-                                ),
-                            ),
                         ),
                         array(
                             'type' => 'checkbox',
@@ -651,6 +644,27 @@ class PWEHeader {
                             'description' => __('Check if you want to change the logotypes color to color. ', 'pwe_header'),
                             'save_always' => true,
                             'value' => array(__('True', 'pwe_header') => 'true',),
+                        ),
+                        array(
+                            'type' => 'param_group',
+                            'group' => 'Replace Strings',
+                            'param_name' => 'pwe_replace',
+                            'params' => array(
+                                array(
+                                    'type' => 'textarea',
+                                    'heading' => __('Input HTML', 'pwelement'),
+                                    'param_name' => 'input_replace_html',
+                                    'save_always' => true,
+                                    'admin_label' => true
+                                ),
+                                array(
+                                    'type' => 'textarea',
+                                    'heading' => __('Output HTML', 'pwelement'),
+                                    'param_name' => 'output_replace_html',
+                                    'save_always' => true,
+                                    'admin_label' => true
+                                ),
+                            ),
                         ),
                         // Add additional options from class extends
                         ...PWElementAdditionalLogotypes::additionalArray(),
@@ -1016,7 +1030,18 @@ class PWEHeader {
             'pwe_congress_widget_color' => '',
             'pwe_congress_widget_items' => '',
             'pwe_header_association_hide' => '',
+            'pwe_replace' => '',
         ), $atts ));
+
+        // Replace strings
+        $pwe_replace_urldecode = urldecode($pwe_replace);
+        $pwe_replace_json = json_decode($pwe_replace_urldecode, true);
+        $input_replace_array_html = array();
+        $output_replace_array_html = array();
+        foreach ($pwe_replace_json as $replace_item) {
+            $input_replace_array_html[] = $replace_item["input_replace_html"];
+            $output_replace_array_html[] = $replace_item["output_replace_html"];
+        }
 
         if ($pwe_header_modes == "conference_mode") {
             $main_badge_color = self::$accent_color;
@@ -1035,7 +1060,7 @@ class PWEHeader {
             $pwe_header_overlay_range = $pwe_header_overlay_range == 0 ? 0.7 : $pwe_header_overlay_range; 
         }
 
-        $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '400px' : $pwe_header_logo_width;
+        $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '260px' : $pwe_header_logo_width;
         $pwe_header_logo_width = str_replace("px", "", $pwe_header_logo_width);
 
         $output = '
@@ -1543,6 +1568,31 @@ class PWEHeader {
                         } else {
                             $actually_date = $formatted_date;  
                         }
+
+                        if ($pwe_header_congress_logo_color != true) {
+                            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '');
+                        } else {
+                            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp');
+                        }
+                        $pwe_header_conference_logo_url = (empty($pwe_header_conference_logo_url)) ? $congress_logo_url : $pwe_header_conference_logo_url;
+                        $pwe_header_conference_link = empty($pwe_header_conference_link) 
+                        ? (get_locale() == 'pl_PL' ? '/wydarzenia/' : '/en/conferences') 
+                        : $pwe_header_conference_link;
+                        $pwe_header_reg_logo = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_logo_url : $logo_url;
+                        $pwe_header_reg_logo_link = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_link : $base_url; 
+
+                        $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
+                        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+                        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
+                        $trade_fair_edition = ($trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
+                        
+                        if ($pwe_header_modes == "registration_mode") {
+                            $pwe_header_title = $trade_fair_desc;
+                            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_desc_short]" : "[trade_fair_desc_short_eng]";
+                        } else if ($pwe_header_modes == "conference_mode") {
+                            $pwe_header_title = (get_locale() == 'pl_PL') ? "[trade_fair_conferance]" : "[trade_fair_conferance_eng]";
+                            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_conferance]" : "[trade_fair_conferance_eng]";
+                        }
                         
                         $output .= '
                         <style>
@@ -1595,39 +1645,43 @@ class PWEHeader {
                                 position: relative;
                                 z-index: 2;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container :is(h1, h2, p),
-                            .pwelement_'. SharedProperties::$rnd_id .' .form-logo-container h2,
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition,
-                            #pweForm .form-edition {
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container :is(h1, h2, p:not(.pwe-header-edition)),
+                            .pwelement_'. SharedProperties::$rnd_id .' .form-logo-container h2 {
                                 color: '. $main_header_color_text .';
                                 text-align: center;
                                 font-weight: 700;
                             }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition,
+                            #pweForm .form-edition {
+                                text-align: center;
+                                font-weight: 700;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                max-width: '. $pwe_header_logo_width .'px !important;
+                                width: 100%;
+                                background: white;
+                                border-radius: 0;
+                                color: '. $main_header_color .';
+                                font-size: 28px;
+                                margin: 0;
+                                padding: 0;
+                                line-height: 1.1;
+                                text-transform: uppercase;
+                            } 
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), 
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4, 
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-title h2 {
                                 text-shadow: 0 0 1px '. $text_shadow .';
-                            } 
+                            }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h2 {
                                 margin: 0;
                                 font-size: 28px !important;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
-                                max-width: 260px !important;
+                                max-width: '. $pwe_header_logo_width .'px !important;
                                 margin: 0 20px;
                                 position: relative;
                                 z-index: 2;
-                            }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
-                                width: auto;
-                                margin: 0;
-                                font-size: 16px;
-                                font-weight: 700;
-                                text-transform: uppercase;
-                                margin: 12px 0 0;
-                                padding: 8px 8px 0;
-                                border-radius: 5px;
-                                color: black;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .header-info-column .pwe-association {
                                 margin-top: 36px;
@@ -1701,7 +1755,6 @@ class PWEHeader {
                                     font-size: 20px !important;
                                 }
                             }
-                            
                         </style>';
 
                         if ($association_fair_logo_color != 'true') {
@@ -1732,29 +1785,13 @@ class PWEHeader {
                                 </style>';
                         }
 
-                        if ($pwe_header_congress_logo_color != true) {
-                            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '');
-                        } else {
-                            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp');
-                        }
-                        $pwe_header_conference_logo_url = (empty($pwe_header_conference_logo_url)) ? $congress_logo_url : $pwe_header_conference_logo_url;
-                        $pwe_header_conference_link = empty($pwe_header_conference_link) 
-                        ? (get_locale() == 'pl_PL' ? '/wydarzenia/' : '/en/conferences') 
-                        : $pwe_header_conference_link;
-                        $pwe_header_reg_logo = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_logo_url : $logo_url;
-                        $pwe_header_reg_logo_link = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_link : $base_url; 
-
-                        $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
-                        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
-                        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
-                        $trade_fair_edition = ($trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
-                        
-                        if ($pwe_header_modes == "registration_mode") {
-                            $pwe_header_title = $trade_fair_desc;
-                            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_desc_short]" : "[trade_fair_desc_short_eng]";
-                        } else if ($pwe_header_modes == "conference_mode") {
-                            $pwe_header_title = (get_locale() == 'pl_PL') ? "[trade_fair_conferance]" : "[trade_fair_conferance_eng]";
-                            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_conferance]" : "[trade_fair_conferance_eng]";
+                        if ($trade_fair_edition_shortcode == 1) {
+                            $output .= '
+                                <style>
+                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                        font-size: 20px;
+                                    } 
+                                </style>';
                         }
 
                         $output .= '<div class="header-info-column">
@@ -1801,13 +1838,13 @@ class PWEHeader {
 
                             $output .= '
                             <div class="pwe-header-logo-container pwe-header-logo-container-mobile">
-                                <img class="pwe-header-logo" src="'. $pwe_header_reg_logo .'" alt="logo-'. $trade_fair_name .'">
-                                <h1>'. $pwe_header_title_short .'</h1>';
+                                <img class="pwe-header-logo" src="'. $pwe_header_reg_logo .'" alt="logo-'. $trade_fair_name .'">';
                                 if (!empty($trade_fair_edition_shortcode) && $pwe_header_modes != "conference_mode") {
                                     $output .= '<p class="pwe-header-edition">'. $trade_fair_edition .'</p>';
                                 }
                                 $output .= '
                                 <h2>'. $actually_date .'</h2> 
+                                <h1 class="">'. $pwe_header_title_short .'</h1>
                             </div>';
 
                             include_once plugin_dir_path(__FILE__) . '/../elements/registration-header.php';
@@ -1893,8 +1930,12 @@ class PWEHeader {
 
 
         $output = do_shortcode($output);
-        
+
         $file_cont = '<div class="pwelement pwelement_'.SharedProperties::$rnd_id.'">' . $output . '</div>';
+        
+        if ($input_replace_array_html && $output_replace_array_html) {
+            $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);
+        }
 
         return $file_cont;
     }
