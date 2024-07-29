@@ -1664,6 +1664,7 @@ class PWEHeader {
                                 color: '. $main_header_color .';
                                 font-size: 28px;
                                 margin: 0;
+                                margin-top: 9px;
                                 padding: 0;
                                 line-height: 1.1;
                                 text-transform: uppercase;
