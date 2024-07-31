@@ -13,6 +13,9 @@ class GFAreaNumbersFrontend {
         
 		foreach($form['fields'] as $field) {
             if (property_exists($field, 'smartPhoneFieldGField') && $field->smartPhoneFieldGField) {
+
+                $field["enableAutocomplete"] = true;
+                $field["autocompleteAttribute"] = 'tel';
                 $field['displayOnly'] = true;
 
                 $fieldId = "input_{$field->formId}";

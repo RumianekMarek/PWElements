@@ -307,7 +307,7 @@
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 10px;
 }
 
 .img-container-top10 .cat-img,

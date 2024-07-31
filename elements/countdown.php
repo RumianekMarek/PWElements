@@ -350,7 +350,7 @@ class PWElementMainCountdown extends PWElements {
                     padding: 0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' #main-timer p {
-                    color: '. $btn_text_color .';
+                    color: '. $text_color .';
                     margin: 9px auto;
                     font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
                 }

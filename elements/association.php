@@ -110,7 +110,7 @@ class PWElementAssociates extends PWElements {
     public static function output($atts, $logo_url = '', $pwe_header_modes = '', $pwe_header_conference_logo_url = '', $pwe_header_conference_link = '') {
         if ($atts['pwe_header_mode_association'] != ''){
             $pwe_header_modes = $atts['pwe_header_mode_association'];
-            $pwe_header_conference_logo_url = $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '';
+            $pwe_header_conference_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '');
             $pwe_header_conference_link = (get_locale() == 'pl_PL') ? '/wydarzenia/' : '/en/conferences';
         }
         
@@ -348,50 +348,50 @@ class PWElementAssociates extends PWElements {
                 </div>';
         } else if (empty($sorted) && ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") && !empty($pwe_header_conference_logo_url)) {
             $output .= '
-                <div id="'. $element_unique_id .'" class="pwe-association">
-                    <div class="main-heading-text pwe-uppercase pwe-association-title">';
-                        if ($pwe_header_modes == "conference_mode") {
-                            $output .= '<h2>'.
-                            self::languageChecker(
-                                <<<PL
-                                Wydarzenie organizowane w ramach targów:
-                                PL,
-                                <<<EN
-                                Event organised as part of the fair:
-                                EN
-                            )
-                            .'</h2>';
-                        } else {
-                            $output .= '<h2>'.
-                            self::languageChecker(
-                                <<<PL
-                                Wydarzenia Towarzyszące
-                                PL,
-                                <<<EN
-                                Side Events
-                                EN
-                            )
-                            .'</h2>';
-                        }
-                    $output .= '
-                    </div>
-                    <div class="pwe-association-logotypes">';
-                        if ($pwe_header_modes == "registration_mode") {
-                            $output .= '
-                                <a class="as-primary" href="'. $pwe_header_conference_link .'">
-                                    <div class="pwe-as-logo" style="background-image: url(' . $pwe_header_conference_logo_url . ');"></div>
-                                </a>
-                            ';  
-                        } else {
-                            $output .= '
-                                <a class="as-primary" href="'. $base_url .'">
-                                    <div class="pwe-as-logo" style="background-image: url(/doc/logo.webp);"></div>
-                                </a>
-                            ';  
-                        }
-                    $output .= '    
-                    </div>
-                </div>';
+            <div id="'. $element_unique_id .'" class="pwe-association">
+                <div class="main-heading-text pwe-uppercase pwe-association-title">';
+                    if ($pwe_header_modes == "conference_mode") {
+                        $output .= '<h2>'.
+                        self::languageChecker(
+                            <<<PL
+                            Wydarzenie organizowane w ramach targów:
+                            PL,
+                            <<<EN
+                            Event organised as part of the fair:
+                            EN
+                        )
+                        .'</h2>';
+                    } else {
+                        $output .= '<h2>'.
+                        self::languageChecker(
+                            <<<PL
+                            Wydarzenia Towarzyszące
+                            PL,
+                            <<<EN
+                            Side Events
+                            EN
+                        )
+                        .'</h2>';
+                    }
+                $output .= '
+                </div>
+                <div class="pwe-association-logotypes">';
+                    if ($pwe_header_modes == "registration_mode") {
+                        $output .= '
+                            <a class="as-primary" href="'. $pwe_header_conference_link .'">
+                                <div class="pwe-as-logo" style="background-image: url(' . $pwe_header_conference_logo_url . ');"></div>
+                            </a>
+                        ';  
+                    } else {
+                        $output .= '
+                            <a class="as-primary" href="'. $base_url .'">
+                                <div class="pwe-as-logo" style="background-image: url(/doc/logo.webp);"></div>
+                            </a>
+                        ';  
+                    }
+                $output .= '    
+                </div>
+            </div>';
         }
 
         $output .= '
