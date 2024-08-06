@@ -314,7 +314,7 @@ class PWElementHomeGallery extends PWElements {
         }
         $gallery_title = str_replace(array('`{`', '`}`'), array('[', ']'), $gallery_title);
 
-        $all_images = ($gallery_thumbnails_more == 'true') ? self::findAllImages('/doc/galeria/mini', 6) : self::findAllImages('/doc/galeria/mini', 4);
+        $all_images = self::findAllImages('/doc/galeria/mini', 4);
 
         $output = '';
 
@@ -517,34 +517,33 @@ class PWElementHomeGallery extends PWElements {
                             </div>
                             <div class="pwe-btn-box">';
 
-                            if ($gallery_hidden_buttons != true) {
-                                if ($gallery_new != true) {
-                                    if($mobile){
-                                        $output .= '
-                                        <span class="pwe-btn-container gallery-link-btn">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                    <a class="pwe-link btn pwe-btn pwe-btn-black" href="/#profil-wystawcy" alt="link do galerii">Profil Wystawcy</a>
-                                                PL,
-                                                <<<EN
-                                                    <a class="pwe-link btn pwe-btn pwe-btn-black" href="/en/#profil-wystawcy" alt="link to gallery">Exhibitor Profile</a>
-                                                EN
-                                            )
-                                        .'</span>';
-                                    }
+                            if ($gallery_new != true) {
+                                if($mobile){
                                     $output .= '
                                     <span class="pwe-btn-container gallery-link-btn">'.
                                         self::languageChecker(
                                             <<<PL
-                                                <a class="pwe-link btn pwe-btn pwe-btn-white" href="/#zakres-branzowy" alt="link do galerii">Zakres branżowy</a>
+                                                <a class="pwe-link btn pwe-btn pwe-btn-black" href="/#profil-wystawcy" alt="link do galerii">Profil Wystawcy</a>
                                             PL,
                                             <<<EN
-                                                <a class="pwe-link btn pwe-btn pwe-btn-white" href="/en/#zakres-branzowy" alt="link to gallery">Industry scope</a>
+                                                <a class="pwe-link btn pwe-btn pwe-btn-black" href="/en/#profil-wystawcy" alt="link to gallery">Exhibitor Profile</a>
                                             EN
                                         )
                                     .'</span>';
                                 }
+                                $output .= '
+                                <span class="pwe-btn-container gallery-link-btn">'.
+                                    self::languageChecker(
+                                        <<<PL
+                                            <a class="pwe-link btn pwe-btn pwe-btn-white" href="/#zakres-branzowy" alt="link do galerii">Zakres branżowy</a>
+                                        PL,
+                                        <<<EN
+                                            <a class="pwe-link btn pwe-btn pwe-btn-white" href="/en/#zakres-branzowy" alt="link to gallery">Industry scope</a>
+                                        EN
+                                    )
+                                .'</span>';
                             }
+                            
                             $output .= '
                                 <span class="pwe-btn-container gallery-link-btn">'.
                                     self::languageChecker(

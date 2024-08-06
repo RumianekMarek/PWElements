@@ -80,7 +80,7 @@ class PWElementContact extends PWElements {
                     }
                 }';
 
-        if ($atts["horizontal"] == "true") {
+        if (isset($atts["horizontal"]) && $atts["horizontal"] == "true") {
             $output .= '
                 .pwelement_'. self::$rnd_id .' .pwe-container-contact-items {
                     display: flex; 
@@ -183,7 +183,7 @@ class PWElementContact extends PWElements {
                         <img src="/wp-content/plugins/PWElements/media/Technicy.jpg" alt="grafika technicy">
                         <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                             <p>';
-                                if ($atts["horizontal"] != "true") {
+                                if (isset($atts["horizontal"]) && $atts["horizontal"] == "true") {
                                     $output .= self::languageChecker(
                                         <<<PL
                                             Obsługa techniczna wystawców<br>

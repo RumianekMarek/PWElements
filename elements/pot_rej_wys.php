@@ -57,7 +57,7 @@ class PWElementStepTwoExhibitor extends PWElements {
         $confirmation_button_text = (get_locale() == 'pl_PL') ? "Wygeneruj ofertę" : "Generate an offer" ;
         $main_page_text_btn = (get_locale() == 'pl_PL') ? "Powrót do strony głównej" : "Back to main page" ;
                 
-        $output .= '
+        $output = '
             <style>
                 .row-parent:has(.pwelement_'. self::$rnd_id .' #pweForm){
                     max-width: 100%;

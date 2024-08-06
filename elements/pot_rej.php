@@ -54,7 +54,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         $main_page_text_btn = (get_locale() == 'pl_PL') ? "Powrót do strony głównej" : "Back to main page" ;
         $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
 
-        $output .= '
+        $output = '
             <style>
                 .pwelement_' . self::$rnd_id . ' #xForm{
                     display: flex;

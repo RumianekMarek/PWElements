@@ -23,8 +23,19 @@ class PWElementOrganizer extends PWElements {
     */
     public static function output($atts) {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important;';
-
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
+        $btn_border = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
         $border_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
+
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
+        $video_plug = 'https://i.ytimg.com/vi/-RmRpZN1mHA/sddefault.jpg';
+        $video_src = 'https://www.youtube.com/embed/-RmRpZN1mHA?autoplay=1';
+        $video_iframe_html = '<iframe class="pwe-iframe" src="' . $video_src . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+        $video_default_html = '<div class="pwe-video-default" style="background-image: url(' . $video_plug . ');">
+                                    <img src="/wp-content/plugins/PWElements/media/youtube-button.webp" alt="youtube play button">
+                            </div>';
 
         $output = '';
 
@@ -34,12 +45,12 @@ class PWElementOrganizer extends PWElements {
                 max-width: 100%;
                 padding: 0 !important;
             }
-            .custom-organizator-video {
+            .custom-organizator-video.desktop {
                 height:500px;
                 position: relative;
                 overflow: hidden;
             }
-            .custom-organizator-video iframe {
+            .custom-organizator-video.desktop iframe {
                 min-width: 180%; 
                 height:120vh; 
                 position: absolute;
@@ -60,9 +71,6 @@ class PWElementOrganizer extends PWElements {
             }
             .custom-organizator-header {
                 margin:0;
-            }
-            .custom-inner-mobile-text {
-                padding: 0 36px 36px 36px;
             }
             .pwelement_' . self::$rnd_id . ' .organizator-box-shadow-left {
                 margin-left: -18px;
@@ -87,13 +95,77 @@ class PWElementOrganizer extends PWElements {
                     margin: -9px -18px 24px 0;
                 }
             }
+
+            .custom-inner-organizator-mobile {
+                padding: 36px;
+            }
+            .custom-organizator-header-mobile {
+                display : flex;
+                justify-content: space-between;
+            }
+            .custom-organizator-header-mobile .image-ptak {
+                width: 80px;
+                border-radius: 10px;
+            }
+            .custom-inner-organizator-mobile .secondary-heading-text {
+                text-align: left;
+                
+            }
+            .custom-inner-organizator-mobile h4 {
+                margin: 0 !important;
+                color: white;
+            }
+            .custom-organizator-video.mobile {
+                position: relative;
+                margin-top: 18px;
+            }
+            .custom-organizator-video.mobile iframe {
+                aspect-ratio: 16 / 9 !important;
+                border-radius: 10px;
+            }
+            .custom-organizator-video .pwe-video-default {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                aspect-ratio: 16 / 9;
+                border-radius: 10px;
+            }
+                    
+            .custom-organizator-video .pwe-video-default img {
+                max-width: 80px;
+                cursor: pointer;
+                transition: .3s ease;
+                opacity: 0.4;
+            }
+            .custom-organizator-video .pwe-video-default img:hover {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            .custom-inner-organizator-mobile .pwe-btn {
+                color: '. $btn_text_color .';
+                background-color: '. $btn_color .';
+                border: 1px solid '. $btn_border .';
+            }
+            .custom-inner-organizator-mobile .pwe-btn:hover {
+                color: '. $btn_text_color .';
+                background-color: '. $darker_btn_color .'!important;
+                border: 1px solid '. $darker_btn_color .'!important;
+            }
+            @media (max-width:360px){
+                .custom-organizator-header-mobile .image-ptak {
+                    width: 60px;
+                }
+            }
             </style>
 
             <div id="organizator" class="custom-container-organizator style-accent-bg text-centered">';
 
             if (!preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT'])) {
                 $output .= '
-                <div class="custom-organizator-video">
+                <div class="custom-organizator-video desktop">
                     <iframe title="YouTube video player" frameborder="0" marginwidth="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" 
                     data-src="https://www.youtube.com/embed/dZJblpIVrcQ?autoplay=1&mute=1&loop=1&playlist=dZJblpIVrcQ&controls=0&showinfo=0"></iframe>
@@ -133,34 +205,79 @@ class PWElementOrganizer extends PWElements {
             </div>';
 
             } else {
-            $output .= '<div class="custom-inner-organizator-mobile">
-                <img src="/wp-content/plugins/custom-element/media/ptak.jpg"/>
-                <div class="custom-inner-mobile-text text-left">
-                    <p class="organizator-box-shadow-left">&nbsp;</p>
-                    <h5 class="custom-organizator-header">'.
+            $output .= '
+            <div class="custom-inner-organizator-mobile">
+                <div class="custom-organizator-header-mobile">
+                    <div class="secondary-heading-text">
+                        <h4 class="pwe-uppercase">'.
                         self::languageChecker(
                             <<<PL
                                 O organizatorze
                             PL,
                             <<<EN
-                                About the organizer
+                                Organizer
                             EN
                         )
-                    .'</h5>
+                        .'</h4>
+                    </div>
+                    
+                    <a href="https://warsawexpo.eu/" target="_blank"><img class="image-ptak" src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp"></a> 
+                    
+                </div>
+
+                <div class="custom-organizator-video mobile">'. $video_default_html .'</div>
+
+                <div class="custom-inner-mobile-text text-left">
+                    
                     <p>'.
                         self::languageChecker(
                             <<<PL
-                                Ptak Warsaw Expo to największe centrum targowokongresowe w Polsce i Europie Środkowo-Wschodniej, które zlokalizowane jest na przedmieściach Warszawy. Posiada 143 000 m2 powierzchni wystawienniczej w 6 nowoczesnych pawilonach oraz 500 000 m2 powierzchni zewnętrznej. To miejsce stworzone do organizacji imprez targowych.
+                            <strong>PTAK Warsaw Expo, największe centrum targowo-kongresowe</strong> 
+                            oraz <strong>lider organizacji targów</strong> w Europie Środkowej, które 
+                            organizuje <strong>ponad 100 targów</strong> rocznie przyciągając zarówno 
+                            wystawców jak i odwiedzających z całego świata.
                             PL,
                             <<<EN
-                                Ptak Warsaw Expo is the largest trade fair and congress centre in Poland and Central and Eastern Europe, located on the outskirts of Warsaw. It has 143,000 m2 of exhibition space in 6 modern pavilions and 500,000 m2 of outdoor space. It is a venue created for trade fairs.
+                            <strong>PTAK Warsaw Expo, the largest trade fair and congress centre</strong>
+                            and <strong>the leader in trade fair organisation</strong> in Central Europe, which
+                            organises <strong>over 100 trade fairs</strong> annually, attracting both
+                            exhibitors and visitors from all over the world.
                             EN
                         )
                     .'</p>
-                    <p class="organizator-box-shadow-right">&nbsp;</p>
+                    <div class="pwe-btn-container">
+                        <a class="pwe-link btn pwe-btn" target="_blank" 
+                        href="'. 
+                        self::languageChecker(
+                            <<<PL
+                            https://warsawexpo.eu/kalendarz-targowy/
+                            PL,
+                            <<<EN
+                            https://warsawexpo.eu/en/exhibition-calendar/
+                            EN
+                        )
+                        .'"'. 
+                        self::languageChecker(
+                            <<<PL
+                            alt="kalendarz targowy">Zobacz nasze targi
+                            PL,
+                            <<<EN
+                            alt="exhibition calendar">See our fairs
+                            EN
+                        )
+                        .'</a>  
+                    </div>
                 </div>
-            </div>';
-            }
+            </div>
+            
+            <script>
+                const videoOrganizator = document.querySelector(".custom-organizator-video.mobile");
+                videoOrganizator.addEventListener("click", () => {
+                    videoOrganizator.innerHTML = `<div class="pwe-video-iframe">'. $video_iframe_html .'</div>`;   
+                });
+            </script>
+            ';
+        }
 
         return $output;
     }

@@ -403,7 +403,7 @@ class PWECatalog {
                 if ($existingIndex === false) {
                     $acc[] = $curr;
                 } else {
-                    if(strtotime($acc[$existingIndex]["Data_sprzedazy"]) < strtotime($curr["Data_sprzedazy"])){
+                    if($acc[$existingIndex]["Data_sprzedazy"] !== null && $curr["Data_sprzedazy"] !== null && strtotime($acc[$existingIndex]["Data_sprzedazy"]) < strtotime($curr["Data_sprzedazy"])){
                         $acc[$existingIndex] = $curr;
                     }
                 }
@@ -497,6 +497,7 @@ class PWECatalog {
     // public static function initElements() {
     // }
     public static function checkTitle($title, $format) {
+        
         if (substr($title, 0, 2) === "``") {
             $exhibitors_title = substr($title, 2, -2);
         } elseif($format == 'PWECatalogFull'){
@@ -558,7 +559,11 @@ class PWECatalog {
             $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
         }
 
-        include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
+        $slider_path = dirname(plugin_dir_path(__FILE__)) . '/scripts/slider.php';
+        
+        if (file_exists($slider_path)){
+            include_once $slider_path;
+        }        
 
         if (!empty($atts['identification'])) {
             $identification = $atts['identification']; 

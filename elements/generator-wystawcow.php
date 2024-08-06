@@ -48,6 +48,32 @@ class PWElementGenerator extends PWElements {
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementGenerator',
+                ), 
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Ticketed fairs', 'pwelement'),
+                'param_name' => 'generator_tickets',
+                'param_holder_class' => 'backend-basic-checkbox backend-area-one-fourth-width',
+                'description' => __('Footer text for ticketed fairs'),
+                'save_always' => true,
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementGenerator',
+                ),
+            ),
+            array(
+                'type' => 'textarea_raw_html',
+                'group' => 'PWE Element',
+                'heading' => __('Footer HTML Text', 'pwelement'),
+                'param_name' => 'generator_html_text',
+                'param_holder_class' => 'backend-textarea-raw-html',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementGenerator',
                 ),
             ),
         );
@@ -64,6 +90,8 @@ class PWElementGenerator extends PWElements {
         extract( shortcode_atts( array(
             'worker_form_id' => '',
             'guest_form_id' => '',
+            'generator_tickets' => '',
+            'generator_html_text' => ''
         ), $atts ));
 
         $worker_entries = GFAPI::get_entries($worker_form_id);
@@ -82,6 +110,25 @@ class PWElementGenerator extends PWElements {
                 $registration_count++;
             }
         }
+
+        $generator_html_text_decoded = base64_decode($generator_html_text);
+        $generator_html_text_decoded = urldecode($generator_html_text_decoded);
+        $generator_html_text_content = wpb_js_remove_wpautop($generator_html_text_decoded, true);
+
+        if ($generator_tickets == true) {
+            if (get_locale() == 'pl_PL') {
+                $generator_html_text_content = (empty($generator_html_text_content)) ? 'Darmowa rejestracja upoważnia do wejścia w dniu <strong class="gen-date">[trade_fair_branzowy]</strong>.' : $generator_html_text_content;
+            } else {
+                $generator_html_text_content = (empty($generator_html_text_content)) ? 'Free registration etitle you to enter only on <strong class="gen-date">[trade_fair_branzowy_eng]</strong>.' : $generator_html_text_content;
+            }  
+        } else {
+            if (get_locale() == 'pl_PL') {
+                $generator_html_text_content = (empty($generator_html_text_content)) ? 'Ze względów organizacyjnych ilość zaproszeń jest ograniczona. Rejestracja dostępna tylko do 30 dni przed targami.' : $generator_html_text_content;
+            } else {
+                $generator_html_text_content = (empty($generator_html_text_content)) ? 'For organizational reasons, the number of invitations is limited. Registration is only available up to 30 days before the fair.' : $generator_html_text_content;
+            }
+        }
+        
 
         $output = '
         <style>
@@ -443,6 +490,7 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .guest-info-icons {
                 display: flex;
                 justify-content: center;
+                gap: 5px;
                 padding: 0 8px
             }
             .pwe-generator-wystawcow .guest-info-icon-block {
@@ -466,7 +514,14 @@ class PWElementGenerator extends PWElements {
                 line-height: inherit;
             }
             .pwe-generator-wystawcow .gen-text {
-                padding: 0 18px;
+                padding: 18px;
+                font-size: 16px;
+            }
+            .pwe-generator-wystawcow .gen-text p {
+                margin: 0 !important;
+            }
+            .pwe-generator-wystawcow .gen-text .gen-date {
+                white-space: nowrap;
             }
             @media (max-width:1200px) {
                 .pwe-generator-wystawcow .container {
@@ -714,16 +769,7 @@ class PWElementGenerator extends PWElements {
 
                                                 [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]
 
-                                                <p class="gen-text">'. 
-                                                    self::languageChecker(
-                                                        <<<PL
-                                                            Ze względów organizacyjnych ilość zaproszeń jest ograniczona. Rejestracja dostępna tylko do 30 dni przed targami.
-                                                        PL,
-                                                        <<<EN
-                                                            For organizational reasons, the number of invitations is limited. Registration is only available up to 30 days before the fair.
-                                                        EN
-                                                    )
-                                                .'</p> 
+                                                <div class="gen-text">'. $generator_html_text_content .'</div> 
                                             </div>
                                             <div class="gen-btn-img" style="background-image: url('. 
                                                 self::languageChecker(

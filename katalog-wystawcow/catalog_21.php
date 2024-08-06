@@ -10,10 +10,10 @@ class PWECatalog21 extends PWECatalog {
     }
 
     public static function output($atts, $identification) {
-
         $exhibitors = self::logosChecker($identification, $atts['format']);
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         $output = '';
+
         if ($mobile) {
             $output .= '
                 <style>
@@ -23,10 +23,14 @@ class PWECatalog21 extends PWECatalog {
                 </style>
             ';
         }
+
         $output .= '
             <div id="top21" class="custom-catalog main-heading-text">';
+
+            
+            
             if (!$mobile){
-                $output .= '<h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['title'], $atts['format']).'</h2>';
+                $output .= '<h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['katalog_year'], $atts['format']).'</h2>';
             }
             $output .= '
                 <div class="img-container-top21">';                

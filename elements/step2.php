@@ -97,19 +97,12 @@ class PWElementStepTwo extends PWElements {
      */
     public static function output($atts, $content = ''){
         extract( shortcode_atts( array(
+            'reg_form_name_step2' => '',
             'step2_overlay_color' => '',
             'step2_overlay_range' => '',
         ), $atts ));
 
-        $fair_logo = ($atts['fair_logo'] != '') ? $atts['fair_logo'] : self::languageChecker(
-            <<<PL
-                /doc/logo-color.webp
-            PL,
-            <<<EN
-                /doc/logo-color-en.webp
-            EN
-        );
-        $fair_logo = trim($fair_logo);
+        $fair_logo = (get_locale() == "pl_PL") ? "/doc/logo-color.webp" : "/doc/logo-color-en.webp";
 
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
         $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
@@ -123,7 +116,7 @@ class PWElementStepTwo extends PWElements {
             $step2_link_exhibitor_no = (empty($atts['step2_link_exhibitor_no'])) ? '/en/registration-confirmation/' : $atts['step2_link_exhibitor_no'];
         }
         
-        $output .= '
+        $output = '
             <style>
                 .row-container:has(#Step2 .gform_wrapper) .row-parent {
                     padding: 0 !important;
@@ -350,7 +343,7 @@ class PWElementStepTwo extends PWElements {
                             )
                         .'</h3>
                         <div class="pwe-gravity-form">
-                            [gravityform id="'. $atts['reg_form_name_step2'] .'" title="false" description="false" ajax="false"]               
+                            [gravityform id="'. $reg_form_name_step2 .'" title="false" description="false" ajax="false"]               
                         </div>
                         <div class="pwe-submitting-buttons">
                             <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">'. 

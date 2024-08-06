@@ -146,6 +146,7 @@ class PWElementPosts extends PWElements {
         $trade_end = do_shortcode('[trade_fair_enddata]');
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
+        $posts_title = "";
         if(get_locale() == "pl_PL") {
             $posts_title = ($posts_title == "") ? "Aktualności" : $posts_title;
             $posts_link = ($posts_link == "") ? "/aktualnosci/" : $posts_link;
@@ -215,7 +216,8 @@ class PWElementPosts extends PWElements {
     
         // Display all categories across the full width of the page
         if ($posts_full_width === 'true' && $mobile != 1) {
-            $output .= '<style>
+            $output .= '
+            <style>
                 .pwelement_'. self::$rnd_id .' .pwe-posts-wrapper {
                     max-width: 100% !important;  
                     padding: 36px 0 !important; 

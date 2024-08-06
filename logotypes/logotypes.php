@@ -23,11 +23,8 @@ class PWELogotypes {
         }
 
         require_once plugin_dir_path(__FILE__) . '/../logotypes/logotypes-additional.php';
-
-        // Hook actions
-        add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
-        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
         
+         // Hook actions
         add_action('init', array($this, 'initVCMapLogotypes'));
         add_shortcode('pwe_logotypes', array($this, 'PWELogotypesOutput'));
     }
@@ -239,24 +236,6 @@ class PWELogotypes {
     /**
      * Adding Styles
      */
-    public function addingStyles(){
-        $css_file = plugins_url('css/style.css', __FILE__);
-        $css_version = filemtime(plugin_dir_path(__FILE__) . 'css/style.css');
-        wp_enqueue_style('pwelement-css', $css_file, array(), $css_version);
-    }
-
-    /**
-     * Adding Scripts
-     */
-    public function addingScripts(){
-        $js_file = plugins_url('js/script.js', __FILE__);
-        $js_version = filemtime(plugin_dir_path(__FILE__) . 'js/script.js');
-        wp_enqueue_script('pwelement-js', $js_file, array('jquery'), $js_version, true);
-    }
-
-    /**
-     * Adding Styles
-     */
     public static function findColor($primary, $secondary, $default = ''){
         if($primary != ''){
             return $primary;
@@ -333,9 +312,12 @@ class PWELogotypes {
         $pwe_replace_json = json_decode($pwe_replace_urldecode, true);
         $input_replace_array_html = array();
         $output_replace_array_html = array();
-        foreach ($pwe_replace_json as $replace_item) {
-            $input_replace_array_html[] = $replace_item["input_replace_html"];
-            $output_replace_array_html[] = $replace_item["output_replace_html"];
+        
+        if (is_array($pwe_replace_json)) {
+            foreach ($pwe_replace_json as $replace_item) {
+                $input_replace_array_html[] = $replace_item["input_replace_html"];
+                $output_replace_array_html[] = $replace_item["output_replace_html"];
+            }
         }
         
         // // Adding the result from additionalOutput to $output

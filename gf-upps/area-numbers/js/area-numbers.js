@@ -6,7 +6,7 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         var main_pattern = '';
         var old_title = '';
         let errorAfter = false;
-
+        const domain = window.location.hostname;
         const paternRegex = /[^9+()-]/;
 
         const createPattern = (unknown = false) => {
@@ -62,7 +62,7 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         const succesCountryIp = (countryCode) => {
             let options = {
                 initialCountry: countryCode,
-                utilsScript: "https://cleanexpo.pl/wp-content/plugins/PWElements/gf-upps/area-numbers/js/utils.js",
+                utilsScript: "https://" + domain + "/wp-content/plugins/PWElements/gf-upps/area-numbers/js/utils.js",
                 autoPlaceholder: "aggressive",
             }
 
@@ -84,29 +84,29 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
             }, 200);
         }
 
-        // const errorPhoneCheck = (event) => {
-        //     event.preventDefault();
-        //     const phoneInput = $(event.target).parent().parent().find(phone_id);
-        //     if (phoneInput.val().length >= main_pattern.length) {
-        //         $(event.target).parent().parent().submit();
-        //     } else {
-        //         if (errorAfter == false) {
-        //             let errorMessage = 'Wypełnić według wzoru ' + main_pattern;
-        //             if (getLocal != 'pl-PL') {
-        //                 errorMessage = 'Fill in by pattern ' + main_pattern;
-        //             }
+        const errorPhoneCheck = (event) => {
+            event.preventDefault();
+            const phoneInput = $(event.target).parent().parent().find(phone_id);
+            if (phoneInput.val().length >= 8) {
+                $(event.target).parent().parent().submit();
+            } else {
+                if (errorAfter == false) {
+                    let errorMessage = 'Wypełnić według wzoru ' + main_pattern;
+                    if (getLocal != 'pl-PL') {
+                        errorMessage = 'Fill in by pattern ' + main_pattern;
+                    }
 
-        //             const errorDiv = $('<span>')
-        //                 .attr('id', 'validation_phone')
-        //                 .addClass('gfield_description validation_message gfield_validation_message')
-        //                 .text(errorMessage);
+                    const errorDiv = $('<span>')
+                        .attr('id', 'validation_phone')
+                        .addClass('gfield_description validation_message gfield_validation_message')
+                        .text(errorMessage);
 
-        //             $(phone_id).parent().parent().after(errorDiv);
+                    $(phone_id).parent().parent().after(errorDiv);
 
-        //             errorAfter = true;
-        //         }
-        //     }
-        // }
+                    errorAfter = true;
+                }
+            }
+        }
 
         $(phone_id).on('input', function () {
             if (!$(this).val().startsWith('+')) {
@@ -139,9 +139,9 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
             };
         });
 
-        // $('form').has(phone_id).find('.gform_button').on('click', function (event) {
-        //     errorPhoneCheck(event);
-        // });
+        $('form').has(phone_id).find('.gform_button').on('click', function (event) {
+            errorPhoneCheck(event);
+        });
 
         // $('form').on('keypress', phone_id, function (event) {
         //     if (event.which === 13) {

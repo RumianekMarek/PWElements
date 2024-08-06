@@ -273,9 +273,19 @@ class PWElementMainCountdown extends PWElements {
      * @param array @atts options
      */
     public static function output($atts, $content = '') {
-        $countdown = vc_param_group_parse_atts($atts['countdowns']);        
+        extract(shortcode_atts(array(
+            'custom_timer' => '',
+            'turn_off_timer_bg' => '',
+            'add_timer' => '',
+            'countdowns' => '',
+        ), $atts ));
+
+        $output = '';
+
+        $countdown = vc_param_group_parse_atts($countdowns);
+
         foreach($countdown as $main_id => $main_value){
-            if (($atts['custom_timer'] == 'true' || $atts["add_timer"] == 'true') && $main_value["countdown_end"] == '') {
+            if (($custom_timer || $add_timer) && $main_value["countdown_end"] == '') {
                 $main_value["countdown_end"] = do_shortcode('[trade_fair_datetotimer]');
             }
             foreach($main_value as $id => $key){
@@ -290,32 +300,41 @@ class PWElementMainCountdown extends PWElements {
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         
-        if($atts['custom_timer'] || $atts["add_timer"]){
+        if(($custom_timer || $add_timer)){
             $right_countdown = self::getRightData($countdown);
         } else {
             $right_countdown = self::getRightData(self::main_timer());
         }
 
-        $countdown_bg = ($right_countdown[0]['turn_off_countdown_bg'] == 'true') ? 'inherit' : self::$accent_color;
-        $countdown_width = ($right_countdown[0]['countdown_limit_width'] == 'true') ? '1200px' : '100%';
-        $countdown_font_weight = ($right_countdown[0]['countdown_weight'] == '') ? '700' : $right_countdown[0]['countdown_weight'];
+        $turn_off_countdown_bg = (isset($right_countdown[0]['turn_off_countdown_bg']) && !empty($right_countdown[0]['turn_off_countdown_bg'])) ? $right_countdown[0]['turn_off_countdown_bg'] : '';
+        $countdown_limit_width = (isset($right_countdown[0]['countdown_limit_width']) && !empty($right_countdown[0]['countdown_limit_width'])) ? $right_countdown[0]['countdown_limit_width'] : '';
+        $countdown_weight = (isset($right_countdown[0]['countdown_weight']) && !empty($right_countdown[0]['countdown_weight'])) ? $right_countdown[0]['countdown_weight'] : '';
+        $countdown_column = (isset($right_countdown[0]['countdown_column']) && !empty($right_countdown[0]['countdown_column'])) ? $right_countdown[0]['countdown_column'] : '';
+
+        $countdown_bg = ($turn_off_countdown_bg == 'true') ? 'inherit' : self::$accent_color;
+        $countdown_width = ($countdown_limit_width == 'true') ? '1200px' : '100%';
+        $countdown_font_weight = ($countdown_weight == '') ? '700' : $countdown_weight;
 
         if ($mobile != 1) {
-            $countdown_font_size = ($right_countdown[0]['countdown_font_size'] == '') ? '18px' : $right_countdown[0]['countdown_font_size'];
-        } else $countdown_font_size = ($right_countdown[0]['countdown_font_size'] == '') ? '16px' : $right_countdown[0]['countdown_font_size'];
+            $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '18px';
+        } else {
+            $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '16px';
+        }
+        
         $countdown_font_size = str_replace("px", "", $countdown_font_size);
         
         $ending_date = new DateTime($right_countdown[0]['countdown_end']);
         
         $date_dif = self::$today_date->diff($ending_date);
 
-        $flex_direction = ($right_countdown[0]['countdown_column'] == true) ? 'flex-direction: column;' : '';
+        $flex_direction = ($countdown_column == true) ? 'flex-direction: column;' : '';
 
         // if ($atts['custom_timer'] == 'true' && $atts['countdown_end'] == '') {
         //     $countdown_end = do_shortcode('[trade_fair_enddata]');
         // }
 
         if ($atts['custom_timer'] != true) {
+            $output = '';
             $output .= '
             <style>
                 .row-parent:has(.pwelement_' . self::$rnd_id . ') {
@@ -406,7 +425,9 @@ class PWElementMainCountdown extends PWElements {
                 
             $output .='<div id="main-timer" class="countdown-container" data-show-register-bar="'. $atts['show_register_bar'] .'">';
 
-            if ($right_countdown[0]['turn_off_countdown_text'] != true && $right_countdown[0]['countdown_text'] != '') {    
+            $turn_off_countdown_text = isset($right_countdown[0]['turn_off_countdown_text']) ? $right_countdown[0]['turn_off_countdown_text'] : '';
+
+            if ($turn_off_countdown_text != true && $right_countdown[0]['countdown_text'] != '') {    
                 $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
             };
             if (get_locale() == "pl_PL") {
@@ -428,7 +449,8 @@ class PWElementMainCountdown extends PWElements {
                                 $output .= '</p>';
                             }
             }
-            if ($right_countdown[0]['turn_off_countdown_button'] != true && $right_countdown[0]['countdown_btn_text'] != '') {
+            $turn_off_countdown_button = isset($right_countdown[0]['turn_off_countdown_button']) ? $right_countdown[0]['turn_off_countdown_button'] : '';
+            if ($turn_off_countdown_button != true && $right_countdown[0]['countdown_btn_text'] != '') {
                 $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
             };
             $output .='</div>';

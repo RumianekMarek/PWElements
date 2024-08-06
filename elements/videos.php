@@ -80,15 +80,13 @@ class PWElementVideos extends PWElements {
                         'type' => 'textfield',
                         'heading' => __('Title', 'pwelement'),
                         'param_name' => 'video_title',
-                        'save_always' => true,
-                        'admin_label' => true
+                        'save_always' => true
                     ),
                     array(
                         'type' => 'textarea',
                         'heading' => __('Iframe', 'pwelement'),
                         'param_name' => 'video_iframe',
-                        'save_always' => true,
-                        'admin_label' => true
+                        'save_always' => true
                     ),
                 ),
             ),

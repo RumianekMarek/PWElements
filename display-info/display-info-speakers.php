@@ -36,6 +36,16 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             array(
                 'type' => 'checkbox',
                 'group' => 'options',
+                'heading' => __('Turn off dots', 'pwe_display_info'),
+                'param_name' => 'info_speakers_dots_off',
+                'description' => __('Check if you want to turn on dots.', 'pwe_display_info'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+            ), 
+            array(
+                'type' => 'checkbox',
+                'group' => 'options',
                 'heading' => __('Hide bio text', 'pwe_display_info'),
                 'param_name' => 'info_speakers_bio_text_hide',
                 'admin_label' => true,
@@ -243,6 +253,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
 
         extract( shortcode_atts( array(
             'info_speakers_slider_on' => '',
+            'info_speakers_dots_off' => '',
             'info_speakers_bio_btn_hide' => '',
             'info_speakers_bio_text_hide' => '',
             'info_speakers_max_width_img' => '',
@@ -270,6 +281,8 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             "lect_color" => $info_speakers_lect_color,
             "bio_color" => $info_speakers_bio_color,
         );
+
+        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
         $info_speakers_lect_color = empty($info_speakers_lect_color) ? 'black' : $info_speakers_lect_color;
         $info_speakers_bio_color = empty($info_speakers_bio_color) ? 'black' : $info_speakers_bio_color;
@@ -407,10 +420,14 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
 
                 $item_speaker_id = 'pweSpeaker-' . $rnd;
 
-                if ($info_speakers_slider_on != true) {
+                if ($info_speakers_slider_on != true && !$mobile) {
                     $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">
                                     <img class="pwe-speaker-img" src="'. $speaker_image_src .'">
-                                    <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>
+                                    <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>';
+                                    if (!empty($speaker_bio_excerpt)) {
+                                            $output .= '<div class="pwe-speaker-excerpt">'. $speaker_bio_excerpt .'</div>';
+                                    }
+                                    $output .= '
                                     <div class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</div>';
                                     if(!empty($speaker_bio)){
                                         $output .='<button class="pwe-speaker-btn">BIO</button>';
@@ -422,11 +439,11 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     "img" => $speaker_image_src,
                     "name" => $speaker_name,
                     "bio" => $speaker_bio,
-                    "bio_excerpt" => $speaker_bio_excerpt 
+                    "bio_excerpt" => $speaker_bio_excerpt
                 );
             }
 
-            if ($info_speakers_slider_on == true) {         
+            if ($info_speakers_slider_on == true || $mobile) {         
                 include_once plugin_dir_path(__FILE__) . '/../scripts/speakers-slider.php';
                 $output .= PWESpeakersSlider::sliderOutput($info_speakers_slider, 3000, $info_speakers_options);
             }

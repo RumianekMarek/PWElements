@@ -85,13 +85,14 @@ class PWElementAssociates extends PWElements {
 
         $as_fair_data = array();
 
-        $prepared_query = $custom_db->prepare("SELECT * FROM associates WHERE side1 = %s OR side2 = %s OR side3 = %s OR side4 = %s OR side5 = %s OR side6 = %s OR primary_fair = %s LIMIT 1", $name, $name, $name, $name, $name, $name, $name, $name);
-
+        $prepared_query = $custom_db->prepare("SELECT * FROM associates WHERE side1 = %s OR side2 = %s OR side3 = %s OR side4 = %s OR side5 = %s OR side6 = %s OR primary_fair = %s LIMIT 1", $name, $name, $name, $name, $name, $name, $name);
+        
         $results = $custom_db->get_results($prepared_query);
+
         foreach($results[0] as $fair){
             if($fair === null){
                 return $as_fair_data;
-            } elseif (strlen($fair) > 5 && !($as_fair_data['primary'])) {
+            } elseif (strlen($fair) > 5 && !isset($as_fair_data['primary'])) {
                 $prepared_query = $custom_db->prepare("SELECT fair_name, fair_logo, fair_logo_en, fair_web FROM fairs WHERE fair_name = %s", $fair);
                 $as_fair_data['primary'] = $custom_db->get_results($prepared_query);
             } elseif (strlen($fair) > 5) {
@@ -108,8 +109,13 @@ class PWElementAssociates extends PWElements {
     * @return string @output 
     */
     public static function output($atts, $logo_url = '', $pwe_header_modes = '', $pwe_header_conference_logo_url = '', $pwe_header_conference_link = '') {
-        if ($atts['pwe_header_mode_association'] != ''){
-            $pwe_header_modes = $atts['pwe_header_mode_association'];
+        extract( shortcode_atts( array(
+            'association_fair_logo_color' => '',
+            'pwe_header_mode_association' => '',
+        ), $atts ));
+
+        if ($pwe_header_mode_association != '') {
+            $pwe_header_modes = $pwe_header_mode_association;
             $pwe_header_conference_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '');
             $pwe_header_conference_link = (get_locale() == 'pl_PL') ? '/wydarzenia/' : '/en/conferences';
         }
@@ -129,10 +135,6 @@ class PWElementAssociates extends PWElements {
                 $conf_site = '/en/events/';
             }
         }
-
-        extract( shortcode_atts( array(
-            'association_fair_logo_color' => '',
-        ), $atts ));
 
         $output = '';
         $sorted = array();

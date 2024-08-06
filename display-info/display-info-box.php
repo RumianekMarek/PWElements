@@ -24,9 +24,22 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             array(
                 'type' => 'checkbox',
                 'group' => 'main',
-                'heading' => __('Simple form', 'pwe_display_info'),
+                'heading' => __('Simple mode', 'pwe_display_info'),
                 'param_name' => 'info_box_simple_mode',
-                'description' => __('To display in simpler form.', 'pwe_display_info'),
+                'description' => __('Display simple mode.', 'pwe_display_info'),
+                'admin_label' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoBox',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'main',
+                'heading' => __('Accordion preset', 'pwe_display_info'),
+                'param_name' => 'info_box_accordion_preset',
+                'description' => __('Turn on accordion preset. Does not work with simple mode setting!', 'pwe_display_info'),
                 'admin_label' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
                 'dependency' => array(
@@ -359,12 +372,18 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
         $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], '#777');
-        $btn_border = '1px solid '. self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
+
+        if(isset($atts['text_color_manual_hidden']) && issdt($atts['text_color'])){
+            $btn_border = '1px solid '. self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
+        } else {
+            $btn_border = '1px solid black';
+        }
 
         $rnd = rand(10000, 99999);
 
         extract( shortcode_atts( array(
             'info_box_simple_mode' => '',
+            'info_box_accordion_preset' => '',
             'info_box_event_time' => '',
             'info_box_event_title' => '',
             'info_box_speakers' => '',
@@ -579,6 +598,58 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             }
         </style>';
 
+        if ($info_box_accordion_preset == true && $info_box_simple_mode != true) {
+            $output .= '
+            <style>
+                @media(min-width:960px){
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecture-time {
+                        width: 15%;
+                    }
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecture-title {
+                        width: 84%;
+                        font-size: 18px;
+                    }
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name {
+                        display: none;
+                    }
+                    #info-box-'. self::$rnd_id .' .pwe-box-info {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: flex-end !important;
+                        flex-direction: unset !important;
+                        gap: 4px !important;
+                    }
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecture-desc {
+                        position: relative;
+                        padding-bottom: 5px;
+                        width: 84%;
+                    }
+                    #info-box-'. self::$rnd_id .' .pwe-see-more {
+                        margin-right: 180px;
+                        margin-top: -24px !important;
+                    }
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecture-desc div, 
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecture-title {
+                        padding-right: 62px; 
+                    }
+                }
+                #info-box-'. self::$rnd_id .' .pwe-see-more {
+                    text-align: right;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-desc::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 1px; /* wysokość gradientu */
+                    background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, .75)), to(rgba(0, 0, 0, 0)));
+                    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .75), rgba(0, 0, 0, 0)); /* alternatywa dla nowszych przeglądarek */
+                }
+
+            </style>';
+        }
+
         // Main content field
         $info_box_event_desc = wpb_js_remove_wpautop($content, true);
 
@@ -593,18 +664,26 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         $speaker_bio = [];
 
         // Decoding and get speakers data
-        $speakers_urldecode = urldecode($info_box_speakers);
-        $speakers_json = json_decode($speakers_urldecode, true);
-        if (is_array($speakers_json)) {
-            foreach ($speakers_json as $key => $speaker){
-                $speaker_images[] = $speaker["speaker_image"];
-                $speaker_names[] = $speaker["speaker_name"];
-                $speaker_bio[] = $speaker["speaker_bio"];
-
-                // Image src for modal
-                $images = $speaker["speaker_image"];
-                $speaker_images_src = wp_get_attachment_url($images); 
-                $speakers_json[$key]['speaker_image_url'] = $speaker_images_src;
+        if (isset($info_box_speakers)){
+            $speakers_urldecode = urldecode($info_box_speakers);
+            $speakers_json = json_decode($speakers_urldecode, true);    
+            if ($speakers_json !== null && is_array($speakers_json)) {
+                foreach ($speakers_json as $key => $speaker){
+                    if(isset($speaker["speaker_image"])){
+                        $speaker_images[] = $speaker["speaker_image"];
+                    }
+                    if(isset($speaker["speaker_name"])){
+                        $speaker_names[] = $speaker["speaker_name"];
+                    }
+                    if(isset($speaker["speaker_bio"])){
+                        $speaker_bio[] = $speaker["speaker_bio"];
+                    }
+    
+                    // Image src for modal
+                    $images = $speaker["speaker_image"];
+                    $speaker_images_src = wp_get_attachment_url($images); 
+                    $speakers_json[$key]['speaker_image_url'] = $speaker_images_src;
+                }
             }
         }
 
@@ -825,8 +904,9 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                         flex-direction: column !important;
                     }
                 }
-            </style> 
+            </style>';
 
+            $output .= '
             <div class="pwe-box-info">';
                 $output .= '
                     <div class="pwe-box-lecture-time-container">

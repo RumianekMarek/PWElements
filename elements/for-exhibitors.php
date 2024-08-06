@@ -113,7 +113,7 @@ class PWElementForExhibitors extends PWElements {
                         .'</div>
                         <div class="pwe-forexhibitors-text">
                             <p>';
-                                if($atts['exhibitor_text1'] == ''){
+                                if(!isset($atts['exhibitor_text1']) || $atts['exhibitor_text1'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             Targi w PTAK WARSAW EXPO to innowacyjne wydarzenia, w których udział biorą wystawcy z Polski i z zagranicy. Targi wyróżnia dostępność ogromnej, największej w Polsce powierzchni wystawienniczej, dającej wystawcom najlepsze, bo wręcz nieograniczone możliwości prezentacji swojej oferty.
@@ -150,7 +150,7 @@ class PWElementForExhibitors extends PWElements {
                         .'</div>
                         <div class="pwe-forexhibitors-text">
                             <p>';
-                                if($atts['exhibitor_text2'] == ''){
+                                if(!isset($atts['exhibitor_text2']) || $atts['exhibitor_text2'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             To tysiące Twoich potencjalnych klientów! Biorąc udział w targach, w charakterze wystawcy, masz aż trzy targowe dni na pokazanie im swoich produktów i usług. A to nie wszystko. Dzięki szerokiej kampanii promocyjnej oraz dużemu zainteresowaniu mediów Twój brand dotrze także do setek tysięcy ludzi w Polsce i za granicą.
@@ -182,7 +182,7 @@ class PWElementForExhibitors extends PWElements {
                         .'</div>
                         <div class="pwe-forexhibitors-text">
                             <p>';
-                                if($atts['exhibitor_text3'] == ''){
+                                if(!isset($atts['exhibitor_text3']) || $atts['exhibitor_text3'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             W biznesie nie możesz pozwolić sobie na stanie w miejscu. Podczas szkoleń, seminariów i konferencji branżowych zdobędziesz cenną wiedzę, którą będziesz mógł wykorzystać w praktyce, a odwiedzając nasze targi odkryjesz najnowsze rozwiązania sprzętowe i produktowe.
@@ -220,7 +220,7 @@ class PWElementForExhibitors extends PWElements {
                         .'</div>
                         <div class="pwe-forexhibitors-text">
                             <p>';
-                                if($atts['exhibitor_text4'] == ''){
+                                if(!isset($atts['exhibitor_text4']) || $atts['exhibitor_text4'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             Podczas targów przeprowadzisz rozmowy i zbudujesz cenne relacje biznesowe, które zaowocują nowymi kontraktami. Targi to jedyna taka okazja by nie tylko zbudować bazę nowych klientów, ale także by usłyszeć o ich potrzebach, co pozwoli na jeszcze lepsze dopasowanie oferty do oczekiwań odbiorców, co w efekcie wpłynie na zwiększenie zysków firmy.
@@ -252,7 +252,7 @@ class PWElementForExhibitors extends PWElements {
                         .'</div>
                         <div class="pwe-forexhibitors-text">
                             <p>';
-                                if($atts['exhibitor_text5'] == ''){
+                                if(!isset($atts['exhibitor_text5']) || $atts['exhibitor_text5'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             Ptak Warsaw Expo to największy i najnowocześniejszy kompleks targowy w Polsce, dedykowany wydarzeniom biznesowym, komercyjnym i rozrywkowym. Ideą jego powstania była organizacja targów, kongresów, szkoleń, imprez masowych i innych wydarzeń w oparciu o innowacyjny system wystawienniczy. Doskonała lokalizacja Ptak Warsaw Expo, usytuowanie obiektów 10 minut od największego w kraju portu lotniczego Lotnisko Chopina i 15 minut od ścisłego centrum Warszawy, sprawia, że PWE wypracowało sobie miano europejskiej stolicy biznesu.
@@ -290,7 +290,7 @@ class PWElementForExhibitors extends PWElements {
                         .'</div>
                         <div class="pwe-forexhibitors-text">
                             <p>';
-                                if($atts['exhibitor_text6'] == ''){
+                                if(!isset($atts['exhibitor_text6']) || $atts['exhibitor_text6'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             Nasza silna sieć kontaktów branżowych pozwala nam przyciągać na targi wystawców i sponsorów, zapewniając Państwu dostęp do najnowszych i najbardziej innowacyjnych produktów i usług w swojej branży. Zawsze szukamy nowych i ekscytujących sposobów na zwiększenie wrażeń z targów, zapewniając, że są one świeże i ekscytujące dla uczestników.

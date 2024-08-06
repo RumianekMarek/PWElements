@@ -330,6 +330,8 @@ class PWElementProfile extends PWElements {
         $unique_id = rand(10000, 99999);
         $element_unique_id = 'profil-' . $unique_id;
 
+        $custom_profile_class_title = "";
+        
         if (in_array('profile_title_visitors', explode(',', $profile_title_checkbox))) {
             $profile_id = "profil-odwiedzajacego";
             $custom_profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile"; 
@@ -557,7 +559,9 @@ class PWElementProfile extends PWElements {
                         <div class="pwe-profile-images-block pwe-profile-block">
                             <div class="pwe-profile-images-wrapper">';
 
-                                session_start();
+                                if (session_status() === PHP_SESSION_NONE) {
+                                    session_start();
+                                }
 
                                 $profile_images_urldecode = urldecode($profile_images);
                                 $profile_images_json = json_decode($profile_images_urldecode, true);

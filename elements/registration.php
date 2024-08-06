@@ -219,6 +219,8 @@ class PWElementRegistration extends PWElements {
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .'!important';
         $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .' !important';
 
+        $output = '';
+
         global $registration_button_text, $registration_form_id;
 
         extract( shortcode_atts( array(
@@ -266,7 +268,7 @@ class PWElementRegistration extends PWElements {
                 $registration_button_text = ($registration_button_text == "") ? "GENERATE AN OFFER" : $registration_button_text;
             }
         } else {
-            if(get_locale() == 'pl_PL') {
+            if (get_locale() == 'pl_PL') {
                 $registration_title = ($registration_title == "") ? "DLA ODWIEDZAJĄCYCH" : $registration_title;
                 $registration_text = ($registration_text == "") ? "Wypełnij formularz i odbierz darmowy bilet" : $registration_text;
                 $registration_button_text = ($registration_button_text == "") ? "Zarejestruj się<span style='display: block; font-weight: 300;'>Odbierz darmowy bilet</span>" : $registration_button_text;
@@ -435,7 +437,7 @@ class PWElementRegistration extends PWElements {
 
         } else if ($registration_select == "exhibitors_v2") {
 
-            $fair_logo = ($atts['fair_logo'] != '') ? $atts['fair_logo'] : self::languageChecker(
+            $fair_logo = (isset($atts['fair_logo']) && $atts['fair_logo'] != '') ? $atts['fair_logo'] : self::languageChecker(
                 <<<PL
                     /doc/logo-color.webp
                 PL,

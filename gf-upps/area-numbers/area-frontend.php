@@ -13,7 +13,9 @@ class GFAreaNumbersFrontend {
         
 		foreach($form['fields'] as $field) {
             if (property_exists($field, 'smartPhoneFieldGField') && $field->smartPhoneFieldGField) {
-
+                // echo '<pre style="width:500px;">';
+                // var_dump($field);
+                // echo '</pre>';
                 $field["enableAutocomplete"] = true;
                 $field["autocompleteAttribute"] = 'tel';
                 $field['displayOnly'] = true;
@@ -43,7 +45,7 @@ class GFAreaNumbersFrontend {
 
         $js_file1 = plugins_url('js/intlTelInput-jquery.min.js', __FILE__);		
         $js_version1 = filemtime(plugin_dir_path(__FILE__) . 'js/intlTelInput-jquery.min.js');        
-        wp_enqueue_script('area_intlTelInput', $js_file1, array( 'jquery' ), $js_version3, true);
+        wp_enqueue_script('area_intlTelInput', $js_file1, array( 'jquery' ), $js_version1, true);
 
         $js_file3 = plugins_url('js/area-numbers.js', __FILE__);		
         $js_version3 = filemtime(plugin_dir_path(__FILE__) . 'js/area-numbers.js');        

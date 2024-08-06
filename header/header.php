@@ -24,9 +24,6 @@ class PWEHeader {
         require_once plugin_dir_path(__FILE__) . '/../elements/association.php';
 
         // Hook actions
-        add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
-        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
-        
         add_action('vc_before_init', array($this, 'inputRange'));
         add_action('vc_before_init', array($this, 'pweCheckbox'));
 
@@ -369,7 +366,6 @@ class PWEHeader {
                             'param_name' => 'pwe_header_conferences_title',
                             'param_holder_class' => 'backend-textarea-raw-html',
                             'save_always' => true,
-                            'value' => base64_encode($pwe_header_conferences_title),
                             'dependency' => array(
                                 'element' => 'pwe_header_modes',
                                 'value' => array(''),
@@ -677,24 +673,6 @@ class PWEHeader {
     /**
      * Adding Styles
      */
-    public function addingStyles(){
-        $css_file = plugins_url('css/style.css', __FILE__);
-        $css_version = filemtime(plugin_dir_path(__FILE__) . 'css/style.css');
-        wp_enqueue_style('pwelement-css', $css_file, array(), $css_version);
-    }
-
-    /**
-     * Adding Scripts
-     */
-    public function addingScripts(){
-        $js_file = plugins_url('js/script.js', __FILE__);
-        $js_version = filemtime(plugin_dir_path(__FILE__) . 'js/script.js');
-        wp_enqueue_script('pwelement-js', $js_file, array('jquery'), $js_version, true);
-    }
-
-    /**
-     * Adding Styles
-     */
     public static function findColor($primary, $secondary, $default = ''){
         if($primary != ''){
             return $primary;
@@ -962,6 +940,7 @@ class PWEHeader {
     public static function adjustBrightness($hex, $steps) {
         // Convert hex to RGB
         $hex = str_replace('#', '', $hex);
+        
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
@@ -986,12 +965,12 @@ class PWEHeader {
      * @return string
      */
     public function PWEHeaderOutput($atts, $content = null) {
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . ' !important';
-        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . ' !important; border-width: 0 !important';
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . '!important';
-        $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') . ' !important';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], '#000000');
+        $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
 
-        if ($text_color == '' || $text_color == '#000000 !important' || $text_color == 'black !important') {
+        if ($text_color == '' || $text_color == '#000000' || $text_color == 'black') {
             $text_shadow = 'white !important;';
         } else {
             $text_shadow = 'black !important;';
@@ -1038,9 +1017,12 @@ class PWEHeader {
         $pwe_replace_json = json_decode($pwe_replace_urldecode, true);
         $input_replace_array_html = array();
         $output_replace_array_html = array();
-        foreach ($pwe_replace_json as $replace_item) {
-            $input_replace_array_html[] = $replace_item["input_replace_html"];
-            $output_replace_array_html[] = $replace_item["output_replace_html"];
+
+        if (is_array($pwe_replace_json)) {
+            foreach ($pwe_replace_json as $replace_item) {
+                $input_replace_array_html[] = $replace_item["input_replace_html"];
+                $output_replace_array_html[] = $replace_item["output_replace_html"];
+            }
         }
 
         if ($pwe_header_modes == "conference_mode") {
@@ -1049,8 +1031,14 @@ class PWEHeader {
             $main_badge_color = self::$main2_color;
         }
 
-        $main_header_color = self::findColor($atts['main_header_color_manual_hidden'], $atts['main_header_color'], $main_badge_color) . '!important';
-        $main_header_color_text = self::findColor($atts['main_header_color_text_manual_hidden'], $atts['main_header_color_text'], 'white') . '!important';
+        $main_header_color_manual_hidden = isset($atts['main_header_color_manual_hidden']) ? $atts['main_header_color_manual_hidden'] : null;
+        $main_header_color = isset($atts['main_header_color']) ? $atts['main_header_color'] : null;
+        $main_header_color_text_manual_hidden = isset($atts['main_header_color_text_manual_hidden']) ? $atts['main_header_color_text_manual_hidden'] : null;
+        $main_header_color_text = isset($atts['main_header_color_text']) ? $atts['main_header_color_text'] : null;
+
+        $main_header_color = self::findColor($main_header_color_manual_hidden, $main_header_color, $main_badge_color) . '!important';
+        $main_header_color_text = self::findColor($main_header_color_text_manual_hidden, $main_header_color_text, 'white') . '!important';
+
         
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
         $darker_form_btn_color = self::adjustBrightness($main_header_color, -20);
@@ -1203,9 +1191,9 @@ class PWEHeader {
                     padding: 0;
                 }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn {
-                    background-color: '. $btn_color .';
-                    color: '. $btn_text_color .';
-                    border: '. $btn_border .';
+                    background-color: '. $btn_color .' !important;
+                    color: '. $btn_text_color .' !important;
+                    border: '. $btn_border .' !important;
                     width: 100%;
                     height: 100%;
                     transform: scale(1) !important;
@@ -1274,7 +1262,7 @@ class PWEHeader {
 
         if ($pwe_header_modes == "simple_mode" &&  $pwe_header_simple_conference == true) {
 
-            $trade_fair_desc = (get_locale() == 'pl_PL') ? '[trade_fair_conferance]' : '[trade_fair_conferance_eng]';
+            $trade_fair_desc = get_the_title();
 
             if($pwe_header_logo_color != 'true') {
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : "/doc/logo.webp";
@@ -1590,10 +1578,10 @@ class PWEHeader {
                             $pwe_header_title = $trade_fair_desc;
                             $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_desc_short]" : "[trade_fair_desc_short_eng]";
                         } else if ($pwe_header_modes == "conference_mode") {
-                            $pwe_header_title = (get_locale() == 'pl_PL') ? "[trade_fair_conferance]" : "[trade_fair_conferance_eng]";
-                            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_conferance]" : "[trade_fair_conferance_eng]";
+                            $pwe_header_title = get_the_title();
+                            $pwe_header_title_short = get_the_title();
                         }
-                        
+
                         $output .= '
                         <style>
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {

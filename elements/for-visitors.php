@@ -18,7 +18,7 @@ class PWElementForVisitors extends PWElements {
      * Returns an array of parameters for the Visual Composer element.
      */
     public static function initElements() {
-        for($i=0; $i<6; $i++){
+        for($i=0; $i<2; $i++){
             $element_output[] = 
                 array(
                     'type' => 'textarea',
@@ -110,7 +110,7 @@ class PWElementForVisitors extends PWElements {
                     <div class="pwe-visitors-text-block">
                         <div class="pwe-visitors-text">
                             <p>';
-                                if($atts['exhibitor_text1'] == ''){
+                                if(!isset($atts['exhibitor_text1']) || $atts['exhibitor_text1'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             [trade_fair_name] to branżowe specjalistyczne wydarzenie odbywające się w Ptak Warsaw Expo, Największym Centrum Targowo – Kongresowym w Europie Środkowej. Mające na celu skupienie wszystkich gałęzi branży [trade_fair_opisbranzy] i stworzenie dogodnych warunków do profesjonalnych kontaktów biznesowych. [trade_fair_desc] pozwolą na znalezienie potencjalnych partnerów biznesowych dla twojej firmy.
@@ -132,7 +132,7 @@ class PWElementForVisitors extends PWElements {
                     <div class="pwe-visitors-text-block">
                         <div class="pwe-visitors-text">
                             <p>';
-                                if($atts['exhibitor_text1'] == ''){
+                                if(!isset($atts['exhibitor_text2']) || $atts['exhibitor_text2'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             [trade_fair_name] to doskonała okazja byś mógł porównać i dokładnie przeanalizować wszystkie dostępne na polskim rynku oferty dedykowane branży. Wydarzenie to stanowi również doskonałą okazję do uczestnictwa w konferencjach, warsztatach oraz kongresach branży [trade_fair_opisbranzy] rozwijających znajomość rynku oraz pokazujących działanie najnowszych technologii. Zarejestruj się i otrzymaj zaproszenie na targi.

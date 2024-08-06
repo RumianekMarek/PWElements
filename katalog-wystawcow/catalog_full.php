@@ -15,7 +15,9 @@ class PWECatalogFull extends PWECatalog {
      */
     // public static function initElements() {
     // }
-    public static function output($atts, $identification) {     
+    public static function output($atts, $identification) {
+        $stand = isset($atts['stand']) ? $atts['stand'] : false;
+
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
         $text_shadow = self::findColor($atts['text_shadow_color_manual_hidden'], $atts['text_shadow_color'], 'black') . '!important';
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
@@ -23,6 +25,8 @@ class PWECatalogFull extends PWECatalog {
         $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
 
+        $divContainerExhibitors = '';
+        
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $exhibitors = self::logosChecker($identification, $atts['format']);
@@ -108,6 +112,7 @@ class PWECatalogFull extends PWECatalog {
                             if ($exhibitor['URL_logo_wystawcy']) {
                                 $singleExhibitor .= '<div class="exhibitors__container-list-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ')"></div>';
                             }
+                            
                             if ($stand !== 'true') {
                                 $singleExhibitor .= '<div class="exhibitors__container-list-text">
                                                         <h2 class="exhibitors__container-list-text-name">' . $exhibitor['Nazwa_wystawcy'] . '</h2>
@@ -140,22 +145,18 @@ class PWECatalogFull extends PWECatalog {
                             }
                         }
                     }
-
-                    $menu_3_pl_items = wp_get_nav_menu_items($menu_3_pl);
-                    $menu_3_en_items = wp_get_nav_menu_items($menu_3_en);
-
-                    $menu_3_pl_data = array();
-                    $menu_3_en_data = array();
-
-                    foreach ($menu_3_pl_items as $item) {
-                        $menu_3_pl_data[] = array(
-                            'title' => $item->title,
-                            'url' => $item->url
-                        );
+                    echo '<script>console.log("'.get_locale().'")</script>';
+                    
+                    if (get_locale() == 'pl_PL'){
+                        $menu_3_data = wp_get_nav_menu_items($menu_3_pl);
+                    } else {
+                        $menu_3_data = wp_get_nav_menu_items($menu_3_en);
                     }
 
-                    foreach ($menu_3_en_items as $item) {
-                        $menu_3_en_data[] = array(
+                    $menu_3 = array();
+
+                    foreach ($menu_3_data as $item) {
+                        $menu_3[] = array(
                             'title' => $item->title,
                             'url' => $item->url
                         );
@@ -165,19 +166,21 @@ class PWECatalogFull extends PWECatalog {
                     <div class="exhibitors__buttons">
                         <span class="pwe-btn-container">';
                             if (get_locale() == "pl_PL") {
-                                $output .='<a href="'. $menu_3_pl_data[0]["url"] .'" class="pwe-btn">Zostań wystawcą</a>';
+                                $output .='<a href="'. $menu_3[0]["url"] .'" class="pwe-btn">Zostań wystawcą</a>';
                             } else {
-                                $output .='<a href="'. $menu_3_en_data[0]["url"] .'" class="pwe-btn">Become an exhibitor</a>';
+                                $output .='<a href="'. $menu_3[0]["url"] .'" class="pwe-btn">Become an exhibitor</a>';
                             } $output .='    
                         </span>';
+
                         if (get_locale() == "en_US") {
                             $output .='
                                 <span class="pwe-btn-container">
                                     <a href="https://warsawexpo.eu/en/forms-for-agents/" class="pwe-btn" target="_blank">Become an agent</a>
                                 </span>';
-                        } $output .='     
+                        } 
+                        
+                        $output .='     
                     </div>
-
                 </div>
             </div>';
 
