@@ -17,6 +17,8 @@ class PWEMediaGallerySlider {
     public static function sliderOutput($media_url, $slide_speed = 3000) {
         /*Random "id" if there is more than one element on page*/  
         $id_rnd = rand(10000, 99999);
+
+        $output = '';
         
         /*Counting min elements for the gallery slider*/   
         if(count($media_url) > 10){
@@ -64,7 +66,7 @@ class PWEMediaGallerySlider {
                         display: flex;
                         align-items: flex-start !important;
                         justify-content: space-between;
-                        margin: 0 !important;
+                        margin: 5px !important;
                         pointer-events: auto;
                 }
                 #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image {

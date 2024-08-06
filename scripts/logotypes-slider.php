@@ -22,8 +22,10 @@ class PWELogotypesSlider {
                 $element_id = (!empty($images_options[0]['element_id'])) ? $images_options[0]['element_id'] : '';
                 $logotypes_caption_on = (!empty($images_options[0]['logotypes_caption_on'])) ? $images_options[0]['logotypes_caption_on'] : '';
                 $header_logotypes_caption_on = (!empty($images_options[0]['header_logotypes_caption_on'])) ? $images_options[0]['header_logotypes_caption_on'] : '';
-                $logotypes_dots_off = (!empty($images_options[0]['logotypes_dots_off'])) ? $images_options[0]['logotypes_dots_off'] : '';
+                $logotypes_dots_off = (!empty($images_options[0]['logotypes_dots_off'])) ? $images_options[0]['logotypes_dots_off'] : ''; 
                 $accent_color = do_shortcode('[trade_fair_accent]');
+
+                $caption_translations = (!empty($images_options[0]['caption_translations'])) ? $images_options[0]['caption_translations'] : '';
 
                 $target_blank = (!empty($images_options[0]['target_blank'])) ? $images_options[0]['target_blank'] : '';
 
@@ -134,8 +136,8 @@ class PWELogotypesSlider {
                                 $imageUrl = $imageData['site'];
                                 $imageClass = !empty($imageData['class']) ? $imageData['class'] : '';
                                 $imageStyle = !empty($imageData['style']) ? $imageData['style'] : '';
-                                $imageCaption = $imageData['folder_name'];
-                                $imageCustomCaption = $imageData['logotypes_name'];
+                                $imageCaption = (isset($imageData['folder_name'])) ? $imageData['folder_name'] : '';
+                                $imageCustomCaption = (isset($imageData['logotypes_name'])) ?  $imageData['logotypes_name'] : '';
 
                                 $currentDomain = $_SERVER['HTTP_HOST'];
                                 $imageDomain = parse_url($imageUrl, PHP_URL_HOST);
@@ -143,16 +145,30 @@ class PWELogotypesSlider {
                                 if (!empty($target_blank) && $currentDomain !== $imageDomain) {
                                         $imageTargetBlank = $target_blank;
                                 } else if ($currentDomain !== $imageDomain) {
-                                        $imageTargetBlank = $imageData['target_blank'];
+                                        $imageTargetBlank = isset($imageData['target_blank']) ? $imageData['target_blank'] : '';
                                 } else $imageTargetBlank = '';
 
                                 if (($logotypes_caption_on == true || $header_logotypes_caption_on == true) && empty($imageCustomCaption)) {
-                                        $logo_caption_text = '<p>'. $imageCaption .'</p>';
+                                        if (get_locale() == 'pl_PL') {
+                                                // Split folder_name into words and add <br> after the first word
+                                                $logotypes_caption_words = explode(" ", $imageCaption);
+                                                if (count($logotypes_caption_words) > 1) {
+                                                        $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
+                                                } else {
+                                                        $logo_caption_text = '<p>' . $imageCaption . '</p>'; // When folder_name is one word
+                                                }
+                                        } else {
+                                                if (array_key_exists($imageCaption, $caption_translations)) {
+                                                        $logo_caption_text = '<p>'. $caption_translations[$imageCaption] .'</p>';
+                                                } else {
+                                                        $logo_caption_text = '<p>'. $imageCaption .'</p>';
+                                                }
+                                        }
                                 } else {
                                         $logo_caption_text = '<p>'. $imageCustomCaption .'</p>';
                                 }
                                 
-                                // Tworzenie HTML
+                                // Create HTML
                                 if (!empty($imageUrl)) {
                                         $output .= '<div class="image-container"><a href="' . $imageUrl . '" ' . $imageTargetBlank . ' ' . $imageId . '"><div class="' . $imageClass . ' logo-with-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>'. $logo_caption_text .'</a></div>';
                                 } else {
@@ -305,7 +321,7 @@ class PWELogotypesSlider {
                                                         slides.appendChild(firstSlide);
 
                                                         setTimeout(() => {
-                                                        firstSlide.classList.remove("first-slide");
+                                                                firstSlide.classList.remove("first-slide");
                                                         }, '. ($slide_speed / 2) .');
                                                 }
 
@@ -464,6 +480,8 @@ class PWELogotypesSlider {
 
                 /*Random "id" if there is more than one element on page*/  
                 $id_rnd = rand(10000, 99999);
+
+                $output = '';
             
                 /*Counting min elements for the gallery slider*/   
                 if(count($media_url) > 10){

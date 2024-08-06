@@ -15,17 +15,17 @@ class PWESpeakersSlider {
          * @param array $media_url Array of media URLs.
          * @param int $min_image Minimum image index.
          * @param int $max_image Maximum image index.
-         * @return string The DOM structure as HTML.
+         * @return string The DOM structure as HTML. 
          */
         private static function createDOM($id_rnd, $media_url, $min_image, $max_image, $options) {
                 
-                if ($options[0]['display_items_desktop'] == 1 || $options[0]['display_items_tablet'] == 1 || $options[0]['display_items_mobile'] == 1) {
-                        $speaker_max_width_img = (empty($options[0]['max_width_img'])) ? "150px" : $options[0]['max_width_img'];
-                }
+                $info_speakers_dots_off = (!empty($options[0]['info_speakers_dots_off'])) ? $options[0]['info_speakers_dots_off'] : '';
 
                 $accent_color = do_shortcode('[trade_fair_accent]');
                 $lect_color = (!empty($images_options[0]['lect_color'])) ? $images_options[0]['lect_color'] : $accent_color;
                 $bio_color = (!empty($images_options[0]['bio_color'])) ? $images_options[0]['bio_color'] : $accent_color;
+
+                $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
                 $output = '
                 <style>
@@ -56,14 +56,13 @@ class PWESpeakersSlider {
                                 flex: 1;
                         }
                         #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker :is(span, p, h2, h3, h4, h5) {
-                                margin: 0 !important;    
+                                margin: 0 !important;
                         }
                         #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-container{
                                 margin: 5px !important;
                                 padding: 10px;
                         }
                         #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-img {
-                                max-width: '. $speaker_max_width_img .';
                                 background-repeat: no-repeat;
                                 background-position: center;
                                 background-size: cover;
@@ -83,10 +82,22 @@ class PWESpeakersSlider {
                                         transform: translateX(0);
                                 }
                         }
-                        #PWESpeakersSlider-'. $id_rnd .' .slides .slide{
+                        #PWESpeakersSlider-'. $id_rnd .' .slides .slide {
                                 animation: slideAnimation 0.5s ease-in-out;
                         }
                 </style>';
+
+                if ($options[0]['display_items_desktop'] == 1 || ($options[0]['display_items_tablet'] == 1 && $mobile) || ($options[0]['display_items_mobile'] == 1 && $mobile)) {
+                        $speaker_max_width_img = "";
+                        $speaker_max_width_img = (empty($options[0]['max_width_img'])) ? "150px;" : $options[0]['max_width_img'];
+                        
+                        $output .= '
+                        <style>
+                                #PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-img {
+                                        max-width: '. $speaker_max_width_img .';
+                                }
+                        </style>';
+                }
 
                 if ($options[0]['btn_hide'] == true) {
                         $output .= '
@@ -140,7 +151,40 @@ class PWESpeakersSlider {
                                 }
                         }
 
-                $output .= '</div></div>';
+                $output .= '</div>';
+
+                if ($info_speakers_dots_off != true) {
+
+                        $output .= '
+                        <style>
+                                #PWESpeakersSlider-'. $id_rnd .' .dots-container {
+                                        display: none;
+                                        text-align: center;
+                                        margin-top: 18px !important;
+                                }
+                                #PWESpeakersSlider-'. $id_rnd .' .dot {
+                                        display: inline-block;
+                                        width: 15px;
+                                        height: 15px;
+                                        border-radius: 50%;
+                                        background-color: #bbb;
+                                        margin: 0 5px;
+                                        cursor: pointer;
+                                }
+                                #PWESpeakersSlider-'. $id_rnd .' .dot.active {
+                                        background-color: '. $accent_color .';
+                                }   
+                        </style>';
+                        
+                        $output .= '
+                        <div class="dots-container">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                        </div>';
+                }
+                
+                $output .= '</div>';
                 return $output;
         }
 
@@ -172,7 +216,10 @@ class PWESpeakersSlider {
                         jQuery(function ($) {                         
                                 const slider = document.querySelector("#PWESpeakersSlider-'. $id_rnd .'");
                                 const slides = slider.querySelector(".slides");
-                                const images = slides.querySelectorAll(".pwe-speaker");          
+                                const images = slides.querySelectorAll(".pwe-speaker");     
+                                
+                                const dotsContainer = slider.querySelector(".dots-container");
+                                const dots = slider.querySelectorAll(".dots-container .dot");
 
                                 let isMouseOver = false;
                                 let isDragging = false;
@@ -211,22 +258,34 @@ class PWESpeakersSlider {
 
                                         slides.style.transform = `translateX(-${slidesTransform}px)`;
 
+                                        if (dotsContainer) {
+                                                dotsContainer.style.display = "block";
+                                        }
+
                                         function nextSlide() {
                                                 slides.querySelectorAll("#PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-container").forEach(function(image){
                                                         image.classList.add("slide");
                                                 })
-                                                slides.firstChild.classList.add("first-slide");
-                                                const firstSlide = slides.querySelector(".first-slide");  
 
-                                                slides.appendChild(firstSlide);
+                                                const firstSlide = slides.firstElementChild;
+                                                if (firstSlide) {
+                                                        firstSlide.classList.add("first-slide");
 
-                                                firstSlide.classList.remove("first-slide");
+                                                        // Przesuwamy pierwszy slajd na koniec
+                                                        slides.appendChild(firstSlide);
+
+                                                        setTimeout(() => {
+                                                        firstSlide.classList.remove("first-slide");
+                                                        }, '. ($slide_speed / 2) .');
+                                                }
 
                                                 setTimeout(function() {
                                                         slides.querySelectorAll("#PWESpeakersSlider-'. $id_rnd .' .pwe-speaker-container").forEach(function(image){
                                                                 image.classList.remove("slide");
                                                         })
                                                 }, '. ($slide_speed / 2) .');
+
+                                                updateCurrentSlide(1);
                                         }                       
 
                                         slider.addEventListener("mousemove", function() {
@@ -241,6 +300,19 @@ class PWESpeakersSlider {
                                         let startX;
                                         let startY;
                                         let slideMove = 0;
+                                        let currentSlide = 0;
+
+                                        function updateDots() {
+                                                if (dots[currentSlide]) {
+                                                        dots.forEach(dot => dot.classList.remove("active"));
+                                                        dots[currentSlide].classList.add("active");
+                                                }
+                                        }
+
+                                        function updateCurrentSlide(delta) {
+                                                currentSlide = (currentSlide + delta + dots.length) % dots.length;
+                                                updateDots();
+                                        }
 
                                         slider.addEventListener("mousedown", (e) => {
                                                 isDown = true;
@@ -311,26 +383,36 @@ class PWESpeakersSlider {
                                                 const verticalDiff = Math.abs(y - startY);
                                         
                                                 if (Math.abs(walk) > verticalDiff) { // Tylko jeśli ruch poziomy jest większy niż pionowy
-                                                e.preventDefault();
-                                                const transformWalk = slidesTransform - walk;
-                                                slides.style.transform = `translateX(-${transformWalk}px)`;
-                                                slideMove = (walk / imageWidth);
+                                                        e.preventDefault();
+                                                        const transformWalk = slidesTransform - walk;
+                                                        slides.style.transform = `translateX(-${transformWalk}px)`;
+                                                        slideMove = (walk / imageWidth);
                                                 }
                                         });
                                         
                                         const resetSlider = (slideWalk) => {
                                                 const slidesMove = Math.abs(Math.round(slideWalk));
                                                 for(i = 0; i < slidesMove; i++){
-                                                        if(slideWalk > 0){
-                                                                slides.lastChild.classList.add("last-slide");
-                                                                const lastSlide = slides.querySelector(".last-slide");  
-                                                                slides.insertBefore(lastSlide, slides.firstChild);
-                                                                lastSlide.classList.remove("last-slide");
+                                                        if (slideWalk > 0) {
+                                                                const lastSlide = slides.lastElementChild;
+                                                                if (lastSlide) {
+                                                                        lastSlide.classList.add("last-slide");
+                                                                        slides.insertBefore(lastSlide, slides.firstChild);
+                                                                        lastSlide.classList.remove("last-slide");
+                                                                        
+                                                                        updateCurrentSlide(-1);
+                                                                        
+                                                                }
                                                         } else {
-                                                                slides.firstChild.classList.add("first-slide");
-                                                                const firstSlide = slides.querySelector(".first-slide");  
-                                                                slides.appendChild(firstSlide);
-                                                                firstSlide.classList.remove("first-slide");
+                                                                const firstSlide = slides.firstElementChild;
+                                                                if (firstSlide) {
+                                                                        firstSlide.classList.add("first-slide");
+                                                                        slides.appendChild(firstSlide);
+                                                                        firstSlide.classList.remove("first-slide");
+                                                                       
+                                                                        updateCurrentSlide(1);
+                                                                        
+                                                                }
                                                         }
                                                 }
                                                 slides.style.transform = `translateX(-${slidesTransform}px)`;
@@ -362,6 +444,8 @@ class PWESpeakersSlider {
         public static function sliderOutput($media_url, $slide_speed = 3000, $info_speakers_options) {
                 $info_speakers_options_json = json_encode($info_speakers_options);
                 $options = json_decode($info_speakers_options_json, true);
+
+                $output = '';
 
                 /*Random "id" if there is more than one element on page*/  
                 $id_rnd = rand(10000, 99999);

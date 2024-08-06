@@ -80,7 +80,6 @@ $output .= '
         }
         .header-conference-button {
             background-color: '. $btn_color .';
-            box-shadow: '. $btn_shadow_color .';
             border: 1px solid '. $btn_color .'; 
             border-radius: 0 !important;
             padding: 5px 10px;

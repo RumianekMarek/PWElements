@@ -54,7 +54,7 @@ class PWEPostsSlider {
                         }
                 </style>';
 
-                if ($posts_full_width === 'true') {
+                if (isset($posts_full_width) && $posts_full_width === 'true') {
                         $output .= '<style>
                                         .pwe-posts-wrapper {
                                                 overflow: visible !important;
@@ -308,6 +308,8 @@ class PWEPostsSlider {
         public static function sliderOutput($media_url, $slide_speed = 3000) {
                 /*Random "id" if there is more than one element on page*/  
                 $id_rnd = rand(10000, 99999);
+
+                $output = '';
                 
                 /*Counting min elements for the gallery slider*/   
                 if(count($media_url) > 10){

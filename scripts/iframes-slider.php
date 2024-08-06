@@ -543,6 +543,8 @@ class PWEIframesSlider {
         public static function sliderOutput($media_url, $slide_speed = 3000, $options = "") {
                 /*Random "id" if there is more than one element on page*/  
                 $id_rnd = rand(10000, 99999);
+
+                $output = '';
                 
                 /*Counting min elements for the gallery slider*/   
                 if(count($media_url) > 10){
