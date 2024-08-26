@@ -38,9 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const leftLink = document.createElement('a');
     const rightLink = document.createElement('a');
 
-    leftLink.href = 'https://warsawexpo.eu/';
-    rightLink.href = 'https://mr.glasstec.pl/';
-
     const pwePageLink = htmlLang === 'pl-PL' ? 'https://warsawexpo.eu/' : 'https://warsawexpo.eu/en/';
     const mainPage = htmlLang === 'pl-PL' ? '/' : '/en/';
 

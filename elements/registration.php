@@ -361,7 +361,7 @@ class PWElementRegistration extends PWElements {
 
         if ($registration_select == "visitors") {
 
-            if (strpos($source_utm, 'utm_source=byli') !== false) {
+            if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
                 $output .= '
                 <style>
                     .row-parent:has(.pwelement_'. self::$rnd_id .') .wpb_column {

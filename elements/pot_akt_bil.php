@@ -218,9 +218,8 @@ class PWElementTicketActConf extends PWElements {
             .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-edition {
                 max-width: 400px;
                 width: 100%;
-                background: white;
                 border-radius: 0;
-                color: '. self::$accent_color .';
+                background-color: white;
                 font-size: 36px;
                 margin: 0;
                 margin-top: 9px;
@@ -229,6 +228,12 @@ class PWElementTicketActConf extends PWElements {
                 text-transform: uppercase;
                 text-align: center;
                 font-weight: 700;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-edition span {
+                background: url(/doc/header_mobile.webp) no-repeat center;
+                color: transparent;
+                    -webkit-background-clip: text;
+                background-clip: text;
             }
             @media (max-width:960px) {
                 .pwe-ticket-activation-confirmation-left-content {
@@ -280,7 +285,7 @@ class PWElementTicketActConf extends PWElements {
                             <<<PL
                             <div class="pwe-ticket-activation-confirmation-confirmation-wrapper">
                                 <h2>Dziękujemy za aktywację biletu!</h2>
-                                <p style="padding-top: 18px;">Wkrótce otrzymają Państwo maila z unikalnym biletem na targi, zawierający <strong>kod QR</strong>. Prosimy o jego zachowanie, gdyż kod QR umożliwi wejście na <strong>[trade_fair_name]</strong> oraz wszystkie wydarzenia towarzyszące.</p>
+                                <p style="padding-top: 18px;">Wkrótce otrzymają Państwo maila z unikalnym biletem na targi, zawierający <strong>kod QR</strong>. Prosimy o jego zachowanie, gdyż kod QR umożliwi wejście na <strong>[trade_fair_name]</strong> oraz wydarzenia towarzyszące targom.</p>
                                 <p style="padding-top: 18px;">W razie pytań, nasz zespół jest do Państwa dyspozycji.</p>
                                 <p><strong>Do zobaczenia na [trade_fair_name]!</strong></p>
                             </div>
@@ -288,7 +293,7 @@ class PWElementTicketActConf extends PWElements {
                             <<<EN
                             <div class="pwe-ticket-activation-confirmation-confirmation-wrapper">
                                 <h2>Thank you for activating your ticket!</h2>
-                                <p>You will soon receive an email with a unique ticket to the fair, containing a <strong>QR code</strong>. Please keep it, as the QR code will allow you to enter <strong>[trade_fair_name_eng]</strong> and all accompanying events.</p>
+                                <p style="padding-top: 18px;">You will soon receive an email with a unique ticket to the trade fair, containing a <strong>QR code</strong>. Please keep it, as the QR code will allow you to enter <strong>[trade_fair_name]</strong> and the events accompanying the trade fair.</p>
                                 <p>If you have any questions, our team is at your disposal.</p>
                                 <p><strong>See you at [trade_fair_name_eng]!</strong></p>
                             </div>
@@ -310,7 +315,7 @@ class PWElementTicketActConf extends PWElements {
                     <div class="pwe-ticket-activation-confirmation-right-content">
                         <img src="/doc/logo.webp">';
                         if (!empty($trade_fair_edition_shortcode)) {
-                            $output .= '<p class="pwe-ticket-activation-confirmation-edition">'. $trade_fair_edition .'</p>';
+                            $output .= '<p class="pwe-ticket-activation-confirmation-edition"><span>'. $trade_fair_edition .'</span></p>';
                         }
                         $output .= '
                         <h2>'. $actually_date .'</h2>

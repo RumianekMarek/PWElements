@@ -132,6 +132,9 @@ class PWElementGenerator extends PWElements {
 
         $output = '
         <style>
+            #page-header{
+                display: none !important;
+            }
             .pwe-generator-wystawcow .gform_validation_errors {
                 display: none;
             }
@@ -523,6 +526,46 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .gen-text .gen-date {
                 white-space: nowrap;
             }
+
+            /* Modal */
+            .modal__elements {
+                z-index: 9999;
+                background-color: #fff;
+                padding: 1rem;
+                box-shadow: 9px 9px 0px -5px black;
+                border: 2px solid black;
+                border-radius: 0;
+                max-width: 80%;
+                max-height: 80%;
+                overflow: auto;
+                position: fixed;
+                top: 100px;
+                height: auto;
+                min-width: 800px;
+            }
+
+            .modal__elements input{
+                text-align: center;
+                width:80%;
+            }
+
+            .modal__elements table{
+                text-align: center;
+                width:90%;
+            }
+
+            .modal__elements p{
+                text-align: center;
+                margin: 0;
+            }
+            .modal__elements table td{
+                text-align: center;
+                padding: 5px 10px;
+            }
+            .modal__elements table input{
+                margin-top: 0 !imprtant;
+            }
+
             @media (max-width:1200px) {
                 .pwe-generator-wystawcow .container {
                     max-width: 900px !important;
@@ -859,10 +902,62 @@ class PWElementGenerator extends PWElements {
                             EN
                         )
                     .'</h3>
+                    <button class="btn tabela-masowa">Tabela Masowa</button>
                 </div>
             </div>
 
-            <script type="text/javascript"> 
+            <script type="text/javascript">
+                jQuery(document).ready(function($){
+                    
+                    $(".tabela-masowa").on("click",function(){
+
+                        $("footer").hide();
+
+                        let modalBox = ""; 
+                        const $modal = $("<div></div>")
+                            .addClass("modal")
+                            .attr("id", "my-modal");
+
+                        modalBox = `<div class="modal__elements">
+                                        <input placeholder="Firma Zapraszająca"></input>
+                                        <p>Wklej do tabeli poniżej tabele z excela z dwoma kolumnami</p>
+                                        <table id="mass-table">
+                                            <tr>
+                                                <th>Imie</td>
+                                                <th>Email</td>
+                                            </tr>
+                                            <tr>
+                                                <td contenteditable="true" colspan="2"></td>
+                                            </tr>
+                                        </table>
+                                        <button class="wyslij">Wyślij</button>
+                                    </div>`;
+                        
+                        $modal.html(modalBox);
+
+                        $(".page-wrapper").prepend($modal);
+
+                        $modal.css("display", "flex");
+                        const $closeBtn = $modal.find(".close");
+
+                        $closeBtn.on("click", function () {
+                            $modal.hide();
+                            $("footer").show();
+                        });
+
+                        $modal.on("click", function (event) {
+                            if ($(event.target)[0] === $modal[0]) {
+                                $modal.hide();
+                                $("footer").show();
+
+                            }
+                        });
+                    });
+                    $(".wyslij").on("click",function(){
+                        console.log($("#mass-table").DataTable());
+                    });
+                });
+
                 var btnExhElements = document.querySelectorAll(".btn-exh");
                 btnExhElements.forEach(function(btnExhElement) {
                     btnExhElement.addEventListener("click", function() {

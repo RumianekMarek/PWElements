@@ -264,6 +264,23 @@ strong {
     }
 }
 
+.mobile-menu-button .lines-button .lines {
+    height: 3px !important;
+    width: 25px !important;
+}
+.mobile-menu-button .lines-button .lines:before {
+    top: 8px !important;
+}
+.mobile-menu-button .lines-button .lines:after {
+    top: -8px !important;
+}
+@media (max-width:500px) {
+    .mmb-container {
+        width: 55%;
+        justify-content: space-between;
+    }
+}
+
 #mapa,
 #wystawcy,
 #konferencje,
@@ -294,4 +311,6 @@ strong {
     visibility:hidden !important;
     height:0 !important;
 }
+
+
 

@@ -17,9 +17,8 @@ class PWECatalog10 extends PWECatalog {
 
         $output .= '
         <style>
-            
             .row-container:has(.pwe-registration) .exhibitors-catalog {
-                border: 2px solid #564949 !important;
+                border: 2px solid #564949;
                 margin-top: 0 !important;
             }
             .row-container:has(.pwe-registration) :is(.wpb_column, .uncol, .uncoltable, .uncont, .exhibitors-catalog, .custom-catalog){
@@ -36,8 +35,7 @@ class PWECatalog10 extends PWECatalog {
 
         $source_utm = $_SERVER['argv'][0];
 
-        if(strpos($source_utm, 'utm_source=byli') !== false){
-
+        if(count($exhibitors) == 10 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false)){
             $output .= '
             <style>
                 .row-container:has(.pwe-registration) .wpb_column:has(#top10) {
@@ -127,15 +125,15 @@ class PWECatalog10 extends PWECatalog {
 
         $output .= '
         <div id="top10" class="custom-catalog main-heading-text">';
-
+    
             if (count($exhibitors) < 10) {
                 $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.webp') ? $logo_file_path . '.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.png') ? $logo_file_path . '.png' : '');
                 $bg_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp') ? '/doc/header_mobile.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.jpg') ? '/doc/header_mobile.jpg' : '');
-                $output .= '
-                <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
-                    <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
-                </div>';
+                // $output .= '
+                // <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
+                //     <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
+                // </div>';
             } else {
                 $output .= '
                 <h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['katalog_year'], $atts['format']).'</h2>
