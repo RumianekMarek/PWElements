@@ -190,7 +190,6 @@ class PWElementMapa extends PWElements {
                 align-items: flex-end;
             }
             .pwe-mapa-right-data {
-                line-height: 0;
                 margin-top:0;
                 font-weight:750;
                 font-size: 20px;

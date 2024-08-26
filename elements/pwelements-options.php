@@ -26,6 +26,9 @@ class PWElements {
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
         
+        // AJAX load more posts
+        add_action('init', array($this, 'load_more_posts'));
+
         add_action('init', array($this, 'initVCMapElements'));
         add_shortcode('pwelement', array($this, 'PWElementsOutput'));
     }
@@ -64,6 +67,10 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'step2.php';
         require_once plugin_dir_path(__FILE__) . 'pot_rej.php';
         require_once plugin_dir_path(__FILE__) . 'pot_rej_wys.php';
+        require_once plugin_dir_path(__FILE__) . 'pot_akt_bil.php';
+        require_once plugin_dir_path(__FILE__) . 'test.php';
+        require_once plugin_dir_path(__FILE__) . 'test1.php';
+        require_once plugin_dir_path(__FILE__) . 'test2.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -264,6 +271,7 @@ class PWElements {
         return array(
             'Select' => '',
             'Adres Ptak Warsaw Expo'         => 'PWElementAddress',
+            'Aktywacja QR'                   => 'PWEActiveQR',
             'Association'                    => 'PWElementAssociates',
             'Badge-Local'                    => 'PWBadgeElement',
             'Countdown'                      => 'PWElementMainCountdown',
@@ -296,6 +304,7 @@ class PWElements {
             'Posts'                          => 'PWElementPosts',
             'Potwierdzenie Rejestracji'      => 'PWElementPotwierdzenieRejestracji',
             'Potwierdzenie Rejestracji Wystawcy' => 'PWElementStepTwoExhibitor',
+            'Potwierdzenie Aktywacji Biletu' => 'PWElementTicketActConf',
             'Profile'                        => 'PWElementProfile',
             'Ramka Facebook'                 => 'PWElementSocials',
             'Registration'                   => 'PWElementRegistration',
@@ -313,6 +322,9 @@ class PWElements {
             'X-form'                         => 'PWElementXForm',
             'Zabudowa'                       => 'PWElementStand',
             'Zaproszenie'                    => 'PWElementInvite',
+            'Test'                           => 'PWElementTest',
+            'Test1'                           => 'PWElementTest1',
+            'Test2'                           => 'PWElementTest2',
         );
     }
 
@@ -324,10 +336,11 @@ class PWElements {
     private function findClassElements() {
         // Array off class placement
         return array(
+            'PWEActiveQR'               => 'active_qr.php',
             'PWElementAssociates'       => 'association.php',
             'PWElementAddress'          => 'ptakAdress.php',
             'PWBadgeElement'            => 'badge-local.php',
-            'PWElementMainCountdown'     => 'countdown.php',
+            'PWElementMainCountdown'    => 'countdown.php',
             'PWCallendarAddElement'     => 'calendarAdd.php',
             'PWAppleCalendarElement'    => 'calendarApple.php',
             'PWGoogleCalendarElement'   => 'calendarGoogle.php',
@@ -363,6 +376,7 @@ class PWElements {
             'PWElementStickyButtons'    => 'sticky-buttons.php',
             'PWElementStepTwo'          => 'step2.php',
             'PWElementStepTwoExhibitor' => 'pot_rej_wys.php',
+            'PWElementTicketActConf'    => 'pot_akt_bil.php',
             'PWElementTicket'           => 'ticket.php',
             'PWElementTrendsPanel'      => 'trends-panel.php',
             'PWElementVideos'           => 'videos.php',
@@ -374,7 +388,17 @@ class PWElements {
             'PWElementXForm'            => 'x_step_registration.php', 
             'PWElementStand'            => 'zabudowa.php',
             'PWElementInvite'           => 'zaproszenie.php',
-        );
+            'PWElementTest'             => 'test.php',
+            'PWElementTest1'             => 'test1.php',
+            'PWElementTest2'             => 'test2.php',
+        ); 
+    }
+
+    /**
+     * Function to handle the AJAX request
+     */
+    public function load_more_posts() {
+        require_once plugin_dir_path(__FILE__) . '/../backend/load-more-posts.php';
     }
 
     /**
@@ -405,6 +429,7 @@ class PWElements {
         wp_enqueue_script('exclusions-js', $exclusions_js_file, array('jquery'), $exclusions_js_version, true);
         wp_localize_script( 'exclusions-js', 'data_js', $data_js_array ); 
     }
+    
 
     /**
      * Adding Styles

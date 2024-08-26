@@ -255,6 +255,13 @@ strong {
     .row-container:has(.gform_wrapper, .pwe-container-grupy) .row-parent {
         padding: 36px 18px 36px 18px !important;
     }
+
+    #masthead .navbar-extra-icons,
+    #masthead .navbar-extra-icons ul,
+    #masthead .navbar-extra-icons ul li {
+        display: inline-block !important;
+        padding: 0 !important;
+    }
 }
 
 #mapa,
@@ -283,7 +290,8 @@ strong {
     font-weight: 700;
 }
 
-.gform_legacy_markup_wrapper .gf_invisible, .gform_legacy_markup_wrapper .gfield_visibility_hidden, .gfield--type-captcha .gform-field-label {
+.gform_legacy_markup_wrapper .gf_invisible, .gform_legacy_markup_wrapper .gfield_visibility_hidden, .gfield--type-captcha {
     visibility:hidden !important;
     height:0 !important;
 }
+

@@ -21,6 +21,22 @@ class PWElementPosts extends PWElements {
     public static function initElements() {
         $element_output = array(
             array(
+                'type' => 'dropdown',
+                'group' => 'PWE Element',
+                'heading' => __('Select form', 'pwelement'),
+                'param_name' => 'posts_modes',
+                'save_always' => true,
+                'value' => array(
+                    'Slider mode' => 'posts_slider_mode',
+                    'Full mode' => 'posts_full_mode',
+                    'Full mode newest' => 'posts_full_newest_mode',
+                ),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementPosts',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Category', 'pwelement'),
@@ -119,6 +135,29 @@ class PWElementPosts extends PWElements {
         return $element_output;
     }
 
+    // public static function get_custom_excerpt($post_id, $word_count = 10) {
+    //     // Pobierz zawartość posta
+    //     $post_content = get_post_field('post_content', $post_id);
+    
+    //     // Usuń shortcode'y i HTML
+    //     $post_content = strip_shortcodes($post_content);
+    //     $post_content = wp_strip_all_tags($post_content);
+    
+    //     // Podziel treść na słowa
+    //     $words = explode(' ', $post_content);
+    
+    //     // Wyodrębnij pierwsze $word_count słów
+    //     $excerpt = array_slice($words, 0, $word_count);
+    
+    //     // Połącz słowa w jeden ciąg znaków
+    //     $excerpt = implode(' ', $excerpt);
+    
+    //     // Dodaj wielokropek na końcu
+    //     $excerpt .= '...';
+    
+    //     return $excerpt;
+    // }
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -127,12 +166,13 @@ class PWElementPosts extends PWElements {
      */
     public static function output($atts) {
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . ' !important;';
-        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '! important; border-width: 0 !important;';
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . ' !important;';
-        $btn_shadow_color = '9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . ' !important;';
-        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . ' !important;';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
+        $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         extract( shortcode_atts( array(
+            'posts_modes' => 'posts_slider_mode',
             'posts_category' => '',
             'posts_count' => '',
             'posts_ratio' => '',
@@ -157,93 +197,225 @@ class PWElementPosts extends PWElements {
             $posts_text = "See all";
         }
         $posts_count = ($posts_count == "") ? 5 : $posts_count;
-        $posts_ratio = ($posts_ratio == "") ? "1/1" : $posts_ratio;
-
-        $output = '
-        <style>
-            .pwelement_'.self::$rnd_id.' .pwe-btn {
-                color: '. $btn_text_color .';
-                background-color:'. $btn_color .';
-                box-shadow:'. $btn_shadow_color .';
-                border:'. $btn_border .';
-            }
-            .pwelement_'.self::$rnd_id.' .pwe-btn:hover {
-                color: #000000 !important;
-                background-color: #ffffff !important;
-                border: 1px solid #000000 !important;
-            }
-            .row-parent:has(.pwelement_'.self::$rnd_id.' .pwe-container-posts) {
-                max-width: 100%;
-                padding: 0 !important;
-            }
-            .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
-                max-width: 1200px; 
-                margin: 0 auto; 
-                padding: 36px;  
-            } 
-            .pwelement_'. self::$rnd_id .' .pwe-posts {
-                display: flex;
-                justify-content: center;
-                gap: 18px;
-                padding-bottom: 18px;
-                opacity: 0;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-post-title {
-                margin: 0;
-                padding: 10px 0 0 10px;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-posts-title h4 {
-                margin: 0 0 36px;
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
-                width: 100%;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-position: center;
-                aspect-ratio: '. $posts_ratio .';
-                box-shadow: 9px 9px 0px -6px [trade_fair_main2];
-            }
-            .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
-                align-items: flex-start !important;
-                gap: 16px;
-            }
-            @media (max-width: 1128px) {
-                .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
-                    padding: 36px;  
-                } 
-            }
-        </style>';
-    
-        // Display all categories across the full width of the page
-        if ($posts_full_width === 'true' && $mobile != 1) {
-            $output .= '
+        if ($posts_modes == "posts_slider_mode") {
+            $posts_ratio = ($posts_ratio == "") ? "1/1" : $posts_ratio;
+        } else {
+            $posts_ratio = ($posts_ratio == "") ? "21/9" : $posts_ratio;
+        }
+        
+        $output = '';
+        $output .= '
             <style>
-                .pwelement_'. self::$rnd_id .' .pwe-posts-wrapper {
-                    max-width: 100% !important;  
-                    padding: 36px 0 !important; 
+                .pwelement_'.self::$rnd_id.' .pwe-btn {
+                    color: '. $btn_text_color .';
+                    background-color:'. $btn_color .';
+                    border:'. $btn_color .';
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-posts-title {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding-left: 36px;
+                .pwelement_'.self::$rnd_id.' .pwe-btn:hover {
+                    color: '. $btn_text_color .';
+                    background-color:'. $darker_btn_color .' !important;
+                    border:'. $darker_btn_color .' !important;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
-                    margin-right: 36px !important;
-                    gap: 36px !important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-post .t-entry-visual,
-                .pwelement_'. self::$rnd_id .' .pwe-post .image-container,
-                .pwelement_'. self::$rnd_id .' .pwe-post .pwe-post-thumbnail {
-                    min-width: 300px !important;
-                    max-width: 300px !important;
+                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
+                    width: 100%;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    aspect-ratio: '. $posts_ratio .';
                 }
             </style>';
-        }   
-        
+
+        if ($posts_modes == "posts_slider_mode") {
+            $output .= '
+            <style>
+                .row-parent:has(.pwelement_'.self::$rnd_id.' .pwe-container-posts) {
+                    max-width: 100%;
+                    padding: 0 !important;
+                }
+                .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
+                    max-width: 1200px; 
+                    margin: 0 auto; 
+                    padding: 36px;  
+                } 
+                .pwelement_'. self::$rnd_id .' .pwe-posts {
+                    display: flex;
+                    justify-content: center;
+                    gap: 18px;
+                    padding-bottom: 18px;
+                    opacity: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-title {
+                    margin: 0;
+                    padding: 10px 0 0 10px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-posts-title h4 {
+                    margin: 0 0 36px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
+                    box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
+                    align-items: flex-start !important;
+                    gap: 16px;
+                }
+                @media (max-width: 1128px) {
+                    .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
+                        padding: 36px;  
+                    } 
+                }
+            </style>';
+
+            // Display all categories across the full width of the page
+            if ($posts_full_width === 'true' && $mobile != 1) {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-posts-wrapper {
+                        max-width: 100% !important;  
+                        padding: 36px 0 !important; 
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-posts-title {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        padding-left: 36px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
+                        margin-right: 36px !important;
+                        gap: 36px !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post .t-entry-visual,
+                    .pwelement_'. self::$rnd_id .' .pwe-post .image-container,
+                    .pwelement_'. self::$rnd_id .' .pwe-post .pwe-post-thumbnail {
+                        min-width: 300px !important;
+                        max-width: 300px !important;
+                    }
+                </style>'; 
+            }   
+        } else {
+            $output .= '
+            <style>
+                .pwelement_'. self::$rnd_id .' .pwe-posts {
+                    columns: 3;
+	                column-gap: 20px;
+                    opacity: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post {
+                    display: flex;
+                    flex-direction: column;
+                    position: relative;
+                    background-color: #333;
+                    border-radius: 10px;
+                    transition: .3s ease;
+                    break-inside: avoid-column;
+	                margin-bottom: 1rem;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post:hover {
+                    transform: scale(1.05);
+                }   
+                .pwelement_'. self::$rnd_id .' .pwe-post-title {
+                    font-weight: 500;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail  {
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 10px 10px 0 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
+                    border-radius: 10px 10px 0 0;
+                    transition: .3s ease;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post:hover .pwe-post-thumbnail .image-container  {
+                    transform: scale(1.05);
+                }  
+                .pwelement_'. self::$rnd_id .' .pwe-post-date {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    color: white;
+                    font-size: 20px;
+                    font-weight: 600;
+                    line-height: 1.1;
+                    width: 50px;
+                    height: 50px;
+                    text-transform: uppercase;
+                    background-color: red;
+                    border-radius: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    z-index: 1;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-date:before {
+                    position: absolute;
+                    content:"";
+                    background-color: rgba(0, 0, 0, 0.1);
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 50%;
+                    z-index: 2;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-title, 
+                .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
+                    color: white;
+                    padding: 9px;
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
+                    padding: 9px 9px 50px;
+                    line-height: 1.5;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-btn {
+                    position: absolute;
+                    color: white;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    padding: 10px;
+                    background: #222;
+                    border-radius: 0 0 10px 10px;
+                    transition: .3s ease;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-btn:hover  {
+                    background: #424242;
+                } 
+
+                .pwelement_'. self::$rnd_id .' .load-more-btn-container {
+                    margin: 36px auto;
+                    text-align: center;
+                }
+                .pwelement_'. self::$rnd_id .' .load-more-btn-container button {
+                    min-width: 240px;
+                    padding: 10px;
+                    text-transform: uppercase;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: .3s ease;
+                }
+                @media (max-width: 960px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-posts {
+                        columns: 2;
+                    } 
+                    .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
+                        font-size: 14px;  
+                    }    
+                }
+                @media (max-width: 500px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-posts {
+                        columns: 1;
+                    }  
+                }
+            </style>'; 
+        }
+
         $output .= '<div id="pwePosts" class="pwe-container-posts">
                         
-            <div class="pwe-posts-wrapper">
-        
+            <div class="pwe-posts-wrapper">';
+
+            if ($posts_modes == "posts_slider_mode") {
+            
+                $output .= '
                 <div class="pwe-posts-title main-heading-text">
                     <h4 class="pwe-uppercase"><span>' . $posts_title . '</span></h4>
                 </div>  
@@ -278,7 +450,6 @@ class PWElementPosts extends PWElements {
                             // Check if category "current" exists
                             array_push($categories_array, "current");
                         }
-                       
 
                         // Transform the category array into a string
                         $categories = implode(',', $categories_array);
@@ -290,6 +461,7 @@ class PWElementPosts extends PWElements {
                         'posts_per_page' => $max_posts,
                         'orderby' => 'date',
                         'order' => 'DESC',
+                        'post_status' => 'publish',
                         'category_name' => $categories,
                     );
 
@@ -332,20 +504,166 @@ class PWElementPosts extends PWElements {
                         </span>
                     </div>';
                 }
+            } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode") {
+
+                $output .= '<div class="pwe-posts">';
+
+                if ($posts_modes == "posts_full_mode") {
+                    $args = array(
+                        'posts_per_page' => 18,
+                        'orderby' => 'date',
+                        'order' => 'DESC',
+                        'post_status' => 'publish',
+                    );
+                } else if ($posts_modes == "posts_full_newest_mode") {
+                    $args = array(
+                        'posts_per_page' => 6,
+                        'orderby' => 'date',
+                        'order' => 'DESC',
+                        'post_status' => 'publish',
+                    );
+                }
+                
+                $query = new WP_Query($args);
+                
+                $posts_displayed = $query->post_count;
+                
+                $post_image_urls = array();
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) : $query->the_post();
+                        $post_id = get_the_ID();
+                        $word_count = 10;
+                
+                        // Get post content
+                        $post_content = get_post_field('post_content', $post_id);
+                
+                        // Extract content inside [vc_column_text] shortcode
+                        preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches);
+                        $vc_content = isset($matches[1]) ? $matches[1] : '';
+                
+                        // Remove HTML
+                        $vc_content = wp_strip_all_tags($vc_content);
+                
+                        // Check if the content is not empty
+                        if (!empty($vc_content)) {
+                            // Split content into words
+                            $words = explode(' ', $vc_content);
+                
+                            // Extract the first $word_count words
+                            $excerpt = array_slice($words, 0, $word_count);
+                
+                            // Combine words into one string
+                            $excerpt = implode(' ', $excerpt);
+                
+                            // Add an ellipsis at the end
+                            $excerpt .= '...';
+                        } else {
+                            $excerpt = '';
+                        }
+                
+                        $link = get_permalink();
+                        $image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '';
+                        $title = get_the_title();
+                        $date = get_the_date('Y-m-d'); // Get date in YYYY-MM-DD format
+
+                        // Format the date
+                        $date_obj = new DateTime($date);
+                        $formatted_date = $date_obj->format('d M'); // Format as DD Mmm
+                        
+                        if (get_locale() == 'pl_PL') {
+                            // Convert month abbreviations to Polish
+                            $formatted_date = str_replace(
+                                array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'),
+                                array('sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'),
+                                $formatted_date
+                            );
+                        }
+                
+                        $output .= '
+                        <a class="pwe-post" href="'. $link .'">
+                            <div class="pwe-post-thumbnail">
+                                <div class="image-container" style="background-image:url('. $image .');"></div>
+                                <p class="pwe-post-date">'. $formatted_date .'</p>
+                            </div> 
+                            <h5 class="pwe-post-title">'. $title .'</h5>
+                            <p class="pwe-post-excerpt">'. $excerpt .'</p>
+                            <button class="pwe-post-btn">CZYTAJ WIĘCEJ</button>
+                        </a>';
+                
+                    endwhile;
+                }
+                
+                wp_reset_postdata();
+
+                $output .= '</div>';
+
+                if ($posts_modes == "posts_full_mode" && $posts_displayed == 18) {
+                    $output .= '
+                    <div class="load-more-btn-container">
+                        <button id="load-more-posts" class="pwe-btn" data-offset="18">'. 
+                        self::languageChecker(
+                            <<<PL
+                            Załaduj więcej
+                            PL,
+                            <<<EN
+                            Load more
+                            EN
+                        )
+                        .'</button>
+                    </div>';
+                }
+                
+            }
                 
             $output .= '</div>
                         
-        </div>
+        </div>';
         
+        $output .= '
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                const pwePostsElement = document.querySelector(".pwelement_'.self::$rnd_id.' .pwe-posts");
+                const pwePostsElement = document.querySelector(".pwelement_' . self::$rnd_id . ' .pwe-posts");
                 const pweSliderElement = document.querySelector(".pwe-posts .slides");
                 const pwePostsRow = document.querySelector(".row-container:has(.pwe-posts)");
                 pwePostsElement.style.opacity = 1;
                 pwePostsElement.style.transition = "opacity 0.3s ease";
                 if ((pwePostsElement && pwePostsElement.children.length === 0) || (pweSliderElement && pweSliderElement.children.length === 0)) {
                     pwePostsRow.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
+                }
+
+                const loadMoreButton = document.getElementById("load-more-posts");
+
+                if (loadMoreButton) {
+                    loadMoreButton.addEventListener("click", function() {
+                        const button = this;
+                        const offset = parseInt(button.getAttribute("data-offset"));
+
+                        button.innerText = "Ładowanie...";
+                        button.disabled = true;
+
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("POST", "' . admin_url('admin-ajax.php') . '", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                        xhr.onload = function() {
+                            if (xhr.status >= 200 && xhr.status < 400) {
+                                const response = xhr.responseText;
+                                const container = document.querySelector(".pwe-posts");
+                                container.insertAdjacentHTML("beforeend", response);
+                                
+                                const newOffset = offset + 18;
+                                button.setAttribute("data-offset", newOffset);
+                                
+                                // Check if all posts have been loaded
+                                if (response.trim() === "") {
+                                    button.remove();
+                                } else {
+                                    button.innerText = "Załaduj więcej";
+                                    button.disabled = false;
+                                }
+                            }
+                        };
+                        xhr.send("action=load_more_posts&offset=" + offset);
+                    });
                 }
             });
         </script>';

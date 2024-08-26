@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementRegistration
@@ -120,7 +120,7 @@ class PWElementRegistration extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function custom_css_1() {
@@ -154,7 +154,7 @@ class PWElementRegistration extends PWElements {
                 }
                 .pwelement_' .self::$rnd_id. ' .gform-field-label {
                     display: inline !important;
-                } 
+                }
                 .pwelement_' .self::$rnd_id. ' .gform-field-label .show-consent,
                 .pwelement_' .self::$rnd_id. ' .gform-field-label .gfield_required_asterisk {
                     display: inline !important;
@@ -189,7 +189,7 @@ class PWElementRegistration extends PWElements {
                 }
                 .pwelement_' .self::$rnd_id. ' .gfield_consent_label {
                     padding-left: 5px;
-                }    
+                }
                 @media (max-width:650px) {
                     .pwelement_' .self::$rnd_id. ' .gform_legacy_markup_wrapper .gform_footer {
                         margin: 0 auto !important;
@@ -206,11 +206,11 @@ class PWElementRegistration extends PWElements {
         ';
         return $css_output;
     }
-    
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -218,6 +218,9 @@ class PWElementRegistration extends PWElements {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') .' !important';
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .'!important';
         $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .' !important';
+
+        $btn_color_vip = '#B69663';
+        $darker_btn_vip_color = self::adjustBrightness($btn_color_vip, -20);
 
         $output = '';
 
@@ -243,7 +246,7 @@ class PWElementRegistration extends PWElements {
 
         if (empty($registration_height_logotypes)) {
             $registration_height_logotypes = '50px';
-        } 
+        }
 
         if ($registration_select == "header_registration") {
             if (get_locale() == 'pl_PL') {
@@ -310,7 +313,14 @@ class PWElementRegistration extends PWElements {
         if (self::isTradeDateExist()) {
             $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
         } else {
-            $actually_date = $formatted_date;  
+            $actually_date = $formatted_date;
+        }
+
+        
+        if (get_locale() == 'pl_PL') {
+            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
+        } else {
+            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
         }
 
         // Create unique id for element
@@ -318,79 +328,288 @@ class PWElementRegistration extends PWElements {
         $element_unique_id = 'pweRegistration-' . $unique_id;
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
+        $source_utm = $_SERVER['argv'][0];
 
-        $output .= '
-        <style>
-            .pwelement_'. self::$rnd_id .' #pweRegister {
-                background-color: '. $main_form_color .';
-                border: 2px solid '. $main_form_color .'; 
-                color: '. $btn_text_color .';
-            }
-            .pwelement_'. self::$rnd_id .' #pweRegister:hover {
-                background-color: '. $darker_btn_color .' !important;
-                border: 2px solid '. $darker_btn_color .' !important;
-            }
-        </style>';
+        if (strpos($source_utm, 'utm_source=byli') !== false) {
+            $output .= '
+            <style>
+                .pwelement_'.self::$rnd_id.' #pweRegister {
+                    background-color: '. $btn_color_vip .';
+                    border: 2px solid '. $btn_color_vip .';
+                    color: white;
+                }
+                .pwelement_'.self::$rnd_id.' #pweRegister:hover {
+                    background-color: '. $darker_btn_vip_color .' !important;
+                    border: 2px solid '. $darker_btn_vip_color .' !important;
+                }
+            </style>';
+        } else {
+            $output .= '
+            <style>
+                .pwelement_'. self::$rnd_id .' #pweRegister {
+                    background-color: '. $main_form_color .';
+                    border: 2px solid '. $main_form_color .';
+                    color: '. $btn_text_color .';
+                }
+                .pwelement_'. self::$rnd_id .' #pweRegister:hover {
+                    background-color: '. $darker_btn_color .' !important;
+                    border: 2px solid '. $darker_btn_color .' !important;
+                }
+            </style>';
+        }
+
 
         if ($registration_select == "visitors") {
 
-            $output .= '
-            <style>
-                .row-container:has(.pwelement_'. self::$rnd_id .') {
-                    background-image: url(/doc/background.webp);
-                    background-repea: no-repeat;
-                    background-position: center;
-                    background-size: cover;
-                }
-                .exhibitors-catalog:has(#top10) {
-                    background-color: white;
-                    border: 2px solid '. $main_form_color .' !important; 
-                    border-radius: 18px;
-                }
-                @media (min-width: 959px) {
-                    .row-container:has(#pweForm) .wpb_column, 
-                    .row-container:has(#top10) .wpb_column {
-                        display: none;
-                    }
-                    .wpb_column:has(#top10),
-                    .wpb_column:has(#pweForm) {
-                        display: table-cell !important;
-                    }
-                }
-                .wpb_column #pweForm {
-                    margin: 0 auto;
-                }
-                .wpb_column:has(#pweForm) {
-                    padding: 0;
-                }
-            </style>'; 
-
-            if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE)) {
+            if (strpos($source_utm, 'utm_source=byli') !== false) {
                 $output .= '
                 <style>
+                    .row-parent:has(.pwelement_'. self::$rnd_id .') .wpb_column {
+                        padding: 0 !important;
+                    }
+                    .row-parent:has(.pwelement_'. self::$rnd_id .') {
+                        max-width: 100% !important;
+                        padding: 0 !important;
+                    }
+                        
+                    /* Zaślepka START <------------------------------------------< */
+                    .row-container:has(.pwelement_' . self::$rnd_id .') .wpb_column:not(:has(.pwe-registration.vip)) {
+                        max-width: 100% !important;
+                        width: 100% !important;
+                        height: auto;
+                    }
+                    .row-container:has(.pwelement_' . self::$rnd_id .') .wpb_column:not(:has(.pwe-registration.vip)) .uncode-single-media-wrapper {
+                        display: flex;
+                        justify-content: center;
+                    }
+                    .row-container:has(.pwelement_' . self::$rnd_id .') .wpb_column:not(:has(.pwe-registration.vip)) img {
+                        max-width: 300px !important;
+                    }
+                    /* Zaślepka END <------------------------------------------< */
+
+                    .wpb_column:has(.pwelement_'. self::$rnd_id .') {
+                        width: 66% !important;
+                        height: auto;
+                    }
+                    .pwelement_'. self::$rnd_id .',
+                    .pwe-registration {
+                        height: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-registration {
+                        display: flex;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .pwe-mockup-column {
+                        width: 50%;
+                        background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .pwe-mockup-column img {
+                        height: 100%;
+                        float: right;
+                        object-fit: cover;
+                    }    
+                    .pwelement_' .self::$rnd_id. ' .pwe-registration-column {
+                        position: relative;
+                        background-color: #E8E8E8;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 36px 18px;
+                        width: 50%;
+                        gap: 18px;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .pwe-registration-title {
+                        min-width: 350px;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .gform_wrapper {
+                        max-width: 350px;
+                    }
+                    .pwelement_'. self::$rnd_id .'  .gform_footer {
+                        text-align: center;
+                    }
+                    .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description, .show-consent) {
+                        color: black;
+                    }
+                    .pwelement_'. self::$rnd_id .' :is(input[type="text"], input[type="number"], input[type="email"], input[type="tel"]) {
+                        border: 2px solid #d6d6d6 !important;
+                        border-radius: 10px;
+                        box-shadow: none !important;
+                        margin: 0;
+                        font-size: 14px !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' input[type="checkbox"] {
+                        border: 2px solid #d6d6d6 !important;
+                        border-radius: 50%;
+                    }
+                    .pwelement_'.self::$rnd_id.' .gform_button {
+                        visibility: hidden !important;
+                        width: 0 !important;
+                        height: 0 !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .gfield_consent_label  {
+                        font-size: 10px;
+                        line-height: 1.1 !important;
+                    }
+                    .pwelement_'.self::$rnd_id.' .gfield_label {
+                        font-size: 14px !important;
+                    }
+                    .pwelement_'.self::$rnd_id.' .gfield_required_asterisk {
+                        display: none !important;
+                    }
+                    .pwelement_'.self::$rnd_id.' .pwe-registration-step-text {
+                        width: 100%;
+                        position: absolute;
+                        top: 18px;
+                        left: 18px;
+                    }
+                    .pwelement_'.self::$rnd_id.' .pwe-registration-step-text p {
+                        margin: 0;
+                    }
+                    .pwelement_'.self::$rnd_id.' .gform_legacy_markup_wrapper ul.gform_fields li.gfield {
+                        padding-right: 0;
+                    }
+                    @media (max-width: 1150px) {
+                        .wpb_row:has(#'. $element_unique_id .') {
+                            display: flex !important;
+                            flex-direction: column !important;
+                        }
+                        .wpb_column:has(.pwelement_'. self::$rnd_id .') {
+                            width: 100% !important;
+                        }
+                        .pwelement_' .self::$rnd_id. ' .pwe-mockup-column,
+                        .pwelement_' .self::$rnd_id. ' .pwe-registration-column {
+                            width: 100%;
+                        }
+                        .pwelement_' .self::$rnd_id. ' .pwe-registration-column {
+                            padding: 72px 18px;
+                        }
+                    }
                     @media (max-width: 960px) {
-                        background-image: url(/doc/header_mobile.webp);
+                        .wpb_column:has(#'. $element_unique_id .') {
+                            max-width: 100% !important;
+                            padding: 0 !important;
+                        }
+                        .row-parent:has(#'. $element_unique_id .') {
+                            padding: 0 !important;
+                        }
+                        .pwelement_' .self::$rnd_id. ' .pwe-registration-column {
+                            padding: 36px 18px 18px;
+                        }
+                    }
+                    @media (max-width: 750px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-registration {
+                            flex-direction: column;
+                        }
+                        .pwelement_' .self::$rnd_id. ' .pwe-registration-title {
+                            min-width: auto;
+                        }
+                        .pwelement_' .self::$rnd_id. ' .pwe-mockup-column {
+                            height: 400px;
+                        }
                     }
                 </style>';
-            } 
 
-            $output .= '
-            <div id="'. $element_unique_id .'" class="pwe-registration">
-                <div class="pwe-registration-column">';
-            
-                include_once plugin_dir_path(__FILE__) . '/../elements/registration-header.php';
-                $output .= PWElementRegHeader::output($registration_form_id, $registration_modes, $registration_logo_color = "", $actually_date, $registration_name = "visitors");
+                $output .= '
+                <div id="'. $element_unique_id .'" class="pwe-registration vip">
+                    <div class="pwe-reg-column pwe-mockup-column">
+                        <img src="'. $badgevipmockup .'">
+                    </div>
+                    <div class="pwe-reg-column pwe-registration-column">
+                        <div class="pwe-registration-step-text">
+                            <p>'.
+                                self::languageChecker(
+                                    <<<PL
+                                        Krok 1 z 2
+                                    PL,
+                                    <<<EN
+                                        Step 1 of 2
+                                    EN
+                                )
+                            .'</p>
+                        </div>
+                        <div class="pwe-registration-title">
+                            <h4>'.
+                                self::languageChecker(
+                                    <<<PL
+                                        Twój bilet na targi
+                                    PL,
+                                    <<<EN
+                                        Your ticket to the fair
+                                    EN
+                                )
+                            .'</h4>
+                        </div>
+                        <div class="pwe-registration-form">
+                            [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
+                        </div>
+                    </div>
+                </div>';
+            } else {
 
-            $output .= '
-                </div>
-            </div>';
+                $output .= '
+                <style>
+                    .row-container:has(.pwelement_'. self::$rnd_id .') {
+                        background-image: url(/doc/background.webp);
+                        background-repea: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                    }
+                    .exhibitors-catalog:has(#top10) {
+                        background-color: white;
+                        border: 2px solid '. $main_form_color .' !important;
+                        border-radius: 18px;
+                    }
+                    @media (min-width: 959px) {
+                        .row-container:has(#pweForm) .wpb_column,
+                        .row-container:has(#top10) .wpb_column {
+                            display: none;
+                        }
+                        .wpb_column:has(#top10),
+                        .wpb_column:has(#pweForm) {
+                            display: table-cell !important;
+                        }
+                    }
+                    .wpb_column #pweForm {
+                        margin: 0 auto;
+                    }
+                    .wpb_column:has(#pweForm) {
+                        padding: 0;
+                    }
+                </style>';
+
+                if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE)) {
+                    $output .= '
+                    <style>
+                        @media (max-width: 960px) {
+                            background-image: url(/doc/header_mobile.webp);
+                        }
+                    </style>';
+                }
+
+                $output .= '
+                <div id="'. $element_unique_id .'" class="pwe-registration">
+                    <div class="pwe-registration-column">';
+
+                    include_once plugin_dir_path(__FILE__) . '/../elements/registration-header.php';
+                    $output .= PWElementRegHeader::output($registration_form_id, $registration_modes, $registration_logo_color = "", $actually_date, $registration_name = "visitors");
+
+                $output .= '
+                    </div>
+                </div>';
+
+            }
 
         } else if ($registration_select == "exhibitors") {
 
             $output .= '
             <style>
                 @media (min-width: 959px) {
-                    .row-container:has(#'. $element_unique_id .') .wpb_column, 
+                    .row-container:has(#'. $element_unique_id .') .wpb_column,
                     .row-container:has(#top10) .wpb_column {
                         display: none;
                     }
@@ -404,7 +623,7 @@ class PWElementRegistration extends PWElements {
                 }
                 #'. $element_unique_id .' {
                     max-width: 555px !important;
-                }    
+                }
             </style>';
 
             if ($mobile != 1) {
@@ -415,7 +634,7 @@ class PWElementRegistration extends PWElements {
                                 }
                             </style>';
             }
-    
+
             $output .= self::custom_css_1();
             $output .= '
             <div id="'. $element_unique_id .'" class="pwe-registration">
@@ -423,7 +642,7 @@ class PWElementRegistration extends PWElements {
                     <div id="pweFormContent" class="pwe-form-content">
                         <div class="pwe-registration-title main-heading-text">
                             <h4 class="custom-uppercase"><span>'. $registration_title .'</span></h4>
-                        </div>  
+                        </div>
                         <div class="pwe-registration-text">';
                             $registration_text = str_replace(array('`{`', '`}`'), array('[', ']'), $registration_text);
                             $output .= '<p>'. wpb_js_remove_wpautop($registration_text, true) .'</p>
@@ -452,7 +671,7 @@ class PWElementRegistration extends PWElements {
             <style>
                 .row-parent:has(.pwelement_' . self::$rnd_id . ') {
                     max-width: 100%;
-                    padding: 0 !important;  
+                    padding: 0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-registration {
                     display: flex;
@@ -471,14 +690,14 @@ class PWElementRegistration extends PWElements {
                 }
 
                 .pwelement_'. self::$rnd_id .' input[type="text"], input[type="number"], input[type="email"], input[type="tel"] {
-                    border: 2px solid;
+                    border: 2px solid !important;
                     border-radius: 10px;
                     box-shadow: none;
                 }
                 .pwelement_'. self::$rnd_id .' input[type="checkbox"] {
-                    min-width: 16px; 
-                    width: 16px; 
-                    height: 16px; 
+                    min-width: 16px;
+                    width: 16px;
+                    height: 16px;
                     border-radius: 50%;
                 }
                 .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description) {
@@ -607,7 +826,7 @@ class PWElementRegistration extends PWElements {
                     display: flex;
                     align-items: center;
                     font-weight: 600;
-                    margin: 9px 0px 0px 0px 
+                    margin: 9px 0px 0px 0px
                 }
 
                 .pwelement_'. self::$rnd_id .' .pwe-registration-bottom {
@@ -673,11 +892,11 @@ class PWElementRegistration extends PWElements {
                 }
                 @media (max-width: 960px) {
                     .row-parent:has(#'. $element_unique_id .') {
-                        padding: 0 !important;  
+                        padding: 0 !important;
                     }
                     .wpb_column:has(.pwelement_'. self::$rnd_id .') {
                         max-width: 100% !important;
-                        padding: 0 !important;  
+                        padding: 0 !important;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-registration-wrapper {
                         flex-direction: column-reverse;
@@ -709,16 +928,16 @@ class PWElementRegistration extends PWElements {
                     <div class="pwe-registration-column iframe-column">
                         <img class="logo-pwe" src="/wp-content/plugins/PWElements/media/logo_pwe.webp">
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/49KljiYGLA0?si=rDFQfo6rApq_fbZJ&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=49KljiYGLA0" 
-                            title="YouTube video player" frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            <iframe src="https://www.youtube.com/embed/49KljiYGLA0?si=rDFQfo6rApq_fbZJ&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=49KljiYGLA0"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
                         </div>
                     </div>
                     <div class="pwe-registration-column form-column">
                         <div class="pwe-registration-form">
-                            <h1>'. 
+                            <h1>'.
                             self::languageChecker(
                                 <<<PL
                                 Dołącz do wystawców
@@ -738,7 +957,7 @@ class PWElementRegistration extends PWElements {
                             <a href="https://warsawexpo.eu/" target="_blanc"><img src="' . plugin_dir_url(dirname( __FILE__ )) . "/media/logo_pwe_black.webp" . '"></a>
                         </div>
                         <div class="fair-logo">
-                            <a href="'. 
+                            <a href="'.
                             self::languageChecker(
                                 <<<PL
                                 /
@@ -753,26 +972,26 @@ class PWElementRegistration extends PWElements {
                     <div class="numbers">
                         <div class="for-exhibitors">
                             <i class="fa fa-envelope-o fa-3x fa-fw"></i>
-                            <p>'. 
+                            <p>'.
                             self::languageChecker(
                                 <<<PL
-                                    "Zostań wystawcą" 
+                                    "Zostań wystawcą"
                                 PL,
                                 <<<EN
-                                    "Become an exhibitor" 
+                                    "Become an exhibitor"
                                 EN
                             )
                         .'<br> <a href="tel:48 517 121 906">+48 517 121 906</a>
                         </div>
                         <div class="for-visitors">
                             <i class="fa fa-phone fa-3x fa-fw"></i>
-                            <p>'. 
+                            <p>'.
                             self::languageChecker(
                                 <<<PL
-                                    "Odwiedzający" 
+                                    "Odwiedzający"
                                 PL,
                                 <<<EN
-                                    "Visitors" 
+                                    "Visitors"
                                 EN
                             )
                         .'<br> <a href="tel:48 513 903 628">+48 513 903 628</a>
@@ -786,7 +1005,7 @@ class PWElementRegistration extends PWElements {
                 sliderContainer.className = "input-range-container";
                 sliderContainer.innerHTML = `
                     <div class="input-range-wrapper">
-                        <h4>'. 
+                        <h4>'.
                             self::languageChecker(
                                 <<<PL
                                 Wybierz powierzchnię wystawienniczą
@@ -876,22 +1095,21 @@ class PWElementRegistration extends PWElements {
                     if ($form['title'] === $title) {
                         return $form['id'];
                     }
-                    
                 }
                 return null;
             }
-            
+
             function custom_gform_submit_button($button, $form) {
                 global $registration_button_text, $registration_form_id;
                 $registration_form_id_nmb = get_form_id_by_title($registration_form_id);
-        
+
                 if ($form['id'] == $registration_form_id_nmb) {
                     $button = '<input type="submit" id="gform_submit_button_'. $registration_form_id_nmb .'" class="gform_button button" value="'.$registration_button_text.'" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
                     <button id="pweRegister" class="btn pwe-btn">'. $registration_button_text .'</button>';
                 }
                 return $button;
             }
-            add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);  
+            add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
         }
 
         $output .= '
@@ -900,7 +1118,77 @@ class PWElementRegistration extends PWElements {
                 $(".show-consent").on("click touch", function () {
                     $(this).next().toggle("slow");
                 });
+
+                if("'.$source_utm.'" != ""){
+                    $(".utm-class").find("input").val("'.$source_utm.'");
+                }
+                // $(document).ready(function() {
+                //     // Pobierz aktualny URL
+                //     const currentUrl = window.location.href;
+
+                //     if (currentUrl.indexOf("?utm_source=byli") !== -1) {
+                //         // Sprawdź, czy zmienna $source_utm zawiera "utm_source=byli"
+                //         if("'.$source_utm.'" == "utm_source=byli"){
+                //             $(".utm-class").find("input").val("");
+                //         }
+                //         console.log("tutaj powinno byc jak nie ma");
+                //     } else {
+                //         console.log("z");
+                //     }
+                // });
+
             });
+
+            // Funkcja zapisująca atrybut title do input
+            function updateCountryInput() {
+                // Znajdź element <div> z klasą iti__selected-flag
+                const selectedFlag = document.querySelector(".iti__flag-container .iti__selected-flag");
+                if (selectedFlag) {
+                    // Pobierz wartość atrybutu title
+                    let countryTitle = selectedFlag.getAttribute("title");
+
+                    // Znajdź element input o klasie country
+                    const countryInput = document.querySelector(".country input");
+                    if (countryInput) {
+                        // Zapisz wartość title do input
+                        countryInput.value = countryTitle;
+                    }
+                }
+            }
+
+            // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza
+            function updateCountryInput() {
+                const countryInput = document.querySelector(".country input");
+                const selectedFlag = document.querySelector(".iti__selected-flag");
+                if (countryInput && selectedFlag) {
+                    countryInput.value = selectedFlag.getAttribute("title") || "";
+                }
+            }
+
+            function addEventListenersToForm() {
+                document.querySelectorAll("input, select, textarea, button").forEach(element => {
+                    ["change", "input", "click", "focus"].forEach(event => {
+                        element.addEventListener(event, updateCountryInput);
+                    });
+                });
+            }
+
+            function observeFlagChanges() {
+                const selectedFlag = document.querySelector(".iti__selected-flag");
+                if (selectedFlag) {
+                    new MutationObserver(mutations => {
+                        if (mutations.some(mutation => mutation.attributeName === "aria-expanded")) {
+                            updateCountryInput();
+                        }
+                    }).observe(selectedFlag, { attributes: true });
+                }
+            }
+
+            // Uruchomienie funkcji
+            addEventListenersToForm();
+            observeFlagChanges();
+
+
 
             window.onload = function () {
                 var pweFormVisitors = document.querySelector("#pweRegister");
@@ -908,17 +1196,29 @@ class PWElementRegistration extends PWElements {
                 if (pweFormVisitors) {
                     pweFormVisitors.addEventListener("click", function (event) {
                         event.preventDefault();
+
                         const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
+                            
                         let telValue;
                         const telContainer = document.getElementsByClassName("ginput_container_phone")[0];
-                        
+
                         if (telContainer) {
                             telValue = telContainer.getElementsByTagName("input")[0].value;
                         } else {
                             telValue = "123456789";
                         }
 
+                        let countryValue = "";
+                        const countryContainer = document.getElementsByClassName("country")[0];
+                        if (countryContainer) {
+                            const countryInput = countryContainer.getElementsByTagName("input")[0];
+                            if (countryInput) {
+                                countryValue = countryInput.value;
+                            }
+                        }
+
                         localStorage.setItem("user_email", emailValue);
+                        localStorage.setItem("user_country", countryValue);
                         localStorage.setItem("user_tel", telValue);
                         localStorage.setItem("user_direction", "rejpl");
 
@@ -927,14 +1227,15 @@ class PWElementRegistration extends PWElements {
                             const areaValue = areaContainer.getElementsByTagName("input")[0].value;
                             localStorage.setItem("user_area", areaValue);
                         }
-                        
+
                         const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
                         buttonSubmit.click();
                     });
                 }
             }
+
         </script>';
-        
+
         return $output;
 
     }

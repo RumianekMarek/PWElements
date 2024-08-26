@@ -22,6 +22,17 @@ class PWElementTicket extends PWElements {
 
         $element_output = array(
             array(
+                'type' => 'dropdown',
+                'heading' => __('Select main color', 'pwelement'),
+                'param_name' => 'ticket_main_color',
+                'value' => self::$fair_colors,
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementTicket',
+                ),
+            ),
+            array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
                 'heading' => __('Title', 'pwelement'),
@@ -49,7 +60,7 @@ class PWElementTicket extends PWElements {
                 ),
             ),
             array(
-                'type' => 'textfield',
+                'type' => 'textfield', 
                 'group' => 'PWE Element',
                 'heading' => __('Price', 'pwelement'),
                 'param_name' => 'ticket_price',
@@ -174,10 +185,10 @@ class PWElementTicket extends PWElements {
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
-        $btn_shadow_color = '9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
-        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
+        $btn_border = '1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], $btn_color);
 
         extract( shortcode_atts( array(
+            'ticket_main_color' => '',
             'ticket_title_checkbox' => '',
             'ticket_title' => '',
             'ticket_price' => '',
@@ -298,7 +309,6 @@ class PWElementTicket extends PWElements {
             .pwelement_'. self::$rnd_id .' .pwe-btn {
                 color: '. $btn_text_color .';
                 background-color:'. $btn_color .';
-                box-shadow:'. $btn_shadow_color .';
                 border:'. $btn_border .';
                 padding: 18px 0;
                 font-size: 14px;
@@ -314,16 +324,14 @@ class PWElementTicket extends PWElements {
             .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
                 color: white !important;
                 background-color: black;
-                box-shadow: 9px 9px 0px -5px '. $btn_color .';
                 border: 1px solid black;
             }
-            .pwe-btn:focus:not(:focus-visible) {
+            .pwelement_'. self::$rnd_id .' .pwe-btn:focus:not(:focus-visible) {
                 background-color:'. $btn_color .' !important;
                 color: '. $btn_text_color .' !important;
-                box-shadow:'. $btn_shadow_color .' !important;
                 border:'. $btn_border .' !important;
             }
-            .pwe-btn:focus {
+            .pwelement_'. self::$rnd_id .' .pwe-btn:focus {
                 outline: none;
             }
             .pwelement_'. self::$rnd_id .' .pwe-ticket-footer-block {
@@ -340,6 +348,22 @@ class PWElementTicket extends PWElements {
                 }
             } 
         </style>';
+
+        
+        if (!empty($ticket_main_color)) {
+            $output .= '
+            <style>
+                .pwelement_'. self::$rnd_id .' .pwe-ticket-header-block,
+                .pwelement_'. self::$rnd_id .' .pwe-ticket-footer-block {
+                    background-color: '. $ticket_main_color .';
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn,
+                .pwelement_'. self::$rnd_id .' .pwe-btn:focus:not(:focus-visible) {
+                    background-color: '. $ticket_main_color .';
+                    border: 1px solid '. $ticket_main_color .';
+                }
+            </style>';
+        } 
 
         $output .= '
             <div id="'. $ticket_id .'" class="pwe-ticket-container">

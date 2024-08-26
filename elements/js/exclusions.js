@@ -1,6 +1,6 @@
 const accent_color = data_js.accent_color;
 
-// Headert button
+// Header button
 document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
     const htmlLang = document.documentElement.lang;
@@ -22,6 +22,49 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    const mainLogo = document.getElementById('main-logo');
+    const existingLink = mainLogo.querySelector('a');
+
+    // Move all children of the <a> element (i.e. logo) to its parent (i.e. #main-logo)
+    while (existingLink.firstChild) {
+        mainLogo.insertBefore(existingLink.firstChild, existingLink);
+    }
+
+    // We remove the empty element <a>
+    existingLink.remove();
+
+    // Create new links
+    const leftLink = document.createElement('a');
+    const rightLink = document.createElement('a');
+
+    leftLink.href = 'https://warsawexpo.eu/';
+    rightLink.href = 'https://mr.glasstec.pl/';
+
+    const pwePageLink = htmlLang === 'pl-PL' ? 'https://warsawexpo.eu/' : 'https://warsawexpo.eu/en/';
+    const mainPage = htmlLang === 'pl-PL' ? '/' : '/en/';
+
+    const commonStyles = {
+        position: 'absolute',
+        top: '0',
+        width: '50%',
+        height: '100%',
+        zIndex: '10'
+    };
+
+    // Assign a style to the left link
+    Object.assign(leftLink.style, commonStyles);
+    leftLink.style.left = '0';
+    leftLink.href = pwePageLink;
+    leftLink.target = '_blank';
+
+    // Assign a style to the right link
+    Object.assign(rightLink.style, commonStyles);
+    rightLink.style.right = '0';
+    rightLink.href = mainPage;
+
+    mainLogo.appendChild(leftLink);
+    mainLogo.appendChild(rightLink);
 });
 
 // // Funkcja do ustawiania cookie

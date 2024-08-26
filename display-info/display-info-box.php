@@ -780,24 +780,28 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                             // Using innerHTML to add speakers
                             let speakersHTML = "";
                             speakers.forEach(speaker => {
-                                let speakerBlock = `<div class="pwe-box-modal-speaker">`;
+                                if (speaker.speaker_image_url != "" && speaker.speaker_bio != undefined) {
+                                    let speakerBlock = `<div class="pwe-box-modal-speaker">`;
 
-                                if (speaker.speaker_image_url != "") {
-                                    speakerBlock += `
-                                        <div class="pwe-box-modal-speaker-img">
-                                            <img src="${speaker.speaker_image_url}" alt="Speaker Image" class="pwe-box-modal-image">
-                                        </div>
-                                    `;
-                                }
+                                    if (speaker.speaker_image_url != "") {
+                                        speakerBlock += `
+                                            <div class="pwe-box-modal-speaker-img">
+                                                <img src="${speaker.speaker_image_url}" alt="Speaker Image" class="pwe-box-modal-image">
+                                            </div>
+                                        `;
+                                    }
 
-                                speakerBlock += `
-                                    <div class="pwe-box-modal-speaker-text">
-                                        <h5 class="pwe-box-modal-name">${speaker.speaker_name}</h5>
-                                        <p class="pwe-box-modal-bio">${speaker.speaker_bio}</p>
-                                    </div>
-                                </div>`;
+                                    if (speaker.speaker_bio != undefined) {
+                                        speakerBlock += `
+                                            <div class="pwe-box-modal-speaker-text">
+                                                <h5 class="pwe-box-modal-name">${speaker.speaker_name}</h5>
+                                                <p class="pwe-box-modal-bio">${speaker.speaker_bio}</p>
+                                            </div>
+                                        </div>`;
+                                    }
 
-                                speakersHTML += speakerBlock;
+                                    speakersHTML += speakerBlock;
+                                } 
                             });
 
                             // Add a speaker info to the modal content container 

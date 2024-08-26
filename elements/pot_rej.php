@@ -12,7 +12,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }    
+    }
 
     // /**
     //  * Static method to initialize Visual Composer elements.
@@ -23,8 +23,23 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             array(
                 'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => __('Registration form', 'pwelement'),
+                'heading' => __('Registration form Guest', 'pwelement'),
                 'param_name' => 'reg_form_name_pr',
+                'save_always' => true,
+                'value' => array_merge(
+                    array('Wybierz' => ''),
+                    self::$fair_forms,
+                ),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementPotwierdzenieRejestracji',
+                ),
+            ),
+            array(
+                'type' => 'dropdown',
+                'group' => 'PWE Element',
+                'heading' => __('Registration form Vip', 'pwelement'),
+                'param_name' => 'reg_form_name_vip',
                 'save_always' => true,
                 'value' => array_merge(
                     array('Wybierz' => ''),
@@ -44,21 +59,83 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
      * Returns the HTML output as a string.
      */
     public static function output($atts, $content = ''){
-                
+
+        extract( shortcode_atts( array(
+            'reg_form_name_pr' => '',
+            'reg_form_name_vip' => '',
+        ), $atts ));
+
+        $source_utm = $_SERVER['argv'][0];
+        $selected_form_id = '';
+        //$selected_form = '';
+
+        if(strpos($source_utm, 'utm_source=byli') === false){
+            $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
+            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
+            $form_name = $reg_form_name_pr;
+        } else {
+            $btn_color = '#b69663';
+            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
+            if (!empty($reg_form_name_vip)) {
+                $form_name = $reg_form_name_vip; 
+            } else {
+                $form_name = $reg_form_name_pr; 
+            }
+        }
+
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
+
         $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
 
         $main_page_text_btn = (get_locale() == 'pl_PL') ? "Powrót do strony głównej" : "Back to main page" ;
-        $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
+
+        //Edytion number
+
+        $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
+        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
+        $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
+
+        $start_date = do_shortcode('[trade_fair_datetotimer]');
+        $end_date = do_shortcode('[trade_fair_enddata]');
+
+        // Function to transform the date
+        function transform_dates($start_date, $end_date) {
+            // Convert date strings to DateTime objects
+            $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
+            $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
+
+            // Check if the conversion was correct
+            if ($start_date_obj && $end_date_obj) {
+                // Get the day, month and year from DateTime objects
+                $start_day = $start_date_obj->format('d');
+                $end_day = $end_date_obj->format('d');
+                $month = $start_date_obj->format('m');
+                $year = $start_date_obj->format('Y');
+
+                //Build the desired format
+                $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
+                return $formatted_date;
+            } else {
+                return "Invalid dates";
+            }
+        }
+
+        // Transform the dates to the desired format
+        $formatted_date = transform_dates($start_date, $end_date);
+
+        if (self::isTradeDateExist()) {
+            $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
+        } else {
+            $actually_date = $formatted_date;
+        }
 
         $output = '
             <style>
                 .pwelement_' . self::$rnd_id . ' #xForm{
                     display: flex;
-                    gap: 20px;
                 }
 
                 .pwelement_' . self::$rnd_id . ' #xForm>div{
@@ -71,10 +148,13 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     font-weight:700;
                 }
                 .pwelement_' . self::$rnd_id . ' .form-3-left {
-                    margin-left: 36px;
                     padding: 36px;
                 }
-                .pwelement_' . self::$rnd_id . ' .form-3{
+                .pwelement_' . self::$rnd_id . ' .form-3-left h2 {
+                    font-size: 24px;
+                }
+                .pwelement_' . self::$rnd_id . ' .form-3 {
+                    position: relative;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
@@ -123,7 +203,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     visibility: hidden;
                     height:0;
                     margin: 0;
-                    padding: 0; 
+                    padding: 0;
                 }
                 .pwelement_' . self::$rnd_id . ' label{
                     padding-left: 10px;
@@ -135,7 +215,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     margin-bottom: 18px;
                     width: 100%;
                     border-radius: 11px !important;
-                    border-color: black !important;
+                    border-color: #d6d6d6 !important;
                     box-shadow: none !important;
                 }
                 .pwelement_' . self::$rnd_id . ' .pwe_reg_visitor{
@@ -201,20 +281,88 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .pwelement_' . self::$rnd_id . ' .pwe-submitting-buttons .pwe-btn {
                     transform: scale(1) !important;
                 }
-                .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description, legend), 
+                .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description, legend),
                 .pwelement_'. self::$rnd_id .' p {
-                    color: '. $text_color .' !important;   
+                    color: '. $text_color .' !important;
                 }
                 .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, legend) {
                     font-size: 14px !important;
-                    font-weight: 700;   
+                    font-weight: 700;
                 }
-                .pwelement_'. self::$rnd_id .' .gform_confirmation_message {
+                .pwelement_'. self::$rnd_id .' .gform_confirmation_message:has(not(.vip_confirm)){
                     font-size: 20px;
                     font-weight: 600;
                     text-align: center;
                 }
+                .pwelement_'. self::$rnd_id .' .form-3-right_vip>div{
+                    max-width: 400px;
+                }
+                .pwelement_'. self::$rnd_id .' .form-3-left-vip{
+                    margin-left: 0;
+                    padding-left: 9px;
+                    background-position: center;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-image: url(/wp-content/plugins/PWElements/media/background-vip.webp);
+                }
+                .pwelement_'. self::$rnd_id .' .vip_options{
+                    margin: 50px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .vip_options>div{
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    margin: 9px;
+                }
+                .pwelement_'. self::$rnd_id .' .vip_options img {
+                    width: 50px;
+                }
+                .pwelement_'. self::$rnd_id .' .vip_options_foot{
+                    text-align: center;
+                    font-weight: 700;
+                    padding-bottom: 15px;
+                }
+                .pwelement_'. self::$rnd_id .' :is(.vip_options_foot p, .opis_vip){
+                    font-size: 14px !important;
+                }
+                .pwelement_'. self::$rnd_id .' .vip_confirm h3{
+                    text-align: center;
+                }
+                .pwelement_'. self::$rnd_id .' .vip_confirm p{
+                    font-weight: 700;
+                }
+                .pwelement_'. self::$rnd_id .' .vip_confirm ul{
+                    list-style: "-";
+                    text-align: left;
+                }
+                .pwelement_'. self::$rnd_id .' .vip-pack{
+                    max-width: 450px;
+                    margin: 20px auto 0;
+                    line-height: 1.2;
+                    text-align: center;
+                    font-size: 24px;
+                }
+                .pwelement_'.self::$rnd_id.' .pwe-registration-step-text {
+                    width: 100%;
+                    position: absolute;
+                    top: 18px;
+                    left: 18px;
+                }
+                .pwelement_'.self::$rnd_id.' .pwe-registration-step-text p {
+                    margin: 0;
+                }
+                @media (max-width:1100px) {
+                    .pwelement_' . self::$rnd_id . ' .form-3 {
+                        padding: 18px;
+                    }
+                }
                 @media (min-width:570px) and (max-width:959px){
+                    .pwelement_'. self::$rnd_id .' .form-3-right_vip {
+                        padding: 0 25px;
+                    }
+                    .vc_row .full-width:has(.pwelement_' . self::$rnd_id . ') .wpb_column{
+                        padding: 0 !important;
+                    }
                     .vc_row .full-width:has(.pwelement_' . self::$rnd_id . ') {
                         padding: 0 !important;
                     }
@@ -225,10 +373,13 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         gap: 0;
                     }
                     .pwelement_' . self::$rnd_id . ' .form-3 {
-                        padding: 18px; 
+                        padding: 18px;
                     }
-                    .pwelement_' . self::$rnd_id . ' .form-3-right {
+                    .pwelement_' . self::$rnd_id . ' .form-3-right-visit {
                         display:none;
+                    }
+                    .pwelement_' . self::$rnd_id . ' .form-3-left-vip {
+                        display: none;
                     }
                     .pwelement_' . self::$rnd_id . ' #xForm>div{
                         width: 50%;
@@ -238,6 +389,18 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     }
                 }
                 @media (max-width:569px){
+                    .pwelement_' . self::$rnd_id . ' .form-3 {
+                        padding: 36px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .form-3-right_vip {
+                        padding: 0 25px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .vip-pack {
+                        margin: 35px auto 0;
+                    }
+                    .vc_row .full-width:has(.pwelement_' . self::$rnd_id . ') .wpb_column{
+                        padding: 0 !important;
+                    }
                     .vc_row .full-width:has(.pwelement_' . self::$rnd_id . '){
                         padding: 0 !important;
                     }
@@ -255,56 +418,99 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         transform: scale(1);
                     }
                 }
-
             </style>
 
-            <div id="xForm">
-                <div class="form-3-left">
-                    <div>'. 
-                        self::languageChecker(
-                            <<<PL
-                                <h2 class="text-color-jevc-color display-befor-subbmit">Dziękujemy za rejestrację na <br><span class="very-strong">[trade_fair_name]!</span></h2>
-                                <h2 class="text-color-jevc-color display-after-subbmit">Dziękujemy za zamówienie pakietu VIP<br><span class="very-strong">[trade_fair_name]!</span></h2>
+            <div id="xForm">';
+            if(strpos($source_utm, 'utm_source=byli') === false){
+                $output .= '
+                    <div class="form-3-left">
+                        <div>'.
+                            self::languageChecker(
+                                <<<PL
+                                    <h2 class="text-color-jevc-color display-befor-subbmit">Dziękujemy za rejestrację na <br><span class="very-strong">[trade_fair_name]!</span></h2>
+                                    <h2 class="text-color-jevc-color display-after-subbmit">Dziękujemy za zamówienie pakietu VIP<br><span class="very-strong">[trade_fair_name]!</span></h2>
 
-                                <p class="">Cieszymy się, że dołączasz do naszego wydarzenia, pełnego nowości rynkowych i inspiracji do zastosowania w Twojej firmie.</p><br>
+                                    <p class="">Cieszymy się, że dołączasz do naszego wydarzenia, pełnego nowości rynkowych i inspiracji do zastosowania w Twojej firmie.</p><br>
 
-                                <p class="display-befor-subbmit"><span class="very-strong">Zachęcamy do wypełnienia</span> ostatniego formularza, dzięki temu będziemy mogli przygotować dla Was <span class="very-strong">wyjątkowy pakiet powitalny VIP</span>, który usprawni Państwa pobyt na targach.</p>
-                                <p class="display-after-subbmit">Twój <span class="very-strong"> wyjątkowy pakiet powitalny VIP</span>  : spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingowa, otrzymasz na podany w formularzu adres za pośrednictwem poczty polskiej na około tydzień przed targami.</p>
-                            PL,
-                            <<<EN
-                                <h2 class="text-color-jevc-color display-befor-subbmit">Thank you for registering at <br><span class="very-strong">[trade_fair_name_eng]!</span></h2>
-                                <h2 class="text-color-jevc-color display-after-subbmit">Thank you for ordering VIP welcome package <br><span class="very-strong">[trade_fair_name_eng]!</span></h2>
+                                    <p class="display-befor-subbmit"><span class="very-strong">Zachęcamy do wypełnienia</span> ostatniego formularza, dzięki temu będziemy mogli przygotować dla Was <span class="very-strong">wyjątkowy pakiet powitalny VIP</span>, który usprawni Państwa pobyt na targach.</p>
+                                    <p class="display-after-subbmit">Twój <span class="very-strong"> wyjątkowy pakiet powitalny VIP</span>  : spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingowa, otrzymasz na podany w formularzu adres za pośrednictwem poczty polskiej na około tydzień przed targami.</p>
+                                PL,
+                                <<<EN
+                                    <h2 class="text-color-jevc-color display-befor-subbmit">Thank you for registering at <br><span class="very-strong">[trade_fair_name_eng]!</span></h2>
+                                    <h2 class="text-color-jevc-color display-after-subbmit">Thank you for ordering VIP welcome package <br><span class="very-strong">[trade_fair_name_eng]!</span></h2>
 
-                                <p class="">We are delighted that you are joining our event, full of market news and inspiration for use in your business.</p><br>
+                                    <p class="">We are delighted that you are joining our event, full of market news and inspiration for use in your business.</p><br>
 
-                                <p class="display-befor-subbmit"><span class="very-strong">We encourage you to fill in</span> the last form, thanks to which we will be able to prepare for you a <span class="very-strong">exclusive VIP welcome package</span> that will enhance your stay at the fair.</p>
-                                <p class="display-after-subbmit">Your <span class="very-strong">exclusive VIP welcome package</span>  which includes a personalized badge with the trade fair plan/schedule and a parking card, will be sent to the address provided in the form via postal service approximately one week before the trade fair.</p>
-                            EN
-                        )
-                    .'
+                                    <p class="display-befor-subbmit"><span class="very-strong">We encourage you to fill in</span> the last form, thanks to which we will be able to prepare for you a <span class="very-strong">exclusive VIP welcome package</span> that will enhance your stay at the fair.</p>
+                                    <p class="display-after-subbmit">Your <span class="very-strong">exclusive VIP welcome package</span>  which includes a personalized badge with the trade fair plan/schedule and a parking card, will be sent to the address provided in the form via postal service approximately one week before the trade fair.</p>
+                                EN
+                            )
+                        .'
+                        </div>
                     </div>
-                </div>
+                ';
+            } else {
+                if (get_locale() == 'pl_PL') {
+                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
+                } else {
+                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
+                }
+
+                $output .= '
+                    <div class="form-3-left form-3-left-vip" style="padding:0;">
+                        <img src="'. $badgevipmockup .'">
+                    </div>
+                ';
+            }
+            $output .= '
                 <div class="form-3">
-                    '. 
-                        self::languageChecker(
-                            <<<PL
-                                <h3 class="display-befor-subbmit">Podaj adres, na który mamy wysłać <span class="golden-text">darmowy pakiet powitalny VIP</span></h3>
-                                <p class="display-befor-subbmit">Otrzymasz bezpłatny spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingową.</p>
-                            PL,
-                            <<<EN
-                                <h3 class="display-befor-subbmit">Enter the address where we should send the <span class="golden-text">free VIP welcome pack</span></h3>
-                                <p class="display-befor-subbmit">You will receive a complimentary personalised badge along with the exhibition schedule/schedule and a parking pass.</p>
-                            EN
-                        )
-                    .'
+
+                    ';
+                    if(strpos($source_utm, 'utm_source=byli') === false){
+                        $output .=
+                            self::languageChecker(
+                                <<<PL
+                                    <h3 class="display-befor-subbmit">Podaj adres, na który mamy wysłać <span class="golden-text">darmowy pakiet powitalny VIP</span></h3>
+                                    <p class="display-befor-subbmit">Otrzymasz bezpłatny spersonalizowany identyfikator wraz z planem/harmonogramem targów oraz kartę parkingową.</p>
+                                PL,
+                                <<<EN
+                                    <h3 class="display-befor-subbmit">Enter the address where we should send the <span class="golden-text">free VIP welcome pack</span></h3>
+                                    <p class="display-befor-subbmit">You will receive a complimentary personalised badge along with the exhibition schedule/schedule and a parking pass.</p>
+                                EN
+                            );
+                    } else {
+                        $output .='
+                            <div class="pwe-registration-step-text">
+                                <p>'.
+                                    self::languageChecker(
+                                        <<<PL
+                                            Krok 2 z 2
+                                        PL,
+                                        <<<EN
+                                            Step 2 of 2
+                                        EN
+                                    )
+                                .'</p>
+                            </div>' .
+                            self::languageChecker(
+                                <<<PL
+                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="golden-text">darmowy pakiet VIP</span></p>
+                                PL,
+                                <<<EN
+                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="golden-text">digital VIP package</span></p>
+                                EN
+                            );
+                    }
+
+                    $output .= '
                     <div class="pwe-gravity-form">
-                        [gravityform id="'. $atts['reg_form_name_pr'] .'" title="false" description="false" ajax="false"]               
+                        [gravityform id="'. $form_name .'" title="false" description="false" ajax="false"]
                     </div>
                     <div class="pwe-submitting-buttons display-befor-subbmit">
-                        <button class="btn pwe-btn pwe_reg_visitor">'. $confirmation_page_text_btn .'</button>
+                        <button id="pweSendStepTwo" class="btn pwe-btn pwe_reg_visitor">'. $confirmation_page_text_btn .'</button>
                     </div>
                     <div class="pwe-submitting-buttons display-after-subbmit">
-                        <a href="'. 
+                        <a href="'.
                         self::languageChecker(
                             <<<PL
                                /
@@ -315,17 +521,121 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         )
                     .'"><button class="btn pwe-btn pwe_reg_visitor">'. $main_page_text_btn .'</button></a>
                     </div>
-                </div>
-                <div class="form-3-right">
-                    <img src="/doc/badge-mockup.webp">
-                </div>
+                </div>';
+
+                if(strpos($source_utm, 'utm_source=byli') === false){
+                    $output .= '
+                        <div class="form-3-right form-3-right-visit">
+                            <img src="/doc/badge-mockup.webp">
+                        </div>
+                    ';
+                } else {
+                    $output .= '
+                        <div class="form-3-right form-3-right_vip">
+                            <div>
+                                <h3>'.
+                                    self::languageChecker(
+                                        <<<PL
+                                            Pakiet VIP upoważnia do:
+                                        PL,
+                                        <<<EN
+                                            The VIP package entitles you to:
+                                        EN
+                                    )
+                                .'</h3>
+                                <div class="vip_options">
+                                    <div>
+                                        <img src="/wp-content/plugins/PWElements/media/vip_diament.webp">
+                                        <span class="opis_vip">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                    Wstępu do strefy VIP
+                                                PL,
+                                                <<<EN
+                                                    Admission to the VIP area
+                                                EN
+                                            )
+                                        .'</span>
+                                    </div>
+                                    <div>
+                                        <img src="/wp-content/plugins/PWElements/media/vip_ludzik.webp">
+                                        <span class="opis_vip">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                    Uczestnistwa w wydarzeniach towarzyszących targom
+                                                PL,
+                                                <<<EN
+                                                    Participation in events accompanying the fair
+                                                EN
+                                            )
+                                        .'</span>
+                                    </div>
+                                    <div>
+                                        <img src="/wp-content/plugins/PWElements/media/vip_wejscie-vip.webp">
+                                        <span class="opis_vip">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                    Szybkiego wejścia na teren targów, gdzie czeka na Ciebie ponad 300 wystawców
+                                                PL,
+                                                <<<EN
+                                                    Quick entry to the fairgrounds, where more than 300 exhibitors await you
+                                                EN
+                                            )
+                                        .'</span>
+                                    </div>
+                                    <div>
+                                        <img src="/wp-content/plugins/PWElements/media/vip_ulotka.webp">
+                                        <span class="opis_vip">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Dostępu do materiałów targowych dostępnych wyłącznie w strefie VIP
+                                                PL,
+                                                <<<EN
+                                                    Access to trade show materials available only in the VIP area
+                                                EN
+                                            )
+                                        .'</span>
+                                    </div>
+                                    <div>
+                                        <img src="/wp-content/plugins/PWElements/media/vip_wifi.webp">
+                                        <span class="opis_vip">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Skorzystania z darmowego WI-FI i strefy ładowania urządzeń
+                                                PL,
+                                                <<<EN
+                                                Take advantage of free WI-FI and a device charging zone
+                                                EN
+                                            )
+                                        .'</span>
+                                    </div>
+                                </div>
+                                <div class="vip_options_foot">
+                                    <p>'.
+                        self::languageChecker(
+                            <<<PL
+                                Zarezerwuj swoje miejsce już dziś i podnieś swoje doświadczenie targowe na wyższy poziom!
+                            PL,
+                            <<<EN
+                                Reserve your spot today and elevate your trade show experience to the next level!
+                            EN
+                        )
+                        .'</p>
+                                </div>
+                            </div>
+                        </div>
+                    ';
+                }
+            $output .= '
             </div>
             <script>
             jQuery(document).ready(function($){
+                $(".pwe_utm").find("input").val("'.$source_utm.'");
                 $(".pwelement_' . self::$rnd_id . ' .pwe_reg_visitor").on("click", function(event){
                     var userEmail = localStorage.getItem("user_email");
                     var userTel = localStorage.getItem("user_tel");
                     var userDirection = localStorage.getItem("user_direction");
+                    var userCountry = localStorage.getItem("user_country");
 
                     if (userEmail) {
                         $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
@@ -336,13 +646,340 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     if (userDirection) {
                         $(".pwelement_'. self::$rnd_id .' input[placeholder=\"Kongres\"]").val(userDirection);
                     }
-                    
+                    if (userCountry) {
+                        $(".pwelement_'. self::$rnd_id .' .country input").val(userCountry);
+                    }
                     $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
                     $(".pwelement_'. self::$rnd_id .' form").submit();
                 });
             });
             </script>
-        ';  
+        ';
+
+        if (strpos($source_utm, 'utm_source=byli') !== false) {
+
+            $output .= '
+            <style>
+                .row-parent:has(.confirmation-vip) {
+                    padding: 0;
+                }
+                .row-container:has(.confirmation-vip) {
+                    display: flex;
+                    width: 100%;
+                    background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: cover;
+                }
+                #xForm:has(.confirmation-vip) {
+                    display: contents;
+                }
+
+                .pwelement_' .self::$rnd_id. ':has(.confirmation-vip) {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 36px;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: rgb(255 255 255 / 70%);
+                    padding: 36px;
+                    border-radius: 36px;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-wrapper {
+                    width:100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-content-column {
+                    width: 70%;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-column {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 30%;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-content-column h4 {
+                    margin: 0;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-column-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    max-width: 220px;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-column-wrapper h4 {
+                    font-size: 20px;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-text {
+                    border-right: 2px solid black;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logotypes {
+                    width: 90%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                    padding: 20px 0;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logotypes-column {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logotypes img {
+                    max-width: 25%;
+                    height: auto;
+                    flex-shrink: 1;
+                    object-fit: contain;
+                    transition: transform 0.2s ease-in-out;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-home-btn-container {
+                    width: 100%;
+                    margin-top: 36px;
+                    text-align: center;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-home-btn {
+                    background-color: white;
+                    padding: 10px 18px;
+                    border-radius: 10px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-line {
+                    display: none;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container img {
+                    position: relative;
+                    z-index: 2;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p, .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container h2 {
+                    text-align: center;
+                    font-weight: 700;
+                    margin: 0;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p {
+                    max-width: 260px !important;
+                    width: 100%;
+                    background: white;
+                    border-radius: 0;
+                    color: '.self::$accent_color.' !important;
+                    font-size: 20px !important;
+                    margin-top: 9px;
+                    padding: 0;
+                    line-height: 1.2;
+                    text-transform: uppercase;
+                }
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container h2 {
+                    color: black !important;
+                    position: relative;
+                    z-index: 2;
+                    font-size: 24px !important;
+                    margin-top: 5px;
+                }
+                @media (min-width:1200px){
+                    .pwelement_' . self::$rnd_id . ' #xForm:has(.confirmation-vip)>div {
+                        min-height: auto !important;
+                        width: 1200px !important;
+                    }
+                }
+                @media (min-width:960px){
+                    .pwelement_' . self::$rnd_id . ' #xForm:has(.confirmation-vip)>div {
+                        min-height: auto !important;
+                        width: 960px !important;
+                    }
+                }
+                @media (max-width: 960px) {
+                    .pwelement_' .self::$rnd_id. ' .vip-pack {
+                        margin: 35px auto 0;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip h4 {
+                        font-size: 18px;
+                        text-align: center;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip :is(p, li) {
+                        font-size: 14px;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-wrapper {
+                        flex-direction: column;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip, .pwelement_' .self::$rnd_id. ' .confirmation-vip-content-column {
+                        width: 100% !important;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-column {
+                        width: 100%;
+                        gap: 36px;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-home-btn-container {
+                        min-height: auto !important;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-column-wrapper {
+                        max-width: 200px;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-text {
+                        border-right: none;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-line {
+                        display: flex;
+                        justify-content: center;
+                        width: 100%;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-line hr {
+                        width: 70%;
+                        height: 2px;
+                        background-color: black;
+                        margin: 20px auto !important;
+                        border: none;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container {
+                        padding: 0 !important;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-logotypes {
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+                    }
+                    .pwelement_' .self::$rnd_id. ' .confirmation-vip-logotypes-column {
+                        width: 100%;
+                    }
+                }
+                .fade-in {
+                    opacity: 1;
+                    min-height: auto;
+                    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+                }
+                .fade-out {
+                    opacity: 0;
+                    max-height: 0;
+                    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+                }
+            </style>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    if (document.querySelector(".gform_confirmation_wrapper")) {
+                        var xForm = document.getElementById("xForm");
+
+                        xForm.innerHTML = `
+                        <div class="confirmation-vip">
+                            <div class="confirmation-vip-wrapper">
+                                <div class="confirmation-vip-content-column confirmation-vip-column">
+                                    <h4>'.
+                                    self::languageChecker(
+                                        <<<PL
+                                        Dziękujemy za rejestrację na targi <span style="white-space: nowrap;">[trade_fair_name]</span>.
+                                        PL,
+                                        <<<EN
+                                        Thank you for registering for <span style="white-space: nowrap;">[trade_fair_name_eng]</span>.
+                                        EN
+                                    )
+                                    .'</h4>
+                                    <div class="confirmation-vip-text">
+                                        <p><strong>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Niebawem dotrze do Państwa przesyłka, w której znajdzie się:
+                                                PL,
+                                                <<<EN
+                                                Check your email for:
+                                                EN
+                                            )
+                                        .'</strong></p>
+                                        <ul>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                <li>Identyfikator VIP upoważniający do wejścia na teren targów i do dedykowanej strefy</li>
+                                                <li>Zaproszenie do strefy VIP</li>
+                                                <li>Kartę parkingową upoważniającą do korzystania z darmowego parkingu</li>
+                                                <li>Szczegółowe informacje o targach i o wydarzeniach towarzyszących</li>
+                                                PL,
+                                                <<<EN
+                                                <li>VIP badge authorizing entry to the fairgrounds and to the dedicated zone</li>
+                                                <li>Invitation to the VIP zone</li>
+                                                <li>Parking card authorizing use of free parking</li>
+                                                EN
+                                            )
+                                        .'</ul>
+                                    </div>'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                <div class="confirmation-vip-logotypes">
+                                                    <div class="confirmation-vip-logotypes-column">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/inpost.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dhl.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/ups.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/pocztex.png">
+                                                    </div>
+                                                    <div class="confirmation-vip-logotypes-column">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/fedex.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/poczta-polska.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/gls.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dpd.png">
+                                                    </div>
+                                                </div>
+                                                PL,
+                                                <<<EN
+                                                EN
+                                            )
+                                        .'</div>
+
+                                <div class="confirmation-vip-line">
+                                    <hr>
+                                </div>
+
+                                <div class="confirmation-vip-logo-column confirmation-vip-column">
+                                    <div class="confirmation-vip-column-wrapper">
+                                        <div class="confirmation-vip-logo-container">
+                                        '.
+                                        self::languageChecker(
+                                            <<<PL
+                                            <img src="/doc/logo-color.webp">
+                                            PL,
+                                            <<<EN
+                                            <img src="/doc/logo-color-en.webp">
+                                            EN
+                                        ).'
+                                        <p class="confirmation-vip-logo-header-edition">
+                                        '. $trade_fair_edition .'
+                                        </p>
+                                        <h2>'.$actually_date.'</h2>
+                                        </div>
+                                        <h4>Ptak Warsaw Expo</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="confirmation-vip-home-btn-container">'.
+                        self::languageChecker(
+                            <<<PL
+                            <a href="/" class="confirmation-vip-home-btn">Strona główna</a>
+                            PL,
+                            <<<EN
+                            <a href="/en/" class="confirmation-vip-home-btn">Home page</a>
+                            EN
+                        )
+                        .'</div>`;
+                    }
+                });
+            </script>';
+        }
 
         return $output;
     }

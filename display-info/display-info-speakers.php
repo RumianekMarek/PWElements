@@ -296,7 +296,6 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 display: flex;
                 justify-content: center;
                 flex-wrap: wrap;
-                margin-top: 0 !important;
                 gap: 18px;
             }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker {

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementRegHeader
@@ -17,10 +17,10 @@ class PWElementRegHeader extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
-    public static function header_additional_css() {
+    public static function header_additional_css() { 
         $registration_css = '
                 <style>
                     #pweForm {
@@ -60,7 +60,7 @@ class PWElementRegHeader extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($registration_form_id, $registration_modes, $registration_logo, $actually_date, $registration_name = "") {
@@ -76,11 +76,10 @@ class PWElementRegHeader extends PWElements {
         $darker_btn_color = self::adjustBrightness($main_badge_color, -20);
 
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
-        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? "edycja" : "edition";
-
+        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
         $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
-        $trade_fair_edition = ($trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . '. ' . $trade_fair_edition_text;
-        
+        $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
+ 
         $output = '
             <style>
                 #pweForm {
@@ -247,7 +246,7 @@ class PWElementRegHeader extends PWElements {
                     width:85%;
                 }
                 #pweForm .show-consent {
-                    color: black !important; 
+                    color: black !important;
                 }
                 #pweForm form :is(.email-error, .phone-error, .cons-error) {
                     font-size: 12px;
@@ -274,11 +273,11 @@ class PWElementRegHeader extends PWElements {
                 #pweForm .gfield_label {
                     font-size: 14px !important;
                 }
-                #pweForm input[type="checkbox"]  { 
+                #pweForm input[type="checkbox"]  {
                     min-width: 16px !important;
                     height: 16px !important;
                     border-radius: 50% !important;
-                }  
+                }
                 #pweForm .form-required::after {
                     content: "" !important;
                 }
@@ -286,7 +285,7 @@ class PWElementRegHeader extends PWElements {
                     display: none !important;
                 }
                 #pweForm .iti--allow-dropdown {
-                    margin-top: 0; 
+                    margin-top: 0;
                 }
                 @media (max-width:960px) {
                     #pweForm {
@@ -306,7 +305,7 @@ class PWElementRegHeader extends PWElements {
                     #pweForm .form-badge-header .form-header-image-qr {
                         display: flex;
                         align-items: center;
-                    }  
+                    }
                 }
                 @media (max-width:450px){
                     #pweForm form {
@@ -334,7 +333,7 @@ class PWElementRegHeader extends PWElements {
                     #pweForm input:not([type=checkbox]) {
                         width: 100%;
                     }
-                }      
+                }
             </style>';
 
             if ($registration_name == "header") {
@@ -369,7 +368,7 @@ class PWElementRegHeader extends PWElements {
             } else {
                 $registration_forn_title = get_locale() == 'pl_PL' ? 'Twój bilet<br>na targi' : 'Your ticket<br>to the fair' ;
             }
-            
+
             $output .='
             <div id="pweForm">
                 <img class="form-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
@@ -398,22 +397,82 @@ class PWElementRegHeader extends PWElements {
                     });
                 });
 
+                // Funkcja zapisująca atrybut title do input
+                function updateCountryInput() {
+                    // Znajdź element <div> z klasą iti__selected-flag
+                    const selectedFlag = document.querySelector(".iti__flag-container .iti__selected-flag");
+                    if (selectedFlag) {
+                        // Pobierz wartość atrybutu title
+                        let countryTitle = selectedFlag.getAttribute("title");
+
+                        // Znajdź element input o klasie country
+                        const countryInput = document.querySelector(".country input");
+                        if (countryInput) {
+                            // Zapisz wartość title do input
+                            countryInput.value = countryTitle;
+                        }
+                    }
+                }
+
+                // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza
+                function updateCountryInput() {
+                    const countryInput = document.querySelector(".country input");
+                    const selectedFlag = document.querySelector(".iti__selected-flag");
+                    if (countryInput && selectedFlag) {
+                        countryInput.value = selectedFlag.getAttribute("title") || "";
+                    }
+                }
+
+                function addEventListenersToForm() {
+                    document.querySelectorAll("input, select, textarea, button").forEach(element => {
+                        ["change", "input", "click", "focus"].forEach(event => {
+                            element.addEventListener(event, updateCountryInput);
+                        });
+                    });
+                }
+
+                function observeFlagChanges() {
+                    const selectedFlag = document.querySelector(".iti__selected-flag");
+                    if (selectedFlag) {
+                        new MutationObserver(mutations => {
+                            if (mutations.some(mutation => mutation.attributeName === "aria-expanded")) {
+                                updateCountryInput();
+                            }
+                        }).observe(selectedFlag, { attributes: true });
+                    }
+                }
+
+                // Uruchomienie funkcji
+                addEventListenersToForm();
+                observeFlagChanges();
+
                 window.onload = function () {
                     var pweFormVisitors = document.querySelector("#pweRegister");
 
                     if (pweFormVisitors) {
                         pweFormVisitors.addEventListener("click", function (event) {
                             event.preventDefault();
+
                             const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
+
                             let telValue;
                             const telContainer = document.getElementsByClassName("ginput_container_phone")[0];
-                            
                             if (telContainer) {
                                 telValue = telContainer.getElementsByTagName("input")[0].value;
                             } else {
                                 telValue = "123456789";
                             }
 
+                            let countryValue = "";
+                            const countryContainer = document.getElementsByClassName("country")[0];
+                            if (countryContainer) {
+                                const countryInput = countryContainer.getElementsByTagName("input")[0];
+                                if (countryInput) {
+                                    countryValue = countryInput.value;
+                                }
+                            }
+
+                            localStorage.setItem("user_country", countryValue);
                             localStorage.setItem("user_email", emailValue);
                             localStorage.setItem("user_tel", telValue);';
 
@@ -426,7 +485,7 @@ class PWElementRegHeader extends PWElements {
                             } else if ($registration_modes == "conference_mode") {
                                 $output .= 'localStorage.setItem("user_direction", "kongres");';
                             }
-                            
+
                             $output .= '
                             const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
                             buttonSubmit.click();
@@ -434,7 +493,7 @@ class PWElementRegHeader extends PWElements {
                     }
                 }
             </script>
-        ';  
+        ';
 
         return $output;
     }
