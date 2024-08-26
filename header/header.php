@@ -94,7 +94,7 @@ class PWEHeader {
                             'description' => __('Write hex number for text shadow color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true,
-                        ),                        
+                        ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
@@ -166,7 +166,7 @@ class PWEHeader {
                             'description' => __('Write hex number for button shadow color for the element.', 'pwe_header'),
                             'value' => '',
                             'save_always' => true
-                        ),    
+                        ),
                         array(
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
@@ -221,7 +221,7 @@ class PWEHeader {
                             'type' => 'dropdown',
                             'group' => 'PWE Element',
                             'heading' => __('Modes', 'pwe_header'),
-                            'param_name' => 'pwe_header_modes', 
+                            'param_name' => 'pwe_header_modes',
                             'admin_label' => true,
                             'value' => array(
                                 'Default' => '',
@@ -630,7 +630,7 @@ class PWEHeader {
                             'param_name' => 'logotypes_slider_logo_color',
                             'description' => __('Check if you want to change the logotypes white to color. ', 'pwe_header'),
                             'save_always' => true,
-                            'value' => array(__('True', 'pwe_header') => 'true',),   
+                            'value' => array(__('True', 'pwe_header') => 'true',),
                         ),
                         array(
                             'type' => 'checkbox',
@@ -695,7 +695,7 @@ class PWEHeader {
 
         if (isset($uncode_options["_uncode_custom_colors_list"]) && is_array($uncode_options["_uncode_custom_colors_list"])) {
             $custom_colors_list = $uncode_options["_uncode_custom_colors_list"];
-      
+
             foreach ($custom_colors_list as $color) {
                 $title = $color['title'];
                 $color_value = $color["_uncode_custom_color"];
@@ -715,13 +715,13 @@ class PWEHeader {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param string $pl text in Polish.
      * @param string $pl text in English.
-     * @return string 
+     * @return string
      */
     public static function languageChecker($pl, $en = ''){
-        if(get_locale() == 'pl_PL'){ 
+        if(get_locale() == 'pl_PL'){
             return $pl;
         } else {
             return $en;
@@ -730,7 +730,7 @@ class PWEHeader {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param bool $logo_color schould logo be in color.
      * @return string
      */
@@ -745,7 +745,7 @@ class PWEHeader {
             '/doc/logo.webp',
             '/doc/logo.png'
         );
-        
+
         switch (true){
             case(get_locale() == 'pl_PL'):
                 if($logo_color){
@@ -786,7 +786,7 @@ class PWEHeader {
      */
     public static function findAllImages($firstPath, $image_count,  $secondPath = '/doc/galeria'){
         $firstPath = $_SERVER['DOCUMENT_ROOT'] . $firstPath;
-        
+
         if (is_dir($firstPath) && !empty(glob($firstPath . '/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE))) {
             $exhibitorsImages = glob($firstPath . '/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
         } else {
@@ -808,7 +808,7 @@ class PWEHeader {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param bool $logo_color schould logo be in color.
      * @return string
      */
@@ -865,12 +865,12 @@ class PWEHeader {
             }
         }
         return $pwe_forms_array;
-    } 
+    }
 
     /**
      * Finding all target form id
      *
-     * @param string $form_name 
+     * @param string $form_name
      * @return string
      */
     public static function findFormsID($form_name){
@@ -901,7 +901,7 @@ class PWEHeader {
     public static function pwe_checkbox_html($settings, $value) {
         $checked = $value === 'true' ? 'checked' : '';
         $id = uniqid('pwe_checkbox_');
-    
+
         return '<div class="pwe-checkbox">'
             . '<input type="checkbox" '
             . 'id="' . esc_attr($id) . '" '
@@ -915,7 +915,7 @@ class PWEHeader {
 
      /**
      * Trade fair date existance check
-     * 
+     *
      * @return bool
      */
     public static function isTradeDateExist(){
@@ -940,7 +940,7 @@ class PWEHeader {
     public static function adjustBrightness($hex, $steps) {
         // Convert hex to RGB
         $hex = str_replace('#', '', $hex);
-        
+
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
@@ -956,7 +956,7 @@ class PWEHeader {
                 . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
     }
 
-    
+
     /**
      * Output method for PWelement shortcode.
      *
@@ -1039,13 +1039,13 @@ class PWEHeader {
         $main_header_color = self::findColor($main_header_color_manual_hidden, $main_header_color, $main_badge_color) . '!important';
         $main_header_color_text = self::findColor($main_header_color_text_manual_hidden, $main_header_color_text, 'white') . '!important';
 
-        
+
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
         $darker_form_btn_color = self::adjustBrightness($main_header_color, -20);
 
         if ($pwe_header_modes == "conference_mode") {
             $pwe_header_overlay_color = empty($pwe_header_overlay_color) ? self::$main2_color : $pwe_header_overlay_color;
-            $pwe_header_overlay_range = $pwe_header_overlay_range == 0 ? 0.7 : $pwe_header_overlay_range; 
+            $pwe_header_overlay_range = $pwe_header_overlay_range == 0 ? 0.7 : $pwe_header_overlay_range;
         }
 
         $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '260px' : $pwe_header_logo_width;
@@ -1055,7 +1055,7 @@ class PWEHeader {
             <style>
                 .row-parent:has(.pwelement_'. SharedProperties::$rnd_id.' .pwe-header) {
                     max-width: 100%;
-                    padding: 0 !important;  
+                    padding: 0 !important;
                 }
                 .wpb_column:has(.pwelement_'. SharedProperties::$rnd_id.' .pwe-header) {
                     max-width: 100%;
@@ -1098,16 +1098,16 @@ class PWEHeader {
                     text-transform: uppercase;
                     text-align: center;
                     width: auto;
-                }             
+                }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title {
                     justify-content: center;
                 }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4 {
                     box-shadow: 9px 9px 0px -6px '. $text_color .';
-                }   
+                }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
                     font-size: 30px;
-                } 
+                }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
                     font-size: 36px;
                 }
@@ -1147,7 +1147,7 @@ class PWEHeader {
                         }
                     }
                 </style>';
-            } 
+            }
 
         if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode") {
             $output .= '
@@ -1167,7 +1167,7 @@ class PWEHeader {
                 }
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), .pwe-header .pwe-logotypes-title h4 {
                     text-shadow: 2px 2px '. $text_shadow .';
-                }   
+                }
                 .pwelement_'. SharedProperties::$rnd_id .' .header-button a {
                     padding: 0 !important;
                     height: 70px;
@@ -1282,7 +1282,7 @@ class PWEHeader {
                         $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo-en.webp') ? "/doc/logo-en.webp" : "/doc/logo-en.png";
                     } else {
                         $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo.webp') ? "/doc/logo.webp" : "/doc/logo.png";
-                    }  
+                    }
                 }
             } else {
                 if (get_locale() == 'pl_PL') {
@@ -1298,7 +1298,7 @@ class PWEHeader {
 
         }
 
-        $file_path_header_background = glob('doc/background.*');
+        $file_path_header_background = glob('doc/background.webp');
         if (!empty($file_path_header_background)) {
             $file_path_header_background = $file_path_header_background[0];
             $file_url = $base_url . '/' . $file_path_header_background;
@@ -1356,11 +1356,11 @@ class PWEHeader {
                     <style>
                         .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
                             background-position: '. $position .' !important;
-                        } 
+                        }
                     </style>';
                 break;
             }
-        } 
+        }
 
         if ($pwe_header_modes != "simple_mode") {
 
@@ -1380,7 +1380,7 @@ class PWEHeader {
             }
 
         }
-        
+
         $background_congress = $base_url . '/wp-content/plugins/PWElements/media/conference-background.webp';
         $background_header = ($pwe_header_modes == "conference_mode") ? $background_congress : $file_url;
 
@@ -1403,7 +1403,7 @@ class PWEHeader {
                             if ($pwe_header_modes != "simple_mode") {
 
                                 $output .= '<div class="pwe-header-buttons">';
-                                    
+
                                     if (get_locale() == 'pl_PL') {
                                         $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/bilety/" : $pwe_header_tickets_button_link;
                                         $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/rejestracja/" : $pwe_header_register_button_link;
@@ -1413,12 +1413,12 @@ class PWEHeader {
                                         $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/en/registration/" : $pwe_header_register_button_link;
                                         $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/en/conferences/" : $pwe_header_conferences_button_link;
                                     }
-                                    
+
                                     $target_blank = (strpos($pwe_header_conferences_button_link, 'http') !== false) ? 'target="blank"' : '';
 
                                     if (in_array('register', explode(',', $pwe_header_button_on))) {
                                         $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
-                                            $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '. 
+                                            $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
                                                             self::languageChecker(
                                                                 <<<PL
                                                                 alt="link do rejestracji">Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
@@ -1427,12 +1427,12 @@ class PWEHeader {
                                                                 alt="link to registration">Register<span style="display: block; font-weight: 300;">Get a free ticket</span>
                                                                 EN
                                                             )
-                                                        .'</a>';   
+                                                        .'</a>';
                                             $output .='</div>';
                                     }
                                     if (in_array('ticket', explode(',', $pwe_header_button_on))) {
                                         $output .= '<div id="pweBtnTickets" class="pwe-btn-container header-button">';
-                                            $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_tickets_button_link .'" '. 
+                                            $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_tickets_button_link .'" '.
                                                             self::languageChecker(
                                                                 <<<PL
                                                                 alt="link do biletów">Kup bilet
@@ -1459,7 +1459,7 @@ class PWEHeader {
                                                             <<<EN
                                                             conferences
                                                             EN
-                                                        ).'">'. $pwe_header_conferences_title 
+                                                        ).'">'. $pwe_header_conferences_title
                                                     .'</a>';
                                         $output .= '</div>';
                                     }
@@ -1476,10 +1476,10 @@ class PWEHeader {
                                                 $output .= '<div class="pwe-btn-container header-button">
                                                     <a class="pwe-link pwe-btn" href="'. $button_url .'" '. $target_blank_aditional .' alt="'. $button_url .'">'. $button_text .'</a>
                                                 </div>';
-                                            } 
+                                            }
                                         }
                                     }
-                                
+
                                 $output .= '</div>';
                             }
 
@@ -1514,14 +1514,14 @@ class PWEHeader {
                                 $output .= '</div>';
                             }
                         }
-                    
+
                         if ($pwe_header_modes != "simple_mode") {
                             require_once plugin_dir_path(__FILE__) . '/../widgets/parking-widget.php';
                             if (count($pwe_congress_widget_items_json) == 1 && !empty($congress_image_url)) {
                                 $output .= '<div class="pwe-header-curled-sheet"><img src="/wp-content/plugins/PWElements/media/zawijas.png" alt="zawijas"></div>';
-                            } 
+                            }
                         }
- 
+
                     } else if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
                         $start_date = do_shortcode('[trade_fair_datetotimer]');
                         $end_date = do_shortcode('[trade_fair_enddata]');
@@ -1554,7 +1554,7 @@ class PWEHeader {
                         if (self::isTradeDateExist()) {
                             $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
                         } else {
-                            $actually_date = $formatted_date;  
+                            $actually_date = $formatted_date;
                         }
 
                         if ($pwe_header_congress_logo_color != true) {
@@ -1563,17 +1563,17 @@ class PWEHeader {
                             $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp');
                         }
                         $pwe_header_conference_logo_url = (empty($pwe_header_conference_logo_url)) ? $congress_logo_url : $pwe_header_conference_logo_url;
-                        $pwe_header_conference_link = empty($pwe_header_conference_link) 
-                        ? (get_locale() == 'pl_PL' ? '/wydarzenia/' : '/en/conferences') 
+                        $pwe_header_conference_link = empty($pwe_header_conference_link)
+                        ? (get_locale() == 'pl_PL' ? '/wydarzenia/' : '/en/conferences')
                         : $pwe_header_conference_link;
                         $pwe_header_reg_logo = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_logo_url : $logo_url;
-                        $pwe_header_reg_logo_link = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_link : $base_url; 
-
+                        $pwe_header_reg_logo_link = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_link : $base_url;
+                        
                         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
                         $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
                         $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
-                        $trade_fair_edition = ($trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
-                        
+                        $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
+
                         if ($pwe_header_modes == "registration_mode") {
                             $pwe_header_title = $trade_fair_desc;
                             $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_desc_short]" : "[trade_fair_desc_short_eng]";
@@ -1612,7 +1612,7 @@ class PWEHeader {
                                 justify-content: center;
                                 align-items: center;
                                 margin-top: 18px;
-                                padding: 24px; 
+                                padding: 24px;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container:before {
                                 content: "";
@@ -1622,7 +1622,7 @@ class PWEHeader {
                                 bottom: 0;
                                 left: 0;
                                 border-radius: 16px;
-                            } 
+                            }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h1 {
                                 text-transform: uppercase;
                                 padding-top: 12px;
@@ -1653,12 +1653,12 @@ class PWEHeader {
                                 font-size: 28px;
                                 margin: 0;
                                 margin-top: 9px;
-                                padding: 0;
-                                line-height: 1.1;
+                                padding: 3px 0;
+                                line-height: 1;
                                 text-transform: uppercase;
-                            } 
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), 
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4, 
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2),
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4,
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-title h2 {
                                 text-shadow: 0 0 1px '. $text_shadow .';
                             }
@@ -1679,8 +1679,8 @@ class PWEHeader {
                                 display: none;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4 {
-                                box-shadow: none !important; 
-                            } 
+                                box-shadow: none !important;
+                            }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logotypes {
                                 margin-top: 36px;
                                 width: 100%;
@@ -1694,7 +1694,7 @@ class PWEHeader {
                                 color: '. $main_header_color_text .';
                                 background-color: '. $darker_form_btn_color .'!important;
                                 border: 2px solid '. $darker_form_btn_color .'!important;
-                            }   
+                            }
                             .pwelement_'. SharedProperties::$rnd_id .' #pweForm .form-container:before {
                                 background-color: '. $main_header_color .';
                             }
@@ -1713,7 +1713,7 @@ class PWEHeader {
                                     background-color: '. $main_header_color .';
                                 }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
-                                    flex-direction: column-reverse; 
+                                    flex-direction: column-reverse;
                                     padding: 0 18px 0;
                                 }
                                 .pwelement_'. SharedProperties::$rnd_id .' .header-info-column,
@@ -1737,7 +1737,7 @@ class PWEHeader {
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text,
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container {
                                     max-width: 450px;
-                                } 
+                                }
                             }
                             @media (max-width: 450px) {
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h1 {
@@ -1763,23 +1763,23 @@ class PWEHeader {
                                 <style>
                                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container:before {
                                         background-color: '. $main_header_color .';
-                                    } 
+                                    }
                                 </style>';
                         } else {
                             $output .= '
                                 <style>
                                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container:before {
                                         background-color: '. $main_header_color .';
-                                    } 
+                                    }
                                 </style>';
                         }
 
-                        if ($trade_fair_edition_shortcode == 1) {
+                        if (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) {
                             $output .= '
                                 <style>
                                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
                                         font-size: 20px;
-                                    } 
+                                    }
                                 </style>';
                         }
 
@@ -1793,15 +1793,15 @@ class PWEHeader {
                                                 $output .= '<p class="pwe-header-edition">'. $trade_fair_edition .'</p>';
                                             }
                                             $output .= '
-                                            <h2>'. $actually_date .'</h2> 
+                                            <h2>'. $actually_date .'</h2>
                                             <p>Ptak Warsaw Expo</p>
-                                        </div>'; 
+                                        </div>';
 
                                         if ($pwe_header_association_hide != true) {
-                                            // Accompanying Fairs 
-                                            $output .= PWElementAssociates::output($atts, $logo_url, $pwe_header_modes, $pwe_header_conference_logo_url, $pwe_header_conference_link); 
+                                            // Accompanying Fairs
+                                            $output .= PWElementAssociates::output($atts, $logo_url, $pwe_header_modes, $pwe_header_conference_logo_url, $pwe_header_conference_link);
                                         }
-                                        
+
                                         if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
                                             $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
                                             $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
@@ -1832,7 +1832,7 @@ class PWEHeader {
                                     $output .= '<p class="pwe-header-edition">'. $trade_fair_edition .'</p>';
                                 }
                                 $output .= '
-                                <h2>'. $actually_date .'</h2> 
+                                <h2>'. $actually_date .'</h2>
                                 <h1 class="">'. $pwe_header_title_short .'</h1>
                             </div>';
 
@@ -1844,7 +1844,7 @@ class PWEHeader {
                             } else {
                                 $registration_button_text = ($registration_button_text == "") ? 'Register<span style="display: block; font-weight: 300;">Get a free ticket</span>' : $registration_button_text;
                             }
-                    
+
                             if (class_exists('GFAPI')) {
                                 function get_form_id_by_title($title) {
                                     $forms = GFAPI::get_forms();
@@ -1852,15 +1852,15 @@ class PWEHeader {
                                         if ($form['title'] === $title) {
                                             return $form['id'];
                                         }
-                                        
+
                                     }
                                     return null;
                                 }
-                                
+
                                 function custom_gform_submit_button($button, $form) {
                                     global $registration_button_text, $pwe_header_form_id;
                                     $registration_form_id_nmb = get_form_id_by_title($pwe_header_form_id);
-                                    
+
                                     if ($form['id'] == $registration_form_id_nmb) {
                                         $button = '<input type="submit" id="gform_submit_button_'.$registration_form_id_nmb.'" class="gform_button button" value="" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
                                         <div class="pwe-btn-container">
@@ -1869,10 +1869,10 @@ class PWEHeader {
                                     }
                                     return $button;
                                 }
-                                add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);  
+                                add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
                             }
                         $output .= '</div>';
-                    } 
+                    }
                 $output .= '
                 </div>
             </div>
@@ -1886,42 +1886,74 @@ class PWEHeader {
 
                     if ((pweLogotypesElement && pweLogotypesElement.children.length === 0)) {
                         pweLogotypesElement.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
-                    } 
+                    }
 
                     if (pweLogotypesElement) {
-                        pweLogotypesElement.style.opacity = 1;  
+                        pweLogotypesElement.style.opacity = 1;
                     }
 
                     if (pweLogotypesAssociation) {
-                        pweLogotypesAssociation.style.opacity = 1;  
+                        pweLogotypesAssociation.style.opacity = 1;
                     }
-        
+
                     const allSliders = document.querySelectorAll(".pwe-header-logotypes");
                     if (allSliders) {
                         allSliders.forEach(function(slider) {
                             const sliderTitle = slider.querySelector(".main-heading-text");
-                            
+
                             if (sliderTitle) {
                                 const sliderTitletoLowerCase = sliderTitle.innerText.toLowerCase();
 
-                                if (sliderTitletoLowerCase.includes("wydarzenia towarzyszące") || 
+                                if (sliderTitletoLowerCase.includes("wydarzenia towarzyszące") ||
                                     sliderTitletoLowerCase.includes("targi towarzyszące") ||
                                     sliderTitletoLowerCase.includes("accompanying events") ||
                                     sliderTitletoLowerCase.includes("accompanying fairs") ||
                                     sliderTitletoLowerCase.includes("side events")) {
                                         slider.style.display = "none";
                                 }
-                            }            
-                        }); 
+                            }
+                        });
                     }
                 });
+
+                // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza
+                function updateCountryInput() {
+                    const countryInput = document.querySelector(".country input");
+                    const selectedFlag = document.querySelector(".iti__selected-flag");
+                    if (countryInput && selectedFlag) {
+                        countryInput.value = selectedFlag.getAttribute("title") || "";
+                    }
+                }
+
+                function addEventListenersToForm() {
+                    document.querySelectorAll("input, select, textarea, button").forEach(element => {
+                        ["change", "input", "click", "focus"].forEach(event => {
+                            element.addEventListener(event, updateCountryInput);
+                        });
+                    });
+                }
+
+                function observeFlagChanges() {
+                    const selectedFlag = document.querySelector(".iti__selected-flag");
+                    if (selectedFlag) {
+                        new MutationObserver(mutations => {
+                            if (mutations.some(mutation => mutation.attributeName === "aria-expanded")) {
+                                updateCountryInput();
+                            }
+                        }).observe(selectedFlag, { attributes: true });
+                    }
+                }
+
+                // Uruchomienie funkcji
+                addEventListenersToForm();
+                observeFlagChanges();
             </script>';
 
 
         $output = do_shortcode($output);
 
         $file_cont = '<div class="pwelement pwelement_'.SharedProperties::$rnd_id.'">' . $output . '</div>';
-        
+
         if ($input_replace_array_html && $output_replace_array_html) {
             $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);
         }

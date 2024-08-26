@@ -17,6 +17,7 @@ class PWECatalog10 extends PWECatalog {
 
         $output .= '
         <style>
+            
             .row-container:has(.pwe-registration) .exhibitors-catalog {
                 border: 2px solid #564949 !important;
                 margin-top: 0 !important;
@@ -29,10 +30,104 @@ class PWECatalog10 extends PWECatalog {
             }
             .row-container:has(.pwe-registration) .img-container-top10 {
                 height: 85%;
+                padding: 18px;
             }
-        </style>
+        </style>';
 
+        $source_utm = $_SERVER['argv'][0];
+
+        if(strpos($source_utm, 'utm_source=byli') !== false){
+
+            $output .= '
+            <style>
+                .row-container:has(.pwe-registration) .wpb_column:has(#top10) {
+                    padding: 36px !important;
+                }
+                .row-container:has(.pwe-registration) .exhibitors-catalog {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    border: none !important;
+                    padding: 0;
+                }
+                .wpb_column:has(#top10) {
+                    width: 33% !important;
+                    padding: 54px 36px;
+                }
+                #top10 {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }     
+                .img-container-top10 {
+                    max-width: 430px;
+                }
+                .top10-text-container {
+                    display: flex;
+                    justify-content: center;
+                    padding-bottom: 36px;
+                }
+                .top10-text {
+                    max-width: 300px;
+                    text-align: center;
+                    font-size: 15px;
+                    font-weight: 600;
+                    line-height: 1.4;
+                    margin: 0;
+                }
+                @media (max-width: 1150px) {
+                    .wpb_column:has(#top10) {
+                        width: 100% !important;
+                        padding: 0;
+                    }
+                    .exhibitors-catalog:has(#top10) {
+                        display: flex;
+                        justify-content: space-evenly;
+                        align-items: center;
+                    }
+                }
+                @media (min-width: 960px) {
+                    .img-container-top10 .cat-img, .img-container-top10 .slides div {
+                        min-height: 50px;
+                        min-width: 140px;
+                        padding: 0;
+                        margin: 0;
+                    }
+                } 
+                @media (max-width: 960px) {
+                    .wpb_column:has(#top10) {
+                        width: 100% !important;
+                        padding: 0;
+                    }
+                    .exhibitors-catalog:has(#top10) {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .top10-text {
+                        max-width: 500px;
+                    }
+                }  
+            </style>';
+            $output .= '
+            <div class="top10-text-container">
+                <p class="top10-text">'. 
+                    self::languageChecker(
+                        <<<PL
+                            Po wypełnieniu formularza zostaniesz przekierowany do kroku 2, gdzie otrzymasz dodatkowe informacje dotyczące uczestnictwa w targach.
+                        PL,
+                        <<<EN
+                            After completing the form, you will be redirected to step 2, where you will receive additional information regarding participation in the fair.
+                        EN
+                    )
+                .'</p>
+            </div>';
+        }
+
+        $output .= '
         <div id="top10" class="custom-catalog main-heading-text">';
+
             if (count($exhibitors) < 10) {
                 $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.webp') ? $logo_file_path . '.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.png') ? $logo_file_path . '.png' : '');

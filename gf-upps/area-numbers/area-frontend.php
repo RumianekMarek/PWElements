@@ -13,9 +13,27 @@ class GFAreaNumbersFrontend {
         
 		foreach($form['fields'] as $field) {
             if (property_exists($field, 'smartPhoneFieldGField') && $field->smartPhoneFieldGField) {
-                // echo '<pre style="width:500px;">';
-                // var_dump($field);
-                // echo '</pre>';
+
+                // $user_ip = $_SERVER["REMOTE_ADDR"];
+
+                // $json       = file_get_contents("http://ipinfo.io/{$user_ip}");
+                // $details    = json_decode($json);
+                
+                // var_dump($details);
+
+
+                // $url = "https://ipinfo.io/212.244.73.146";
+                // $ch = curl_init();
+                // curl_setopt($ch, CURLOPT_URL, $url);
+                // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                // $response = curl_exec($ch);
+                // if (curl_errno($ch)) {
+                //     die('cURL error: ' . curl_error($ch));
+                // }
+                // curl_close($ch);
+
+                // var_dump($response);
+
                 $field["enableAutocomplete"] = true;
                 $field["autocompleteAttribute"] = 'tel';
                 $field['displayOnly'] = true;

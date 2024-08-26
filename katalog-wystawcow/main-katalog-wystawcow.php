@@ -590,12 +590,43 @@ class PWECatalog {
 
         $exhibitors_top10 = ($identification) ? self::logosChecker($identification, "PWECatalog10") : 0;
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
-            $output_html .= '
-            <style>
-                .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
-                    display: none !important;
-                } 
-            </style>';
+            $source_utm = $_SERVER['argv'][0];
+
+            if(strpos($source_utm, 'utm_source=byli') !== false){
+                $output_html .= '
+                <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                        position: relative;
+                        background-image: url(/doc/header_mobile.webp);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        padding: 0;
+                    } 
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .'):before {
+                        content: "";
+                        position: absolute;
+                        top: 60%;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        margin: auto;
+                        max-width: 300px;
+                        height: auto;
+                        background-image: url(/doc/logo.webp);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        transform: translateY(-60%);
+                    }
+                </style>';
+            } else {
+                $output_html .= '
+                <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                        display: none !important;
+                    } 
+                </style>';
+            } 
         }
 
         $output_html .= '
