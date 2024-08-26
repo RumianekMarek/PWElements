@@ -3,7 +3,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI:
  * Description: Adding a new element to the website PRO.
- * Version: 2.0.0
+ * Version: 2.0.5
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  */
@@ -15,6 +15,7 @@ class PWElementsPlugin {
     public $PWECatalog;
     public $PWEDisplayInfo;
     public $PWEMediaGallery;
+    // public $PWEQRActive;
 
     public function __construct() {
         // Czyszczenie pamięci wp_rocket
@@ -44,6 +45,9 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'gf-upps/area-numbers/area_numbers_gf.php';
         $this->GFAreaNumbersField = new GFAreaNumbersField();
+
+        // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
+        // $this->PWEQRActive = new PWEQRActive();
     }
 
     // Czyszczenie pamięci wp_rocket
