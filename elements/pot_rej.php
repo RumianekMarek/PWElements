@@ -69,11 +69,15 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         $selected_form_id = '';
         //$selected_form = '';
 
-        if(strpos($source_utm, 'utm_source=byli') === false){
+        if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false){
             $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
             $form_name = $reg_form_name_pr;
-        } else {
+        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+            $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
+            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
+            $form_name = $reg_form_name_pr;
+        } else if (strpos($source_utm, 'utm_source=byli') !== false){
             $btn_color = '#b69663';
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
             if (!empty($reg_form_name_vip)) {
@@ -90,6 +94,8 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
 
         $main_page_text_btn = (get_locale() == 'pl_PL') ? "Powrót do strony głównej" : "Back to main page" ;
+
+        $fair_logo = (get_locale() == "pl_PL") ? "/doc/logo-color.webp" : "/doc/logo-color-en.webp";
 
         //Edytion number
 
@@ -136,14 +142,13 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             <style>
                 .pwelement_' . self::$rnd_id . ' #xForm{
                     display: flex;
+                    min-height: 90vh;
                 }
-
                 .pwelement_' . self::$rnd_id . ' #xForm>div{
                     align-content: center;
                     min-height: 643px;
-                    width: 33%;
+                    width: 33.3%;
                 }
-
                 .pwelement_' . self::$rnd_id . ' .very-strong{
                     font-weight:700;
                 }
@@ -163,15 +168,17 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     background-color: #E8E8E8;
                     min-height: inherit;
                 }
-                .pwelement_' . self::$rnd_id . ' .form-3-right{
+                .pwelement_' . self::$rnd_id . ' .form-3-right {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    justify-content: center;
                     gap: 27px;
                 }
-                .pwelement_' . self::$rnd_id . ' .golden-text{
+                .pwelement_' . self::$rnd_id . ' .golden-text {
                     color: #c49a62 !important;
+                }
+                .pwelement_' . self::$rnd_id . ' .silver-text {
+                    color: #747474 !important;
                 }
                 .pwelement_' . self::$rnd_id . ' .form-3 form{
                     margin-top: 18px;
@@ -294,10 +301,14 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     font-weight: 600;
                     text-align: center;
                 }
-                .pwelement_'. self::$rnd_id .' .form-3-right_vip>div{
+                .pwelement_'. self::$rnd_id .' .form-3-right_vip {
+                    padding: 0 18px;
+                    justify-content: center;
+                }
+                .pwelement_'. self::$rnd_id .' .form-3-right_vip>div {
                     max-width: 400px;
                 }
-                .pwelement_'. self::$rnd_id .' .form-3-left-vip{
+                .pwelement_'. self::$rnd_id .' .form-3-left-vip {
                     margin-left: 0;
                     padding-left: 9px;
                     background-position: center;
@@ -305,10 +316,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     background-repeat: no-repeat;
                     background-image: url(/wp-content/plugins/PWElements/media/background-vip.webp);
                 }
-                .pwelement_'. self::$rnd_id .' .vip_options{
+                .pwelement_'. self::$rnd_id .' .vip_options {
                     margin: 50px 0;
                 }
-                .pwelement_'. self::$rnd_id .' .vip_options>div{
+                .pwelement_'. self::$rnd_id .' .vip_options>div {
                     display: flex;
                     align-items: center;
                     gap: 20px;
@@ -378,9 +389,11 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     .pwelement_' . self::$rnd_id . ' .form-3-right-visit {
                         display:none;
                     }
-                    .pwelement_' . self::$rnd_id . ' .form-3-left-vip {
+                    .pwelement_' . self::$rnd_id . ' .form-3-left-vip,
+                    .pwelement_' . self::$rnd_id . ' .form-3-left-premium {
                         display: none;
                     }
+                    
                     .pwelement_' . self::$rnd_id . ' #xForm>div{
                         width: 50%;
                     }
@@ -418,10 +431,11 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         transform: scale(1);
                     }
                 }
-            </style>
+            </style>';
 
+            $output .= '
             <div id="xForm">';
-            if(strpos($source_utm, 'utm_source=byli') === false){
+            if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
                 $output .= '
                     <div class="form-3-left">
                         <div>'.
@@ -450,23 +464,32 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     </div>
                 ';
             } else {
-                if (get_locale() == 'pl_PL') {
-                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
-                } else {
-                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
-                }
+                if (strpos($source_utm, 'utm_source=byli') !== false) {
+                    if (get_locale() == 'pl_PL') {
+                        $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
+                    } else {
+                        $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
+                    }
 
-                $output .= '
-                    <div class="form-3-left form-3-left-vip" style="padding:0;">
-                        <img src="'. $badgevipmockup .'">
-                    </div>
-                ';
+                    $output .= '
+                        <div class="form-3-left form-3-left-vip" style="padding:0;">
+                            <img src="'. $badgevipmockup .'">
+                        </div>
+                    ';
+                } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+            
+                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
+
+                    $output .= '
+                        <div class="form-3-left form-3-left-premium" style="padding:0;">
+                            <img src="'. $badgevipmockup .'">
+                        </div>
+                    ';
+                }
             }
             $output .= '
-                <div class="form-3">
-
-                    ';
-                    if(strpos($source_utm, 'utm_source=byli') === false){
+                <div class="form-3">';
+                    if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
                         $output .=
                             self::languageChecker(
                                 <<<PL
@@ -479,7 +502,8 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                 EN
                             );
                     } else {
-                        $output .='
+                        if (strpos($source_utm, 'utm_source=byli') !== false) {
+                            $output .='
                             <div class="pwe-registration-step-text">
                                 <p>'.
                                     self::languageChecker(
@@ -494,12 +518,35 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             </div>' .
                             self::languageChecker(
                                 <<<PL
-                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="golden-text">darmowy pakiet VIP</span></p>
+                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="golden-text">darmowy pakiet <strong>VIP</strong></span></p>
                                 PL,
                                 <<<EN
-                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="golden-text">digital VIP package</span></p>
+                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="golden-text">digital <strong>VIP</strong> package</span></p>
                                 EN
                             );
+                        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+                            $output .='
+                            <div class="pwe-registration-step-text">
+                                <p>'.
+                                    self::languageChecker(
+                                        <<<PL
+                                            Krok 2 z 2
+                                        PL,
+                                        <<<EN
+                                            Step 2 of 2
+                                        EN
+                                    )
+                                .'</p>
+                            </div>' .
+                            self::languageChecker(
+                                <<<PL
+                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="silver-text">darmowy pakiet <strong>PLATINUM</strong></span></p>
+                                PL,
+                                <<<EN
+                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="silver-text">digital <strong>PLATINUM</strong> package</span></p>
+                                EN
+                            );
+                        }
                     }
 
                     $output .= '
@@ -523,136 +570,222 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     </div>
                 </div>';
 
-                if(strpos($source_utm, 'utm_source=byli') === false){
+                if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
                     $output .= '
                         <div class="form-3-right form-3-right-visit">
                             <img src="/doc/badge-mockup.webp">
                         </div>
                     ';
                 } else {
-                    $output .= '
-                        <div class="form-3-right form-3-right_vip">
-                            <div>
-                                <h3>'.
-                                    self::languageChecker(
-                                        <<<PL
-                                            Pakiet VIP upoważnia do:
-                                        PL,
-                                        <<<EN
-                                            The VIP package entitles you to:
-                                        EN
-                                    )
-                                .'</h3>
-                                <div class="vip_options">
-                                    <div>
-                                        <img src="/wp-content/plugins/PWElements/media/vip_diament.webp">
-                                        <span class="opis_vip">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                    Wstępu do strefy VIP
-                                                PL,
-                                                <<<EN
-                                                    Admission to the VIP area
-                                                EN
-                                            )
-                                        .'</span>
+                    if (strpos($source_utm, 'utm_source=byli') !== false) {
+                        $output .= '
+                            <div class="form-3-right form-3-right_vip">
+                                <div>
+                                    <h3>'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                Pakiet VIP upoważnia do:
+                                            PL,
+                                            <<<EN
+                                                The VIP package entitles you to:
+                                            EN
+                                        )
+                                    .'</h3>
+                                    <div class="vip_options">
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/vip_diament.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        Wstępu do strefy VIP
+                                                    PL,
+                                                    <<<EN
+                                                        Admission to the VIP area
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/vip_ludzik.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        Uczestnistwa w wydarzeniach towarzyszących targom
+                                                    PL,
+                                                    <<<EN
+                                                        Participation in events accompanying the fair
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/vip_wejscie-vip.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        Szybkiego wejścia na teren targów, gdzie czeka na Ciebie ponad 300 wystawców
+                                                    PL,
+                                                    <<<EN
+                                                        Quick entry to the fairgrounds, where more than 300 exhibitors await you
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/vip_ulotka.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Dostępu do materiałów targowych dostępnych wyłącznie w strefie VIP
+                                                    PL,
+                                                    <<<EN
+                                                        Access to trade show materials available only in the VIP area
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/vip_wifi.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Skorzystania z darmowego WI-FI i strefy ładowania urządzeń
+                                                    PL,
+                                                    <<<EN
+                                                    Take advantage of free WI-FI and a device charging zone
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <img src="/wp-content/plugins/PWElements/media/vip_ludzik.webp">
-                                        <span class="opis_vip">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                    Uczestnistwa w wydarzeniach towarzyszących targom
-                                                PL,
-                                                <<<EN
-                                                    Participation in events accompanying the fair
-                                                EN
-                                            )
-                                        .'</span>
+                                    <div class="vip_options_foot">
+                                        <p>'.
+                            self::languageChecker(
+                                <<<PL
+                                    Zarezerwuj swoje miejsce już dziś i podnieś swoje doświadczenie targowe na wyższy poziom!
+                                PL,
+                                <<<EN
+                                    Reserve your spot today and elevate your trade show experience to the next level!
+                                EN
+                            )
+                            .'</p>
                                     </div>
-                                    <div>
-                                        <img src="/wp-content/plugins/PWElements/media/vip_wejscie-vip.webp">
-                                        <span class="opis_vip">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                    Szybkiego wejścia na teren targów, gdzie czeka na Ciebie ponad 300 wystawców
-                                                PL,
-                                                <<<EN
-                                                    Quick entry to the fairgrounds, where more than 300 exhibitors await you
-                                                EN
-                                            )
-                                        .'</span>
-                                    </div>
-                                    <div>
-                                        <img src="/wp-content/plugins/PWElements/media/vip_ulotka.webp">
-                                        <span class="opis_vip">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                Dostępu do materiałów targowych dostępnych wyłącznie w strefie VIP
-                                                PL,
-                                                <<<EN
-                                                    Access to trade show materials available only in the VIP area
-                                                EN
-                                            )
-                                        .'</span>
-                                    </div>
-                                    <div>
-                                        <img src="/wp-content/plugins/PWElements/media/vip_wifi.webp">
-                                        <span class="opis_vip">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                Skorzystania z darmowego WI-FI i strefy ładowania urządzeń
-                                                PL,
-                                                <<<EN
-                                                Take advantage of free WI-FI and a device charging zone
-                                                EN
-                                            )
-                                        .'</span>
-                                    </div>
-                                </div>
-                                <div class="vip_options_foot">
-                                    <p>'.
-                        self::languageChecker(
-                            <<<PL
-                                Zarezerwuj swoje miejsce już dziś i podnieś swoje doświadczenie targowe na wyższy poziom!
-                            PL,
-                            <<<EN
-                                Reserve your spot today and elevate your trade show experience to the next level!
-                            EN
-                        )
-                        .'</p>
                                 </div>
                             </div>
-                        </div>
-                    ';
+                        ';
+                    } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+                        $output .= '
+                            <div class="form-3-right form-3-right_vip">
+                                <div>
+                                    <h3>'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                Pakiet PREMIUM upoważnia do:
+                                            PL,
+                                            <<<EN
+                                                The PREMIUM package entitles you to:
+                                            EN
+                                        )
+                                    .'</h3>
+                                    <div class="vip_options">
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/premium_diament.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        Wstępu do strefy VIP
+                                                    PL,
+                                                    <<<EN
+                                                        Admission to the VIP area
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/premium_ludzik.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        Uczestnistwa w wydarzeniach towarzyszących targom
+                                                    PL,
+                                                    <<<EN
+                                                        Participation in events accompanying the fair
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/premium_ulotka.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Dostępu do materiałów targowych dostępnych wyłącznie w strefie VIP
+                                                    PL,
+                                                    <<<EN
+                                                    Access to trade show materials available only in the VIP area
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                        <div>
+                                            <img src="/wp-content/plugins/PWElements/media/premium_wifi.webp">
+                                            <span class="opis_vip">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Skorzystania z darmowego WI-FI i strefy ładowania urządzeń
+                                                    PL,
+                                                    <<<EN
+                                                    Take advantage of free WI-FI and a device charging zone
+                                                    EN
+                                                )
+                                            .'</span>
+                                        </div>
+                                    </div>
+                                    <div class="vip_options_foot">
+                                        <p>'.
+                            self::languageChecker(
+                                <<<PL
+                                    Zarezerwuj swoje miejsce już dziś i podnieś swoje doświadczenie targowe na wyższy poziom!
+                                PL,
+                                <<<EN
+                                    Reserve your spot today and elevate your trade show experience to the next level!
+                                EN
+                            )
+                            .'</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ';
+                    }
                 }
             $output .= '
             </div>
-            <script>
-            jQuery(document).ready(function($){
-                $(".pwe_utm").find("input").val("'.$source_utm.'");
-                $(".pwelement_' . self::$rnd_id . ' .pwe_reg_visitor").on("click", function(event){
-                    var userEmail = localStorage.getItem("user_email");
-                    var userTel = localStorage.getItem("user_tel");
-                    var userDirection = localStorage.getItem("user_direction");
-                    var userCountry = localStorage.getItem("user_country");
 
-                    if (userEmail) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
-                    }
-                    if (userTel) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
-                    }
-                    if (userDirection) {
-                        $(".pwelement_'. self::$rnd_id .' input[placeholder=\"Kongres\"]").val(userDirection);
-                    }
-                    if (userCountry) {
-                        $(".pwelement_'. self::$rnd_id .' .country input").val(userCountry);
-                    }
-                    $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
-                    $(".pwelement_'. self::$rnd_id .' form").submit();
+            <script>
+                jQuery(document).ready(function($){
+                    $(".pwe_utm").find("input").val("'.$source_utm.'");
+                    $(".pwelement_' . self::$rnd_id . ' .pwe_reg_visitor").on("click", function(event){
+                        var userEmail = localStorage.getItem("user_email");
+                        var userTel = localStorage.getItem("user_tel");
+                        var userDirection = localStorage.getItem("user_direction");
+                        var userCountry = localStorage.getItem("user_country");
+
+                        if (userEmail) {
+                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                        }
+                        if (userTel) {
+                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
+                        }
+                        if (userDirection) {
+                            $(".pwelement_'. self::$rnd_id .' input[placeholder=\"Kongres\"]").val(userDirection);
+                        }
+                        if (userCountry) {
+                            $(".pwelement_'. self::$rnd_id .' .country input").val(userCountry);
+                        }
+                        $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
+                        $(".pwelement_'. self::$rnd_id .' form").submit();
+                    });
                 });
-            });
             </script>
         ';
 
@@ -674,7 +807,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 #xForm:has(.confirmation-vip) {
                     display: contents;
                 }
-
                 .pwelement_' .self::$rnd_id. ':has(.confirmation-vip) {
                     display: flex;
                     flex-direction: column;
@@ -768,7 +900,8 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     position: relative;
                     z-index: 2;
                 }
-                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p, .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container h2 {
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p, 
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container h2 {
                     text-align: center;
                     font-weight: 700;
                     margin: 0;
@@ -776,10 +909,9 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p {
                     max-width: 260px !important;
                     width: 100%;
-                    background: white;
                     border-radius: 0;
                     color: '.self::$accent_color.' !important;
-                    font-size: 20px !important;
+                    font-size: 20px;
                     margin-top: 9px;
                     padding: 0;
                     line-height: 1.2;
@@ -869,8 +1001,18 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     max-height: 0;
                     transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
                 }
-            </style>
+            </style>';
 
+            if (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .confirmation-vip-logo-container p {
+                        font-size: 16px;
+                    }
+                </style>';
+            }
+
+            $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     if (document.querySelector(".gform_confirmation_wrapper")) {
@@ -883,10 +1025,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                     <h4>'.
                                     self::languageChecker(
                                         <<<PL
-                                        Dziękujemy za rejestrację na targi <span style="white-space: nowrap;">[trade_fair_name]</span>.
+                                        Dziękujemy za rejestrację na targi <span style="white-space: nowrap;">[trade_fair_name]</span>
                                         PL,
                                         <<<EN
-                                        Thank you for registering for <span style="white-space: nowrap;">[trade_fair_name_eng]</span>.
+                                        Thank you for registering for <span style="white-space: nowrap;">[trade_fair_name_eng]</span>
                                         EN
                                     )
                                     .'</h4>
@@ -976,6 +1118,350 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             EN
                         )
                         .'</div>`;
+                    }
+                });
+            </script>';
+        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+
+            $output .= '
+            <style>
+                .row-parent:has(.pwe-confirmation-premium) {
+                    max-width: 100%;
+                    padding: 0 !important;  
+                }
+                .wpb_column:has(.pwe-confirmation-premium) {
+                    max-width: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' #xForm:has(.pwe-confirmation-premium) > div {
+                    width: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper {
+                    display: flex;
+                    min-height: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left {
+                    width: 60%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
+                    width: 40%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-image: url(/doc/header_mobile.webp);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: cover;
+                    background-color: #009cff;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content,
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;  
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
+                    padding: 72px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
+                    align-items: center;
+                }    
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left h4 {
+                    font-size: 24px;
+                    font-weight: 700;
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left p {
+                    font-size: 18px;
+                    margin: 0;
+                }
+                .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes {
+                    width: 90%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                    padding: 20px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes-column {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                }
+                .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes img {
+                    max-width: 25%;
+                    height: auto;
+                    flex-shrink: 1;
+                    object-fit: contain;
+                    transition: transform 0.2s ease-in-out;
+                }    
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-home-btn-container {
+                    background-color: black;
+                    padding: 18px;
+                    border-radius: 40px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-home-btn {
+                    color: white !important;
+                    text-transform: uppercase;
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
+                    max-width: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
+                    padding: 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right img {
+                    max-width: 400px;
+                    width: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                    color: white;
+                    text-align: center;
+                    margin: 0;
+                    text-transform: uppercase;
+                }
+                .pwelement_'. self::$rnd_id .' .form-2-bottom{
+                    background-color: #f7f7f7;
+                    display: flex;
+                    justify-content: center;
+                    gap: 18px;
+                    flex-wrap: wrap;
+                    padding: 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .form-2-bottom div{
+                    flex:1;
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap:9px;
+                }
+                .pwelement_'. self::$rnd_id .' .form-2-bottom div > div{
+                    flex:1;
+                    min-width: 200px;
+                }
+                .pwelement_'. self::$rnd_id .' .form-2-bottom img{
+                    max-height: 80px;
+                    object-fit: contain;
+                }
+                .pwelement_'. self::$rnd_id .' .form-2-bottom :is(.for-exhibitors, .for-visitors){
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .pwelement_'. self::$rnd_id .' .form-2-bottom :is(.for-exhibitors, .for-visitors) p {
+                    margin-top: 0px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
+                    max-width: 400px;
+                    width: 100%;
+                    border-radius: 0;
+                    background-color: white;
+                    font-size: 36px;
+                    margin: 0;
+                    margin-top: 9px;
+                    padding: 3px 0;
+                    line-height: 1;
+                    text-transform: uppercase;
+                    text-align: center;
+                    font-weight: 700;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition span {
+                    background: url(/doc/header_mobile.webp) no-repeat center;
+                    color: transparent;
+                        -webkit-background-clip: text;
+                    background-clip: text;
+                }
+                @media (max-width:960px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
+                        padding: 36px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes {
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+                    }
+                    .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes-column {
+                        width: 100%;
+                    }
+                }
+                @media (max-width:768px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper,
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left, 
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
+                        min-height: auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper {
+                        flex-direction: column;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left,
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
+                        width: 100%;
+                        padding: 36px 18px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
+                        padding: 0 0 36px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .form-2-bottom div > div {
+                        min-width: unset;
+                    }
+                    .pwelement_'. self::$rnd_id .' .form-2-bottom div{
+                        flex: unset;
+                        width: 100%;
+                    }
+                }
+            </style>';
+
+            if (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
+                        font-size: 28px;
+                    }
+                    @media (max-width:420px) {
+                       .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
+                            font-size: 24px;
+                        } 
+                    }
+                </style>';
+            }
+
+            if (self::isTradeDateExist()) {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                        font-size: 32px;
+                    }
+                    @media (min-width: 768px) and (max-width: 1100px) { 
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
+                            font-size: calc(24px + (32 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
+                        } 
+                    }
+                    @media (min-width: 300px) and (max-width: 550px) { 
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
+                            font-size: calc(24px + (32 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
+                        } 
+                    }
+                </style>';
+            } else {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                        font-size: 56px;
+                    }
+                    @media (min-width: 768px) and (max-width: 1100px) { 
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
+                            font-size: calc(24px + (56 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
+                        } 
+                    }
+                    @media (min-width: 300px) and (max-width: 550px) { 
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
+                            font-size: calc(24px + (56 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
+                        } 
+                    }
+                </style>';
+            }
+
+            $output .= '
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    if (document.querySelector(".gform_confirmation_wrapper")) {
+                        var xForm = document.getElementById("xForm");
+
+                        xForm.innerHTML = `
+                        <div class="pwe-confirmation-premium">
+                            <div class="pwe-confirmation-premium-wrapper">
+                                <div class="pwe-confirmation-premium-left">
+                                    <div class="pwe-confirmation-premium-left-content">
+                                        <h4>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Dziękujemy za rejestrację na targi <span style="white-space: nowrap;">[trade_fair_name]</span>
+                                                PL,
+                                                <<<EN
+                                                Thank you for registering for <span style="white-space: nowrap;">[trade_fair_name_eng]</span>
+                                                EN
+                                            )
+                                        .'</h4>
+                                        <br>
+                                        <div class="confirmation-vip-text">
+                                            <p><strong>'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Za miesiąc przed targami otrzymują Państwo przesyłkę, w której znajdzie się:
+                                                    PL,
+                                                    <<<EN
+                                                    One month before the fair, you will receive a parcel containing:
+                                                    EN
+                                                )
+                                            .'</strong></p>
+                                            <ul>'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    <li>Identyfikator upoważniający do wejścia na targi i do VIP ROOM</li>
+                                                    <li>Kartę parkingową upoważniającą do korzystania z darmowego parkingu</li>
+                                                    <li>Szczegółowe informacje o targach i o wydarzeniach towarzyszących</li>
+                                                    PL,
+                                                    <<<EN
+                                                    <li>Identification badge authorizing entry to the fair and VIP ROOM</li>
+                                                    <li>Parking card authorizing use of free parking</li>
+                                                    <li>Detailed information about the fair and accompanying events</li>
+                                                    EN
+                                                )
+                                            .'</ul>
+                                        </div>'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                <div class="confirmation-premium-logotypes">
+                                                    <div class="confirmation-premium-logotypes-column">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/inpost.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dhl.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/ups.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/pocztex.png">
+                                                    </div>
+                                                    <div class="confirmation-premium-logotypes-column">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/fedex.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/poczta-polska.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/gls.png">
+                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dpd.png">
+                                                    </div>
+                                                </div>
+                                                PL,
+                                                <<<EN
+                                                EN
+                                            )
+                                        .'</div>
+                                    
+                                    <div class="pwe-confirmation-premium-home-btn-container">'.
+                                    self::languageChecker(
+                                        <<<PL
+                                        <a href="/" class="pwe-confirmation-premium-home-btn">Strona główna</a>
+                                        PL,
+                                        <<<EN
+                                        <a href="/en/" class="pwe-confirmation-premium-home-btn">Home page</a>
+                                        EN
+                                    )
+                                    .'</div>
+                                </div>
+                                <div class="pwe-confirmation-premium-right">
+                                    <div class="pwe-confirmation-premium-right-content">
+                                        <img src="/doc/logo.webp">';
+                                        if (!empty($trade_fair_edition_shortcode)) {
+                                            $output .= '<p class="pwe-confirmation-premium-edition"><span>'. $trade_fair_edition .'</span></p>';
+                                        }
+                                        $output .= '
+                                        <h2>'. $actually_date .'</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
                     }
                 });
             </script>';

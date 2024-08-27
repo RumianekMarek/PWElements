@@ -541,7 +541,8 @@ class PWElementGenerator extends PWElements {
                 position: fixed;
                 top: 100px;
                 height: auto;
-                min-width: 800px;
+                min-width: 1200px;
+                text-align: -webkit-center;
             }
 
             .modal__elements input{
@@ -558,9 +559,16 @@ class PWElementGenerator extends PWElements {
                 text-align: center;
                 margin: 0;
             }
+            .modal__elements table th{
+                width:50%;
+            }
             .modal__elements table td{
                 text-align: center;
-                padding: 5px 10px;
+                padding: 0;
+            }
+            .modal__elements tr table{
+                text-align: center;
+                width:100%;
             }
             .modal__elements table input{
                 margin-top: 0 !imprtant;
@@ -910,6 +918,7 @@ class PWElementGenerator extends PWElements {
                 jQuery(document).ready(function($){
                     
                     $(".tabela-masowa").on("click",function(){
+                        const tableCont = [];
 
                         $("footer").hide();
 
@@ -919,15 +928,16 @@ class PWElementGenerator extends PWElements {
                             .attr("id", "my-modal");
 
                         modalBox = `<div class="modal__elements">
-                                        <input placeholder="Firma Zapraszająca"></input>
-                                        <p>Wklej do tabeli poniżej tabele z excela z dwoma kolumnami</p>
+                                        <input class="company" placeholder="Firma Zapraszająca"></input>
+                                        <p>Wklej do tabeli poniżej kolumny z excela, sprawdź czy imie i email na jednej wysokości pasują do siebie</p>
                                         <table id="mass-table">
                                             <tr>
                                                 <th>Imie</td>
                                                 <th>Email</td>
                                             </tr>
                                             <tr>
-                                                <td contenteditable="true" colspan="2"></td>
+                                                <td class="mass-send-name" contenteditable="true"></td>
+                                                <td class="mass-send-email" contenteditable="true"></td>
                                             </tr>
                                         </table>
                                         <button class="wyslij">Wyślij</button>
@@ -945,17 +955,35 @@ class PWElementGenerator extends PWElements {
                             $("footer").show();
                         });
 
-                        $modal.on("click", function (event) {
-                            if ($(event.target)[0] === $modal[0]) {
-                                $modal.hide();
-                                $("footer").show();
+                        // $modal.on("click", function (event) {
+                        //     if ($(event.target)[0] === $modal[0]) {
+                        //         $modal.hide();
+                        //         $("footer").show();
 
-                            }
+                        //     }
+                        // });
+                        
+                        $(".wyslij").on("click",function(){
+                            tableCont["company"] = $(".company").val();
+
+                            content_name = $("#mass-table").find(".mass-send-name").text().split("\n");
+                            content_email = $("#mass-table").find(".mass-send-email").text().split("\n");
+
+                            content_name.trim().split("\n").map(line => line.trim()).filter(line => line !== "");
+                            content_email.trim().split("\n").map(line => line.trim()).filter(line => line !== "");
+
+                            // for (let i = 0; i < content_name.length; i++) {
+                            //     console.log(content_name);
+                            //     if(content_name[i] != ""){
+                            //         pair = [name => content_name[i], email => content_email[i]];
+                            //         tableCont.push(pair);
+                            //     }
+                            // }
+
+                            console.log(content_name);
                         });
                     });
-                    $(".wyslij").on("click",function(){
-                        console.log($("#mass-table").DataTable());
-                    });
+                    
                 });
 
                 var btnExhElements = document.querySelectorAll(".btn-exh");

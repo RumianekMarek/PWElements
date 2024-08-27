@@ -222,6 +222,9 @@ class PWElementRegistration extends PWElements {
         $btn_color_vip = '#B69663';
         $darker_btn_vip_color = self::adjustBrightness($btn_color_vip, -20);
 
+        $btn_color_premium = self::$accent_color;
+        $darker_btn_premium_color = self::adjustBrightness($btn_color_premium, -20);
+
         $output = '';
 
         global $registration_button_text, $registration_form_id;
@@ -316,19 +319,22 @@ class PWElementRegistration extends PWElements {
             $actually_date = $formatted_date;
         }
 
-        
-        if (get_locale() == 'pl_PL') {
-            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
-        } else {
-            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
-        }
-
         // Create unique id for element
         $unique_id = rand(10000, 99999);
         $element_unique_id = 'pweRegistration-' . $unique_id;
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         $source_utm = $_SERVER['argv'][0];
+
+        if (strpos($source_utm, 'utm_source=premium') !== false) {
+            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
+        } else {
+            if (get_locale() == 'pl_PL') {
+                $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
+            } else {
+                $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
+            }
+        }
 
         if (strpos($source_utm, 'utm_source=byli') !== false) {
             $output .= '
@@ -341,6 +347,19 @@ class PWElementRegistration extends PWElements {
                 .pwelement_'.self::$rnd_id.' #pweRegister:hover {
                     background-color: '. $darker_btn_vip_color .' !important;
                     border: 2px solid '. $darker_btn_vip_color .' !important;
+                }
+            </style>';
+        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+            $output .= '
+            <style>
+                .pwelement_'.self::$rnd_id.' #pweRegister {
+                    background-color: '. $btn_color_premium .';
+                    border: 2px solid '. $btn_color_premium .';
+                    color: white;
+                }
+                .pwelement_'.self::$rnd_id.' #pweRegister:hover {
+                    background-color: '. $darker_btn_premium_color .' !important;
+                    border: 2px solid '. $darker_btn_premium_color .' !important;
                 }
             </style>';
         } else {
@@ -400,7 +419,6 @@ class PWElementRegistration extends PWElements {
                     }
                     .pwelement_' .self::$rnd_id. ' .pwe-mockup-column {
                         width: 50%;
-                        background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
                         background-repeat: no-repeat;
                         background-position: center;
                         background-size: cover;
@@ -513,6 +531,15 @@ class PWElementRegistration extends PWElements {
                         }
                     }
                 </style>';
+
+                if (strpos($source_utm, 'utm_source=byli') !== false) {
+                    $output .= '
+                    <style>
+                        .pwelement_' .self::$rnd_id. ' .pwe-mockup-column {
+                            background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                        }
+                    </style>';
+                }
 
                 $output .= '
                 <div id="'. $element_unique_id .'" class="pwe-registration vip">
@@ -1219,9 +1246,29 @@ class PWElementRegistration extends PWElements {
 
                         localStorage.setItem("user_email", emailValue);
                         localStorage.setItem("user_country", countryValue);
-                        localStorage.setItem("user_tel", telValue);
-                        localStorage.setItem("user_direction", "rejpl");
+                        localStorage.setItem("user_tel", telValue);';
 
+                        if (strpos($source_utm, 'utm_source=byli') !== false) {
+                            if (get_locale() == 'pl_PL') {
+                                $output .= 'localStorage.setItem("user_direction", "rejpl-vip");';
+                            } else {
+                                $output .= 'localStorage.setItem("user_direction", "rejen-vip");';
+                            }
+                        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+                            if (get_locale() == 'pl_PL') {
+                                $output .= 'localStorage.setItem("user_direction", "rejpl-premium");';
+                            } else {
+                                $output .= 'localStorage.setItem("user_direction", "rejen-vip-premium");';
+                            }
+                        } else {
+                            if (get_locale() == 'pl_PL') {
+                                $output .= 'localStorage.setItem("user_direction", "rejpl");';
+                            } else {
+                                $output .= 'localStorage.setItem("user_direction", "rejen");';
+                            }
+                        }
+
+                        $output .= '
                         const areaContainer = document.getElementsByClassName("input-area")[0];
                         if (areaContainer) {
                             const areaValue = areaContainer.getElementsByTagName("input")[0].value;

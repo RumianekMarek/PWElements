@@ -171,18 +171,9 @@ class PWElementTicketActConf extends PWElements {
             }
             .pwe-ticket-activation-confirmation-right h2 {
                 color: white;
-                font-size: 56px;
+                text-align: center;
                 margin: 0;
-            }
-            @media (min-width: 768px) and (max-width: 1100px) { 
-                .pwe-ticket-activation-confirmation-right h2 { 
-                    font-size: calc(24px + (56 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
-                } 
-            }
-            @media (min-width: 300px) and (max-width: 550px) { 
-                .pwe-ticket-activation-confirmation-right h2 { 
-                    font-size: calc(24px + (56 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
-                } 
+                text-transform: uppercase;
             }
             .pwelement_'. self::$rnd_id .' .form-2-bottom{
                 background-color: #f7f7f7;
@@ -272,6 +263,42 @@ class PWElementTicketActConf extends PWElements {
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-edition {
                     font-size: 28px;
+                }
+            </style>';
+        }
+
+        if (self::isTradeDateExist()) {
+            $output .= '
+            <style>
+                .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-right h2 {
+                    font-size: 32px;
+                }
+                @media (min-width: 768px) and (max-width: 1100px) { 
+                    .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-right h2 { 
+                        font-size: calc(24px + (32 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
+                    } 
+                }
+                @media (min-width: 300px) and (max-width: 550px) { 
+                    .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-right h2 { 
+                        font-size: calc(24px + (32 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
+                    } 
+                }
+            </style>';
+        } else {
+            $output .= '
+            <style>
+                .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-right h2 {
+                    font-size: 56px;
+                }
+                @media (min-width: 768px) and (max-width: 1100px) { 
+                    .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-right h2 { 
+                        font-size: calc(24px + (56 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
+                    } 
+                }
+                @media (min-width: 300px) and (max-width: 550px) { 
+                    .pwelement_'. self::$rnd_id .' .pwe-ticket-activation-confirmation-right h2 { 
+                        font-size: calc(24px + (56 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
+                    } 
                 }
             </style>';
         }
