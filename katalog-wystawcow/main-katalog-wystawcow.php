@@ -592,7 +592,7 @@ class PWECatalog {
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
             $source_utm = $_SERVER['argv'][0];
 
-            if(strpos($source_utm, 'utm_source=byli') !== false){
+            if(strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false){
                 $output_html .= '
                 <style>
                     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {

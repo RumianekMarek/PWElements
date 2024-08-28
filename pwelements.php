@@ -3,7 +3,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI:
  * Description: Adding a new element to the website PRO.
- * Version: 2.0.7
+ * Version: 2.0.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  */
