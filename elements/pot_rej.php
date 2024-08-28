@@ -158,6 +158,9 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .pwelement_' . self::$rnd_id . ' .form-3-left h2 {
                     font-size: 24px;
                 }
+                .pwelement_' . self::$rnd_id . ' .form-3-left img {
+                    width: 100%;
+                }
                 .pwelement_' . self::$rnd_id . ' .form-3 {
                     position: relative;
                     display: flex;
@@ -540,10 +543,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             </div>' .
                             self::languageChecker(
                                 <<<PL
-                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="silver-text">darmowy pakiet <strong>PLATINUM</strong></span></p>
+                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="silver-text">darmowy pakiet <strong>PLATINIUM</strong></span></p>
                                 PL,
                                 <<<EN
-                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="silver-text">digital <strong>PLATINUM</strong> package</span></p>
+                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="silver-text">digital <strong>PLATINIUM</strong> package</span></p>
                                 EN
                             );
                         }
@@ -680,10 +683,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                     <h3>'.
                                         self::languageChecker(
                                             <<<PL
-                                                Pakiet PREMIUM upoważnia do:
+                                                Pakiet PLATINIUM upoważnia do:
                                             PL,
                                             <<<EN
-                                                The PREMIUM package entitles you to:
+                                                The PLATINIUM package entitles you to:
                                             EN
                                         )
                                     .'</h3>
@@ -1395,10 +1398,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             <p><strong>'.
                                                 self::languageChecker(
                                                     <<<PL
-                                                    Za miesiąc przed targami otrzymują Państwo przesyłkę, w której znajdzie się:
+                                                    Na miesiąc przed targami otrzymują Państwo przesyłkę, w której znajdzie się:
                                                     PL,
                                                     <<<EN
-                                                    One month before the fair, you will receive a parcel containing:
+                                                    One month before the fair, you will recive a package that includes:
                                                     EN
                                                 )
                                             .'</strong></p>
@@ -1410,35 +1413,28 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                                     <li>Szczegółowe informacje o targach i o wydarzeniach towarzyszących</li>
                                                     PL,
                                                     <<<EN
-                                                    <li>Identification badge authorizing entry to the fair and VIP ROOM</li>
-                                                    <li>Parking card authorizing use of free parking</li>
+                                                    <li>Badge authorizing entry to the fair and VIP ROOM</li>
+                                                    <li>Parking pass entitling to free parking</li>
                                                     <li>Detailed information about the fair and accompanying events</li>
                                                     EN
                                                 )
                                             .'</ul>
-                                        </div>'.
-                                        self::languageChecker(
-                                            <<<PL
-                                                <div class="confirmation-premium-logotypes">
-                                                    <div class="confirmation-premium-logotypes-column">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/inpost.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dhl.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/ups.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/pocztex.png">
-                                                    </div>
-                                                    <div class="confirmation-premium-logotypes-column">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/fedex.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/poczta-polska.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/gls.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dpd.png">
-                                                    </div>
-                                                </div>
-                                                PL,
-                                                <<<EN
-                                                EN
-                                            )
-                                        .'</div>
-                                    
+                                        </div>
+                                        <div class="confirmation-premium-logotypes">
+                                            <div class="confirmation-premium-logotypes-column">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/inpost.png">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dhl.png">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/ups.png">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/pocztex.png">
+                                            </div>
+                                            <div class="confirmation-premium-logotypes-column">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/fedex.png">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/poczta-polska.png">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/gls.png">
+                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dpd.png">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="pwe-confirmation-premium-home-btn-container">'.
                                     self::languageChecker(
                                         <<<PL

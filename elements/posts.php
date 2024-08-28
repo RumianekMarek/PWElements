@@ -29,7 +29,8 @@ class PWElementPosts extends PWElements {
                 'value' => array(
                     'Slider mode' => 'posts_slider_mode',
                     'Full mode' => 'posts_full_mode',
-                    'Full mode newest' => 'posts_full_newest_mode',
+                    'Full mode newest (top 6)' => 'posts_full_newest_mode',
+                    'Full mode newest slider' => 'posts_full_newest_slider_mode',
                 ),
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -291,13 +292,18 @@ class PWElementPosts extends PWElements {
                 </style>'; 
             }   
         } else {
+            if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode") {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-posts {
+                        columns: 3;
+                        column-gap: 20px;
+                        opacity: 0;
+                    }
+                </style>';
+            }
             $output .= '
             <style>
-                .pwelement_'. self::$rnd_id .' .pwe-posts {
-                    columns: 3;
-	                column-gap: 20px;
-                    opacity: 0;
-                }
                 .pwelement_'. self::$rnd_id .' .pwe-post {
                     display: flex;
                     flex-direction: column;
@@ -314,7 +320,7 @@ class PWElementPosts extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-post-title {
                     font-weight: 500;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail  {
+                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail {
                     position: relative;
                     overflow: hidden;
                     border-radius: 10px 10px 0 0;
@@ -504,7 +510,7 @@ class PWElementPosts extends PWElements {
                         </span>
                     </div>';
                 }
-            } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode") {
+            } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode" || $posts_modes == "posts_full_newest_slider_mode") {
 
                 $output .= '<div class="pwe-posts">';
 
@@ -518,6 +524,13 @@ class PWElementPosts extends PWElements {
                 } else if ($posts_modes == "posts_full_newest_mode") {
                     $args = array(
                         'posts_per_page' => 6,
+                        'orderby' => 'date',
+                        'order' => 'DESC',
+                        'post_status' => 'publish',
+                    );
+                } else if ($posts_modes == "posts_full_newest_slider_mode") {
+                    $args = array(
+                        'posts_per_page' => -1,
                         'orderby' => 'date',
                         'order' => 'DESC',
                         'post_status' => 'publish',
@@ -579,21 +592,36 @@ class PWElementPosts extends PWElements {
                             );
                         }
                 
-                        $output .= '
-                        <a class="pwe-post" href="'. $link .'">
-                            <div class="pwe-post-thumbnail">
-                                <div class="image-container" style="background-image:url('. $image .');"></div>
-                                <p class="pwe-post-date">'. $formatted_date .'</p>
-                            </div> 
-                            <h5 class="pwe-post-title">'. $title .'</h5>
-                            <p class="pwe-post-excerpt">'. $excerpt .'</p>
-                            <button class="pwe-post-btn">CZYTAJ WIĘCEJ</button>
-                        </a>';
+                        if ($posts_modes == "posts_full_newest_slider_mode") {
+                            $post_image_urls[] = array(
+                                "img" => $image,
+                                "link" => $link,
+                                "title" => $title,
+                                "excerpt" => $excerpt,
+                                "date" => $formatted_date
+                            );
+                        } else {
+                            $output .= '
+                            <a class="pwe-post" href="'. $link .'">
+                                <div class="pwe-post-thumbnail">
+                                    <div class="image-container" style="background-image:url('. $image .');"></div>
+                                    <p class="pwe-post-date">'. $formatted_date .'</p>
+                                </div> 
+                                <h5 class="pwe-post-title">'. $title .'</h5>
+                                <p class="pwe-post-excerpt">'. $excerpt .'</p>
+                                <button class="pwe-post-btn">CZYTAJ WIĘCEJ</button>
+                            </a>';
+                        }
                 
                     endwhile;
                 }
                 
                 wp_reset_postdata();
+
+                if ($posts_modes == "posts_full_newest_slider_mode") {
+                    include_once plugin_dir_path(__FILE__) . '/../scripts/posts-slider.php';
+                    $output .= PWEPostsSlider::sliderOutput($post_image_urls, 3000, $full_mode = 'true');
+                }
 
                 $output .= '</div>';
 

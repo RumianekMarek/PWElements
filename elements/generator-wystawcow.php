@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementGenerator
@@ -48,22 +48,22 @@ class PWElementGenerator extends PWElements {
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementGenerator',
-                ), 
-            ),
-            array(
-                'type' => 'checkbox',
-                'group' => 'PWE Element',
-                'heading' => __('Ticketed fairs', 'pwelement'),
-                'param_name' => 'generator_tickets',
-                'param_holder_class' => 'backend-basic-checkbox backend-area-one-fourth-width',
-                'description' => __('Footer text for ticketed fairs'),
-                'save_always' => true,
-                'admin_label' => true,
-                'dependency' => array(
-                    'element' => 'pwe_element',
-                    'value' => 'PWElementGenerator',
                 ),
             ),
+            // array(
+            //     'type' => 'checkbox',
+            //     'group' => 'PWE Element',
+            //     'heading' => __('Ticketed fairs', 'pwelement'),
+            //     'param_name' => 'generator_tickets',
+            //     'param_holder_class' => 'backend-basic-checkbox backend-area-one-fourth-width',
+            //     'description' => __('Footer text for ticketed fairs'),
+            //     'save_always' => true,
+            //     'admin_label' => true,
+            //     'dependency' => array(
+            //         'element' => 'pwe_element',
+            //         'value' => 'PWElementGenerator',
+            //     ),
+            // ),
             array(
                 'type' => 'textarea_raw_html',
                 'group' => 'PWE Element',
@@ -83,14 +83,14 @@ class PWElementGenerator extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
         extract( shortcode_atts( array(
             'worker_form_id' => '',
             'guest_form_id' => '',
-            'generator_tickets' => '',
+            // 'generator_tickets' => '',
             'generator_html_text' => ''
         ), $atts ));
 
@@ -115,20 +115,20 @@ class PWElementGenerator extends PWElements {
         $generator_html_text_decoded = urldecode($generator_html_text_decoded);
         $generator_html_text_content = wpb_js_remove_wpautop($generator_html_text_decoded, true);
 
-        if ($generator_tickets == true) {
-            if (get_locale() == 'pl_PL') {
-                $generator_html_text_content = (empty($generator_html_text_content)) ? 'Darmowa rejestracja upoważnia do wejścia w dniu <strong class="gen-date">[trade_fair_branzowy]</strong>.' : $generator_html_text_content;
-            } else {
-                $generator_html_text_content = (empty($generator_html_text_content)) ? 'Free registration etitle you to enter only on <strong class="gen-date">[trade_fair_branzowy_eng]</strong>.' : $generator_html_text_content;
-            }  
-        } else {
-            if (get_locale() == 'pl_PL') {
-                $generator_html_text_content = (empty($generator_html_text_content)) ? 'Ze względów organizacyjnych ilość zaproszeń jest ograniczona. Rejestracja dostępna tylko do 30 dni przed targami.' : $generator_html_text_content;
-            } else {
-                $generator_html_text_content = (empty($generator_html_text_content)) ? 'For organizational reasons, the number of invitations is limited. Registration is only available up to 30 days before the fair.' : $generator_html_text_content;
-            }
-        }
-        
+        // if ($generator_tickets == true) {
+        //     if (get_locale() == 'pl_PL') {
+        //         $generator_html_text_content = (empty($generator_html_text_content)) ? 'Darmowa rejestracja upoważnia do wejścia w dniu <strong class="gen-date">[trade_fair_branzowy]</strong>.' : $generator_html_text_content;
+        //     } else {
+        //         $generator_html_text_content = (empty($generator_html_text_content)) ? 'Free registration etitle you to enter only on <strong class="gen-date">[trade_fair_branzowy_eng]</strong>.' : $generator_html_text_content;
+        //     }
+        // } else {
+        //     if (get_locale() == 'pl_PL') {
+        //         $generator_html_text_content = (empty($generator_html_text_content)) ? 'Ze względów organizacyjnych ilość zaproszeń jest ograniczona. Rejestracja dostępna tylko do 30 dni przed targami.' : $generator_html_text_content;
+        //     } else {
+        //         $generator_html_text_content = (empty($generator_html_text_content)) ? 'For organizational reasons, the number of invitations is limited. Registration is only available up to 30 days before the fair.' : $generator_html_text_content;
+        //     }
+        // }
+
 
         $output = '
         <style>
@@ -166,7 +166,7 @@ class PWElementGenerator extends PWElements {
                 padding: 0 10px;
             }
             .pwe-generator-wystawcow .gform_legacy_markup_wrapper .gform_footer {
-                padding: 0 !important; 
+                padding: 0 !important;
             }
             .pwe-generator-wystawcow .gform_legacy_markup_wrapper .gform_footer input[type=submit] {
                 width: auto !important;
@@ -205,7 +205,7 @@ class PWElementGenerator extends PWElements {
                 top: 9px;
                 height: 24px;
             }
-            .pwe-generator-wystawcow .gfield_validation_message, 
+            .pwe-generator-wystawcow .gfield_validation_message,
             .pwe-generator-wystawcow .gform_submission_error {
                 font-size: 10px !important;
                 padding: 2px 2px 2px 6px !important;
@@ -217,7 +217,7 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .gform_validation_errors {
                 padding: 0 !important;
             }
-            .pwe-generator-wystawcow .container-forms h2, 
+            .pwe-generator-wystawcow .container-forms h2,
             .pwe-generator-wystawcow .container-forms button {
                 font-weight: 800;
             }
@@ -316,7 +316,7 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .info-item-right h2 {
                 color: #b79663;
             }
-            .pwe-generator-wystawcow .container-info .info-item button, 
+            .pwe-generator-wystawcow .container-info .info-item button,
             .pwe-generator-wystawcow .gform_footer input[type="submit"] {
                 margin: 0 !important;
                 color: white !important;
@@ -341,8 +341,8 @@ class PWElementGenerator extends PWElements {
                 left: 10px;
                 top: 25%;
             }
-            .pwe-generator-wystawcow .form-item h2, 
-            .pwe-generator-wystawcow .form-item h3, 
+            .pwe-generator-wystawcow .form-item h2,
+            .pwe-generator-wystawcow .form-item h3,
             .pwe-generator-wystawcow .form-item button {
                 z-index: 100;
                 position: relative;
@@ -355,7 +355,7 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .form-item-element-right {
                 background-position: center;
                 background-size: cover;
-                background-repeat: no-repeat; 
+                background-repeat: no-repeat;
             }
             .pwe-generator-wystawcow .form-item-element-left {
                 background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/badgevip.jpg);
@@ -439,16 +439,16 @@ class PWElementGenerator extends PWElements {
                 background-position: 5px;
             }
             .pwe-generator-wystawcow :is(
-            input[placeholder="IMIĘ I NAZWISKO (PRACOWNIKA)"], 
-            input[placeholder="IMIĘ I NAZWISKO (GOŚCIA)"], 
-            input[placeholder="NAME AND SURNAME (GUEST)"], 
-            input[placeholder="NAME AND SURNAME (EMPLOYEE)"], 
+            input[placeholder="IMIĘ I NAZWISKO (PRACOWNIKA)"],
+            input[placeholder="IMIĘ I NAZWISKO (GOŚCIA)"],
+            input[placeholder="NAME AND SURNAME (GUEST)"],
+            input[placeholder="NAME AND SURNAME (EMPLOYEE)"],
             input[placeholder="NAME AND SURNAME"]) {
                 background-image: url("/wp-content/plugins/PWElements/media/generator-wystawcow/name.png");
             }
-            .pwe-generator-wystawcow input[placeholder="FIRMA ZAPRASZAJĄCA"], 
-            .pwe-generator-wystawcow input[placeholder="FIRMA"], 
-            .pwe-generator-wystawcow input[placeholder="INVITING COMPANY"], 
+            .pwe-generator-wystawcow input[placeholder="FIRMA ZAPRASZAJĄCA"],
+            .pwe-generator-wystawcow input[placeholder="FIRMA"],
+            .pwe-generator-wystawcow input[placeholder="INVITING COMPANY"],
             .pwe-generator-wystawcow input[placeholder="COMPANY"] {
                 background-image: url("/wp-content/plugins/PWElements/media/generator-wystawcow/box.png");
             }
@@ -499,7 +499,7 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .guest-info-icon-block {
                 max-width: 110px;
                 display: flex;
-                flex-direction: column; 
+                flex-direction: column;
                 align-items: center;
                 gap: 8px;
                 padding-top: 36px;
@@ -628,10 +628,10 @@ class PWElementGenerator extends PWElements {
                 .row-container:has(.pwe-generator-wystawcow) .row-parent {
                     padding: 18px !important;
                 }
-                .pwe-generator-wystawcow .info-item-left, 
-                .pwe-generator-wystawcow .container, 
-                .pwe-generator-wystawcow .info-item-right, 
-                .pwe-generator-wystawcow .form-item-element-left, 
+                .pwe-generator-wystawcow .info-item-left,
+                .pwe-generator-wystawcow .container,
+                .pwe-generator-wystawcow .info-item-right,
+                .pwe-generator-wystawcow .form-item-element-left,
                 .pwe-generator-wystawcow .form-item-element-right {
                     border-radius: 0px !important;
                 }
@@ -639,7 +639,7 @@ class PWElementGenerator extends PWElements {
                     margin-top:10px !important;
                 }
                 .pwe-generator-wystawcow .container .container-forms .container-info .info-item:nth-child(2) .table-cell {
-                    padding-left: 0px !important; 
+                    padding-left: 0px !important;
                     padding-right: 0;
                 }
                 .pwe-generator-wystawcow .gform-body {
@@ -650,7 +650,7 @@ class PWElementGenerator extends PWElements {
                 }
                 .pwe-generator-wystawcow .custom-tech-support-text {
                     margin: 36px 0 !important;
-                }  
+                }
                 .pwe-generator-wystawcow .form-item-element-left {
                     background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
                 }
@@ -670,7 +670,7 @@ class PWElementGenerator extends PWElements {
                     right: 12px;
                     height: 40px;
                     width: 120px !important;
-                }  
+                }
             }
             @media (max-width:640px) {
                 .pwe-generator-wystawcow h2 {
@@ -698,19 +698,11 @@ class PWElementGenerator extends PWElements {
                 .pwe-generator-wystawcow .guest-info-icon-block {
                     max-width: 90px;
                 }
-            }    
+            }
         </style>
 
             <div id="pweGeneratorWystawcow" class="pwe-generator-wystawcow">
-                <div class="heading-text register-count">
-                    <h3>';
-                        if(get_locale() == 'pl_PL'){ 
-                            $output .= 'Wykorzystano '. $registration_count .' z limitu 100 zaproszeń'; 
-                        } else { 
-                            $output .= 'Already used '. $registration_count .' from a total of 100 invitations'; 
-                        } $output .= '  
-                    </h3>
-                </div>
+
                 <div class="container">
                     <div class="container-forms">
                         <div class="container-info">
@@ -718,7 +710,7 @@ class PWElementGenerator extends PWElements {
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="forms-container-form__left active">
-                                            <h2>'. 
+                                            <h2>'.
                                                 self::languageChecker(
                                                     <<<PL
                                                         WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA
@@ -738,7 +730,7 @@ class PWElementGenerator extends PWElements {
                                 <div class="table-cell">
                                         <div class="guest-info">
                                             <div class="forms-container-form__right">
-                                                <h2>'. 
+                                                <h2>'.
                                                     self::languageChecker(
                                                         <<<PL
                                                             WYGENERUJ</br>IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!
@@ -748,7 +740,7 @@ class PWElementGenerator extends PWElements {
                                                         EN
                                                     )
                                                 .'</h2>
-                                                <h5>'. 
+                                                <h5>'.
                                                     self::languageChecker(
                                                         <<<PL
                                                             Identyfikator VIP uprawnia do:
@@ -760,9 +752,9 @@ class PWElementGenerator extends PWElements {
                                                 .'</h5>
                                                 <div class="guest-info-icons">
 
-                                                    <div class="guest-info-icon-block"> 
+                                                    <div class="guest-info-icon-block">
                                                         <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico1.png" alt="icon1">
-                                                        <p>'. 
+                                                        <p>'.
                                                         self::languageChecker(
                                                             <<<PL
                                                                 Bezpłatnego skorzystania ze strefy VIP ROOM
@@ -776,7 +768,7 @@ class PWElementGenerator extends PWElements {
 
                                                     <div class="guest-info-icon-block">
                                                         <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico3.png" alt="icon3">
-                                                        <p>'. 
+                                                        <p>'.
                                                         self::languageChecker(
                                                             <<<PL
                                                                 Fast track
@@ -790,7 +782,7 @@ class PWElementGenerator extends PWElements {
 
                                                     <div class="guest-info-icon-block">
                                                         <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico4.png" alt="icon4">
-                                                        <p>'. 
+                                                        <p>'.
                                                         self::languageChecker(
                                                             <<<PL
                                                                 Opieki concierge`a
@@ -804,7 +796,7 @@ class PWElementGenerator extends PWElements {
 
                                                     <div class="guest-info-icon-block">
                                                         <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico2.png" alt="icon2">
-                                                        <p>'. 
+                                                        <p>'.
                                                         self::languageChecker(
                                                             <<<PL
                                                                 Uczestnictwa<br>we wszystkich konferencjach branżowych
@@ -820,9 +812,9 @@ class PWElementGenerator extends PWElements {
 
                                                 [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]
 
-                                                <div class="gen-text">'. $generator_html_text_content .'</div> 
+                                                <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
                                             </div>
-                                            <div class="gen-btn-img" style="background-image: url('. 
+                                            <div class="gen-btn-img" style="background-image: url('.
                                                 self::languageChecker(
                                                     <<<PL
                                                         /wp-content/plugins/PWElements/media/generator-wystawcow/gen-pl.png
@@ -844,7 +836,7 @@ class PWElementGenerator extends PWElements {
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="gen-mobile">
-                                            <h2>'. 
+                                            <h2>'.
                                             self::languageChecker(
                                                 <<<PL
                                                     WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA
@@ -854,7 +846,7 @@ class PWElementGenerator extends PWElements {
                                                 EN
                                             )
                                             .'</h2>
-                                            <button class="forms-container-info__btn btn-exh">'. 
+                                            <button class="forms-container-info__btn btn-exh">'.
                                                 self::languageChecker(
                                                     <<<PL
                                                         KLIKNIJ
@@ -871,7 +863,7 @@ class PWElementGenerator extends PWElements {
                             <div class="form-item form-item-element-right sign-up">
                                 <div class="table">
                                     <div class="table-cell">
-                                        <h2>'. 
+                                        <h2>'.
                                             self::languageChecker(
                                                 <<<PL
                                                     WYGENERUJ<br>IDENTYFIKATOR VIP<br>DLA SWOICH GOŚCI!
@@ -881,7 +873,7 @@ class PWElementGenerator extends PWElements {
                                                 EN
                                             )
                                         .'</h2>
-                                        <button class="forms-container-info__btn btn-exh">'. 
+                                        <button class="forms-container-info__btn btn-exh">'.
                                             self::languageChecker(
                                                 <<<PL
                                                 KLIKNIJ
@@ -890,7 +882,7 @@ class PWElementGenerator extends PWElements {
                                                 CHANGE
                                                 EN
                                             )
-                                        .'</button>     
+                                        .'</button>
                                     </div>
                                 </div>
                             </div>
@@ -898,7 +890,7 @@ class PWElementGenerator extends PWElements {
                     </div>
                 </div>
                 <div class="heading-text custom-tech-support-text">
-                    <h3>'. 
+                    <h3>'.
                         self::languageChecker(
                             <<<PL
                                 Potrzebujesz pomocy?<br>
@@ -910,19 +902,19 @@ class PWElementGenerator extends PWElements {
                             EN
                         )
                     .'</h3>
-                    <button class="btn tabela-masowa">Tabela Masowa</button>
+                    <!-- <button class="btn tabela-masowa">Tabela Masowa</button> -->
                 </div>
             </div>
 
             <script type="text/javascript">
                 jQuery(document).ready(function($){
-                    
+
                     $(".tabela-masowa").on("click",function(){
                         const tableCont = [];
 
                         $("footer").hide();
 
-                        let modalBox = ""; 
+                        let modalBox = "";
                         const $modal = $("<div></div>")
                             .addClass("modal")
                             .attr("id", "my-modal");
@@ -942,7 +934,7 @@ class PWElementGenerator extends PWElements {
                                         </table>
                                         <button class="wyslij">Wyślij</button>
                                     </div>`;
-                        
+
                         $modal.html(modalBox);
 
                         $(".page-wrapper").prepend($modal);
@@ -962,7 +954,7 @@ class PWElementGenerator extends PWElements {
 
                         //     }
                         // });
-                        
+
                         $(".wyslij").on("click",function(){
                             tableCont["company"] = $(".company").val();
 
@@ -983,7 +975,7 @@ class PWElementGenerator extends PWElements {
                             console.log(content_name);
                         });
                     });
-                    
+
                 });
 
                 var btnExhElements = document.querySelectorAll(".btn-exh");
@@ -991,17 +983,17 @@ class PWElementGenerator extends PWElements {
                     btnExhElement.addEventListener("click", function() {
                         var containerElements = document.querySelectorAll(".container");
                         var infoItemElements = document.querySelectorAll(".info-item");
-                    
+
                         containerElements.forEach(function(containerElement) {
                             containerElement.classList.toggle("log-in");
                         });
-                        
+
                         infoItemElements.forEach(function(infoItemElement) {
                             infoItemElement.classList.toggle("none");
                         });
                     });
                 })
-                
+
             </script>';
 
             $output .= "
