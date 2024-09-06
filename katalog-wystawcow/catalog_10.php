@@ -33,7 +33,11 @@ class PWECatalog10 extends PWECatalog {
             }
         </style>';
 
-        $source_utm = $_SERVER['argv'][0];
+        if (isset($_SERVER['argv'][0])) {
+            $source_utm = $_SERVER['argv'][0];
+        } else {
+            $source_utm = ''; 
+        }
 
         if(count($exhibitors) == 10 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false)){
             $output .= '
@@ -130,15 +134,31 @@ class PWECatalog10 extends PWECatalog {
                 $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.webp') ? $logo_file_path . '.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.png') ? $logo_file_path . '.png' : '');
                 $bg_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp') ? '/doc/header_mobile.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.jpg') ? '/doc/header_mobile.jpg' : '');
-                // $output .= '
-                // <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
-                //     <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
-                // </div>';
+                $output .= '
+                <style>
+                    .wpb_column:has(#top10) .exhibitors-catalog {
+                        border: 0 !important;
+                    }
+                    #top10 .custom-catalog-bg {
+                        background-position: center;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 36px;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                    }
+                </style>
+
+                <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
+                    <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
+                </div>';
             } else {
                 $output .= '
                 <h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['katalog_year'], $atts['format']).'</h2>
                 <div class="img-container-top10">';
-                    if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )){
+                    if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )) {
                         $slider_array = array();
                         foreach($exhibitors as $exhibitor){
                             $slider_array[] = array(

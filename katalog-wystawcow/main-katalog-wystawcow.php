@@ -392,11 +392,11 @@ class PWECatalog {
 
         $json = file_get_contents($canUrl);
         $data = json_decode($json, true);
-        
+
         $basic_wystawcy = reset($data)['Wystawcy'];
         $logos_array = array();
 
-        if($basic_wystawcy != ''){
+        if($basic_wystawcy != '') {
             $basic_wystawcy = array_reduce($basic_wystawcy, function($acc, $curr) {
                 $name = $curr['Nazwa_wystawcy'];
                 $existingIndex = array_search($name, array_column($acc, 'Nazwa_wystawcy'));
@@ -590,9 +590,13 @@ class PWECatalog {
 
         $exhibitors_top10 = ($identification) ? self::logosChecker($identification, "PWECatalog10") : 0;
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
-            $source_utm = $_SERVER['argv'][0];
+            if (isset($_SERVER['argv'][0])) {
+                $source_utm = $_SERVER['argv'][0];
+            } else {
+                $source_utm = ''; 
+            }
 
-            if(strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false){
+            if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
                 $output_html .= '
                 <style>
                     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
@@ -620,12 +624,12 @@ class PWECatalog {
                     }
                 </style>';
             } else {
-                $output_html .= '
-                <style>
-                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
-                        display: none !important;
-                    } 
-                </style>';
+                // $output_html .= '
+                // <style>
+                //     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                //         display: none !important;
+                //     } 
+                // </style>';
             } 
         }
 

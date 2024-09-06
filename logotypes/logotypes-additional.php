@@ -81,11 +81,16 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                         'admin_label' => true
                     ),
                     array(
-                        'type' => 'checkbox',
+                        'type' => 'dropdown',
                         'heading' => __('Logo color', 'pwe_logotypes'),
                         'param_name' => 'logotype_color',
                         'save_always' => true,
                         'admin_label' => true,
+                        'param_holder_class' => 'dropdown-checkbox',
+                        'value' => array(
+                            'No' => '',
+                            'Yes' => 'true'
+                        ),
                     ),
                     array(
                         'type' => 'textfield',
@@ -238,7 +243,7 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                             $header_logotypes_width = $logotypes_item["logotypes_width"];
                             $header_logotypes_media = $logotypes_item["logotypes_media"];
                             $header_logotypes_slider_off = $logotypes_item["logotypes_slider_off"];
-                            $header_logotypes_caption_on = $logotypes["logotypes_caption_on"];
+                            $header_logotypes_caption_on = $logotypes_item["logotypes_caption_on"];
                             $header_logotypes_items_width = $logotypes_item["logotypes_items_width"];
                         }   
                         $header_logotypes_media_ids = explode(',', $header_logotypes_media);  

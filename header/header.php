@@ -21,7 +21,6 @@ class PWEHeader {
         }
 
         require_once plugin_dir_path(__FILE__) . '/../logotypes/logotypes-additional.php';
-        require_once plugin_dir_path(__FILE__) . '/../elements/association.php';
 
         // Hook actions
         add_action('vc_before_init', array($this, 'inputRange'));
@@ -484,34 +483,34 @@ class PWEHeader {
                             'type' => 'param_group',
                             'group' => 'Logotypes',
                             'heading' => __('Logotypes', 'pwe_header'),
-                            'param_name' => 'pwe_header_logotypes',
+                            'param_name' => 'pwe_header_logotypes', 
                             'params' => array(
                                 array(
                                 'type' => 'attach_images',
                                 'heading' => __('Logotypes catalog', 'pwe_header'),
                                 'param_name' => 'logotypes_media',
-                                'save_always' => true,
+                                'save_always' => true
                                 ),
                                 array(
                                     'type' => 'textfield',
                                     'heading' => __('Logotypes catalog', 'pwe_header'),
                                     'param_name' => 'logotypes_catalog',
                                     'description' => __('Put catalog name in /doc/ where are logotypes.', 'pwe_header'),
-                                    'save_always' => true,
+                                    'save_always' => true
                                 ),
                                 array(
                                     'type' => 'textfield',
                                     'heading' => __('Logotypes Title', 'pwe_header'),
                                     'param_name' => 'logotypes_title',
                                     'description' => __('Set title to diplay over the gallery', 'pwe_header'),
-                                    'save_always' => true,
+                                    'save_always' => true
                                 ),
                                 array(
                                     'type' => 'textfield',
                                     'heading' => esc_html__('Logotypes Name', 'pwe_header'),
                                     'param_name' => 'logotypes_name',
                                     'description' => __('Set custom name thumbnails', 'pwe_header'),
-                                    'save_always' => true,
+                                    'save_always' => true
                                 ),
                                 array(
                                     'type' => 'input_range',
@@ -521,25 +520,35 @@ class PWEHeader {
                                     'min' => '0',
                                     'max' => '100',
                                     'step' => '1',
-                                    'save_always' => true,
+                                    'save_always' => true
                                 ),
                                 array(
-                                    'type' => 'checkbox',
+                                    'type' => 'dropdown',
                                     'heading' => __('Turn off slider', 'pwe_header'),
                                     'param_name' => 'logotypes_slider_off',
                                     'save_always' => true,
+                                    'param_holder_class' => 'dropdown-checkbox',
+                                    'value' => array(
+                                        'No' => '',
+                                        'Yes' => 'true'
+                                    ),
                                 ),
                                 array(
-                                    'type' => 'checkbox',
+                                    'type' => 'dropdown',
                                     'heading' => __('Turn on captions', 'pwe_header'),
                                     'param_name' => 'logotypes_caption_on',
                                     'save_always' => true,
+                                    'param_holder_class' => 'dropdown-checkbox',
+                                    'value' => array(
+                                        'No' => '',
+                                        'Yes' => 'true'
+                                    ),
                                 ),
                                 array(
                                     'type' => 'textfield',
                                     'heading' => __('Logotypes width (___px)', 'pwe_header'),
                                     'param_name' => 'logotypes_items_width',
-                                    'save_always' => true,
+                                    'save_always' => true
                                 ),
                             ),
                         ),
@@ -1490,11 +1499,7 @@ class PWEHeader {
                             if ($pwe_congress_widget_off != 'true') {
                                 require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
                             }
-
-                            if ($pwe_header_association_hide != true) {
-                                // Accompanying Fairs
-                                $output .= PWElementAssociates::output($atts);
-                            }
+                            
                         }
 
                         $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
@@ -1797,11 +1802,6 @@ class PWEHeader {
                                             <p>Ptak Warsaw Expo</p>
                                         </div>';
 
-                                        if ($pwe_header_association_hide != true) {
-                                            // Accompanying Fairs
-                                            $output .= PWElementAssociates::output($atts, $logo_url, $pwe_header_modes, $pwe_header_conference_logo_url, $pwe_header_conference_link);
-                                        }
-
                                         if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
                                             $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
                                             $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
@@ -1894,25 +1894,6 @@ class PWEHeader {
 
                     if (pweLogotypesAssociation) {
                         pweLogotypesAssociation.style.opacity = 1;
-                    }
-
-                    const allSliders = document.querySelectorAll(".pwe-header-logotypes");
-                    if (allSliders) {
-                        allSliders.forEach(function(slider) {
-                            const sliderTitle = slider.querySelector(".main-heading-text");
-
-                            if (sliderTitle) {
-                                const sliderTitletoLowerCase = sliderTitle.innerText.toLowerCase();
-
-                                if (sliderTitletoLowerCase.includes("wydarzenia towarzyszące") ||
-                                    sliderTitletoLowerCase.includes("targi towarzyszące") ||
-                                    sliderTitletoLowerCase.includes("accompanying events") ||
-                                    sliderTitletoLowerCase.includes("accompanying fairs") ||
-                                    sliderTitletoLowerCase.includes("side events")) {
-                                        slider.style.display = "none";
-                                }
-                            }
-                        });
                     }
                 });
 
