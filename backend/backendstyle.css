@@ -36,7 +36,13 @@
             width: 100% !important;
         }
     }
-
+    .dropdown-checkbox select,
+    .dropdown-checkbox .select-wrapper {
+        width: 50px !important; 
+    }
+    .dropdown-checkbox select {
+        padding: 0px 10px !important;
+    }
     .backend-fields {
         display: flex;
         align-items: center;

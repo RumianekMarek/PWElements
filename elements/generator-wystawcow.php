@@ -80,6 +80,12 @@ class PWElementGenerator extends PWElements {
         return $element_output;
     }
 
+    private static function generateToken() {
+        $domain = $_SERVER["HTTP_HOST"];
+        $secret_key = '^GY0ZlZ!xzn1eM5';
+        return hash_hmac('sha256', $domain, $secret_key);
+    }
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -94,6 +100,8 @@ class PWElementGenerator extends PWElements {
             'generator_html_text' => ''
         ), $atts ));
 
+        $send_file = plugins_url('other/mass_vip.php', dirname(__FILE__));
+        
         $worker_entries = GFAPI::get_entries($worker_form_id);
         $guest_entries = GFAPI::get_entries($guest_form_id);
         $ip_address = $_SERVER['REMOTE_ADDR'];
@@ -114,6 +122,8 @@ class PWElementGenerator extends PWElements {
         $generator_html_text_decoded = base64_decode($generator_html_text);
         $generator_html_text_decoded = urldecode($generator_html_text_decoded);
         $generator_html_text_content = wpb_js_remove_wpautop($generator_html_text_decoded, true);
+
+       
 
         // if ($generator_tickets == true) {
         //     if (get_locale() == 'pl_PL') {
@@ -310,19 +320,22 @@ class PWElementGenerator extends PWElements {
                 right: 0;
                 border-radius: 0 0 20px 0;
             }
-            .pwe-generator-wystawcow .info-item-right .gform_footer input[type="submit"] {
+            .pwe-generator-wystawcow .info-item-right .gform_footer input[type="submit"],
+            .btn-gold {
                 background: #b79663 !important;
             }
             .pwe-generator-wystawcow .info-item-right h2 {
                 color: #b79663;
             }
             .pwe-generator-wystawcow .container-info .info-item button,
-            .pwe-generator-wystawcow .gform_footer input[type="submit"] {
+            .pwe-generator-wystawcow .gform_footer input[type="submit"],
+            .btn-gold{
+                text-transform: uppercase;
                 margin: 0 !important;
                 color: white !important;
-                font-weight: 800;
-                font-size: 24px !important;
-                border-radius: 15px !important;
+                font-weight: 600;
+                font-size: 16px !important;
+                border-radius: 16px !important;
                 padding: 15px 25px;
                 width: 200px;
                 box-shadow: none !important;
@@ -528,6 +541,11 @@ class PWElementGenerator extends PWElements {
             }
 
             /* Modal */
+            @media (max-width: 961px){
+                .tabela-masowa{
+                    display:none;
+                }
+            }
             .modal__elements {
                 z-index: 9999;
                 background-color: #fff;
@@ -541,8 +559,12 @@ class PWElementGenerator extends PWElements {
                 position: fixed;
                 top: 100px;
                 height: auto;
-                min-width: 1200px;
+                min-width: 900px;
                 text-align: -webkit-center;
+            }
+
+            .tabela-masowa{
+                width:unset !important;
             }
 
             .modal__elements input{
@@ -563,17 +585,58 @@ class PWElementGenerator extends PWElements {
                 width:50%;
             }
             .modal__elements table td{
+                background-repeat: no-repeat;
+                background-position: center;
                 text-align: center;
                 padding: 0;
+            }
+            .modal__elements .mass-send-name:empty{
+                background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/generator-imiona.webp);
+            }
+            .modal__elements .mass-send-email:empty{
+                background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/geneartor-emaile.webp);
             }
             .modal__elements tr table{
                 text-align: center;
                 width:100%;
+                margin-top: 0;
             }
             .modal__elements table input{
                 margin-top: 0 !imprtant;
             }
+            .modal__elements .error-color{
+                color: red;
+            }
+            .modal__elements .btn-close{
+                background-color: #b79663;
+                padding: 0px 13px 5px 14px;
+                border-radius: 50%;
+                font-weight: 700;
+                color: white;
+                font-size: 30px;
+                position: absolute;
+                right: 10px;
+                cursor: pointer;
+            }
+            .modal__elements label{
+                font-weight: 600;
+                font-size: 18px;
+            }
 
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .modal__elements .zastepczy{
+                color: #ccc;
+                font-style: italic; 
+            }
+            td:empty{
+                line-height: 6;
+            }
+            .wyslij.btn-gold{
+                margin:18px !important;
+            }
             @media (max-width:1200px) {
                 .pwe-generator-wystawcow .container {
                     max-width: 900px !important;
@@ -811,7 +874,16 @@ class PWElementGenerator extends PWElements {
                                                 </div>
 
                                                 [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]
-
+                                                <button class="btn tabela-masowa btn-gold">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Wysyłka zbiorcza
+                                                PL,
+                                                <<<EN
+                                                Collective send
+                                                EN
+                                            )
+                                        .'</button>           
                                                 <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
                                             </div>
                                             <div class="gen-btn-img" style="background-image: url('.
@@ -902,7 +974,7 @@ class PWElementGenerator extends PWElements {
                             EN
                         )
                     .'</h3>
-                    <!-- <button class="btn tabela-masowa">Tabela Masowa</button> -->
+                    
                 </div>
             </div>
 
@@ -920,19 +992,65 @@ class PWElementGenerator extends PWElements {
                             .attr("id", "my-modal");
 
                         modalBox = `<div class="modal__elements">
-                                        <input class="company" placeholder="Firma Zapraszająca"></input>
-                                        <p>Wklej do tabeli poniżej kolumny z excela, sprawdź czy imie i email na jednej wysokości pasują do siebie</p>
+                                        <span class="btn-close">x</span>
+                                        <p style="max-width:90%;">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Uzupełnij poniżej nazwę firmy zapraszającej oraz dane osób, które powinny otrzymać zaproszenia VIP GOLD. Dane wklej pod nagłówkami poniższej tabeli. Przed wysyłką zweryfikuj zgodność danych.
+                                                PL,
+                                                <<<EN
+                                                Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
+                                                EN
+                                            )
+                                        .'</p>
+                                        <input class="company" placeholder="'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Firma Zapraszająca (wpisz nazwę swojej firmy)
+                                                PL,
+                                                <<<EN
+                                                Inviting Company (your company's name)
+                                                EN
+                                            )
+                                        .'"></input>
                                         <table id="mass-table">
                                             <tr>
-                                                <th>Imie</td>
-                                                <th>Email</td>
+                                                <th>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                IMIĘ I NAZWISKO (GOŚCIA)
+                                                PL,
+                                                <<<EN
+                                                Name of the invited person
+                                                EN
+                                            )
+                                        .'</th>
+                                                <th>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                E-MAIL OSOBY ZAPRASZANEJ
+                                                PL,
+                                                <<<EN
+                                                E-mail of the invited person
+                                                EN
+                                            )
+                                        .'</th>
                                             </tr>
                                             <tr>
                                                 <td class="mass-send-name" contenteditable="true"></td>
                                                 <td class="mass-send-email" contenteditable="true"></td>
                                             </tr>
                                         </table>
-                                        <button class="wyslij">Wyślij</button>
+                                        <button class="wyslij btn-gold">'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Wyślij
+                                                PL,
+                                                <<<EN
+                                                Send
+                                                EN
+                                            )
+                                        .'</button>
                                     </div>`;
 
                         $modal.html(modalBox);
@@ -940,42 +1058,97 @@ class PWElementGenerator extends PWElements {
                         $(".page-wrapper").prepend($modal);
 
                         $modal.css("display", "flex");
-                        const $closeBtn = $modal.find(".close");
+                        const $closeBtn = $modal.find(".btn-close");
 
                         $closeBtn.on("click", function () {
                             $modal.hide();
                             $("footer").show();
                         });
 
-                        // $modal.on("click", function (event) {
-                        //     if ($(event.target)[0] === $modal[0]) {
-                        //         $modal.hide();
-                        //         $("footer").show();
-
-                        //     }
-                        // });
+                        $modal.on("click", function (event) {
+                            if ($(event.target)[0] === $modal[0]) {
+                                $modal.hide();
+                                $("footer").show();
+                            }
+                        });
+                        
+                        $("#mass-table, .company").on("click", function(){
+                            if($(this).next().hasClass("company-error")){
+                                $(this).next().remove();
+                            }
+                        });
 
                         $(".wyslij").on("click",function(){
-                            tableCont["company"] = $(".company").val();
+                            pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
 
                             content_name = $("#mass-table").find(".mass-send-name").text().split("\n");
                             content_email = $("#mass-table").find(".mass-send-email").text().split("\n");
+                            
+                            const cNames = content_name.filter(target => (target !== "" && target !== "\t")).map(target => target.replace(/\t\t/g, "")); 
+                            const cEmail = content_email.filter(target => (target !== "" && target !== "\t")).map(target => target.replace(/\t\t/g, "")); 
 
-                            content_name.trim().split("\n").map(line => line.trim()).filter(line => line !== "");
-                            content_email.trim().split("\n").map(line => line.trim()).filter(line => line !== "");
+                            for (let i = 0; i < cEmail.length; i++) {
+                                if(cEmail[i] != ""){
+                                    pair = {"name": cNames[i], "email": cEmail[i]};
+                                    tableCont.push(pair);
+                                }
+                            }
+                                
+                            if ($("#mass-table").find("td").filter(function(){ return $(this).html() != "" }).length < 2 && !$("#mass-table").next().hasClass("company-error")){
+                                $("#mass-table").after(`<p class="company-error error-color" >'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Wprowadź dane
+                                                PL,
+                                                <<<EN
+                                                Insert data
+                                                EN
+                                            )
+                                        .'</p>`);
+                            }
 
-                            // for (let i = 0; i < content_name.length; i++) {
-                            //     console.log(content_name);
-                            //     if(content_name[i] != ""){
-                            //         pair = [name => content_name[i], email => content_email[i]];
-                            //         tableCont.push(pair);
-                            //     }
-                            // }
+                            if ($(".company").val() == ""){
+                                if (!$(".company").next().hasClass("company-error")){
+                                    $(".company").after(`<p class="company-error error-color" >'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                Nazwa firmy jest wymagana
+                                                PL,
+                                                <<<EN
+                                                Company Name is required
+                                                EN
+                                            )
+                                        .'</p>`);
+                                }
+                            } else if (tableCont.length > 1 ){
+                                $(this).after("<div id=spinner class=spinner></div>");
+                                $.post("' . $send_file . '", {
+                                    token: "' . self::generateToken() .'",
+                                    lang: pageLang,
+                                    company: $(".company").val(),
+                                    data: tableCont
+                                }, function(response) {
 
-                            console.log(content_name);
+                                    const mass_tr = $(".mass-send-email tr td");
+
+                                    resdata = JSON.parse(response);
+                                    resdata.forEach(function (value, index){
+                                        if(value === true){
+                                            $(mass_tr[index]).text($(mass_tr[index]).text() + "  send").css("color", "green");
+                                        } else {
+                                            $(mass_tr[index]).text($(mass_tr[index]).text() + "  error").css("color", "red");
+                                        }
+                                    });
+                                    
+                                    $("#spinner").remove();
+                                    tableCont.splice(0, tableCont.length);
+                                    $("#dataContainer").empty();
+                                });
+                            } else {
+
+                            }
                         });
                     });
-
                 });
 
                 var btnExhElements = document.querySelectorAll(".btn-exh");

@@ -362,7 +362,7 @@ class PWElementMapa extends PWElements {
                     )
                     .'<p class="pwe-mapa-right-data" style="text-align: center;">'. $pwe_event_date .'</p>
                 </div>
-            
+
             <div class="pwe-mapa-rounded-element pwe-mapa-rounded-element-country-right">
                 <p style="font-weight: 800; font-size: 24px;">'. $pwe_number_countries .'</p>
                 <p style="font-size:12px">

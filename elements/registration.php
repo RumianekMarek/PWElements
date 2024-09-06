@@ -89,6 +89,17 @@ class PWElementRegistration extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
+                'heading' => __('Input step', 'pwelement'),
+                'param_name' => 'registration_input_step',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementRegistration',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
                 'heading' => __('Height logotypes', 'pwelement'),
                 'description' => __('Default 50px', 'pwelement'),
                 'param_name' => 'registration_height_logotypes',
@@ -237,6 +248,7 @@ class PWElementRegistration extends PWElements {
             'registration_height_logotypes' => '',
             'registration_modes' => '',
             'registration_form_id' => '',
+            'registration_input_step' => '',
         ), $atts ));
 
         if ($registration_modes == "conference_mode") {
@@ -249,6 +261,10 @@ class PWElementRegistration extends PWElements {
 
         if (empty($registration_height_logotypes)) {
             $registration_height_logotypes = '50px';
+        }
+
+        if (empty($registration_input_step)) {
+            $registration_input_step = '10';
         }
 
         if ($registration_select == "header_registration") {
@@ -269,9 +285,9 @@ class PWElementRegistration extends PWElements {
             }
         } else if ($registration_select == "exhibitors_v2") {
             if(get_locale() == 'pl_PL') {
-                $registration_button_text = ($registration_button_text == "") ? "WYGENERUJ OFERTĘ" : $registration_button_text;
+                $registration_button_text = ($registration_button_text == "") ? "WYŚLIJ" : $registration_button_text;
             } else {
-                $registration_button_text = ($registration_button_text == "") ? "GENERATE AN OFFER" : $registration_button_text;
+                $registration_button_text = ($registration_button_text == "") ? "SEND" : $registration_button_text;
             }
         } else {
             if (get_locale() == 'pl_PL') {
@@ -324,7 +340,12 @@ class PWElementRegistration extends PWElements {
         $element_unique_id = 'pweRegistration-' . $unique_id;
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
-        $source_utm = $_SERVER['argv'][0];
+        
+        if (isset($_SERVER['argv'][0])) {
+            $source_utm = $_SERVER['argv'][0];
+        } else {
+            $source_utm = ''; 
+        }
 
         if (strpos($source_utm, 'utm_source=premium') !== false) {
             $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
@@ -377,6 +398,15 @@ class PWElementRegistration extends PWElements {
             </style>';
         }
 
+        $output .= '
+        <style>
+            .pwelement_'. self::$rnd_id .' .gfield--type-consent {
+                line-height: 1.2 !important;
+            }
+            .pwelement_'. self::$rnd_id .' .gfield--type-consent input[type="checkbox"] {
+                margin-top: 0 !important;
+            }
+        </style>';
 
         if ($registration_select == "visitors") {
 
@@ -471,7 +501,7 @@ class PWElementRegistration extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .gfield_consent_label  {
                         font-size: 10px;
-                        line-height: 1.1 !important;
+                        line-height: 1.2 !important;
                     }
                     .pwelement_'.self::$rnd_id.' .gfield_label {
                         font-size: 14px !important;
@@ -580,6 +610,9 @@ class PWElementRegistration extends PWElements {
 
                 $output .= '
                 <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(.exhibitors-catalog):has(#top10) {
+                        display: none !important;
+                    } 
                     .row-container:has(.pwelement_'. self::$rnd_id .') {
                         background-image: url(/doc/background.webp);
                         background-repea: no-repeat;
@@ -846,8 +879,21 @@ class PWElementRegistration extends PWElements {
                     display: flex;
                     gap: 12px;
                 }
-                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-values input {
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-values .input-container {
+                    position: relative;
+                    display: inline-block;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-values input {
                     width: 100px;
+                    padding-right: 20px;
+                    height: 43px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-values .unit-label {
+                    position: absolute;
+                    top: 16px;
+                    right: 8px;
+                    font-weight: 600;
+                    pointer-events: none;
                 }
                 .pwelement_'. self::$rnd_id .' .input-range-value-label {
                     display: flex;
@@ -855,7 +901,6 @@ class PWElementRegistration extends PWElements {
                     font-weight: 600;
                     margin: 9px 0px 0px 0px
                 }
-
                 .pwelement_'. self::$rnd_id .' .pwe-registration-bottom {
                     background-color: #f4f4f4;
                     display: flex;
@@ -885,12 +930,12 @@ class PWElementRegistration extends PWElements {
                     max-height: 80px;
                     object-fit: contain;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors){
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors) {
                     display: flex;
                     justify-content: flex-start;
                     align-items: center;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors) p{
+                .pwelement_'. self::$rnd_id .' .pwe-registration-bottom :is(.for-exhibitors, .for-visitors) p {
                     margin-top: 0px;
                 }
                 .pwelement_'. self::$rnd_id .' .iframe-column {
@@ -916,6 +961,10 @@ class PWElementRegistration extends PWElements {
                     height: 100%;
                     object-fit: cover;
                     pointer-events: none;
+                }
+                .pwelement_'. self::$rnd_id .' .fair-logo img,
+                .pwelement_'. self::$rnd_id .' .pwe-logo img {
+                    max-width: 170px;
                 }
                 @media (max-width: 960px) {
                     .row-parent:has(#'. $element_unique_id .') {
@@ -967,10 +1016,10 @@ class PWElementRegistration extends PWElements {
                             <h1>'.
                             self::languageChecker(
                                 <<<PL
-                                Dołącz do wystawców
+                                Zapytaj o stoisko
                                 PL,
                                 <<<EN
-                                Join the exhibitors
+                                Ask for a stand
                                 EN
                             )
                             .'</h1>
@@ -1025,93 +1074,101 @@ class PWElementRegistration extends PWElements {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>';
 
-            <script>
-                const sliderContainer = document.createElement("div");
-                sliderContainer.className = "input-range-container";
-                sliderContainer.innerHTML = `
-                    <div class="input-range-wrapper">
-                        <h4>'.
-                            self::languageChecker(
-                                <<<PL
-                                Wybierz powierzchnię wystawienniczą
-                                PL,
-                                <<<EN
-                                Choose an exhibition space
-                                EN
-                            )
-                        .'</h4>
-                        <div class="input-range-inputs">
-                            <div class="input-range-track"></div>
-                            <input type="range" min="16" max="180" value="16" id="inputRange1" oninput="slideOne()">
-                            <input type="range" min="16" max="180" value="130" id="inputRange2" oninput="slideTwo()">
-                        </div>
-                        <div class="input-range-values">
-                            <span class="input-range-value-label">od</span><input type="number" maxlength="3" min="0" max="999" value="16" id="inputRangeValue1" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
-                            <span class="input-range-value-label">do</span><input type="number" maxlength="3" min="0" max="999" value="130" id="inputRangeValue2" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
-                        </div>
-                    </div>
-                `;
+            // $output .= '
+            // <script>
+            //     const sliderContainer = document.createElement("div");
+            //     sliderContainer.className = "input-range-container";
+            //     sliderContainer.innerHTML = `
+            //         <div class="input-range-wrapper">
+            //             <h4>'.
+            //                 self::languageChecker(
+            //                     <<<PL
+            //                     Wybierz powierzchnię wystawienniczą
+            //                     PL,
+            //                     <<<EN
+            //                     Choose an exhibition space
+            //                     EN
+            //                 )
+            //             .'</h4>
+            //             <div class="input-range-inputs">
+            //                 <div class="input-range-track"></div>
+            //                 <input type="range" min="0" max="180" value="0" step="'. $registration_input_step .'", id="inputRange1" oninput="slideOne()">
+            //                 <input type="range" min="0" max="180" value="180" step="'. $registration_input_step .'" id="inputRange2" oninput="slideTwo()">
+            //             </div>
+            //             <div class="input-range-values">
+            //                 <span class="input-range-value-label">od</span>
+            //                 <div class="input-container">
+            //                     <input type="number" min="0" max="999" value="0" id="inputRangeValue1" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
+            //                     <span class="unit-label">m²</span>
+            //                 </div>
+            //                 <span class="input-range-value-label">do</span>
+            //                 <div class="input-container">
+            //                     <input type="number" min="0" max="999" value="180" id="inputRangeValue2" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
+            //                     <span class="unit-label">m²</span>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //     `;
 
-                const form = document.querySelector(".pwelement_'. self::$rnd_id .' form");
-                const formEmail = form.querySelector(".ginput_container_email");
+            //     const form = document.querySelector(".pwelement_'. self::$rnd_id .' form");
+            //     const formEmail = form.querySelector(".ginput_container_email");
 
-                formEmail.insertAdjacentElement("afterend", sliderContainer);
+            //     formEmail.insertAdjacentElement("afterend", sliderContainer);
 
-                function updateArea() {
-                    areaInput.value = minValue.value + " - " + maxValue.value + " m²";
-                }
+            //     function updateArea() {
+            //         areaInput.value = minValue.value + " - " + maxValue.value + " m²";
+            //     }
 
-                document.addEventListener("DOMContentLoaded", function () {
-                    slideOne();
-                    slideTwo();
-                    fillColor();
-                });
+            //     document.addEventListener("DOMContentLoaded", function () {
+            //         slideOne();
+            //         slideTwo();
+            //         fillColor();
+            //     });
 
-                let sliderOne = document.getElementById("inputRange1");
-                let sliderTwo = document.getElementById("inputRange2");
-                let displayValOne = document.getElementById("inputRangeValue1");
-                let displayValTwo = document.getElementById("inputRangeValue2");
-                let minGap = 0;
-                let sliderTrack = document.querySelector(".input-range-track");
-                let sliderMaxValue = sliderOne.max;
+            //     let sliderOne = document.getElementById("inputRange1");
+            //     let sliderTwo = document.getElementById("inputRange2");
+            //     let displayValOne = document.getElementById("inputRangeValue1");
+            //     let displayValTwo = document.getElementById("inputRangeValue2");
+            //     let minGap = 0;
+            //     let sliderTrack = document.querySelector(".input-range-track");
+            //     let sliderMaxValue = sliderOne.max;
 
-                function slideOne() {
-                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
-                        sliderOne.value = parseInt(sliderTwo.value) - minGap;
-                    }
-                    displayValOne.value = sliderOne.value;
-                    fillColor();
-                    updateArea();
-                }
+            //     function slideOne() {
+            //         if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+            //             sliderOne.value = parseInt(sliderTwo.value) - minGap;
+            //         }
+            //         displayValOne.value = sliderOne.value;
+            //         fillColor();
+            //         updateArea();
+            //     }
 
-                function slideTwo() {
-                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
-                        sliderTwo.value = parseInt(sliderOne.value) + minGap;
-                    }
-                    displayValTwo.value = sliderTwo.value;
-                    fillColor();
-                    updateArea();
-                }
+            //     function slideTwo() {
+            //         if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+            //             sliderTwo.value = parseInt(sliderOne.value) + minGap;
+            //         }
+            //         displayValTwo.value = sliderTwo.value;
+            //         fillColor();
+            //         updateArea();
+            //     }
 
-                function fillColor() {
-                    let percent1 = ((sliderOne.value - sliderOne.min) / (sliderMaxValue - sliderOne.min)) * 100;
-                    let percent2 = ((sliderTwo.value - sliderTwo.min) / (sliderMaxValue - sliderTwo.min)) * 100;
-                    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , '. self::$accent_color .' ${percent1}% , '. self::$accent_color .' ${percent2}%, #dadae5 ${percent2}%)`;
-                }
+            //     function fillColor() {
+            //         let percent1 = ((sliderOne.value - sliderOne.min) / (sliderMaxValue - sliderOne.min)) * 100;
+            //         let percent2 = ((sliderTwo.value - sliderTwo.min) / (sliderMaxValue - sliderTwo.min)) * 100;
+            //         sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , '. self::$accent_color .' ${percent1}% , '. self::$accent_color .' ${percent2}%, #dadae5 ${percent2}%)`;
+            //     }
 
-                function updateArea() {
-                    const areaContainer = document.getElementsByClassName("input-area")[0];
-                    if (areaContainer) {
-                        const areaInput = areaContainer.getElementsByTagName("input")[0];
-                        if (areaInput) {
-                            areaInput.value = displayValOne.value + " - " + displayValTwo.value + " m²";
-                        }
-                    }
-                }
-            </script>
-            ';
+            //     function updateArea() {
+            //         const areaContainer = document.getElementsByClassName("input-area")[0];
+            //         if (areaContainer) {
+            //             const areaInput = areaContainer.getElementsByTagName("input")[0];
+            //             if (areaInput) {
+            //                 areaInput.value = displayValOne.value + " - " + displayValTwo.value + " m²";
+            //             }
+            //         }
+            //     }
+            // </script>';
 
         }
 
@@ -1142,28 +1199,11 @@ class PWElementRegistration extends PWElements {
         $output .= '
         <script>
             jQuery(function ($) {
-                $(".show-consent").on("click touch", function () {
-                    $(this).next().toggle("slow");
-                });
 
                 if("'.$source_utm.'" != ""){
                     $(".utm-class").find("input").val("'.$source_utm.'");
                 }
-                // $(document).ready(function() {
-                //     // Pobierz aktualny URL
-                //     const currentUrl = window.location.href;
-
-                //     if (currentUrl.indexOf("?utm_source=byli") !== -1) {
-                //         // Sprawdź, czy zmienna $source_utm zawiera "utm_source=byli"
-                //         if("'.$source_utm.'" == "utm_source=byli"){
-                //             $(".utm-class").find("input").val("");
-                //         }
-                //         console.log("tutaj powinno byc jak nie ma");
-                //     } else {
-                //         console.log("z");
-                //     }
-                // });
-
+ 
             });
 
             // Funkcja zapisująca atrybut title do input
@@ -1215,8 +1255,6 @@ class PWElementRegistration extends PWElements {
             addEventListenersToForm();
             observeFlagChanges();
 
-
-
             window.onload = function () {
                 var pweFormVisitors = document.querySelector("#pweRegister");
 
@@ -1244,28 +1282,41 @@ class PWElementRegistration extends PWElements {
                             }
                         }
 
+                        // function getCookie(name) {
+                        //     let value = "; " + document.cookie;
+                        //     let parts = value.split("; " + name + "=");
+                        //     if (parts.length === 2) return parts.pop().split(";").shift();
+                        //     return null;
+                        // }
+
+                        // let utmCookie = getCookie("utm_params");
+                        // let utmPWE = "'. $source_utm .'";
+                        // let utmInput = document.querySelector(".utm-class input");
+
+                        // if (utmPWE.includes("utm_source=byli") || utmPWE.includes("utm_source=premium")) {
+                        //     utmCookie = utmPWE;
+                        //     utmInput.value = utmPWE;
+                        //     localStorage.setItem("pwe_utm", utmPWE);
+                        // } else {
+                        //     if (utmPWE.includes("utm_source=")) {
+                        //         utmCookie = utmPWE;
+                        //         utmInput.value = utmPWE;
+                        //         localStorage.setItem("pwe_utm", utmPWE);
+                        //     } else {
+                        //         utmCookie = utmPWE;
+                        //         utmInput.value = "";
+                        //         localStorage.setItem("pwe_utm", "");
+                        //     }
+                        // }
+
                         localStorage.setItem("user_email", emailValue);
                         localStorage.setItem("user_country", countryValue);
                         localStorage.setItem("user_tel", telValue);';
 
-                        if (strpos($source_utm, 'utm_source=byli') !== false) {
-                            if (get_locale() == 'pl_PL') {
-                                $output .= 'localStorage.setItem("user_direction", "rejpl-vip");';
-                            } else {
-                                $output .= 'localStorage.setItem("user_direction", "rejen-vip");';
-                            }
-                        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-                            if (get_locale() == 'pl_PL') {
-                                $output .= 'localStorage.setItem("user_direction", "rejpl-premium");';
-                            } else {
-                                $output .= 'localStorage.setItem("user_direction", "rejen-vip-premium");';
-                            }
+                        if (get_locale() == 'pl_PL') {
+                            $output .= 'localStorage.setItem("user_direction", "rejpl");';
                         } else {
-                            if (get_locale() == 'pl_PL') {
-                                $output .= 'localStorage.setItem("user_direction", "rejpl");';
-                            } else {
-                                $output .= 'localStorage.setItem("user_direction", "rejen");';
-                            }
+                            $output .= 'localStorage.setItem("user_direction", "rejen");'; 
                         }
 
                         $output .= '

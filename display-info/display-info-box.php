@@ -268,7 +268,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
      */
     private static function speakerImageMini($speaker_images) {
         if (count($speaker_images) < 1){
-            $speaker_html = '<div class="pwe-box-speakers"></div>';
+            $speaker_html = '';
         } else {
             $speaker_html = '<div class="pwe-box-speakers-img">';
             $head_images = array_filter($speaker_images);
@@ -281,9 +281,6 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
 
                     
                     if ($image_src) {
-                        if (!$info_box_photo_squer){
-                            $b_radius = 'border-radius: 50%;';
-                        }
                         $z_index = (1 + $i);
                         $margin_top_index = '';
                         
@@ -354,7 +351,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                 }
                         }
                         
-                        $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src[0]) .'" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; '.$b_radius.' z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
+                        $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src[0]) .'" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
                     }
                 }
             }
@@ -370,14 +367,10 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
      */
     public static function output($atts, $content = null) {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
-        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], '#777');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']);
+        $btn_border = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']);
 
-        if(isset($atts['text_color_manual_hidden']) && issdt($atts['text_color'])){
-            $btn_border = '1px solid '. self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
-        } else {
-            $btn_border = '1px solid black';
-        }
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $rnd = rand(10000, 99999);
 
@@ -442,24 +435,24 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 justify-content: center;
                 gap: 18px;
             }
-            #info-box-'. self::$rnd_id .' .pwe-box-speakers-img {
+            #info-box-'. self::$rnd_id .' .pwe-box-speaker {
                 border-radius: '. $info_box_photo_square .';
             }
             #info-box-'. self::$rnd_id .' .pwe-box-speaker-btn {
                 margin: 10px auto !important;
-                box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
-                background-color: '. $btn_color .';
                 color: '. $btn_text_color .';
-                border: '. $btn_border .';
+                background-color: '. $btn_color .';
+                border: 1px solid '. $btn_border .';
                 padding: 6px 16px;
                 font-weight: 600;
                 width: 80px;
+                border-radius: 10px;
                 transition: .3s ease;
             }
             #info-box-'. self::$rnd_id .' .pwe-box-speaker-btn:hover {
-                box-shadow: 4px 4px 0px -1px black !important;
-                color: black !important;
-                background-color: white !important;
+                color: '. $btn_text_color .';
+                background-color: '. $darker_btn_color .'!important;
+                border: 1px solid '. $darker_btn_color .'!important;
             }
             #info-box-'. self::$rnd_id .' .pwe-box-lecture-time,
             #info-box-'. self::$rnd_id .' .pwe-box-lecture-title,
@@ -690,45 +683,25 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         // Output content
         if ($info_box_simple_mode != true) {
             if ($info_box_hide_photo != true) {
-                if(!empty($speaker_names[0])){
-                    $output .= '
-                    <div id="pweBoxSpeakers-'. $rnd .'" class="pwe-box-speakers">';
-                        if(!empty($speaker_images[0])){
-                            $output .= self::speakerImageMini($speaker_images);
-                        } else {
-                            $output .= '
-                            <style>
-                                #pweBoxSpeakers-'. $rnd .' {
-                                    display: flex;
-                                    flex-direction: column;
-                                    justify-content: center;
-                                }
-                            </style>';
-                        }
-                        if(!empty($speaker_bio[0])){
-                            $output .='<button class="pwe-box-speaker-btn">BIO</button>';
-                        }
-                    $output .= '
-                    </div>';
-                } else {
-                    $output .= '
-                    <style>
-                        #info-box-'. self::$rnd_id .' {
-                            width: 100% !important;
-                        }
-                        #info-box-'. self::$rnd_id .' .pwe-box-info {
-                            width: 100% !important;  
-                        }
-                    </style>';
-                }
+                $output .= '
+                <div id="pweBoxSpeakers-'. $rnd .'" class="pwe-box-speakers">';
+                    $output .= self::speakerImageMini($speaker_images);
+                    if(!empty($speaker_bio[0])){
+                        $output .='<button class="pwe-box-speaker-btn">BIO</button>';
+                    }
+                $output .= '
+                </div>';
             }
             
             $output .= '
             <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">';
                 if($info_box_title_top == true) {
                     $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
-                                <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
-                                <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>
+                                <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>';
+                                if (!empty($speaker_names[0])) {
+                                    $output .= '<h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>';
+                                }
+                                $output .= '
                                 <div class="pwe-box-lecture-desc" style="">';
                                     $output .= $info_box_event_desc;
                                     if (!empty($info_box_event_hidden_desc)) {
@@ -739,8 +712,11 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                     } $output .= '
                                 </div>';
                 } else {
-                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
-                                <h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>
+                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>';
+                                if (!empty($speaker_names[0])) {
+                                    $output .= '<h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>';
+                                }
+                                $output .= '
                                 <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
                                 <div class="pwe-box-lecture-desc" style="">';
                                     $output .= $info_box_event_desc;

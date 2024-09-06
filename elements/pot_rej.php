@@ -35,21 +35,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     'value' => 'PWElementPotwierdzenieRejestracji',
                 ),
             ),
-            array(
-                'type' => 'dropdown',
-                'group' => 'PWE Element',
-                'heading' => __('Registration form Vip', 'pwelement'),
-                'param_name' => 'reg_form_name_vip',
-                'save_always' => true,
-                'value' => array_merge(
-                    array('Wybierz' => ''),
-                    self::$fair_forms,
-                ),
-                'dependency' => array(
-                    'element' => 'pwe_element',
-                    'value' => 'PWElementPotwierdzenieRejestracji',
-                ),
-            ),
         );
         return $element_output;
     }
@@ -62,7 +47,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
 
         extract( shortcode_atts( array(
             'reg_form_name_pr' => '',
-            'reg_form_name_vip' => '',
         ), $atts ));
 
         $source_utm = $_SERVER['argv'][0];
@@ -72,20 +56,15 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false){
             $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
-            $form_name = $reg_form_name_pr;
         } else if (strpos($source_utm, 'utm_source=premium') !== false) {
             $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
-            $form_name = $reg_form_name_pr;
         } else if (strpos($source_utm, 'utm_source=byli') !== false){
             $btn_color = '#b69663';
-            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
-            if (!empty($reg_form_name_vip)) {
-                $form_name = $reg_form_name_vip; 
-            } else {
-                $form_name = $reg_form_name_pr; 
-            }
+            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;   
         }
+
+        $form_name = $reg_form_name_pr; 
 
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');

@@ -55,7 +55,6 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'generator-wystawcow.php';
         require_once plugin_dir_path(__FILE__) . 'registration.php';
         require_once plugin_dir_path(__FILE__) . 'registration-content.php';
-        require_once plugin_dir_path(__FILE__) . 'association.php';
         require_once plugin_dir_path(__FILE__) . 'x_step_registration.php';
         require_once plugin_dir_path(__FILE__) . 'zaproszenie.php';
         require_once plugin_dir_path(__FILE__) . 'ticket.php';
@@ -223,7 +222,6 @@ class PWElements {
                         ...PWElementGenerator::initElements(),
                         ...PWElementRegistration::initElements(),
                         ...PWElementRegContent::initElements(),
-                        ...PWElementAssociates::initElements(),
                         ...PWElementInvite::initElements(),
                         ...PWElementXForm::initElements(),
                         ...PWElementTicket::initElements(),
@@ -272,7 +270,6 @@ class PWElements {
             'Select' => '',
             'Adres Ptak Warsaw Expo'         => 'PWElementAddress',
             'Aktywacja QR'                   => 'PWEActiveQR',
-            'Association'                    => 'PWElementAssociates',
             'Badge-Local'                    => 'PWBadgeElement',
             'Countdown'                      => 'PWElementMainCountdown',
             'Conference Side Events'         => 'PWElementConfSideEvents',
@@ -337,7 +334,6 @@ class PWElements {
         // Array off class placement
         return array(
             'PWEActiveQR'               => 'active_qr.php',
-            'PWElementAssociates'       => 'association.php',
             'PWElementAddress'          => 'ptakAdress.php',
             'PWBadgeElement'            => 'badge-local.php',
             'PWElementMainCountdown'    => 'countdown.php',
@@ -697,16 +693,18 @@ class PWElements {
             $output_replace_array_html[] = $replace_item["output_replace_html"];
         }
 
+        $output = '';
+
         if ($this->findClassElements()[$pwe_element]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$pwe_element];
             
             if (class_exists($pwe_element)) {
                 $output_class = new $pwe_element;
-                $output = $output_class->output($atts, $content);
+                $output .= $output_class->output($atts, $content);
             } else {
                 // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $pwe_element .' does not exist")</script>';
-                $output = '';
+                $output .= '';
             }
         } else {
             echo '<script>console.log("File with class ' . $pwe_element .' does not exist")</script>';

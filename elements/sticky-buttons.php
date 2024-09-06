@@ -215,7 +215,7 @@ class PWElementStickyButtons extends PWElements {
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Name parameter for sections & rows', 'pwelement'),
-                'description' => __('Default "konferencja". Enter this name into a section or row as a class (Ex. link "domain/wydarzenia/?konferencja=szkolenie")', 'pwelement'),
+                'description' => __('Default "konferencja". Enter this name into a section or row as a class (Ex. link "www/wydarzenia/?konferencja=szkolenie") - (domain/page/?class=id)', 'pwelement'),
                 'param_name' => 'sticky_buttons_parameter',
                 'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
@@ -835,6 +835,7 @@ class PWElementStickyButtons extends PWElements {
                                     hideSections[i].style.display = "none";
                                 }
                                 if (index === 0 && button) {
+                                    hideSections[0].style.display = "block";
                                     button.style.transform = "scale(1.1)";
                                 }
                             } else {

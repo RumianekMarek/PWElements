@@ -62,10 +62,10 @@ class PWElementVideos extends PWElements {
                 'param_name' => 'pwe_video_width',
                 'save_always' => true,
                 'dependency' => array(
-                    'element' => 'pwe_element',
-                    'value' => 'PWElementVideos',
+                    'element' => 'pwe_videos_slider_off',
+                    'value' => 'true',
                 ),
-              ),
+            ),
             array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',

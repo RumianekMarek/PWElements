@@ -223,6 +223,29 @@ class PWEDisplayInfo {
     }
 
     /**
+     * Function to change color brightness (taking color in hex format)
+     *
+     * @return array
+     */
+    public static function adjustBrightness($hex, $steps) {
+        // Convert hex to RGB
+        $hex = str_replace('#', '', $hex);
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        // Shift RGB values
+        $r = max(0, min(255, $r + $steps));
+        $g = max(0, min(255, $g + $steps));
+        $b = max(0, min(255, $b + $steps));
+
+        // Convert RGB back to hex
+        return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT)
+                . str_pad(dechex($g), 2, '0', STR_PAD_LEFT)
+                . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+    }
+
+    /**
      * Finding preset colors pallet.
      *
      * @return array

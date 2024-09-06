@@ -224,6 +224,9 @@ class PWElementPosts extends PWElements {
                     background-position: center;
                     aspect-ratio: '. $posts_ratio .';
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-post-title {
+                    text-align: left;
+                }
             </style>';
 
         if ($posts_modes == "posts_slider_mode") {
@@ -313,6 +316,7 @@ class PWElementPosts extends PWElements {
                     transition: .3s ease;
                     break-inside: avoid-column;
 	                margin-bottom: 1rem;
+                    box-shadow: 5px 5px 15px #999;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post:hover {
                     transform: scale(1.05);
@@ -337,13 +341,13 @@ class PWElementPosts extends PWElements {
                     bottom: 10px;
                     left: 10px;
                     color: white;
-                    font-size: 20px;
+                    font-size: 19px;
                     font-weight: 600;
-                    line-height: 1.1;
+                    line-height: 1.3;
                     width: 50px;
                     height: 50px;
                     text-transform: uppercase;
-                    background-color: red;
+                    background-color: '. self::$main2_color .';
                     border-radius: 5px;
                     display: flex;
                     justify-content: center;

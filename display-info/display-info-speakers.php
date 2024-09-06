@@ -245,9 +245,10 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
      */
     public static function output($atts, $content = null) {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
-        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], '#777');
-        $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']);
+        $btn_border = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']);
+
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $rnd = rand(10000, 99999);
 
@@ -287,6 +288,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
         $info_speakers_lect_color = empty($info_speakers_lect_color) ? 'black' : $info_speakers_lect_color;
         $info_speakers_bio_color = empty($info_speakers_bio_color) ? 'black' : $info_speakers_bio_color;
         $info_speakers_element_width = empty($info_speakers_element_width) ? '150px' : $info_speakers_element_width;
+        $info_speakers_max_width_img = empty($info_speakers_max_width_img) ? '100%' : $info_speakers_max_width_img;
         $info_speakers_photo_square = $info_speakers_photo_square != true ? '50%' : '0';
 
         $output = '
@@ -299,8 +301,8 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 gap: 18px;
             }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker {
-                width: '. $info_speakers_element_width .';
-                min-width: 150px;
+                width: '. $info_speakers_element_width .' !important;
+                min-width: '. $info_speakers_element_width .';
                 display: flex;
                 flex-direction: column;
                 text-align: center;
@@ -311,27 +313,32 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 color: '. $info_speakers_lect_color .';
             }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker-img {
-                width: 100%;
+                width: '. $info_speakers_max_width_img .';
                 border-radius: '. $info_speakers_photo_square .';
                 margin: 0 auto;
                 aspect-ratio: 1/1;
                 object-fit: cover;
             }
+            #info-speaker-'. self::$rnd_id .' .pwe-speaker-excerpt {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+            }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker-btn {
                 margin: 10px auto !important;
-                box-shadow: 4px 4px 0px -1px '. $btn_shadow_color .';
-                background-color: '. $btn_color .';
                 color: '. $btn_text_color .';
-                border: '. $btn_border .';
+                background-color: '. $btn_color .';
+                border: 1px solid '. $btn_border .';
                 padding: 6px 16px;
                 font-weight: 600;
                 width: 80px;
+                border-radius: 10px;
                 transition: .3s ease;
             }
             #info-speaker-'. self::$rnd_id .' .pwe-speaker-btn:hover {
-                box-shadow: 4px 4px 0px -1px black;
-                color: black;
-                background-color: white;
+                color: '. $btn_text_color .';
+                background-color: '. $darker_btn_color .'!important;
+                border: 1px solid '. $darker_btn_color .'!important;
             }
             #pweSpeakerModal-'. $rnd .' {
                 position: fixed;
@@ -413,7 +420,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $speaker_image = $speaker["speaker_image"];
                 $speaker_name = $speaker["speaker_name"];
                 $speaker_bio = $speaker["speaker_bio"];
-                $speaker_bio_excerpt = $speaker["speaker_bio_excerpt"];
+                $speaker_bio_excerpt = isset($speaker["speaker_bio_excerpt"]) ? $speaker["speaker_bio_excerpt"] : '';
 
                 $speaker_image_src = wp_get_attachment_url($speaker_image);   
 

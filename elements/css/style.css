@@ -66,8 +66,8 @@
     text-decoration: underline;
 }
 
-.pl_PL,
-.en_US,
+/* .pl_PL,
+.en_US, */
 .pwe-display-none {
     display: none;
 }

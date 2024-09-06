@@ -44,6 +44,41 @@ jQuery(function ($) {
     }); 
 });
 
+// function getLocationPath() {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const utmSource = urlParams.get('utm_source');
+    
+//     if (utmSource === 'byli') {
+//         return 'vip';
+//     } else if (utmSource === 'premium') {
+//         return 'platinum';
+//     } else {
+//         let urlPath = window.location.pathname;
+        
+//         if (urlPath.startsWith("/")) {
+//             urlPath = urlPath.substring(1);
+//         }
+//         if (urlPath.endsWith("/")) {
+//             urlPath = urlPath.slice(0, -1);
+//         }
+        
+//         return urlPath.length > 0 ? urlPath : "header";
+//     }
+// }
+
+// function setLocationToForm() {
+//     const locationInput = document.querySelector(".location input");
+//     if (locationInput) {
+//         const locationPath = getLocationPath();
+//         locationInput.value = locationPath;
+//         localStorage.setItem("user_location", locationPath);
+//     }
+// }
+
+// window.onload = function () {
+//     setLocationToForm();
+// };
+
 
 
 

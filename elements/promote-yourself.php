@@ -54,14 +54,12 @@ class PWElementPromot extends PWElements {
     * @return string @output 
     */
     public static function output($atts) {
-        $text_color = 'color:' . self::findColor($atts["text_color_manual_hidden"], $atts["text_color"], "white") . '!important;';
-        $text_color_shadow = self::findColor($atts["text_shadow_color_manual_hidden"], $atts["text_shadow_color"], "black");
-
-        $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important; border-width: 0 !important;';
-        $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important;';
-        $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
-        $btn_border = 'border: 1px solid ' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$fair_colors['Accent']) . '!important;';
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important';
+        $btn_border = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important';
         
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
         
         $logo_color = self::findBestLogo($atts["logo_color"]); 
 
@@ -98,15 +96,23 @@ class PWElementPromot extends PWElements {
                     margin:18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-btn {
-                    ' . $btn_text_color
-                    . $btn_color
-                    . $btn_shadow_color
-                    . $btn_border .'
+                    color:' . $btn_text_color .';
+                    background-color: '. $btn_color .';
+                    border: 1px solid '. $btn_border .';
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
+                    color: '. $btn_text_color .';
+                    background-color: '. $darker_btn_color .'!important;
+                    border: 1px solid '. $darker_btn_color .'!important;
                 }
                 .pwe-content-promote-item {
                     flex-wrap: wrap;
                     margin: 36px auto;
                     width: fit-content;
+                }
+                .pwe-border-element {
+                    border: 2px solid '. $btn_color .';
+                    border-radius: 10px;
                 }
                 .pwe-content-promote-item .btn-icon-right {
                     color:white !important;
@@ -138,18 +144,19 @@ class PWElementPromot extends PWElements {
                 }
                 .pwe-content-promote-item__help {
                     width: 80%;
+                    max-width: 860px;
                     margin: auto;
                 }
-                .pwe-content-promote-item__help h2{
+                .pwe-content-promote-item__help h2 { 
                     margin-top: 0;
-                    ' . $text_color . '
+                    color:' . $text_color . ';
                 }
                 .pwe-content-promote-item__help div{
                     margin-top: 18px;
                 }
                 .pwe-content-promote-item__help a{
                     font-weight: 600;
-                    ' . $text_color . '
+                    color:' . $text_color . ';
                 }
                 .pwe-hide-promote {
                     width: 66%;
@@ -297,7 +304,7 @@ class PWElementPromot extends PWElements {
                         EN
                     )
                 .'</div>
-                <div class="pwe-flex pwe-content-promote-item pwe-shadow-border-black">';
+                <div class="pwe-flex pwe-content-promote-item pwe-border-element">';
 
                 if ($atts['show_banners'] != 'true') {
                     $promoteBaners = self::findAllImages('/doc/wypromuj', 4);
@@ -341,7 +348,7 @@ class PWElementPromot extends PWElements {
                                         $baner800en
                                     EN
                                 )
-                                .'" class="pwe-link btn border-width-0 btn-accent btn-baner btn" target="_blank" rel="nofollow" title="800x800" >'.
+                                .'" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="800x800" >'.
                                     self::languageChecker(
                                         <<<PL
                                             Pobierz
@@ -363,7 +370,7 @@ class PWElementPromot extends PWElements {
                                         $baner1200en
                                     EN
                                 )
-                                .'" class="pwe-link btn border-width-0 btn-accent btn-baner btn" target="_blank" rel="nofollow" title="1200x200" >'.
+                                .'" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="1200x200" >'.
                                     self::languageChecker(
                                         <<<PL
                                             Pobierz
@@ -391,7 +398,7 @@ class PWElementPromot extends PWElements {
                         .'</h3>
                         ' . $logo_color . '
                         <span class="btn-container">
-                            <a href="" class="pwe-link btn border-width-0 btn-accent btn-baner" target="_blank" rel="nofollow" title="[trade_fair_name] logo" >'.
+                            <a href="" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="[trade_fair_name] logo" >'.
                                 self::languageChecker(
                                     <<<PL
                                         Pobierz
@@ -418,7 +425,7 @@ class PWElementPromot extends PWElements {
                             <img src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp" alt="PWE-logo"/>
                             <div>
                                 <span class="btn-container">
-                                    <a href="https://warsawexpo.eu/docs/Logo_PWE.zip" class="pwe-link btn border-width-0 btn-accent btn-baner " target="_blank" rel="nofollow" title="PWE-logo">'.
+                                    <a href="https://warsawexpo.eu/docs/Logo_PWE.zip" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="PWE-logo">'.
                                         self::languageChecker(
                                             <<<PL
                                                 Pobierz
@@ -433,7 +440,7 @@ class PWElementPromot extends PWElements {
                             </div>
                         </div>
                     </div>
-                    <div class="pwe-shadow-border-black style-accent-bg pwe-content-promote-item__help pwe-block-padding">
+                    <div class="pwe-border-element style-accent-bg pwe-content-promote-item__help pwe-block-padding">
                         <h2>'.
                             self::languageChecker(
                                 <<<PL
