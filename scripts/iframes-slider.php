@@ -44,7 +44,6 @@ class PWEIframesSlider {
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-item {
                             position: relative;
-                            padding: 4px;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-item iframe {
                             aspect-ratio: 16 / 9 !important;
@@ -57,7 +56,6 @@ class PWEIframesSlider {
                             background-repeat: no-repeat;
                             background-size: cover;
                             aspect-ratio: 16 / 9;
-                            padding: 4px;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-default img {
                             max-width: 80px;
@@ -236,6 +234,8 @@ class PWEIframesSlider {
                 $iframes_default_json = json_encode($iframes_default_array);
                 $iframes_title_json = json_encode($iframes_title_array);
 
+                $images_multi = count($media_url) <= 2 ? 2 : 3;
+
                 $output = '
                 <script>
                         jQuery(function ($) {                         
@@ -258,7 +258,7 @@ class PWEIframesSlider {
                                 } else if (slidesWidth < 959) {
                                         imagesMulti = 2;
                                 } else {
-                                        imagesMulti = 3;
+                                        imagesMulti = '. $images_multi .';
                                 }
 
                                 // Change the default thumbnail to iframe
@@ -276,7 +276,6 @@ class PWEIframesSlider {
                                                 }
                                         });
                                 });
-
 
                                 if(imagesMulti >=  '. $media_url_count .'){
                                         $("#PWEIframesSlider-'. $id_rnd .' .slides").each(function(){

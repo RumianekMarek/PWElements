@@ -53,17 +53,18 @@ class PWEPostsSlider {
                                         overflow: visible !important;
                                 }
                                 .pwe-posts .slides {
-                                        justify-content: center;
+                                        justify-content: space-between;
                                 }
                         }
                 </style>';
 
                 if (isset($posts_full_width) && $posts_full_width === 'true') {
-                        $output .= '<style>
-                                        .pwe-posts-wrapper {
-                                                overflow: visible !important;
-                                        }
-                                </style>';
+                        $output .= '
+                        <style>
+                                .pwe-posts-wrapper {
+                                        overflow: visible !important;
+                                }
+                        </style>';
                 }
 
                 $output .= '

@@ -478,6 +478,8 @@ class PWEMediaGallery {
                             $carousel_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : (string) $media_gallery_thumbnails_width_tablet;
                             $carousel_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : (string) $media_gallery_thumbnails_width_mobile;
 
+                            $media_gallery_gap = 0;
+
                             $output .=  '<style>
                                             /* Carousel */
                                             #'. $media_gallery_id .' .slides {
