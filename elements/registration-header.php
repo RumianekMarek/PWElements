@@ -80,6 +80,12 @@ class PWElementRegHeader extends PWElements {
         $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
         $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
  
+        if (isset($_SERVER['argv'][0])) {
+            $source_utm = $_SERVER['argv'][0];
+        } else {
+            $source_utm = ''; 
+        }
+
         $output = '
             <style>
                 #pweForm {
@@ -391,11 +397,6 @@ class PWElementRegHeader extends PWElements {
             </div>
 
             <script>
-                jQuery(function ($) {
-                    $(".show-consent").on("click touch", function () {
-                        $(this).next().toggle("slow");
-                    });
-                });
 
                 // Funkcja zapisująca atrybut title do input
                 function updateCountryInput() {
@@ -447,6 +448,24 @@ class PWElementRegHeader extends PWElements {
                 observeFlagChanges();
 
                 window.onload = function () {
+                    function getCookie(name) {
+                        let value = "; " + document.cookie;
+                        let parts = value.split("; " + name + "=");
+                        if (parts.length === 2) return parts.pop().split(";").shift();
+                        return null;
+                    }
+
+                    function deleteCookie(name) {
+                        document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    }
+
+                    let utmPWE = "'. $source_utm .'";
+                    let utmCookie = getCookie("utm_params");
+
+                    if (utmCookie && (utmCookie.includes("utm_source=byli") || utmCookie.includes("utm_source=premium"))) {
+                        deleteCookie("utm_params");
+                    }
+
                     var pweFormVisitors = document.querySelector("#pweRegister");
 
                     if (pweFormVisitors) {

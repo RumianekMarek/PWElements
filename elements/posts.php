@@ -197,7 +197,7 @@ class PWElementPosts extends PWElements {
             $posts_link = ($posts_link == "") ? "/en/news/" : $posts_link;
             $posts_text = "See all";
         }
-        $posts_count = ($posts_count == "") ? 5 : $posts_count;
+        
         if ($posts_modes == "posts_slider_mode") {
             $posts_ratio = ($posts_ratio == "") ? "1/1" : $posts_ratio;
         } else {
@@ -230,6 +230,7 @@ class PWElementPosts extends PWElements {
             </style>';
 
         if ($posts_modes == "posts_slider_mode") {
+            
             $output .= '
             <style>
                 .row-parent:has(.pwelement_'.self::$rnd_id.' .pwe-container-posts) {
@@ -262,9 +263,17 @@ class PWElementPosts extends PWElements {
                     align-items: flex-start !important;
                     gap: 16px;
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-posts .slides a {
+                    padding: 10px;
+                }
                 @media (max-width: 1128px) {
                     .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
                         padding: 36px;  
+                    } 
+                }
+                @media (max-width: 650px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
+                        gap: 18px;
                     } 
                 }
             </style>';
@@ -424,6 +433,8 @@ class PWElementPosts extends PWElements {
             <div class="pwe-posts-wrapper">';
 
             if ($posts_modes == "posts_slider_mode") {
+
+                $posts_count = ($posts_count == "") ? 5 : $posts_count;
             
                 $output .= '
                 <div class="pwe-posts-title main-heading-text">
@@ -465,7 +476,7 @@ class PWElementPosts extends PWElements {
                         $categories = implode(',', $categories_array);
                     }
         
-                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 5) : -1;
+                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
         
                     $args = array(
                         'posts_per_page' => $max_posts,
@@ -519,22 +530,31 @@ class PWElementPosts extends PWElements {
                 $output .= '<div class="pwe-posts">';
 
                 if ($posts_modes == "posts_full_mode") {
+                    $posts_count = ($posts_count == "") ? 18 : $posts_count;
+                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
+        
                     $args = array(
-                        'posts_per_page' => 18,
+                        'posts_per_page' => $max_posts,
                         'orderby' => 'date',
                         'order' => 'DESC',
                         'post_status' => 'publish',
                     );
                 } else if ($posts_modes == "posts_full_newest_mode") {
+                    $posts_count = ($posts_count == "") ? 6 : $posts_count;
+                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 12) : -1;
+        
                     $args = array(
-                        'posts_per_page' => 6,
+                        'posts_per_page' => $max_posts,
                         'orderby' => 'date',
                         'order' => 'DESC',
                         'post_status' => 'publish',
                     );
                 } else if ($posts_modes == "posts_full_newest_slider_mode") {
+                    $posts_count = ($posts_count == "") ? 10 : $posts_count;
+                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;
+        
                     $args = array(
-                        'posts_per_page' => -1,
+                        'posts_per_page' => $max_posts,
                         'orderby' => 'date',
                         'order' => 'DESC',
                         'post_status' => 'publish',

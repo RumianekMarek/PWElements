@@ -63,6 +63,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'confHeader.php'; 
         require_once plugin_dir_path(__FILE__) . 'trends-panel.php';
         require_once plugin_dir_path(__FILE__) . 'mapa.php'; 
+        require_once plugin_dir_path(__FILE__) . 'mapa-test.php'; 
         require_once plugin_dir_path(__FILE__) . 'step2.php';
         require_once plugin_dir_path(__FILE__) . 'pot_rej.php';
         require_once plugin_dir_path(__FILE__) . 'pot_rej_wys.php';
@@ -70,6 +71,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'test.php';
         require_once plugin_dir_path(__FILE__) . 'test1.php';
         require_once plugin_dir_path(__FILE__) . 'test2.php';
+        require_once plugin_dir_path(__FILE__) . 'resend-ticket.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -228,6 +230,7 @@ class PWElements {
                         ...PWElementNumbers::initElements(),
                         ...PWElementConfSection::initElements(),
                         ...PWElementMapa::initElements(),
+                        ...PWElementMapaTest::initElements(),
                         ...PWElementHeaderConference::initElements(),
                         ...PWElementPotwierdzenieRejestracji::initElements(),
                         ...PWElementStepTwoExhibitor::initElements(),
@@ -294,6 +297,7 @@ class PWElements {
             'Liczby'                         => 'PWElementNumbers',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
             'Mapa'                           => 'PWElementMapa',
+            'Mapa test'                      => 'PWElementMapaTest',
             'Mapka dojazdu'                  => 'PWElementRoute',
             'Nie przegap'                    => 'PWElementDontMiss',
             'Organizator'                    => 'PWElementOrganizer',
@@ -306,6 +310,7 @@ class PWElements {
             'Ramka Facebook'                 => 'PWElementSocials',
             'Registration'                   => 'PWElementRegistration',
             'Registration content'           => 'PWElementRegContent',
+            'Resend ticket'                  => 'PWEResendTicket',
             'Sekcja konferencji'             => 'PWElementConfSection',
             'Sticky buttons'                 => 'PWElementStickyButtons',
             'Step2'                          => 'PWElementStepTwo',
@@ -355,6 +360,7 @@ class PWElements {
             'PWElementGenerator'        => 'generator-wystawcow.php',
             'PWElementGroups'           => 'grupy.php',
             'PWElementMapa'             => 'mapa.php',
+            'PWElementMapaTest'         => 'mapa-test.php',
             'PWElementOrgInfo'          => 'org-information.php',
             'PWElementContactInfo'      => 'kontakt-info.php',
             'PWElementContact'          => 'kontakt.php',
@@ -362,6 +368,7 @@ class PWElements {
             'PWElementRoute'            => 'route.php',
             'PWElementRegistration'     => 'registration.php',
             'PWElementRegContent'       => 'registration-content.php',
+            'PWEResendTicket'           => 'resend-ticket.php',
             'PWElementNumbers'          => 'numbers.php',
             'PWElementDontMiss'         => 'niePrzegap.php',
             'PWElementOrganizer'        => 'organizator.php',

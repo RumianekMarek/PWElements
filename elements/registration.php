@@ -137,6 +137,9 @@ class PWElementRegistration extends PWElements {
     public static function custom_css_1() {
         $css_output = '
             <style>
+                .gform_validation_errors {
+                    border:none !important;
+                }
                 .pwelement_' . self::$rnd_id . ' .pwe-registration-column {
                     background-color: #e8e8e8;
                     padding: 18px 36px;
@@ -340,11 +343,11 @@ class PWElementRegistration extends PWElements {
         $element_unique_id = 'pweRegistration-' . $unique_id;
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
-        
+
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
         } else {
-            $source_utm = ''; 
+            $source_utm = '';
         }
 
         if (strpos($source_utm, 'utm_source=premium') !== false) {
@@ -420,7 +423,7 @@ class PWElementRegistration extends PWElements {
                         max-width: 100% !important;
                         padding: 0 !important;
                     }
-                        
+
                     /* Zaślepka START <------------------------------------------< */
                     .row-container:has(.pwelement_' . self::$rnd_id .') .wpb_column:not(:has(.pwe-registration.vip)) {
                         max-width: 100% !important;
@@ -457,7 +460,7 @@ class PWElementRegistration extends PWElements {
                         height: 100%;
                         float: right;
                         object-fit: cover;
-                    }    
+                    }
                     .pwelement_' .self::$rnd_id. ' .pwe-registration-column {
                         position: relative;
                         background-color: #E8E8E8;
@@ -610,9 +613,9 @@ class PWElementRegistration extends PWElements {
 
                 $output .= '
                 <style>
-                    .row-container:has(.pwe-registration) .wpb_column:has(.exhibitors-catalog):has(#top10) {
-                        display: none !important;
-                    } 
+                    // .row-container:has(.pwe-registration) .wpb_column:has(.exhibitors-catalog):has(#top10) {
+                    //     display: none !important;
+                    // }
                     .row-container:has(.pwelement_'. self::$rnd_id .') {
                         background-image: url(/doc/background.webp);
                         background-repea: no-repeat;
@@ -669,10 +672,10 @@ class PWElementRegistration extends PWElements {
             $output .= '
             <style>
                 @media (min-width: 959px) {
-                    .row-container:has(#'. $element_unique_id .') .wpb_column,
-                    .row-container:has(#top10) .wpb_column {
-                        display: none;
-                    }
+                    // .row-container:has(#'. $element_unique_id .') .wpb_column,
+                    // .row-container:has(#top10) .wpb_column {
+                    //     display: none;
+                    // }
                     .wpb_column:has(#top10),
                     .wpb_column:has(#'. $element_unique_id .') {
                         display: table-cell !important;
@@ -1198,13 +1201,6 @@ class PWElementRegistration extends PWElements {
 
         $output .= '
         <script>
-            jQuery(function ($) {
-
-                if("'.$source_utm.'" != ""){
-                    $(".utm-class").find("input").val("'.$source_utm.'");
-                }
- 
-            });
 
             // Funkcja zapisująca atrybut title do input
             function updateCountryInput() {
@@ -1256,6 +1252,29 @@ class PWElementRegistration extends PWElements {
             observeFlagChanges();
 
             window.onload = function () {
+                function getCookie(name) {
+                    let value = "; " + document.cookie;
+                    let parts = value.split("; " + name + "=");
+                    if (parts.length === 2) return parts.pop().split(";").shift();
+                    return null;
+                }
+
+                function deleteCookie(name) {
+                    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                }
+
+                let utmPWE = "'. $source_utm .'";
+                let utmCookie = getCookie("utm_params");
+                let utmInput = document.querySelector(".utm-class input");
+
+                if (utmCookie && (utmCookie.includes("utm_source=byli") || utmCookie.includes("utm_source=premium"))) {
+                    deleteCookie("utm_params");
+                }
+
+                if (utmInput) {
+                    utmInput.value = utmPWE;
+                }
+
                 var pweFormVisitors = document.querySelector("#pweRegister");
 
                 if (pweFormVisitors) {
@@ -1263,7 +1282,7 @@ class PWElementRegistration extends PWElements {
                         event.preventDefault();
 
                         const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
-                            
+
                         let telValue;
                         const telContainer = document.getElementsByClassName("ginput_container_phone")[0];
 
@@ -1282,33 +1301,6 @@ class PWElementRegistration extends PWElements {
                             }
                         }
 
-                        // function getCookie(name) {
-                        //     let value = "; " + document.cookie;
-                        //     let parts = value.split("; " + name + "=");
-                        //     if (parts.length === 2) return parts.pop().split(";").shift();
-                        //     return null;
-                        // }
-
-                        // let utmCookie = getCookie("utm_params");
-                        // let utmPWE = "'. $source_utm .'";
-                        // let utmInput = document.querySelector(".utm-class input");
-
-                        // if (utmPWE.includes("utm_source=byli") || utmPWE.includes("utm_source=premium")) {
-                        //     utmCookie = utmPWE;
-                        //     utmInput.value = utmPWE;
-                        //     localStorage.setItem("pwe_utm", utmPWE);
-                        // } else {
-                        //     if (utmPWE.includes("utm_source=")) {
-                        //         utmCookie = utmPWE;
-                        //         utmInput.value = utmPWE;
-                        //         localStorage.setItem("pwe_utm", utmPWE);
-                        //     } else {
-                        //         utmCookie = utmPWE;
-                        //         utmInput.value = "";
-                        //         localStorage.setItem("pwe_utm", "");
-                        //     }
-                        // }
-
                         localStorage.setItem("user_email", emailValue);
                         localStorage.setItem("user_country", countryValue);
                         localStorage.setItem("user_tel", telValue);';
@@ -1316,7 +1308,7 @@ class PWElementRegistration extends PWElements {
                         if (get_locale() == 'pl_PL') {
                             $output .= 'localStorage.setItem("user_direction", "rejpl");';
                         } else {
-                            $output .= 'localStorage.setItem("user_direction", "rejen");'; 
+                            $output .= 'localStorage.setItem("user_direction", "rejen");';
                         }
 
                         $output .= '
