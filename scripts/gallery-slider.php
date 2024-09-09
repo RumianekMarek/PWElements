@@ -81,7 +81,7 @@ class PWEMediaGallerySlider {
                  
             </style>';
 
-        if ($media_gallery_full_width === 'true') {
+        if (isset($media_gallery_full_width) === 'true') {
                 $output .= '<style>
                                 #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-slider {
                                         overflow: visible !important;
@@ -161,13 +161,14 @@ class PWEMediaGallerySlider {
                 }
 
                 $count_visible_thumbs = [
-                        'desktop' => $media_url[$imgNumber]['count-visible-thumbs-desktop'],
-                        'tablet' => $media_url[$imgNumber]['count-visible-thumbs-tablet'],
-                        'mobile' => $media_url[$imgNumber]['count-visible-thumbs-mobile']
+                        'desktop' => isset($media_url[$imgNumber]['count-visible-thumbs-desktop']) ? $media_url[$imgNumber]['count-visible-thumbs-desktop'] : 3,
+                        'tablet' => isset($media_url[$imgNumber]['count-visible-thumbs-tablet']) ? $media_url[$imgNumber]['count-visible-thumbs-tablet'] : 2,
+                        'mobile' => isset($media_url[$imgNumber]['count-visible-thumbs-mobile']) ? $media_url[$imgNumber]['count-visible-thumbs-mobile'] : 2
                 ];
+        
                 $breakpoints = [
-                        'tablet' => $media_url[$imgNumber]['breakpoint-tablet'],
-                        'mobile' => $media_url[$imgNumber]['breakpoint-mobile']
+                        'tablet' => isset($media_url[$imgNumber]['breakpoint-tablet']) ? $media_url[$imgNumber]['breakpoint-tablet'] : 959, 
+                        'mobile' => isset($media_url[$imgNumber]['breakpoint-mobile']) ? $media_url[$imgNumber]['breakpoint-mobile'] : 480 
                 ];
                 
                 $count_visible_thumbs_json = (!empty($count_visible_thumbs)) ? json_encode($count_visible_thumbs) : "";

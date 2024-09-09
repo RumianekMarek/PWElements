@@ -1127,8 +1127,7 @@ class PWEHeader {
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .dots-container {
                     display: none !important;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-logotypes,
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-association {
+                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-logotypes {
                     transition: .3s ease;
                     opacity: 0;
                 }
@@ -1371,25 +1370,6 @@ class PWEHeader {
             }
         }
 
-        if ($pwe_header_modes != "simple_mode") {
-
-            // Accompanying Fairs
-            if ($association_fair_logo_color != 'true') {
-                $output .= '
-                    <style>
-                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .as-side .pwe-as-logo,
-                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .slides div {
-                            filter: brightness(0) invert(1);
-                            transition: all .3s ease;
-                        }
-                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .slides .as-primary div {
-                            filter: inherit;
-                        }
-                    </style>';
-            }
-
-        }
-
         $background_congress = $base_url . '/wp-content/plugins/PWElements/media/conference-background.webp';
         $background_header = ($pwe_header_modes == "conference_mode") ? $background_congress : $file_url;
 
@@ -1494,14 +1474,13 @@ class PWEHeader {
 
                         $output .= '</div>';
 
-                        if ($pwe_header_modes != "simple_mode") {
-
-                            if ($pwe_congress_widget_off != 'true') {
-                                require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
-                            }
-                            
+                        // Congres widget START --------------------------------------------------------------------------------------<
+                        if ($pwe_header_modes != "simple_mode" && $pwe_congress_widget_off != 'true') {
+                            require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
                         }
+                        // Congres widget END --------------------------------------------------------------------------------------<
 
+                        // Logotypes slider START --------------------------------------------------------------------------------------<
                         $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
                         $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
                         if ($pwe_header_modes != "simple_mode") {
@@ -1519,6 +1498,7 @@ class PWEHeader {
                                 $output .= '</div>';
                             }
                         }
+                        // Logotypes slider END --------------------------------------------------------------------------------------<
 
                         if ($pwe_header_modes != "simple_mode") {
                             require_once plugin_dir_path(__FILE__) . '/../widgets/parking-widget.php';
@@ -1751,18 +1731,6 @@ class PWEHeader {
                             }
                         </style>';
 
-                        if ($association_fair_logo_color != 'true') {
-                            $output .= '
-                                <style>
-                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .image-container div,
-                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-as-logo,
-                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .slides div {
-                                        filter: brightness(0) invert(1);
-                                        transition: all .3s ease;
-                                    }
-                                </style>';
-                        }
-
                         if ($pwe_header_modes == "conference_mode") {
                             $output .= '
                                 <style>
@@ -1788,40 +1756,180 @@ class PWEHeader {
                                 </style>';
                         }
 
-                        $output .= '<div class="header-info-column">
-                                        <div class="pwe-header-text">
-                                            <h1>'. $pwe_header_title .'</h1>
-                                        </div>
-                                        <div class="pwe-header-logo-container pwe-header-logo-container-desktop">
-                                            <img class="pwe-header-logo" src="'. $pwe_header_reg_logo .'" alt="logo-'. $trade_fair_name .'">';
-                                            if (!empty($trade_fair_edition_shortcode) && $pwe_header_modes != "conference_mode") {
-                                                $output .= '<p class="pwe-header-edition">'. $trade_fair_edition .'</p>';
-                                            }
-                                            $output .= '
-                                            <h2>'. $actually_date .'</h2>
-                                            <p>Ptak Warsaw Expo</p>
-                                        </div>';
+                        $output .= '
+                        <div class="header-info-column">
+                            <div class="pwe-header-text">
+                                <h1>'. $pwe_header_title .'</h1>
+                            </div>
+                            <div class="pwe-header-logo-container pwe-header-logo-container-desktop">
+                                <img class="pwe-header-logo" src="'. $pwe_header_reg_logo .'" alt="logo-'. $trade_fair_name .'">';
+                                if (!empty($trade_fair_edition_shortcode) && $pwe_header_modes != "conference_mode") {
+                                    $output .= '<p class="pwe-header-edition">'. $trade_fair_edition .'</p>';
+                                }
+                                $output .= '
+                                <h2>'. $actually_date .'</h2>
+                                <p>Ptak Warsaw Expo</p>
+                            </div>';
 
-                                        if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
-                                            $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
-                                            $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
-                                            if ($pwe_header_modes != "simple_mode") {
-                                                if (is_array($pwe_header_logotypes_json) && !empty($pwe_header_logotypes_json)) {
-                                                    $output .= '<div class="pwe-header-logotypes">';
-                                                        foreach ($pwe_header_logotypes_json as $logotypes) {
-                                                            $logotypes_width = $logotypes["logotypes_width"];
-                                                            $logotypes_media = $logotypes["logotypes_media"];
-                                                            $logotypes_catalog = $logotypes["logotypes_catalog"];
-                                                            if(!empty($logotypes_catalog) || !empty($logotypes_media)) {
-                                                                // Adding the result from additionalOutput to $output
-                                                                $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $logotypes);
-                                                            }
+                            // Congress logo START --------------------------------------------------------------------------------------<
+                            if ($pwe_header_association_hide != true) {
+                                if (!empty($pwe_header_conference_logo_url)) {
+                                    $output .= '
+                                    <style>
+                                        .pwe-association {
+                                            position: relative;
+                                            width: 100%;
+                                        }
+                                        .pwe-association-title {
+                                            display: flex;
+                                            justify-content: center;
+                                        }
+                                        .pwe-association-title h2 {
+                                            color: '. $text_color .';
+                                            margin: 0;
+                                            text-align: center !important;
+                                            margin-top: 0 !important;
+                                            box-shadow: none !important;
+                                            text-transform: inherit !important;
+                                        }
+                                        .pwe-association-logotypes {
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            flex-wrap: wrap;
+                                            gap: 10px;
+                                        }
+                                        .pwe-association-logotypes .pwe-logo,
+                                        .pwe-association-logotypes .slides div {
+                                            background-size: contain;
+                                            background-repeat: no-repeat;
+                                            background-position: center;
+                                            min-width: 140px;
+                                            height: fit-content;
+                                            aspect-ratio: 3/2;
+                                            margin: 5px;
+                                        }
+                                        .pwe-association-logotypes .pwe-logo {
+                                            min-width: 200px;
+                                        }
+                                    </style>';
+
+                                    if ($association_fair_logo_color != 'true') {
+                                        $output .= '
+                                            <style>
+                                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-logo {
+                                                    filter: brightness(0) invert(1);
+                                                    transition: all .3s ease;
+                                                }
+                                            </style>';
+                                    }
+
+                                    $output .= '
+                                    <div id="pweAssociation" class="pwe-association">
+                                        <div class="main-heading-text pwe-uppercase pwe-association-title">';
+                                            if ($pwe_header_modes == "conference_mode") {
+                                                $output .= '<h2>'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Wydarzenie organizowane w ramach targów:
+                                                    PL,
+                                                    <<<EN
+                                                    Event organised as part of the fair:
+                                                    EN
+                                                )
+                                                .'</h2>';
+                                            } else {
+                                                $output .= '<h2>'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Wydarzenia Towarzyszące
+                                                    PL,
+                                                    <<<EN
+                                                    Side Events
+                                                    EN
+                                                )
+                                                .'</h2>';
+                                            }
+                                        $output .= '
+                                        </div>
+                                        <div class="pwe-association-logotypes">';
+                                            if ($pwe_header_modes == "registration_mode") {
+                                                $output .= '
+                                                    <a class="pwe-association-logo" href="'. $pwe_header_conference_link .'">
+                                                        <div class="pwe-logo" style="background-image: url(' . $pwe_header_conference_logo_url . ');"></div>
+                                                    </a>
+                                                ';  
+                                            } else {
+                                                $output .= '
+                                                    <a class="pwe-association-logo" href="'. $base_url .'">
+                                                        <div class="pwe-logo" style="background-image: url(/doc/logo.webp);"></div>
+                                                    </a>
+                                                ';  
+                                            }
+                                        $output .= '    
+                                        </div>
+                                    </div>';
+
+                                    $output .= '
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            let pweElement = document.querySelector(".pwelement_'. self::$rnd_id .'");
+                                            let pweElementRow = document.querySelector(".row-container:has(.pwelement_'. self::$rnd_id .')");
+                                            let pweAssociation = document.querySelector(".pwelement_'. self::$rnd_id .' .pwe-association") !== null;
+                                            let isInPweHeader = pweElementRow !== null && pweElementRow.closest(".pwe-header") !== null;
+                            
+                                            if (pweElementRow !== null && pweAssociation == false && !isInPweHeader) {
+                                                pweElementRow.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
+                                            }
+
+                                            const allSliders = document.querySelectorAll(".pwe-header-logotypes");
+                                            if (allSliders) {
+                                                allSliders.forEach(function(slider) {
+                                                    const sliderTitle = slider.querySelector(".main-heading-text");
+
+                                                    if (sliderTitle) {
+                                                        const sliderTitletoLowerCase = sliderTitle.innerText.toLowerCase();
+
+                                                        if (sliderTitletoLowerCase.includes("wydarzenia towarzyszące") ||
+                                                            sliderTitletoLowerCase.includes("targi towarzyszące") ||
+                                                            sliderTitletoLowerCase.includes("accompanying events") ||
+                                                            sliderTitletoLowerCase.includes("accompanying fairs") ||
+                                                            sliderTitletoLowerCase.includes("side events")) {
+                                                                slider.style.display = "none";
                                                         }
-                                                    $output .= '</div>';
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    </script>';
+                                }
+                            }
+                            // Congress logo END --------------------------------------------------------------------------------------<
+
+                            // Logotypes slider START --------------------------------------------------------------------------------------<
+                            if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
+                                $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
+                                $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
+                                if ($pwe_header_modes != "simple_mode") {
+                                    if (is_array($pwe_header_logotypes_json) && !empty($pwe_header_logotypes_json)) {
+                                        $output .= '<div class="pwe-header-logotypes">';
+                                            foreach ($pwe_header_logotypes_json as $logotypes) {
+                                                $logotypes_width = $logotypes["logotypes_width"];
+                                                $logotypes_media = $logotypes["logotypes_media"];
+                                                $logotypes_catalog = $logotypes["logotypes_catalog"];
+                                                if(!empty($logotypes_catalog) || !empty($logotypes_media)) {
+                                                    // Adding the result from additionalOutput to $output
+                                                    $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $logotypes);
                                                 }
                                             }
-                                        }
-                        $output .= '</div>';
+                                        $output .= '</div>';
+                                    }
+                                }
+                            }
+                            // Logotypes slider END --------------------------------------------------------------------------------------<
+
+                        $output .= '
+                        </div>';
 
                         $output .= '<div class="header-form-column">';
 
@@ -1882,7 +1990,6 @@ class PWEHeader {
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     const pweLogotypesElement = document.querySelector(".pwelement_'.SharedProperties::$rnd_id.' .pwe-header-logotypes");
-                    const pweLogotypesAssociation = document.querySelector(".pwelement_'.SharedProperties::$rnd_id.' .pwe-association");
 
                     if ((pweLogotypesElement && pweLogotypesElement.children.length === 0)) {
                         pweLogotypesElement.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
@@ -1892,9 +1999,6 @@ class PWEHeader {
                         pweLogotypesElement.style.opacity = 1;
                     }
 
-                    if (pweLogotypesAssociation) {
-                        pweLogotypesAssociation.style.opacity = 1;
-                    }
                 });
 
                 // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza

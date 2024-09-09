@@ -128,7 +128,7 @@ class PWECatalog10 extends PWECatalog {
         }
 
         $output .= '
-        <div id="top10" class="custom-catalog main-heading-text">';
+        <div id="top10" class="custom-catalog main-heading-text">'; 
     
             if (count($exhibitors) < 10) {
                 $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';

@@ -224,6 +224,7 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                 $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
                 $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
                 $header_logotypes_media_urls = [];
+                $header_logotypes_slider_off = '';
 
                 if (is_array($pwe_header_logotypes_json)) {
                     foreach ($pwe_header_logotypes_json as $logotypes_item) {

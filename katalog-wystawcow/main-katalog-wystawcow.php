@@ -596,6 +596,8 @@ class PWECatalog {
                 $source_utm = ''; 
             }
 
+            $current_page = $_SERVER['REQUEST_URI'];
+
             if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
                 $output_html .= '
                 <style>
@@ -623,13 +625,38 @@ class PWECatalog {
                         transform: translateY(-60%);
                     }
                 </style>';
-            } else {
-                // $output_html .= '
-                // <style>
-                //     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
-                //         display: none !important;
-                //     } 
-                // </style>';
+            } else if (strpos($current_page, 'zostan-wystawca') || strpos($current_page, 'become-an-exhibitor')) {
+                $output_html .= '
+                <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .'),
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') * {
+                        width: 100%;
+                        height: 100%;
+                    }
+                    #katalog-'. self::$rnd_id .' {
+                        position: relative;
+                        background-image: url(/doc/header_mobile.webp);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        padding: 0;
+                    } 
+                    #katalog-'. self::$rnd_id .':before {
+                        content: "";
+                        position: absolute;
+                        top: 60%;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        margin: auto;
+                        max-width: 300px;
+                        height: auto;
+                        background-image: url(/doc/logo.webp);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        transform: translateY(-60%);
+                    }
+                </style>';
             } 
         }
 

@@ -17,6 +17,8 @@ class PWEPostsSlider {
          * @return string The DOM structure as HTML.
          */
         private static function createDOM($id_rnd, $media_url, $min_image, $max_image, $full_mode) {
+
+                $accent_color = do_shortcode('[trade_fair_accent]');
                 
                 $output = '
                 <style>
@@ -45,7 +47,7 @@ class PWEPostsSlider {
                                         transform: translateX(0);
                                 }
                         }
-                        .pwe-posts .slides .slide{
+                        .pwe-posts .slides .slide {
                                 animation: slideAnimation 0.5s ease-in-out;
                         }
                         @media (max-width: 1200px) {
@@ -115,7 +117,37 @@ class PWEPostsSlider {
                                 
                         }
 
-                $output .='</div></div>';
+                        $output .= '
+                        </div>';
+
+                        $output .= '
+                        <style>
+                                .pwe-posts .dots-container {
+                                        display: none;
+                                        text-align: center;
+                                        margin-top: 18px;
+                                }
+                                .pwe-posts .dot {
+                                        display: inline-block;
+                                        width: 15px;
+                                        height: 15px;
+                                        border-radius: 50%;
+                                        background-color: #bbb;
+                                        margin: 0 5px;
+                                        cursor: pointer;
+                                }
+                                .pwe-posts .dot.active {
+                                        background-color: '. $accent_color .';
+                                }   
+                        </style>
+                        
+                        <div class="dots-container">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                        </div>';
+
+                $output .='</div>';
                 return $output;
         }
 
@@ -138,6 +170,8 @@ class PWEPostsSlider {
                                 const slider = document.querySelector("#PWEPostsSlider-'.$id_rnd.'");
                                 const slides = document.querySelector("#PWEPostsSlider-'.$id_rnd.' .slides");
                                 const images = document.querySelectorAll("#PWEPostsSlider-'.$id_rnd.' .slides .pwe-post");
+                                const dotsContainer = slider.querySelector("#PWEPostsSlider-'.$id_rnd.' .dots-container");
+                                const dots = slider.querySelectorAll("#PWEPostsSlider-'.$id_rnd.' .dots-container .dot");
 
                                 let isMouseOver = false;
                                 let isDragging = false;
@@ -214,6 +248,10 @@ class PWEPostsSlider {
                                         $output .= '
                                         slides.style.transform = `translateX(-${slidesTransform}px)`; 
 
+                                        if (dotsContainer) {
+                                                dotsContainer.style.display = "block";
+                                        }
+
                                         function nextSlide() {
                                                 slides.querySelectorAll("#PWEPostsSlider-'. $id_rnd .' .pwe-post").forEach(function(image){
                                                         image.classList.add("slide");
@@ -236,6 +274,8 @@ class PWEPostsSlider {
                                                                 image.classList.remove("slide");
                                                         })
                                                 }, '. ($slide_speed / 2) .');
+
+                                                updateCurrentSlide(1);
                                         }                       
 
                                         slider.addEventListener("mousemove", function() {
@@ -250,6 +290,19 @@ class PWEPostsSlider {
                                         let startX;
                                         let startY;
                                         let slideMove = 0;
+                                        let currentSlide = 0;
+
+                                        function updateDots() {
+                                                if (dots[currentSlide]) {
+                                                        dots.forEach(dot => dot.classList.remove("active"));
+                                                        dots[currentSlide].classList.add("active");
+                                                }
+                                        }
+
+                                        function updateCurrentSlide(delta) {
+                                                currentSlide = (currentSlide + delta + dots.length) % dots.length;
+                                                updateDots();
+                                        }
 
                                         const links = document.querySelectorAll("#PWEPostsSlider-'. $id_rnd .' a");
                                         links.forEach(link => {
@@ -342,7 +395,9 @@ class PWEPostsSlider {
                                                                 if (lastSlide) {
                                                                         lastSlide.classList.add("last-slide");
                                                                         slides.insertBefore(lastSlide, slides.firstChild);
-                                                                        lastSlide.classList.remove("last-slide");      
+                                                                        lastSlide.classList.remove("last-slide");   
+                                                                        
+                                                                        updateCurrentSlide(-1);
                                                                 }
                                                         } else {
                                                                 const firstSlide = slides.firstElementChild;
@@ -350,7 +405,8 @@ class PWEPostsSlider {
                                                                         firstSlide.classList.add("first-slide");
                                                                         slides.appendChild(firstSlide);
                                                                         firstSlide.classList.remove("first-slide");
-                                                                        
+
+                                                                        updateCurrentSlide(1);     
                                                                 }
                                                         }
                                                 }

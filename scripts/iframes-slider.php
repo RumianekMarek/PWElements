@@ -40,7 +40,7 @@ class PWEIframesSlider {
                             min-height: 0 !important;
                             min-width: 0 !important;
                             pointer-events: auto;
-                            gap: 26px;
+                            gap: 27px;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-item {
                             position: relative;
