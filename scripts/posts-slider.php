@@ -22,10 +22,15 @@ class PWEPostsSlider {
                 
                 $output = '
                 <style>
+                        #PWEPostsSlider-'.$id_rnd.' {
+                                transition: .3s ease;
+                                opacity: 0;
+                        }
                         .pwe-posts .pwe-posts-slider {
                                 width: 100%;
                                 overflow: hidden !important;
                                 margin: 0 !important;
+                                padding-top: 18px;
                         }
                         .pwe-posts .slides {
                                 display: flex;
@@ -34,7 +39,7 @@ class PWEPostsSlider {
                                 min-height : 0 !important;
                                 min-width : 0 !important;
                                 pointer-events: auto;
-                                gap: 30px;
+                                gap: 19px;
                         }
                         .pwe-posts .slide {
                                 padding: 0;
@@ -125,7 +130,7 @@ class PWEPostsSlider {
                                 .pwe-posts .dots-container {
                                         display: none;
                                         text-align: center;
-                                        margin-top: 18px;
+                                        margin-top: 36px;
                                 }
                                 .pwe-posts .dot {
                                         display: inline-block;
@@ -172,6 +177,9 @@ class PWEPostsSlider {
                                 const images = document.querySelectorAll("#PWEPostsSlider-'.$id_rnd.' .slides .pwe-post");
                                 const dotsContainer = slider.querySelector("#PWEPostsSlider-'.$id_rnd.' .dots-container");
                                 const dots = slider.querySelectorAll("#PWEPostsSlider-'.$id_rnd.' .dots-container .dot");
+
+                                slider.style.opacity = 1;
+                                slider.style.transition = "opacity 0.3s ease";
 
                                 let isMouseOver = false;
                                 let isDragging = false;
@@ -242,7 +250,7 @@ class PWEPostsSlider {
                                         if ($full_mode != 'true'){
                                                 $output .= 'const slidesTransform = (imageWidth + 18) * '. $min_image_adjusted .';'; 
                                         } else {
-                                                $output .= 'const slidesTransform = (imageWidth + 30) * '. $min_image_adjusted .';'; 
+                                                $output .= 'const slidesTransform = (imageWidth + 18) * '. $min_image_adjusted .';'; 
                                         }
                                 
                                         $output .= '

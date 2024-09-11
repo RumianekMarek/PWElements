@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
             } else {
                 $('.pwe-posts-wrapper').append(response);
                 button.data('offset', offset + 18);
-                button.text('Załaduj więcejaaa');
+                button.text('Załaduj więcej');
                 button.prop('disabled', false);
             }
         });
