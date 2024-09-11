@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $all_entrys = array();
                 $all_entrys_id = array();
                 $full_form = '';
-
+                
                 foreach($all_forms as $form){
                     if(strpos(strtolower($form['title']), ('rejestracja gości wystawców ' . $lang)) !== false){
                         $form_id = $form['id'];
@@ -48,10 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         ];
 
                         $entry_id = GFAPI::add_entry($entry);
-                        $full_entry = GFAPI::get_entry($entry_id);
-
-                        $notice = GFAPI::send_notifications( $full_form, $full_entry);
-
+                        $all_entrys_id[] = $entry_id;
                         $all_entrys[] = true;
                     } else {
                         $all_entrys[] = false;
@@ -59,7 +56,40 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 }
                 echo json_encode($all_entrys);
             }
-        }     
+
+            if(count($all_entrys_id) > 0 ){
+                global $wpdb;
+                // Ustaw nazwę tabeli
+                $table_name = $wpdb->prefix . 'mass_exhibitors_invite_query';
+
+                // Sprawdź, czy tabela istnieje
+                if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") != $table_name) {
+                    // Tabela nie istnieje, więc ją tworzymy
+                    $charset_collate = $wpdb->get_charset_collate();
+
+                    $sql = "CREATE TABLE $table_name (
+                        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                        gf_entry_id BIGINT(20) UNSIGNED,
+                        status VARCHAR(20) DEFAULT 'new',
+                        PRIMARY KEY (id)
+                    ) $charset_collate;";
+
+                    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+                    dbDelta($sql);
+                }
+                foreach($all_entrys_id as $single_id){
+                    $wpdb->insert(
+                        $table_name,
+                        array(
+                            'gf_entry_id' => $single_id,
+                        ),
+                        array(
+                            '%d',
+                        )
+                    );
+                }
+            }
+        }
     } else {
         echo 'error code 401';
         exit;
