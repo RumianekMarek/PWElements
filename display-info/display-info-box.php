@@ -602,10 +602,12 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                         width: 84%;
                         font-size: 18px;
                     }
-                    #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name {
+                    #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name,
+                    #info-box-'. self::$rnd_id .' .pwe-box-speakers {
                         display: none;
                     }
                     #info-box-'. self::$rnd_id .' .pwe-box-info {
+                        width: 100%;
                         display: flex;
                         flex-wrap: wrap;
                         justify-content: flex-end !important;

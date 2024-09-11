@@ -72,6 +72,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'test1.php';
         require_once plugin_dir_path(__FILE__) . 'test2.php';
         require_once plugin_dir_path(__FILE__) . 'resend-ticket.php';
+        require_once plugin_dir_path(__FILE__) . 'header-new.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -327,6 +328,7 @@ class PWElements {
             'Test'                           => 'PWElementTest',
             'Test1'                           => 'PWElementTest1',
             'Test2'                           => 'PWElementTest2',
+            'Header New'                           => 'PWElementHeaderNew',
         );
     }
 
@@ -394,6 +396,7 @@ class PWElements {
             'PWElementTest'             => 'test.php',
             'PWElementTest1'             => 'test1.php',
             'PWElementTest2'             => 'test2.php',
+            'PWElementHeaderNew'             => 'header-new.php',
         ); 
     }
 
@@ -485,11 +488,7 @@ class PWElements {
      * @return string 
      */
     public static function languageChecker($pl, $en = ''){
-        if(get_locale() == 'pl_PL'){ 
-            return $pl;
-        } else {
-            return $en;
-        }
+        return get_locale() == 'pl_PL' ? $pl : $en;
     }
 
      /**

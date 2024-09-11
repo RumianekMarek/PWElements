@@ -21,80 +21,92 @@ class PWElementMapaTest extends PWElements {
     public static function initElements() {
         $element_output = array(
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Title with color background', 'pwelement'),
+                'param_name' => 'pwe_custom_title_color_1',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMapaTest',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Custom title first', 'pwelement'),
-                'param_name' => 'pwe_custom_title',
+                'param_name' => 'pwe_custom_title_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Number of visitors', 'pwelement'),
-                'param_name' => 'pwe_number_visitors',
+                'param_name' => 'pwe_number_visitors_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Number of exhibitors', 'pwelement'),
-                'param_name' => 'pwe_number_exhibitors',
+                'param_name' => 'pwe_number_exhibitors_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Number of countries', 'pwelement'),
-                'param_name' => 'pwe_number_countries',
+                'param_name' => 'pwe_number_countries_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Percent of polish visitors', 'pwelement'),
-                'param_name' => 'pwe_percent_polish_visitors',
+                'param_name' => 'pwe_percent_polish_visitors_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Date of events', 'pwelement'),
-                'param_name' => 'pwe_event_date',
+                'param_name' => 'pwe_event_date_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Exhibition space', 'pwelement'),
-                'param_name' => 'pwe_exhibition_space',
+                'param_name' => 'pwe_exhibition_space_1',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementMapa',
+                    'value' => 'PWElementMapaTest',
                 ),
             ),
         );
@@ -104,18 +116,19 @@ class PWElementMapaTest extends PWElements {
     public static function output($atts) {
 
         extract( shortcode_atts( array(
-            'pwe_custom_title' => '',
-            'pwe_number_visitors' => '',
-            'pwe_number_exhibitors' => '',
-            'pwe_number_countries' => '',
-            'pwe_percent_polish_visitors' => '',
-            'pwe_event_date' => '',
-            'pwe_exhibition_space' => '',
+            'pwe_custom_title_color_1' => '',
+            'pwe_custom_title_1' => '',
+            'pwe_number_visitors_1' => '',
+            'pwe_number_exhibitors_1' => '',
+            'pwe_number_countries_1' => '',
+            'pwe_percent_polish_visitors_1' => '',
+            'pwe_event_date_1' => '',
+            'pwe_exhibition_space_1' => '',
         ), $atts ));
 
-        $pwe_number_visitors = !empty($pwe_number_visitors) ? $pwe_number_visitors : 0;
-        $pwe_percent_polish_visitors = !empty($pwe_percent_polish_visitors) ? $pwe_percent_polish_visitors : 0;
-        $pwe_number_countries = !empty($pwe_number_countries) ? $pwe_number_countries : 15;
+        $pwe_number_visitors_1 = !empty($pwe_number_visitors_1) ? $pwe_number_visitors_1 : 0;
+        $pwe_percent_polish_visitors_1 = !empty($pwe_percent_polish_visitors_1) ? $pwe_percent_polish_visitors_1 : 0;
+        $pwe_number_countries_1 = !empty($pwe_number_countries_1) ? $pwe_number_countries_1 : 15;
 
         $output = '
         <style>
@@ -129,7 +142,6 @@ class PWElementMapaTest extends PWElements {
                 margin: 20px 0;
                 text-align: center;
             }
-
             #pweMapa .pwe-container-mapa {
                 background-image:url(/doc/mapka_mobile.webp);
                 background-position: right;
@@ -237,15 +249,52 @@ class PWElementMapaTest extends PWElements {
                     font-size: 14px;
                 }
             }
-        </style>
+        </style>';
 
+        if ($pwe_custom_title_color_1 == true) {
+            $output .= '
+                <style>
+                .row-parent:has(#pweMapa) {
+                    max-width: 100% !important;
+                    padding: 0 !important;
+                }
+                #pweMapa h2 {
+                    width: 100%;
+                    background-color: red;
+                    padding: 8px;
+                    color: white !important;
+                    margin: 0;
+                }
+                #pweMapa .pwe-container-mapa {
+                    max-width: 1200px;
+                    padding: 36px;
+                    margin: 36px;
+                }
+                @media(max-width:680px){
+                    #pweMapa h2 {
+                        font-size: 20px;
+                    }
+                    #pweMapa .mapka-mobile {
+                        padding: 0 36px 36px;
+                    }
+                }
+                @media(max-width:430px){
+                    #pweMapa h2 {
+                        font-size: 16px;
+                    }
+                }
+                </style>
+            ';
+        }
+
+        $output .= '
         <div id="pweMapa">
-            <h2 class="text-accent-color">'. $pwe_custom_title .'</h2>
+            <h2 class="text-accent-color">'. $pwe_custom_title_1 .'</h2>
             <div class="pwe-container-mapa">
                 <div class="pwe-mapa-elements text-accent-color">
                     <div class="pwe-mapa-element" style="background: '.self::$main2_color.'">
                         <i class="fa fa-group fa-1x fa-fw"></i>
-                        <p class="pwe-mapa-element-heading">'. $pwe_number_visitors .'</p>
+                        <p class="pwe-mapa-element-heading">'. $pwe_number_visitors_1 .'</p>
                         <p class="pew-mapa-element-text">'.
                             self::languageChecker(
                             <<<PL
@@ -261,7 +310,7 @@ class PWElementMapaTest extends PWElements {
                 <div class="pwe-mapa-elements">
                     <div class="pwe-mapa-element" style="background-color: '.self::$accent_color.'">
                         <i class="fa fa-wpforms fa-1x fa-fw"></i>
-                        <p class="pwe-mapa-element-heading">'. $pwe_number_exhibitors .'</p>
+                        <p class="pwe-mapa-element-heading">'. $pwe_number_exhibitors_1 .'</p>
                         <p class="pew-mapa-element-text">'.
                             self::languageChecker(
                             <<<PL
@@ -277,7 +326,7 @@ class PWElementMapaTest extends PWElements {
                 <div class="pwe-mapa-elements">
                     <div class="pwe-mapa-element" style="background-color: #9a1933;">
                         <i class="fa fa-world fa-1x fa-fw"></i>
-                        <p class="pwe-mapa-element-heading">'. $pwe_number_countries .'</p>
+                        <p class="pwe-mapa-element-heading">'. $pwe_number_countries_1 .'</p>
                         <p class="pew-mapa-element-text">'.
                             self::languageChecker(
                             <<<PL

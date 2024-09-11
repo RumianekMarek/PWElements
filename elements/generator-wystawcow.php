@@ -123,7 +123,7 @@ class PWElementGenerator extends PWElements {
         $generator_html_text_decoded = urldecode($generator_html_text_decoded);
         $generator_html_text_content = wpb_js_remove_wpautop($generator_html_text_decoded, true);
 
-       
+        $token = $_GET['token'];
 
         // if ($generator_tickets == true) {
         //     if (get_locale() == 'pl_PL') {
@@ -138,7 +138,6 @@ class PWElementGenerator extends PWElements {
         //         $generator_html_text_content = (empty($generator_html_text_content)) ? 'For organizational reasons, the number of invitations is limited. Registration is only available up to 30 days before the fair.' : $generator_html_text_content;
         //     }
         // }
-
 
         $output = '
         <style>
@@ -569,6 +568,8 @@ class PWElementGenerator extends PWElements {
 
             .modal__elements input{
                 text-align: center;
+            }
+            .modal__elements input[type="text"]{
                 width:80%;
             }
 
@@ -873,18 +874,21 @@ class PWElementGenerator extends PWElements {
 
                                                 </div>
 
-                                                [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]
-                                                <button class="btn tabela-masowa btn-gold">'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                Wysyłka zbiorcza
-                                                PL,
-                                                <<<EN
-                                                Collective send
-                                                EN
-                                            )
-                                        .'</button>           
-                                                <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
+                                                [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]';
+                                        if ($token == "masowy"){
+                                            $output .= '<button class="btn tabela-masowa btn-gold">'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    Wysyłka zbiorcza
+                                                    PL,
+                                                    <<<EN
+                                                    Collective send
+                                                    EN
+                                                )
+                                                .'</button>
+                                            ';
+                                            }
+                                        $output .= ' <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
                                             </div>
                                             <div class="gen-btn-img" style="background-image: url('.
                                                 self::languageChecker(
@@ -996,14 +1000,14 @@ class PWElementGenerator extends PWElements {
                                         <p style="max-width:90%;">'.
                                             self::languageChecker(
                                                 <<<PL
-                                                Uzupełnij poniżej nazwę firmy zapraszającej oraz dane osób, które powinny otrzymać zaproszenia VIP GOLD. Dane wklej pod nagłówkami poniższej tabeli. Przed wysyłką zweryfikuj zgodność danych.
+                                                Uzupełnij poniżej nazwę firmy zapraszającej oraz dane osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
                                                 PL,
                                                 <<<EN
                                                 Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
                                                 EN
                                             )
                                         .'</p>
-                                        <input class="company" placeholder="'.
+                                        <input type="text" class="company" placeholder="'.
                                             self::languageChecker(
                                                 <<<PL
                                                 Firma Zapraszająca (wpisz nazwę swojej firmy)
@@ -1013,34 +1017,8 @@ class PWElementGenerator extends PWElements {
                                                 EN
                                             )
                                         .'"></input>
-                                        <table id="mass-table">
-                                            <tr>
-                                                <th>'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                IMIĘ I NAZWISKO (GOŚCIA)
-                                                PL,
-                                                <<<EN
-                                                Name of the invited person
-                                                EN
-                                            )
-                                        .'</th>
-                                                <th>'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                E-MAIL OSOBY ZAPRASZANEJ
-                                                PL,
-                                                <<<EN
-                                                E-mail of the invited person
-                                                EN
-                                            )
-                                        .'</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="mass-send-name" contenteditable="true"></td>
-                                                <td class="mass-send-email" contenteditable="true"></td>
-                                            </tr>
-                                        </table>
+                                        <label for="fileUpload">Wybierz plik z danymi</label>
+                                        <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
                                         <button class="wyslij btn-gold">'.
                                             self::languageChecker(
                                                 <<<PL
@@ -1078,22 +1056,63 @@ class PWElementGenerator extends PWElements {
                             }
                         });
 
+                        $(document).ready(function() {
+                            $("#fileUpload").on("change", function(event) {
+                                console.log("cos");
+                                const file = event.target.files[0];
+
+                                if (!file) {
+                                    alert("Nie wybrano pliku.");
+                                    return;
+                                }
+
+                                const allowedExtensions = ["csv", "xls", "xlsx"];
+                                const fileExtension = file.name.split(".").pop().toLowerCase();
+
+                                if (!allowedExtensions.includes(fileExtension)) {
+                                    alert("Niewłaściwy typ pliku. Proszę wybrać plik CSV, XLS lub XLSX.");
+                                    return;
+                                }
+
+                                const reader = new FileReader();
+
+                                reader.onload = function(e) {
+                                    const fileContent = e.target.result;
+
+                                    $("#fileContent").text(fileContent);
+                                };
+
+                                if (fileExtension === "csv") {
+                                    reader.readAsText(file);
+                                } else {
+                                    reader.readAsArrayBuffer(file);
+                                }
+                                console.log(reader);
+                            });
+                        });
+
                         $(".wyslij").on("click",function(){
+                        
                             pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
 
-                            content_name = $("#mass-table").find(".mass-send-name").text().split("\n");
-                            content_email = $("#mass-table").find(".mass-send-email").text().split("\n");
-                            
-                            const cNames = content_name.filter(target => (target !== "" && target !== "\t")).map(target => target.replace(/\t\t/g, "")); 
-                            const cEmail = content_email.filter(target => (target !== "" && target !== "\t")).map(target => target.replace(/\t\t/g, "")); 
+                            let content_name = [];
+                            let content_email = [];
 
-                            for (let i = 0; i < cEmail.length; i++) {
-                                if(cEmail[i] != ""){
-                                    pair = {"name": cNames[i], "email": cEmail[i]};
+                            $("#mass-table").find(".mass-send-name td").each(function() {
+                                content_name.push($(this).text().trim());
+                            });
+
+                            $("#mass-table").find(".mass-send-email td").each(function() {
+                                content_email.push($(this).text().trim());
+                            });
+                            
+                            for (let i = 0; i < content_email.length; i++) {
+                                if(content_email[i] != ""){
+                                    pair = {"name": content_name[i], "email": content_email[i]};
                                     tableCont.push(pair);
                                 }
                             }
-                                
+
                             if ($("#mass-table").find("td").filter(function(){ return $(this).html() != "" }).length < 2 && !$("#mass-table").next().hasClass("company-error")){
                                 $("#mass-table").after(`<p class="company-error error-color" >'.
                                             self::languageChecker(
@@ -1121,6 +1140,7 @@ class PWElementGenerator extends PWElements {
                                         .'</p>`);
                                 }
                             } else if (tableCont.length > 1 ){
+                                $(this).remove();
                                 $(this).after("<div id=spinner class=spinner></div>");
                                 $.post("' . $send_file . '", {
                                     token: "' . self::generateToken() .'",
@@ -1140,6 +1160,15 @@ class PWElementGenerator extends PWElements {
                                         }
                                     });
                                     
+                                    console.log(resdata);
+
+                                    resdata.forEach(function(value, index){
+                                    if(value === false){
+                                            const index_number = index + 1;
+                                            $("#mass-table").after(`<p style="color:red; font-weight: 700;">Email problem: ` + index_number + `</p>`);
+                                        }
+                                    })
+
                                     $("#spinner").remove();
                                     tableCont.splice(0, tableCont.length);
                                     $("#dataContainer").empty();

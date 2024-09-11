@@ -308,9 +308,20 @@ class PWElementPosts extends PWElements {
                 $output .= '
                 <style>
                     .pwelement_'. self::$rnd_id .' .pwe-posts {
-                        columns: 3;
-                        column-gap: 20px;
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 20px;
                         opacity: 0;
+                    }
+                    @media (max-width: 960px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-posts {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
+                    @media (max-width: 500px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-posts {
+                            grid-template-columns: repeat(1, 1fr);
+                        }
                     }
                 </style>';
             }
@@ -321,17 +332,15 @@ class PWElementPosts extends PWElements {
                     flex-direction: column;
                     position: relative;
                     background-color: #333;
-                    border-radius: 10px;
+                    border-radius: 11px;
                     transition: .3s ease;
-                    break-inside: avoid-column;
-	                margin-bottom: 1rem;
-                    box-shadow: 5px 5px 15px #999;
+                    height: 330px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post:hover {
                     transform: scale(1.05);
                 }   
                 .pwelement_'. self::$rnd_id .' .pwe-post-title {
-                    font-weight: 500;
+                    font-weight: 600;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail {
                     position: relative;
@@ -413,24 +422,16 @@ class PWElementPosts extends PWElements {
                     transition: .3s ease;
                 }
                 @media (max-width: 960px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-posts {
-                        columns: 2;
-                    } 
                     .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
                         font-size: 14px;  
                     }    
-                }
-                @media (max-width: 500px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-posts {
-                        columns: 1;
-                    }  
                 }
             </style>'; 
         }
 
         $output .= '<div id="pwePosts" class="pwe-container-posts">
                         
-            <div class="pwe-posts-wrapper">';
+            <div class="pwe-posts-wrapper">'; 
 
             if ($posts_modes == "posts_slider_mode") {
 
@@ -543,7 +544,7 @@ class PWElementPosts extends PWElements {
                     $posts_count = ($posts_count == "") ? 6 : $posts_count;
                     $max_posts = ($posts_all !== 'true') ? min($posts_count, 12) : -1;
         
-                    $args = array(
+                    $args = array( 
                         'posts_per_page' => $max_posts,
                         'orderby' => 'date',
                         'order' => 'DESC',
