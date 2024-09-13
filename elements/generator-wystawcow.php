@@ -23,7 +23,7 @@ class PWElementGenerator extends PWElements {
             array(
                 'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => __('Worker form (left)', 'pwelement'),
+                'heading' => __('Select form', 'pwelement'),
                 'param_name' => 'worker_form_id',
                 'save_always' => true,
                 'value' => array_merge(
@@ -35,16 +35,32 @@ class PWElementGenerator extends PWElements {
                     'value' => 'PWElementGenerator',
                 ),
             ),
+            // array(
+            //     'type' => 'dropdown',
+            //     'group' => 'PWE Element',
+            //     'heading' => __('Guest form (right)', 'pwelement'),
+            //     'param_name' => 'guest_form_id',
+            //     'save_always' => true,
+            //     'value' => array_merge(
+            //       array('Wybierz' => ''),
+            //       self::$fair_forms,
+            //     ),
+            //     'dependency' => array(
+            //         'element' => 'pwe_element',
+            //         'value' => 'PWElementGenerator',
+            //     ),
+            // ),
             array(
                 'type' => 'dropdown',
                 'group' => 'PWE Element',
-                'heading' => __('Guest form (right)', 'pwelement'),
-                'param_name' => 'guest_form_id',
+                'heading' => __('Select form mode', 'pwelement'),
+                'param_name' => 'generator_select',
                 'save_always' => true,
-                'value' => array_merge(
-                  array('Wybierz' => ''),
-                  self::$fair_forms,
+                'value' => array(
+                    'Generator gości wystawców' => 'exhibitor_quest',
+                    'Generator pracowników wystawców' => 'exhibitor_worker',
                 ),
+                'std' => 'exhibitor_quest',
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementGenerator',
@@ -93,17 +109,20 @@ class PWElementGenerator extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
+        $current_url = $_SERVER['REQUEST_URI'];
+
         extract( shortcode_atts( array(
             'worker_form_id' => '',
-            'guest_form_id' => '',
+            // 'guest_form_id' => '',
             // 'generator_tickets' => '',
-            'generator_html_text' => ''
+            'generator_html_text' => '',
+            'generator_select' => '',
         ), $atts ));
 
         $send_file = plugins_url('other/mass_vip.php', dirname(__FILE__));
-        
+
         $worker_entries = GFAPI::get_entries($worker_form_id);
-        $guest_entries = GFAPI::get_entries($guest_form_id);
+        // $guest_entries = GFAPI::get_entries($guest_form_id);
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $registration_count = 0;
         foreach ($worker_entries as $entry) {
@@ -112,12 +131,12 @@ class PWElementGenerator extends PWElements {
                 $registration_count++;
             }
         }
-        foreach ($guest_entries as $entry) {
-            $entry_ip = rgar($entry, 'ip');
-            if ($entry_ip === $ip_address) {
-                $registration_count++;
-            }
-        }
+        // foreach ($guest_entries as $entry) {
+        //     $entry_ip = rgar($entry, 'ip');
+        //     if ($entry_ip === $ip_address) {
+        //         $registration_count++;
+        //     }
+        // }
 
         $generator_html_text_decoded = base64_decode($generator_html_text);
         $generator_html_text_decoded = urldecode($generator_html_text_decoded);
@@ -373,6 +392,9 @@ class PWElementGenerator extends PWElements {
                 background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/badgevip.jpg);
                 border-radius: 20px 0 0 20px;
             }
+            .pwe-generator-wystawcow .form-item-element-left-wyst {
+               background-image: url( /wp-content/plugins/PWElements/media/generator-wystawcow/badgevipmockup-wys.webp);
+            }
             .pwe-generator-wystawcow .form-item-element-right {
                 background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
                 border-radius: 0 20px 20px 0;
@@ -435,7 +457,7 @@ class PWElementGenerator extends PWElements {
                 border: 2px solid black;
             }
             .pwe-generator-wystawcow .guest-info {
-                width: 70% !important;
+                width: 100% !important;
                 color: #000000 !important;
             }
             .pwe-generator-wystawcow .guest-info h5 {
@@ -480,6 +502,7 @@ class PWElementGenerator extends PWElements {
                 color: black !important;
             }
             .pwe-generator-wystawcow .container .gen-btn-img {
+                display:none !important;
                 position: absolute !important;
                 top: 0 !important;
                 right: 0 !important;
@@ -545,6 +568,7 @@ class PWElementGenerator extends PWElements {
                     display:none;
                 }
             }
+
             .modal__elements {
                 z-index: 9999;
                 background-color: #fff;
@@ -555,11 +579,9 @@ class PWElementGenerator extends PWElements {
                 max-width: 80%;
                 max-height: 80%;
                 overflow: auto;
-                position: fixed;
-                top: 100px;
                 height: auto;
                 min-width: 900px;
-                text-align: -webkit-center;
+                text-align: center;
             }
 
             .tabela-masowa{
@@ -568,7 +590,9 @@ class PWElementGenerator extends PWElements {
 
             .modal__elements input{
                 text-align: center;
+                margin: 18px auto;
             }
+                
             .modal__elements input[type="text"]{
                 width:80%;
             }
@@ -631,9 +655,27 @@ class PWElementGenerator extends PWElements {
             .modal__elements .zastepczy{
                 color: #ccc;
                 font-style: italic; 
+            } 
+            .file-uloader{
+                margin-top: 18px;
             }
-            td:empty{
-                line-height: 6;
+            .file-selctor {
+                display:flex;
+                gap:18px;
+                justify-content: center;
+                align-items: center;
+                margin-top: 9px;
+            }
+            .file-selctor :is(label, select){
+                width: 30%;
+                min-width: 100px;
+                margin: 0;
+            }
+            .file-selctor select{
+                padding-right: 30px;
+                cursor: pointer;
+                background: #fff url(/wp-content/plugins/PWElements/media/arrow-down.png) no-repeat right 5px top 55%;
+                background-size: 20px 20px;
             }
             .wyslij.btn-gold{
                 margin:18px !important;
@@ -669,17 +711,30 @@ class PWElementGenerator extends PWElements {
                 .pwe-generator-wystawcow .container {
                     max-width: none !important;
                     margin: 15px auto 0;
-                    height: 950px;
+                    min-height: 700px;
+                    height: auto;
+                }
+                .pwe-generator-wystawcow .container:has(.wyst) {
+                    max-width: none !important;
+                    margin: 15px auto 0;
+                    min-height: 520px;
+                    height: auto;
+                }
+                .pwe-generator-wystawcow .container ul.gform_fields li.gfield {
+                    padding-right: 0 !important;
                 }
                 .pwe-generator-wystawcow .container .container-form {
                     width: 100%;
                     height: 250px;
                 }
+                .pwe-generator-wystawcow .forms-container-form__right h2 {
+                    display: none;
+                }
                 .pwe-generator-wystawcow .container .container-forms .container-info .info-item {
                     position: absolute;
                     top: 250px;
                     width: 100%;
-                    height: 740px;
+                    height: auto;
                     border-radius: 0 0 18px 18px !important;
                 }
                 .pwe-generator-wystawcow .container .container-form {
@@ -735,6 +790,9 @@ class PWElementGenerator extends PWElements {
                     height: 40px;
                     width: 120px !important;
                 }
+                .pwe-generator-wystawcow .forms-container-info__btn.btn-exh {
+                    display: none;
+                }
             }
             @media (max-width:640px) {
                 .pwe-generator-wystawcow h2 {
@@ -766,11 +824,14 @@ class PWElementGenerator extends PWElements {
         </style>
 
             <div id="pweGeneratorWystawcow" class="pwe-generator-wystawcow">
+                ';
+                    if ($generator_select == "exhibitor_quest") {
+                    $output .= '
 
-                <div class="container">
-                    <div class="container-forms">
+                    <div class="container">
+                        <div class="container-forms">
                         <div class="container-info">
-                            <div class="info-item info-item-left none">
+                        <div class="info-item info-item-left none">
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="forms-container-form__left active">
@@ -784,7 +845,7 @@ class PWElementGenerator extends PWElements {
                                                     EN
                                                 )
                                             .'</h2>
-                                            [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]
+
                                         </div>
                                     </div>
                                 </div>
@@ -874,7 +935,7 @@ class PWElementGenerator extends PWElements {
 
                                                 </div>
 
-                                                [gravityform id="'. $guest_form_id .'" title="false" description="false" ajax="false"]';
+                                                [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]';
                                         if ($token == "masowy"){
                                             $output .= '<button class="btn tabela-masowa btn-gold">'.
                                                 self::languageChecker(
@@ -887,7 +948,7 @@ class PWElementGenerator extends PWElements {
                                                 )
                                                 .'</button>
                                             ';
-                                            }
+                                        }
                                         $output .= ' <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
                                             </div>
                                             <div class="gen-btn-img" style="background-image: url('.
@@ -909,6 +970,105 @@ class PWElementGenerator extends PWElements {
                         </div>
                         <div class="container-form">
                             <div class="form-item form-item-element-left log-in">
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <div class="gen-mobile">
+                                            <h2>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                    WYGENERUJ</br>IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!
+                                                PL,
+                                                <<<EN
+                                                    GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!
+                                                EN
+                                            )
+                                            .'</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-item form-item-element-right sign-up">
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <h2>'.
+                                            self::languageChecker(
+                                                <<<PL
+                                                    WYGENERUJ<br>IDENTYFIKATOR VIP<br>DLA SWOICH GOŚCI!
+                                                PL,
+                                                <<<EN
+                                                    GENERATE<br>A VIP INVITATION<br>FOR YOUR GUESTS!
+                                                EN
+                                            )
+                                        .'</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+                    };
+
+                    if ($generator_select == "exhibitor_worker") {
+                    $output .= '
+                         <div class="container">
+                        <div class="container-forms wyst">
+                        <div class="container-info">
+                        <div class="info-item info-item-left none">
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <div class="forms-container-form__left active">
+                                            <h2>'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA
+                                                    PL,
+                                                    <<<EN
+                                                        GENERATE<br>AN ID FOR YOURSELF<br>AND YOUR COWORKERS
+                                                    EN
+                                                )
+                                            .'</h2>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="info-item info-item-right">
+                            <div class="table">
+                                <div class="table-cell">
+                                        <div class="guest-info">
+                                            <div class="forms-container-form__right">
+                                                <h2>'.
+                                                    self::languageChecker(
+                                                        <<<PL
+                                                            WYGENERUJ</br>IDENTYFIKATOR DLA</br>SIEBIE I OBSŁUGI STOISKA!
+                                                        PL,
+                                                        <<<EN
+                                                            GENERATE</br>AN ID FOR YOURSELF</br>AND YOUR COWORKERS!
+                                                        EN
+                                                    )
+                                                .'</h2>
+
+                                                [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]';
+                                        $output .= ' <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
+                                            </div>
+                                            <div class="gen-btn-img" style="background-image: url('.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                        /wp-content/plugins/PWElements/media/generator-wystawcow/gen-pl.png
+                                                    PL,
+                                                    <<<EN
+                                                        /wp-content/plugins/PWElements/media/generator-wystawcow/gen-en.png
+                                                    EN
+                                                )
+                                            .');">
+                                                <div class="forms-container-info__btn btn-exh"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-form">
+                            <div class="form-item form-item-element-left form-item-element-left-wyst log-in">
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="gen-mobile">
@@ -963,9 +1123,11 @@ class PWElementGenerator extends PWElements {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>';
+                    };
+                    $output .= '</div>
                 </div>
-                <div class="heading-text custom-tech-support-text">
+                <div style="text-align: center; display: flex; justify-content: center;" class="heading-text custom-tech-support-text">
                     <h3>'.
                         self::languageChecker(
                             <<<PL
@@ -978,12 +1140,15 @@ class PWElementGenerator extends PWElements {
                             EN
                         )
                     .'</h3>
-                    
+
                 </div>
             </div>
-
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
             <script type="text/javascript">
                 jQuery(document).ready(function($){
+                    let fileContent = "";
+                    let fileArray = "";
 
                     $(".tabela-masowa").on("click",function(){
                         const tableCont = [];
@@ -1000,7 +1165,7 @@ class PWElementGenerator extends PWElements {
                                         <p style="max-width:90%;">'.
                                             self::languageChecker(
                                                 <<<PL
-                                                Uzupełnij poniżej nazwę firmy zapraszającej oraz dane osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
+                                                Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
                                                 PL,
                                                 <<<EN
                                                 Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
@@ -1017,8 +1182,11 @@ class PWElementGenerator extends PWElements {
                                                 EN
                                             )
                                         .'"></input>
-                                        <label for="fileUpload">Wybierz plik z danymi</label>
-                                        <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
+                                        <div class="file-uloader">
+                                            <label for="fileUpload">Wybierz plik z danymi</label>
+                                            <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
+                                            <p class="under-label">Dozwolone rozszerzenia .csv, .xls, .xlsx</p>
+                                        </div>
                                         <button class="wyslij btn-gold">'.
                                             self::languageChecker(
                                                 <<<PL
@@ -1058,7 +1226,6 @@ class PWElementGenerator extends PWElements {
 
                         $(document).ready(function() {
                             $("#fileUpload").on("change", function(event) {
-                                console.log("cos");
                                 const file = event.target.files[0];
 
                                 if (!file) {
@@ -1075,10 +1242,36 @@ class PWElementGenerator extends PWElements {
                                 }
 
                                 const reader = new FileReader();
-
+                                
                                 reader.onload = function(e) {
-                                    const fileContent = e.target.result;
+                                    fileContent = e.target.result;
 
+                                    if(file.name.split(".").pop().toLowerCase() != "csv"){
+                                        const data = new Uint8Array(e.target.result);
+                                        const workbook = XLSX.read(data, { type: "array" });
+                                        const firstSheetName = workbook.SheetNames[0];
+                                        const worksheet = workbook.Sheets[firstSheetName];
+                                        fileContent = XLSX.utils.sheet_to_csv(worksheet);
+                                    } else {
+                                        fileContent = e.target.result;
+                                    }
+
+                                    fileArray = fileContent.split("\n");
+                                    const fileLabel = fileArray[0].split(",");
+
+                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret"></select></div>`);
+                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami (edited)</label><select type="select" id="name-column" name="name-column" class="selectoret"></select></div>`);
+                                    
+                                    $(".selectoret").each(function(){
+                                        $(this).append(`<option value="">Wybierz</option>`);
+                                    });
+
+                                    fileLabel.forEach(function(element) {
+                                        $(".selectoret").each(function(){
+                                            $(this).append(`<option value="${element}">${element}</option>`);
+                                        })
+                                    });
+                            
                                     $("#fileContent").text(fileContent);
                                 };
 
@@ -1087,59 +1280,78 @@ class PWElementGenerator extends PWElements {
                                 } else {
                                     reader.readAsArrayBuffer(file);
                                 }
-                                console.log(reader);
                             });
                         });
 
                         $(".wyslij").on("click",function(){
-                        
                             pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
+                            let company_name = "";
+                            let emailColumn = "";
+                            let nameColumn = "";
 
-                            let content_name = [];
-                            let content_email = [];
+                            if ($(".company").val() != ""){
+                                company_name = $(".company").val();
+                            } else {
+                                $(".company").after(`<p class="company-error error-color" >'.
+                                    self::languageChecker(
+                                        <<<PL
+                                        Nazwa firmy jest wymagana
+                                        PL,
+                                        <<<EN
+                                        Company Name is required
+                                        EN
+                                    )
+                                .'</p>`);
+                            }
 
-                            $("#mass-table").find(".mass-send-name td").each(function() {
-                                content_name.push($(this).text().trim());
-                            });
+                            if ($("#email-column").val() != ""){
+                                emailColumn = $("#email-column").val();
+                            } else {
+                                $(".file-selctor").has("#email-column").after(`<p class="company-error error-color" >'.
+                                    self::languageChecker(
+                                        <<<PL
+                                        Wybierz kolumne z danymi
+                                        PL,
+                                        <<<EN
+                                        Company Name is required
+                                        EN
+                                    )
+                                .'</p>`);
+                            }
+                            if ($("#name-column").val() != ""){
+                                nameColumn = $("#name-column").val();
+                            } else {
+                                $(".file-selctor").has("#name-column").after(`<p class="company-error error-color" >'.
+                                    self::languageChecker(
+                                        <<<PL
+                                        Wybierz kolumne z danymi
+                                        PL,
+                                        <<<EN
+                                        Company Name is required
+                                        EN
+                                    )
+                                .'</p>`);
+                            }
+                            
+                            if(company_name == "" || emailColumn == "" || nameColumn == ""){
+                                return;
+                            }
 
-                            $("#mass-table").find(".mass-send-email td").each(function() {
-                                content_email.push($(this).text().trim());
+                            let fileLabel = fileArray.shift();
+
+                            fileLabel = fileLabel.split(",");
+                            const namelIndex = fileLabel.indexOf(nameColumn);
+                            const emailIndex = fileLabel.indexOf(emailColumn);
+                            
+                            const tableCont = fileArray.map((row) => {
+                                const rowArray = row.split(",");
+                                return {"name": rowArray[namelIndex], "email": rowArray[emailIndex]};
+
                             });
                             
-                            for (let i = 0; i < content_email.length; i++) {
-                                if(content_email[i] != ""){
-                                    pair = {"name": content_name[i], "email": content_email[i]};
-                                    tableCont.push(pair);
-                                }
-                            }
-
-                            if ($("#mass-table").find("td").filter(function(){ return $(this).html() != "" }).length < 2 && !$("#mass-table").next().hasClass("company-error")){
-                                $("#mass-table").after(`<p class="company-error error-color" >'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                Wprowadź dane
-                                                PL,
-                                                <<<EN
-                                                Insert data
-                                                EN
-                                            )
-                                        .'</p>`);
-                            }
-
-                            if ($(".company").val() == ""){
-                                if (!$(".company").next().hasClass("company-error")){
-                                    $(".company").after(`<p class="company-error error-color" >'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                Nazwa firmy jest wymagana
-                                                PL,
-                                                <<<EN
-                                                Company Name is required
-                                                EN
-                                            )
-                                        .'</p>`);
-                                }
-                            } else if (tableCont.length > 1 ){
+                            console.log(tableCont);
+                            
+                            if (tableCont.length > 0 ){
                                 $(this).remove();
                                 $(this).after("<div id=spinner class=spinner></div>");
                                 $.post("' . $send_file . '", {
@@ -1174,7 +1386,16 @@ class PWElementGenerator extends PWElements {
                                     $("#dataContainer").empty();
                                 });
                             } else {
-
+                                $(".wyslij").before(`<p class="company-error error-color" style="font-weight:700;">'.
+                                    self::languageChecker(
+                                        <<<PL
+                                        Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo
+                                        PL,
+                                        <<<EN
+                                        Company Name is required
+                                        EN
+                                    )
+                                .'</p>`);
                             }
                         });
                     });
@@ -1201,17 +1422,16 @@ class PWElementGenerator extends PWElements {
             $output .= "
             <script>
                 var registrationCount = '" . $registration_count . "';
-
                 if (document.querySelector('html').lang === 'pl-PL') {
-                    const companyNameInput = document.querySelector('.forms-container-form__left input[placeholder=\'FIRMA ZAPRASZAJĄCA\']');
-                    const companyEmailInput = document.querySelector('.forms-container-form__left input[placeholder=\'E-MAIL OSOBY ZAPRASZANEJ\']');
+                    const companyNameInput = document.querySelector('.wyst .forms-container-form__right input[placeholder=\'FIRMA ZAPRASZAJĄCA\']');
+                    const companyEmailInput = document.querySelector('.wyst .forms-container-form__right input[placeholder=\'E-MAIL OSOBY ZAPRASZANEJ\']');
                     if (companyNameInput && companyEmailInput) {
                         companyNameInput.placeholder = 'FIRMA';
                         companyEmailInput.placeholder = 'E-MAIL';
                     }
                 } else {
-                    const companyNameInputEn = document.querySelector('.forms-container-form__left input[placeholder=\'INVITING COMPANY\']');
-                    const companyEmailInputEn = document.querySelector('.forms-container-form__left input[placeholder=\'E-MAIL OF THE INVITED PERSON\']');
+                    const companyNameInputEn = document.querySelector('.wyst  .forms-container-form__right input[placeholder=\'INVITING COMPANY\']');
+                    const companyEmailInputEn = document.querySelector('.wyst .forms-container-form__right input[placeholder=\'E-MAIL OF THE INVITED PERSON\']');
                     if (companyNameInputEn && companyEmailInputEn) {
                         companyNameInputEn.placeholder = 'COMPANY';
                         companyEmailInputEn.placeholder = 'E-MAIL';

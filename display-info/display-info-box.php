@@ -681,6 +681,16 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                 }
             }
         }
+        
+        if (empty($speaker_images[0])) {
+            $output .= '
+            <style>
+                #info-box-'. self::$rnd_id .' .pwe-box-speakers {
+                    justify-content: center;
+                }
+            </style>
+            ';
+        }
 
         // Output content
         if ($info_box_simple_mode != true) {
@@ -696,42 +706,36 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             }
             
             $output .= '
-            <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">';
-                if($info_box_title_top == true) {
-                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>
-                                <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>';
-                                if (!empty($speaker_names[0])) {
-                                    $output .= '<h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>';
-                                }
-                                $output .= '
-                                <div class="pwe-box-lecture-desc" style="">';
-                                    $output .= $info_box_event_desc;
-                                    if (!empty($info_box_event_hidden_desc)) {
-                                        $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
-                                        $output .= '
-                                            <div style="display: none;">'. $info_box_event_hidden_desc .'</div>
-                                            <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
-                                    } $output .= '
-                                </div>';
-                } else {
-                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>';
-                                if (!empty($speaker_names[0])) {
-                                    $output .= '<h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>';
-                                }
-                                $output .= '
-                                <h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>
-                                <div class="pwe-box-lecture-desc" style="">';
-                                    $output .= $info_box_event_desc;
-                                    if (!empty($info_box_event_hidden_desc)) {
-                                        $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
-                                        $output .= '
-                                            <div style="display: none;">'. $info_box_event_hidden_desc .'</div>
-                                            <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
-                                    } $output .= '
-                                </div>';
+            <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">
+                <h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>';
+
+                if($info_box_title_top) {
+                    $output .= '<h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>';
                 }
+
+                if (!empty($speaker_names[0])) {
+                    $output .= '<h5 class="pwe-box-lecturer-name" style="color:'. $info_box_lect_color .';">'. implode('<br>', $speaker_names) .'</h5>';
+                }
+
+                if(!$info_box_title_top) {
+                    $output .= '<h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>';
+                }
+
+                $output .= '
+                <div class="pwe-box-lecture-desc">';
+                $output .= $info_box_event_desc;
+                if (!empty($info_box_event_hidden_desc)) {
+                    $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+                    $output .= '
+                            <div style="display: none;">'. $info_box_event_hidden_desc .'</div>
+                            <p class="pwe-see-more" style="cursor: pointer;">'. $showMore .'</p>';
+                }
+                $output .= '
+                </div>';
+
             $output .= '
             </div>';
+
             
             $speakers = json_encode($speakers_json);
 
@@ -742,8 +746,14 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     const speakers = '. $speakers .';
                     const speakersBtn = infoBox.querySelector(".pwe-box-speaker-btn");
 
+                    // Check if there is at least one speaker with name or bio
+                    const shouldCreateModal = speakers.some(speaker => {
+                        return (speaker.speaker_name && speaker.speaker_name.trim() !== "") && 
+                            (speaker.speaker_bio && speaker.speaker_bio.trim() !== "");
+                    });
+
                     // Create a new modal if the BIO button is clicked
-                    if (speakersBtn) {
+                    if (speakersBtn && shouldCreateModal) {
                         speakersBtn.addEventListener("click", function() {
                             const modalDiv = document.createElement("div");
                             modalDiv.className = "pwe-box-modal";
@@ -758,7 +768,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                             // Using innerHTML to add speakers
                             let speakersHTML = "";
                             speakers.forEach(speaker => {
-                                if (speaker.speaker_image_url != "" && speaker.speaker_bio != undefined) {
+                                if (speaker.speaker_name != undefined && speaker.speaker_bio != undefined) {
                                     let speakerBlock = `<div class="pwe-box-modal-speaker">`;
 
                                     if (speaker.speaker_image_url != "") {
@@ -769,14 +779,14 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                         `;
                                     }
 
-                                    if (speaker.speaker_bio != undefined) {
+                                    // if (speaker.speaker_bio != undefined) {
                                         speakerBlock += `
                                             <div class="pwe-box-modal-speaker-text">
                                                 <h5 class="pwe-box-modal-name">${speaker.speaker_name}</h5>
                                                 <p class="pwe-box-modal-bio">${speaker.speaker_bio}</p>
                                             </div>
                                         </div>`;
-                                    }
+                                    // }
 
                                     speakersHTML += speakerBlock;
                                 } 
