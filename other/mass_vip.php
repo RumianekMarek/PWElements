@@ -16,6 +16,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $lang = $_POST['lang'];
                 $fields = array();
                 $all_entrys = array();
+                $all_not_valid = array();
                 $all_entrys_id = array();
                 $full_form = '';
                 
@@ -39,22 +40,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 }
 
                 foreach($data as $val){
-                    if(filter_var(trim($val['email']), FILTER_VALIDATE_EMAIL)){
-                        $entry = [
-                            'form_id' => $form_id,
-                            $fields['name'] => $val['name'],
-                            $fields['email'] => $val['email'],
-                            $fields['company'] => $_POST['company'],
-                        ];
+                    $entry = [
+                        'form_id' => $form_id,
+                        $fields['name'] => $val['name'],
+                        $fields['email'] => $val['email'],
+                        $fields['company'] => $_POST['company'],
+                    ];
 
-                        $entry_id = GFAPI::add_entry($entry);
+                    $entry_id = GFAPI::add_entry($entry);
+
+                    if(filter_var(trim($val['email']), FILTER_VALIDATE_EMAIL)){
                         $all_entrys_id[] = $entry_id;
                         $all_entrys[] = true;
                     } else {
+                        $all_not_valid[] = $entry_id;
                         $all_entrys[] = false;
                     }
                 }
-                echo json_encode($all_entrys);
             }
 
             if(count($all_entrys_id) > 0 ){
@@ -85,6 +87,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         ),
                         array(
                             '%d',
+                        )
+                    );
+                }
+                foreach($all_not_valid as $single_id){
+                    $wpdb->insert(
+                        $table_name,
+                        array(
+                            'gf_entry_id' => $single_id,
+                            'status' => "error"
+                        ),
+                        array(
+                            '%d',
+                            '%s'
                         )
                     );
                 }
