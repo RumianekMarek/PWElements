@@ -3,20 +3,17 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.1.4
+ * Version: 2.1.6
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
  */
 
-// Plugin automation uodate
-include( plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php');
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/RumianekMarek/PWElements',
-    __FILE__,
-    'PWElements'
-);
-$myUpdateChecker->getVcsApi()->enableReleaseAssets();
+
+
+// Defining path constants
+// define('PWE_ELEMENTS_PATH', plugin_dir_path(__FILE__)); 
+// define('PWE_ELEMENTS_URL', plugin_dir_url(__FILE__));
 
 class PWElementsPlugin {
     public $PWElements;
@@ -26,17 +23,22 @@ class PWElementsPlugin {
     public $PWEDisplayInfo;
     public $PWEMediaGallery;
     // public $PWEQRActive;
+    public $PWEExhibitorGenerator;
 
     public function __construct() {
         // Czyszczenie pamięci wp_rocket
         add_action( 'upgrader_process_complete', array( $this, 'clearWpRocketCacheOnPluginUpdate' ), 10, 2 );
         $this->initClasses();
+        $this->init();
         // $this -> resendTicket();
     }
 
-
-
     private function initClasses() {
+
+        // Helpers functions
+        require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
+
+
         require_once plugin_dir_path(__FILE__) . 'elements/pwelements-options.php';
         $this->PWElements = new PWElements();
 
@@ -63,6 +65,9 @@ class PWElementsPlugin {
 
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
+        $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
     }
 
     // Czyszczenie pamięci wp_rocket
@@ -76,6 +81,19 @@ class PWElementsPlugin {
                 rocket_clean_domain();
             }
         }
+    }
+
+    private function init() {
+        // Adres autoupdate
+        include( plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php');
+
+        $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+            'https://github.com/RumianekMarek/PWElements',
+            __FILE__,
+            'PWElements'
+        );
+
+        $myUpdateChecker->getVcsApi()->enableReleaseAssets();
     }
 }
 

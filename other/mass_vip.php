@@ -3,6 +3,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $domain = $_SERVER["HTTP_HOST"];
     $secret_key = '^GY0ZlZ!xzn1eM5';
     $hash = hash_hmac('sha256', $domain, $secret_key);
+    $response = "false";
 
     if( $_POST['token'] ==  $hash){
         $new_url = str_replace('private_html','public_html',$_SERVER["DOCUMENT_ROOT"]) .'/wp-load.php';
@@ -79,6 +80,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
                     dbDelta($sql);
                 }
+
                 foreach($all_entrys_id as $single_id){
                     $wpdb->insert(
                         $table_name,
@@ -103,13 +105,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         )
                     );
                 }
+                $response = 'true';
             }
         }
+        echo json_decode($response);
     } else {
-        echo 'error code 401';
+        echo json_decode('error code 401');
         exit;
     }
 } else {
-    echo 'error code 401';
+    echo json_decode('error code 401');
     exit;
 }
