@@ -1,0 +1,193 @@
+.exhibitor-generator__wrapper {
+    display: flex;
+    min-height: 500px;
+}
+.exhibitor-generator__left {
+    width: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 20px 0 0 20px;
+}
+.pwe-exhibitor-visitor-generator .exhibitor-generator__left {
+    background-image:url(/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/badgevip.jpg);
+}
+.pwe-exhibitor-worker-generator .exhibitor-generator__left {
+    background-image:url(/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media//badgevipmockup-wys.webp);
+}
+.exhibitor-generator__left h3 {
+    display: none;
+}
+.exhibitor-generator__right {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #EBEBEB;
+    border-radius: 0 20px 20px 0;
+}
+.exhibitor-generator__right-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 550px;
+}
+.exhibitor-generator__right h3 {
+    text-align: center;
+    color: #b79663;
+    font-weight: 800;
+    font-size: 28px !important;
+    padding: 0 10px;
+}
+.exhibitor-generator__right-icons h5 {
+    text-align: center;
+}
+.exhibitor-generator__right-icons-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 8px;
+}
+.exhibitor-generator__right-icon {
+    max-width: 110px;
+    min-width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 36px;
+}
+.exhibitor-generator__right-icon img {
+    height: 50px;
+    object-fit: contain;
+}
+.exhibitor-generator__right-icon p {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: inherit;
+    text-align: center;
+}
+.exhibitor-generator__right-form {
+    width: 100%;
+    margin-top: 18px;
+}
+.exhibitor-generator__right-form li.gfield,
+.exhibitor-generator__right-form .gform_fields {
+    padding-right: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="IMIĘ I NAZWISKO"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="NAME AND SURNAME"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="FIRMA"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="COMPANY"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="E-MAIL"]) .ginput_container {
+    position: relative;
+    height: 35px;
+    background-color: #D2D2D2 !important;
+    border-radius: 5px !important;
+    overflow: hidden;
+}
+.exhibitor-generator__right-form .gfield input[placeholder^="IMIĘ I NAZWISKO"],
+.exhibitor-generator__right-form .gfield input[placeholder^="NAME AND SURNAME"],
+.exhibitor-generator__right-form .gfield input[placeholder^="FIRMA"],
+.exhibitor-generator__right-form .gfield input[placeholder^="COMPANY"],
+.exhibitor-generator__right-form .gfield input[placeholder^="E-MAIL"] {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 45px;
+    border: 0;
+    background-color: #D2D2D2 !important;
+    border-radius: 5px !important;
+    font-weight: 700;
+    color: #555555;
+}
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="IMIĘ I NAZWISKO"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="NAME AND SURNAME"]) {
+    --icon-url: url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/name.png");
+}
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="FIRMA"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="COMPANY"]) {
+    --icon-url: url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/box.png");
+}
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="E-MAIL"]) {
+    --icon-url: url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/email.png");
+}
+.exhibitor-generator__right-form .gfield .ginput_container:before {
+    content: "";
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    height: 35px;
+    position: absolute;
+    background-image: var(--icon-url);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.exhibitor-generator__right-form input:-webkit-autofill,
+.exhibitor-generator__right-form input:-webkit-autofill:hover,
+.exhibitor-generator__right-form input:-webkit-autofill:focus {
+    -webkit-text-fill-color: black !important;
+    -webkit-box-shadow: 0 0 0px 40rem #D2D2D2 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+.exhibitor-generator__right-form .gform_footer {
+text-align: center;
+}
+.exhibitor-generator__right-form .gform_footer input[type="submit"] {
+    background: #b79663 !important;
+    color: white;
+    border-radius: 8px;
+}
+@media(max-width: 960px) {
+    .exhibitor-generator__wrapper {
+        flex-direction: column;
+    }
+    .exhibitor-generator__right {
+        display: block;
+        width: 100%;
+        border-radius: 0 0 20px 20px;
+    }
+    .exhibitor-generator__right-wrapper {
+        padding: 18px 36px;
+    }
+    .exhibitor-generator__right h3 {
+        display: none;
+    }
+    .pwe-exhibitor-visitor-generator .exhibitor-generator__left,
+    .pwe-exhibitor-worker-generator .exhibitor-generator__left {
+        width: 100%;
+        border-radius: 20px 20px 0 0;
+        background-image:url(/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/gen-bg.jpg)
+    }
+    .exhibitor-generator__left h3 {
+        display: block;
+        margin: 0;
+        text-align: center;
+        padding: 46px 18px;
+        font-weight: 800;
+        font-size: 28px !important;
+    }
+}
+@media(max-width: 450px) {
+    .exhibitor-generator__right-wrapper {
+        padding: 18px;
+    }
+    .exhibitor-generator__right-icons-wrapper {
+        padding: 0;
+    }
+    .exhibitor-generator__right-icon img {
+        height: 40px;
+    }
+    .exhibitor-generator__right-icon p {
+        font-size: 12px;
+    }
+}
