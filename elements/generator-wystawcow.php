@@ -1204,7 +1204,7 @@ class PWElementGenerator extends PWElements {
                         $(".page-wrapper").prepend($modal);
 
                         $modal.css("display", "flex");
-                        const $closeBtn = $modal.find(".btn-close");
+                        let $closeBtn = $modal.find(".btn-close");
 
                         $closeBtn.on("click", function () {
                             $modal.hide();
@@ -1342,18 +1342,19 @@ class PWElementGenerator extends PWElements {
                             fileLabel = fileLabel.split(",");
                             const namelIndex = fileLabel.indexOf(nameColumn);
                             const emailIndex = fileLabel.indexOf(emailColumn);
-                            
-                            const tableCont = fileArray.map((row) => {
+                                        
+                            const tableCont = fileArray.reduce((acc, row) => {
                                 const rowArray = row.split(",");
-                                return {"name": rowArray[namelIndex], "email": rowArray[emailIndex]};
+                                if (rowArray[emailIndex] && rowArray[emailIndex].length > 5) {
+                                    acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex] });
+                                }
+                                return acc;
+                            }, []);
 
-                            });
-                            
-                            console.log(tableCont);
-                            
-                            if (tableCont.length > 0 ){
-                                $(this).remove();
-                                $(this).after("<div id=spinner class=spinner></div>");
+                            if (tableCont.length > 0 && tableCont.length < 5000 ){
+                                $(".modal__elements").html("<span class=btn-close>x</span>");
+                                $(".modal__elements").append("<div id=spinner class=spinner></div>");
+                                $closeBtn = $modal.find(".btn-close");
                                 $.post("' . $send_file . '", {
                                     token: "' . self::generateToken() .'",
                                     lang: pageLang,
@@ -1361,26 +1362,15 @@ class PWElementGenerator extends PWElements {
                                     data: tableCont
                                 }, function(response) {
 
-                                    const mass_tr = $(".mass-send-email tr td");
-
                                     resdata = JSON.parse(response);
-                                    resdata.forEach(function (value, index){
-                                        if(value === true){
-                                            $(mass_tr[index]).text($(mass_tr[index]).text() + "  send").css("color", "green");
-                                        } else {
-                                            $(mass_tr[index]).text($(mass_tr[index]).text() + "  error").css("color", "red");
-                                        }
-                                    });
                                     
+                                    if (resdata == 1){
+                                        $(".modal__elements").append(`<p style="color:green; font-weight: 600; width: 90%;">Dziękujemy za skorzystanie z generatora zaproszeń. Państwa goście wkrótce otrzymają zaproszenia VIP.</p>`);
+                                    } else {
+                                        $(".modal__elements").append(`<p style="color:red; font-weight: 600; width: 90%;">Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo</p>`);
+                                    }
                                     console.log(resdata);
-
-                                    resdata.forEach(function(value, index){
-                                    if(value === false){
-                                            const index_number = index + 1;
-                                            $("#mass-table").after(`<p style="color:red; font-weight: 700;">Email problem: ` + index_number + `</p>`);
-                                        }
-                                    })
-
+                                    
                                     $("#spinner").remove();
                                     tableCont.splice(0, tableCont.length);
                                     $("#dataContainer").empty();

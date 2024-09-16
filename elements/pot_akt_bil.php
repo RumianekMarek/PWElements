@@ -14,8 +14,41 @@ class PWElementTicketActConf extends PWElements {
         parent::__construct();
     }
 
+    private static function notification_succes($entry_id , $form) {
+        $active_id = '';
+        $field_exists = false;
+
+        foreach ($form['fields'] as $key){
+            if ($key->label == 'Aktywacja'){
+                $active_id = $key->id;
+                $field_exists = true;
+                break;
+            }
+        }
+
+        if ($field_exists == false){
+                $new_field_data = new GF_Field_Text();
+                $new_field_data->isRequired = false;
+                $new_field_data->id = 99;
+                $new_field_data->label = 'Aktywacja';
+                $new_field_data->placeholder = 'Aktywacja';
+                $new_field_data->visibility ='hidden';
+
+            $new_field = GF_Fields::create($new_field_data);
+            $form['fields'][] = $new_field;
+            GFAPI::update_form( $form );
+
+            $active_id = 99;
+        }
+        
+        if ($active_id != ''){
+            GFAPI::update_entry_field($entry_id, $active_id, 'Aktywowane');
+        }
+    }
+
     private static function notification_sender() {
         $query_string = $_SERVER["QUERY_STRING"];
+        
         if ($query_string == '') {
             return false;
         }
@@ -25,6 +58,7 @@ class PWElementTicketActConf extends PWElements {
         $id_array = explode(',', $decoded_qs);
 
         $form = GFAPI::get_form($id_array[0]);
+        $form_clone = $form;
 
         if (is_wp_error($form) || empty($form)) {
             echo '<script>console.error("Nie udało się pobrać formularza.")</script>';
@@ -38,7 +72,7 @@ class PWElementTicketActConf extends PWElements {
             return false;
         }
 
-        foreach ($form["notifications"] as $id => &$key) {
+        foreach ($form_clone["notifications"] as $id => &$key) {
             if ($key['name'] == 'SPECJALSI A PL Aktywacja') {
                 $key['isActive'] = true;
             } else {
@@ -47,7 +81,8 @@ class PWElementTicketActConf extends PWElements {
         }
 
         try {
-            GFAPI::send_notifications($form, $entry);
+            GFAPI::send_notifications($form_clone, $entry);
+            self::notification_succes($id_array[1] , $form);
         } catch (Exception $e) {
             echo '<script>console.error("Błąd send_notifications.")</script>';
         }

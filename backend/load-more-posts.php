@@ -54,6 +54,7 @@ function load_more_posts() {
             $image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '';
             $title = get_the_title();
             $date = get_the_date('Y-m-d'); // Get date in YYYY-MM-DD format
+            $load_more = get_locale() == 'pl_PL' ? 'CZYTAJ WIĘCEJ' : 'READ MORE';
 
             // Format the date
             $date_obj = new DateTime($date);
@@ -76,7 +77,7 @@ function load_more_posts() {
                 </div> 
                 <h5 class="pwe-post-title">'. $title .'</h5>
                 <p class="pwe-post-excerpt">'. $excerpt .'</p>
-                <button class="pwe-post-btn">CZYTAJ WIĘCEJ</button>
+                <button class="pwe-post-btn">'. $load_more .'</button>
             </a>';
     
         endwhile;

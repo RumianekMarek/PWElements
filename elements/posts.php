@@ -634,7 +634,7 @@ class PWElementPosts extends PWElements {
                                 </div> 
                                 <h5 class="pwe-post-title">'. $title .'</h5>
                                 <p class="pwe-post-excerpt">'. $excerpt .'</p>
-                                <button class="pwe-post-btn">CZYTAJ WIĘCEJ</button>
+                                <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
                             </a>';
                         }
                 
@@ -653,16 +653,7 @@ class PWElementPosts extends PWElements {
                 if ($posts_modes == "posts_full_mode" && $posts_displayed == 18) {
                     $output .= '
                     <div class="load-more-btn-container">
-                        <button id="load-more-posts" class="pwe-btn" data-offset="18">'. 
-                        self::languageChecker(
-                            <<<PL
-                            Załaduj więcej
-                            PL,
-                            <<<EN
-                            Load more
-                            EN
-                        )
-                        .'</button>
+                        <button id="load-more-posts" class="pwe-btn" data-offset="18">' . self::languageChecker('Załaduj więcej','Load more') . '</button>
                     </div>';
                 }
                 
@@ -691,7 +682,7 @@ class PWElementPosts extends PWElements {
                         const button = this;
                         const offset = parseInt(button.getAttribute("data-offset"));
 
-                        button.innerText = "Ładowanie...";
+                        button.innerText = "' . self::languageChecker('Ładowanie...','Loading...') . '";
                         button.disabled = true;
 
                         const xhr = new XMLHttpRequest();
@@ -710,7 +701,7 @@ class PWElementPosts extends PWElements {
                                 if (response.trim() === "") {
                                     button.remove();
                                 } else {
-                                    button.innerText = "Załaduj więcej";
+                                    button.innerText = "' . self::languageChecker('Załaduj więcej','Load more') . '";
                                     button.disabled = false;
                                 }
                             }
