@@ -79,8 +79,12 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         //Edytion number
 
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
-        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
-        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
+        if (strpos($trade_fair_edition_shortcode, '.') !== false) {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? " edycja" : " edition";
+        } else {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+        }
+        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Premierowa Edycja" : "Premier Edition";
         $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
 
         $start_date = do_shortcode('[trade_fair_datetotimer]');

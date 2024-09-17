@@ -72,8 +72,10 @@ class PWElementTicketActConf extends PWElements {
             return false;
         }
 
+        $form_name = (get_locale() == "pl_PL") ? "SPECJALSI A PL Aktywacja" : "SPECJALSI A ENG Aktywacja";
+        
         foreach ($form_clone["notifications"] as $id => &$key) {
-            if ($key['name'] == 'SPECJALSI A PL Aktywacja') {
+            if ($key['name'] == $form_name) {
                 $key['isActive'] = true;
             } else {
                 $key['isActive'] = false;
@@ -95,8 +97,12 @@ class PWElementTicketActConf extends PWElements {
         $fair_logo = (get_locale() == "pl_PL") ? "/doc/logo-color.webp" : "/doc/logo-color-en.webp";
 
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
-        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
-        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
+        if (strpos($trade_fair_edition_shortcode, '.') !== false) {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? " edycja" : " edition";
+        } else {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+        }
+        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Premierowa Edycja" : "Premier Edition";
         $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
 
         $start_date = do_shortcode('[trade_fair_datetotimer]');

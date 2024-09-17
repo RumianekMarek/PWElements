@@ -76,8 +76,12 @@ class PWElementRegHeader extends PWElements {
         $darker_btn_color = self::adjustBrightness($main_badge_color, -20);
 
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
-        $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
-        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Edycja Premierowa" : "Premier Edition";
+        if (strpos($trade_fair_edition_shortcode, '.') !== false) {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? " edycja" : " edition";
+        } else {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+        }
+        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Premierowa Edycja" : "Premier Edition";
         $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
  
         if (isset($_SERVER['argv'][0])) {
