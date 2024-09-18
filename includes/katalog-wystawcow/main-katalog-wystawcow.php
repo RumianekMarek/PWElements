@@ -1,0 +1,207 @@
+<?php
+
+class PWECatalog1 {
+    public static $rnd_id;
+    public static $fair_colors;
+    public static $accent_color;
+    public static $main2_color;
+
+    /**
+     * Constructor method for initializing the plugin.
+     */
+    public function __construct() {
+        $this->catalogFunctions();
+
+        self::$rnd_id = rand(10000, 99999);
+        self::$fair_colors = PWECommonFunctions::findPalletColorsStatic();
+        // self::$fair_forms = $this->findFormsGF();
+        self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
+        
+        foreach(self::$fair_colors as $color_key => $color_value){
+            if(strpos($color_key, 'main2') != false){
+                self::$main2_color = $color_value;
+            }
+        }
+        add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
+        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
+
+        add_shortcode('pwe_katalog1', array($this, 'PWECatalogOutput'));
+    }
+    
+    public function catalogFunctions() {
+        require_once plugin_dir_path(__FILE__) . 'classes/catalog_functions.php';
+    }
+
+    /**
+     * Adding Styles
+     */
+    function addingStyles(){
+        $css_file = plugins_url('assets/katalog.css', __FILE__);
+        $css_version = filemtime(plugin_dir_path(__FILE__) . 'assets/katalog.css');
+        wp_enqueue_style('pwe-katalog-css', $css_file, array(), $css_version);
+    }
+
+
+    /**
+     * Adding Scripts
+     */
+    function addingScripts($atts){
+        $js_file = plugins_url('assets/katalog.js', __FILE__);
+        $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/katalog.js');
+        wp_enqueue_script('pwe-katalog-js', $js_file, array('jquery'), $js_version, true);
+    }
+
+
+    /**
+     * Output method for pwe_katalog1 shortcode.
+     *
+     * @param array $atts Shortcode attributes.
+     * @param string $content Shortcode content.
+     * @return string
+     */
+    public function PWECatalogOutput($atts, $content = null) {
+        $btn_text_color = PWECommonFunctions::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = PWECommonFunctions::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
+        $btn_shadow_color = PWECommonFunctions::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important';
+        $btn_border = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
+
+        // pwe_katalog1 output
+        extract( shortcode_atts( array(
+            'format' => '',
+        ), $atts ));
+
+        $darker_btn_color = PWECommonFunctions::adjustBrightness($btn_color, -20);
+
+        if ($format == 'PWECatalogFull'){
+            $text_color = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+            $btn_text_color = PWECommonFunctions::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'black') . '!important';
+        } else {
+            $text_color = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important';
+            $btn_text_color = PWECommonFunctions::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        }
+
+        $slider_path = dirname(plugin_dir_path(__FILE__)) . '/scripts/slider.php';
+        
+        if (file_exists($slider_path)){
+            include_once $slider_path;
+        }        
+
+        if (!empty($atts['identification'])) {
+            $identification = $atts['identification']; 
+        } else {
+            $identification = do_shortcode('[trade_fair_catalog]');
+        }
+        $catalog_format = CatalogFunctions::findClassElements()[$format];
+
+        if ($catalog_format){
+            require_once plugin_dir_path(__FILE__) . $catalog_format;
+            
+            if (class_exists($format) && $identification) {
+                $output_class = new $format;
+                $output = $output_class->output($atts, $identification, $content);
+            } else {
+                // Log if the class doesn't exist
+                echo '<script>console.log("Class '. $format .' or ID , does not exist")</script>';
+                $output = '';
+            }
+        } else {
+            echo '<script>console.log("Select a Catalog Format")</script>';
+        }
+
+        $output_html = '';
+
+        $exhibitors_top10 = ($identification) ? CatalogFunctions::logosChecker($identification, "PWECatalog10") : 0;
+        if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
+            if (isset($_SERVER['argv'][0])) {
+                $source_utm = $_SERVER['argv'][0];
+            } else {
+                $source_utm = ''; 
+            }
+
+            $current_page = $_SERVER['REQUEST_URI'];
+
+            if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
+                $output_html .= '
+                <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                        position: relative;
+                        background-image: url(/doc/header_mobile.webp);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        padding: 0;
+                    } 
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .'):before {
+                        content: "";
+                        position: absolute;
+                        top: 60%;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        margin: auto;
+                        max-width: 300px;
+                        height: auto;
+                        background-image: url(/doc/logo.webp);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        transform: translateY(-60%);
+                    }
+                </style>';
+            } else if (strpos($current_page, 'zostan-wystawca') || strpos($current_page, 'become-an-exhibitor')) {
+                $output_html .= '
+                <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .'),
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') * {
+                        width: 100%;
+                        height: 100%;
+                    }
+                    #katalog-'. self::$rnd_id .' {
+                        position: relative;
+                        background-image: url(/doc/header_mobile.webp);
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        padding: 0;
+                    } 
+                    #katalog-'. self::$rnd_id .':before {
+                        content: "";
+                        position: absolute;
+                        top: 60%;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        margin: auto;
+                        max-width: 300px;
+                        height: auto;
+                        background-image: url(/doc/logo.webp);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        transform: translateY(-60%);
+                    }
+                </style>';
+            } 
+        }
+
+        $output_html .= '
+            <style>
+                #katalog-'. self::$rnd_id .' .pwe-text-color {
+                    text-align: center;
+                    color:' . $text_color . ';
+                }
+                #katalog-'. self::$rnd_id .' .custom-link {
+                    color: '. $btn_text_color .';
+                    background-color: '. $btn_color .';
+                    border: 1px solid '. $btn_border .';
+                }
+                #katalog-'. self::$rnd_id .' .custom-link:hover {
+                    color: '. $btn_text_color .';
+                    background-color: '. $darker_btn_color .'!important;
+                    border: 1px solid '. $darker_btn_color .'!important;
+                }
+            </style>
+
+            <div id="katalog-' . self::$rnd_id . '" class="exhibitors-catalog">' . $output . '</div>';
+
+        return $output_html;
+    }
+}
