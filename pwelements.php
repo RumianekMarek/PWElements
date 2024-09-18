@@ -1,19 +1,16 @@
 <?php
+
 /*
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.1.7
+ * Version: 2.1.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
  */
 
 
-
-// Defining path constants
-// define('PWE_ELEMENTS_PATH', plugin_dir_path(__FILE__)); 
-// define('PWE_ELEMENTS_URL', plugin_dir_url(__FILE__));
 
 class PWElementsPlugin {
     public $PWElements;
@@ -23,6 +20,8 @@ class PWElementsPlugin {
     public $PWEDisplayInfo;
     public $PWEMediaGallery;
     // public $PWEQRActive;
+    public $GFAreaNumbersField;
+    public $PWECatalog1;
     public $PWEExhibitorGenerator;
 
     public function __construct() {
@@ -37,7 +36,6 @@ class PWElementsPlugin {
 
         // Helpers functions
         require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
-
 
         require_once plugin_dir_path(__FILE__) . 'elements/pwelements-options.php';
         $this->PWElements = new PWElements();
@@ -66,8 +64,11 @@ class PWElementsPlugin {
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
 
-        require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
-        $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
+        // require_once plugin_dir_path(__FILE__) . 'includes/katalog-wystawcow/main-katalog-wystawcow.php';
+        // $this->PWECatalog1 = new PWECatalog1();
+
+        // require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
+        // $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
     }
 
     // Czyszczenie pamięci wp_rocket
@@ -83,7 +84,27 @@ class PWElementsPlugin {
         }
     }
 
+    private function getGithubKey() {
+        global $wpdb;
+    
+        $table_name = $wpdb->prefix . 'custom_klavio_setup';
+        if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $table_name) {
+            return null;
+        }
+
+        $github_pre = $wpdb->prepare("SELECT klavio_list_id FROM $table_name WHERE klavio_list_name = %s", 'github_secret');
+        $github_result = $wpdb->get_results($github_pre);
+        
+        if (!empty($github_result)) {
+            return $github_result[0]->klavio_list_id;
+        } else {
+            return null;
+        }
+    }
+    
+
     private function init() {
+
         // Adres autoupdate
         include( plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php');
 
@@ -93,6 +114,9 @@ class PWElementsPlugin {
             'PWElements'
         );
 
+        if (self::getGithubKey()){
+            $myUpdateChecker->setAuthentication(self::getGithubKey());
+        }
         $myUpdateChecker->getVcsApi()->enableReleaseAssets();
     }
 }

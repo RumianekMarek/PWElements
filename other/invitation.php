@@ -58,11 +58,11 @@
             const { width, height } = firstPage.getSize();
 
             pdfDoc.setTitle('Zaproszenie na Bankiet')
-            pdfDoc.setAuthor('Sergiusz Skrypnychenko')
+            pdfDoc.setAuthor('Ptak Warsaw Expo')
             pdfDoc.setSubject('Invite')
             pdfDoc.setKeywords(['Invite', 'Targi', 'PWE', 'Impreza', 'Fairs', 'Bankiet'])
             pdfDoc.setProducer('BadgeGenerator 1.5')
-            pdfDoc.setCreator('Sergiusz Skrypnychenko (skrypnychenko.s@gmail.com)')
+            pdfDoc.setCreator('Ptak Warsaw Expo (kontakt@warsawexpo.eu)')
 
 
             // 

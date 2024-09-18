@@ -15,6 +15,38 @@ class PWECommonFunctions {
         }
     }
 
+/**
+     * Finding preset colors pallet.
+     *
+     * @return array
+     */
+    public static function findPalletColorsStatic() {
+        $uncode_options = get_option('uncode');
+        $accent_uncode_color = $uncode_options["_uncode_accent_color"];
+        $custom_element_colors = array();
+
+        if (isset($uncode_options["_uncode_custom_colors_list"]) && is_array($uncode_options["_uncode_custom_colors_list"])) {
+            $custom_colors_list = $uncode_options["_uncode_custom_colors_list"];
+      
+            foreach ($custom_colors_list as $color) {
+                $title = $color['title'];
+                $color_value = $color["_uncode_custom_color"];
+                $color_id = $color["_uncode_custom_color_unique_id"];
+
+                if ($accent_uncode_color != $color_id) {
+                    $custom_element_colors[$title] = $color_value;
+                } else {
+                    $accent_color_value = $color_value;
+                    $custom_element_colors = array_merge(array('Accent' => $accent_color_value), $custom_element_colors);
+                }
+            }
+            $custom_element_colors = array_merge(array('Default' => ''), $custom_element_colors);
+        }
+        return $custom_element_colors;
+    }
+
+
+    
     /**
      * Finding preset colors pallet.
      *
@@ -45,6 +77,8 @@ class PWECommonFunctions {
         return $custom_element_colors;
     }
 
+
+
     /**
      * Laguage check for text
      * 
@@ -55,6 +89,8 @@ class PWECommonFunctions {
     public static function languageChecker($pl, $en = '') {
         return get_locale() == 'pl_PL' ? $pl : $en;
     }
+
+
 
      /**
      * Function to change color brightness (taking color in hex format)
@@ -79,6 +115,8 @@ class PWECommonFunctions {
                 . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
     }
 
+
+
     /**
      * Finding all GF forms
      *
@@ -94,6 +132,8 @@ class PWECommonFunctions {
         }
         return $pwe_forms_array;
     }  
+
+
 
     /**
      * Finding all target form id
@@ -115,6 +155,8 @@ class PWECommonFunctions {
         return $pwe_form_id;
     }
 
+
+
     /**
      * Mobile displayer check
      * 
@@ -123,6 +165,8 @@ class PWECommonFunctions {
     public static function checkForMobile(){
         return (preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']));
     }
+
+
 
     /**
      * Laguage check for text
@@ -177,6 +221,8 @@ class PWECommonFunctions {
         }
     }
 
+
+
     /**
      * Finding URL of all images based on katalog
      */
@@ -202,6 +248,8 @@ class PWECommonFunctions {
         return $exhibitors_path;
     }
 
+
+
     /**
      * Laguage check for text
      * 
@@ -221,6 +269,9 @@ class PWECommonFunctions {
             }
         }
     }
+
+
+
     /**
      * Trade fair date existance check
      * 
@@ -238,6 +289,61 @@ class PWECommonFunctions {
             }
         }
         return false;
+    }
+
+
+
+    /**
+     * Adding element input[type="range"]
+     */
+    public static function inputRange() {
+        if ( function_exists( 'vc_add_shortcode_param' ) ) {
+            vc_add_shortcode_param( 'input_range', array('PWEHeader', 'input_range_field_html') );
+        }
+    }
+    public static function input_range_field_html( $settings, $value ) {
+        $id = uniqid('range_');
+        return '<div class="pwe-input-range">'
+            . '<input type="range" '
+            . 'id="' . esc_attr( $id ) . '" '
+            . 'name="' . esc_attr( $settings['param_name'] ) . '" '
+            . 'class="wpb_vc_param_value ' . esc_attr( $settings['param_name'] ) . ' ' . esc_attr( $settings['type'] ) . '_field" '
+            . 'value="' . esc_attr( $value ) . '" '
+            . 'min="' . esc_attr( $settings['min'] ) . '" '
+            . 'max="' . esc_attr( $settings['max'] ) . '" '
+            . 'step="' . esc_attr( $settings['step'] ) . '" '
+            . 'oninput="document.getElementById(\'value_' . esc_attr( $id ) . '\').innerHTML = this.value" '
+            . '/>'
+            . '<span id="value_' . esc_attr( $id ) . '">' . esc_attr( $value ) . '</span>'
+            . '</div>';
+    }
+
+
+
+    /**
+     * Adding custom checkbox element
+     */
+    function pweCheckbox() {
+        if (function_exists('vc_add_shortcode_param')) {
+            vc_add_shortcode_param('pwe_checkbox', array('PWEHeader', 'pwe_checkbox_html'));
+        }
+    }
+    /**
+     * Generate HTML for custom checkbox
+     */
+    public static function pwe_checkbox_html($settings, $value) {
+        $checked = $value === 'true' ? 'checked' : '';
+        $id = uniqid('pwe_checkbox_');
+
+        return '<div class="pwe-checkbox">'
+            . '<input type="checkbox" '
+            . 'id="' . esc_attr($id) . '" '
+            . 'name="' . esc_attr($settings['param_name']) . '" '
+            . 'class="wpb_vc_param_value ' . esc_attr($settings['param_name']) . ' ' . esc_attr($settings['type']) . '_field" '
+            . 'value="'.$value.'" '
+            . $checked
+            . ' onclick="this.value = this.checked ? \'true\' : \'\';" />'
+            . '</div>';
     }
 
 }
