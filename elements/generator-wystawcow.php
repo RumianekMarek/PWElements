@@ -142,7 +142,9 @@ class PWElementGenerator extends PWElements {
         $generator_html_text_decoded = urldecode($generator_html_text_decoded);
         $generator_html_text_content = wpb_js_remove_wpautop($generator_html_text_decoded, true);
 
-        $token = $_GET['token'];
+        if(isset($_GET['token'])){
+            $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+        }
 
         // if ($generator_tickets == true) {
         //     if (get_locale() == 'pl_PL') {
@@ -935,9 +937,9 @@ class PWElementGenerator extends PWElements {
 
                                                 </div>
 
-                                                [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]';
-                                        if ($token == "masowy"){
-                                            $output .= '<button class="btn tabela-masowa btn-gold">'.
+                                                [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]
+                                                
+                                                <button class="btn tabela-masowa btn-gold">'.
                                                 self::languageChecker(
                                                     <<<PL
                                                     Wysyłka zbiorcza
@@ -947,9 +949,7 @@ class PWElementGenerator extends PWElements {
                                                     EN
                                                 )
                                                 .'</button>
-                                            ';
-                                        }
-                                        $output .= ' <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
+                                            <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
                                             </div>
                                             <div class="gen-btn-img" style="background-image: url('.
                                                 self::languageChecker(
@@ -1260,7 +1260,7 @@ class PWElementGenerator extends PWElements {
                                     const fileLabel = fileArray[0].split(",");
 
                                     $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret"></select></div>`);
-                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami (edited)</label><select type="select" id="name-column" name="name-column" class="selectoret"></select></div>`);
+                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami</label><select type="select" id="name-column" name="name-column" class="selectoret"></select></div>`);
                                     
                                     $(".selectoret").each(function(){
                                         $(this).append(`<option value="">Wybierz</option>`);
