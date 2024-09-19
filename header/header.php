@@ -226,7 +226,8 @@ class PWEHeader extends PWECommonFunctions {
                                 'Default' => '',
                                 'Simple mode' => 'simple_mode',
                                 'Registration mode' => 'registration_mode',
-                                'Coference mode' => 'conference_mode'
+                                'Coference mode' => 'conference_mode',
+                                'Squares mode' => 'squares_mode'
                             ),
                         ),
                         array(
@@ -871,7 +872,7 @@ class PWEHeader extends PWECommonFunctions {
                 </style>';
             }
 
-        if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode") {
+        if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode" && $pwe_header_modes != "squares_mode") {
             $output .= '
             <style>
                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
@@ -1084,6 +1085,84 @@ class PWEHeader extends PWECommonFunctions {
             }
         }
 
+        $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
+        if (strpos($trade_fair_edition_shortcode, '.') !== false) {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? " edycja" : " edition";
+        } else {
+            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+        }
+        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Premierowa Edycja" : "Premier Edition";
+        $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
+
+
+        $start_date = do_shortcode('[trade_fair_datetotimer]');
+        $end_date = do_shortcode('[trade_fair_enddata]');
+
+        // Function to transform the date
+        function transform_dates($start_date, $end_date) {
+            // Convert date strings to DateTime objects
+            $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
+            $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
+
+            // Check if the conversion was correct
+            if ($start_date_obj && $end_date_obj) {
+                // Get the day, month and year from DateTime objects
+                $start_day = $start_date_obj->format('d');
+                $end_day = $end_date_obj->format('d');
+                $month = $start_date_obj->format('m');
+                $year = $start_date_obj->format('Y');
+
+                //Build the desired format
+                $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
+                return $formatted_date;
+            } else {
+                return "Invalid dates";
+            }
+        }
+
+        // Transform the dates to the desired format
+        $formatted_date = transform_dates($start_date, $end_date);
+
+        if (self::isTradeDateExist()) {
+            $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
+        } else {
+            $actually_date = $formatted_date;
+        }
+
+        if ($pwe_header_congress_logo_color != true) {
+            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '');
+        } else {
+            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp');
+        }
+        $pwe_header_conference_logo_url = (empty($pwe_header_conference_logo_url)) ? $congress_logo_url : $pwe_header_conference_logo_url;
+        $pwe_header_conference_link = empty($pwe_header_conference_link)
+        ? (get_locale() == 'pl_PL' ? '/wydarzenia/' : '/en/conferences')
+        : $pwe_header_conference_link;
+        $pwe_header_reg_logo = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_logo_url : $logo_url;
+        $pwe_header_reg_logo_link = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_link : $base_url;
+
+        if ($pwe_header_modes == "registration_mode") {
+            $pwe_header_title = $trade_fair_desc;
+            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_desc_short]" : "[trade_fair_desc_short_eng]";
+        } else if ($pwe_header_modes == "conference_mode") {
+            $pwe_header_title = get_the_title();
+            $pwe_header_title_short = get_the_title();
+        }
+
+
+        if (get_locale() == 'pl_PL') {
+            $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/bilety/" : $pwe_header_tickets_button_link;
+            $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/rejestracja/" : $pwe_header_register_button_link;
+            $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/wydarzenia/" : $pwe_header_conferences_button_link;
+        } else {
+            $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/en/tickets/" : $pwe_header_tickets_button_link;
+            $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/en/registration/" : $pwe_header_register_button_link;
+            $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/en/conferences/" : $pwe_header_conferences_button_link;
+        }
+
+        $target_blank = (strpos($pwe_header_conferences_button_link, 'http') !== false) ? 'target="blank"' : '';
+
+
         $background_congress = $base_url . '/wp-content/plugins/PWElements/media/conference-background.webp';
         $background_header = ($pwe_header_modes == "conference_mode") ? $background_congress : $file_url;
 
@@ -1091,7 +1170,7 @@ class PWEHeader extends PWECommonFunctions {
 
             <div style="background-image: url('. $background_header .');"  class="pwe-header-container pwe-header-background">
                 <div class="pwe-header-wrapper">';
-                    if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode") {
+                    if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode" && $pwe_header_modes != "squares_mode") {
 
                         $output .= '
                         <div class="header-wrapper-column">
@@ -1106,18 +1185,6 @@ class PWEHeader extends PWECommonFunctions {
                             if ($pwe_header_modes != "simple_mode") {
 
                                 $output .= '<div class="pwe-header-buttons">';
-
-                                    if (get_locale() == 'pl_PL') {
-                                        $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/bilety/" : $pwe_header_tickets_button_link;
-                                        $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/rejestracja/" : $pwe_header_register_button_link;
-                                        $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/wydarzenia/" : $pwe_header_conferences_button_link;
-                                    } else {
-                                        $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/en/tickets/" : $pwe_header_tickets_button_link;
-                                        $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/en/registration/" : $pwe_header_register_button_link;
-                                        $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/en/conferences/" : $pwe_header_conferences_button_link;
-                                    }
-
-                                    $target_blank = (strpos($pwe_header_conferences_button_link, 'http') !== false) ? 'target="blank"' : '';
 
                                     if (in_array('register', explode(',', $pwe_header_button_on))) {
                                         $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
@@ -1222,68 +1289,6 @@ class PWEHeader extends PWECommonFunctions {
                         }
 
                     } else if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
-                        $start_date = do_shortcode('[trade_fair_datetotimer]');
-                        $end_date = do_shortcode('[trade_fair_enddata]');
-
-                        // Function to transform the date
-                        function transform_dates($start_date, $end_date) {
-                            // Convert date strings to DateTime objects
-                            $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
-                            $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
-
-                            // Check if the conversion was correct
-                            if ($start_date_obj && $end_date_obj) {
-                                // Get the day, month and year from DateTime objects
-                                $start_day = $start_date_obj->format('d');
-                                $end_day = $end_date_obj->format('d');
-                                $month = $start_date_obj->format('m');
-                                $year = $start_date_obj->format('Y');
-
-                                //Build the desired format
-                                $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
-                                return $formatted_date;
-                            } else {
-                                return "Invalid dates";
-                            }
-                        }
-
-                        // Transform the dates to the desired format
-                        $formatted_date = transform_dates($start_date, $end_date);
-
-                        if (self::isTradeDateExist()) {
-                            $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
-                        } else {
-                            $actually_date = $formatted_date;
-                        }
-
-                        if ($pwe_header_congress_logo_color != true) {
-                            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : '');
-                        } else {
-                            $congress_logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp');
-                        }
-                        $pwe_header_conference_logo_url = (empty($pwe_header_conference_logo_url)) ? $congress_logo_url : $pwe_header_conference_logo_url;
-                        $pwe_header_conference_link = empty($pwe_header_conference_link)
-                        ? (get_locale() == 'pl_PL' ? '/wydarzenia/' : '/en/conferences')
-                        : $pwe_header_conference_link;
-                        $pwe_header_reg_logo = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_logo_url : $logo_url;
-                        $pwe_header_reg_logo_link = ($pwe_header_modes == "conference_mode") ? $pwe_header_conference_link : $base_url;
-                        
-                        $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
-                        if (strpos($trade_fair_edition_shortcode, '.') !== false) {
-                            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? " edycja" : " edition";
-                        } else {
-                            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
-                        }
-                        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Premierowa Edycja" : "Premier Edition";
-                        $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
-
-                        if ($pwe_header_modes == "registration_mode") {
-                            $pwe_header_title = $trade_fair_desc;
-                            $pwe_header_title_short = (get_locale() == 'pl_PL') ? "[trade_fair_desc_short]" : "[trade_fair_desc_short_eng]";
-                        } else if ($pwe_header_modes == "conference_mode") {
-                            $pwe_header_title = get_the_title();
-                            $pwe_header_title_short = get_the_title();
-                        }
 
                         $output .= '
                         <style>
@@ -1546,27 +1551,9 @@ class PWEHeader extends PWECommonFunctions {
                                     <div id="pweAssociation" class="pwe-association">
                                         <div class="main-heading-text pwe-uppercase pwe-association-title">';
                                             if ($pwe_header_modes == "conference_mode") {
-                                                $output .= '<h2>'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    Wydarzenie organizowane w ramach targów:
-                                                    PL,
-                                                    <<<EN
-                                                    Event organised as part of the fair:
-                                                    EN
-                                                )
-                                                .'</h2>';
+                                                $output .= '<h2>' . self::languageChecker('Wydarzenie organizowane w ramach targów:', 'Event organised as part of the fair:') . '</h2>';
                                             } else {
-                                                $output .= '<h2>'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    Wydarzenia Towarzyszące
-                                                    PL,
-                                                    <<<EN
-                                                    Side Events
-                                                    EN
-                                                )
-                                                .'</h2>';
+                                                $output .= '<h2>' . self::languageChecker('Wydarzenia Towarzyszące', 'Side Events') . '</h2>';
                                             }
                                         $output .= '
                                         </div>
@@ -1698,6 +1685,393 @@ class PWEHeader extends PWECommonFunctions {
                                 add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
                             }
                         $output .= '</div>';
+                    } else if ($pwe_header_modes == "squares_mode") {
+                        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
+                        $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
+                        $output .= '
+                        <style>
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                                position: relative;
+                                max-width: 100%;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column {
+                                width: 50%;
+                                max-width: 600px;
+                                padding: 36px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                                max-width: 280px !important;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                                padding: 0 !important;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
+                                color: '. $text_color .';
+                                text-align: start;
+                                margin: 0;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                                text-transform: uppercase;
+                                font-size: 30px;
+                                font-weight: 500 !important;
+                                max-width: 600px;
+                                padding-top: 24px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                                text-transform: lowercase;
+                                margin-top: 24px;
+                                font-size: 28px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
+                                text-transform: uppercase;
+                                font-size: 30px;
+                                padding: 6px 8px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                background-color: white;
+                            }    
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition span {
+                                background: url(/doc/background.webp) no-repeat center;
+                                color: transparent;
+                                    -webkit-background-clip: text;
+                                background-clip: text;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-mobile {
+                                display: none;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                position: absolute;
+                                top: 0;
+                                right: -50px;
+                                height: 100%;
+                                display: flex;
+                                object-fit: contain;
+                                overflow: visible;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                padding-top: 24px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .pwe-association {
+                                width: 40%;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .header-button {
+                                width: 40%;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                                position: relative;
+                                width: 300px;
+                                height: 60px;
+                                padding: 0;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn {
+                                background-color: '. $btn_color .' !important;
+                                color: '. $btn_text_color .' !important;
+                                border: '. $btn_color .' !important;
+                                width: 100%;
+                                height: 100%;
+                                transform: scale(1) !important;
+                                transition: .3s ease;
+                                font-size: 16px;
+                                font-weight: 600;
+                                padding: 6px 18px !important;
+                                letter-spacing: 0.1em;
+                                text-align: center;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                                text-transform: uppercase;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-small-text {
+                                font-size: 10px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-angle-right {
+                                position: absolute;
+                                right: 25px;
+                                top: -30%;
+                                height: 35px;
+                                font-size: 72px;
+                                color: white;
+                                transition: .3s ease;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
+                                right: 20px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn:hover {
+                                color: '. $btn_text_color .';
+                                background-color: '. $darker_btn_color .'!important;
+                                border: 1px solid '. $darker_btn_color .'!important;
+                            }
+                            @media(max-width: 1400px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    right: -100px;
+                                }
+                            }   
+                            @media(max-width: 1300px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    right: -150px;
+                                }
+                            }
+                            @media(max-width: 1250px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                          
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    right: -200px;
+                                }
+                            }
+                            @media(max-width: 1200px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    right: -250px;
+                                }
+                            }
+                            @media(max-width: 1100px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                    width: 60%;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                    width: 40%;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    right: -350px;
+                                }
+                            }
+                            @media(max-width: 1000px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    right: -400px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                                    width: 260px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-angle-right {
+                                    right: 20px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
+                                    right: 15px;
+                                }
+                            }
+                            @media(max-width: 960px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                    display: none;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-mobile {
+                                    display: flex;
+                                }
+                                .pwe-header-wrapper {
+                                    flex-direction: column;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column,
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column,
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                    width: 100%;
+                                    max-width: 1200px;
+                                    padding: 0;
+                                    text-align: center;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                                    max-width: 260px !important;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                    padding: 18px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
+                                    flex-direction: column-reverse;
+                                    justify-content: center;
+                                    gap: 18px;  
+                                    padding-top: 18px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
+                                    text-align: center;
+                                    width: auto;
+                                    font-size: 24px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                                    padding-top: 0;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                                    margin-top: 18px;
+                                    font-size: 22px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
+                                    margin-top: 10px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-title {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                    width: fit-content;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                    width: 100%;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                    width: 100%;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .pwe-association {
+                                    width: 100% !important;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .header-button {
+                                    width: 100% !important;
+                                    max-width: 320px !important;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block {
+                                    display: flex;
+                                    flex-direction: column-reverse;
+                                    justify-content: center;
+                                    align-items: center;
+                                    text-align: center;
+                                    gap: 18px;
+                                }
+                            }
+                        </style>';
+
+                        $output .= '
+                        <div class="pwe-header-column pwe-header-content-column">
+
+                            <div class="pwe-header-text">
+                                <div class="pwe-header-main-content-block">
+                                    <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
+                                    <div class="pwe-header-title">
+                                        <h1>'. $trade_fair_desc .'</h1>
+                                        <h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>
+                                    </div>
+                                </div>
+                                <h2>'. $trade_fair_date .'</h2>
+                            </div>
+                            
+                            <div class="pwe-header-bottom">';
+                            
+                                // Congress logo START --------------------------------------------------------------------------------------<
+                                if ($pwe_header_association_hide != true) {
+                                    if (!empty($pwe_header_conference_logo_url)) {
+                                        $output .= '
+                                        <style>
+                                            .pwe-association {
+                                                position: relative;
+                                            }
+                                            #pweAssociation .pwe-association-title {
+                                                display: flex;
+                                                justify-content: center;
+                                            }
+                                            #pweAssociation .pwe-association-title h2 {
+                                                color: '. $text_color .';
+                                                margin: 0;
+                                                padding: 0;
+                                                text-align: center !important;
+                                                margin-top: 0 !important;
+                                                box-shadow: none !important;
+                                                text-transform: inherit !important;
+                                                font-size: 12px !important;
+                                            }
+                                            #pweAssociation .pwe-association-logotypes {
+                                                display: flex;
+                                                justify-content: start;
+                                                align-items: center;
+                                                flex-wrap: wrap;
+                                                gap: 10px;
+                                            }
+                                            #pweAssociation .pwe-association-logotypes .pwe-logo {
+                                                background-size: contain;
+                                                background-repeat: no-repeat;
+                                                background-position: center;
+                                                min-width: 180px;
+                                                height: fit-content;
+                                                aspect-ratio: 21 / 9;
+                                                margin: 5px;
+                                            } 
+                                            .pwe-association-logo {
+                                                text-align: center;
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                                align-items: center;
+                                            }
+                                            .pwe-association-logo span {
+                                                margin-top: 12px;
+                                                color: white;
+                                                border: 1px solid white;
+                                                border-radius: 4px;
+                                                padding: 4px 10px;
+                                                font-size: 14px;
+                                                width: fit-content;
+                                            }
+                                            @media(max-width: 960px) {
+                                                .pwe-association {
+                                                    width: 100%;
+                                                }
+                                                #pweAssociation .pwe-association-title {
+                                                    justify-content: center;
+                                                }
+                                                #pweAssociation .pwe-association-logotypes {
+                                                    justify-content: center;
+                                                }
+                                                #pweAssociation .pwe-association-logotypes .pwe-logo {
+                                                    min-width: 160px;
+                                                } 
+                                            }
+                                        </style>';
+
+                                        if ($association_fair_logo_color != 'true') {
+                                            $output .= '
+                                                <style>
+                                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-logo {
+                                                        filter: brightness(0) invert(1);
+                                                        transition: all .3s ease;
+                                                    }
+                                                </style>';
+                                        }
+
+                                        $output .= '
+                                        <div id="pweAssociation" class="pwe-association">
+                                            <div class="main-heading-text pwe-uppercase pwe-association-title">';
+                                                if ($pwe_header_modes == "conference_mode") {
+                                                    $output .= '<h2>' . self::languageChecker('Wydarzenie organizowane w ramach targów:', 'Event organised as part of the fair:') . '</h2>';
+                                                } else {
+                                                    $output .= '<h2>' . self::languageChecker('Wydarzenia Towarzyszące', 'Side Events') . '</h2>';
+                                                }
+                                            $output .= '
+                                            </div>
+                                            <div class="pwe-association-logotypes">
+                                                <a class="pwe-association-logo" href="' . $pwe_header_conference_link . '">
+                                                    <div class="pwe-logo" style="background-image: url(' . $pwe_header_conference_logo_url . ');"></div>
+                                                    <span>' . self::languageChecker('SPRAWDŹ', 'CHECK') . '</span>
+                                                </a> 
+                                            </div>
+                                        </div>';
+                                    }
+                                }
+                                // Congress logo END --------------------------------------------------------------------------------------<
+
+                                $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
+                                $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    alt="link do rejestracji">Zarejestruj się<span class="btn-small-text" style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
+                                                    PL,
+                                                    <<<EN
+                                                    alt="link to registration">Register<span class="btn-small-text" style="display: block; font-weight: 300;">Get a free ticket</span>
+                                                    EN
+                                                )
+                                            .'</a><span class="btn-angle-right">&#8250;</span>';
+                                $output .='</div>
+                            </div>
+                            ';
+
+                        $output .= '
+                        </div>
+
+                        <div class="pwe-header-column pwe-header-image-column">
+                            <img height: 100%; width="auto" class="pwe-header-img-v1-desktop" src="/doc/hall_squares_desktop.webp">
+                            <img class="pwe-header-img-v1-mobile" src="/doc/hall_squares_mobile.webp">
+                        </div>';
                     }
                 $output .= '
                 </div>
@@ -1751,7 +2125,6 @@ class PWEHeader extends PWECommonFunctions {
                 addEventListenersToForm();
                 observeFlagChanges();
             </script>';
-
 
         $output = do_shortcode($output);
 
