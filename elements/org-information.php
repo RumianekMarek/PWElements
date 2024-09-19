@@ -76,16 +76,23 @@ class PWElementOrgInfo extends PWElements {
                     text-decoration: underline;
                 }';
 
-        if(self::isTradeDateExist()){
+
+        if(self::isTradeDateExist() == false){
             $output .= '
-            .no-data_info{
+            .no-data_info {
                 display: none;
+            }
+            .no-data_remove {
+                display: block;
             }';
         } else {
             $output .= '
-                .no-data_remove{
-                    display: none;
-                }';
+            .no-data_info {
+                display: block;
+            }
+            .no-data_remove {
+                display: none;
+            }';
         };
         
         $output .= '
@@ -139,7 +146,7 @@ class PWElementOrgInfo extends PWElements {
                                         <li>Dla Odwiedzających – 10:00 – 17:00</li>
                                     </ul>
                                 </div>
-                                <h4 id="pweHiddenParagraphPl" class="pwe-hidden-paragraph pwe-display-info">Wszystkie szczegóły pojawią się wkrótce</h4>
+                                <h4 id="pweHiddenParagraphPl" class="pwe-hidden-paragraph no-data_info">Wszystkie szczegóły pojawią się wkrótce</h4>
                             </div>
 
                             <div id="wazne-informacje" class="pwe-org-info-content-item">

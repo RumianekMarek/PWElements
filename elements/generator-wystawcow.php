@@ -1149,6 +1149,7 @@ class PWElementGenerator extends PWElements {
                 jQuery(document).ready(function($){
                     let fileContent = "";
                     let fileArray = "";
+                    let $closeBtn = "";
 
                     $(".tabela-masowa").on("click",function(){
                         const tableCont = [];
@@ -1204,7 +1205,7 @@ class PWElementGenerator extends PWElements {
                         $(".page-wrapper").prepend($modal);
 
                         $modal.css("display", "flex");
-                        let $closeBtn = $modal.find(".btn-close");
+                        $closeBtn = $modal.find(".btn-close");
 
                         $closeBtn.on("click", function () {
                             $modal.hide();
@@ -1355,6 +1356,7 @@ class PWElementGenerator extends PWElements {
                                 $(".modal__elements").html("<span class=btn-close>x</span>");
                                 $(".modal__elements").append("<div id=spinner class=spinner></div>");
                                 $closeBtn = $modal.find(".btn-close");
+                                
                                 $.post("' . $send_file . '", {
                                     token: "' . self::generateToken() .'",
                                     lang: pageLang,

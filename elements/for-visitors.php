@@ -24,8 +24,8 @@ class PWElementForVisitors extends PWElements {
                     'type' => 'textarea',
                     'group' => 'PWE Element',
                     'heading' => __('Visitors text '.$i+1, 'pwelement'),
-                    'param_name' => 'exhibitor_text'.$i+1,
-                    'param_holder_class' => 'for-exhibitors',
+                    'param_name' => 'visitor_text'.$i+1,
+                    'param_holder_class' => 'for-visitors',
                     'value' => '',
                     'dependency' => array(
                         'element' => 'pwe_element',
@@ -110,7 +110,7 @@ class PWElementForVisitors extends PWElements {
                     <div class="pwe-visitors-text-block">
                         <div class="pwe-visitors-text">
                             <p>';
-                                if(!isset($atts['exhibitor_text1']) || $atts['exhibitor_text1'] == ''){
+                                if(!isset($atts['visitor_text1']) || $atts['visitor_text1'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             [trade_fair_name] to branżowe specjalistyczne wydarzenie odbywające się w Ptak Warsaw Expo, Największym Centrum Targowo – Kongresowym w Europie Środkowej. Mające na celu skupienie wszystkich gałęzi branży [trade_fair_opisbranzy] i stworzenie dogodnych warunków do profesjonalnych kontaktów biznesowych. [trade_fair_desc] pozwolą na znalezienie potencjalnych partnerów biznesowych dla twojej firmy.
@@ -120,7 +120,7 @@ class PWElementForVisitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text1'];
+                                    $output .= $atts['visitor_text1'];
                                 }
                             $output .= '</p>
                         </div>
@@ -132,7 +132,7 @@ class PWElementForVisitors extends PWElements {
                     <div class="pwe-visitors-text-block">
                         <div class="pwe-visitors-text">
                             <p>';
-                                if(!isset($atts['exhibitor_text2']) || $atts['exhibitor_text2'] == ''){
+                                if(!isset($atts['visitor_text2']) || $atts['visitor_text2'] == ''){
                                     $output .= self::languageChecker(
                                         <<<PL
                                             [trade_fair_name] to doskonała okazja byś mógł porównać i dokładnie przeanalizować wszystkie dostępne na polskim rynku oferty dedykowane branży. Wydarzenie to stanowi również doskonałą okazję do uczestnictwa w konferencjach, warsztatach oraz kongresach branży [trade_fair_opisbranzy] rozwijających znajomość rynku oraz pokazujących działanie najnowszych technologii. Zarejestruj się i otrzymaj zaproszenie na targi.
@@ -142,7 +142,7 @@ class PWElementForVisitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text1'];
+                                    $output .= $atts['visitor_text1'];
                                 }
                             $output .= '</p>
                         </div>

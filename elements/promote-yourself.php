@@ -54,6 +54,7 @@ class PWElementPromot extends PWElements {
     * @return string @output 
     */
     public static function output($atts) {
+        $show_banners = isset($atts['show_banners']) ? $atts['show_banners'] : false;
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$fair_colors['Accent']) . '!important';
@@ -61,8 +62,14 @@ class PWElementPromot extends PWElements {
         
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
         
+        $logo_href = '';
         $logo_color = self::findBestLogo($atts["logo_color"]); 
-
+        $logo_color_array = explode('"', $logo_color);
+        foreach($logo_color_array as $href){
+            if(strpos(strtolower($href), '/doc/') !== false){
+                $logo_href = $href;
+            }
+        }
         $output = '';
 
         $promoteImage = self::findAllImages('/doc/galeria', 1);
@@ -108,7 +115,7 @@ class PWElementPromot extends PWElements {
                 .pwe-content-promote-item {
                     flex-wrap: wrap;
                     margin: 36px auto;
-                    width: fit-content;
+                    justify-content: space-around;
                 }
                 .pwe-border-element {
                     border: 2px solid '. $btn_color .';
@@ -122,7 +129,7 @@ class PWElementPromot extends PWElements {
                     flex:1;
                     justify-content: space-between;
                     align-items: center;
-                    min-width: 250px;
+                    max-width: 250px;
                     display:flex !important;
                     gap: 5px;
                 }
@@ -130,7 +137,6 @@ class PWElementPromot extends PWElements {
                     margin:0;
                 }
                 .pwe-content-promote-item .pwe-content-promote-element img{
-                    max-width: 250px;
                     max-height: 150px;
                 }
                 .pwe-content-promote-item div .btn {
@@ -204,6 +210,13 @@ class PWElementPromot extends PWElements {
                     .pwe-promote-text-block {
                         display: flex;
                         flex-direction: column;
+                    }
+                    .pwe-content-promote-item.pwe-flex{
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    .pwelement .h2.mobile-kons-email{
+                        font-size: calc(7px + 3vw) !important;
                     }
                 }
                 .promote-element-background-element {
@@ -284,7 +297,7 @@ class PWElementPromot extends PWElements {
                                 <li>Poinformuj swoich klientów za pomocą swoich kanałów Social Media o tym, co na nich czeka na Twoim stoisku! (jakie brandy? jakie innowacyjne produkty i usługi? jakie atrakcje?)</li>
                                 <li>Przygotuj ofertę specjalną na targi i poinformuj o niej swoich klientów za pomocą kanałów Social Media oraz mailingu.</li>
                                 <li>Umieść na swojej stronie podlinkowany baner [trade_fair_name].</li>
-                                <li class="link-text-underline">Podziel się wszystkim tym, co przygotowałeś na [trade_fair_name] z naszym zespołem! Wyślij nam listę atrakcji i ambasadorów obecnych na Twoim stoisku oraz poinformuj nas o premierach, promocjach i rabatach, które przygotowałeś na targi, a my zamieścimy to w naszych kanałach Social Media. (wszelkie materiały wysyłaj na adres mailowy: <a href="mailto:konsultantmarketingowy@warsawexpo.eu">konsultantmarketingowy@warsawexpo.eu</a>)</li>
+                                <li class="link-text-underline">Podziel się wszystkim tym, co przygotowałeś na [trade_fair_name] z naszym zespołem! Wyślij nam listę atrakcji i ambasadorów obecnych na Twoim stoisku oraz poinformuj nas o premierach, promocjach i rabatach, które przygotowałeś na targi, a my zamieścimy to w naszych kanałach Social Media. (wszelkie materiały wysyłaj na adres mailowy: <a href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>)</li>
                                 <li>Jeśli potrzebujesz materiałów o naszych targach, poniżej znajduje się lista plików do pobrania.</li>
                             </ol>
                             <p>Gdybyś potrzebował więcej, napisz do nas, a my postaramy się pomóc! Tylko działając razem jesteśmy w stanie osiągnąć sukces.</p>
@@ -297,7 +310,7 @@ class PWElementPromot extends PWElements {
                                 <li>Inform your pweers through your Social Media channels about what is waiting for them at your stand! (what brands? what innovative products and services? what attractions?)</li>
                                 <li>Prepare a special offer for the fair and inform your pweers about it using Social Media channels and mailing.</li>
                                 <li>Place the linked banner [trade_fair_name_eng] on your website.</li>
-                                <li class="link-text-underline">Share everything you've prepared on [trade_fair_name_eng] with our team! Send us a list of attractions and ambassadors present at your stand and inform us about the premieres, promotions and discounts that you have prepared for the fair, and we will post it in our Social Media channels. (all materials should be sent to the following e-mail address: <a href='mailto:konsultantmarketingowy@warsawexpo.eu'>konsultantmarketingowy@warsawexpo.eu</a>)</li>
+                                <li class="link-text-underline">Share everything you've prepared on [trade_fair_name_eng] with our team! Send us a list of attractions and ambassadors present at your stand and inform us about the premieres, promotions and discounts that you have prepared for the fair, and we will post it in our Social Media channels. (all materials should be sent to the following e-mail address: <a href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>)</li>
                                 <li>If you need materials about our fair, below is a list of files to download.</li>
                             </ol>
                             <p>If you need more, write to us and we will try to help! Only by working together are we able to achieve success.</p>
@@ -306,7 +319,7 @@ class PWElementPromot extends PWElements {
                 .'</div>
                 <div class="pwe-flex pwe-content-promote-item pwe-border-element">';
 
-                if ($atts['show_banners'] != 'true') {
+                if ($show_banners != 'true') {
                     $promoteBaners = self::findAllImages('/doc/wypromuj', 4);
                     
                     foreach($promoteBaners as $baner){
@@ -325,6 +338,7 @@ class PWElementPromot extends PWElements {
                                 break;
                         }
                     }
+
                     $output .='
                         <div class="pwe-column pwe-content-promote-element">
                             <h3>'.
@@ -398,7 +412,7 @@ class PWElementPromot extends PWElements {
                         .'</h3>
                         ' . $logo_color . '
                         <span class="btn-container">
-                            <a href="" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="[trade_fair_name] logo" >'.
+                            <a href="' . $logo_href . '" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="[trade_fair_name] logo" >'.
                                 self::languageChecker(
                                     <<<PL
                                         Pobierz
@@ -452,7 +466,7 @@ class PWElementPromot extends PWElements {
                             )                           
                         .'</h2>
                         <div class="text-centered link-text-underline">
-                            <a class="h2" href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>
+                            <a class="h2 mobile-kons-email" href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>
                         </div>
                     </div>
                 </div>';
