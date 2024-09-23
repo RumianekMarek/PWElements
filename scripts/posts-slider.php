@@ -77,6 +77,7 @@ class PWEPostsSlider {
                 $output .= '
                 <div id="PWEPostsSlider-'. $id_rnd .'" class="pwe-posts-slider">
                         <div class="slides">';
+                        $load_more = get_locale() == 'pl_PL' ? 'CZYTAJ WIĘCEJ' : 'READ MORE';
                         
                         for ($i = $min_image; $i < ($max_image); $i++) {
                                 if($i<0){
@@ -114,7 +115,7 @@ class PWEPostsSlider {
                                                         </div> 
                                                         <h5 class="pwe-post-title">'. $imageTitle .'</h5>
                                                         <p class="pwe-post-excerpt">'. $imageExcerpt .'</p>
-                                                        <button class="pwe-post-btn">CZYTAJ WIĘCEJ</button>
+                                                        <button class="pwe-post-btn">'. $load_more .'</button>
                                                 </a>
                                         </div>
                                         ';  
