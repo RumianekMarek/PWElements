@@ -335,12 +335,12 @@ class PWElementMainCountdown extends PWElements {
 
         if ($atts['custom_timer'] != true) {
             $output = '';
-            $output .= '
-            <style>
-                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                    opacity: 0;
-                }
-            </style>';
+            // $output .= '
+            // <style>
+            //     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+            //         opacity: 0;
+            //     }
+            // </style>';
         }
 
         if ($atts['turn_off_timer_bg'] == true) {
@@ -409,10 +409,14 @@ class PWElementMainCountdown extends PWElements {
                         flex-wrap: wrap;
                         justify-content: space-evenly;
                         align-items: baseline;
+                        margin: 8px auto;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
                         min-width: 100%;
                     }  
+                    .pwelement_'. self::$rnd_id .' #main-timer p {
+                        margin: 0 auto;
+                    }
                 }';
                 $output .= '
                 @media (max-width:959px){
@@ -461,16 +465,16 @@ class PWElementMainCountdown extends PWElements {
             $output .= '</style>';
         }
 
-        $output .= '
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                if (document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')")) {
-                    const countdownEl = document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')");
-                    countdownEl.style.opacity = 1;
-                    countdownEl.style.transition = "opacity 0.3s ease";
-                }
-            });
-        </script>';
+        // $output .= '
+        // <script>
+        //     document.addEventListener("DOMContentLoaded", function() {
+        //         if (document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')")) {
+        //             const countdownEl = document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')");
+        //             countdownEl.style.opacity = 1;
+        //             countdownEl.style.transition = "opacity 0.3s ease";
+        //         }
+        //     });
+        // </script>';
 
         return $output;
     }

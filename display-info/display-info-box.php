@@ -437,6 +437,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             }
             #info-box-'. self::$rnd_id .' .pwe-box-speaker {
                 border-radius: '. $info_box_photo_square .';
+                background: white;
             }
             #info-box-'. self::$rnd_id .' .pwe-box-speaker-btn {
                 margin: 10px auto !important;

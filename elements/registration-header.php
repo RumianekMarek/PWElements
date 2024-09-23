@@ -216,7 +216,10 @@ class PWElementRegHeader extends PWElements {
                     color: black !important;
                 }
                 #pweForm .gform_legacy_markup_wrapper .gform_footer {
-                    margin: -18px auto 0 !important;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto !important;
                     padding: 0;
                     text-align: center;
                 }

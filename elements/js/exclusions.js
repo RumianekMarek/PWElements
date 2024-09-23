@@ -62,6 +62,64 @@ document.addEventListener('DOMContentLoaded', function () {
 
     mainLogo.appendChild(leftLink);
     mainLogo.appendChild(rightLink);
+
+
+
+
+    const squaresModeBgs = document.querySelectorAll('.pwe-header-background .pwe-bg-image');
+
+    if (squaresModeBgs.length > 0) {
+        let currentIndex = 0;
+        let isFirstLoop = true;
+
+        function changeBackground() {
+            // Wyzeruj wszystkie obrazy
+            squaresModeBgs.forEach((bg) => bg.classList.remove('visible'));
+
+            // Jeśli jesteśmy w pierwszej pętli, pokaż pierwszy obrazek tylko na początku
+            if (isFirstLoop) {
+                if (currentIndex === 0) {
+                    squaresModeBgs[0].classList.add('visible'); // Pierwszy obrazek na 3 sekundy
+                    setTimeout(() => {
+                        currentIndex = 1;
+                        changeBackground(); // Przejdź do drugiego obrazu po 3 sekundach
+                    }, 3000);
+                } else if (currentIndex === 1) {
+                    squaresModeBgs[1].classList.add('visible'); // Drugi obrazek na 10 sekund
+                    setTimeout(() => {
+                        currentIndex = 2;
+                        changeBackground(); // Przejdź do trzeciego obrazu po 10 sekundach
+                    }, 10000);
+                } else if (currentIndex === 2) {
+                    squaresModeBgs[2].classList.add('visible'); // Trzeci obrazek na 10 sekund
+                    setTimeout(() => {
+                        isFirstLoop = false; // Ustaw flagę, że pierwsza pętla się skończyła
+                        currentIndex = 1; // Ustaw na drugi obraz na początek kolejnych pętli
+                        changeBackground();
+                    }, 10000);
+                }
+            } else {
+                // Kolejne pętle: tylko drugi i trzeci obrazek
+                if (currentIndex === 1) {
+                    squaresModeBgs[1].classList.add('visible'); // Drugi obrazek na 10 sekund
+                    setTimeout(() => {
+                        currentIndex = 2;
+                        changeBackground();
+                    }, 10000);
+                } else if (currentIndex === 2) {
+                    squaresModeBgs[2].classList.add('visible'); // Trzeci obrazek na 10 sekund
+                    setTimeout(() => {
+                        currentIndex = 1;
+                        changeBackground();
+                    }, 10000);
+                }
+            }
+        }
+
+        changeBackground();
+    }
+
+    
 });
 
 // // Funkcja do ustawiania cookie
@@ -113,3 +171,6 @@ document.addEventListener('DOMContentLoaded', function () {
 //         field.value = utmParams;
 //     });
 // }
+
+
+

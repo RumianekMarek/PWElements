@@ -71,9 +71,7 @@ class PWElementTicketActConf extends PWElements {
             echo '<script>console.error("Nie udało się pobrać potwierdzenia.")</script>';
             return false;
         }
-
         $form_name = (get_locale() == "pl_PL") ? "SPECJALSI A PL Aktywacja" : "SPECJALSI A ENG Aktywacja";
-        
         foreach ($form_clone["notifications"] as $id => &$key) {
             if ($key['name'] == $form_name) {
                 $key['isActive'] = true;
