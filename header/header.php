@@ -861,7 +861,7 @@ class PWEHeader extends PWECommonFunctions {
                 }
             </style>';
 
-            if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE) && $pwe_header_modes != "conference_mode") {
+            if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE) && ($pwe_header_modes != "conference_mode" && $pwe_header_modes != "squares_mode")) {
                 $output .= '
                 <style>
                     @media (max-width: 569px) {
@@ -977,6 +977,7 @@ class PWEHeader extends PWECommonFunctions {
         }
 
         $partnerImages = glob($_SERVER['DOCUMENT_ROOT'] . '/doc/partnerzy/*.{jpeg,jpg,png,webp,JPG,PNG,JPEG,WEBP}', GLOB_BRACE);
+
         $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $base_url .= "://".$_SERVER['HTTP_HOST'];
 
@@ -1168,7 +1169,15 @@ class PWEHeader extends PWECommonFunctions {
 
         $output .= '<div id="pweHeader" class="pwe-header">
 
-            <div style="background-image: url('. $background_header .');"  class="pwe-header-container pwe-header-background">
+            <div style="background-image: url('. $background_header .');"  class="pwe-header-container pwe-header-background">';
+
+                if ($pwe_header_modes == "squares_mode") {
+                    $output .= '
+                    <div class="pwe-bg-image1 pwe-bg-image"></div>
+                    <div class="pwe-bg-image2 pwe-bg-image"></div>
+                    <div class="pwe-bg-image3 pwe-bg-image"></div>';
+                }
+                $output .= '
                 <div class="pwe-header-wrapper">';
                     if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode" && $pwe_header_modes != "squares_mode") {
 
@@ -1700,10 +1709,10 @@ class PWEHeader extends PWECommonFunctions {
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column {
                                 width: 50%;
                                 max-width: 600px;
-                                padding: 36px;
+                                padding: 36px 36px 54px;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
-                                max-width: 280px !important;
+                                max-width: '. $pwe_header_logo_width .'px !important;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
                                 padding: 0 !important;
@@ -1729,6 +1738,10 @@ class PWEHeader extends PWECommonFunctions {
                                 text-transform: uppercase;
                                 font-size: 30px;
                                 padding: 6px 8px;
+                            }
+                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text p {
+                                color: '. $text_color .';
+                                display: none;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
                                 background-color: white;
@@ -1792,12 +1805,12 @@ class PWEHeader extends PWECommonFunctions {
                                 font-size: 10px;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-angle-right {
+                                color: '. $btn_text_color .';
                                 position: absolute;
                                 right: 25px;
                                 top: -30%;
                                 height: 35px;
                                 font-size: 72px;
-                                color: white;
                                 transition: .3s ease;
                             }
                             .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
@@ -1857,6 +1870,74 @@ class PWEHeader extends PWECommonFunctions {
                                 }
                             }
                             @media(max-width: 960px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                                    background-image: url("/doc/header_mobile.webp") !important;
+                                    position: relative;
+                                    width: 100%;
+                                    height: 100%;
+                                    overflow: hidden;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image1, 
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image2, 
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image3 {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    background-size: cover;
+                                    background-position: center;
+                                    background-repeat: no-repeat;
+                                    opacity: 0;
+                                    transition: opacity 2s ease-in-out;
+                                    z-index: 1 !important;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image1 {
+                                    background-image: url("/doc/header_mobile.webp");
+                                    z-index: 1;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image2 {
+                                    background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_2.webp");
+                                    z-index: 2;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image3 {
+                                    background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_3.webp");
+                                    z-index: 3;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background .visible {
+                                    opacity: 1;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block,
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                    background-color: #00000099;
+                                    padding: 18px;
+                                    border-radius: 18px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block {
+                                    max-width: 400px;
+                                    display: flex;
+                                    flex-direction: column-reverse;
+                                    justify-content: center;
+                                    align-items: center;
+                                    text-align: center;
+                                    gap: 18px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                    margin-top: 36px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: center;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text p {
+                                    display: block;
+                                    margin: 0;
+                                }  
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition span {
+                                    color: black;
+                                }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
                                     display: none;
                                 }
@@ -1874,11 +1955,8 @@ class PWEHeader extends PWECommonFunctions {
                                     padding: 0;
                                     text-align: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
-                                    max-width: 260px !important;
-                                }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
-                                    padding: 18px;
+                                    padding: 36px 18px;
                                 }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
                                     flex-direction: column-reverse;
@@ -1889,14 +1967,13 @@ class PWEHeader extends PWECommonFunctions {
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
                                     text-align: center;
                                     width: auto;
-                                    font-size: 24px;
+                                    font-size: 22px;
                                 }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
                                     padding-top: 0;
                                 }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
-                                    margin-top: 18px;
-                                    font-size: 22px;
+                                    margin-top: 0;
                                 }
                                 .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
                                     margin-top: 10px;
@@ -1922,13 +1999,13 @@ class PWEHeader extends PWECommonFunctions {
                                     width: 100% !important;
                                     max-width: 320px !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block {
-                                    display: flex;
-                                    flex-direction: column-reverse;
-                                    justify-content: center;
-                                    align-items: center;
-                                    text-align: center;
-                                    gap: 18px;
+                            }
+                            @media(max-width: 450px) {
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                    padding: 18px;
+                                }
+                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                    margin-top: 18px;
                                 }
                             }
                         </style>';
@@ -1944,111 +2021,112 @@ class PWEHeader extends PWECommonFunctions {
                                         <h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>
                                     </div>
                                 </div>
-                                <h2>'. $trade_fair_date .'</h2>
+                                <div class="pwe-header-date-block">
+                                    <h2>'. $trade_fair_date .'</h2>
+                                    <p>'. self::languageChecker('Warszawa, Polska', 'Warsaw, Poland') .'</p>
+                                </div>
                             </div>
                             
                             <div class="pwe-header-bottom">';
                             
-                                // Congress logo START --------------------------------------------------------------------------------------<
-                                if ($pwe_header_association_hide != true) {
-                                    if (!empty($pwe_header_conference_logo_url)) {
-                                        $output .= '
-                                        <style>
-                                            .pwe-association {
-                                                position: relative;
-                                            }
-                                            #pweAssociation .pwe-association-title {
-                                                display: flex;
-                                                justify-content: center;
-                                            }
-                                            #pweAssociation .pwe-association-title h2 {
-                                                color: '. $text_color .';
-                                                margin: 0;
-                                                padding: 0;
-                                                text-align: center !important;
-                                                margin-top: 0 !important;
-                                                box-shadow: none !important;
-                                                text-transform: inherit !important;
-                                                font-size: 12px !important;
-                                            }
-                                            #pweAssociation .pwe-association-logotypes {
-                                                display: flex;
-                                                justify-content: start;
-                                                align-items: center;
-                                                flex-wrap: wrap;
-                                                gap: 10px;
-                                            }
-                                            #pweAssociation .pwe-association-logotypes .pwe-logo {
-                                                background-size: contain;
-                                                background-repeat: no-repeat;
-                                                background-position: center;
-                                                min-width: 180px;
-                                                height: fit-content;
-                                                aspect-ratio: 21 / 9;
-                                                margin: 5px;
-                                            } 
-                                            .pwe-association-logo {
-                                                text-align: center;
-                                                display: flex;
-                                                flex-direction: column;
-                                                justify-content: center;
-                                                align-items: center;
-                                            }
-                                            .pwe-association-logo span {
-                                                margin-top: 12px;
-                                                color: white;
-                                                border: 1px solid white;
-                                                border-radius: 4px;
-                                                padding: 4px 10px;
-                                                font-size: 14px;
-                                                width: fit-content;
-                                            }
-                                            @media(max-width: 960px) {
-                                                .pwe-association {
-                                                    width: 100%;
-                                                }
-                                                #pweAssociation .pwe-association-title {
-                                                    justify-content: center;
-                                                }
-                                                #pweAssociation .pwe-association-logotypes {
-                                                    justify-content: center;
-                                                }
-                                                #pweAssociation .pwe-association-logotypes .pwe-logo {
-                                                    min-width: 160px;
-                                                } 
-                                            }
-                                        </style>';
+                                // // Congress logo START --------------------------------------------------------------------------------------<
+                                // if ($pwe_header_association_hide != true) {
+                                //     if (!empty($pwe_header_conference_logo_url)) {
+                                //         $output .= '
+                                //         <style>
+                                //             .pwe-association {
+                                //                 position: relative;
+                                //             }
+                                //             #pweAssociation .pwe-association-title {
+                                //                 display: flex;
+                                //                 justify-content: center;
+                                //             }
+                                //             #pweAssociation .pwe-association-title h2 {
+                                //                 color: '. $text_color .';
+                                //                 margin: 0;
+                                //                 padding: 0;
+                                //                 text-align: center !important;
+                                //                 margin-top: 0 !important;
+                                //                 box-shadow: none !important;
+                                //                 text-transform: inherit !important;
+                                //                 font-size: 12px !important;
+                                //             }
+                                //             #pweAssociation .pwe-association-logotypes {
+                                //                 display: flex;
+                                //                 justify-content: start;
+                                //                 align-items: center;
+                                //                 flex-wrap: wrap;
+                                //                 gap: 10px;
+                                //             }
+                                //             #pweAssociation .pwe-association-logotypes .pwe-logo {
+                                //                 background-size: contain;
+                                //                 background-repeat: no-repeat;
+                                //                 background-position: center;
+                                //                 min-width: 180px;
+                                //                 max-width: 180px;
+                                //                 height: fit-content;
+                                //                 padding: 10px;
+                                //             } 
+                                //             .pwe-association-logo {
+                                //                 text-align: center;
+                                //                 display: flex;
+                                //                 flex-direction: column;
+                                //                 justify-content: center;
+                                //                 align-items: center;
+                                //             }
+                                //             .pwe-association-logo:before {
+                                //                 content: "' . self::languageChecker('SPRAWDŹ', 'CHECK') . '";    
+                                //                 position: absolute;
+                                //                 bottom: -32px;
+                                //                 color: white;
+                                //                 border: 1px solid white;
+                                //                 border-radius: 4px;
+                                //                 padding: 4px 10px;
+                                //                 font-size: 14px;s
+                                //                 width: fit-content;
+                                //             }
+                                //             @media(max-width: 960px) {
+                                //                 .pwe-association {
+                                //                     width: 100%;
+                                //                 }
+                                //                 #pweAssociation .pwe-association-title {
+                                //                     justify-content: center;
+                                //                 }
+                                //                 #pweAssociation .pwe-association-logotypes {
+                                //                     justify-content: center;
+                                //                 }
+                                //             }
+                                //         </style>';
 
-                                        if ($association_fair_logo_color != 'true') {
-                                            $output .= '
-                                                <style>
-                                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-logo {
-                                                        filter: brightness(0) invert(1);
-                                                        transition: all .3s ease;
-                                                    }
-                                                </style>';
-                                        }
+                                //         if ($association_fair_logo_color != 'true') {
+                                //             $output .= '
+                                //                 <style>
+                                //                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-logo {
+                                //                         filter: brightness(0) invert(1);
+                                //                         transition: all .3s ease;
+                                //                     }
+                                //                 </style>';
+                                //         }
 
-                                        $output .= '
-                                        <div id="pweAssociation" class="pwe-association">
-                                            <div class="main-heading-text pwe-uppercase pwe-association-title">';
-                                                if ($pwe_header_modes == "conference_mode") {
-                                                    $output .= '<h2>' . self::languageChecker('Wydarzenie organizowane w ramach targów:', 'Event organised as part of the fair:') . '</h2>';
-                                                } else {
-                                                    $output .= '<h2>' . self::languageChecker('Wydarzenia Towarzyszące', 'Side Events') . '</h2>';
-                                                }
-                                            $output .= '
-                                            </div>
-                                            <div class="pwe-association-logotypes">
-                                                <a class="pwe-association-logo" href="' . $pwe_header_conference_link . '">
-                                                    <div class="pwe-logo" style="background-image: url(' . $pwe_header_conference_logo_url . ');"></div>
-                                                    <span>' . self::languageChecker('SPRAWDŹ', 'CHECK') . '</span>
-                                                </a> 
-                                            </div>
-                                        </div>';
-                                    }
-                                }
-                                // Congress logo END --------------------------------------------------------------------------------------<
+                                //         $output .= '
+                                //         <div style="display: none;" id="pweAssociation" class="pwe-association">
+                                //             <div class="main-heading-text pwe-uppercase pwe-association-title">';
+                                //                 if ($pwe_header_modes == "conference_mode") {
+                                //                     $output .= '<h2>' . self::languageChecker('Wydarzenie organizowane w ramach targów:', 'Event organised as part of the fair:') . '</h2>';
+                                //                 } else {
+                                //                     $output .= '<h2>' . self::languageChecker('Wydarzenia Towarzyszące', 'Side Events') . '</h2>';
+                                //                 }
+                                //             $output .= '
+                                //             </div>
+                                //             <div class="pwe-association-logotypes">
+                                //                 <a class="pwe-association-logo" href="' . $pwe_header_conference_link . '">
+                                //                     <img class="pwe-logo" src="' . $pwe_header_conference_logo_url . '">
+                                //                 </a> 
+                                //             </div>
+                                //         </div>';
+                                //     }
+                                // }
+                                // // Congress logo END --------------------------------------------------------------------------------------<
 
                                 $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
                                 $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
@@ -2070,7 +2148,7 @@ class PWEHeader extends PWECommonFunctions {
 
                         <div class="pwe-header-column pwe-header-image-column">
                             <img height: 100%; width="auto" class="pwe-header-img-v1-desktop" src="/doc/hall_squares_desktop.webp">
-                            <img class="pwe-header-img-v1-mobile" src="/doc/hall_squares_mobile.webp">
+                            <img style="display: none;" class="pwe-header-img-v1-mobile" src="/doc/hall_squares_mobile.webp">
                         </div>';
                     }
                 $output .= '
@@ -2078,7 +2156,8 @@ class PWEHeader extends PWECommonFunctions {
             </div>
         </div>';
 
-        $output .= '
+        if ($pwe_header_modes != "squares_mode") {
+            $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     const pweLogotypesElement = document.querySelector(".pwelement_'.SharedProperties::$rnd_id.' .pwe-header-logotypes");
@@ -2125,6 +2204,7 @@ class PWEHeader extends PWECommonFunctions {
                 addEventListenersToForm();
                 observeFlagChanges();
             </script>';
+        }
 
         $output = do_shortcode($output);
 
