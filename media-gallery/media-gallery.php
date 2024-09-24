@@ -109,6 +109,27 @@ class PWEMediaGallery {
                     ),
                     array(
                         'type' => 'dropdown',
+                        'heading' => __('Justify last row', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_justify_last_row',
+                        'description' => __('Don`t justify the last row', 'pwe_media_gallery'),
+                        'save_always' => true,
+                        'value' => array(
+                            'Nojustify' => 'nojustify',
+                            'Justify' => 'justify',
+                            'Left' => 'left',
+                            'Center' => 'center',
+                            'Right' => 'right',
+                            'Hide' => 'hide',
+                        ),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'flex'
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'dropdown',
                         'heading' => __('Aspect Ratio', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_aspect_ratio',
                         'description' => __('Set an aspect ratio for the images', 'pwe_media_gallery'),
@@ -136,7 +157,28 @@ class PWEMediaGallery {
                         'param_name' => 'media_gallery_gap',
                         'description' => __('Set the items gap.', 'pwe_media_gallery'),
                         'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'carousel',
+                            ),
+                        ),
                     ),  
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Margin items', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_margin',
+                        'description' => __('Set the items margin.', 'pwe_media_gallery'),
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'flex'
+                            ),
+                        ),
+                    ), 
                     array(
                         'type' => 'checkbox',
                         'heading' => __('Full width', 'pwe_media_gallery'),
@@ -144,6 +186,15 @@ class PWEMediaGallery {
                         'description' => __('overflow: visible;', 'pwe_media_gallery'),
                         'save_always' => true,
                         'value' => array(__('True', 'pwe_media_gallery') => 'true',),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'flex',
+                                'slider',
+                            ),
+                        ),
                     ),
                     array(
                         'type' => 'dropdown',
@@ -166,6 +217,14 @@ class PWEMediaGallery {
                             '3 columns' => '3',
                             '2 columns' => '2',
                             '1 column' => '1',
+                        ),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'carousel',
+                            ),
                         ),
                     ), 
                     array(
@@ -190,6 +249,14 @@ class PWEMediaGallery {
                             '2 columns' => '2',
                             '1 column' => '1',
                         ),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'carousel',
+                            ),
+                        ),
                     ), 
                     array(
                         'type' => 'dropdown',
@@ -213,31 +280,28 @@ class PWEMediaGallery {
                             '2 columns' => '2',
                             '1 column' => '1',
                         ),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'carousel',
+                            ),
+                        ),
                     ),   
                     array(
                         'type' => 'textfield',
-                        'heading' => __('Thumbnail height (desktop)(200px def)', 'pwe_media_gallery'),
-                        'param_name' => 'thumbnails_height_desktop',
-                        'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
-                        'description' => __('Write the thumbnail height for desktop.', 'pwe_media_gallery'),
+                        'heading' => __('Thumbnails rows height (200px default)', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_thumbnails_rows_height',
+                        'description' => __('Write the thumbnails rows height.', 'pwe_media_gallery'),
                         'save_always' => true,
-                    ), 
-                    array(
-                        'type' => 'textfield',
-                        'heading' => __('Thumbnail height (tablet)(200px def)', 'pwe_media_gallery'),
-                        'param_name' => 'thumbnails_height_tablet',
-                        'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
-                        'description' => __('Write the thumbnail height for tablet.', 'pwe_media_gallery'),
-                        'save_always' => true,
-                    ),        
-                    array(
-                        'type' => 'textfield',
-                        'heading' => __('Thumbnail height (mobile)(200px def)', 'pwe_media_gallery'),
-                        'param_name' => 'thumbnails_height_mobile',
-                        'param_holder_class' => 'backend-area-one-third-width thumbnails_height_flex',
-                        'description' => __('Write the thumbnail height for mobile.', 'pwe_media_gallery'),
-                        'save_always' => true,
-                    ),           
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'flex'
+                            ),
+                        ),
+                    ),   
                     array(
                         'type' => 'textfield',
                         'heading' => __('Breakpoint for tablet', 'pwe_media_gallery'),
@@ -245,6 +309,14 @@ class PWEMediaGallery {
                         'description' => __('Set a breakpoint for tablet (default 959px)', 'pwe_media_gallery'),
                         'param_holder_class' => 'backend-area-half-width',
                         'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'carousel',
+                            ),
+                        ),
                     ),  
                     array(
                         'type' => 'textfield',
@@ -253,6 +325,14 @@ class PWEMediaGallery {
                         'description' => __('Set a breakpoint for mobile (default 480px)', 'pwe_media_gallery'),
                         'param_holder_class' => 'backend-area-half-width',
                         'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'carousel',
+                            ),
+                        ),
                     ), 
                 ),
             ));
@@ -293,15 +373,15 @@ class PWEMediaGallery {
             'media_gallery_clicked' => '',
             'media_gallery_links' => '',
             'media_gallery_layout' => '',
+            'media_gallery_justify_last_row' => '',
             'media_gallery_aspect_ratio' => '',
             'media_gallery_gap' => '',
+            'media_gallery_margin' => '',
             'media_gallery_full_width' => '',
             'media_gallery_thumbnails_width_desktop' => '',
             'media_gallery_thumbnails_width_tablet' => '',
             'media_gallery_thumbnails_width_mobile' => '',
-            'thumbnails_height_desktop' => '',
-            'thumbnails_height_tablet' => '',
-            'thumbnails_height_mobile' => '',
+            'media_gallery_thumbnails_rows_height' => '',
             'media_gallery_breakpoint_tablet' => '',
             'media_gallery_breakpoint_mobile' => '',
         ), $atts));
@@ -355,10 +435,15 @@ class PWEMediaGallery {
         // Set gap for images
         $media_gallery_gap = (empty($media_gallery_gap)) ? '5' : $media_gallery_gap;
 
+        // Set margin for images
+        $media_gallery_margin = (empty($media_gallery_margin)) ? '5' : $media_gallery_margin;
+
         // Removing px if it exists
         $media_gallery_breakpoint_tablet = str_replace("px", "", $media_gallery_breakpoint_tablet);
         $media_gallery_breakpoint_mobile = str_replace("px", "", $media_gallery_breakpoint_mobile);
+        $media_gallery_thumbnails_rows_height = str_replace("px", "", $media_gallery_thumbnails_rows_height);
         $media_gallery_gap = str_replace("px", "", $media_gallery_gap);
+        $media_gallery_margin = str_replace("px", "", $media_gallery_margin);
         
         $output = '';
 
@@ -433,42 +518,15 @@ class PWEMediaGallery {
                             break;
                         case 'flex':
 
-                            // Set the height of if images in the gallery
-                            $thumbnails_height_desktop = ($thumbnails_height_desktop == '') ? '200px' : $thumbnails_height_desktop;
-                            $thumbnails_height_tablet = ($thumbnails_height_tablet == '') ? '200px' : $thumbnails_height_tablet;
-                            $thumbnails_height_mobile = ($thumbnails_height_mobile == '') ? '200px' : $thumbnails_height_mobile;
+                            // Set the height of if images row in the gallery
+                            $media_gallery_thumbnails_rows_height = ($media_gallery_thumbnails_rows_height == '') ? '200' : $media_gallery_thumbnails_rows_height;
 
                             $output .=  '<style>
                                             /* Flexbox */
-                                            #'. $media_gallery_id .' .pwe-media-gallery {
-                                                display: flex;
-                                                flex-wrap: wrap;
-                                                gap: '. $media_gallery_gap .'px;
+                                            #'. $media_gallery_id .' .justified-gallery {
+                                                opacity: 1 !important;
+                                                min-height: auto !important;
                                             }
-                                            #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                flex-grow: 1;
-                                            }
-                                            #'. $media_gallery_id .' .pwe-media-gallery-image img {
-                                                width: 100%;
-                                                height: 100%;
-                                                object-fit: cover;
-                                                object-position: top;
-                                            }
-                                            @media (min-width: '. ($media_gallery_breakpoint_tablet + 1) .'px) {
-                                                #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                    height: '. $thumbnails_height_desktop .';
-                                                }
-                                            }
-                                            @media (max-width: '. $media_gallery_breakpoint_tablet .'px) {
-                                                #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                    height: '. $thumbnails_height_tablet .';
-                                                }
-                                            }
-                                            @media (max-width: '. $media_gallery_breakpoint_mobile .'px) {
-                                                #'. $media_gallery_id .' .pwe-media-gallery-image {
-                                                    height: '. $thumbnails_height_mobile .';
-                                                }
-                                            } 
                                         </style>';
                             break;
                         case 'carousel':
@@ -509,7 +567,10 @@ class PWEMediaGallery {
 
                     $simple_layout_types = ['columns', 'grid', 'flex'];
                     if (array_intersect($simple_layout_types, $layouts)) { // Gallery <--------------------------------------<
-                        $output .= '<div class="pwe-gallery-container pwe-media-gallery">';
+                        $output .= '<div class="pwe-gallery-container pwe-media-gallery">
+                        <link href="/wp-content/plugins/PWElements/media-gallery/justified-gallery/justifiedGallery.css" rel="stylesheet">
+                        <script src="/wp-content/plugins/PWElements/media-gallery/justified-gallery/jquery.justifiedGallery.js"></script>
+                        ';
                         foreach ($media_gallery_array as $image_url) {
                             $path_parts = pathinfo($image_url);
                             $image_filename = $path_parts['basename'];
@@ -733,6 +794,19 @@ class PWEMediaGallery {
                 }
             });
         </script>';
+        
+        if (in_array('flex', $layouts)) {
+            $output .= '
+            <script>
+                jQuery(document).ready(function($){
+                    $(".pwe-gallery-container").justifiedGallery ({
+                        rowHeight : '. $media_gallery_thumbnails_rows_height .',
+                        lastRow : "'. $media_gallery_justify_last_row .'",
+                        margins : '. $media_gallery_margin .',
+                    });
+                });
+            </script>';
+        }
     
         $output = do_shortcode($output);
         
