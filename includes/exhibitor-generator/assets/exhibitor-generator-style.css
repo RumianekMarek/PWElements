@@ -258,8 +258,16 @@
     
 .modal__elements input[type="text"] {
     width: 50%;
+}
+
+.modal__elements input[type="text"],
+.modal__elements select {
     border: 1px solid black;
     border-radius: 10px;
+}
+
+.modal__elements .file-selctor label {
+    text-align: left;
 }
 
 .modal__elements table{

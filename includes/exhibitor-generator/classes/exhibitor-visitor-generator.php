@@ -80,9 +80,9 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                         <div class="exhibitor-generator__right-form">
                             [gravityform id="'. $exhibitor_generator_form_id .'" title="false" description="false" ajax="false"]
                         </div>';
-                        if ($token == "masowy") {
+                        // if ($token == "masowy") {
                             $output .= '<button class="tabela-masowa btn-gold">' . self::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
-                        }
+                        // }
                         if (!empty($generator_html_text_content)) {
                             $output .= '<div class="exhibitor-generator__right-text">' . $generator_html_text_content . '</div>';
                         }
@@ -93,7 +93,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
         </div>
         ';
 
-        if ($token == "masowy") {
+        // if ($token == "masowy") {
             $output .= '
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
             <script type="text/javascript">
@@ -211,7 +211,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                                     const fileLabel = fileArray[0].split(",");
 
                                     $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret"></select></div>`);
-                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami (edited)</label><select type="select" id="name-column" name="name-column" class="selectoret"></select></div>`);
+                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami</label><select type="select" id="name-column" name="name-column" class="selectoret"></select></div>`);
                                     
                                     $(".selectoret").each(function(){
                                         $(this).append(`<option value="">Wybierz</option>`);
@@ -359,7 +359,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                 })
 
             </script>';
-        }
+        // }
 
         return $output; 
     }
