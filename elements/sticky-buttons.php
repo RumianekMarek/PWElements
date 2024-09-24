@@ -666,7 +666,7 @@ class PWElementStickyButtons extends PWElements {
 
                         $output .= '</div>
                     </div>';
-                    if ($sticky_buttons_info_text_show == true) {
+                    if ($sticky_buttons_info_text_show == true && count($sticky_buttons_json) < 4) {
                         $output .= '<p class="sticky-buttons-info-bottom">'. $sticky_buttons_info_text_bottom .'</p>';
                     }
                 $output .= '

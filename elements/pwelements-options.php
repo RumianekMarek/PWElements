@@ -25,7 +25,7 @@ class PWElements {
         // Hook actions
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
-        
+
         // AJAX load more posts
         add_action('init', array($this, 'load_more_posts'));
 
@@ -60,10 +60,10 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'ticket.php';
         require_once plugin_dir_path(__FILE__) . 'numbers.php';
         require_once plugin_dir_path(__FILE__) . 'confSection.php';
-        require_once plugin_dir_path(__FILE__) . 'confHeader.php'; 
+        require_once plugin_dir_path(__FILE__) . 'confHeader.php';
         require_once plugin_dir_path(__FILE__) . 'trends-panel.php';
-        require_once plugin_dir_path(__FILE__) . 'mapa.php'; 
-        require_once plugin_dir_path(__FILE__) . 'mapa-test.php'; 
+        require_once plugin_dir_path(__FILE__) . 'mapa.php';
+        require_once plugin_dir_path(__FILE__) . 'mapa-test.php';
         require_once plugin_dir_path(__FILE__) . 'step2.php';
         require_once plugin_dir_path(__FILE__) . 'pot_rej.php';
         require_once plugin_dir_path(__FILE__) . 'pot_rej_wys.php';
@@ -73,6 +73,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'test2.php';
         require_once plugin_dir_path(__FILE__) . 'resend-ticket.php';
         require_once plugin_dir_path(__FILE__) . 'header-new.php';
+        require_once plugin_dir_path(__FILE__) . 'hale.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -139,7 +140,7 @@ class PWElements {
                             'description' => __('Write hex number for text shadow color for the element.', 'pwelement'),
                             'value' => '',
                             'save_always' => true,
-                        ),                        
+                        ),
                         array(
                             'type' => 'dropdown',
                             'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwelement'),
@@ -236,6 +237,7 @@ class PWElements {
                         ...PWElementPotwierdzenieRejestracji::initElements(),
                         ...PWElementStepTwoExhibitor::initElements(),
                         ...PWElementStepTwo::initElements(),
+                        ...PWElementTicketActConf::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -291,6 +293,7 @@ class PWElements {
             'For Visitors'                   => 'PWElementForVisitors',
             'Generator wystawcow'            => 'PWElementGenerator',
             'Grupy zorganizowane'            => 'PWElementGroups',
+            'Hale'                           => 'PWElementHale',
             'Informacje organizacyjne'       => 'PWElementOrgInfo',
             'Informacje kontaktowe'          => 'PWElementContactInfo',
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
@@ -390,14 +393,15 @@ class PWElements {
             'PWElementVisitorsBenefits' => 'visitors-benefits.php',
             'PWElementConferences'      => 'wydarzenia-ogolne.php',
             'PWElementPromot'           => 'promote-yourself.php',
-            'PWElementXForm'            => 'x_step_registration.php', 
+            'PWElementXForm'            => 'x_step_registration.php',
             'PWElementStand'            => 'zabudowa.php',
             'PWElementInvite'           => 'zaproszenie.php',
             'PWElementTest'             => 'test.php',
-            'PWElementTest1'             => 'test1.php',
-            'PWElementTest2'             => 'test2.php',
-            'PWElementHeaderNew'             => 'header-new.php',
-        ); 
+            'PWElementTest1'            => 'test1.php',
+            'PWElementTest2'            => 'test2.php',
+            'PWElementHeaderNew'        => 'header-new.php',
+            'PWElementHale'             => 'hale.php',
+        );
     }
 
     /**
@@ -423,7 +427,7 @@ class PWElements {
         $js_file = plugins_url('js/script.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'js/script.js');
         wp_enqueue_script('pwelement-js', $js_file, array('jquery'), $js_version, true);
-        
+
         $data_js_array = array(
             'accent_color' => self::$accent_color,
             'main2_color' => self::$main2_color,
@@ -433,9 +437,9 @@ class PWElements {
         $exclusions_js_file = plugins_url('js/exclusions.js', __FILE__);
         $exclusions_js_version = filemtime(plugin_dir_path(__FILE__) . 'js/exclusions.js');
         wp_enqueue_script('exclusions-js', $exclusions_js_file, array('jquery'), $exclusions_js_version, true);
-        wp_localize_script( 'exclusions-js', 'data_js', $data_js_array ); 
+        wp_localize_script( 'exclusions-js', 'data_js', $data_js_array );
     }
-    
+
 
     /**
      * Adding Styles
@@ -462,7 +466,7 @@ class PWElements {
 
         if (isset($uncode_options["_uncode_custom_colors_list"]) && is_array($uncode_options["_uncode_custom_colors_list"])) {
             $custom_colors_list = $uncode_options["_uncode_custom_colors_list"];
-      
+
             foreach ($custom_colors_list as $color) {
                 $title = $color['title'];
                 $color_value = $color["_uncode_custom_color"];
@@ -482,10 +486,10 @@ class PWElements {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param string $pl text in Polish.
      * @param string $pl text in English.
-     * @return string 
+     * @return string
      */
     public static function languageChecker($pl, $en = ''){
         return get_locale() == 'pl_PL' ? $pl : $en;
@@ -528,12 +532,12 @@ class PWElements {
             }
         }
         return $pwe_forms_array;
-    }  
+    }
 
     /**
      * Finding all target form id
      *
-     * @param string $form_name 
+     * @param string $form_name
      * @return string
      */
     public static function findFormsID($form_name){
@@ -552,7 +556,7 @@ class PWElements {
 
     /**
      * Mobile displayer check
-     * 
+     *
      * @return bool
      */
     public static function checkForMobile(){
@@ -561,7 +565,7 @@ class PWElements {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param bool $logo_color schould logo be in color.
      * @return string
      */
@@ -580,7 +584,7 @@ class PWElements {
         switch (true){
             case(get_locale() == 'pl_PL'):
                 if($logo_color){
-                    foreach ($filePaths as $path) {    
+                    foreach ($filePaths as $path) {
                         if (strpos($path, '-en.') === false && file_exists(ABSPATH . $path)) {
                             return '<img src="' . $path . '"/>';
                         }
@@ -617,7 +621,7 @@ class PWElements {
      */
     public static function findAllImages($firstPath, $image_count = false, $secondPath = '/doc/galeria'){
         $firstPath = $_SERVER['DOCUMENT_ROOT'] . $firstPath;
-        
+
         if (is_dir($firstPath) && !empty(glob($firstPath . '/*.{jpeg,jpg,png,webp,svg,JPEG,JPG,PNG,WEBP}', GLOB_BRACE))) {
             $exhibitorsImages = glob($firstPath . '/*.{jpeg,jpg,png,webp,svg,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
         } else {
@@ -639,7 +643,7 @@ class PWElements {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param bool $logo_color schould logo be in color.
      * @return string
      */
@@ -658,7 +662,7 @@ class PWElements {
     }
     /**
      * Trade fair date existance check
-     * 
+     *
      * @return bool
      */
     public static function isTradeDateExist(){
@@ -703,7 +707,7 @@ class PWElements {
 
         if ($this->findClassElements()[$pwe_element]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$pwe_element];
-            
+
             if (class_exists($pwe_element)) {
                 $output_class = new $pwe_element;
                 $output .= $output_class->output($atts, $content);
@@ -715,9 +719,9 @@ class PWElements {
         } else {
             echo '<script>console.log("File with class ' . $pwe_element .' does not exist")</script>';
         }
-        
+
         $output = do_shortcode($output);
-        
+
         $file_cont = '<div class="pwelement pwelement_'.self::$rnd_id.'">' . $output . '</div>';
 
         if ($input_replace_array_html && $output_replace_array_html) {

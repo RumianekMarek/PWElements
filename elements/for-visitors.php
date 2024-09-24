@@ -23,8 +23,8 @@ class PWElementForVisitors extends PWElements {
                 array(
                     'type' => 'textarea',
                     'group' => 'PWE Element',
-                    'heading' => __('Visitors text '.$i+1, 'pwelement'),
-                    'param_name' => 'visitor_text'.$i+1,
+                    'heading' => __('Visitors text' . ($i+1), 'pwelement'),
+                    'param_name' => 'visitor_text' . ($i+1),
                     'param_holder_class' => 'for-visitors',
                     'value' => '',
                     'dependency' => array(

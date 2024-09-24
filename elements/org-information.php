@@ -283,10 +283,10 @@ class PWElementOrgInfo extends PWElements {
                                 </ol>
                             </div>
 
-                            <div id="dane-kontaktowe_en" class="pwe-org-info-content-item no-data_remove">
+                            <div id="dane-kontaktowe_en" class="pwe-org-info-content-item">
                                 <h2>1. Contact information, installation and dismantling deadlines, and trade fair opening hours. </h2>
 
-                                <div class="pwe-org-info-block-dates pwe-display-none">
+                                <div class="pwe-org-info-block-dates no-data_remove">
                                     <p style="display: flex; flex-wrap: wrap; gap: 5px;">Exhibitors’ support: <a style="display: flex; flex-wrap: wrap;" href="mailto:konsultanttechniczny@warsawexpo.eu"><span style="display:block;"> konsultanttechniczny</span><span style="display:block;">@warsawexpo.eu</span></a></p>
                                     <h5>Stand assembly:</h5>
                                     <ul>

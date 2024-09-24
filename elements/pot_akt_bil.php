@@ -14,6 +14,27 @@ class PWElementTicketActConf extends PWElements {
         parent::__construct();
     }
 
+    /**
+     * Static method to initialize Visual Composer elements.
+     * Returns an array of parameters for the Visual Composer element.
+     */
+    public static function initElements() {
+        $element_output = array(
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Color logo', 'pwelement'),
+                'param_name' => 'ticket_act_conf_logo_color',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementTicketActConf',
+                ),
+            ),
+        );
+        return $element_output;
+    }
+
     private static function notification_succes($entry_id , $form) {
         $active_id = '';
         $field_exists = false;
@@ -92,7 +113,15 @@ class PWElementTicketActConf extends PWElements {
     public static function output($atts) {
         self::notification_sender();
 
-        $fair_logo = (get_locale() == "pl_PL") ? "/doc/logo-color.webp" : "/doc/logo-color-en.webp";
+        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+
+        extract( shortcode_atts( array(
+            'ticket_act_conf_logo_color' => '',
+        ), $atts ));
+
+        $fair_logo_color = (get_locale() == "pl_PL") ? "/doc/logo-color.webp" : "/doc/logo-color-en.webp";
+        $fair_logo_white = (get_locale() == "pl_PL") ? "/doc/logo.webp" : "/doc/logo-en.webp";
+        $fair_logo = $ticket_act_conf_logo_color != true ? $fair_logo_white : $fair_logo_color;
 
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
         if (strpos($trade_fair_edition_shortcode, '.') !== false) {
@@ -209,7 +238,7 @@ class PWElementTicketActConf extends PWElements {
                 width: 100%;
             }
             .pwe-ticket-activation-confirmation-right h2 {
-                color: white;
+                color: '. $text_color .';
                 text-align: center;
                 margin: 0;
                 text-transform: uppercase;
@@ -249,7 +278,7 @@ class PWElementTicketActConf extends PWElements {
                 max-width: 400px;
                 width: 100%;
                 border-radius: 0;
-                background-color: white;
+                background-color: '. $text_color .';
                 font-size: 36px;
                 margin: 0;
                 margin-top: 9px;
@@ -379,7 +408,7 @@ class PWElementTicketActConf extends PWElements {
                 </div>
                 <div class="pwe-ticket-activation-confirmation-right">
                     <div class="pwe-ticket-activation-confirmation-right-content">
-                        <img src="/doc/logo.webp">';
+                        <img src="' . $fair_logo . '">';
                         if (!empty($trade_fair_edition_shortcode)) {
                             $output .= '<p class="pwe-ticket-activation-confirmation-edition"><span>'. $trade_fair_edition .'</span></p>';
                         }
@@ -405,7 +434,7 @@ class PWElementTicketActConf extends PWElements {
                                 /en/
                             EN
                         )
-                        .'"><img src="' . $fair_logo . '"></a>
+                        .'"><img src="' . $fair_logo_color . '"></a>
                     </div>
                 </div>
                 <div class="numbers">

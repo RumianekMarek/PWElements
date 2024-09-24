@@ -23,8 +23,8 @@ class PWElementForExhibitors extends PWElements {
                 array(
                     'type' => 'textarea',
                     'group' => 'PWE Element',
-                    'heading' => __('Exhibitors text '.$i+1, 'pwelement'),
-                    'param_name' => 'exhibitor_text'.$i+1,
+                    'heading' => __('Exhibitors text' . ($i+1), 'pwelement'),
+                    'param_name' => 'exhibitor_text' . ($i+1),
                     'param_holder_class' => 'backend-textarea',
                     'value' => '',
                     'dependency' => array(

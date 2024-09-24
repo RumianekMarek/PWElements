@@ -56,6 +56,18 @@ class PWElementVideos extends PWElements {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Turn off title', 'pwelement'),
+                'param_name' => 'pwe_videos_title_off',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementVideos',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
                 'heading' => __('Video width', 'pwelement'),
@@ -111,7 +123,8 @@ class PWElementVideos extends PWElements {
             'pwe_video_opinions' => '',
             'pwe_video_width' => '',
             'pwe_videos_iframe' => '',
-            'pwe_videos_slider_off' => ''
+            'pwe_videos_slider_off' => '',
+            'pwe_videos_title_off' => ''
         ), $atts ));
 
         $videos_urldecode = urldecode($pwe_videos_iframe);
@@ -198,12 +211,15 @@ class PWElementVideos extends PWElements {
             }
 
             $output .= '
-            <div id="pweVideos-'. self::$rnd_id .'" class="pwe-container-videos">
-                <div class="pwe-videos-title main-heading-text">
-                    <h4 class="pwe-uppercase"><span>'. $pwe_video_custom_title .'</span></h4>
-                </div>  
+            <div id="pweVideos-'. self::$rnd_id .'" class="pwe-container-videos">';
+                if ($pwe_videos_title_off != true) {
+                    $output .= '
+                    <div class="pwe-videos-title main-heading-text">
+                        <h4 class="pwe-uppercase"><span>'. $pwe_video_custom_title .'</span></h4>
+                    </div>';
+                }
+                $output .= ' 
                 <div class="pwe-videos">';
-
 
                     if (empty($video_iframe)) {
                         if (get_locale() == 'pl_PL') {

@@ -334,7 +334,8 @@ class PWElementPosts extends PWElements {
                     background-color: #333;
                     border-radius: 11px;
                     transition: .3s ease;
-                    height: 330px;
+                    height: auto;
+                    min-height: 300px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post:hover {
                     transform: scale(1.05);
@@ -386,6 +387,7 @@ class PWElementPosts extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-title, 
                 .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
+                    text-align: left;
                     color: white;
                     padding: 9px;
                     margin: 0;
@@ -603,6 +605,11 @@ class PWElementPosts extends PWElements {
                         $image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '';
                         $title = get_the_title();
                         $date = get_the_date('Y-m-d'); // Get date in YYYY-MM-DD format
+
+                        $title_words = explode(' ', $title);
+                        if (count($title_words) > 10) {
+                            $title = implode(' ', array_slice($title_words, 0, 10)) . '...';
+                        }
 
                         // Format the date
                         $date_obj = new DateTime($date);
