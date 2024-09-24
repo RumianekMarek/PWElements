@@ -23,13 +23,11 @@ class PWEIframesSlider {
                 
                 $output = '
                 <style>
-                        .row-parent:has(.pwelement_'. $element_id .') {
-                                overflow: hidden !important;
-                        }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-videos-slider {
                             position: relative;
                             width: 100%;
                             margin: 0 !important;
+                            overflow: hidden;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .slides {
                             display: flex;
@@ -40,10 +38,11 @@ class PWEIframesSlider {
                             min-height: 0 !important;
                             min-width: 0 !important;
                             pointer-events: auto;
-                            gap: 27px;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-item {
                             position: relative;
+                            margin: 5px;
+                            padding: 10px;
                         }
                         .pwelement_'. $element_id .' .pwe-videos .pwe-video-item iframe {
                             aspect-ratio: 16 / 9 !important;
@@ -100,11 +99,8 @@ class PWEIframesSlider {
                                 animation: slideInLeft 0.5s ease-in-out;
                         }   
                         @media (max-width: 1200px) {
-                                .row-parent:has(.pwelement_'. $element_id .') {
-                                        overflow: visible !important;
-                                }
-                                .pwelement_'. $element_id .' .pwe-videos .slides {
-                                        gap: 31px;
+                                .pwelement_'. $element_id .' .pwe-videos .pwe-videos-slider {
+                                        overflow: visible;
                                 }
                         }   
                 </style>';
@@ -156,10 +152,10 @@ class PWEIframesSlider {
                                         display: none;
                                 }
                                 .pwelement_'. $element_id .' #prevButton {
-                                        left: -31px;
+                                        left: -0px;
                                 }
                                 .pwelement_'. $element_id .' #nextButton {
-                                        right: -24px;
+                                        right: -0px;
                                 }
                         </style>
 
@@ -172,7 +168,7 @@ class PWEIframesSlider {
                                 .pwelement_'. $element_id .' .pwe-videos .dots-container {
                                         display: none;
                                         text-align: center;
-                                        margin-top: 18px;
+                                        margin-top: 36px;
                                 }
                                 .pwelement_'. $element_id .' .pwe-videos .dot {
                                         display: inline-block;
@@ -297,7 +293,7 @@ class PWEIframesSlider {
                                                 image.style.maxWidth = imageWidth + "px";
                                         });
 
-                                        const slidesTransform = (imageWidth + 30) * '. $min_image_adjusted .';
+                                        const slidesTransform = (imageWidth + 10) * '. $min_image_adjusted .';
 
                                         slides.style.transform = `translateX(-${slidesTransform}px)`; 
 
