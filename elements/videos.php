@@ -197,11 +197,6 @@ class PWElementVideos extends PWElements {
                             width: 31%;
                             height: 200px;
                             position: relative;
-                            overflow: hidden;
-                            box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
-                        }
-                        .pwelement_'. self::$rnd_id .' .pwe-video-item:has(.rll-youtube-player) .rll-youtube-player {
-                            box-shadow: none !important;
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-video-item p {
                             font-size: 16px;

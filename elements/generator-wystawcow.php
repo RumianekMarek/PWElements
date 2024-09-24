@@ -377,7 +377,7 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .form-item h2,
             .pwe-generator-wystawcow .form-item h3,
             .pwe-generator-wystawcow .form-item button {
-                z-index: 100;
+                z-index: 0;
                 position: relative;
             }
             .pwe-generator-wystawcow .form-item h3 {
@@ -596,7 +596,17 @@ class PWElementGenerator extends PWElements {
             }
                 
             .modal__elements input[type="text"]{
-                width:80%;
+                width:60%;
+            }
+               
+            .modal__elements input[type="text"],
+            .modal__elements select {
+                border: 1px solid black;
+                border-radius: 5px;
+            }
+
+            .modal__elements .file-selctor label {
+                text-align: left;
             }
 
             .modal__elements table{
@@ -669,7 +679,7 @@ class PWElementGenerator extends PWElements {
                 margin-top: 9px;
             }
             .file-selctor :is(label, select){
-                width: 30%;
+                width: 35%;
                 min-width: 100px;
                 margin: 0;
             }
@@ -709,6 +719,7 @@ class PWElementGenerator extends PWElements {
                     font-size: 14px;
                 }
             }
+            
             @media (max-width:960px) {
                 .pwe-generator-wystawcow .container {
                     max-width: none !important;
@@ -1360,8 +1371,8 @@ class PWElementGenerator extends PWElements {
                                 $.post("' . $send_file . '", {
                                     token: "' . self::generateToken() .'",
                                     lang: pageLang,
-                                    company: $(".company").val(),
-                                    data: tableCont
+                                    company: company_name,
+                                    data: tableCont,
                                 }, function(response) {
 
                                     resdata = JSON.parse(response);
