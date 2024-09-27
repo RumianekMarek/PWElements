@@ -1161,6 +1161,7 @@ class PWElementGenerator extends PWElements {
                     let fileContent = "";
                     let fileArray = "";
                     let $closeBtn = "";
+                    let emailTrue = false;
 
                     $(".tabela-masowa").on("click",function(){
                         const tableCont = [];
@@ -1230,14 +1231,15 @@ class PWElementGenerator extends PWElements {
                             }
                         });
                         
-                        $("#mass-table, .company").on("click", function(){
-                            if($(this).next().hasClass("company-error")){
+                        $(".company").on("click", function(){
+                            if($(this).next().attr("class").match(/-error/)){
                                 $(this).next().remove();
                             }
                         });
 
                         $(document).ready(function() {
                             $("#fileUpload").on("change", function(event) {
+                                $(".file-selctor").remove();
                                 const file = event.target.files[0];
 
                                 if (!file) {
@@ -1271,8 +1273,8 @@ class PWElementGenerator extends PWElements {
                                     fileArray = fileContent.split("\n");
                                     const fileLabel = fileArray[0].split(",");
 
-                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret"></select></div>`);
-                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami</label><select type="select" id="name-column" name="name-column" class="selectoret"></select></div>`);
+                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret vars-to-insert"></select></div>`);
+                                    $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami</label><select type="select" id="name-column" name="name-column" class="selectoret vars-to-insert"></select></div>`);
                                     
                                     $(".selectoret").each(function(){
                                         $(this).append(`<option value="">Wybierz</option>`);
@@ -1280,10 +1282,50 @@ class PWElementGenerator extends PWElements {
 
                                     fileLabel.forEach(function(element) {
                                         $(".selectoret").each(function(){
-                                            $(this).append(`<option value="${element}">${element}</option>`);
+                                            if(element != ""){
+                                                $(this).append(`<option value="${element}">${element}</option>`);
+                                            }
                                         })
                                     });
-                            
+                                    
+                                    $(".vars-to-insert").on("change", function(){
+                                        if($(this).parent().next().attr("class").match(/-error/)){
+                                            $(this).parent().next().remove();
+                                        }
+                                    });
+
+                                    $("#email-column").on("change", function(){
+                                        const fileLabel = fileArray[0].split(",");
+                                        const chosenLabel = $(this).val();
+                                        const chosenID = fileLabel.findIndex(label => label == chosenLabel );
+
+                                        let chosenErrors = -1;
+                                        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                                        for (const row of fileArray){
+                                            const rowArray = row.split(",");
+
+                                            if (chosenErrors > 5){
+                                                $(".file-selctor").has("#email-column").after(`<p class="email-error error-color" >'.
+                                                    self::languageChecker(
+                                                        <<<PL
+                                                        W wybranej kolumnie znajduje się 5 lub więcej błędnych maili proszę o poprawienie przed kontynuacją.
+                                                        PL,
+                                                        <<<EN
+                                                        Select a column with emails
+                                                        EN
+                                                    )
+                                                .'</p>`);
+                                                emailTrue = false;
+                                                break ;
+                                            } else if (rowArray[chosenID].length < 5 || !emailPattern.test(rowArray[chosenID])){
+                                                chosenErrors++;
+                                            } else {
+                                                emailTrue = true;
+                                            }
+                                        };
+                                    });
+
                                     $("#fileContent").text(fileContent);
                                 };
 
@@ -1294,8 +1336,11 @@ class PWElementGenerator extends PWElements {
                                 }
                             });
                         });
-
+                        
                         $(".wyslij").on("click",function(){
+                            if(!emailTrue){                 
+                                return;
+                            }
                             pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
                             let company_name = "";
                             let emailColumn = "";
@@ -1304,45 +1349,52 @@ class PWElementGenerator extends PWElements {
                             if ($(".company").val() != ""){
                                 company_name = $(".company").val();
                             } else {
-                                $(".company").after(`<p class="company-error error-color" >'.
-                                    self::languageChecker(
-                                        <<<PL
-                                        Nazwa firmy jest wymagana
-                                        PL,
-                                        <<<EN
-                                        Company Name is required
-                                        EN
-                                    )
-                                .'</p>`);
+                                if ($(".company-error").length == 0){
+                                    $(".company").after(`<p class="company-error error-color" >'.
+                                        self::languageChecker(
+                                            <<<PL
+                                            Nazwa firmy jest wymagana
+                                            PL,
+                                            <<<EN
+                                            Company Name is required
+                                            EN
+                                        )
+                                    .'</p>`);
+                                }
                             }
 
                             if ($("#email-column").val() != ""){
                                 emailColumn = $("#email-column").val();
                             } else {
-                                $(".file-selctor").has("#email-column").after(`<p class="company-error error-color" >'.
-                                    self::languageChecker(
-                                        <<<PL
-                                        Wybierz kolumne z danymi
-                                        PL,
-                                        <<<EN
-                                        Company Name is required
-                                        EN
-                                    )
-                                .'</p>`);
+                                if ($(".email-error").length == 0){
+                                    $(".file-selctor").has("#email-column").after(`<p class="email-error error-color" >'.
+                                        self::languageChecker(
+                                            <<<PL
+                                            Wybierz kolumne z mailami
+                                            PL,
+                                            <<<EN
+                                            Select a column with emails
+                                            EN
+                                        )
+                                    .'</p>`);
+                                }
                             }
                             if ($("#name-column").val() != ""){
                                 nameColumn = $("#name-column").val();
+                                
                             } else {
-                                $(".file-selctor").has("#name-column").after(`<p class="company-error error-color" >'.
-                                    self::languageChecker(
-                                        <<<PL
-                                        Wybierz kolumne z danymi
-                                        PL,
-                                        <<<EN
-                                        Company Name is required
-                                        EN
-                                    )
-                                .'</p>`);
+                                if ($(".name-error").length == 0){
+                                    $(".file-selctor").has("#name-column").after(`<p class="name-error error-color" >'.
+                                        self::languageChecker(
+                                            <<<PL
+                                            Wybierz kolumne z danymi
+                                            PL,
+                                            <<<EN
+                                            Select a column with Names
+                                            EN
+                                        )
+                                    .'</p>`);
+                                }
                             }
                             
                             if(company_name == "" || emailColumn == "" || nameColumn == ""){
@@ -1354,16 +1406,21 @@ class PWElementGenerator extends PWElements {
                             fileLabel = fileLabel.split(",");
                             const namelIndex = fileLabel.indexOf(nameColumn);
                             const emailIndex = fileLabel.indexOf(emailColumn);
-                                        
+                            let emailErrors = 0;
+
                             const tableCont = fileArray.reduce((acc, row) => {
                                 const rowArray = row.split(",");
-                                if (rowArray[emailIndex] && rowArray[emailIndex].length > 5) {
+                                if (rowArray[emailIndex] && rowArray[emailIndex].length > 5 && emailErrors < 5) {
                                     acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex] });
+                                } else if (emailErrors < 5) {
+                                    emailErrors++;
+                                } else {
+                                    
                                 }
                                 return acc;
                             }, []);
 
-                            if (tableCont.length > 0 && tableCont.length < 5000 ){
+                            if (tableCont.length > 0 && tableCont.length < 5000 && emailErrors < 5){
                                 $(".modal__elements").html("<span class=btn-close>x</span>");
                                 $(".modal__elements").append("<div id=spinner class=spinner></div>");
                                 $closeBtn = $modal.find(".btn-close");
@@ -1376,29 +1433,35 @@ class PWElementGenerator extends PWElements {
                                 }, function(response) {
 
                                     resdata = JSON.parse(response);
-                                    
+
                                     if (resdata == 1){
                                         $(".modal__elements").append(`<p style="color:green; font-weight: 600; width: 90%;">Dziękujemy za skorzystanie z generatora zaproszeń. Państwa goście wkrótce otrzymają zaproszenia VIP.</p>`);
                                     } else {
                                         $(".modal__elements").append(`<p style="color:red; font-weight: 600; width: 90%;">Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo</p>`);
                                     }
-                                    console.log(resdata);
                                     
                                     $("#spinner").remove();
                                     tableCont.splice(0, tableCont.length);
                                     $("#dataContainer").empty();
                                 });
                             } else {
+                                let errorMessage = "";
+                                if(tableCont.length > 5000){
+                                    errorMessage += "Za dużo znalezionych elementów, maksymalna ilość to 5000 lub źle odczytany plik";
+                                }
+
                                 $(".wyslij").before(`<p class="company-error error-color" style="font-weight:700;">'.
                                     self::languageChecker(
                                         <<<PL
                                         Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo
+                                        Error -> 
                                         PL,
                                         <<<EN
-                                        Company Name is required
+                                        Sorry, there was a technical problem. Please try again later or report the problem by email
+                                        Error -> 
                                         EN
                                     )
-                                .'</p>`);
+                                .' ${errorMessage}</p>`);
                             }
                         });
                     });

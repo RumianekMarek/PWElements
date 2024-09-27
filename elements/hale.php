@@ -15,11 +15,51 @@ class PWElementHale extends PWElements {
 
     /**
      * Static method to generate the HTML output for the PWE Element.
-    * Returns the HTML output as a string.
-    *
-    * @return string @output
+     * Returns the HTML output as a string.
     */
+    public static function initElements() {
+        $element_output = array(
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Dispaly Different Logo Color', 'pwelement'),
+                'param_name' => 'logo_color_hala',
+                'description' => __('Check Yes to display different logo color.', 'pwelement'),
+                'value' => 'true',
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementHale',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Hale', 'pwelement'),
+                'param_name' => 'hale_text',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementHale',
+                ),
+            ),
+        );
+        return $element_output;
+    }
     public static function output($atts) {
+
+        $logo_href = '';
+        $logo_color = self::findBestLogo($atts["logo_color_hala"]);
+        $logo_color_array = explode('"', $logo_color);
+        foreach($logo_color_array as $href){
+            if(strpos(strtolower($href), '/doc/') !== false){
+                $logo_href = $href;
+            }
+        }
+
+        extract( shortcode_atts( array(
+            'hale_text' => '',
+        ), $atts ));
+
         $output = '';
 
         $output .= '
@@ -58,7 +98,7 @@ class PWElementHale extends PWElements {
             </style>
             <div id="hale" class="hale-'. self::$rnd_id .'">
                 <div class="hale_info">
-                    <img src="/doc/logo-color.webp" />
+                    <img src="'. $logo_href .'" />
                     <div class="information">
                         <p class="upper"><strong>'.
                             self::languageChecker(
@@ -70,7 +110,7 @@ class PWElementHale extends PWElements {
                                 EN
                             )
                             .'</strong></p>
-                        <p>hale: B,C</p>
+                        <p>'. $hale_text .'</p>
                         <p>10:00-17:00</p>
                         <p class="upper">'.
                             self::languageChecker(

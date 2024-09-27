@@ -238,6 +238,7 @@ class PWElements {
                         ...PWElementStepTwoExhibitor::initElements(),
                         ...PWElementStepTwo::initElements(),
                         ...PWElementTicketActConf::initElements(),
+                        ...PWElementHale::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',

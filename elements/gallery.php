@@ -352,7 +352,7 @@ class PWElementHomeGallery extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-wrapper {
                     max-width: 1200px;
                     margin: 0 auto;
-                    padding: 18px 36px 72px;
+                    padding: 18px 36px 18px;
                 }
 
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
@@ -361,7 +361,7 @@ class PWElementHomeGallery extends PWElements {
                     justify-content: center;
                     gap: 36px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper, .pwe-gallery-desc-wrapper{
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper, .pwe-gallery-desc-wrapper {
                     width: 50%;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs {
@@ -371,6 +371,7 @@ class PWElementHomeGallery extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc {
                     background-color: #eaeaea;
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper .pwe-btn-container,
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-wrapper .pwe-btn-container {
@@ -388,6 +389,7 @@ class PWElementHomeGallery extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom img {
                     width: 50%;
                     padding: 5px;
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content h3,
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content h3 p {
@@ -484,9 +486,6 @@ class PWElementHomeGallery extends PWElements {
             $output .= '
             <div id="pweGallery" class="pwe-container-gallery style-accent-bg">
                 <div class="pwe-gallery-wrapper">
-                    <div class="pwe-row-border">
-                        <div class="pwe-box-top-left-white"></div>
-                    </div>
                     <div class="pwe-gallery-section">
                         <div class="pwe-gallery-thumbs-wrapper">
                             <div class="pwe-gallery-thumbs">';
@@ -560,7 +559,7 @@ class PWElementHomeGallery extends PWElements {
 
                         $output .= '
                         <div class="pwe-gallery-desc-wrapper">
-                            <div class="pwe-gallery-desc shadow-black">
+                            <div class="pwe-gallery-desc">
                                 <div class="pwe-gallery-desc-content single-block-padding pwe-align-left">
                                     <h3 style="margin: 0;"> '. wpb_js_remove_wpautop($gallery_title, true) .' </h3>
                                     <div class="pwe-gallery-desc-paragraph">';
@@ -598,9 +597,6 @@ class PWElementHomeGallery extends PWElements {
 
                         $output .= '
                         </div>
-                    </div>
-                    <div class="pwe-row-border">
-                        <div class="pwe-box-bottom-right-white"></div>
                     </div>
                 </div>
             </div>';
