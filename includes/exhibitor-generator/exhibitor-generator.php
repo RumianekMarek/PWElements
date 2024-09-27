@@ -111,8 +111,8 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
      * Adding Scripts
      */
     public function addingScripts($atts){
-        $js_file = plugins_url('assets/exhibitor-generator-skript.js', __FILE__);
-        $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/exhibitor-generator-skript.js');
+        $js_file = plugins_url('assets/exhibitor-generator-script.js', __FILE__);
+        $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/exhibitor-generator-script.js');
         wp_enqueue_script('pwe-exhibitor-generator-js', $js_file, array('jquery'), $js_version, true);
     }  
 

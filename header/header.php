@@ -1037,6 +1037,31 @@ class PWEHeader extends PWECommonFunctions {
                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
                         min-height: auto !important;
                     }
+                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 18px;
+                    }
+                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                        width: auto;
+                    }
+                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo .pwe-btn-container {
+                        width: 240px;
+                        height: 50px;
+                        padding: 0;
+                    }
+                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo .pwe-btn {
+                        background-color: '. $main_header_color .';
+                        border: 2px solid '. $main_header_color .';
+                        color: '. $main_header_color_text .';
+                    }
+                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo .pwe-btn:hover {
+                        color: '. $main_header_color_text .';
+                        background-color: '. $darker_form_btn_color .'!important;
+                        border: 2px solid '. $darker_form_btn_color .'!important;
+                    }
                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
                         display: flex;
                         flex-direction: column-reverse;
@@ -1182,10 +1207,24 @@ class PWEHeader extends PWECommonFunctions {
                     if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode" && $pwe_header_modes != "squares_mode") {
 
                         $output .= '
-                        <div class="header-wrapper-column">
+                        <div class="header-wrapper-column">';
 
-                            <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
+                            if ($pwe_header_modes == "simple_mode" &&  $pwe_header_simple_conference == true) {
 
+                                $output .='
+                                <div class="pwe-header-simple-logo">
+                                    <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
+                                    <div id="pweBtnRegistration" class="pwe-btn-container header-button">
+                                        <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'?utm_source=conference&utm_medium=button&utm_campaign=refferal" '.
+                                            self::languageChecker('alt="link do rejestracji">Weź udział</span>', 'alt="link to registration">Take a part</span>')
+                                        .'</a>
+                                    </div>
+                                </div>';
+                            } else {
+                                $output .= '<img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">';
+                            }
+
+                            $output .= '
                             <div class="pwe-header-text">
                                 <h1>'. $trade_fair_desc .'</h1>
                                 <h2>'. $trade_fair_date .'</h2>
@@ -1207,7 +1246,7 @@ class PWEHeader extends PWECommonFunctions {
                                                                 EN
                                                             )
                                                         .'</a>';
-                                            $output .='</div>';
+                                        $output .='</div>';
                                     }
                                     if (in_array('ticket', explode(',', $pwe_header_button_on))) {
                                         $output .= '<div id="pweBtnTickets" class="pwe-btn-container header-button">';
