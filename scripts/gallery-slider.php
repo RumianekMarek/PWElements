@@ -72,6 +72,9 @@ class PWEMediaGallerySlider {
                 #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image {
                         margin: 5px !important;
                 }
+                #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image img {
+                        border-radius: 18px;
+                }
                 #PWEMediaGallerySlider-'. $id_rnd .' .slide {
                         animation: slideAnimation 0.5s ease-in-out;
                 }
