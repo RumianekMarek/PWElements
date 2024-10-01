@@ -350,6 +350,7 @@ class PWElementPosts extends PWElements {
                     position: relative;
                     overflow: hidden;
                     border-radius: 10px 10px 0 0;
+                    background-color: white;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
                     border-radius: 10px 10px 0 0;
