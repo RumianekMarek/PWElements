@@ -25,11 +25,11 @@ class PWElementForVisitors extends PWElements {
                     'group' => 'PWE Element',
                     'heading' => __('Visitors text' . ($i+1), 'pwelement'),
                     'param_name' => 'visitor_text' . ($i+1),
-                    'param_holder_class' => 'for-visitors',
+                    'param_holder_class' => 'backend-textarea',
                     'value' => '',
                     'dependency' => array(
                         'element' => 'pwe_element',
-                        'value' => 'PWElementforVisitors',
+                        'value' => 'PWElementForVisitors',
                     ),
                 );
         }

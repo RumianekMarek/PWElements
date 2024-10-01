@@ -172,6 +172,8 @@ class PWElementPosts extends PWElements {
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
+        $darker_main2_color = self::adjustBrightness(self::$main2_color, -20);
+
         extract( shortcode_atts( array(
             'posts_modes' => 'posts_slider_mode',
             'posts_category' => '',
@@ -257,7 +259,7 @@ class PWElementPosts extends PWElements {
                     margin: 0 0 36px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
-                    box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
                     align-items: flex-start !important;
@@ -331,7 +333,8 @@ class PWElementPosts extends PWElements {
                     display: flex;
                     flex-direction: column;
                     position: relative;
-                    background-color: #333;
+                    background-color: white;
+                    border: 1px solid '. self::$main2_color .';
                     border-radius: 11px;
                     transition: .3s ease;
                     height: auto;
@@ -388,7 +391,7 @@ class PWElementPosts extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-post-title, 
                 .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
                     text-align: left;
-                    color: white;
+                    color: #222;
                     padding: 9px;
                     margin: 0;
                 }
@@ -403,12 +406,12 @@ class PWElementPosts extends PWElements {
                     left: 0;
                     right: 0;
                     padding: 10px;
-                    background: #222;
+                    background-color: '. self::$main2_color .';
                     border-radius: 0 0 10px 10px;
                     transition: .3s ease;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-btn:hover  {
-                    background: #424242;
+                    background-color: '. $darker_main2_color .';
                 } 
 
                 .pwelement_'. self::$rnd_id .' .load-more-btn-container {
@@ -535,45 +538,42 @@ class PWElementPosts extends PWElements {
                 if ($posts_modes == "posts_full_mode") {
                     $posts_count = ($posts_count == "") ? 18 : $posts_count;
                     $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
-        
-                    $args = array(
-                        'posts_per_page' => $max_posts,
-                        'orderby' => 'date',
-                        'order' => 'DESC',
-                        'post_status' => 'publish',
-                    );
                 } else if ($posts_modes == "posts_full_newest_mode") {
                     $posts_count = ($posts_count == "") ? 6 : $posts_count;
-                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 12) : -1;
-        
-                    $args = array( 
-                        'posts_per_page' => $max_posts,
-                        'orderby' => 'date',
-                        'order' => 'DESC',
-                        'post_status' => 'publish',
-                    );
+                    $max_posts = $posts_count;
                 } else if ($posts_modes == "posts_full_newest_slider_mode") {
                     $posts_count = ($posts_count == "") ? 10 : $posts_count;
-                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;
-        
-                    $args = array(
-                        'posts_per_page' => $max_posts,
-                        'orderby' => 'date',
-                        'order' => 'DESC',
-                        'post_status' => 'publish',
-                    );
+                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;  
+                }
+
+                $all_categories = get_categories(array('hide_empty' => true));
+
+                $category_names = array();
+
+                foreach ($all_categories as $category) {
+                    $category_names[] = $category->name;
                 }
                 
+                $category_name = implode(', ', $category_names); 
+
+                $args = array(
+                    'posts_per_page' => $max_posts,
+                    'orderby' => 'date',
+                    'order' => 'DESC',
+                    'post_status' => 'publish',
+                    'category_name' => $category_name
+                );
+
                 $query = new WP_Query($args);
                 
                 $posts_displayed = $query->post_count;
-                
+
                 $post_image_urls = array();
                 if ($query->have_posts()) {
                     while ($query->have_posts()) : $query->the_post();
                         $post_id = get_the_ID();
                         $word_count = 10;
-                
+
                         // Get post content
                         $post_content = get_post_field('post_content', $post_id);
                 
@@ -633,16 +633,18 @@ class PWElementPosts extends PWElements {
                                 "date" => $formatted_date
                             );
                         } else {
-                            $output .= '
-                            <a class="pwe-post" href="'. $link .'">
-                                <div class="pwe-post-thumbnail">
-                                    <div class="image-container" style="background-image:url('. $image .');"></div>
-                                    <p class="pwe-post-date">'. $formatted_date .'</p>
-                                </div> 
-                                <h5 class="pwe-post-title">'. $title .'</h5>
-                                <p class="pwe-post-excerpt">'. $excerpt .'</p>
-                                <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
-                            </a>';
+                            if (!empty($image)) {
+                                $output .= '
+                                <a class="pwe-post" href="'. $link .'">
+                                    <div class="pwe-post-thumbnail">
+                                        <div class="image-container" style="background-image:url('. $image .');"></div>
+                                        <p class="pwe-post-date">'. $formatted_date .'</p>
+                                    </div> 
+                                    <h5 class="pwe-post-title">'. $title .'</h5>
+                                    <p class="pwe-post-excerpt">'. $excerpt .'</p>
+                                    <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
+                                </a>';
+                            }
                         }
                 
                     endwhile;

@@ -170,11 +170,13 @@ class PWElementVideos extends PWElements {
                     min-width: 300px;
                 }
                 .pwelement_'. self::$rnd_id .' iframe,
+                .pwelement_'. self::$rnd_id .' .rll-youtube-player,
                 .pwelement_'. self::$rnd_id .' .pwe-video-default {
-                    box-shadow: 9px 9px 0px -6px '. self::$main2_color .';
+                    box-shadow: unset;
                     width: 100%;
                     height: auto;
                     aspect-ratio: 16 / 9;
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-video-item p {
                     font-size: 18px;
