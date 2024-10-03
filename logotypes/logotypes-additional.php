@@ -452,6 +452,7 @@ class PWElementAdditionalLogotypes extends SharedProperties {
                                     "Partner Gold" => "Partner<br>Gold",
                                     "Partner Platinum" => "Platinum<br>Partner",
                                     "Partner Główny" => "Main<br>Partner",
+                                    "Partner Honorowy" => "Honorary<br>Partner",
                                     "Targi Wspiera" => "Fair<br>Supports",
                                     "Kraj Partnerski" => "Partner<br>Country",
                                     "Oficjalny Partner Targów" => "Official Fair<br>Partner",

@@ -1067,7 +1067,13 @@ class PWEHeader extends PWECommonFunctions {
                         flex-direction: column-reverse;
                     }
                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
-                        font-size: calc(24px + (40 - 24) * ( (100vw - 300px) / (1200 - 300) ));
+                        font-size: 40px;
+                        margin: 0;
+                    }
+                    @media (max-width: 1200px) {
+                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                            font-size: calc(24px + (40 - 24) * ( (100vw - 300px) / (1200 - 300) ));
+                        }
                     }
                     @media (min-width: 960px) {
                         .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
