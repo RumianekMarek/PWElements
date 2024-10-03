@@ -61,10 +61,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
         } else if (strpos($source_utm, 'utm_source=byli') !== false){
             $btn_color = '#b69663';
-            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;   
+            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
         }
 
-        $form_name = $reg_form_name_pr; 
+        $form_name = $reg_form_name_pr;
 
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
@@ -379,7 +379,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     .pwelement_' . self::$rnd_id . ' .form-3-left-premium {
                         display: none;
                     }
-                    
+
                     .pwelement_' . self::$rnd_id . ' #xForm>div{
                         width: 50%;
                     }
@@ -463,7 +463,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         </div>
                     ';
                 } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-            
+
                     $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
 
                     $output .= '
@@ -596,7 +596,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
-                                                        Uczestnistwa w wydarzeniach towarzyszących targom
+                                                        Uczestnictwa w wydarzeniach towarzyszących targom
                                                     PL,
                                                     <<<EN
                                                         Participation in events accompanying the fair
@@ -692,7 +692,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
-                                                        Uczestnistwa w wydarzeniach towarzyszących targom
+                                                        Uczestnictwa w wydarzeniach towarzyszących targom
                                                     PL,
                                                     <<<EN
                                                         Participation in events accompanying the fair
@@ -886,7 +886,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     position: relative;
                     z-index: 2;
                 }
-                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p, 
+                .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container p,
                 .pwelement_' .self::$rnd_id. ' .confirmation-vip-logo-container h2 {
                     text-align: center;
                     font-weight: 700;
@@ -1113,7 +1113,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             <style>
                 .row-parent:has(.pwe-confirmation-premium) {
                     max-width: 100%;
-                    padding: 0 !important;  
+                    padding: 0 !important;
                 }
                 .wpb_column:has(.pwe-confirmation-premium) {
                     max-width: 100%;
@@ -1147,14 +1147,14 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
                     display: flex;
                     flex-direction: column;
-                    justify-content: center;  
+                    justify-content: center;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
                     padding: 72px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
                     align-items: center;
-                }    
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left h4 {
                     font-size: 24px;
                     font-weight: 700;
@@ -1185,7 +1185,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     flex-shrink: 1;
                     object-fit: contain;
                     transition: transform 0.2s ease-in-out;
-                }    
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-home-btn-container {
                     background-color: black;
                     padding: 18px;
@@ -1280,7 +1280,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 }
                 @media (max-width:768px) {
                     .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper,
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left, 
+                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left,
                     .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
                         min-height: auto;
                     }
@@ -1314,7 +1314,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     @media (max-width:420px) {
                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
                             font-size: 24px;
-                        } 
+                        }
                     }
                 </style>';
             }
@@ -1325,15 +1325,15 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
                         font-size: 32px;
                     }
-                    @media (min-width: 768px) and (max-width: 1100px) { 
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
-                            font-size: calc(24px + (32 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
-                        } 
+                    @media (min-width: 768px) and (max-width: 1100px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                            font-size: calc(24px + (32 - 24) * ( (100vw - 768px) / ( 1100 - 768) ));
+                        }
                     }
-                    @media (min-width: 300px) and (max-width: 550px) { 
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
-                            font-size: calc(24px + (32 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
-                        } 
+                    @media (min-width: 300px) and (max-width: 550px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                            font-size: calc(24px + (32 - 24) * ( (100vw - 300px) / ( 550 - 300) ));
+                        }
                     }
                 </style>';
             } else {
@@ -1342,15 +1342,15 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
                         font-size: 56px;
                     }
-                    @media (min-width: 768px) and (max-width: 1100px) { 
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
-                            font-size: calc(24px + (56 - 24) * ( (100vw - 768px) / ( 1100 - 768) )); 
-                        } 
+                    @media (min-width: 768px) and (max-width: 1100px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                            font-size: calc(24px + (56 - 24) * ( (100vw - 768px) / ( 1100 - 768) ));
+                        }
                     }
-                    @media (min-width: 300px) and (max-width: 550px) { 
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 { 
-                            font-size: calc(24px + (56 - 24) * ( (100vw - 300px) / ( 550 - 300) )); 
-                        } 
+                    @media (min-width: 300px) and (max-width: 550px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
+                            font-size: calc(24px + (56 - 24) * ( (100vw - 300px) / ( 550 - 300) ));
+                        }
                     }
                 </style>';
             }

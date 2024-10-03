@@ -40,7 +40,7 @@ class PWElementStand extends PWElements {
                     border: 1px solid '. $darker_btn_color .'!important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-min-media-wrapper img {
-                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-container-stand {
                     display:flex;

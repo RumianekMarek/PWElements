@@ -354,7 +354,6 @@ class PWElementHomeGallery extends PWElements {
                     margin: 0 auto;
                     padding: 18px 36px 18px;
                 }
-
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
                     width: 100%;
                     display: flex;
@@ -436,6 +435,9 @@ class PWElementHomeGallery extends PWElements {
                     padding-top: 0 !important;
                 }   
                 @media (max-width: 960px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-wrapper {
+                        padding: 36px 36px;
+                    }
                     .pwelement_'. self::$rnd_id .' .pwe-gallery-section {
                         flex-direction: column;
                     }

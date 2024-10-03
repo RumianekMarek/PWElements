@@ -29,7 +29,7 @@ class PWElementForExhibitors extends PWElements {
                     'value' => '',
                     'dependency' => array(
                         'element' => 'pwe_element',
-                        'value' => 'PWElementForExhibitors',
+                        'value' => 'PWElementForExhibitors', 
                     ),
                 );
         }
@@ -76,7 +76,7 @@ class PWElementForExhibitors extends PWElements {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
-                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                    border-radius: 18px;
                 }
 
                 @media (max-width:768px) {
@@ -123,7 +123,7 @@ class PWElementForExhibitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text1'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['exhibitor_text1']);
                                 }
                             $output .= '</p>
                         </div>
@@ -160,7 +160,7 @@ class PWElementForExhibitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text2'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['exhibitor_text2']);
                                 }
                             $output .= '</p>
                         </div>
@@ -192,7 +192,7 @@ class PWElementForExhibitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text3'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['exhibitor_text3']);
                                 }
                             $output .= '</p>
                         </div>
@@ -230,7 +230,7 @@ class PWElementForExhibitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text4'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['exhibitor_text4']);
                                 }
                             $output .= '</p>
                         </div>
@@ -262,7 +262,7 @@ class PWElementForExhibitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text5'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['exhibitor_text5']);
                                 }
                             $output .= '</p>
                         </div>
@@ -302,7 +302,7 @@ class PWElementForExhibitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['exhibitor_text6'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['exhibitor_text6']);
                                 }
                             $output .= '</p>
                         </div>

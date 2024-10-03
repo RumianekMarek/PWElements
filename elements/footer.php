@@ -416,7 +416,7 @@ class PWElementFooter extends PWElements {
             <div class="pwe-footer-iframe-wrapper">
                 <div class="pwe-footer-column iframe-column">
                     <div class="pwe-footer-video-container">
-                        <iframe src="https://www.youtube.com/embed/tMQHNwpw9jI?si=Vyul5EoXPg1krpIf&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=tMQHNwpw9jI"
+                        <iframe data-src="https://www.youtube.com/embed/tMQHNwpw9jI?si=Vyul5EoXPg1krpIf&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=tMQHNwpw9jI"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

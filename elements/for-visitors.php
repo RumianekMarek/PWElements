@@ -29,7 +29,7 @@ class PWElementForVisitors extends PWElements {
                     'value' => '',
                     'dependency' => array(
                         'element' => 'pwe_element',
-                        'value' => 'PWElementForVisitors',
+                        'value' => 'PWElementForVisitors', 
                     ),
                 );
         }
@@ -83,7 +83,7 @@ class PWElementForVisitors extends PWElements {
                     width: 100%;
                     aspect-ratio: 16/9;
                     object-fit: cover;
-                    box-shadow: 9px 9px 0px -6px [trade_fair_main2]; 
+                    border-radius: 18px;
                 }
                 @media (max-width:768px){
                     .pwelement_'. self::$rnd_id .' .pwe-content-visitors-item {
@@ -120,7 +120,7 @@ class PWElementForVisitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['visitor_text1'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['visitor_text1']);
                                 }
                             $output .= '</p>
                         </div>
@@ -142,7 +142,7 @@ class PWElementForVisitors extends PWElements {
                                         EN
                                     );
                                 } else {
-                                    $output .= $atts['visitor_text1'];
+                                    $output .= str_replace(array('`{`', '`}`'), array('[',']'), $atts['visitor_text2']);
                                 }
                             $output .= '</p>
                         </div>

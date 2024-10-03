@@ -1158,8 +1158,10 @@ class PWElementGenerator extends PWElements {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
             <script type="text/javascript">
                 jQuery(document).ready(function($){
+                    let fileLabel = [];
                     let fileContent = "";
-                    let fileArray = "";
+                    let fileArray = [];
+                    let filteredArray = [];
                     let $closeBtn = "";
                     let emailTrue = false;
 
@@ -1269,9 +1271,27 @@ class PWElementGenerator extends PWElements {
                                     } else {
                                         fileContent = e.target.result;
                                     }
-
+                                    fileContent = fileContent.replace(/\r/g, "");
+                                    
                                     fileArray = fileContent.split("\n");
-                                    const fileLabel = fileArray[0].split(",");
+
+                                    filteredArray = [];
+                                    
+                                    fileArray.forEach(function(element){
+                                        if (element.trim() !== "" && !/^[,\s"]+$/.test(element)){
+                                            let newElement = element.split(/,(?=(?:[^"]|"[^"]*")*$)/);
+
+                                            newElement = newElement.map(function(elem){ 
+                                                elem = elem.replace(/\\\\/g, ``);
+                                                elem = elem.replace(/\\"/g, ``);
+                                                return elem;
+                                            });
+
+                                            filteredArray.push(newElement);
+                                        }
+                                    });
+
+                                    fileLabel = filteredArray[0];
 
                                     $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret vars-to-insert"></select></div>`);
                                     $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami</label><select type="select" id="name-column" name="name-column" class="selectoret vars-to-insert"></select></div>`);
@@ -1289,21 +1309,19 @@ class PWElementGenerator extends PWElements {
                                     });
                                     
                                     $(".vars-to-insert").on("change", function(){
-                                        if($(this).parent().next().attr("class").match(/-error/)){
+                                        if($(this).parent().next().attr("class").match(/-error/) == "-error"){
                                             $(this).parent().next().remove();
                                         }
                                     });
 
                                     $("#email-column").on("change", function(){
-                                        const fileLabel = fileArray[0].split(",");
                                         const chosenLabel = $(this).val();
                                         const chosenID = fileLabel.findIndex(label => label == chosenLabel );
-
                                         let chosenErrors = -1;
                                         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-                                        for (const row of fileArray){
-                                            const rowArray = row.split(",");
+                                        for (const row of filteredArray){
+                                            const rowArray = row;
 
                                             if (chosenErrors > 5){
                                                 $(".file-selctor").has("#email-column").after(`<p class="email-error error-color" >'.
@@ -1401,15 +1419,12 @@ class PWElementGenerator extends PWElements {
                                 return;
                             }
 
-                            let fileLabel = fileArray.shift();
-
-                            fileLabel = fileLabel.split(",");
                             const namelIndex = fileLabel.indexOf(nameColumn);
                             const emailIndex = fileLabel.indexOf(emailColumn);
                             let emailErrors = 0;
 
-                            const tableCont = fileArray.reduce((acc, row) => {
-                                const rowArray = row.split(",");
+                            const tableCont = filteredArray.reduce((acc, row) => {
+                                const rowArray = row;
                                 if (rowArray[emailIndex] && rowArray[emailIndex].length > 5 && emailErrors < 5) {
                                     acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex] });
                                 } else if (emailErrors < 5) {

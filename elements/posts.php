@@ -67,8 +67,8 @@ class PWElementPosts extends PWElements {
                 'description' => __('Default 1/1', 'pwelement'),
                 'save_always' => true,
                 'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementPosts',
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
                 ),
             ),
             array(
@@ -79,8 +79,8 @@ class PWElementPosts extends PWElements {
                 'description' => __('Default aktualnosci-news', 'pwelement'),
                 'save_always' => true,
                 'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementPosts',
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
                 ),
             ),
             array(
@@ -91,8 +91,8 @@ class PWElementPosts extends PWElements {
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementPosts',
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
                 ),
             ),
             array(
@@ -103,8 +103,8 @@ class PWElementPosts extends PWElements {
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementPosts',
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
                 ),
             ),
             array(
@@ -116,8 +116,8 @@ class PWElementPosts extends PWElements {
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementPosts',
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
                 ),
             ),
             array(
@@ -128,8 +128,8 @@ class PWElementPosts extends PWElements {
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
-                  'element' => 'pwe_element',
-                  'value' => 'PWElementPosts',
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
                 ),
             ),
         );
@@ -549,13 +549,22 @@ class PWElementPosts extends PWElements {
 
                 $all_categories = get_categories(array('hide_empty' => true));
 
-                $category_names = array();
+                if (!empty($posts_category) && term_exists($posts_category, 'category')) {
+                    // We only use categories from `$posts category`
+                    $category_name = $posts_category;
+                } else {
+                    $category_names = array();
 
-                foreach ($all_categories as $category) {
-                    $category_names[] = $category->name;
-                }
-                
-                $category_name = implode(', ', $category_names); 
+                    foreach ($all_categories as $category) {
+                        // Checks if the category name contains the word 'news'
+                        if (strpos(strtolower($category->name), 'news') !== false) {
+                            // Use slug instead of category name
+                            $category_names[] = $category->slug; 
+                        }
+                    }
+
+                    $category_name = implode(', ', $category_names); 
+                }         
 
                 $args = array(
                     'posts_per_page' => $max_posts,

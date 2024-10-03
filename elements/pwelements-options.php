@@ -74,6 +74,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'resend-ticket.php';
         require_once plugin_dir_path(__FILE__) . 'header-new.php';
         require_once plugin_dir_path(__FILE__) . 'hale.php';
+        require_once plugin_dir_path(__FILE__) . 'opinions.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -239,6 +240,7 @@ class PWElements {
                         ...PWElementStepTwo::initElements(),
                         ...PWElementTicketActConf::initElements(),
                         ...PWElementHale::initElements(),
+                        ...PWElementOpinions::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -306,6 +308,7 @@ class PWElements {
             'Mapka dojazdu'                  => 'PWElementRoute',
             'Nie przegap'                    => 'PWElementDontMiss',
             'Organizator'                    => 'PWElementOrganizer',
+            'Opinions'                       => 'PWElementOpinions',
             'Panel trendów'                  => 'PWElementTrendsPanel',
             'Posts'                          => 'PWElementPosts',
             'Potwierdzenie Rejestracji'      => 'PWElementPotwierdzenieRejestracji',
@@ -368,6 +371,7 @@ class PWElements {
             'PWElementMapa'             => 'mapa.php',
             'PWElementMapaTest'         => 'mapa-test.php',
             'PWElementOrgInfo'          => 'org-information.php',
+            'PWElementOpinions'         => 'opinions.php',
             'PWElementContactInfo'      => 'kontakt-info.php',
             'PWElementContact'          => 'kontakt.php',
             'PWElementHomeGallery'      => 'gallery.php',

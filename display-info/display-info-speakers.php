@@ -93,14 +93,12 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                         'heading' => __('Bio excerpt', 'pwe_display_info'),
                         'param_name' => 'speaker_bio_excerpt',
                         'save_always' => true,
-                        'admin_label' => true,
                     ),
                     array(
                         'type' => 'textarea',
                         'heading' => __('Bio full', 'pwe_display_info'),
                         'param_name' => 'speaker_bio',
                         'save_always' => true,
-                        'admin_label' => true,
                     ),
                 ),
                 'dependency' => array(

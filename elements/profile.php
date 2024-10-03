@@ -442,7 +442,7 @@ class PWElementProfile extends PWElements {
                     object-fit: cover;
                     width: ' . $profile_img_max_width . ';
                     aspect-ratio: ' . $profile_img_aspect_ratio . ';
-                    box-shadow: 9px 9px 0px -6px [trade_fair_main2];
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-profile-block {
                     width: 50%;
@@ -522,7 +522,8 @@ class PWElementProfile extends PWElements {
             </style>';
         }
 
-        $output .= '<div id="'. $profile_id .'" class="pwe-container-profile" style="background-color:'. $profile_background .';">
+        $output .= '
+        <div id="'. $profile_id .'" class="pwe-container-profile" style="background-color:'. $profile_background .';">
             <div class="pwe-profile-wrapper">';
                 if (in_array('border_top', explode(',', $profile_border))) {  
                     $output .= '<p class="profile-box-shadow-left">&nbsp;</p>';
@@ -621,42 +622,21 @@ class PWElementProfile extends PWElements {
                         if (in_array('profile_btn_tick', explode(',', $profile_buttons))) {
                             $output .= '<div class="pwe-btn-container">
                                             <a class="pwe-link btn pwe-btn" href="'. $profile_tickets_button_link .'"'. 
-                                            self::languageChecker(
-                                                <<<PL
-                                                alt="link do biletów">Kup bilet</a>
-                                                PL,
-                                                <<<EN
-                                                alt="link to tickets">Buy a ticket
-                                                EN
-                                            )
+                                                self::languageChecker('alt="link do biletów">Kup bilet</a>', 'alt="link to tickets">Buy a ticket')
                                             .'</a>  
                                         </div>';
                         }
                         if (in_array('profile_btn_rej', explode(',', $profile_buttons))) {
                             $output .= '<div class="pwe-btn-container">
                                             <a class="pwe-link btn pwe-btn" href="'. $profile_register_button_link .'"'. 
-                                            self::languageChecker(
-                                                <<<PL
-                                                alt="link do rejestracji">Weź udział
-                                                PL,
-                                                <<<EN
-                                                alt="link to registration">Take a part
-                                                EN
-                                            )
+                                                self::languageChecker('alt="link do rejestracji">Weź udział', 'alt="link to registration">Take a part')
                                             .'</a>  
                                         </div>';
                         }
                         if (in_array('profile_btn_exhib', explode(',', $profile_buttons))) {
                             $output .= '<div class="pwe-btn-container">
                                             <a class="pwe-link btn pwe-btn" href="'. $profile_exhibitors_button_link .'"'. 
-                                            self::languageChecker(
-                                                <<<PL
-                                                alt="link do rejestracji wystawców">Zostań wystawcą
-                                                PL,
-                                                <<<EN
-                                                alt="link to exhibitor registration">Book a stand
-                                                EN
-                                            )
+                                                self::languageChecker('alt="link do rejestracji wystawców">Zostań wystawcą', 'alt="link to exhibitor registration">Book a stand')
                                             .'</a>  
                                         </div>';
                         }
