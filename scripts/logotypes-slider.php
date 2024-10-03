@@ -32,15 +32,13 @@ class PWELogotypesSlider {
                 $output = '
                 <style>
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider {
                                 width: 100%;
                                 overflow: hidden;
                                 margin: 0 !important;
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides {
                                 display: flex;
                                 align-items: center;
                                 justify-content: space-between;
@@ -50,20 +48,17 @@ class PWELogotypesSlider {
                                 pointer-events: auto;
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div {
                                 padding: 0;
                                 object-fit: contain !important;
                                 
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides a,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides a,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides a {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides a {
                                 align-self: flex-start;
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides .image-container,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides .image-container,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides .image-container {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides .image-container {
                                 margin: 5px !important;
                         }
                         @keyframes slideAnimation {
@@ -75,8 +70,7 @@ class PWELogotypesSlider {
                                 }
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides .slide,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides .slide,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides .slide {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides .slide {
                                 animation: slideAnimation 0.5s ease-in-out;
                         }
                         .pwe-element-logotypes-slider {
@@ -93,13 +87,11 @@ class PWELogotypesSlider {
                         $output .= '
                         <style>
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div {
                                 display: block;
                         }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div p,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div p,
-                        .pwe-association-logotypes .pwe-element-logotypes-slider .slides > div p {
+                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div p {
                                 width: 100%;
                                 text-transform: uppercase;
                                 font-size: 12px;
@@ -133,7 +125,8 @@ class PWELogotypesSlider {
                                 $imageData = $media_url[$imgNumber];
                                 $imageStyles = "background-image:url('{$imageData['img']}');";
                                 $imageId = (!empty($imageData['id']) && $imageData['id'] == 'primary') ? 'as-' . $imageData['id'] : '';
-                                $imageUrl = $imageData['site'];
+                                // $imageUrl = $imageData['site']; //Links are disabled
+                                $imageUrl = '';
                                 $imageClass = !empty($imageData['class']) ? $imageData['class'] : '';
                                 $imageStyle = !empty($imageData['style']) ? $imageData['style'] : '';
                                 $imageCaption = (isset($imageData['folder_name'])) ? $imageData['folder_name'] : '';

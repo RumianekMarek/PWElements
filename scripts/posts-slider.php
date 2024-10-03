@@ -106,8 +106,15 @@ class PWEPostsSlider {
                                         $imageUrl = $media_url[$imgNumber]['link'];
                                         $imageSrc = $media_url[$imgNumber]['img'];
                                         $imageTitle = $media_url[$imgNumber]['title'];
-                                        $imageExcerpt = $media_url[$imgNumber]['excerpt'];
-                                        $imageDate = $media_url[$imgNumber]['date'];
+
+                                        $imageExcerpt = $imageDate = '';
+                                        if(isset($media_url[$imgNumber]['excerpt'])){
+                                                $imageExcerpt = '<p class="pwe-post-excerpt">'. $media_url[$imgNumber]['excerpt'] .'</p>';
+                                        }
+                                        
+                                        if(isset($media_url[$imgNumber]['date'])){
+                                                $imageDate = '<button class="pwe-post-btn">'. $media_url[$imgNumber]['date'] .'</button>';
+                                        }
 
                                         if (!empty($imageSrc)) {
                                                 $output .= '
@@ -118,13 +125,12 @@ class PWEPostsSlider {
                                                                         <p class="pwe-post-date">'. $imageDate .'</p>
                                                                 </div> 
                                                                 <h5 class="pwe-post-title">'. $imageTitle .'</h5>
-                                                                <p class="pwe-post-excerpt">'. $imageExcerpt .'</p>
-                                                                <button class="pwe-post-btn">'. $load_more .'</button>
+                                                                ' . $imageExcerpt
+                                                                . $imageDate . '                                                
                                                         </a>
                                                 </div>';  
                                         }
                                 }
-                                
                         }
 
                         $output .= '

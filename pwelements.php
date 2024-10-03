@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.2.4
+ * Version: 2.2.5
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -23,6 +23,7 @@ class PWElementsPlugin {
     public $GFAreaNumbersField;
     public $PWECatalog1;
     public $PWEExhibitorGenerator;
+    public $PWEProfile;
 
     public function __construct() {
         // Czyszczenie pamięci wp_rocket
@@ -58,9 +59,6 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'gf-upps/area-numbers/area_numbers_gf.php';
         $this->GFAreaNumbersField = new GFAreaNumbersField();
 
-        // require_once plugin_dir_path(__FILE__) . 'pweupdater.php';
-        // $this->PWElementsUpdater = new PWElementsUpdater();
-
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
 
@@ -69,6 +67,9 @@ class PWElementsPlugin {
 
         // require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
         // $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/profile/profile.php';
+        $this->PWEProfile = new PWEProfile();
     }
 
     // Czyszczenie pamięci wp_rocket

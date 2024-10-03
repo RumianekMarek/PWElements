@@ -3,6 +3,16 @@
 class PWECommonFunctions {
 
     /**
+     * Decoding Base64
+     * Decoding URL
+     * Remowe wpautop
+     */
+    public static function decode_clean_content($encoded_content) {
+        $decoded_content = wpb_js_remove_wpautop(urldecode(base64_decode($encoded_content)), true);
+        return $decoded_content;
+    }
+
+    /**
      * Adding colors
      */
     public static function findColor($primary, $secondary, $default = '') {
@@ -15,7 +25,7 @@ class PWECommonFunctions {
         }
     }
 
-/**
+    /**
      * Finding preset colors pallet.
      *
      * @return array
