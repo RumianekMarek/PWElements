@@ -41,8 +41,8 @@ class PWEPostsSlider {
                                 pointer-events: auto;
                                 gap: 19px;
                         }
-                        .pwe-posts .slide {
-                                min-height: 300px;
+                        .pwe-posts .pwe-slide {
+                                min-height: 350px;
                                 padding: 0;
                         }
                         @keyframes slideAnimation {
@@ -106,16 +106,8 @@ class PWEPostsSlider {
                                         $imageUrl = $media_url[$imgNumber]['link'];
                                         $imageSrc = $media_url[$imgNumber]['img'];
                                         $imageTitle = $media_url[$imgNumber]['title'];
-
-                                        $imageExcerpt = $imageDate = '';
-                                        if(isset($media_url[$imgNumber]['excerpt'])){
-                                                $imageExcerpt = '<p class="pwe-post-excerpt">'. $media_url[$imgNumber]['excerpt'] .'</p>';
-                                        }
-                                        
-                                        if(isset($media_url[$imgNumber]['date'])){
-                                                $imageDate = '<button class="pwe-post-btn">'. $media_url[$imgNumber]['date'] .'</button>';
-                                        }
-
+                                        $imageExcerpt = !empty($imageExcerpt) ? $media_url[$imgNumber]['excerpt'] : '';
+                                        $imageDate = !empty($imageDate) ? $media_url[$imgNumber]['date'] : '';
                                         if (!empty($imageSrc)) {
                                                 $output .= '
                                                 <div class="pwe-slide">
@@ -123,12 +115,12 @@ class PWEPostsSlider {
                                                                 <div class="pwe-post-thumbnail">
                                                                         <div class="image-container" style="'. $imageStyles .'"></div>
                                                                         <p class="pwe-post-date">'. $imageDate .'</p>
-                                                                </div> 
+                                                                </div>
                                                                 <h5 class="pwe-post-title">'. $imageTitle .'</h5>
-                                                                ' . $imageExcerpt
-                                                                . $imageDate . '                                                
+                                                                <p class="pwe-post-excerpt">'. $imageExcerpt .'</p>
+                                                                <button class="pwe-post-btn">' . $load_more . '</button>
                                                         </a>
-                                                </div>';  
+                                                </div>';
                                         }
                                 }
                         }
