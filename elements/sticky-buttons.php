@@ -593,8 +593,9 @@ class PWElementStickyButtons extends PWElements {
             $output .= '
                 <div class="sticky custom-sticky-buttons-cropped-container">
                     <div class="custom-sticky-head-container style-accent-bg" background-color:'. $sticky_buttons_cropped_background .'!important">
-                        <h4 class="custom-sticky-head-text" style="'. $text_color .' !important;">Wybierz kongres &nbsp;</h4>
-                        <i class="fa fa-chevron-down fa-1x fa-fw" style="'. $text_color .' !important;"></i>
+                        <h4 class="custom-sticky-head-text" style="color: white;">Wybierz kongres 
+                            <i class="fa fa-chevron-down fa-1x fa-fw"></i>
+                        </h4>
                     </div>
                     <div class="custom-sticky-buttons-cropped style-accent-bg" background-color:'. $sticky_buttons_cropped_background .'!important">';
 

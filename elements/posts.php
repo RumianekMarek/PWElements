@@ -338,7 +338,7 @@ class PWElementPosts extends PWElements {
                     border-radius: 11px;
                     transition: .3s ease;
                     height: auto;
-                    min-height: 300px;
+                    min-height: 350px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post:hover {
                     transform: scale(1.05);
@@ -564,7 +564,7 @@ class PWElementPosts extends PWElements {
                     }
 
                     $category_name = implode(', ', $category_names); 
-                }         
+                }      
 
                 $args = array(
                     'posts_per_page' => $max_posts,
@@ -617,8 +617,8 @@ class PWElementPosts extends PWElements {
                         $date = get_the_date('Y-m-d'); // Get date in YYYY-MM-DD format
 
                         $title_words = explode(' ', $title);
-                        if (count($title_words) > 10) {
-                            $title = implode(' ', array_slice($title_words, 0, 10)) . '...';
+                        if (count($title_words) > 8) {
+                            $title = implode(' ', array_slice($title_words, 0, 8)) . '...';
                         }
 
                         // Format the date

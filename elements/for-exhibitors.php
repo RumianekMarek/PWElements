@@ -72,6 +72,9 @@ class PWElementForExhibitors extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block{
                     width: 50%;
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block {
+                    align-content: center;
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-image-block img {
                     width: 100%;
                     aspect-ratio: 16/9;

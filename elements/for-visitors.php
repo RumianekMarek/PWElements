@@ -79,6 +79,9 @@ class PWElementForVisitors extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-visitors-text-block{
                     width: 50%;
                 }
+                .pwelement_'. self::$rnd_id .' .pwe-visitors-text-block {
+                    align-content: center;
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-visitors-image-block img {
                     width: 100%;
                     aspect-ratio: 16/9;
