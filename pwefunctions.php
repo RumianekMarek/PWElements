@@ -3,6 +3,13 @@
 class PWECommonFunctions {
 
     /**
+     * Random number
+     */
+    public static function id_rnd() {
+        $id_rnd = rand(10000, 99999);
+        return $id_rnd;
+    }
+    /**
      * Decoding Base64
      * Decoding URL
      * Remowe wpautop
