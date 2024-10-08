@@ -260,13 +260,12 @@ class PWEProfileAllInOne extends PWEProfile {
             preg_match('/embed\/([^?]+)/', $src, $match);
             $video_id = $match[1];
         } else {
-            $video_id = 'R0Ckz1dVxoQ';
+            $video_id = 'R0Ckz1dVxoQ'; 
         }
 
-        $profile_iframe = '<iframe src="https://www.youtube.com/embed/'. $video_id .'?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist='. $video_id .'"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+        $profile_iframe = '<iframe data-src="https://www.youtube.com/embed/'. $video_id .'?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist='. $video_id .'"
+                            title="YouTube video player" frameborder="0" marginwidth="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted">
                             </iframe>';
                                             
         $output .= '
