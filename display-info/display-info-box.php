@@ -351,7 +351,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                 }
                         }
                         
-                        $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src[0]) .'" alt="'.$speakers_names[$i].'-'.$i.' portrait" style="position:relative; z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
+                        $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src[0]) .'" alt="speaker portrait" style="position:relative; z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
                     }
                 }
             }
@@ -595,6 +595,17 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         if ($info_box_accordion_preset == true && $info_box_simple_mode != true) {
             $output .= '
             <style>
+                #info-box-'. self::$rnd_id .' .pwe-box-info {
+                    width: 100%;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name,
+                #info-box-'. self::$rnd_id .' .pwe-box-speakers {
+                    display: none;
+                }
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-time,
+                #info-box-'. self::$rnd_id .' .pwe-box-lecture-title {
+                    text-align: start;
+                }
                 @media(min-width:960px){
                     #info-box-'. self::$rnd_id .' .pwe-box-lecture-time {
                         width: 15%;
@@ -603,12 +614,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                         width: 84%;
                         font-size: 18px;
                     }
-                    #info-box-'. self::$rnd_id .' .pwe-box-lecturer-name,
-                    #info-box-'. self::$rnd_id .' .pwe-box-speakers {
-                        display: none;
-                    }
                     #info-box-'. self::$rnd_id .' .pwe-box-info {
-                        width: 100%;
                         display: flex;
                         flex-wrap: wrap;
                         justify-content: flex-end !important;
@@ -638,9 +644,9 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    height: 1px; /* wysokość gradientu */
+                    height: 1px;
                     background: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, .75)), to(rgba(0, 0, 0, 0)));
-                    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .75), rgba(0, 0, 0, 0)); /* alternatywa dla nowszych przeglądarek */
+                    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .75), rgba(0, 0, 0, 0));
                 }
 
             </style>';
@@ -707,8 +713,10 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             }
             
             $output .= '
-            <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">
-                <h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>';
+            <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">';
+                if(!empty($info_box_event_time)) {
+                    $output .= '<h4 class="pwe-box-lecture-time">'. $info_box_event_time .'</h4>';
+                }
 
                 if($info_box_title_top) {
                     $output .= '<h4 class="pwe-box-lecture-title" style="font-size:'. $info_box_title_size .'; color:'. $info_box_title_color .';">'. $info_box_event_title .'</h4>';

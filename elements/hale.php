@@ -22,9 +22,9 @@ class PWElementHale extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Dispaly Different Logo Color', 'pwelement'),
+                'heading' => __('Dispaly Logo Color', 'pwelement'),
                 'param_name' => 'logo_color_hala',
-                'description' => __('Check Yes to display different logo color.', 'pwelement'),
+                'description' => __('Check Yes to display logo color.', 'pwelement'),
                 'value' => 'true',
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -47,18 +47,21 @@ class PWElementHale extends PWElements {
     }
     public static function output($atts) {
 
+        
+
+        extract( shortcode_atts( array(
+            'logo_color_hala' => '',
+            'hale_text' => '',
+        ), $atts ));
+
         $logo_href = '';
-        $logo_color = self::findBestLogo($atts["logo_color_hala"]);
+        $logo_color = self::findBestLogo($logo_color_hala);
         $logo_color_array = explode('"', $logo_color);
         foreach($logo_color_array as $href){
             if(strpos(strtolower($href), '/doc/') !== false){
                 $logo_href = $href;
             }
         }
-
-        extract( shortcode_atts( array(
-            'hale_text' => '',
-        ), $atts ));
 
         $output = '';
 

@@ -60,7 +60,7 @@ class PWElementForExhibitors extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-container-forexhibitors {
                     margin: 0 auto;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-content-forexhibitors-item{
+                .pwelement_'. self::$rnd_id .' .pwe-content-forexhibitors-item {
                     width: 100%;
                     display:flex;
                     justify-content: center;
@@ -69,7 +69,7 @@ class PWElementForExhibitors extends PWElements {
                 }
                 
                 .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-image-block, 
-                .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block{
+                .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block {
                     width: 50%;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-forexhibitors-text-block {
@@ -83,7 +83,7 @@ class PWElementForExhibitors extends PWElements {
                 }
 
                 @media (max-width:768px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-content-forexhibitors-item{
+                    .pwelement_'. self::$rnd_id .' .pwe-content-forexhibitors-item {
                         flex-direction: column;
                     }
                     .pwelement_'. self::$rnd_id .' .column-reverse {

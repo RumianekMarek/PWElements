@@ -65,8 +65,8 @@ class PWElementPromot extends PWElements {
         $logo_href = '';
         $logo_color = self::findBestLogo($atts["logo_color"]); 
         $logo_color_array = explode('"', $logo_color);
-        foreach($logo_color_array as $href){
-            if(strpos(strtolower($href), '/doc/') !== false){
+        foreach($logo_color_array as $href) {
+            if(strpos(strtolower($href), '/doc/') !== false) {
                 $logo_href = $href;
             }
         }
@@ -133,11 +133,12 @@ class PWElementPromot extends PWElements {
                     display:flex !important;
                     gap: 5px;
                 }
-                .pwe-content-promote-item .pwe-content-promote-element h3{
+                .pwe-content-promote-item .pwe-content-promote-element h3 {
                     margin:0;
                 }
-                .pwe-content-promote-item .pwe-content-promote-element img{
+                .pwe-content-promote-item .pwe-content-promote-element img {
                     max-height: 150px;
+                    object-fit: contain;
                 }
                 .pwe-content-promote-item div .btn {
                     transform: none !important;
@@ -157,7 +158,7 @@ class PWElementPromot extends PWElements {
                     margin-top: 0;
                     color:' . $text_color . ';
                 }
-                .pwe-content-promote-item__help div{
+                .pwe-content-promote-item__help div {
                     margin-top: 18px;
                 }
                 .pwe-content-promote-item__help a{
@@ -168,7 +169,7 @@ class PWElementPromot extends PWElements {
                     width: 66%;
                     margin: 0 auto;
                 }
-                .pwe-content-promote-item__help :is(h2, a){
+                .pwe-content-promote-item__help :is(h2, a) {
                     font-size: 24px !important;
                 }
                 @media(max-width:960px) {
@@ -199,11 +200,11 @@ class PWElementPromot extends PWElements {
                     }
                 }
                 @media (max-width:600px) {
-                    .promote-img-contener{
+                    .promote-img-contener {
                         order: 2;
                         text-align: center;
                     }
-                    .pwe-promote-text-block img{
+                    .pwe-promote-text-block img {
                         float: unset;
                         max-width: 90%;
                     }
@@ -211,11 +212,11 @@ class PWElementPromot extends PWElements {
                         display: flex;
                         flex-direction: column;
                     }
-                    .pwe-content-promote-item.pwe-flex{
+                    .pwe-content-promote-item.pwe-flex {
                         flex-direction: column;
                         align-items: center;
                     }
-                    .pwelement .h2.mobile-kons-email{
+                    .pwelement .h2.mobile-kons-email {
                         font-size: calc(7px + 3vw) !important;
                     }
                 }
