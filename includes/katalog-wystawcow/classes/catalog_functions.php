@@ -112,6 +112,46 @@ class CatalogFunctions {
         }
         return $logos_array;
     }
+
+    /**
+     * Check Title for Exhibitors Catalog
+     */
+    // public static function initElements() {
+    // }
+    public static function checkTitle($title, $format) {
+        
+        if (substr($title, 0, 2) === "``") {
+            $exhibitors_title = substr($title, 2, -2);
+        } elseif($format == 'PWECatalogFull'){
+            $exhibitors_title = PWECommonFunctions::languageChecker(
+                <<<PL
+                    Katalog wystawców 
+                PL,
+                <<<EN
+                    Exhibitor Catalog 
+                EN
+            ) . $title;
+        } elseif ($format == 'PWECatalog21' || $format == 'PWECatalog10'){
+            $exhibitors_title = PWECommonFunctions::languageChecker(
+                <<<PL
+                    Wystawcy 
+                PL,
+                <<<EN
+                    Exhibitors 
+                EN
+            ) . (($title) ? $title : do_shortcode('[trade_fair_catalog_year]'));
+        } elseif ($format == 'PWECatalog7'){
+            $exhibitors_title = PWECommonFunctions::languageChecker(
+                <<<PL
+                    Nowi wystawcy na targach 
+                PL,
+                <<<EN
+                    New exhibitors at the fair 
+                EN
+            ) . $title;
+        }
+        return $exhibitors_title;
+    }
 }
 
 
@@ -122,35 +162,35 @@ function initVCMapPWECatalog() {
     // Check if Visual Composer is available
     if (class_exists('Vc_Manager')) {
         vc_map( array(
-            'name' => __( 'PWE Katalog wystawców 1', 'pwe_katalog1'),
-            'base' => 'pwe_katalog1',
-            'category' => __( 'PWE Elements', 'pwe_katalog1'),
+            'name' => __( 'PWE Katalog wystawców', 'pwe_katalog'),
+            'base' => 'pwe_katalog',
+            'category' => __( 'PWE Elements', 'pwe_katalog'),
             'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
             //Add all vc_map PWECatalog files
             'params' => array(
                 array(
                     'type' => 'textfield',
-                    'heading' => __( 'Enter ID', 'pwe_katalog1'),
+                    'heading' => __( 'Enter ID', 'pwe_katalog'),
                     'param_name' => 'identification',
-                    'description' => __( 'Enter trade fair ID number.', 'pwe_katalog1'),
+                    'description' => __( 'Enter trade fair ID number.', 'pwe_katalog'),
                     'param_holder_class' => 'backend-textfield',
                     'save_always' => true,
                     'admin_label' => true
                 ),
                 array(
                     'type' => 'textfield',
-                    'heading' => __( 'Enter Archive Year <br>or Title in "..." ', 'pwe_katalog1'),
+                    'heading' => __( 'Enter Archive Year <br>or Title in "..." ', 'pwe_katalog'),
                     'param_name' => 'katalog_year',
-                    'description' => __( 'Enter year for display in catalog title or us "" to change full title.', 'pwe_katalog1'),
+                    'description' => __( 'Enter year for display in catalog title or us "" to change full title.', 'pwe_katalog'),
                     'param_holder_class' => 'backend-textfield',
                     'save_always' => true,
                     'admin_label' => true
                 ),
                 array(
                     'type' => 'dropdown',
-                    'heading' => __( 'Catalog format', 'pwe_katalog1'),
+                    'heading' => __( 'Catalog format', 'pwe_katalog'),
                     'param_name' => 'format',
-                    'description' => __( 'Select catalog format.', 'pwe_katalog1'),
+                    'description' => __( 'Select catalog format.', 'pwe_katalog'),
                     'param_holder_class' => 'backend-textfield',
                     'value' => array(
                     'Select' => '',
@@ -164,9 +204,9 @@ function initVCMapPWECatalog() {
                 ),
                 array(
                     'type' => 'textfield',
-                    'heading' => __( 'Logos changer', 'pwe_katalog1'),
+                    'heading' => __( 'Logos changer', 'pwe_katalog'),
                     'param_name' => 'file_changer',
-                    'description' => __( 'Changer for logos divided by ";" try to put names <br> change places "name<=>name or position";<br> move to position "name=>>name or position";', 'pwe_katalog1'),
+                    'description' => __( 'Changer for logos divided by ";" try to put names <br> change places "name<=>name or position";<br> move to position "name=>>name or position";', 'pwe_katalog'),
                     'save_always' => true,
                     'dependency' => array(
                     'element' => 'format',
@@ -176,10 +216,10 @@ function initVCMapPWECatalog() {
                 // colors setup
                 array(
                     'type' => 'dropdown',
-                    'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwe_katalog1'),
+                    'heading' => __('Select text color <a href="#" onclick="yourFunction(`text_color_manual_hidden`, `text_color`)">Hex</a>', 'pwe_katalog'),
                     'param_name' => 'text_color',
                     'param_holder_class' => 'main-options',
-                    'description' => __('Select text color for the element.', 'pwe_katalog1'),
+                    'description' => __('Select text color for the element.', 'pwe_katalog'),
                     'value' => PWECommonFunctions::findPalletColorsStatic(),
                     'dependency' => array(
                         'element' => 'text_color_manual_hidden',
@@ -190,19 +230,19 @@ function initVCMapPWECatalog() {
                 ),
                 array(
                     'type' => 'textfield',
-                    'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwe_katalog1'),
+                    'heading' => __('Write text color <a href="#" onclick="yourFunction(`text_color`, `text_color_manual_hidden`)">Pallet</a>', 'pwe_katalog'),
                     'param_name' => 'text_color_manual_hidden',
                     'param_holder_class' => 'main-options pwe_dependent-hidden',
-                    'description' => __('Write hex number for text color for the element.', 'pwe_katalog1'),
+                    'description' => __('Write hex number for text color for the element.', 'pwe_katalog'),
                     'value' => '',
                     'save_always' => true,
                 ),
                 array(
                     'type' => 'dropdown',
-                    'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwe_katalog1'),
+                    'heading' => __('Select text shadow color <a href="#" onclick="yourFunction(`text_shadow_color_manual_hidden`, `text_shadow_color`)">Hex</a>', 'pwe_katalog'),
                     'param_name' => 'text_shadow_color',
                     'param_holder_class' => 'main-options',
-                    'description' => __('Select shadow text color for the element.', 'pwe_katalog1'),
+                    'description' => __('Select shadow text color for the element.', 'pwe_katalog'),
                     'value' => PWECommonFunctions::findPalletColorsStatic(),
                     'dependency' => array(
                         'element' => 'text_shadow_color_manual_hidden',
@@ -212,19 +252,19 @@ function initVCMapPWECatalog() {
                 ),
                 array(
                     'type' => 'textfield',
-                    'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_katalog1'),
+                    'heading' => __('Write text shadow color <a href="#" onclick="yourFunction(`text_shadow_color`, `text_shadow_color_manual_hidden`)">Pallet</a>', 'pwe_katalog'),
                     'param_name' => 'text_shadow_color_manual_hidden',
                     'param_holder_class' => 'main-options pwe_dependent-hidden',
-                    'description' => __('Write hex number for text shadow color for the element.', 'pwe_katalog1'),
+                    'description' => __('Write hex number for text shadow color for the element.', 'pwe_katalog'),
                     'value' => '',
                     'save_always' => true,
                 ),                        
                 array(
                     'type' => 'dropdown',
-                    'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwe_katalog1'),
+                    'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwe_katalog'),
                     'param_name' => 'btn_color',
                     'param_holder_class' => 'main-options',
-                    'description' => __('Select button color for the element.', 'pwe_katalog1'),
+                    'description' => __('Select button color for the element.', 'pwe_katalog'),
                     'value' => PWECommonFunctions::findPalletColorsStatic(),
                     'dependency' => array(
                         'element' => 'btn_color_manual_hidden',
@@ -234,19 +274,19 @@ function initVCMapPWECatalog() {
                 ),
                 array(
                     'type' => 'textfield',
-                    'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwe_katalog1'),
+                    'heading' => __('Write button color <a href="#" onclick="yourFunction(`btn_color`, `btn_color_manual_hidden`)">Pallet</a>', 'pwe_katalog'),
                     'param_name' => 'btn_color_manual_hidden',
                     'param_holder_class' => 'main-options pwe_dependent-hidden',
-                    'description' => __('Write hex number for button color for the element.', 'pwe_katalog1'),
+                    'description' => __('Write hex number for button color for the element.', 'pwe_katalog'),
                     'value' => '',
                     'save_always' => true
                 ),
                 array(
                     'type' => 'dropdown',
-                    'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwe_katalog1'),
+                    'heading' => __('Select button text color <a href="#" onclick="yourFunction(`btn_text_color_manual_hidden`, `btn_text_color`)">Hex</a>', 'pwe_katalog'),
                     'param_name' => 'btn_text_color',
                     'param_holder_class' => 'main-options',
-                    'description' => __('Select button text color for the element.', 'pwe_katalog1'),
+                    'description' => __('Select button text color for the element.', 'pwe_katalog'),
                     'value' => PWECommonFunctions::findPalletColorsStatic(),
                     'dependency' => array(
                         'element' => 'btn_text_color_manual_hidden',
@@ -288,38 +328,38 @@ function initVCMapPWECatalog() {
                 // color END
                 array(
                     'type' => 'textfield',
-                    'heading' => __( 'Export link', 'pwe_katalog1'),
+                    'heading' => __( 'Export link', 'pwe_katalog'),
                     'param_name' => 'export_link',
-                    'description' => __( 'Export link', 'pwe_katalog1'),
+                    'description' => __( 'Export link', 'pwe_katalog'),
                     'save_always' => true,
                     'admin_label' => true
                 ),
                 // array(
                 //     'type' => 'checkbox',
-                //     'heading' => __('Hide details', 'pwe_katalog1'),
+                //     'heading' => __('Hide details', 'pwe_katalog'),
                 //     'param_name' => 'details',
-                //     'description' => __('Check to use to hide details. ONLY full catalog.', 'pwe_katalog1'),
+                //     'description' => __('Check to use to hide details. ONLY full catalog.', 'pwe_katalog'),
                 //     'param_holder_class' => 'backend-basic-checkbox',
                 //     'admin_label' => true,
-                //     'value' => array(__('True', 'pwe_katalog1') => 'true',),
+                //     'value' => array(__('True', 'pwe_katalog') => 'true',),
                 // ),
                 // array(
                 //     'type' => 'checkbox',
-                //     'heading' => __('Hide stand', 'pwe_katalog1'),
+                //     'heading' => __('Hide stand', 'pwe_katalog'),
                 //     'param_name' => 'stand',
-                //     'description' => __('Check to use to hide stand. ONLY full catalog.', 'pwe_katalog1'),
+                //     'description' => __('Check to use to hide stand. ONLY full catalog.', 'pwe_katalog'),
                 //     'param_holder_class' => 'backend-basic-checkbox',
                 //     'admin_label' => true,
-                //     'value' => array(__('True', 'pwe_katalog1') => 'true',),
+                //     'value' => array(__('True', 'pwe_katalog') => 'true',),
                 // ),
                 array(
                     'type' => 'checkbox',
-                    'heading' => __('Registration', 'pwe_katalog1'),
+                    'heading' => __('Registration', 'pwe_katalog'),
                     'param_name' => 'ticket',
-                    'description' => __('Default height logotypes 110px. ONLY top10.', 'pwe_katalog1'),
+                    'description' => __('Default height logotypes 110px. ONLY top10.', 'pwe_katalog'),
                     'param_holder_class' => 'backend-basic-checkbox',
                     'admin_label' => true,
-                    'value' => array(__('True', 'pwe_katalog1') => 'true',),
+                    'value' => array(__('True', 'pwe_katalog') => 'true',),
                     'dependency' => array(
                     'element' => 'format',
                     'value' => array('top10')
@@ -327,32 +367,32 @@ function initVCMapPWECatalog() {
                 ),
                 array(
                     'type' => 'checkbox',
-                    'heading' => __('Slider desktop', 'pwe_katalog1'),
+                    'heading' => __('Slider desktop', 'pwe_katalog'),
                     'param_name' => 'slider_desktop',
-                    'description' => __('Check if you want to display in slider on desktop.', 'pwe_katalog1'),
+                    'description' => __('Check if you want to display in slider on desktop.', 'pwe_katalog'),
                     'param_holder_class' => 'backend-basic-checkbox',
                     'admin_label' => true,
                     'save_always' => true,
-                    'value' => array(__('True', 'pwe_katalog1') => 'true',),
+                    'value' => array(__('True', 'pwe_katalog') => 'true',),
                 ),
                 array(
                     'type' => 'checkbox',
-                    'heading' => __('Grid mobile', 'pwe_katalog1'),
+                    'heading' => __('Grid mobile', 'pwe_katalog'),
                     'param_name' => 'grid_mobile',
-                    'description' => __('Check if you want to display in grid on mobile.', 'pwe_katalog1'),
+                    'description' => __('Check if you want to display in grid on mobile.', 'pwe_katalog'),
                     'param_holder_class' => 'backend-basic-checkbox',
                     'admin_label' => true,
                     'save_always' => true,
-                    'value' => array(__('True', 'pwe_katalog1') => 'true',),
+                    'value' => array(__('True', 'pwe_katalog') => 'true',),
                 ),
                 array(
                     'type' => 'checkbox',
-                    'heading' => __('Turn off dots', 'pwe_katalog1'),
+                    'heading' => __('Turn off dots', 'pwe_katalog'),
                     'param_name' => 'slider_dots_off',
-                    'description' => __('Check if you want to turn off dots.', 'pwe_katalog1'),
+                    'description' => __('Check if you want to turn off dots.', 'pwe_katalog'),
                     'admin_label' => true,
                     'save_always' => true,
-                    'value' => array(__('True', 'pwe_katalog1') => 'true',),
+                    'value' => array(__('True', 'pwe_katalog') => 'true',),
                 ), 
             ),
         ));

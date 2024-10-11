@@ -1,6 +1,6 @@
 <?php
 
-class PWEExhibitorGenerator extends PWECommonFunctions {
+class PWEExhibitorGenerator{
     
     public static $rnd_id;
     public static $fair_colors;
@@ -12,9 +12,10 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
      * Constructor method for initializing the plugin.
      */
     public function __construct() {
+        $pweComonFunction = new PWECommonFunctions;
         self::$rnd_id = rand(10000, 99999);
-        self::$fair_forms = $this->findFormsGF();
-        self::$fair_colors = $this->findPalletColors();
+        self::$fair_forms = $pweComonFunction->findFormsGF('id');
+        self::$fair_colors = $pweComonFunction->findPalletColors();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
 
         foreach(self::$fair_colors as $color_key => $color_value){
@@ -36,48 +37,94 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
      */
     public function initVCMapPWEExhibitorGenerator() { 
 
-            require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-visitor-generator.php';
-            require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-worker-generator.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-visitor-generator.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-worker-generator.php';
       
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
-            vc_map( array(
+            vc_map(array(
                 'name' => __( 'PWE Exhibitor Generator', 'pwe_exhibitor_generator'),
                 'base' => 'pwe_exhibitor_generator',
                 'category' => __( 'PWE Elements', 'pwe_exhibitor_generator'),
-                'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
-                'params' => array_merge(
-                    array( 
-                        array(
-                            'type' => 'dropdown',
-                            'group' => 'PWE Exhibitor Generator',
-                            'heading' => __('Select form mode', 'pwe_exhibitor_generator'),
-                            'param_name' => 'exhibitor_generator_mode',
-                            'save_always' => true,
-                            'value' => array(
-                                'Exhibitor Visitor Generator' => 'PWEExhibitorVisitorGenerator',
-                                'Exhibitor Worker Generator' => 'PWEExhibitorWorkerGenerator',
-                            ),
-                            'std' => 'PWEExhibitorVisitorGenerator',
+                'admin_enqueue_css' => plugin_dir_url(dirname(__DIR__)) . 'backend/backendstyle.css',
+                'class' => 'costam',
+                'params' => array( 
+                    array(
+                        'type' => 'dropdown',
+                        'group' => 'PWE Element',
+                        'heading' => __('Select form', 'pwelement'),
+                        'param_name' => 'generator_form_id',
+                        'save_always' => true,
+                        'value' => array_merge(
+                            array('Wybierz' => ''),
+                            self::$fair_forms,
                         ),
-                        array(
-                            'type' => 'dropdown',
-                            'group' => 'PWE Exhibitor Generator',
-                            'heading' => __('Select form', 'pwe_exhibitor_generator'),
-                            'param_name' => 'exhibitor_generator_form_id',
-                            'save_always' => true,
-                            'value' => array_merge(
-                                array('Wybierz' => ''),
-                                self::$fair_forms,
-                            ),
+                    ),
+                    array(
+                        'type' => 'dropdown',
+                        'group' => 'PWE Element',
+                        'heading' => __('Select form mode', 'pwelement'),
+                        'param_name' => 'exhibitor_generator_mode',
+                        'save_always' => true,
+                        'value' => array(
+                            'Generator gości wystawców' => 'PWEExhibitorVisitorGenerator',
+                            'Generator pracowników wystawców' => 'PWEExhibitorWorkerGenerator',
                         ),
-                        array(
-                            'type' => 'textarea_raw_html',
-                            'group' => 'PWE Exhibitor Generator',
-                            'heading' => __('Footer HTML Text', 'pwe_exhibitor_generator'),
-                            'param_name' => 'exhibitor_generator_html_text',
-                            'param_holder_class' => 'backend-textarea-raw-html',
-                            'save_always' => true,
+                        'std' => 'PWEExhibitorVisitorGenerator',
+                    ),
+                    array(
+                        'type' => 'textarea_raw_html',
+                        'group' => 'PWE Element',
+                        'heading' => __('Footer HTML Text', 'pwelement'),
+                        'param_name' => 'generator_html_text',
+                        'param_holder_class' => 'backend-textarea-raw-html',
+                        'save_always' => true,
+
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'PWE Element',
+                        'heading' => __('Połączeni z Katalogiem wystawców', 'pwelement'),
+                        'param_name' => 'generator_catalog',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'param_group',
+                        'group' => 'PWE Element',
+                        'heading' => __('Personalizowanie Pod wystawce', 'pwelement'),
+                        'description' => __('Dodaj wystawce do grupy i sprawdź na stronie pod parametrem <br> ?wysatwca=...', 'pwelement'),
+                        'param_name' => 'company_edition',
+                        'params' => array(
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('UNIKALNY! token  do adresu url <br> ?wystawca=', 'pwelement'),
+                                'param_name' => 'exhibitor_token',
+                                'save_always' => true,
+                                'admin_label' => true,
+                                'value' => '',
+                            ),
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Header Custom', 'pwelement'),
+                                'param_name' => 'exhibitor_heder',
+                                'save_always' => true,
+                                'admin_label' => true,
+                                'value' => '',
+                            ),
+                            array(
+                                'type' => 'attach_image',
+                                'heading' => __('Logo Wystawcy', 'pwelement'),
+                                'param_name' => 'exhibitor_logo',
+                                'save_always' => true,
+                            ),
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Nazwa Wystawcy', 'pwelement'),
+                                'param_name' => 'exhibitor_name',
+                                'save_always' => true,
+                                'admin_label' => true,
+                                'value' => '',
+                            ),
                         ),
                     ),
                 ),
@@ -117,6 +164,48 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
     }  
 
     /**
+     * Static method to hide specjal input.
+     * Returns form for GF filter.
+     *
+     * @param array @form object
+     */
+    public static function hide_field_by_label( $form, $com_name ) {
+        $label_to_hide = ['FIRMA ZAPRASZAJĄCA', 'FIRMA', 'INVITING COMPANY', 'COMPANY'];
+
+        foreach( $form['fields'] as &$field ) {
+            if( in_array($field->label, $label_to_hide) ) {
+                $field->cssClass .= ' gf_hidden';
+                $field->defaultValue = $com_name;
+            }
+        }
+        return $form;
+    }
+
+    /**
+     * Static method to create data for generator personalization.
+     * Returns data in array format.
+     *
+     * @param array @exhibitor_id string
+     */
+    public static function catalog_data($exhibitor_id) {
+        $katalog_id = do_shortcode('[trade_fair_catalog]');
+        
+        $today = new DateTime();
+        $formattedDate = $today->format('Y-m-d');
+        $token = md5("#22targiexpo22@@@#".$formattedDate);
+        $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id;
+        $json = file_get_contents($canUrl);
+        if ($json !== null){
+            $search_id = $exhibitor_id . '.00';
+            $data_array = json_decode($json, true);
+            $exhibitors_data = reset($data_array)['Wystawcy'];
+            $exhibitor =  $exhibitors_data[$search_id];
+            return  $exhibitor;
+        };
+        return null;
+    }   
+
+    /**
      * Output method for pwe_exhibitor_generator shortcode.
      *
      * @param array $atts Shortcode attributes.
@@ -124,7 +213,6 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
      * @return string
      */
     public function PWEExhibitorGeneratorOutput($atts) {
-
         extract( shortcode_atts( array(
             'exhibitor_generator_mode' => '',
         ), $atts ));
@@ -134,7 +222,7 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
             
             if (class_exists($exhibitor_generator_mode)) {
                 $output_class = new $exhibitor_generator_mode;
-                $output = $output_class->output($atts, $content);
+                $output = $output_class->output($atts);
             } else {
                 // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $exhibitor_generator_mode .' does not exist")</script>';
@@ -157,7 +245,7 @@ class PWEExhibitorGenerator extends PWECommonFunctions {
             ' . $output . '
             <div style="text-align: center; display: flex; justify-content: center;" class="heading-text exhibitor-generator-tech-support">
                 <h3>'.
-                    self::languageChecker(
+                    PWECommonFunctions::languageChecker(
                         <<<PL
                             Potrzebujesz pomocy?<br>
                             Skontaktuj się z nami - <a href="mailto:info@warsawexpo.eu">info@warsawexpo.eu</a>

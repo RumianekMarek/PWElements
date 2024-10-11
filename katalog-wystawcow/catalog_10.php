@@ -13,6 +13,10 @@ class PWECatalog10 extends PWECatalog {
         
         $exhibitors = self::logosChecker($identification, $atts['format']);
 
+        if ($exhibitors === null){
+            return;
+        }
+        
         $output = '';
 
         $output .= '

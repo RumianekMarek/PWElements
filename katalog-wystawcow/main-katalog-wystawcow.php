@@ -392,6 +392,9 @@ class PWECatalog {
 
         $json = file_get_contents($canUrl);
         $data = json_decode($json, true);
+        if ($data === null){
+            return null;
+        }
 
         $basic_wystawcy = reset($data)['Wystawcy'];
         $logos_array = array();
@@ -589,6 +592,14 @@ class PWECatalog {
         $output_html = '';
 
         $exhibitors_top10 = ($identification) ? self::logosChecker($identification, "PWECatalog10") : 0;
+        if ($exhibitors_top10 === null){
+            if (current_user_can('administrator')) {
+                return '<p>Błędny numer katalogu wystawców</p>';
+            } else {
+                return '<style>.row-container:has(.catalog-not-finde-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-finde-' . self::$rnd_id . '"></div>';
+            }
+        }
+
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
             if (isset($_SERVER['argv'][0])) {
                 $source_utm = $_SERVER['argv'][0];

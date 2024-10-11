@@ -13,11 +13,15 @@ class PWECatalog7 extends PWECatalog {
         
         $exhibitors = self::logosChecker($identification, $atts['format']);
 
-        $output = '';
+        if ($exhibitors === null){
+            return;
+        }
+        $atts_title = isset($atts['title']) ? $atts['title'] : '';
+        $output = '';   
 
         $output .= '
             <div id="recently7" class="custom-catalog main-heading-text">
-                <h2 class="catalog-custom-title pwe-text-color" style="width: fit-content;">'.self::checkTitle($atts['title'], $atts['format']).'</h2>
+                <h2 class="catalog-custom-title pwe-text-color" style="width: fit-content;">'.self::checkTitle($atts_title, $atts['format']).'</h2>
                 <div class="img-container-recently7">';
                     if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )){
                         $slider_array = array();

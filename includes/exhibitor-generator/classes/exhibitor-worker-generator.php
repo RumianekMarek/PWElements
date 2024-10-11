@@ -22,7 +22,7 @@ class PWEExhibitorWorkerGenerator extends PWEExhibitorGenerator {
     public static function output($atts) {
 
         extract( shortcode_atts( array(
-            'exhibitor_generator_form_id' => '',
+            'generator_form_id' => '',
             'exhibitor_generator_html_text' => '',
         ), $atts ));
 
@@ -36,16 +36,16 @@ class PWEExhibitorWorkerGenerator extends PWEExhibitorGenerator {
             <div class="exhibitor-generator__wrapper">
                 <div class="exhibitor-generator__left">
                     <div class="exhibitor-generator__left-wrapper">
-                        <h3>' . self::languageChecker('WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>
+                        <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>
                     </div>
                 </div>
                 <div class="exhibitor-generator__right">
                     <div class="exhibitor-generator__right-wrapper">
                         <div class="exhibitor-generator__right-title">
-                            <h3>' . self::languageChecker('WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>
+                            <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ<br>IDENTYFIKATOR DLA<br>SIEBIE I OBSŁUGI STOISKA', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>
                         </div>
                         <div class="exhibitor-generator__right-form">
-                            [gravityform id="'. $exhibitor_generator_form_id .'" title="false" description="false" ajax="false"]
+                            [gravityform id="'. $generator_form_id .'" title="false" description="false" ajax="false"]
                         </div>';
                         if (!empty($generator_html_text_content)) {
                             $output .= '<div class="exhibitor-generator__right-text">' . $generator_html_text_content . '</div>';

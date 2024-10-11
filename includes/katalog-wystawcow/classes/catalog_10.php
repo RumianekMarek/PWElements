@@ -11,7 +11,10 @@ class PWECatalog10 extends PWECatalog {
 
     public static function output($atts, $identification) {
         
-        $exhibitors = self::logosChecker($identification, $atts['format']);
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format']);
+        if ($exhibitors === null){
+            return;
+        }
 
         $output = '';
 
@@ -115,7 +118,7 @@ class PWECatalog10 extends PWECatalog {
             $output .= '
             <div class="top10-text-container">
                 <p class="top10-text">'. 
-                    self::languageChecker(
+                    PWECommonFunctions::languageChecker(
                         <<<PL
                             Po wypełnieniu formularza zostaniesz przekierowany do kroku 2, gdzie otrzymasz dodatkowe informacje dotyczące uczestnictwa w targach.
                         PL,
@@ -156,9 +159,9 @@ class PWECatalog10 extends PWECatalog {
                 </div>';
             } else {
                 $output .= '
-                <h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['katalog_year'], $atts['format']).'</h2>
+                <h2 class="catalog-custom-title" style="width: fit-content;">'.CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']).'</h2>
                 <div class="img-container-top10">';
-                    if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )) {
+                    if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )) {
                         $slider_array = array();
                         foreach($exhibitors as $exhibitor){
                             $slider_array[] = array(
@@ -171,7 +174,7 @@ class PWECatalog10 extends PWECatalog {
                             "element_id" => self::$rnd_id,
                             "logotypes_dots_off" => $atts["slider_dots_off"]  
                         );                           
-                        require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
+                        require_once plugin_dir_path(dirname(dirname(dirname( __FILE__ )))) . 'scripts/logotypes-slider.php';
                         $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
     
                     } else { 

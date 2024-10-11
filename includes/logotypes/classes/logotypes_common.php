@@ -106,7 +106,7 @@ class PWElementAdditionalLogotypes {
 
     public static function additionalOutput($atts, $el_id, $logotypes = null) {
 
-        include_once plugin_dir_path(__FILE__) . '/../scripts/logotypes-slider.php';
+        include_once plugin_dir_path(dirname(dirname(__DIR__))) . 'scripts/logotypes-slider.php';
 
         extract( shortcode_atts( array(
             'logotypes_media' => '',

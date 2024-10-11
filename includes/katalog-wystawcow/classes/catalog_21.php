@@ -10,7 +10,12 @@ class PWECatalog21 extends PWECatalog {
     }
 
     public static function output($atts, $identification) {
-        $exhibitors = self::logosChecker($identification, $atts['format']);
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format']);
+
+        if ($exhibitors === null){
+            return;
+        }
+
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         $output = '';
 
@@ -30,11 +35,11 @@ class PWECatalog21 extends PWECatalog {
             
             
             if (!$mobile){
-                $output .= '<h2 class="catalog-custom-title" style="width: fit-content;">'.self::checkTitle($atts['katalog_year'], $atts['format']).'</h2>';
+                $output .= '<h2 class="catalog-custom-title" style="width: fit-content;">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']).'</h2>';
             }
             $output .= '
                 <div class="img-container-top21">';                
-                    if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )){
+                    if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )){
                         $slider_array = array();
                         foreach($exhibitors as $exhibitor){
                             $slider_array[] = array(
@@ -47,7 +52,8 @@ class PWECatalog21 extends PWECatalog {
                             "element_id" => self::$rnd_id,
                             "logotypes_dots_off" => $atts["slider_dots_off"]  
                         );                   
-                        require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
+                              
+                        require_once plugin_dir_path(dirname(dirname(dirname( __FILE__ )))) . 'scripts/logotypes-slider.php';
                         $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
 
                     } else {    
@@ -64,7 +70,7 @@ class PWECatalog21 extends PWECatalog {
                 </div>
                 <div>
                     <span style="display: flex; justify-content: center;" class="btn-container">'.
-                        self::languageChecker(
+                      PWECommonFunctions::languageChecker(
                             <<<PL
                                 <a href="/katalog-wystawcow/" class="custom-link btn border-width-0 btn-accent" title="Katalog wystawców">Katalog wystawców</a>
                             PL,

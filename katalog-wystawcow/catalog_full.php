@@ -31,6 +31,10 @@ class PWECatalogFull extends PWECatalog {
 
         $exhibitors = self::logosChecker($identification, $atts['format']);
 
+        if ($exhibitors === null){
+            return;
+        }
+
         $output = '';
 
         $bg_link = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/background.webp') ? '/doc/background.webp' : '/doc/background.jpg';

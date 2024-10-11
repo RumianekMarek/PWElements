@@ -11,6 +11,11 @@ class PWECatalog21 extends PWECatalog {
 
     public static function output($atts, $identification) {
         $exhibitors = self::logosChecker($identification, $atts['format']);
+
+        if ($exhibitors === null){
+            return;
+        }
+        
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         $output = '';
 

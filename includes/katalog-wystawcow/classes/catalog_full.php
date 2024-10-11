@@ -18,18 +18,21 @@ class PWECatalogFull extends PWECatalog {
     public static function output($atts, $identification) {
         $stand = isset($atts['stand']) ? $atts['stand'] : false;
 
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
-        $text_shadow = self::findColor($atts['text_shadow_color_manual_hidden'], $atts['text_shadow_color'], 'black') . '!important';
-        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
-        $btn_shadow_color = self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
-        $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
+        $text_color = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+        $text_shadow = PWECommonFunctions::findColor($atts['text_shadow_color_manual_hidden'], $atts['text_shadow_color'], 'black') . '!important';
+        $btn_text_color = PWECommonFunctions::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
+        $btn_color = PWECommonFunctions::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
+        $btn_shadow_color = PWECommonFunctions::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black');
+        $btn_border = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
 
         $divContainerExhibitors = '';
         
-        $darker_btn_color = self::adjustBrightness($btn_color, -20);
+        $darker_btn_color = PWECommonFunctions::adjustBrightness($btn_color, -20);
 
-        $exhibitors = self::logosChecker($identification, $atts['format']);
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format']);
+        if ($exhibitors === null){
+            return;
+        }
 
         $output = '';
 
@@ -81,9 +84,9 @@ class PWECatalogFull extends PWECatalog {
                 <div class="exhibitors">
                     <div class="exhibitor__header" style="background-image: url(&quot;'. $bg_link .'&quot;);">
                         <div>
-                            <h1 class="pwe-text-color fontsize-">'. self::checkTitle($atts['katalog_year'], $atts['format']) .'</h1>
+                            <h1 class="pwe-text-color fontsize-">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']) .'</h1>
                             <h2 class="pwe-text-color">'.
-                                self::languageChecker(
+                                PWECommonFunctions::languageChecker(
                                     <<<PL
                                         [trade_fair_name]
                                     PL,
@@ -94,7 +97,7 @@ class PWECatalogFull extends PWECatalog {
                             .'</h2>
                         </div>
                         <input id="search" placeholder="'.
-                            self::languageChecker(
+                            PWECommonFunctions::languageChecker(
                                 <<<PL
                                 Szukaj
                                 PL,
@@ -145,7 +148,6 @@ class PWECatalogFull extends PWECatalog {
                             }
                         }
                     }
-                    echo '<script>console.log("'.get_locale().'")</script>';
                     
                     if (get_locale() == 'pl_PL'){
                         $menu_3_data = wp_get_nav_menu_items($menu_3_pl);

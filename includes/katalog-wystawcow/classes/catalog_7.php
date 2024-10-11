@@ -12,14 +12,17 @@ class PWECatalog7 extends PWECatalog {
     public static function output($atts, $identification) {
         
         $exhibitors = self::logosChecker($identification, $atts['format']);
+        if ($exhibitors === null){
+            return;
+        }
 
         $output = '';
 
         $output .= '
             <div id="recently7" class="custom-catalog main-heading-text">
-                <h2 class="catalog-custom-title pwe-text-color" style="width: fit-content;">'.self::checkTitle($atts['title'], $atts['format']).'</h2>
+                <h2 class="catalog-custom-title pwe-text-color" style="width: fit-content;">'.CatalogFunctions::checkTitle($atts['title'], $atts['format']).'</h2>
                 <div class="img-container-recently7">';
-                    if (($atts["slider_desktop"] == 'true' && self::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && self::checkForMobile() == '1' )){
+                    if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )){
                         $slider_array = array();
                         foreach($exhibitors as $exhibitor){
                             $slider_array[] = array(
@@ -31,8 +34,8 @@ class PWECatalog7 extends PWECatalog {
                         $images_options[] = array(
                             "element_id" => self::$rnd_id,
                             "logotypes_dots_off" => $atts["slider_dots_off"]  
-                        );                 
-                        require_once plugin_dir_path(dirname( __FILE__ )) . 'scripts/logotypes-slider.php';
+                        );
+                        require_once plugin_dir_path(dirname(dirname(dirname( __FILE__ )))) . 'scripts/logotypes-slider.php';
                         $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
                     } else { 
                         foreach ($exhibitors as $exhibitor){
@@ -47,7 +50,7 @@ class PWECatalog7 extends PWECatalog {
                 </div>
                 <div>
                     <span style="display: flex; justify-content: center;" class="btn-container">'.
-                        self::languageChecker(
+                        PWECommonFunctions::languageChecker(
                             <<<PL
                                 <a href="/katalog-wystawcow" class="custom-link btn border-width-0 btn-accent btn-square shadow-black" title="Katalog wystawców">Zobacz więcej</a>
                             PL,

@@ -1,6 +1,6 @@
 <?php
 
-class PWECatalog1 {
+class PWECatalog {
     public static $rnd_id;
     public static $fair_colors;
     public static $accent_color;
@@ -25,7 +25,7 @@ class PWECatalog1 {
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
 
-        add_shortcode('pwe_katalog1', array($this, 'PWECatalogOutput'));
+        add_shortcode('pwe_katalog', array($this, 'PWECatalogOutput'));
     }
     
     public function catalogFunctions() {
@@ -53,7 +53,7 @@ class PWECatalog1 {
 
 
     /**
-     * Output method for pwe_katalog1 shortcode.
+     * Output method for pwe_katalog shortcode.
      *
      * @param array $atts Shortcode attributes.
      * @param string $content Shortcode content.
@@ -65,7 +65,7 @@ class PWECatalog1 {
         $btn_shadow_color = PWECommonFunctions::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important';
         $btn_border = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
 
-        // pwe_katalog1 output
+        // pwe_katalog output
         extract( shortcode_atts( array(
             'format' => '',
         ), $atts ));
@@ -92,7 +92,7 @@ class PWECatalog1 {
             $identification = do_shortcode('[trade_fair_catalog]');
         }
         $catalog_format = CatalogFunctions::findClassElements()[$format];
-
+        
         if ($catalog_format){
             require_once plugin_dir_path(__FILE__) . $catalog_format;
             
@@ -100,7 +100,6 @@ class PWECatalog1 {
                 $output_class = new $format;
                 $output = $output_class->output($atts, $identification, $content);
             } else {
-                // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $format .' or ID , does not exist")</script>';
                 $output = '';
             }
@@ -111,6 +110,14 @@ class PWECatalog1 {
         $output_html = '';
 
         $exhibitors_top10 = ($identification) ? CatalogFunctions::logosChecker($identification, "PWECatalog10") : 0;
+        if ($exhibitors_top10 === null){
+            if (current_user_can('administrator')) {
+                return '<p>Błędny numer katalogu wystawców</p>';
+            } else {
+                return '<style>.row-container:has(.catalog-not-finde-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-finde-' . self::$rnd_id . '"></div>';
+            }
+        }
+        
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
             if (isset($_SERVER['argv'][0])) {
                 $source_utm = $_SERVER['argv'][0];

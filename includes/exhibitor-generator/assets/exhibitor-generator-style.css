@@ -32,6 +32,9 @@
     background: #EBEBEB;
     border-radius: 0 20px 20px 0;
 }
+.exhibitor-generator__right-title {
+    text-align: center;
+}
 .exhibitor-generator__right-wrapper {
     display: flex;
     flex-direction: column;

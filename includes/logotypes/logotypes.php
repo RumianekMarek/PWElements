@@ -19,8 +19,7 @@ class PWELogotypes extends PWECommonFunctions {
             }
         }
 
-        require_once plugin_dir_path(__FILE__) . '/../logotypes/logotypes-additional.php';
-        
+        require_once plugin_dir_path(__FILE__) . 'classes/logotypes_common.php';
         
          // Hook actions
         add_action('init', array($this, 'initVCMapLogotypes'));
@@ -37,8 +36,8 @@ class PWELogotypes extends PWECommonFunctions {
                 'name' => __('PWE Logotypes', 'pwe_logotypes'),
                 'base' => 'pwe_logotypes',
                 'category' => __('PWE Elements', 'pwe_logotypes'),
-                'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
-                'admin_enqueue_js' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendscript.js',
+                'admin_enqueue_css' => plugin_dir_url(dirname( __DIR__ )) . 'backend/backendstyle.css',
+                'admin_enqueue_js' => plugin_dir_url(dirname( __DIR__ )) . 'backend/backendscript.js',
                 'params' => array_merge(
                     array(
                         // colors setup
@@ -241,7 +240,7 @@ class PWELogotypes extends PWECommonFunctions {
      */
     public function PWELogotypesOutput($atts, $content = null) {
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
-        
+
         extract( shortcode_atts( array(
             'pwe_replace' => '',
         ), $atts ));
