@@ -136,29 +136,6 @@ class PWElementPosts extends PWElements {
         return $element_output;
     }
 
-    // public static function get_custom_excerpt($post_id, $word_count = 10) {
-    //     // Pobierz zawartość posta
-    //     $post_content = get_post_field('post_content', $post_id);
-    
-    //     // Usuń shortcode'y i HTML
-    //     $post_content = strip_shortcodes($post_content);
-    //     $post_content = wp_strip_all_tags($post_content);
-    
-    //     // Podziel treść na słowa
-    //     $words = explode(' ', $post_content);
-    
-    //     // Wyodrębnij pierwsze $word_count słów
-    //     $excerpt = array_slice($words, 0, $word_count);
-    
-    //     // Połącz słowa w jeden ciąg znaków
-    //     $excerpt = implode(' ', $excerpt);
-    
-    //     // Dodaj wielokropek na końcu
-    //     $excerpt .= '...';
-    
-    //     return $excerpt;
-    // }
-
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -208,28 +185,28 @@ class PWElementPosts extends PWElements {
         
         $output = '';
         $output .= '
-            <style>
-                .pwelement_'.self::$rnd_id.' .pwe-btn {
-                    color: '. $btn_text_color .';
-                    background-color:'. $btn_color .';
-                    border:'. $btn_color .';
-                }
-                .pwelement_'.self::$rnd_id.' .pwe-btn:hover {
-                    color: '. $btn_text_color .';
-                    background-color:'. $darker_btn_color .' !important;
-                    border:'. $darker_btn_color .' !important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
-                    width: 100%;
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center;
-                    aspect-ratio: '. $posts_ratio .';
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-post-title {
-                    text-align: left;
-                }
-            </style>';
+        <style>
+            .pwelement_'.self::$rnd_id.' .pwe-btn {
+                color: '. $btn_text_color .';
+                background-color:'. $btn_color .';
+                border:'. $btn_color .';
+            }
+            .pwelement_'.self::$rnd_id.' .pwe-btn:hover {
+                color: '. $btn_text_color .';
+                background-color:'. $darker_btn_color .' !important;
+                border:'. $darker_btn_color .' !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
+                width: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                aspect-ratio: '. $posts_ratio .';
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-post-title {
+                text-align: left;
+            }
+        </style>';
 
         if ($posts_modes == "posts_slider_mode") {
             
@@ -439,49 +416,34 @@ class PWElementPosts extends PWElements {
                         
             <div class="pwe-posts-wrapper">'; 
 
-            if ($posts_modes == "posts_slider_mode") {
+                if ($posts_modes == "posts_slider_mode") {
 
-                $posts_count = ($posts_count == "") ? 5 : $posts_count;
+                    $posts_count = ($posts_count == "") ? 5 : $posts_count;
+                
+                    $output .= '
+                    <div class="pwe-posts-title main-heading-text">
+                        <h4 class="pwe-uppercase"><span>' . $posts_title . '</span></h4>
+                    </div>  
+                    <div class="pwe-posts">';
             
-                $output .= '
-                <div class="pwe-posts-title main-heading-text">
-                    <h4 class="pwe-uppercase"><span>' . $posts_title . '</span></h4>
-                </div>  
-                <div class="pwe-posts">';
-        
-                if (strlen($trade_end) <= 10) { // Assuming the date format is 'Y/m/d'
-                    $trade_end .= ' 17:00'; // Adding '17:00' to the date
-                }
-                $trade_end_date = DateTime::createFromFormat('Y/m/d H:i', $trade_end);
-                $now = new DateTime();
-        
-                if ($trade_end_date !== false) {
-                    // Getting the year from the end date of the fair
-                    $trade_end_year = $trade_end_date->format('Y');
-        
-                    // Create a category name with the "news-" prefix and the year
-                    $category_year = 'news-' . $trade_end_year;
+                    $all_categories = get_categories(array('hide_empty' => true));
 
-                    // Check if `$posts category` is set and not empty
                     if (!empty($posts_category) && term_exists($posts_category, 'category')) {
                         // We only use categories from `$posts category`
-                        $categories = $posts_category;
+                        $category_name = $posts_category;
                     } else {
-                        // Create an array for categories
-                        $categories_array = [];
-                        // Add a categories to the array, if it's exists
-                        if (term_exists($category_year, 'category')) {
-                            // Check if a category with the "news-" prefix and year exists
-                            array_push($categories_array, $category_year);
-                        }
-                        if (term_exists("current", 'category')) {
-                            // Check if category "current" exists
-                            array_push($categories_array, "current");
+                        $category_names = array();
+
+                        foreach ($all_categories as $category) {
+                            // Checks if the category name contains the word 'news'
+                            if (strpos(strtolower($category->name), 'news') !== false) {
+                                // Use slug instead of category name
+                                $category_names[] = $category->slug; 
+                            }
                         }
 
-                        // Transform the category array into a string
-                        $categories = implode(',', $categories_array);
-                    }
+                        $category_name = implode(', ', $category_names); 
+                    }  
         
                     $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
         
@@ -490,7 +452,7 @@ class PWElementPosts extends PWElements {
                         'orderby' => 'date',
                         'order' => 'DESC',
                         'post_status' => 'publish',
-                        'category_name' => $categories,
+                        'category_name' => $category_name,
                     );
 
                     $query = new WP_Query($args);
@@ -518,167 +480,164 @@ class PWElementPosts extends PWElements {
                     include_once plugin_dir_path(__FILE__) . '/../scripts/posts-slider.php';
                     $output .= PWEPostsSlider::sliderOutput($post_image_urls);
 
-                } else {
-                    echo 'Błąd: Nieprawidłowy format daty.';
-                    return;
-                }
-        
-                $output .= '</div>';
-                if ($posts_btn !== "true") {
-                    $output .= '
-                    <div class="pwe-btn-container" style="padding-top: 18px;">
-                        <span>
-                            <a class="pwe-link btn pwe-btn" href="'. $posts_link .'">'. $posts_text .'</a>
-                        </span>
-                    </div>';
-                }
-            } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode" || $posts_modes == "posts_full_newest_slider_mode") {
+            
+                    $output .= '</div>';
+                    if ($posts_btn !== "true") {
+                        $output .= '
+                        <div class="pwe-btn-container" style="padding-top: 18px;">
+                            <span>
+                                <a class="pwe-link btn pwe-btn" href="'. $posts_link .'">'. $posts_text .'</a>
+                            </span>
+                        </div>';
+                    }
+                } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode" || $posts_modes == "posts_full_newest_slider_mode") {
 
-                $output .= '<div class="pwe-posts">';
+                    $output .= '<div class="pwe-posts">';
 
-                if ($posts_modes == "posts_full_mode") {
-                    $posts_count = ($posts_count == "") ? 18 : $posts_count;
-                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
-                } else if ($posts_modes == "posts_full_newest_mode") {
-                    $posts_count = ($posts_count == "") ? 6 : $posts_count;
-                    $max_posts = $posts_count;
-                } else if ($posts_modes == "posts_full_newest_slider_mode") {
-                    $posts_count = ($posts_count == "") ? 10 : $posts_count;
-                    $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;  
-                }
-
-                $all_categories = get_categories(array('hide_empty' => true));
-
-                if (!empty($posts_category) && term_exists($posts_category, 'category')) {
-                    // We only use categories from `$posts category`
-                    $category_name = $posts_category;
-                } else {
-                    $category_names = array();
-
-                    foreach ($all_categories as $category) {
-                        // Checks if the category name contains the word 'news'
-                        if (strpos(strtolower($category->name), 'news') !== false) {
-                            // Use slug instead of category name
-                            $category_names[] = $category->slug; 
-                        }
+                    if ($posts_modes == "posts_full_mode") {
+                        $posts_count = ($posts_count == "") ? 18 : $posts_count;
+                        $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
+                    } else if ($posts_modes == "posts_full_newest_mode") {
+                        $posts_count = ($posts_count == "") ? 6 : $posts_count;
+                        $max_posts = $posts_count;
+                    } else if ($posts_modes == "posts_full_newest_slider_mode") {
+                        $posts_count = ($posts_count == "") ? 10 : $posts_count;
+                        $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;  
                     }
 
-                    $category_name = implode(', ', $category_names); 
-                }      
+                    $all_categories = get_categories(array('hide_empty' => true));
 
-                $args = array(
-                    'posts_per_page' => $max_posts,
-                    'orderby' => 'date',
-                    'order' => 'DESC',
-                    'post_status' => 'publish',
-                    'category_name' => $category_name
-                );
+                    if (!empty($posts_category) && term_exists($posts_category, 'category')) {
+                        // We only use categories from `$posts category`
+                        $category_name = $posts_category;
+                    } else {
+                        $category_names = array();
 
-                $query = new WP_Query($args);
-                
-                $posts_displayed = $query->post_count;
-
-                $post_image_urls = array();
-                if ($query->have_posts()) {
-                    while ($query->have_posts()) : $query->the_post();
-                        $post_id = get_the_ID();
-                        $word_count = 10;
-
-                        // Get post content
-                        $post_content = get_post_field('post_content', $post_id);
-                
-                        // Extract content inside [vc_column_text] shortcode
-                        preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches);
-                        $vc_content = isset($matches[1]) ? $matches[1] : '';
-                
-                        // Remove HTML
-                        $vc_content = wp_strip_all_tags($vc_content);
-                
-                        // Check if the content is not empty
-                        if (!empty($vc_content)) {
-                            // Split content into words
-                            $words = explode(' ', $vc_content);
-                
-                            // Extract the first $word_count words
-                            $excerpt = array_slice($words, 0, $word_count);
-                
-                            // Combine words into one string
-                            $excerpt = implode(' ', $excerpt);
-                
-                            // Add an ellipsis at the end
-                            $excerpt .= '...';
-                        } else {
-                            $excerpt = '';
-                        }
-                
-                        $link = get_permalink();
-                        $image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '';
-                        $title = get_the_title();
-                        $date = get_the_date('Y-m-d'); // Get date in YYYY-MM-DD format
-
-                        $title_words = explode(' ', $title);
-                        if (count($title_words) > 8) {
-                            $title = implode(' ', array_slice($title_words, 0, 8)) . '...';
-                        }
-
-                        // Format the date
-                        $date_obj = new DateTime($date);
-                        $formatted_date = $date_obj->format('d M'); // Format as DD Mmm
-                        
-                        if (get_locale() == 'pl_PL') {
-                            // Convert month abbreviations to Polish
-                            $formatted_date = str_replace(
-                                array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'),
-                                array('sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'),
-                                $formatted_date
-                            );
-                        }
-                
-                        if ($posts_modes == "posts_full_newest_slider_mode") {
-                            $post_image_urls[] = array(
-                                "img" => $image,
-                                "link" => $link,
-                                "title" => $title,
-                                "excerpt" => $excerpt,
-                                "date" => $formatted_date
-                            );
-                        } else {
-                            if (!empty($image)) {
-                                $output .= '
-                                <a class="pwe-post" href="'. $link .'">
-                                    <div class="pwe-post-thumbnail">
-                                        <div class="image-container" style="background-image:url('. $image .');"></div>
-                                        <p class="pwe-post-date">'. $formatted_date .'</p>
-                                    </div> 
-                                    <h5 class="pwe-post-title">'. $title .'</h5>
-                                    <p class="pwe-post-excerpt">'. $excerpt .'</p>
-                                    <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
-                                </a>';
+                        foreach ($all_categories as $category) {
+                            // Checks if the category name contains the word 'news'
+                            if (strpos(strtolower($category->name), 'news') !== false) {
+                                // Use slug instead of category name
+                                $category_names[] = $category->slug; 
                             }
                         }
-                
-                    endwhile;
+
+                        $category_name = implode(', ', $category_names); 
+                    }      
+
+                    $args = array(
+                        'posts_per_page' => $max_posts,
+                        'orderby' => 'date',
+                        'order' => 'DESC',
+                        'post_status' => 'publish',
+                        'category_name' => $category_name
+                    );
+
+                    $query = new WP_Query($args);
+                    
+                    $posts_displayed = $query->post_count;
+
+                    $post_image_urls = array();
+                    if ($query->have_posts()) {
+                        while ($query->have_posts()) : $query->the_post();
+                            $post_id = get_the_ID();
+                            $word_count = 10;
+
+                            // Get post content
+                            $post_content = get_post_field('post_content', $post_id);
+                    
+                            // Extract content inside [vc_column_text] shortcode
+                            preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches);
+                            $vc_content = isset($matches[1]) ? $matches[1] : '';
+                    
+                            // Remove HTML
+                            $vc_content = wp_strip_all_tags($vc_content);
+                    
+                            // Check if the content is not empty
+                            if (!empty($vc_content)) {
+                                // Split content into words
+                                $words = explode(' ', $vc_content);
+                    
+                                // Extract the first $word_count words
+                                $excerpt = array_slice($words, 0, $word_count);
+                    
+                                // Combine words into one string
+                                $excerpt = implode(' ', $excerpt);
+                    
+                                // Add an ellipsis at the end
+                                $excerpt .= '...';
+                            } else {
+                                $excerpt = '';
+                            }
+                    
+                            $link = get_permalink();
+                            $image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '';
+                            $title = get_the_title();
+                            $date = get_the_date('Y-m-d'); // Get date in YYYY-MM-DD format
+
+                            $title_words = explode(' ', $title);
+                            if (count($title_words) > 8) {
+                                $title = implode(' ', array_slice($title_words, 0, 8)) . '...';
+                            }
+
+                            // Format the date
+                            $date_obj = new DateTime($date);
+                            $formatted_date = $date_obj->format('d M'); // Format as DD Mmm
+                            
+                            if (get_locale() == 'pl_PL') {
+                                // Convert month abbreviations to Polish
+                                $formatted_date = str_replace(
+                                    array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'),
+                                    array('sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'),
+                                    $formatted_date
+                                );
+                            }
+                    
+                            if ($posts_modes == "posts_full_newest_slider_mode") {
+                                $post_image_urls[] = array(
+                                    "img" => $image,
+                                    "link" => $link,
+                                    "title" => $title,
+                                    "excerpt" => $excerpt,
+                                    "date" => $formatted_date
+                                );
+                            } else {
+                                if (!empty($image)) {
+                                    $output .= '
+                                    <a class="pwe-post" href="'. $link .'">
+                                        <div class="pwe-post-thumbnail">
+                                            <div class="image-container" style="background-image:url('. $image .');"></div>
+                                            <p class="pwe-post-date">'. $formatted_date .'</p>
+                                        </div> 
+                                        <h5 class="pwe-post-title">'. $title .'</h5>
+                                        <p class="pwe-post-excerpt">'. $excerpt .'</p>
+                                        <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
+                                    </a>';
+                                }
+                            }
+                    
+                        endwhile;
+                    }
+                    
+                    wp_reset_postdata();
+
+                    if ($posts_modes == "posts_full_newest_slider_mode") {
+                        include_once plugin_dir_path(__FILE__) . '/../scripts/posts-slider.php';
+                        $output .= PWEPostsSlider::sliderOutput($post_image_urls, 3000, $full_mode = 'true');
+                    }
+
+                    $output .= '</div>';
+
+                    if ($posts_modes == "posts_full_mode" && $posts_displayed == 18) {
+                        $output .= '
+                        <div class="load-more-btn-container">
+                            <button id="load-more-posts" class="pwe-btn" data-offset="18">' . self::languageChecker('Załaduj więcej','Load more') . '</button>
+                        </div>';
+                    }
+                    
                 }
                 
-                wp_reset_postdata();
-
-                if ($posts_modes == "posts_full_newest_slider_mode") {
-                    include_once plugin_dir_path(__FILE__) . '/../scripts/posts-slider.php';
-                    $output .= PWEPostsSlider::sliderOutput($post_image_urls, 3000, $full_mode = 'true');
-                }
-
-                $output .= '</div>';
-
-                if ($posts_modes == "posts_full_mode" && $posts_displayed == 18) {
-                    $output .= '
-                    <div class="load-more-btn-container">
-                        <button id="load-more-posts" class="pwe-btn" data-offset="18">' . self::languageChecker('Załaduj więcej','Load more') . '</button>
-                    </div>';
-                }
-                
-            }
-                
-            $output .= '</div>
+            $output .= '
+            </div>
                         
         </div>';
         

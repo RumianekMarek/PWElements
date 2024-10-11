@@ -1,7 +1,6 @@
 <?php
 
 class PWEHeader extends PWECommonFunctions {
-    public static $rnd_id;
     public static $fair_colors;
     public static $accent_color;
     public static $main2_color;
@@ -261,19 +260,6 @@ class PWEHeader extends PWECommonFunctions {
                                 'element' => 'pwe_header_modes',
                                 'value' => array(
                                     'simple_mode'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Options',
-                            'heading' => __('You tube video link', 'pwe_header'),
-                            'param_name' => 'pwe_header_videos',
-                            'save_always' => true,
-                            'dependency' => array(
-                                'element' => 'pwe_header_modes',
-                                'value' => array(
-                                    'video_mode'
                                 ),
                             ),
                         ),
@@ -567,87 +553,91 @@ class PWEHeader extends PWECommonFunctions {
                                     'save_always' => true
                                 ),
                             ),
-                        ),
-                        array(
-                            'type' => 'checkbox',
-                            'group' => 'Congress widget',
-                            'heading' => __('Turn off widget', 'pwe_header'),
-                            'param_name' => 'pwe_congress_widget_off',
-                            'save_always' => true,
-                            'value' => array(__('True', 'pwe_header') => 'true',),
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Title widget', 'pwe_header'),
-                            'description' => __('Default (Konferencje - PL), (Conference - EN)', 'pwe_header'),
-                            'param_holder_class' => 'backend-area-one-fourth-width',
-                            'param_name' => 'pwe_congress_widget_title',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Button text', 'pwe_header'),
-                            'description' => __('Default (WEŹ UDZIAŁ - PL), (TAKE PART - EN)', 'pwe_header'),
-                            'param_holder_class' => 'backend-area-one-fourth-width',
-                            'param_name' => 'pwe_congress_widget_button',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Button link', 'pwe_header'),
-                            'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwe_header'),
-                            'param_holder_class' => 'backend-area-one-fourth-width',
-                            'param_name' => 'pwe_congress_widget_button_link',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'textfield',
-                            'group' => 'Congress widget',
-                            'heading' => __('Buttons width', 'pwe_header'),
-                            'description' => __('Default 200px', 'pwe_header'),
-                            'param_holder_class' => 'backend-area-one-fourth-width',
-                            'param_name' => 'pwe_congress_widget_buttons_width',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'colorpicker',
-                            'group' => 'Congress widget',
-                            'heading' => __('Congress accent color', 'pwe_header'),
-                            'param_holder_class' => 'backend-area-one-fourth-width',
-                            'param_name' => 'pwe_congress_widget_color',
-                            'save_always' => true,
-                        ),
-                        array(
-                            'type' => 'param_group',
-                            'group' => 'Congress widget',
-                            'heading' => __('Congress items', 'pwe_header'),
-                            'param_name' => 'pwe_congress_widget_items',
-                            'params' => array(
-                                array(
-                                    'type' => 'attach_image',
-                                    'heading' => __('Congress image', 'pwe_header'),
-                                    'param_name' => 'congress_item_image',
-                                    'save_always' => true,
-                                ),
-                                array(
-                                    'type' => 'textfield',
-                                    'heading' => __('Congress link', 'pwe_header'),
-                                    'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwe_header'),
-                                    'param_name' => 'congress_item_link',
-                                    'save_always' => true,
-                                ),
-                                array(
-                                    'type' => 'textfield',
-                                    'heading' => __('Caption text', 'pwe_header'),
-                                    'description' => __('Default (Dowiedz się więcej - PL), (Find out more - EN)', 'pwe_header'),
-                                    'param_name' => 'congress_item_caption',
-                                    'save_always' => true,
-                                ),
+                            'dependency' => array(
+                                'element' => 'pwe_header_modes',
+                                'value' => array(''),
                             ),
                         ),
+                        // array(
+                        //     'type' => 'checkbox',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Turn off widget', 'pwe_header'),
+                        //     'param_name' => 'pwe_congress_widget_off',
+                        //     'save_always' => true,
+                        //     'value' => array(__('True', 'pwe_header') => 'true',),
+                        // ),
+                        // array(
+                        //     'type' => 'textfield',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Title widget', 'pwe_header'),
+                        //     'description' => __('Default (Konferencje - PL), (Conference - EN)', 'pwe_header'),
+                        //     'param_holder_class' => 'backend-area-one-fourth-width',
+                        //     'param_name' => 'pwe_congress_widget_title',
+                        //     'save_always' => true,
+                        // ),
+                        // array(
+                        //     'type' => 'textfield',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Button text', 'pwe_header'),
+                        //     'description' => __('Default (WEŹ UDZIAŁ - PL), (TAKE PART - EN)', 'pwe_header'),
+                        //     'param_holder_class' => 'backend-area-one-fourth-width',
+                        //     'param_name' => 'pwe_congress_widget_button',
+                        //     'save_always' => true,
+                        // ),
+                        // array(
+                        //     'type' => 'textfield',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Button link', 'pwe_header'),
+                        //     'description' => __('Default (/rejestracja/ - PL), (/en/registration/ - EN)', 'pwe_header'),
+                        //     'param_holder_class' => 'backend-area-one-fourth-width',
+                        //     'param_name' => 'pwe_congress_widget_button_link',
+                        //     'save_always' => true,
+                        // ),
+                        // array(
+                        //     'type' => 'textfield',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Buttons width', 'pwe_header'),
+                        //     'description' => __('Default 200px', 'pwe_header'),
+                        //     'param_holder_class' => 'backend-area-one-fourth-width',
+                        //     'param_name' => 'pwe_congress_widget_buttons_width',
+                        //     'save_always' => true,
+                        // ),
+                        // array(
+                        //     'type' => 'colorpicker',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Congress accent color', 'pwe_header'),
+                        //     'param_holder_class' => 'backend-area-one-fourth-width',
+                        //     'param_name' => 'pwe_congress_widget_color',
+                        //     'save_always' => true,
+                        // ),
+                        // array(
+                        //     'type' => 'param_group',
+                        //     'group' => 'Congress widget',
+                        //     'heading' => __('Congress items', 'pwe_header'),
+                        //     'param_name' => 'pwe_congress_widget_items',
+                        //     'params' => array(
+                        //         array(
+                        //             'type' => 'attach_image',
+                        //             'heading' => __('Congress image', 'pwe_header'),
+                        //             'param_name' => 'congress_item_image',
+                        //             'save_always' => true,
+                        //         ),
+                        //         array(
+                        //             'type' => 'textfield',
+                        //             'heading' => __('Congress link', 'pwe_header'),
+                        //             'description' => __('Default (/wydarzenia/ - PL), (/en/conferences/ - EN)', 'pwe_header'),
+                        //             'param_name' => 'congress_item_link',
+                        //             'save_always' => true,
+                        //         ),
+                        //         array(
+                        //             'type' => 'textfield',
+                        //             'heading' => __('Caption text', 'pwe_header'),
+                        //             'description' => __('Default (Dowiedz się więcej - PL), (Find out more - EN)', 'pwe_header'),
+                        //             'param_name' => 'congress_item_caption',
+                        //             'save_always' => true,
+                        //         ),
+                        //     ),
+                        // ),
                         array(
                             'type' => 'checkbox',
                             'group' => 'Aditional options',
@@ -708,13 +698,13 @@ class PWEHeader extends PWECommonFunctions {
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], '#000000');
         $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
 
+        $el_id = self::id_rnd();
+
         if ($text_color == '' || $text_color == '#000000' || $text_color == 'black') {
             $text_shadow = 'white !important;';
         } else {
             $text_shadow = 'black !important;';
         }
-
-        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
         global $registration_button_text, $pwe_header_form_id;
 
@@ -738,15 +728,14 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_logo_color' => '',
             'pwe_header_logo_marg_pag' => '',
             'pwe_header_congress_logo_color' => '',
-            'pwe_header_videos' => '',
             'association_fair_logo_color' => '',
-            'pwe_congress_widget_off' => '',
-            'pwe_congress_widget_title' => '',
-            'pwe_congress_widget_button' => '',
-            'pwe_congress_widget_button_link' => '',
-            'pwe_congress_widget_buttons_width' => '',
-            'pwe_congress_widget_color' => '',
-            'pwe_congress_widget_items' => '',
+            // 'pwe_congress_widget_off' => '',
+            // 'pwe_congress_widget_title' => '',
+            // 'pwe_congress_widget_button' => '',
+            // 'pwe_congress_widget_button_link' => '',
+            // 'pwe_congress_widget_buttons_width' => '',
+            // 'pwe_congress_widget_color' => '',
+            // 'pwe_congress_widget_items' => '',
             'pwe_header_association_hide' => '',
             'pwe_replace' => '',
         ), $atts ));
@@ -792,27 +781,27 @@ class PWEHeader extends PWECommonFunctions {
 
         $output = '
             <style>
-                .row-parent:has(.pwelement_'. SharedProperties::$rnd_id.' .pwe-header) {
+                .row-parent:has(.pwelement_'. $el_id.' .pwe-header) {
                     max-width: 100%;
                     padding: 0 !important;
                 }
-                .wpb_column:has(.pwelement_'. SharedProperties::$rnd_id.' .pwe-header) {
+                .wpb_column:has(.pwelement_'. $el_id.' .pwe-header) {
                     max-width: 100%;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                .pwelement_'. $el_id .' .pwe-header-wrapper {
                     min-height: 60vh;
                     max-width: 1200px;
                     margin: 0 auto;
                     display: flex;
                     z-index: 2;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                .pwelement_'. $el_id .' .pwe-header-logo {
                     max-width: '. $pwe_header_logo_width .'px !important;
                     width: 100%;
                     height: auto;
                     z-index: 1;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-container:before {
+                .pwelement_'. $el_id .' .pwe-header-container:before {
                     content: "";
                     position: absolute;
                     top: 0;
@@ -823,54 +812,54 @@ class PWEHeader extends PWECommonFunctions {
                     opacity: '. $pwe_header_overlay_range .';
                     z-index: 0;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                .pwelement_'. $el_id .' .pwe-header-background {
                     background-size: cover;
                     background-repeat: no-repeat;
                     background-position: center;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                .pwelement_'. $el_id .' .pwe-header-text {
                     padding: 18px 0;
                     z-index: 1;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), .pwe-header .pwe-logotypes-title h4 {
+                .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2), .pwe-header .pwe-logotypes-title h4 {
                     color: '. $text_color .';
                     text-transform: uppercase;
                     text-align: center;
                     width: auto;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title {
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title {
                     justify-content: center;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4 {
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title h4 {
                     box-shadow: 9px 9px 0px -6px '. $text_color .';
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                .pwelement_'. $el_id .' .pwe-header-text h1 {
                     font-size: 30px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                .pwelement_'. $el_id .' .pwe-header-text h2 {
                     font-size: 36px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .slides div p,
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-gallery-wrapper div p{
+                .pwelement_'. $el_id .' .pwe-header .slides div p,
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-gallery-wrapper div p{
                     color: '. $text_color .';
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .dots-container {
+                .pwelement_'. $el_id .' .pwe-header .dots-container {
                     display: none !important;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-logotypes {
+                .pwelement_'. $el_id .' .pwe-header .pwe-header-logotypes {
                     transition: .3s ease;
                     opacity: 0;
                 }
                 @media (min-width: 300px) and (max-width: 1200px) {
-                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-text h1 {
+                    .pwelement_'.$el_id.' .pwe-header-text h1 {
                         font-size: calc(20px + (30 - 20) * ( (100vw - 300px) / (1200 - 300) ));
                     }
-                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-text h2 {
+                    .pwelement_'.$el_id.' .pwe-header-text h2 {
                         font-size: calc(24px + (36 - 24) * ( (100vw - 300px) / (1200 - 300) ));
                     }
                 }
                 @media (max-width: 960px) {
-                    .row-parent:has(.pwelement_'.SharedProperties::$rnd_id.' .pwe-header) {
+                    .row-parent:has(.pwelement_'.$el_id.' .pwe-header) {
                         padding: 0 !important;
                     }
                 }
@@ -890,12 +879,12 @@ class PWEHeader extends PWECommonFunctions {
         if ($pwe_header_modes != "registration_mode" && $pwe_header_modes != "conference_mode" && $pwe_header_modes != "squares_mode" && $pwe_header_modes != "video_mode")  {
             $output .= '
             <style>
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                .pwelement_'. $el_id .' .pwe-header-wrapper {
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                .pwelement_'. $el_id .' .header-wrapper-column {
                     max-width: 750px;
                     justify-content: space-evenly;
                     align-items: center;
@@ -903,10 +892,10 @@ class PWEHeader extends PWECommonFunctions {
                     flex-direction: column;
                     padding: 36px 18px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2), .pwe-header .pwe-logotypes-title h4 {
+                .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2), .pwe-header .pwe-logotypes-title h4 {
                     text-shadow: 2px 2px '. $text_shadow .';
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .header-button a {
+                .pwelement_'. $el_id .' .header-button a {
                     padding: 0 !important;
                     height: 70px;
                     display: flex;
@@ -916,19 +905,19 @@ class PWEHeader extends PWECommonFunctions {
                     text-transform: uppercase;
                     z-index: 1;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-buttons {
+                .pwelement_'. $el_id .' .pwe-header-buttons {
                     display: flex;
                     flex-wrap: wrap;
                     justify-content: center;
                     gap: 20px;
                     padding: 18px 0;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                .pwelement_'. $el_id .' .pwe-header .pwe-btn-container {
                     width: 320px;
                     height: 75px;
                     padding: 0;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn {
+                .pwelement_'. $el_id .' .pwe-header .pwe-btn {
                     background-color: '. $btn_color .' !important;
                     color: '. $btn_text_color .' !important;
                     border: '. $btn_border .' !important;
@@ -942,16 +931,16 @@ class PWEHeader extends PWECommonFunctions {
                     letter-spacing: 0.1em;
                     text-align: center;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn:hover {
+                .pwelement_'. $el_id .' .pwe-header .pwe-btn:hover {
                     color: '. $btn_text_color .';
                     background-color: '. $darker_btn_color .'!important;
                     border: 1px solid '. $darker_btn_color .'!important;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-container-logotypes-gallery {
+                .pwelement_'. $el_id .' .pwe-header .pwe-container-logotypes-gallery {
                     position: relative;
                     z-index: 1;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logotypes {
+                .pwelement_'. $el_id .' .pwe-header-logotypes {
                     display: flex;
                     flex-wrap: wrap;
                     justify-content: center;
@@ -961,10 +950,10 @@ class PWEHeader extends PWECommonFunctions {
                     padding: 0 18px 36px;
                     gap: 18px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-association {
+                .pwelement_'. $el_id .' .pwe-header .pwe-association {
                     padding: 0 18px 36px;
                 }
-                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-curled-sheet {
+                .pwelement_'. $el_id .' .pwe-header .pwe-header-curled-sheet {
                     z-index: 1;
                     position: absolute;
                     top: 0;
@@ -972,19 +961,19 @@ class PWEHeader extends PWECommonFunctions {
                     width: 400px;
                 }
                 @media (max-width: 1200px) {
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-curled-sheet {
+                    .pwelement_'. $el_id .' .pwe-header .pwe-header-curled-sheet {
                         display: none;
                     }
                 }
                 @media (max-width: 960px) {
-                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header-logotypes .pwe-container-logotypes-gallery {
+                    .pwelement_'.$el_id.' .pwe-header-logotypes .pwe-container-logotypes-gallery {
                         width: 100% !important;
                     }
-                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header .pwe-btn-container {
+                    .pwelement_'.$el_id.' .pwe-header .pwe-btn-container {
                         width: 260px;
                         height: 70px;
                     }
-                    .pwelement_'.SharedProperties::$rnd_id.' .pwe-header .pwe-btn {
+                    .pwelement_'.$el_id.' .pwe-header .pwe-btn {
                         font-size: 13px;
                     }
                 }
@@ -1046,56 +1035,53 @@ class PWEHeader extends PWECommonFunctions {
         if ($pwe_header_modes == "simple_mode") {
             $output .= '
                 <style>
-                    .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                    .pwelement_'. $el_id .' .header-wrapper-column {
                         padding: 36px;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                    .pwelement_'. $el_id .' .pwe-header-wrapper {
                         min-height: auto !important;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo {
+                    .pwelement_'. $el_id .' .pwe-header-simple-logo {
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
                         align-items: center;
                         gap: 18px;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
-                        width: auto;
-                    }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo .pwe-btn-container {
+                    .pwelement_'. $el_id .' .pwe-header-simple-logo .pwe-btn-container {
                         width: 240px;
                         height: 50px;
                         padding: 0;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo .pwe-btn {
+                    .pwelement_'. $el_id .' .pwe-header-simple-logo .pwe-btn {
                         background-color: '. $main_header_color .';
                         border: 2px solid '. $main_header_color .';
                         color: '. $main_header_color_text .';
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-simple-logo .pwe-btn:hover {
+                    .pwelement_'. $el_id .' .pwe-header-simple-logo .pwe-btn:hover {
                         color: '. $main_header_color_text .';
                         background-color: '. $darker_form_btn_color .'!important;
                         border: 2px solid '. $darker_form_btn_color .'!important;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                    .pwelement_'. $el_id .' .pwe-header-text {
                         display: flex;
                         flex-direction: column-reverse;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                    .pwelement_'. $el_id .' .pwe-header-text h2 {
                         font-size: 40px;
                         margin: 0;
                     }
                     @media (max-width: 1200px) {
-                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                        .pwelement_'. $el_id .' .pwe-header-text h2 {
                             font-size: calc(24px + (40 - 24) * ( (100vw - 300px) / (1200 - 300) ));
                         }
                     }
                     @media (min-width: 960px) {
-                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                        .pwelement_'. $el_id .' .pwe-header-wrapper {
                             min-height: 350px !important;
                             height: 350px;
                         }
-                        .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                        .pwelement_'. $el_id .' .header-wrapper-column {
                             max-width: 1200px;
                             flex-direction: row;
                             gap: 60px;
@@ -1107,13 +1093,13 @@ class PWEHeader extends PWECommonFunctions {
         if ($pwe_header_logo_marg_pag == 'true') {
             $output .= '
                 <style>
-                    .pwelement_'. SharedProperties::$rnd_id .' .header-wrapper-column {
+                    .pwelement_'. $el_id .' .header-wrapper-column {
                         padding: 0 18px 36px;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                    .pwelement_'. $el_id .' .pwe-header-text {
                         padding: 0 0 18px;
                     }
-                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                    .pwelement_'. $el_id .' .pwe-header-text h1 {
                         margin: 0;
                     }
                 </style>';
@@ -1124,7 +1110,7 @@ class PWEHeader extends PWECommonFunctions {
             if (in_array($position, explode(',', $pwe_header_bg_position))) {
                 $output .= '
                     <style>
-                        .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                        .pwelement_'. $el_id .' .pwe-header-background {
                             background-position: '. $position .' !important;
                         }
                     </style>';
@@ -1145,30 +1131,8 @@ class PWEHeader extends PWECommonFunctions {
         $start_date = do_shortcode('[trade_fair_datetotimer]');
         $end_date = do_shortcode('[trade_fair_enddata]');
 
-        // Function to transform the date
-        function transform_dates($start_date, $end_date) {
-            // Convert date strings to DateTime objects
-            $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
-            $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
-
-            // Check if the conversion was correct
-            if ($start_date_obj && $end_date_obj) {
-                // Get the day, month and year from DateTime objects
-                $start_day = $start_date_obj->format('d');
-                $end_day = $end_date_obj->format('d');
-                $month = $start_date_obj->format('m');
-                $year = $start_date_obj->format('Y');
-
-                //Build the desired format
-                $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
-                return $formatted_date;
-            } else {
-                return "Invalid dates";
-            }
-        }
-
         // Transform the dates to the desired format
-        $formatted_date = transform_dates($start_date, $end_date);
+        $formatted_date = self::transform_dates($start_date, $end_date);
 
         if (self::isTradeDateExist()) {
             $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
@@ -1324,11 +1288,11 @@ class PWEHeader extends PWECommonFunctions {
 
                         $output .= '</div>';
 
-                        // Congres widget START --------------------------------------------------------------------------------------<
-                        if ($pwe_header_modes != "simple_mode" && $pwe_congress_widget_off != 'true') {
-                            require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
-                        }
-                        // Congres widget END --------------------------------------------------------------------------------------<
+                        // // Congres widget START --------------------------------------------------------------------------------------<
+                        // if ($pwe_header_modes != "simple_mode" && $pwe_congress_widget_off != 'true') {
+                        //     require_once plugin_dir_path(__FILE__) . '/../widgets/congress-widget.php';
+                        // }
+                        // // Congres widget END --------------------------------------------------------------------------------------<
 
                         // Logotypes slider START --------------------------------------------------------------------------------------<
                         $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
@@ -1342,7 +1306,7 @@ class PWEHeader extends PWECommonFunctions {
                                         $logotypes_catalog = $logotypes["logotypes_catalog"];
                                         if(!empty($logotypes_catalog) || !empty($logotypes_media)) {
                                             // Adding the result from additionalOutput to $output
-                                            $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $logotypes);
+                                            $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $el_id, $logotypes);
                                         }
                                     }
                                 $output .= '</div>';
@@ -1352,37 +1316,37 @@ class PWEHeader extends PWECommonFunctions {
 
                         if ($pwe_header_modes != "simple_mode") {
                             require_once plugin_dir_path(__FILE__) . '/../widgets/parking-widget.php';
-                            if (count($pwe_congress_widget_items_json) == 1 && !empty($congress_image_url)) {
-                                $output .= '<div class="pwe-header-curled-sheet"><img src="/wp-content/plugins/PWElements/media/zawijas.png" alt="zawijas"></div>';
-                            }
+                            // if ($pwe_congress_widget_items_json && count($pwe_congress_widget_items_json) == 1 && !empty($congress_image_url)) {
+                            //     $output .= '<div class="pwe-header-curled-sheet"><img src="/wp-content/plugins/PWElements/media/zawijas.png" alt="zawijas"></div>';
+                            // }
                         }
 
                     } else if ($pwe_header_modes == "registration_mode" || $pwe_header_modes == "conference_mode") {
 
                         $output .= '
                         <style>
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                            .pwelement_'. $el_id .' .pwe-header-wrapper {
                                 position: relative;
                                 display: flex;
                                 padding: 0 18px 36px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .header-info-column,
-                            .pwelement_'. SharedProperties::$rnd_id .' .header-form-column {
+                            .pwelement_'. $el_id .' .header-info-column,
+                            .pwelement_'. $el_id .' .header-form-column {
                                 width: 50%;
                                 display: flex;
                                 justify-content: center;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .header-info-column {
+                            .pwelement_'. $el_id .' .header-info-column {
                                 flex-direction: column;
                                 align-items: center;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .header-form-column {
+                            .pwelement_'. $el_id .' .header-form-column {
                                 display: flex;
                                 flex-direction: column;
                                 justify-content: start;
                                 align-items: center;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container {
                                 position: relative;
                                 display: flex;
                                 flex-direction: column;
@@ -1391,7 +1355,7 @@ class PWEHeader extends PWECommonFunctions {
                                 margin-top: 18px;
                                 padding: 24px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container:before {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container:before {
                                 content: "";
                                 position: absolute;
                                 top: 0;
@@ -1400,28 +1364,28 @@ class PWEHeader extends PWECommonFunctions {
                                 left: 0;
                                 border-radius: 16px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h1 {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container h1 {
                                 text-transform: uppercase;
                                 padding-top: 12px;
                                 font-size: 22px !important;
                                 margin: 0;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container :is(h1, h2, p) {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container :is(h1, h2, p) {
                                 position: relative;
                                 z-index: 2;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container :is(h1, h2, p:not(.pwe-header-edition)),
-                            .pwelement_'. SharedProperties::$rnd_id .' .form-logo-container h2 {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container :is(h1, h2, p:not(.pwe-header-edition)),
+                            .pwelement_'. $el_id .' .form-logo-container h2 {
                                 color: '. $main_header_color_text .';
                                 text-align: center;
                                 font-weight: 700;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition,
+                            .pwelement_'. $el_id .' .pwe-header-edition,
                             #pweForm .form-edition {
                                 text-align: center;
                                 font-weight: 700;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                            .pwelement_'. $el_id .' .pwe-header-edition {
                                 max-width: '. $pwe_header_logo_width .'px !important;
                                 width: 100%;
                                 background: white;
@@ -1434,90 +1398,90 @@ class PWEHeader extends PWECommonFunctions {
                                 line-height: 1;
                                 text-transform: uppercase;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2),
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4,
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-title h2 {
+                            .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2),
+                            .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title h4,
+                            .pwelement_'. $el_id .' .pwe-association-title h2 {
                                 text-shadow: 0 0 1px '. $text_shadow .';
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h2 {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container h2 {
                                 margin: 0;
                                 font-size: 28px !important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                            .pwelement_'. $el_id .' .pwe-header-logo {
                                 max-width: '. $pwe_header_logo_width .'px !important;
                                 margin: 0 20px;
                                 position: relative;
                                 z-index: 2;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .header-info-column .pwe-association {
+                            .pwelement_'. $el_id .' .header-info-column .pwe-association {
                                 margin-top: 36px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .header-form-column .pwe-association {
+                            .pwelement_'. $el_id .' .header-form-column .pwe-association {
                                 display: none;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-logotypes-title h4 {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title h4 {
                                 box-shadow: none !important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logotypes {
+                            .pwelement_'. $el_id .' .pwe-header-logotypes {
                                 margin-top: 36px;
                                 width: 100%;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' #pweForm .pwe-btn {
+                            .pwelement_'. $el_id .' #pweForm .pwe-btn {
                                 background-color: '. $main_header_color .';
                                 border: 2px solid '. $main_header_color .';
                                 color: '. $main_header_color_text .';
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' #pweForm .pwe-btn:hover {
+                            .pwelement_'. $el_id .' #pweForm .pwe-btn:hover {
                                 color: '. $main_header_color_text .';
                                 background-color: '. $darker_form_btn_color .'!important;
                                 border: 2px solid '. $darker_form_btn_color .'!important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' #pweForm .form-container:before {
+                            .pwelement_'. $el_id .' #pweForm .form-container:before {
                                 background-color: '. $main_header_color .';
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container-mobile {
+                            .pwelement_'. $el_id .' .pwe-header-logo-container-mobile {
                                     display: none;
                             }
                             @media (max-width: 960px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container-desktop,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                                .pwelement_'. $el_id .' .pwe-header-logo-container-desktop,
+                                .pwelement_'. $el_id .' .pwe-header-text {
                                     display: none;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container-mobile {
+                                .pwelement_'. $el_id .' .pwe-header-logo-container-mobile {
                                     display: flex;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' #pweForm .form-logo-container {
+                                .pwelement_'. $el_id .' #pweForm .form-logo-container {
                                     background-color: '. $main_header_color .';
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                                .pwelement_'. $el_id .' .pwe-header-wrapper {
                                     flex-direction: column-reverse;
                                     padding: 0 18px 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .header-info-column,
-                                .pwelement_'. SharedProperties::$rnd_id .' .header-form-column {
+                                .pwelement_'. $el_id .' .header-info-column,
+                                .pwelement_'. $el_id .' .header-form-column {
                                     width: 100%;
                                     padding-bottom: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .header-form-column {
+                                .pwelement_'. $el_id .' .header-form-column {
                                     align-items: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .header-form-column .pwe-association {
+                                .pwelement_'. $el_id .' .header-form-column .pwe-association {
                                     display: block;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                                .pwelement_'. $el_id .' .pwe-header-text h1 {
                                     margin: 0;
                                     padding: 0 !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                                .pwelement_'. $el_id .' .pwe-header-text {
                                     padding: 36px 0 !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container {
+                                .pwelement_'. $el_id .' .pwe-header-text,
+                                .pwelement_'. $el_id .' .pwe-header-logo-container {
                                     max-width: 450px;
                                 }
                             }
                             @media (max-width: 450px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container h1 {
+                                .pwelement_'. $el_id .' .pwe-header-logo-container h1 {
                                     font-size: 20px !important;
                                 }
                             }
@@ -1526,14 +1490,14 @@ class PWEHeader extends PWECommonFunctions {
                         if ($pwe_header_modes == "conference_mode") {
                             $output .= '
                                 <style>
-                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container:before {
+                                    .pwelement_'. $el_id .' .pwe-header-logo-container:before {
                                         background-color: '. $main_header_color .';
                                     }
                                 </style>';
                         } else {
                             $output .= '
                                 <style>
-                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo-container:before {
+                                    .pwelement_'. $el_id .' .pwe-header-logo-container:before {
                                         background-color: '. $main_header_color .';
                                     }
                                 </style>';
@@ -1542,7 +1506,7 @@ class PWEHeader extends PWECommonFunctions {
                         if (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) {
                             $output .= '
                                 <style>
-                                    .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                    .pwelement_'. $el_id .' .pwe-header-edition {
                                         font-size: 20px;
                                     }
                                 </style>';
@@ -1609,7 +1573,7 @@ class PWEHeader extends PWECommonFunctions {
                                     if ($association_fair_logo_color != 'true') {
                                         $output .= '
                                             <style>
-                                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-logo {
+                                                .pwelement_'. $el_id .' .pwe-association-logotypes .pwe-logo {
                                                     filter: brightness(0) invert(1);
                                                     transition: all .3s ease;
                                                 }
@@ -1647,9 +1611,9 @@ class PWEHeader extends PWECommonFunctions {
                                     $output .= '
                                     <script>
                                         document.addEventListener("DOMContentLoaded", function() {
-                                            let pweElement = document.querySelector(".pwelement_'. self::$rnd_id .'");
-                                            let pweElementRow = document.querySelector(".row-container:has(.pwelement_'. self::$rnd_id .')");
-                                            let pweAssociation = document.querySelector(".pwelement_'. self::$rnd_id .' .pwe-association") !== null;
+                                            let pweElement = document.querySelector(".pwelement_'. $el_id .'");
+                                            let pweElementRow = document.querySelector(".row-container:has(.pwelement_'. $el_id .')");
+                                            let pweAssociation = document.querySelector(".pwelement_'. $el_id .' .pwe-association") !== null;
                                             let isInPweHeader = pweElementRow !== null && pweElementRow.closest(".pwe-header") !== null;
 
                                             if (pweElementRow !== null && pweAssociation == false && !isInPweHeader) {
@@ -1693,7 +1657,7 @@ class PWEHeader extends PWECommonFunctions {
                             //                     $logotypes_catalog = $logotypes["logotypes_catalog"];
                             //                     if(!empty($logotypes_catalog) || !empty($logotypes_media)) {
                             //                         // Adding the result from additionalOutput to $output
-                            //                         $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $logotypes);
+                            //                         $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $el_id, $logotypes);
                             //                     }
                             //                 }
                             //             $output .= '</div>';
@@ -1761,62 +1725,62 @@ class PWEHeader extends PWECommonFunctions {
 
                         $output .= '
                         <style>
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                            .pwelement_'. $el_id .' .pwe-header-wrapper {
                                 position: relative;
                                 max-width: 100%;
                                 justify-content: center;
                                 align-items: center;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column {
+                            .pwelement_'. $el_id .' .pwe-header-column {
                                 width: 50%;
                                 max-width: 600px;
                                 padding: 36px 36px 54px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                            .pwelement_'. $el_id .' .pwe-header-logo {
                                 max-width: '. $pwe_header_logo_width .'px !important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                            .pwelement_'. $el_id .' .pwe-header-text {
                                 padding: 0 !important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
+                            .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, h3) {
                                 color: '. $text_color .';
                                 text-align: start;
                                 margin: 0;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                            .pwelement_'. $el_id .' .pwe-header-text h1 {
                                 text-transform: uppercase;
                                 font-size: 30px;
                                 font-weight: 500 !important;
                                 max-width: 600px;
                                 padding-top: 24px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                            .pwelement_'. $el_id .' .pwe-header-text h2 {
                                 text-transform: lowercase;
                                 margin-top: 24px;
                                 font-size: 28px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
+                            .pwelement_'. $el_id .' .pwe-header-text h3 {
                                 text-transform: uppercase;
                                 font-size: 30px;
                                 padding: 6px 8px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text p {
+                            .pwelement_'. $el_id .' .pwe-header-text p {
                                 color: '. $text_color .';
                                 display: none;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                            .pwelement_'. $el_id .' .pwe-header-edition {
                                 background-color: white;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition span {
+                            .pwelement_'. $el_id .' .pwe-header-edition span {
                                 background: url(/doc/background.webp) no-repeat center;
                                 color: transparent;
                                     -webkit-background-clip: text;
                                 background-clip: text;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-mobile {
+                            .pwelement_'. $el_id .' .pwe-header-img-v1-mobile {
                                 display: none;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                            .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                 position: absolute;
                                 top: 0;
                                 right: -50px;
@@ -1825,25 +1789,25 @@ class PWEHeader extends PWECommonFunctions {
                                 object-fit: contain;
                                 overflow: visible;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
+                            .pwelement_'. $el_id .' .pwe-header-bottom {
                                 display: flex;
                                 justify-content: space-between;
                                 align-items: center;
                                 padding-top: 24px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .pwe-association {
+                            .pwelement_'. $el_id .' .pwe-header-bottom .pwe-association {
                                 width: 40%;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .header-button {
+                            .pwelement_'. $el_id .' .pwe-header-bottom .header-button {
                                 width: 40%;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container {
                                 position: relative;
                                 width: 300px;
                                 height: 60px;
                                 padding: 0;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn {
                                 background-color: '. $btn_color .' !important;
                                 color: '. $btn_text_color .' !important;
                                 border: '. $btn_color .' !important;
@@ -1862,10 +1826,10 @@ class PWEHeader extends PWECommonFunctions {
                                 align-items: center;
                                 text-transform: uppercase;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-small-text {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container .btn-small-text {
                                 font-size: 10px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-angle-right {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container .btn-angle-right {
                                 color: '. $btn_text_color .';
                                 position: absolute;
                                 right: 25px;
@@ -1874,73 +1838,73 @@ class PWEHeader extends PWECommonFunctions {
                                 font-size: 72px;
                                 transition: .3s ease;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
                                 right: 20px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn:hover {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn:hover {
                                 color: '. $btn_text_color .';
                                 background-color: '. $darker_btn_color .'!important;
                                 border: 1px solid '. $darker_btn_color .'!important;
                             }
                             @media(max-width: 1400px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     right: -100px;
                                 }
                             }
                             @media(max-width: 1300px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     right: -150px;
                                 }
                             }
                             @media(max-width: 1250px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                                .pwelement_'. $el_id .' .pwe-header-wrapper {
 
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     right: -200px;
                                 }
                             }
                             @media(max-width: 1200px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     right: -250px;
                                 }
                             }
                             @media(max-width: 1100px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                .pwelement_'. $el_id .' .pwe-header-content-column {
                                     width: 60%;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                .pwelement_'. $el_id .' .pwe-header-image-column {
                                     width: 40%;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     right: -350px;
                                 }
                             }
                             @media(max-width: 1000px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     right: -400px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                                .pwelement_'. $el_id .' .pwe-header .pwe-btn-container {
                                     width: 260px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-angle-right {
+                                .pwelement_'. $el_id .' .pwe-header .pwe-btn-container .btn-angle-right {
                                     right: 20px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
+                                .pwelement_'. $el_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
                                     right: 15px;
                                 }
                             }
                             @media(max-width: 960px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                                .pwelement_'. $el_id .' .pwe-header-background {
                                     background-image: url("/doc/header_mobile.webp") !important;
                                     position: relative;
                                     width: 100%;
                                     height: 100%;
                                     overflow: hidden;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image1,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image2,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image3 {
+                                .pwelement_'. $el_id .' .pwe-bg-image1,
+                                .pwelement_'. $el_id .' .pwe-bg-image2,
+                                .pwelement_'. $el_id .' .pwe-bg-image3 {
                                     position: absolute;
                                     top: 0;
                                     left: 0;
@@ -1953,28 +1917,28 @@ class PWEHeader extends PWECommonFunctions {
                                     transition: opacity 2s ease-in-out;
                                     z-index: 1 !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image1 {
+                                .pwelement_'. $el_id .' .pwe-bg-image1 {
                                     background-image: url("/doc/header_mobile.webp");
                                     z-index: 1;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image2 {
+                                .pwelement_'. $el_id .' .pwe-bg-image2 {
                                     background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_2.webp");
                                     z-index: 2;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image3 {
+                                .pwelement_'. $el_id .' .pwe-bg-image3 {
                                     background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_3.webp");
                                     z-index: 3;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background .visible {
+                                .pwelement_'. $el_id .' .pwe-header-background .visible {
                                     opacity: 1;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                .pwelement_'. $el_id .' .pwe-header-main-content-block,
+                                .pwelement_'. $el_id .' .pwe-header-date-block {
                                     background-color: #00000099;
                                     padding: 18px;
                                     border-radius: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block {
+                                .pwelement_'. $el_id .' .pwe-header-main-content-block {
                                     max-width: 400px;
                                     display: flex;
                                     flex-direction: column-reverse;
@@ -1983,89 +1947,89 @@ class PWEHeader extends PWECommonFunctions {
                                     text-align: center;
                                     gap: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                .pwelement_'. $el_id .' .pwe-header-date-block {
                                     margin-top: 36px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                                .pwelement_'. $el_id .' .pwe-header-text {
                                     display: flex;
                                     flex-direction: column;
                                     justify-content: center;
                                     align-items: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text p {
+                                .pwelement_'. $el_id .' .pwe-header-text p {
                                     display: block;
                                     margin: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition span {
+                                .pwelement_'. $el_id .' .pwe-header-edition span {
                                     color: black;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     display: none;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-mobile {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-mobile {
                                     display: flex;
                                 }
                                 .pwe-header-wrapper {
                                     flex-direction: column;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                .pwelement_'. $el_id .' .pwe-header-column,
+                                .pwelement_'. $el_id .' .pwe-header-content-column,
+                                .pwelement_'. $el_id .' .pwe-header-image-column {
                                     width: 100%;
                                     max-width: 1200px;
                                     padding: 0;
                                     text-align: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                .pwelement_'. $el_id .' .pwe-header-content-column {
                                     padding: 36px 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
+                                .pwelement_'. $el_id .' .pwe-header-bottom {
                                     flex-direction: column-reverse;
                                     justify-content: center;
                                     gap: 18px;
                                     padding-top: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
+                                .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, h3) {
                                     text-align: center;
                                     width: auto;
                                     font-size: 22px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                                .pwelement_'. $el_id .' .pwe-header-text h1 {
                                     padding-top: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                                .pwelement_'. $el_id .' .pwe-header-text h2 {
                                     margin-top: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
+                                .pwelement_'. $el_id .' .pwe-header-text h3 {
                                     margin-top: 10px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-title {
+                                .pwelement_'. $el_id .' .pwe-header-title {
                                     display: flex;
                                     flex-direction: column;
                                     align-items: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                .pwelement_'. $el_id .' .pwe-header-edition {
                                     width: fit-content;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                .pwelement_'. $el_id .' .pwe-header-content-column {
                                     width: 100%;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                .pwelement_'. $el_id .' .pwe-header-image-column {
                                     width: 100%;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .pwe-association {
+                                .pwelement_'. $el_id .' .pwe-header-bottom .pwe-association {
                                     width: 100% !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .header-button {
+                                .pwelement_'. $el_id .' .pwe-header-bottom .header-button {
                                     width: 100% !important;
                                     max-width: 320px !important;
                                 }
                             }
                             @media(max-width: 450px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                .pwelement_'. $el_id .' .pwe-header-content-column {
                                     padding: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                .pwelement_'. $el_id .' .pwe-header-date-block {
                                     margin-top: 18px;
                                 }
                             }
@@ -2073,7 +2037,6 @@ class PWEHeader extends PWECommonFunctions {
 
                         $output .= '
                         <div class="pwe-header-column pwe-header-content-column">
-
                             <div class="pwe-header-text">
                                 <div class="pwe-header-main-content-block">
                                     <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
@@ -2088,123 +2051,17 @@ class PWEHeader extends PWECommonFunctions {
                                 </div>
                             </div>
 
-                            <div class="pwe-header-bottom">';
-
-                                // // Congress logo START --------------------------------------------------------------------------------------<
-                                // if ($pwe_header_association_hide != true) {
-                                //     if (!empty($pwe_header_conference_logo_url)) {
-                                //         $output .= '
-                                //         <style>
-                                //             .pwe-association {
-                                //                 position: relative;
-                                //             }
-                                //             #pweAssociation .pwe-association-title {
-                                //                 display: flex;
-                                //                 justify-content: center;
-                                //             }
-                                //             #pweAssociation .pwe-association-title h2 {
-                                //                 color: '. $text_color .';
-                                //                 margin: 0;
-                                //                 padding: 0;
-                                //                 text-align: center !important;
-                                //                 margin-top: 0 !important;
-                                //                 box-shadow: none !important;
-                                //                 text-transform: inherit !important;
-                                //                 font-size: 12px !important;
-                                //             }
-                                //             #pweAssociation .pwe-association-logotypes {
-                                //                 display: flex;
-                                //                 justify-content: start;
-                                //                 align-items: center;
-                                //                 flex-wrap: wrap;
-                                //                 gap: 10px;
-                                //             }
-                                //             #pweAssociation .pwe-association-logotypes .pwe-logo {
-                                //                 background-size: contain;
-                                //                 background-repeat: no-repeat;
-                                //                 background-position: center;
-                                //                 min-width: 180px;
-                                //                 max-width: 180px;
-                                //                 height: fit-content;
-                                //                 padding: 10px;
-                                //             }
-                                //             .pwe-association-logo {
-                                //                 text-align: center;
-                                //                 display: flex;
-                                //                 flex-direction: column;
-                                //                 justify-content: center;
-                                //                 align-items: center;
-                                //             }
-                                //             .pwe-association-logo:before {
-                                //                 content: "' . self::languageChecker('SPRAWDŹ', 'CHECK') . '";
-                                //                 position: absolute;
-                                //                 bottom: -32px;
-                                //                 color: white;
-                                //                 border: 1px solid white;
-                                //                 border-radius: 4px;
-                                //                 padding: 4px 10px;
-                                //                 font-size: 14px;s
-                                //                 width: fit-content;
-                                //             }
-                                //             @media(max-width: 960px) {
-                                //                 .pwe-association {
-                                //                     width: 100%;
-                                //                 }
-                                //                 #pweAssociation .pwe-association-title {
-                                //                     justify-content: center;
-                                //                 }
-                                //                 #pweAssociation .pwe-association-logotypes {
-                                //                     justify-content: center;
-                                //                 }
-                                //             }
-                                //         </style>';
-
-                                //         if ($association_fair_logo_color != 'true') {
-                                //             $output .= '
-                                //                 <style>
-                                //                     .pwelement_'. SharedProperties::$rnd_id .' .pwe-association-logotypes .pwe-logo {
-                                //                         filter: brightness(0) invert(1);
-                                //                         transition: all .3s ease;
-                                //                     }
-                                //                 </style>';
-                                //         }
-
-                                //         $output .= '
-                                //         <div style="display: none;" id="pweAssociation" class="pwe-association">
-                                //             <div class="main-heading-text pwe-uppercase pwe-association-title">';
-                                //                 if ($pwe_header_modes == "conference_mode") {
-                                //                     $output .= '<h2>' . self::languageChecker('Wydarzenie organizowane w ramach targów:', 'Event organised as part of the fair:') . '</h2>';
-                                //                 } else {
-                                //                     $output .= '<h2>' . self::languageChecker('Wydarzenia Towarzyszące', 'Side Events') . '</h2>';
-                                //                 }
-                                //             $output .= '
-                                //             </div>
-                                //             <div class="pwe-association-logotypes">
-                                //                 <a class="pwe-association-logo" href="' . $pwe_header_conference_link . '">
-                                //                     <img class="pwe-logo" src="' . $pwe_header_conference_logo_url . '">
-                                //                 </a>
-                                //             </div>
-                                //         </div>';
-                                //     }
-                                // }
-                                // // Congress logo END --------------------------------------------------------------------------------------<
-
-                                $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
-                                $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    alt="link do rejestracji">Zarejestruj się<span class="btn-small-text" style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
-                                                    PL,
-                                                    <<<EN
-                                                    alt="link to registration">Register<span class="btn-small-text" style="display: block; font-weight: 300;">Get a free ticket</span>
-                                                    EN
-                                                )
-                                            .'</a><span class="btn-angle-right">&#8250;</span>';
-                                $output .='</div>
+                            <div class="pwe-header-bottom">
+                                <div id="pweBtnRegistration" class="pwe-btn-container header-button">
+                                    <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" alt="'. self::languageChecker('link do rejestracji', 'link to registration') .'">
+                                        '. self::languageChecker('Zarejestruj się', 'Register') .'
+                                        <span class="btn-small-text" style="display: block; font-weight: 300;">
+                                            '. self::languageChecker('Odbierz darmowy bilet', 'Get a free ticket') .'
+                                        </span>
+                                    </a>
+                                    <span class="btn-angle-right">&#8250;</span>
+                                </div>
                             </div>
-                            ';
-
-                        $output .= '
                         </div>
 
                         <div class="pwe-header-column pwe-header-image-column">
@@ -2217,13 +2074,13 @@ class PWEHeader extends PWECommonFunctions {
 
                         $output .= '
                         <style>
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-wrapper {
+                            .pwelement_'. $el_id .' .pwe-header-wrapper {
                                 position: relative;
                                 max-width: 100%;
                                 justify-content: center;
                                 align-items: center;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column {
+                            .pwelement_'. $el_id .' .pwe-header-column {
                                 max-width: 1200px;
                                 width: 100%;
                                 margin: 0 auto;
@@ -2231,60 +2088,60 @@ class PWEHeader extends PWECommonFunctions {
                                 flex-direction: column;
                                 justify-content: left;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logo {
+                            .pwelement_'. $el_id .' .pwe-header-logo {
                                 max-width: '. $pwe_header_logo_width .'px !important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                            .pwelement_'. $el_id .' .pwe-header-text {
                                 padding: 0 !important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
+                            .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, h3) {
                                 color: '. $text_color .';
                                 text-align: start;
                                 margin: 0;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                            .pwelement_'. $el_id .' .pwe-header-text h1 {
                                 text-transform: uppercase;
                                 font-size: 30px;
                                 font-weight: 500 !important;
                                 max-width: 600px;
                                 padding-top: 24px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                            .pwelement_'. $el_id .' .pwe-header-text h2 {
                                 text-transform: lowercase;
                                 margin-top: 24px;
                                 font-size: 28px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
+                            .pwelement_'. $el_id .' .pwe-header-text h3 {
                                 text-transform: uppercase;
                                 font-size: 30px;
                                 padding: 6px 8px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text p {
+                            .pwelement_'. $el_id .' .pwe-header-text p {
                                 color: '. $text_color .';
                                 display: none;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                            .pwelement_'. $el_id .' .pwe-header-edition {
                                 background-color: white;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition span {
+                            .pwelement_'. $el_id .' .pwe-header-edition span {
                                 color: black;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
+                            .pwelement_'. $el_id .' .pwe-header-bottom {
                                 display: flex;
                                 justify-content: start;
                                 align-items: center;
                                 padding-top: 24px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .header-button {
+                            .pwelement_'. $el_id .' .pwe-header-bottom .header-button {
                                 width: 40%;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container {
                                 position: relative;
                                 width: 300px;
                                 height: 60px;
                                 padding: 0;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn {
                                 background-color: '. $btn_color .' !important;
                                 color: '. $btn_text_color .' !important;
                                 border: '. $btn_color .' !important;
@@ -2303,10 +2160,10 @@ class PWEHeader extends PWECommonFunctions {
                                 align-items: center;
                                 text-transform: uppercase;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-small-text {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container .btn-small-text {
                                 font-size: 10px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container .btn-angle-right {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container .btn-angle-right {
                                 color: '. $btn_text_color .';
                                 position: absolute;
                                 right: 25px;
@@ -2315,15 +2172,15 @@ class PWEHeader extends PWECommonFunctions {
                                 font-size: 72px;
                                 transition: .3s ease;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn-container:hover .btn-angle-right {
                                 right: 20px;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-btn:hover {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-btn:hover {
                                 color: '. $btn_text_color .';
                                 background-color: '. $darker_btn_color .'!important;
                                 border: 1px solid '. $darker_btn_color .'!important;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .video-background {
+                            .pwelement_'. $el_id .' .pwe-header .video-background {
                                 position: absolute;
                                 top: 0;
                                 left: 0;
@@ -2335,7 +2192,7 @@ class PWEHeader extends PWECommonFunctions {
                             }
 
                             /* Dopasowanie wideo do całego tła */
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .video-background iframe {
+                            .pwelement_'. $el_id .' .pwe-header .video-background iframe {
                                 position: absolute;
                                 top: -36vh;
                                 left: 0;
@@ -2347,7 +2204,7 @@ class PWEHeader extends PWECommonFunctions {
                             }
 
                             /* Kontener na całą zawartość */
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-container {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-header-container {
                                 position: relative;
                                 width: 100%;
                                 height: 80vh;
@@ -2357,7 +2214,7 @@ class PWEHeader extends PWECommonFunctions {
                                 overflow: hidden;
                             }
 
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-wrapper {
+                            .pwelement_'. $el_id .' .pwe-header .pwe-header-wrapper {
                                 position: relative;
                                 z-index: 1; /* Ustawia elementy nad wideo */
                                 display: flex;
@@ -2367,7 +2224,7 @@ class PWEHeader extends PWECommonFunctions {
                                 padding: 0 20px;
                                 min-height: 80vh;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column-container {
+                            .pwelement_'. $el_id .' .pwe-header-column-container {
                                 max-width: 600px;
                                 padding: 36px;
                                 background-color: rgb(25 25 25 / 80%);
@@ -2377,7 +2234,7 @@ class PWEHeader extends PWECommonFunctions {
                                 flex-direction: column;
                                 justify-content: space-around;
                             }
-                            .pwelement_'. SharedProperties::$rnd_id .' .video-background video {
+                            .pwelement_'. $el_id .' .video-background video {
                                 position: absolute;
                                 top: 50%;
                                 left: 50%;
@@ -2387,44 +2244,44 @@ class PWEHeader extends PWECommonFunctions {
                                 transform: translate(-50%, -50%);
                             }
                             @media(max-width:1350px){
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .video-background iframe {
+                                .pwelement_'. $el_id .' .pwe-header .video-background iframe {
                                     width: 100vw;
                                     height: 100vh;
                                     top: -9vh;
                                 }
                             }
                             @media(min-width:1200px){
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                                .pwelement_'. $el_id .' .pwe-header-background {
                                     background: none !important;
                                 }
                             }
                             @media(max-width: 960px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .video-background {
+                                .pwelement_'. $el_id .' .video-background {
                                     display:none !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-container {
+                                .pwelement_'. $el_id .' .pwe-header .pwe-header-container {
                                     height: auto;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column-container {
+                                .pwelement_'. $el_id .' .pwe-header-column-container {
                                     padding: 0;
                                     background-color: inherit;
                                     min-height: auto;
                                     margin: 0 auto;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header .pwe-header-wrapper {
+                                .pwelement_'. $el_id .' .pwe-header .pwe-header-wrapper {
                                     min-height: auto;
                                     padding: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background {
+                                .pwelement_'. $el_id .' .pwe-header-background {
                                     background-image: url("/doc/header_mobile.webp") !important;
                                     position: relative;
                                     width: 100%;
                                     height: 100%;
                                     overflow: hidden;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image1,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image2,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image3 {
+                                .pwelement_'. $el_id .' .pwe-bg-image1,
+                                .pwelement_'. $el_id .' .pwe-bg-image2,
+                                .pwelement_'. $el_id .' .pwe-bg-image3 {
                                     position: absolute;
                                     top: 0;
                                     left: 0;
@@ -2437,28 +2294,28 @@ class PWEHeader extends PWECommonFunctions {
                                     transition: opacity 2s ease-in-out;
                                     z-index: 1 !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image1 {
+                                .pwelement_'. $el_id .' .pwe-bg-image1 {
                                     background-image: url("/doc/header_mobile.webp");
                                     z-index: 1;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image2 {
+                                .pwelement_'. $el_id .' .pwe-bg-image2 {
                                     background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_2.webp");
                                     z-index: 2;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-bg-image3 {
+                                .pwelement_'. $el_id .' .pwe-bg-image3 {
                                     background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_3.webp");
                                     z-index: 3;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-background .visible {
+                                .pwelement_'. $el_id .' .pwe-header-background .visible {
                                     opacity: 1;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                .pwelement_'. $el_id .' .pwe-header-main-content-block,
+                                .pwelement_'. $el_id .' .pwe-header-date-block {
                                     background-color: #00000099;
                                     padding: 18px;
                                     border-radius: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-main-content-block {
+                                .pwelement_'. $el_id .' .pwe-header-main-content-block {
                                     max-width: 400px;
                                     display: flex;
                                     flex-direction: column-reverse;
@@ -2467,86 +2324,86 @@ class PWEHeader extends PWECommonFunctions {
                                     text-align: center;
                                     gap: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                .pwelement_'. $el_id .' .pwe-header-date-block {
                                     margin-top: 36px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text {
+                                .pwelement_'. $el_id .' .pwe-header-text {
                                     display: flex;
                                     flex-direction: column;
                                     justify-content: center;
                                     align-items: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text p {
+                                .pwelement_'. $el_id .' .pwe-header-text p {
                                     display: block;
                                     margin: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition span {
+                                .pwelement_'. $el_id .' .pwe-header-edition span {
                                     color: black;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-desktop {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-desktop {
                                     display: none;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-img-v1-mobile {
+                                .pwelement_'. $el_id .' .pwe-header-img-v1-mobile {
                                     display: flex;
                                 }
                                 .pwe-header-wrapper {
                                     flex-direction: column;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-column,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column,
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                .pwelement_'. $el_id .' .pwe-header-column,
+                                .pwelement_'. $el_id .' .pwe-header-content-column,
+                                .pwelement_'. $el_id .' .pwe-header-image-column {
                                     width: 100%;
                                     max-width: 1200px;
                                     padding: 0;
                                     text-align: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                .pwelement_'. $el_id .' .pwe-header-content-column {
                                     padding: 36px 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom {
+                                .pwelement_'. $el_id .' .pwe-header-bottom {
                                     flex-direction: column-reverse;
                                     justify-content: center;
                                     gap: 18px;
                                     padding-top: 18px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text :is(h1, h2, h3) {
+                                .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, h3) {
                                     text-align: center;
                                     width: auto;
                                     font-size: 22px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h1 {
+                                .pwelement_'. $el_id .' .pwe-header-text h1 {
                                     padding-top: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h2 {
+                                .pwelement_'. $el_id .' .pwe-header-text h2 {
                                     margin-top: 0;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-text h3 {
+                                .pwelement_'. $el_id .' .pwe-header-text h3 {
                                     margin-top: 10px;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-title {
+                                .pwelement_'. $el_id .' .pwe-header-title {
                                     display: flex;
                                     flex-direction: column;
                                     align-items: center;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-edition {
+                                .pwelement_'. $el_id .' .pwe-header-edition {
                                     width: fit-content;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-content-column {
+                                .pwelement_'. $el_id .' .pwe-header-content-column {
                                     width: 100%;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-image-column {
+                                .pwelement_'. $el_id .' .pwe-header-image-column {
                                     width: 100%;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .pwe-association {
+                                .pwelement_'. $el_id .' .pwe-header-bottom .pwe-association {
                                     width: 100% !important;
                                 }
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-bottom .header-button {
+                                .pwelement_'. $el_id .' .pwe-header-bottom .header-button {
                                     width: 100% !important;
                                     max-width: 320px !important;
                                 }
                             }
                             @media(max-width: 450px) {
-                                .pwelement_'. SharedProperties::$rnd_id .' .pwe-header-date-block {
+                                .pwelement_'. $el_id .' .pwe-header-date-block {
                                     margin-top: 18px;
                                 }
                             }
@@ -2555,6 +2412,7 @@ class PWEHeader extends PWECommonFunctions {
                         $output .= '
                         <div class="pwe-header-column pwe-header-content-column">
                             <div class="pwe-header-column-container">
+
                                 <div class="pwe-header-text">
                                     <div class="pwe-header-main-content-block">
                                         <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
@@ -2569,31 +2427,24 @@ class PWEHeader extends PWECommonFunctions {
                                     </div>
                                 </div>
 
-                                <div class="pwe-header-bottom">';
-
-
-                                    $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
-                                    $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
-                                                    self::languageChecker(
-                                                        <<<PL
-                                                        alt="link do rejestracji">Zarejestruj się<span class="btn-small-text" style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
-                                                        PL,
-                                                        <<<EN
-                                                        alt="link to registration">Register<span class="btn-small-text" style="display: block; font-weight: 300;">Get a free ticket</span>
-                                                        EN
-                                                    )
-                                                .'</a><span class="btn-angle-right">&#8250;</span>';
-                                    $output .='</div>
+                                <div class="pwe-header-bottom">
+                                    <div id="pweBtnRegistration" class="pwe-btn-container header-button">
+                                        <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" alt="'. self::languageChecker('link do rejestracji', 'link to registration') .'">
+                                            '. self::languageChecker('Zarejestruj się', 'Register') .'
+                                            <span class="btn-small-text" style="display: block; font-weight: 300;">
+                                                '. self::languageChecker('Odbierz darmowy bilet', 'Get a free ticket') .'
+                                            </span>
+                                        </a>
+                                        <span class="btn-angle-right">&#8250;</span>
+                                    </div>
                                 </div>
+
                             </div>
-                            ';
-                        $output .= '
+                        </div>
+
+                        <div class="video-background">
+                            <video autoplay="" muted="" loop="" preload="auto" class="bg-video" src="/doc/header.mp4"></video>
                         </div>';
-                        $output .= '
-                            <div class="video-background">
-                                <video autoplay="" muted="" loop="" preload="auto" class="bg-video" src="/doc/header.mp4"></video>
-                            </div>
-                        ';
                     }
                 $output .= '
                 </div>
@@ -2604,7 +2455,7 @@ class PWEHeader extends PWECommonFunctions {
             $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    const pweLogotypesElement = document.querySelector(".pwelement_'. SharedProperties::$rnd_id .' .pwe-header-logotypes");
+                    const pweLogotypesElement = document.querySelector(".pwelement_'. $el_id .' .pwe-header-logotypes");
 
                     if ((pweLogotypesElement && pweLogotypesElement.children.length === 0)) {
                         pweLogotypesElement.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
@@ -2652,7 +2503,7 @@ class PWEHeader extends PWECommonFunctions {
 
         $output = do_shortcode($output);
 
-        $file_cont = '<div class="pwelement pwelement_'.SharedProperties::$rnd_id.'">' . $output . '</div>';
+        $file_cont = '<div class="pwelement pwelement_'. $el_id .'">' . $output . '</div>';
 
         if ($input_replace_array_html && $output_replace_array_html) {
             $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);

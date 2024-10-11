@@ -154,6 +154,36 @@ class PWElementOrganizer extends PWElements {
                 background-color: '. $darker_btn_color .'!important;
                 border: 1px solid '. $darker_btn_color .'!important;
             }
+
+            .custom-organizator-header-mobile,
+            .custom-organizator-mobile-container {
+                max-width: 1200px;
+            }
+            .custom-organizator-mobile-container {
+                display: flex;
+                gap: 36px;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .custom-organizator-mobile-container .custom-organizator-video,
+            .custom-organizator-mobile-container .custom-inner-mobile-text {
+                width: 50%;
+                max-width: 500px;
+            }
+            .custom-organizator-mobile-container .custom-inner-mobile-text {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            @media (max-width:1050px){
+                .custom-organizator-mobile-container {
+                    justify-content: center;
+                }
+                .custom-organizator-mobile-container .custom-organizator-video,
+                .custom-organizator-mobile-container .custom-inner-mobile-text {
+                    width: 100%;
+                }
+            }
             @media (max-width:360px){
                 .custom-organizator-header-mobile .image-ptak {
                     width: 60px;
@@ -225,49 +255,52 @@ class PWElementOrganizer extends PWElements {
                     
                 </div>
 
-                <div class="custom-organizator-video mobile">'. $video_default_html .'</div>
+                <div class="custom-organizator-mobile-container">
+                    <div class="custom-organizator-video mobile">'. $video_default_html .'</div>
 
-                <div class="custom-inner-mobile-text text-left">
-                    
-                    <p>'.
-                        self::languageChecker(
-                            <<<PL
-                            <strong>PTAK Warsaw Expo, największe centrum targowo-kongresowe</strong> 
-                            oraz <strong>lider organizacji targów</strong> w Europie Środkowej, które 
-                            organizuje <strong>ponad 100 targów</strong> rocznie przyciągając zarówno 
-                            wystawców jak i odwiedzających z całego świata.
-                            PL,
-                            <<<EN
-                            <strong>PTAK Warsaw Expo, the largest trade fair and congress centre</strong>
-                            and <strong>the leader in trade fair organisation</strong> in Central Europe, which
-                            organises <strong>over 100 trade fairs</strong> annually, attracting both
-                            exhibitors and visitors from all over the world.
-                            EN
-                        )
-                    .'</p>
-                    <div class="pwe-btn-container">
-                        <a class="pwe-link btn pwe-btn" target="_blank" 
-                        href="'. 
-                        self::languageChecker(
-                            <<<PL
-                            https://warsawexpo.eu/kalendarz-targowy/
-                            PL,
-                            <<<EN
-                            https://warsawexpo.eu/en/exhibition-calendar/
-                            EN
-                        )
-                        .'"'. 
-                        self::languageChecker(
-                            <<<PL
-                            alt="kalendarz targowy">Zobacz nasze targi
-                            PL,
-                            <<<EN
-                            alt="exhibition calendar">See our fairs
-                            EN
-                        )
-                        .'</a>  
+                    <div class="custom-inner-mobile-text text-left">
+                        
+                        <p>'.
+                            self::languageChecker(
+                                <<<PL
+                                <strong>PTAK Warsaw Expo, największe centrum targowo-kongresowe</strong> 
+                                oraz <strong>lider organizacji targów</strong> w Europie Środkowej, które 
+                                organizuje <strong>ponad 100 targów</strong> rocznie przyciągając zarówno 
+                                wystawców jak i odwiedzających z całego świata.
+                                PL,
+                                <<<EN
+                                <strong>PTAK Warsaw Expo, the largest trade fair and congress centre</strong>
+                                and <strong>the leader in trade fair organisation</strong> in Central Europe, which
+                                organises <strong>over 100 trade fairs</strong> annually, attracting both
+                                exhibitors and visitors from all over the world.
+                                EN
+                            )
+                        .'</p>
+                        <div class="pwe-btn-container">
+                            <a class="pwe-link btn pwe-btn" target="_blank" 
+                            href="'. 
+                            self::languageChecker(
+                                <<<PL
+                                https://warsawexpo.eu/kalendarz-targowy/
+                                PL,
+                                <<<EN
+                                https://warsawexpo.eu/en/exhibition-calendar/
+                                EN
+                            )
+                            .'"'. 
+                            self::languageChecker(
+                                <<<PL
+                                alt="kalendarz targowy">Zobacz nasze targi
+                                PL,
+                                <<<EN
+                                alt="exhibition calendar">See our fairs
+                                EN
+                            )
+                            .'</a>  
+                        </div>
                     </div>
                 </div>
+                
             </div>
             
             <script>

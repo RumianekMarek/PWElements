@@ -1,4 +1,3 @@
-/* NEW */
 .pwe_dependent-hidden {
     display: none !important;
 }
@@ -9,6 +8,7 @@
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_logotypes"],
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_media_gallery"],
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_display_info"],
+#vc_ui-panel-edit-element[data-vc-shortcode="pwe_exhibitor_generator"],
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_profile"] {
 
     .backend-area-full-width { 

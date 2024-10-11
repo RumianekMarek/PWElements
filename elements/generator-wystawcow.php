@@ -92,6 +92,41 @@ class PWElementGenerator extends PWElements {
                     'value' => 'PWElementGenerator',
                 ),
             ),
+            array(
+                'type' => 'param_group',
+                'group' => 'PWE Element',
+                'heading' => __('Personalizowanie Pod wystawce', 'pwelement'),
+                'description' => __('Dodaj wystawce do grupy i sprawdź na stronie pod parametrem <br> ?wysatwca=...', 'pwelement'),
+                'param_name' => 'company_edition',
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementGenerator',
+                ),
+                'params' => array(
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('UNIKALNY! token  do adresu url ?wystawca=', 'pwelement'),
+                        'param_name' => 'exhibitor_token',
+                        'save_always' => true,
+                        'admin_label' => true,
+                        'value' => '',
+                    ),
+                    array(
+                        'type' => 'attach_image',
+                        'heading' => __('Logo Wystawcy', 'pwelement'),
+                        'param_name' => 'exhibitor_logo',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Nazwa Wystawcy', 'pwelement'),
+                        'param_name' => 'exhibitor_name',
+                        'save_always' => true,
+                        'admin_label' => true,
+                        'value' => '',
+                    ),
+                ),
+            ),
         );
         return $element_output;
     }
@@ -100,6 +135,24 @@ class PWElementGenerator extends PWElements {
         $domain = $_SERVER["HTTP_HOST"];
         $secret_key = '^GY0ZlZ!xzn1eM5';
         return hash_hmac('sha256', $domain, $secret_key);
+    }
+    
+    /**
+     * Static method to hide specjal input.
+     * Returns form for GF filter.
+     *
+     * @param array @form object
+     */
+    public static function hide_field_by_label( $form, $com_name ) {
+        $label_to_hide = ['FIRMA ZAPRASZAJĄCA', 'FIRMA', 'INVITING COMPANY', 'COMPANY'];
+
+        foreach( $form['fields'] as &$field ) {
+            if( in_array($field->label, $label_to_hide) ) {
+                $field->cssClass .= ' gf_hidden';
+                $field->defaultValue = $com_name;
+            }
+        }
+        return $form;
     }
 
     /**
@@ -110,14 +163,41 @@ class PWElementGenerator extends PWElements {
      */
     public static function output($atts) {
         $current_url = $_SERVER['REQUEST_URI'];
+        $output = '';
 
         extract( shortcode_atts( array(
             'worker_form_id' => '',
-            // 'guest_form_id' => '',
-            // 'generator_tickets' => '',
             'generator_html_text' => '',
             'generator_select' => '',
         ), $atts ));
+
+        $company_array = array();
+
+        if(isset($_GET['wystawca'])){
+
+            $company_edition = vc_param_group_parse_atts( $atts['company_edition'] );
+            foreach ($company_edition as $company){
+                if($_GET['wystawca'] == $company['exhibitor_token']){
+                    $company_array = $company;
+                    break;
+                }
+            }
+
+            if (isset($company_array['exhibitor_name'])){
+                add_filter( 'gform_pre_render', function( $form ) use ( $company_array ) {
+                    return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+                });
+                add_filter( 'gform_pre_validation', function( $form ) use ( $company_array ) {
+                    return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+                });
+                add_filter( 'gform_pre_submission_filter', function( $form ) use ( $company_array ) {
+                    return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+                });
+                add_filter( 'gform_admin_pre_render', function( $form ) use ( $company_array ) {
+                    return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+                });
+            }
+        }
 
         $send_file = plugins_url('other/mass_vip.php', dirname(__FILE__));
 
@@ -145,6 +225,7 @@ class PWElementGenerator extends PWElements {
         if(isset($_GET['token'])){
             $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
         }
+
 
         // if ($generator_tickets == true) {
         //     if (get_locale() == 'pl_PL') {
@@ -187,9 +268,9 @@ class PWElementGenerator extends PWElements {
                 text-decoration: underline;
                 color: black !important;
             }
-            .pwe-generator-wystawcow {
-                padding: 18px 0 36px;
-            }
+            // .pwe-generator-wystawcow {
+            //     padding: 18px 0 36px;
+            // }
             .pwe-generator-wystawcow h2 {
                 font-size: 28px !important;
                 width: auto !important;
@@ -273,7 +354,7 @@ class PWElementGenerator extends PWElements {
                 border-radius: 25px;
                 position: relative;
                 max-width: 1200px;
-                margin: 30px auto 0;
+                // margin: 30px auto 0;
                 height: 780px;
                 top: 50%;
                 -moz-transition: all 0.5s;
@@ -834,7 +915,7 @@ class PWElementGenerator extends PWElements {
                     max-width: 90px;
                 }
             }
-        </style>
+            </style>
 
             <div id="pweGeneratorWystawcow" class="pwe-generator-wystawcow">
                 ';
@@ -858,7 +939,6 @@ class PWElementGenerator extends PWElements {
                                                     EN
                                                 )
                                             .'</h2>
-
                                         </div>
                                     </div>
                                 </div>
@@ -877,8 +957,11 @@ class PWElementGenerator extends PWElements {
                                                             GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!
                                                         EN
                                                     )
-                                                .'</h2>
-                                                <h5>'.
+                                                .'</h2>';
+                                                    if(isset($company_array['exhibitor_logo'])){
+                                                        $output .= '<img style="max-height: 120px;" src="' . wp_get_attachment_url($company_array['exhibitor_logo']) . '">';
+                                                    }
+                                    $output .= '<h5>'.
                                                     self::languageChecker(
                                                         <<<PL
                                                             Identyfikator VIP uprawnia do:
@@ -948,18 +1031,22 @@ class PWElementGenerator extends PWElements {
 
                                                 </div>
 
-                                                [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]
-                                                
-                                                <button class="btn tabela-masowa btn-gold">'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    Wysyłka zbiorcza
-                                                    PL,
-                                                    <<<EN
-                                                    Collective send
-                                                    EN
-                                                )
-                                                .'</button>
+                                                [gravityform id="'. $worker_form_id .'" title="false" description="false" ajax="false"]';
+
+                                                if(!isset($company_array['exhibitor_logo'])){
+                                                    $output .= '<button class="btn tabela-masowa btn-gold">'.
+                                                    self::languageChecker(
+                                                        <<<PL
+                                                        Wysyłka zbiorcza
+                                                        PL,
+                                                        <<<EN
+                                                        Collective send
+                                                        EN
+                                                    )
+                                                    .'</button>';
+                                                }
+
+                                                $output .= '
                                             <!-- <div class="gen-text">'. $generator_html_text_content .'</div> -->
                                             </div>
                                             <div class="gen-btn-img" style="background-image: url('.
@@ -1501,7 +1588,7 @@ class PWElementGenerator extends PWElements {
             </script>';
 
             $output .= "
-            <script>
+            <script>                
                 var registrationCount = '" . $registration_count . "';
                 if (document.querySelector('html').lang === 'pl-PL') {
                     const companyNameInput = document.querySelector('.wyst .forms-container-form__right input[placeholder=\'FIRMA ZAPRASZAJĄCA\']');

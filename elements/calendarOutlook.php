@@ -30,7 +30,6 @@ class PWOutlookCalendarElement extends PWElements {
                 EN
             )
         );
-        echo '<script>console.log("'.$fair_desc.'")</script>';
         
         $trade_name = do_shortcode(
             self::languageChecker(
@@ -51,7 +50,7 @@ class PWOutlookCalendarElement extends PWElements {
         $output = '<div id="calendar-outlook" class="pwe-container-calendar-add text-centered">
                     <a class="outlook" alt="link do kalendarza outlook" href="' . $linker . '" target="_blank">
                         <img src="/wp-content/plugins/PWElements/media/outlook.png" alt="ikonka outlook calendar"/>
-                        <p class="font-weight-700">'.
+                        <p class="calendar-icon font-weight-700">'.
                         self::languageChecker(
                             <<<PL
                             Kalendarz<br>Outlook

@@ -89,8 +89,7 @@
     box-shadow: 9px 9px 0px -5px black;
 }
 
-.pwe-shadow-border-black,
-.pwe-container-calendar-icons .pwe-container-calendar-add {
+.pwe-shadow-border-black {
     box-shadow: 9px 9px 0px -5px black;
     border: 2px solid black;
 }

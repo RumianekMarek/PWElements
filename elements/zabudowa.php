@@ -60,7 +60,7 @@ class PWElementStand extends PWElements {
                 }
             </style>
 
-            <div id="PWEstand" class="pwe-container-stand">
+            <div id="stand" class="pwe-container-stand">
                 <div class="pwe-block-1 half-block-padding" style="flex:1;">
                     <div class="heading-text el-text main-heading-text text-centered">
                     <h4>'. 

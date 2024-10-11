@@ -1,6 +1,6 @@
 <?php
 
-class PWEDisplayInfo {
+class PWEDisplayInfo extends PWECommonFunctions {
     public static $rnd_id;
     public static $fair_colors;
     public static $accent_color;
@@ -19,10 +19,6 @@ class PWEDisplayInfo {
                 self::$main2_color = $color_value;
             }
         }
-        
-        // Hook actions
-        add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
-        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
 
         add_action('init', array($this, 'initVCMapPWEDisplayInfo'));
         add_shortcode('pwe_display_info', array($this, 'PWEDisplayInfoOutput'));
@@ -43,6 +39,7 @@ class PWEDisplayInfo {
                 'base' => 'pwe_display_info',
                 'category' => __( 'PWE Elements', 'pwe_display_info'),
                 'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
+                'param_holder_class' => 'pwelement__backend',
                 'params' => array_merge(
                     array( 
                         array(
@@ -164,20 +161,6 @@ class PWEDisplayInfo {
     }
 
     /**
-     * Get available elements for the dropdown.
-     *
-     * @return array
-     */
-    private function getAvailableElements() {
-        // Creating an instance of elements to choose from
-        return array(
-            'Info Box'         => 'PWEDisplayInfoBox',
-            'Info Speakers'    => 'PWEDisplayInfoSpeakers',
-
-        );
-    }
-
-    /**
      * Check class for file if exists.
      *
      * @return array
@@ -188,104 +171,6 @@ class PWEDisplayInfo {
             'PWEDisplayInfoBox'         => 'display-info-box.php',
             'PWEDisplayInfoSpeakers'    => 'display-info-speakers.php',
         );
-    }
-
-    /**
-     * Mobile displayer check
-     * 
-     * @return bool
-     */
-    public static function checkForMobile(){
-        return (preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']));
-    }
-
-    /**
-     * Adding Styles
-     */
-    public function addingStyles(){
-        $css_file = plugins_url('display-info.css', __FILE__);
-        $css_version = filemtime(plugin_dir_path(__FILE__) . 'display-info.css');
-        wp_enqueue_style('pwe-display-info-css', $css_file, array(), $css_version);
-    }
-
-    /**
-     * Adding Scripts
-     */
-    public function addingScripts($atts){
-        $js_file = plugins_url('display-info.js', __FILE__);
-        $js_version = filemtime(plugin_dir_path(__FILE__) . 'display-info.js');
-        wp_enqueue_script('pwe-display-info-js', $js_file, array('jquery'), $js_version, true);
-
-        $locale = get_locale();
-        wp_localize_script('pwe-display-info-js', 'pweScriptData', array(
-            'locale' => $locale
-        ));
-    }
-
-    /**
-     * Function to change color brightness (taking color in hex format)
-     *
-     * @return array
-     */
-    public static function adjustBrightness($hex, $steps) {
-        // Convert hex to RGB
-        $hex = str_replace('#', '', $hex);
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-
-        // Shift RGB values
-        $r = max(0, min(255, $r + $steps));
-        $g = max(0, min(255, $g + $steps));
-        $b = max(0, min(255, $b + $steps));
-
-        // Convert RGB back to hex
-        return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT)
-                . str_pad(dechex($g), 2, '0', STR_PAD_LEFT)
-                . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-    }
-
-    /**
-     * Finding preset colors pallet.
-     *
-     * @return array
-     */
-    public static function findPalletColors(){
-        $uncode_options = get_option('uncode');
-        $accent_uncode_color = $uncode_options["_uncode_accent_color"];
-        $custom_element_colors = array();
-
-        if (isset($uncode_options["_uncode_custom_colors_list"]) && is_array($uncode_options["_uncode_custom_colors_list"])) {
-            $custom_colors_list = $uncode_options["_uncode_custom_colors_list"];
-      
-            foreach ($custom_colors_list as $color) {
-                $title = $color['title'];
-                $color_value = $color["_uncode_custom_color"];
-                $color_id = $color["_uncode_custom_color_unique_id"];
-
-                if ($accent_uncode_color != $color_id) {
-                    $custom_element_colors[$title] = $color_value;
-                } else {
-                    $accent_color_value = $color_value;
-                    $custom_element_colors = array_merge(array('Accent' => $accent_color_value), $custom_element_colors);
-                }
-            }
-            $custom_element_colors = array_merge(array('Default' => ''), $custom_element_colors);
-        }
-        return $custom_element_colors;
-    }
-
-    /**
-     * Adding Styles
-     */
-    public static function findColor($primary, $secondary, $default = ''){
-        if($primary != ''){
-            return $primary;
-        } elseif ($secondary != ''){
-            return $secondary;
-        } else {
-            return $default;
-        }
     }
 
     /**

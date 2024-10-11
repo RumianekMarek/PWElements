@@ -38,11 +38,20 @@ class PWBadgeElement extends PWElements {
     /**
      * Static method to generate mass bages.
      * 
-     * @param number @badge_form_id form id for Qr codes
+     * @param number @badge_form_id form id
+     *
+     * The method processes the following steps:
+     * 1. Checks if the form was submitted and necessary inputs are present.
+     * 2. Updates the URL of the confirmation message.
+     * 3. Collects data from the form inputs and prepares it for badge generation.
+     * 4. Checks if the badge name is correctly formatted.
+     * 5. Generates multiple badges adding to forms and opens each badge URL in a new window for download.w.
      */
     public static function massGenerator($badge_form_id) {
-        
-        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3'])){         
+        // 1. Checks if the form was submitted and necessary inputs are present.
+        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3'])){
+            
+            // 2. Updates the URL of the confirmation message.
             echo '<script>
             jQuery(function ($) {
                 const gfMessage = $(".gform_confirmation_message a");
@@ -54,11 +63,15 @@ class PWBadgeElement extends PWElements {
                 }
             });
             </script>';
+
+            // 3. Collects data from the form inputs prepares it for badge generation.
             $multi_badge = array();
             $multi_badge['form_id'] = $badge_form_id;
   
+            // Get the badge domain from a shortcode
             $badge_domain = do_shortcode('[trade_fair_badge]');
             
+            // Collect all form inputs
             foreach ($_POST as $key => $value) {
                 
                 if (strpos(strtolower($key), 'input') !== false) {
@@ -68,19 +81,27 @@ class PWBadgeElement extends PWElements {
                 }
             }
 
+            // 4. Checks if the badge name is correctly formatted.
             if(strpos($multi_badge[3], $badge_domain) === false){
                 $multi_badge[3] = $badge_domain . $multi_badge[3];
             }
-            
-            for($i=1; $i<$_POST['multi_send']; $i++){  
+
+            // 5. Generates multiple badges adding to forms and opens each badge URL in a new window for download.
+            for($i=0; $i<$_POST['multi_send']; $i++){  
+
+                // Adding entry to Gravity form
                 $entry_id = GFAPI::add_entry($multi_badge);
+
+                // Getting QR-code url
                 $meta_key = '';
-                for ($j=0; $j<=300;$j++){
+                for ($j=1; $j<=300;$j++){
                     if(gform_get_meta($entry_id , 'qr-code_feed_' . $j . '_url') != ''){
                         $meta_key = 'qr-code_feed_' . $j . '_url';
                         break;
                     }
                 }
+
+                // Opening new window to download
                 $qr_code_url = (gform_get_meta($entry_id, $meta_key));
                 $badge_url = 'https://warsawexpo.eu/assets/badge/local/loading.html?category='.$multi_badge[3].'&getname='.$multi_badge[1].'&firma='.$multi_badge[2].'&qrcode='.$qr_code_url;
                 echo '<script>window.open("'.$badge_url.'");</script>';
@@ -100,7 +121,7 @@ class PWBadgeElement extends PWElements {
             $btn_text_color = 'color:' . self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'black') . '!important; border-width: 0 !important;';
             $btn_color = 'background-color:' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'white') . '!important;';
             $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
-            
+
             $output = '';
 
             $output .= '<style>

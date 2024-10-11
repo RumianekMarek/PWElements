@@ -389,135 +389,133 @@ class PWElementProfile extends PWElements {
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $output = '
-            <style>
-                .pwelement_'. self::$rnd_id .' {
-                    margin: 0 !important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-btn {
-                    color: '. $btn_text_color .';
-                    background-color: '. $btn_color .';
-                    border: 1px solid '. $btn_border .';
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
-                    color: '. $btn_text_color .';
-                    background-color: '. $darker_btn_color .'!important;
-                    border: 1px solid '. $darker_btn_color .'!important;
-                }
-                .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-profile) {
-                    max-width: 100%;
-                    padding: 0 !important;  
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-wrapper {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: ' . $profile_padding_element . ';   
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-content {
-                    display: flex;
-                    gap: 36px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-text-block {
-                    display: flex;
-                    flex-direction: column;
-                    
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-text-block h4 {
-                    font-size: 20px !important;
-                    font-weight: 600 !important;
-                    text-transform: uppercase !important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-images-block {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-images-wrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    gap: 36px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-image {
-                    object-fit: cover;
-                    width: ' . $profile_img_max_width . ';
-                    aspect-ratio: ' . $profile_img_aspect_ratio . ';
-                    border-radius: 18px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-block {
-                    width: 50%;
-                    margin: 0 auto;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-buttons {
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: space-around;
-                    padding: 18px 0;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-link {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
-                .pwelement_'. self::$rnd_id .' .profile-box-shadow-left {
-                    margin-left: -10px;
-                    margin-bottom: -31px;
-                    box-shadow: -3px -3px ' . $profile_shadow . ';
-                    width: 170px !important;
-                    height: 40px;
-                }
-                .pwelement_'. self::$rnd_id .' .profile-box-shadow-right {
-                    margin-right: -10px;
-                    margin-top: -46px;
-                    box-shadow: 3px 3px ' . $profile_shadow . ';
-                    width: 170px !important;
-                    height: 40px;
-                    float: right;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-hidden-content ul,
-                .pwelement_'. self::$rnd_id .' .pwe-hidden-content,
-                .pwelement_'. self::$rnd_id .' .pwe-see-more {
-                    margin: 0 !important;
-                }
-                #zakres-branzowy .pwe-uppercase {
-                    padding: 0 12px 10px 0 !important;
-                    margin-bottom: 18px;
-                }
-                @media (max-width: 960px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-profile-content {
-                        flex-direction: column;
-                        gap: 0 !important;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-profile-block {
-                        width: 100% !important;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-profile-image {
-                        aspect-ratio: auto !important;
-                    }
-                }
-                @media (max-width: 600px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-profile-image {
-                        width: 100%;
-                    }
-                }
-            </style>';
-
-        if ($mobile) {
-            $output .= '
-            <style>
+        <style>
+            .pwelement_'. self::$rnd_id .' {
+                margin: 0 !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-btn {
+                color: '. $btn_text_color .';
+                background-color: '. $btn_color .';
+                border: 1px solid '. $btn_border .';
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
+                color: '. $btn_text_color .';
+                background-color: '. $darker_btn_color .'!important;
+                border: 1px solid '. $darker_btn_color .'!important;
+            }
+            .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-container-profile) {
+                max-width: 100%;
+                padding: 0 !important;  
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-wrapper {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: ' . $profile_padding_element . ';   
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-content {
+                display: flex;
+                gap: 36px;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-text-block {
+                display: flex;
+                flex-direction: column;
+                
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-text-block h4 {
+                font-size: 20px !important;
+                font-weight: 600 !important;
+                text-transform: uppercase !important;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-images-block {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-images-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 36px;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-image {
+                object-fit: cover;
+                width: ' . $profile_img_max_width . ';
+                aspect-ratio: ' . $profile_img_aspect_ratio . ';
+                border-radius: 18px;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-block {
+                width: 50%;
+                margin: 0 auto;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-profile-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 18px 0;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-link {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .pwelement_'. self::$rnd_id .' .profile-box-shadow-left {
+                margin-left: -10px;
+                margin-bottom: -31px;
+                box-shadow: -3px -3px ' . $profile_shadow . ';
+                width: 170px !important;
+                height: 40px;
+            }
+            .pwelement_'. self::$rnd_id .' .profile-box-shadow-right {
+                margin-right: -10px;
+                margin-top: -46px;
+                box-shadow: 3px 3px ' . $profile_shadow . ';
+                width: 170px !important;
+                height: 40px;
+                float: right;
+            }
+            .pwelement_'. self::$rnd_id .' .pwe-hidden-content ul,
+            .pwelement_'. self::$rnd_id .' .pwe-hidden-content,
+            .pwelement_'. self::$rnd_id .' .pwe-see-more {
+                margin: 0 !important;
+            }
+            #zakres-branzowy .pwe-uppercase {
+                padding: 0 12px 10px 0 !important;
+                margin-bottom: 18px;
+            }
+            @media (max-width: 960px) {
                 .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     flex-direction: column-reverse;
+                    gap: 0 !important;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-profile-text-block p:first-of-type {
-                    display: none;
+                .pwelement_'. self::$rnd_id .' .pwe-profile-block {
+                    width: 100% !important;
                 }
-            </style>';
-        } else if ($profile_reverse_block == 'true') {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-image {
+                    aspect-ratio: auto !important;
+                }
+            }
+            @media (max-width: 600px) {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-image {
+                    width: 100%;
+                }
+            }
+        </style>';
+
+        if ($profile_reverse_block == 'true') {
             $output .= '
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     flex-direction: row-reverse;
+                }
+                @media (max-width: 960px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-content {
+                        flex-direction: column-reverse;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-text-block p:first-of-type {
+                        display: none;
+                    }
                 }
             </style>';
         }

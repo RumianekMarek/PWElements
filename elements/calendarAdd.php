@@ -42,6 +42,10 @@ class PWCallendarAddElement extends PWElements {
     * @return string @output 
     */
     public static function output($atts) {
+        extract( shortcode_atts( array(
+            'logo_color' => '',
+        ), $atts ));
+
         require_once plugin_dir_path(__FILE__) . 'calendarApple.php';
         require_once plugin_dir_path(__FILE__) . 'calendarGoogle.php';
         require_once plugin_dir_path(__FILE__) . 'calendarOffice.php';
@@ -52,7 +56,8 @@ class PWCallendarAddElement extends PWElements {
 
         $output = '';
 
-        $output .= '<style>
+        $output .= '
+        <style>
             .row-parent:has(.pwelement_'.self::$rnd_id.' #calendar-add) {
                 max-width: 100%;
                 padding: 0 !important;
@@ -60,7 +65,7 @@ class PWCallendarAddElement extends PWElements {
             .wpb_column:has(.pwelement_'.self::$rnd_id.') {
                 padding-top: 0 !important;
             }
-            #calendar-add{
+            .pwelement_'.self::$rnd_id.' #calendar-add {
                 background: no-repeat;
                 background-size: cover;
                 background-image:url(' . (file_exists(ABSPATH . "/doc/background.webp") ? "/doc/background.webp" : "/doc/background.jpg") . ');
@@ -71,66 +76,84 @@ class PWCallendarAddElement extends PWElements {
                 . $text_shadow_color . '
                 font-weight:700;
             }
-            .pwe-container-calendar-icons, .pwe-header-calendarAdd{
+            .pwelement_'.self::$rnd_id.' #calendar-add h1 {
+                font-size: 76px;
+                text-transform: uppercase;
+            }
+            .pwelement_'.self::$rnd_id.' .pwe-container-calendar-icons, 
+            .pwelement_'.self::$rnd_id.' .pwe-header-calendarAdd {
                 display: flex;
                 justify-content: center;
                 gap:30px;
                 margin-top: 20px;
             }
-            .pwe-inner-calendarAdd, .pwe-container-calendar-icons{
+            .pwelement_'.self::$rnd_id.' .pwe-inner-calendarAdd, 
+            .pwelement_'.self::$rnd_id.' .pwe-container-calendar-icons {
                 max-width: 1200px;
             }
-            .pwe-inner-calendarAdd img {
+            .pwelement_'.self::$rnd_id.' .pwe-inner-calendarAdd img {
                 object-fit: contain;
                 max-width: 300px !important;
             }
-            .pwe-container-calendar-icons{ 
+            .pwelement_'.self::$rnd_id.' .pwe-container-calendar-icons { 
                 top:-30px;
                 position: relative; 
             }
-            .pwe-inner-calendar-icons{
+            .pwelement_'.self::$rnd_id.' .pwe-inner-calendar-icons {
                 margin-top:30px;
             }
-            .pwe-container-calendar-add{
+            .pwelement_'.self::$rnd_id.' .pwe-container-calendar-add { 
                 flex:1;
                 min-width: 100px;
                 max-width: 180px;
                 background: white;
-                padding:5px 0;
+                padding: 5px 0;
+                border-radius: 18px;
             }
-            .pwe-container-calendar-add p{
+            .pwelement_'.self::$rnd_id.' .pwe-container-calendar-add p {
                 color:black;
                 margin:5px;
                 line-height: 1.2;
             }
-            .pwe-container-calendar-add img, .pwe-header-calendarAdd img{
+            .pwelement_'.self::$rnd_id.' .pwe-container-calendar-add img, 
+            .pwelement_'.self::$rnd_id.' .pwe-header-calendarAdd img {
                 max-height: 150px;
                 width: auto;
                 max-width:100%;
             }
+            .pwelement_'.self::$rnd_id.' #calendar-add .calendar-icon a {
+                color:black !important;
+            }
+            @media (min-width: 300px) and (max-width: 1200px) {
+                .pwelement_'.self::$rnd_id.' #calendar-add h1 {
+                    font-size: calc(24px + (76 - 24) * ( (100vw - 300px) / (1200 - 300) ));
+                }
+            }
             @media (max-width:959px){
-                .pwe-container-calendar-icons{
+                .pwelement_'.self::$rnd_id.' .pwe-container-calendar-icons {
                     padding: 10px;
                 }
             }
             @media (max-width:570px){
-                .pwe-container-calendar-icons, .pwe-header-calendarAdd {
+                .pwelement_'.self::$rnd_id.' .pwe-container-calendar-icons, 
+                .pwelement_'.self::$rnd_id.' .pwe-header-calendarAdd {
                     flex-wrap: wrap;
                 }
-                .pwe-container-calendar-add{
+                .pwelement_'.self::$rnd_id.' .pwe-container-calendar-add {
                     min-width: 35%;
                     max-width: 130px;
                 }
-                .pwe-container-calendar-add img{
+                .pwelement_'.self::$rnd_id.' .pwe-container-calendar-add img {
                     max-height: 100px;
                 }  
             }
         </style>
+
         <div id="calendar-add" class="pwe-container-calendar-main text-centered style-accent-bg">
             <div class="pwe-calendar-wrapper">
                 <div class="pwe-inner-calendarAdd single-block-padding">
                     <div class="pwe-header-calendarAdd">'.
-                            self::findBestLogo($atts['logo_color'])
+                            self::findBestLogo($logo_color)
                         .'<div class="pwe-header-text-calendarAdd">'.
                         self::languageChecker(
                             <<<PL
@@ -145,19 +168,20 @@ class PWCallendarAddElement extends PWElements {
                         .'</div>
                     </div>
                     <div class="pwe-header-calendar-add text-centered">
-                        <h1 class="bigtext">
-                            <span class="text-uppercase bigtext-line0">'.
+                        <h1 class="pwe-header-calendar-add-text">'.
                             self::languageChecker(
                                 <<<PL
-                                <span>Dodaj do kalendarza</span>
+                                    Dodaj do kalendarza
                                 PL,
                                 <<<EN
-                                <span>Add to calendar</span>
+                                    Add to calendar
                                 EN
                                 )
-                            .'</span>
+                            .'
                         </h1>
                     </div> 
+
+                    
         
                     <div class="pwe-text-calendar-add text-centered">'.
                         self::languageChecker(

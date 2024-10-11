@@ -30,7 +30,6 @@ class PWGoogleCalendarElement extends PWElements {
                 EN
             )
         );
-        echo '<script>console.log("'.$fair_desc.'")</script>';
         
         $trade_name = do_shortcode(
             self::languageChecker(
@@ -51,7 +50,7 @@ class PWGoogleCalendarElement extends PWElements {
         $output = '<div id="calendar-google" class="pwe-container-calendar-add text-centered">
                     <a class="google" alt="link do kalendarza google" href="' . $linker . '" target="_blank">
                         <img src="/wp-content/plugins/PWElements/media/googlecalendar.png" alt="ikonka google calendar"/>
-                        <p class="font-weight-700">'.
+                        <p class="calendar-icon font-weight-700">'.
                         self::languageChecker(
                             <<<PL
                             Kalendarz<br>Google

@@ -265,7 +265,7 @@ class PWElementMapa extends PWElements {
             }
         </style>
 
-        <div id="pweMapa" class="pwe-container-mapa">
+        <div id="mapa" class="pwe-container-mapa">
             <div class="pwe-mapa-staticts">
                 <h2 class="text-accent-color">'. $pwe_custom_title .'</h2>
                 <div class="pwe-mapa-rounded-stat">
