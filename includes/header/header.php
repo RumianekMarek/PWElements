@@ -89,6 +89,16 @@ class PWEHeader extends PWECommonFunctions {
         $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '260px' : $pwe_header_logo_width;
         $pwe_header_logo_width = str_replace("px", "", $pwe_header_logo_width);
 
+        if (get_locale() == 'pl_PL') {
+            $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/bilety/" : $pwe_header_tickets_button_link;
+            $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/rejestracja/" : $pwe_header_register_button_link;
+            $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/wydarzenia/" : $pwe_header_conferences_button_link;
+        } else {
+            $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/en/tickets/" : $pwe_header_tickets_button_link;
+            $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/en/registration/" : $pwe_header_register_button_link;
+            $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/en/conferences/" : $pwe_header_conferences_button_link;
+        }
+
         // General css
         $output = '
         <style>
@@ -166,7 +176,7 @@ class PWEHeader extends PWECommonFunctions {
         </style>';
 
         if (current_user_can('administrator')) {
-            $output .= '<script>console.log("(line 169) mobile = '. preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']) .'-'. $_SERVER['HTTP_USER_AGENT'].'");</script>';
+            $output .= '<script>console.log("(line 169) mobile = '. preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']) .' - ('. $_SERVER['HTTP_USER_AGENT'].')");</script>';
         }
 
         $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
