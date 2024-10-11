@@ -9,6 +9,31 @@ class PWECommonFunctions {
         $id_rnd = rand(10000, 99999);
         return $id_rnd;
     }
+    
+    /**
+     * Function to transform the date
+     */
+    public static function transform_dates($start_date, $end_date) {
+        // Convert date strings to DateTime objects
+        $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
+        $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
+
+        // Check if the conversion was correct
+        if ($start_date_obj && $end_date_obj) {
+            // Get the day, month and year from DateTime objects
+            $start_day = $start_date_obj->format('d');
+            $end_day = $end_date_obj->format('d');
+            $month = $start_date_obj->format('m');
+            $year = $start_date_obj->format('Y');
+
+            //Build the desired format
+            $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
+            return $formatted_date;
+        } else {
+            return "Invalid dates";
+        }
+    }
+
     /**
      * Decoding Base64
      * Decoding URL
@@ -139,12 +164,18 @@ class PWECommonFunctions {
      *
      * @return array
      */
-    public function findFormsGF(){
+    public function findFormsGF($mode = ''){
         $pwe_forms_array = array();
         if (method_exists('GFAPI', 'get_forms')) {
             $pwe_forms = GFAPI::get_forms();
-            foreach ($pwe_forms as $form) {
-                $pwe_forms_array[$form['id']] = $form['title'];
+            if($mode == 'id'){
+                foreach ($pwe_forms as $form) {
+                    $pwe_forms_array[$form['title']] = $form['id'];
+                }
+            } else {
+                foreach ($pwe_forms as $form) {
+                    $pwe_forms_array[$form['id']] = $form['title'];
+                }
             }
         }
         return $pwe_forms_array;

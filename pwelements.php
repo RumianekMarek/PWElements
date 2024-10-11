@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.2.7
+ * Version: 2.2.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -41,17 +41,17 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'elements/pwelements-options.php';
         $this->PWElements = new PWElements();
 
-        require_once plugin_dir_path(__FILE__) . 'logotypes/logotypes.php';
-        $this->PWELogotypes = new PWELogotypes();
+        // require_once plugin_dir_path(__FILE__) . 'logotypes/logotypes.php';
+        // $this->PWELogotypes = new PWELogotypes();
 
-        require_once plugin_dir_path(__FILE__) . 'header/header.php';
-        $this->PWEHeader = new PWEHeader();
+        // require_once plugin_dir_path(__FILE__) . 'header/header.php';
+        // $this->PWEHeader = new PWEHeader();
 
         require_once plugin_dir_path(__FILE__) . 'katalog-wystawcow/main-katalog-wystawcow.php';
         $this->PWECatalog = new PWECatalog();
 
-        require_once plugin_dir_path(__FILE__) . 'display-info/main-display-info.php';
-        $this->PWEDisplayInfo = new PWEDisplayInfo();
+        // require_once plugin_dir_path(__FILE__) . 'display-info/main-display-info.php';
+        // $this->PWEDisplayInfo = new PWEDisplayInfo();
 
         require_once plugin_dir_path(__FILE__) . 'media-gallery/media-gallery.php';
         $this->PWEMediaGallery = new PWEMediaGallery();
@@ -63,13 +63,22 @@ class PWElementsPlugin {
         // $this->PWEQRActive = new PWEQRActive();
 
         // require_once plugin_dir_path(__FILE__) . 'includes/katalog-wystawcow/main-katalog-wystawcow.php';
-        // $this->PWECatalog1 = new PWECatalog1();
+        // $this->PWECatalog = new PWECatalog();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
-        // $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
+        require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
+        $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
 
         require_once plugin_dir_path(__FILE__) . 'includes/profile/profile.php';
         $this->PWEProfile = new PWEProfile();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/header/header.php';
+        $this->PWEHeader = new PWEHeader();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/logotypes/logotypes.php';
+        $this->PWELogotypes = new PWELogotypes();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/display-info/display-info.php';
+        $this->PWEDisplayInfo = new PWEDisplayInfo();
     }
 
     // Czyszczenie pamięci wp_rocket
