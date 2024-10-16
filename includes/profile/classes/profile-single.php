@@ -443,7 +443,7 @@ class PWEProfileSingle extends PWEProfile {
                 }
                 @media (max-width: 960px) {
                     .profile-single-'. self::$rnd_id .' .pwe-profile-content {
-                        flex-direction: column;
+                        flex-direction: column-reverse;
                         gap: 0 !important;
                     }
                     .profile-single-'. self::$rnd_id .' .pwe-profile-block {
@@ -460,21 +460,19 @@ class PWEProfileSingle extends PWEProfile {
                 }
             </style>';
 
-        if ($mobile) {
+        if ($profile_reverse_block == 'true') {
             $output .= '
             <style>
-                .profile-single-'. self::$rnd_id .' .pwe-profile-content {
-                    flex-direction: column-reverse;
-                }
-                .profile-single-'. self::$rnd_id .' .pwe-profile-text-block p:first-of-type {
-                    display: none;
-                }
-            </style>';
-        } else if ($profile_reverse_block == 'true') {
-            $output .= '
-            <style>
-                .profile-single-'. self::$rnd_id .' .pwe-profile-content {
+                .pwelement_'. self::$rnd_id .' .pwe-profile-content {
                     flex-direction: row-reverse;
+                }
+                @media (max-width: 960px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-content {
+                        flex-direction: column-reverse;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-profile-text-block p:first-of-type {
+                        display: none;
+                    }
                 }
             </style>';
         }

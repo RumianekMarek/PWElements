@@ -89,7 +89,7 @@ class PWEHeader extends PWECommonFunctions {
         $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '260px' : $pwe_header_logo_width;
         $pwe_header_logo_width = str_replace("px", "", $pwe_header_logo_width);
 
-        if (get_locale() == 'pl_PL') {
+        if (self::lang_pl()) {
             $pwe_header_tickets_button_link = empty($pwe_header_tickets_button_link) ? "/bilety/" : $pwe_header_tickets_button_link;
             $pwe_header_register_button_link = empty($pwe_header_register_button_link) ? "/rejestracja/" : $pwe_header_register_button_link;
             $pwe_header_conferences_button_link = empty($pwe_header_conferences_button_link) ? "/wydarzenia/" : $pwe_header_conferences_button_link;
@@ -175,15 +175,13 @@ class PWEHeader extends PWECommonFunctions {
             }
         </style>';
 
-        if (current_user_can('administrator')) {
-            $output .= '<script>console.log("(line 169) mobile = '. preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']) .' - ('. $_SERVER['HTTP_USER_AGENT'].')");</script>';
-        }
+        $output .= '<script>console.log("mobile == '. preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']) .' ('. $_SERVER['HTTP_USER_AGENT'].') (line 178)");</script>';
 
         $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $base_url .= "://".$_SERVER['HTTP_HOST'];
 
-        $trade_fair_name = (get_locale() == 'pl_PL') ? '[trade_fair_name]' : '[trade_fair_name_eng]';
-        $trade_fair_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
+        $trade_fair_name = (self::lang_pl()) ? '[trade_fair_name]' : '[trade_fair_name_eng]';
+        $trade_fair_date = (self::lang_pl()) ? '[trade_fair_date]' : '[trade_fair_date_eng]';
 
         if ($pwe_header_modes == "simple_mode" &&  $pwe_header_simple_conference == true) {
             $trade_fair_desc = get_the_title();
@@ -193,9 +191,9 @@ class PWEHeader extends PWECommonFunctions {
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp';
             }
         } else {
-            $trade_fair_desc = (get_locale() == 'pl_PL') ? '[trade_fair_desc]' : '[trade_fair_desc_eng]';
+            $trade_fair_desc = (self::lang_pl()) ? '[trade_fair_desc]' : '[trade_fair_desc_eng]';
             if($pwe_header_logo_color != 'true') {
-                if (get_locale() == 'pl_PL') {
+                if (self::lang_pl()) {
                     $logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo.webp') ? '/doc/logo.webp' : '/doc/logo.png');
                 } else {
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo-en.webp') || file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo-en.png')) {
@@ -205,7 +203,7 @@ class PWEHeader extends PWECommonFunctions {
                     }
                 }
             } else {
-                if (get_locale() == 'pl_PL') {
+                if (self::lang_pl()) {
                     $logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo-color.webp') ? '/doc/logo-color.webp' : '/doc/logo-color.png');
                 } else {
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo-color-en.webp') || file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo-color-en.png')) {
@@ -241,11 +239,11 @@ class PWEHeader extends PWECommonFunctions {
         // Processing edition shortcode
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
         if (strpos($trade_fair_edition_shortcode, '.') !== false) {
-            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? " edycja" : " edition";
+            $trade_fair_edition_text = (self::lang_pl()) ? " edycja" : " edition";
         } else {
-            $trade_fair_edition_text = (get_locale() == 'pl_PL') ? ". edycja" : ". edition";
+            $trade_fair_edition_text = (self::lang_pl()) ? ". edycja" : ". edition";
         }
-        $trade_fair_edition_first = (get_locale() == 'pl_PL') ? "Premierowa Edycja" : "Premier Edition";
+        $trade_fair_edition_first = (self::lang_pl()) ? "Premierowa Edycja" : "Premier Edition";
         $trade_fair_edition = (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) ? $trade_fair_edition_first : $trade_fair_edition_shortcode . $trade_fair_edition_text;
 
         // Shortcodes of dates
@@ -257,7 +255,7 @@ class PWEHeader extends PWECommonFunctions {
 
         // Format of date
         if (self::isTradeDateExist()) {
-            $actually_date = (get_locale() == 'pl_PL') ? '[trade_fair_date]' : '[trade_fair_date_eng]';
+            $actually_date = (self::lang_pl()) ? '[trade_fair_date]' : '[trade_fair_date_eng]';
         } else {
             $actually_date = $formatted_date;
         }

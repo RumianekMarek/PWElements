@@ -226,16 +226,25 @@
 
 
 
-
-
 /* Modal */
 @media (max-width: 961px){
     .tabela-masowa{
         display:none;
     }
 }
+.modal__element{
+    position: fixed !important;
+    top:0;
+    left:0;
+    width: 100% !important;
+    height: 100% !important;
+    border: unset;
+    background-color: rgba(128, 128, 128, 0.3);
+}
 
-.modal__elements {
+.modal__element .inner{
+    position: relative;  
+    margin: 100px auto;
     z-index: 9999;
     background-color: #fff;
     padding: 1rem;
@@ -254,61 +263,61 @@
     width:unset !important;
 }
 
-.modal__elements input {
+.modal__element input {
     text-align: center;
-    margin: 18px auto;
+    margin: 18px auto 0 auto;
 }
     
-.modal__elements input[type="text"] {
+.modal__element input[type="text"] {
     width: 50%;
 }
 
-.modal__elements input[type="text"],
-.modal__elements select {
+.modal__element input[type="text"],
+.modal__element select {
     border: 1px solid black;
     border-radius: 10px;
 }
 
-.modal__elements .file-selctor label {
+.modal__element .file-selector label {
     text-align: left;
 }
 
-.modal__elements table{
+.modal__element table{
     text-align: center;
     width:90%;
 }
 
-.modal__elements p{
+.modal__element p{
     text-align: center;
     margin: 0;
 }
-.modal__elements table th{
+.modal__element table th{
     width:50%;
 }
-.modal__elements table td{
+.modal__element table td{
     background-repeat: no-repeat;
     background-position: center;
     text-align: center;
     padding: 0;
 }
-.modal__elements .mass-send-name:empty{
+.modal__element .mass-send-name:empty{
     background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/generator-imiona.webp);
 }
-.modal__elements .mass-send-email:empty{
+.modal__element .mass-send-email:empty{
     background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/geneartor-emaile.webp);
 }
-.modal__elements tr table{
+.modal__element tr table{
     text-align: center;
     width:100%;
     margin-top: 0;
 }
-.modal__elements table input{
+.modal__element table input{
     margin-top: 0 !important;
 }
-.modal__elements .error-color{
+.modal__element .error-color{
     color: red;
 }
-.modal__elements .btn-close{
+.modal__element .btn-close{
     background-color: #b79663;
     padding: 0px 13px 5px 14px;
     border-radius: 50%;
@@ -319,7 +328,7 @@
     right: 10px;
     cursor: pointer;
 }
-.modal__elements label{
+.modal__element label{
     font-weight: 600;
     font-size: 18px;
 }
@@ -328,26 +337,26 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-.modal__elements .zastepczy{
+.modal__element .zastepczy{
     color: #ccc;
     font-style: italic; 
 } 
 .file-uloader{
     margin-top: 18px;
 }
-.file-selctor {
+.file-selector {
     display:flex;
     gap:18px;
     justify-content: center;
     align-items: center;
     margin-top: 9px;
 }
-.file-selctor :is(label, select){
+.file-selector :is(label, select){
     width: 30%;
     min-width: 100px;
     margin: 0;
 }
-.file-selctor select{
+.file-selector select{
     padding-right: 30px;
     cursor: pointer;
     background: #fff url(/wp-content/plugins/PWElements/media/arrow-down.png) no-repeat right 5px top 55%;

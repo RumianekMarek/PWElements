@@ -14,7 +14,6 @@ class PWECatalog {
 
         self::$rnd_id = rand(10000, 99999);
         self::$fair_colors = PWECommonFunctions::findPalletColorsStatic();
-        // self::$fair_forms = $this->findFormsGF();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
         
         foreach(self::$fair_colors as $color_key => $color_value){
@@ -114,7 +113,7 @@ class PWECatalog {
             if (current_user_can('administrator')) {
                 return '<p>Błędny numer katalogu wystawców</p>';
             } else {
-                return '<style>.row-container:has(.catalog-not-finde-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-finde-' . self::$rnd_id . '"></div>';
+                return '<style>.row-container:has(.catalog-not-found-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-found-' . self::$rnd_id . '"></div>';
             }
         }
         
@@ -187,6 +186,13 @@ class PWECatalog {
                     }
                 </style>';
             } 
+        } else {
+            $output_html .= '
+            <style>
+                .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                    display: none !important;
+                } 
+            </style>';
         }
 
         $output_html .= '

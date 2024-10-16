@@ -21,6 +21,7 @@ $output .= '
         display: flex;
         flex-direction: column;
         justify-content: left;
+        padding: 36px 0;
     }
     .pwelement_'. $el_id .' .pwe-header-logo {
         max-width: '. $pwe_header_logo_width .'px !important;
@@ -141,7 +142,7 @@ $output .= '
     .pwelement_'. $el_id .' .pwe-header .pwe-header-container {
         position: relative;
         width: 100%;
-        height: 80vh;
+        min-height: 80vh;
         display: flex;
         justify-content: center;
         align-items: center;

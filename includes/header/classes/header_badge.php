@@ -156,6 +156,9 @@ $output .= '
     .pwelement_'. $el_id .' .pwe-association-title h2 {
         text-shadow: 0 0 1px '. $text_shadow .';
     }
+    .pwelement_'. $el_id .' .pwe-header-text h1 {
+        margin: 0;
+    }
     .pwelement_'. $el_id .' .pwe-header-logo-container h2 {
         margin: 0;
         font-size: 28px !important;
@@ -430,17 +433,14 @@ $output .= '
 $output .= '
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        let pweElement = document.querySelector(".pwelement_'. $el_id .'");
-        let pweElementRow = document.querySelector(".row-container:has(.pwelement_'. $el_id .')");
-        let pweAssociation = document.querySelector(".pwelement_'. $el_id .' .pwe-association") !== null;
-        let isInPweHeader = pweElementRow !== null && pweElementRow.closest(".pwe-header") !== null;
+        const pweElement = document.querySelector(".pwelement_'. $el_id .'");
+        const pweAssociation = document.querySelector(".pwelement_'. $el_id .' .pwe-association");
 
-        if (pweElementRow !== null && pweAssociation == false && !isInPweHeader) {
-            pweElementRow.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
+        if (pweAssociation == null) {
+            pweAssociation.style.display = "none";
         }
     });
 
-    // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza
     function updateCountryInput() {
         const countryInput = document.querySelector(".country input");
         const selectedFlag = document.querySelector(".iti__selected-flag");
@@ -468,7 +468,6 @@ $output .= '
         }
     }
 
-    // Uruchomienie funkcji
     addEventListenersToForm();
     observeFlagChanges();
 </script>';

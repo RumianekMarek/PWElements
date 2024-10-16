@@ -112,6 +112,13 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     ),
                     array(
                         'type' => 'textfield',
+                        'heading' => __('Image src (doc/...)', 'pwe_display_info'),
+                        'param_name' => 'speaker_image_doc',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
                         'heading' => __('Speaker Name', 'pwe_display_info'),
                         'param_name' => 'speaker_name',
                         'save_always' => true,
@@ -266,99 +273,116 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
      * 
      * @param array @atts options
      */
-    private static function speakerImageMini($speaker_images) {
-        if (count($speaker_images) < 1){
-            $speaker_html = '';
-        } else {
-            $speaker_html = '<div class="pwe-box-speakers-img">';
-            $head_images = array_filter($speaker_images);
-            $head_images = array_values($head_images);
-
-            for ($i = 0; $i < count($head_images); $i++) {    
-                        
-                if (isset($head_images[$i])) {
-                    $image_src = wp_get_attachment_image_src($head_images[$i], 'full');
-
-                    
-                    if ($image_src) {
-                        $z_index = (1 + $i);
-                        $margin_top_index = '';
-                        
-                        $max_width_index = "50%";
-                        
-                        switch (count($head_images)) {
-                            case 1:
-                                $top_index = "unset";
-                                $left_index = "unset";
-                                $max_width_index = "80%";
-                                break;
-                        
-                            case 2:
-                                switch ($i) {
-                                    case 0:
-                                        $margin_top_index = "margin-top : 20px";
-                                        $max_width_index = "50%";
-                                        $top_index = "-20px";
-                                        $left_index = "10px";
-                                        break;
-                        
-                                    case 1:
-                                        $max_width_index = "50%";
-                                        $top_index = "0";
+    private static function speakerImageMini($speaker_images, $speaker_images_doc) { 
+        $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $base_url .= "://".$_SERVER['HTTP_HOST'];
+      
+        // Merge images from two arrays, filtering out empty values
+        $head_images = array_merge(array_filter((array)$speaker_images_doc), array_filter((array)$speaker_images));
+    
+        // Check if the merged image array is empty
+        if (empty($head_images)) {
+            return ''; // Return an empty string if there are no images
+        }
+    
+        $speaker_html = '<div class="pwe-box-speakers-img">';
+        $head_images = array_values($head_images); // Reindex the array
+    
+        // Loop through images
+        for ($i = 0; $i < count($head_images); $i++) {    
+            if (isset($head_images[$i]) && !empty($head_images[$i])) {
+                // Distinguish between ID and path
+                if (is_numeric($head_images[$i])) {
+                    // If the value is an ID from WordPress Media Library
+                    $image_src = wp_get_attachment_image_src($head_images[$i], 'full')[0]; // Get the full URL of the image
+                } else {
+                    // If the value is a direct path to the file
+                    $image_src = $base_url . '/doc/' . $head_images[$i]; // Build the path based on the value from `$speaker_images_doc`
+                }
+    
+                if ($image_src) {
+                    $z_index = (1 + $i);
+                    $margin_top_index = '';
+                    $max_width_index = "50%";
+    
+                    // Set styles based on the number of images
+                    switch (count($head_images)) {
+                        case 1:
+                            $top_index = "unset";
+                            $left_index = "unset";
+                            $max_width_index = "80%";
+                            break;
+    
+                        case 2:
+                            switch ($i) {
+                                case 0:
+                                    $margin_top_index = "margin-top : 20px";
+                                    $max_width_index = "50%";
+                                    $top_index = "-20px";
+                                    $left_index = "10px";
+                                    break;
+    
+                                case 1:
+                                    $max_width_index = "50%";
+                                    $top_index = "0";
+                                    $left_index = "-10px";
+                                    break;
+                            }
+                            break;
+    
+                        case 3:
+                            switch ($i) {
+                                case 0:
+                                    $top_index = "0";
+                                    $left_index = "15px";
+                                    break;
+    
+                                case 1:
+                                    $top_index = "40px";
+                                    $left_index = "-15px";
+                                    break;
+    
+                                case 2:
+                                    $top_index = "-15px";
+                                    $left_index = "-30px";
+                                    break;
+                            }
+                            break;
+    
+                        default:
+                            switch ($i) {
+                                case 0:
+                                    $margin_top_index = 'margin-top: 5px !important;';
+                                    break;
+    
+                                case 1:
+                                    $left_index = "-10px";
+                                    break;
+    
+                                default:
+                                    $reszta = $i % 2;
+                                    if ($reszta == 0) {
+                                        $top_index = $i / 2 * -15 . "px";
+                                        $left_index = "0";
+                                    } else {
+                                        $top_index = floor($i / 2) * -15 . "px";
                                         $left_index = "-10px";
-                                        break;
-                                }
-                                break;
-                        
-                            case 3:
-                                switch ($i) {
-                                    case 0:
-                                        $top_index = "0";
-                                        $left_index = "15px";
-                                        break;
-                        
-                                    case 1:
-                                        $top_index = "40px";
-                                        $left_index = "-15px";
-                                        break;
-                        
-                                    case 2:
-                                        $top_index = "-15px";
-                                        $left_index = "-30px";
-                                        break;
-                                }
-                                break;
-                            default:
-                                switch ($i) {
-                                    case 0:
-                                        $margin_top_index = 'margin-top: 5px !important;';
-                                        break;
-                        
-                                    case 1:
-                                        $left_index = "-10px";
-                                        break;
-
-                                    default:
-                                        $reszta = $i % 2;
-                                        if ($reszta == 0) {
-                                            $top_index = $i / 2 * -15 . "px";
-                                            $left_index = "0";
-                                        } else {
-                                            $top_index = floor($i / 2) * -15 . "px";
-                                            $left_index = "-10px";
-                                        }
-                                        break;
-                                }
-                        }
-                        
-                        $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src[0]) .'" alt="speaker portrait" style="position:relative; z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
+                                    }
+                                    break;
+                            }
                     }
+    
+                    // Add image to HTML
+                    $speaker_html .= '<img class="pwe-box-speaker" src="'. esc_url($image_src) .'" alt="speaker portrait" style="position:relative; z-index:'.$z_index.'; top:'.$top_index.'; left:'.$left_index.'; max-width: '.$max_width_index.';'.$margin_top_index.';" />';
                 }
             }
-            $speaker_html .= '</div>';
         }
+        $speaker_html .= '</div>';
+    
         return $speaker_html;
     }
+    
+    
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -661,6 +685,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
         $info_box_event_hidden_desc = wpb_js_remove_wpautop($info_box_show_more_decoded, true);// Remowe wpautop
 
         // Create arrays
+        $speaker_images_doc = [];
         $speaker_images = [];
         $speaker_names = [];
         $speaker_bio = [];
@@ -674,6 +699,9 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     if(isset($speaker["speaker_image"])){
                         $speaker_images[] = $speaker["speaker_image"];
                     }
+                    if(isset($speaker["speaker_image_doc"])){
+                        $speaker_images_doc[] = $speaker["speaker_image_doc"];
+                    }        
                     if(isset($speaker["speaker_name"])){
                         $speaker_names[] = $speaker["speaker_name"];
                     }
@@ -685,6 +713,8 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     $images = $speaker["speaker_image"];
                     $speaker_images_src = wp_get_attachment_url($images); 
                     $speakers_json[$key]['speaker_image_url'] = $speaker_images_src;
+
+                    $speakers_json[$key]['speaker_image_doc_url'] = $speaker_images_doc;
                 }
             }
         }
@@ -704,7 +734,7 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             if ($info_box_hide_photo != true) {
                 $output .= '
                 <div id="pweBoxSpeakers-'. $rnd .'" class="pwe-box-speakers">';
-                    $output .= self::speakerImageMini($speaker_images);
+                    $output .= self::speakerImageMini($speaker_images, $speaker_images_doc);
                     if(!empty($speaker_bio[0])){
                         $output .='<button class="pwe-box-speaker-btn">BIO</button>';
                     }
@@ -780,7 +810,13 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                                 if (speaker.speaker_name != undefined && speaker.speaker_bio != undefined) {
                                     let speakerBlock = `<div class="pwe-box-modal-speaker">`;
 
-                                    if (speaker.speaker_image_url != "") {
+                                    if (speaker.speaker_image_doc_url != "") {
+                                        speakerBlock += `
+                                            <div class="pwe-box-modal-speaker-img">
+                                                <img src="https://' . $_SERVER['HTTP_HOST'] . '/doc/${speaker.speaker_image_doc_url}" alt="Speaker Image" class="pwe-box-modal-image">
+                                            </div>
+                                        `;
+                                    } else if (speaker.speaker_image_url != "") {
                                         speakerBlock += `
                                             <div class="pwe-box-modal-speaker-img">
                                                 <img src="${speaker.speaker_image_url}" alt="Speaker Image" class="pwe-box-modal-image">

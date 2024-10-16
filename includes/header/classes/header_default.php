@@ -59,7 +59,7 @@ $output .= '
         align-items: center;
     }
     .pwelement_'. $el_id .' .header-wrapper-column {
-        max-width: 650px;
+        max-width: 750px;
         width: 100%;
         justify-content: space-evenly;
         align-items: center;
@@ -170,32 +170,23 @@ $output .= '
                 <div class="pwe-header-buttons">';
 
                     if (in_array('register', explode(',', $pwe_header_button_on))) {
-                        $output .='<div id="pweBtnRegistration" class="pwe-btn-container header-button">';
-                            $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
-                                            self::languageChecker(
-                                                <<<PL
-                                                alt="link do rejestracji">Zarejestruj się<span style="display: block; font-weight: 300;">Odbierz darmowy bilet</span>
-                                                PL,
-                                                <<<EN
-                                                alt="link to registration">Register<span style="display: block; font-weight: 300;">Get a free ticket</span>
-                                                EN
-                                            )
-                                        .'</a>';
-                        $output .='</div>';
+                        $output .= '
+                        <div id="pweBtnRegistration" class="pwe-btn-container header-button">
+                            <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" alt="'. self::languageChecker('link do rejestracji', 'link to registration') .'">
+                                '. self::languageChecker('Zarejestruj się', 'Register') .'
+                                <span class="btn-small-text" style="display: block; font-weight: 300;">
+                                    '. self::languageChecker('Odbierz darmowy bilet', 'Get a free ticket') .'
+                                </span>
+                            </a>
+                        </div>';
                     }
                     if (in_array('ticket', explode(',', $pwe_header_button_on))) {
-                        $output .= '<div id="pweBtnTickets" class="pwe-btn-container header-button">';
-                            $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_tickets_button_link .'" '.
-                                            self::languageChecker(
-                                                <<<PL
-                                                alt="link do biletów">Kup bilet
-                                                PL,
-                                                <<<EN
-                                                alt="link to tickets">Buy a ticket
-                                                EN
-                                            )
-                                        .'</a>';
-                        $output .= '</div>';
+                        $output .= '
+                        <div id="pweBtnTickets" class="pwe-btn-container header-button">
+                            <a class="pwe-link pwe-btn" href="'. $pwe_header_tickets_button_link .'" '.
+                                self::languageChecker('alt="link do biletów">Kup bilet', 'alt="link to tickets">Buy a ticket')
+                            .'</a>
+                        </div>';
                     }
                     if (in_array('conference', explode(',', $pwe_header_button_on))) {
                         if (empty($pwe_header_conferences_title)) {
@@ -203,18 +194,12 @@ $output .= '
                         } else {
                             $pwe_header_conferences_title = urldecode(base64_decode($pwe_header_conferences_title));
                         }
-                        $output .= '<div id="pweBtnConferences" class="pwe-btn-container header-button">';
-                        $output .= '<a class="pwe-link pwe-btn" href="'. $pwe_header_conferences_button_link .'" '. $target_blank .' title="'.
-                                        self::languageChecker(
-                                            <<<PL
-                                            konferencje
-                                            PL,
-                                            <<<EN
-                                            conferences
-                                            EN
-                                        ).'">'. $pwe_header_conferences_title
-                                    .'</a>';
-                        $output .= '</div>';
+                        $output .= '
+                        <div id="pweBtnConferences" class="pwe-btn-container header-button">
+                            <a class="pwe-link pwe-btn" href="'. $pwe_header_conferences_button_link .'" '. $target_blank .' title="'.
+                                self::languageChecker('konferencje', 'conferences').'">'. $pwe_header_conferences_title
+                            .'</a>
+                        </div>';
                     }
 
                     $pwe_header_buttons_urldecode = urldecode($pwe_header_buttons);
@@ -236,30 +221,32 @@ $output .= '
                 $output .= '
                 </div>';
 
-                // Logotypes slider --------------------------------------------------------------------------------------<
-                $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
-                $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
-                if ($pwe_header_modes != "simple_mode") {
-                    if (is_array($pwe_header_logotypes_json) && !empty($pwe_header_logotypes_json)) {
-                        $output .= '<div class="pwe-header-logotypes">';
-                            foreach ($pwe_header_logotypes_json as $logotypes) {
-                                $logotypes_width = $logotypes["logotypes_width"];
-                                $logotypes_media = $logotypes["logotypes_media"];
-                                $logotypes_catalog = $logotypes["logotypes_catalog"];
-                                if(!empty($logotypes_catalog) || !empty($logotypes_media)) {
-                                    // Adding the result from additionalOutput to $output
-                                    $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $el_id, $logotypes);
-                                }
-                            }
-                        $output .= '</div>';
-                    }
-                }
-
-                // Parking widget --------------------------------------------------------------------------------------<
-                require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/parking-widget.php';
-
             $output .= '
-            </div>
+            </div>';
+
+            // Logotypes slider --------------------------------------------------------------------------------------<
+            $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
+            $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
+            if ($pwe_header_modes != "simple_mode") {
+                if (is_array($pwe_header_logotypes_json) && !empty($pwe_header_logotypes_json)) {
+                    $output .= '<div class="pwe-header-logotypes">';
+                        foreach ($pwe_header_logotypes_json as $logotypes) {
+                            $logotypes_width = $logotypes["logotypes_width"];
+                            $logotypes_media = $logotypes["logotypes_media"];
+                            $logotypes_catalog = $logotypes["logotypes_catalog"];
+                            if(!empty($logotypes_catalog) || !empty($logotypes_media)) {
+                                // Adding the result from additionalOutput to $output
+                                $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $el_id, $logotypes);
+                            }
+                        }
+                    $output .= '</div>';
+                }
+            }
+
+            // Parking widget --------------------------------------------------------------------------------------<
+            require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/parking-widget.php';
+            
+        $output .= '
         </div>
     </div>
 </div>';

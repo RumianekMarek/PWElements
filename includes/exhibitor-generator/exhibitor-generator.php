@@ -23,13 +23,13 @@ class PWEExhibitorGenerator{
                 self::$main2_color = $color_value;
             }
         }
+        add_action('init', array($this, 'initVCMapPWEExhibitorGenerator'));
+        add_shortcode('pwe_exhibitor_generator', array($this, 'PWEExhibitorGeneratorOutput'));
         
         // Hook actions
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
 
-        add_action('init', array($this, 'initVCMapPWEExhibitorGenerator'));
-        add_shortcode('pwe_exhibitor_generator', array($this, 'PWEExhibitorGeneratorOutput'));
     }
 
     /**
@@ -140,8 +140,8 @@ class PWEExhibitorGenerator{
     private function findClassElements() {
         // Array off class placement
         return array(
-            'PWEExhibitorVisitorGenerator'     => 'classes/exhibitor-visitor-generator.php',
-            'PWEExhibitorWorkerGenerator'      => 'classes/exhibitor-worker-generator.php',
+            'PWEExhibitorVisitorGenerator' => 'classes/exhibitor-visitor-generator.php',
+            'PWEExhibitorWorkerGenerator'  => 'classes/exhibitor-worker-generator.php',
         );
     }
 
@@ -158,9 +158,15 @@ class PWEExhibitorGenerator{
      * Adding Scripts
      */
     public function addingScripts($atts){
+        $send_data = [
+            'send_file' => plugins_url('assets/mass_vip.php', __FILE__ ),
+            'secret' =>  hash_hmac('sha256', $_SERVER["HTTP_HOST"], '^GY0ZlZ!xzn1eM5'),
+        ];
+        
         $js_file = plugins_url('assets/exhibitor-generator-script.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/exhibitor-generator-script.js');
         wp_enqueue_script('pwe-exhibitor-generator-js', $js_file, array('jquery'), $js_version, true);
+        wp_localize_script( 'exclusions-js', 'send_data', $send_data );
     }  
 
     /**
@@ -258,7 +264,49 @@ class PWEExhibitorGenerator{
                 .'</h3>
 
             </div>
-        </div>';
+        </div>
+        <div class="modal__element">
+            <div class="inner">
+                <span class="btn-close">x</span>
+                <p style="max-width:90%;">'.
+                    PWECommonFunctions::languageChecker(
+                        <<<PL
+                        Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
+                        PL,
+                        <<<EN
+                        Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
+                        EN
+                    )
+                .'</p>
+                <input type="text" class="company" placeholder="'.
+                    PWECommonFunctions::languageChecker(
+                        <<<PL
+                        Firma Zapraszająca (wpisz nazwę swojej firmy)
+                        PL,
+                        <<<EN
+                        Inviting Company (your company's name)
+                        EN
+                    )
+                .'"></input>
+                <div class="file-uloader">
+                    <label for="fileUpload">Wybierz plik z danymi</label>
+                    <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
+                    <p class="under-label">Dozwolone rozszerzenia .csv, .xls, .xlsx</p>
+                </div>
+                <button class="wyslij btn-gold">'.
+                    PWECommonFunctions::languageChecker(
+                        <<<PL
+                        Wyślij
+                        PL,
+                        <<<EN
+                        Send
+                        EN
+                    )
+                .'</button>
+            <div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        ';
 
         return $output_html;
     }

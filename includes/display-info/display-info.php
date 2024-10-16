@@ -10,7 +10,6 @@ class PWEDisplayInfo extends PWECommonFunctions {
      * Constructor method for initializing the plugin.
      */
     public function __construct() {
-        // self::$rnd_id = rand(10000, 99999);
         self::$fair_colors = $this->findPalletColors();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
 
@@ -209,9 +208,7 @@ class PWEDisplayInfo extends PWECommonFunctions {
         $display_info_css_decoded = base64_decode($display_info_css);// Decoding Base64
         $display_info_css_code = urldecode($display_info_css_decoded); // Decoding URL
 
-
-
-        self::$rnd_id = !empty($display_info_custom_id) ? $display_info_custom_id : rand(10000, 99999);
+        self::$rnd_id = !empty($display_info_custom_id) ? $display_info_custom_id : self::id_rnd();
 
         if ($this->findClassElements()[$display_info_format]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$display_info_format];

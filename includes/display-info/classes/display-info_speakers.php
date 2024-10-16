@@ -83,6 +83,13 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     ),
                     array(
                         'type' => 'textfield',
+                        'heading' => __('Image src (doc/...)', 'pwe_display_info'),
+                        'param_name' => 'speaker_image_doc',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
                         'heading' => __('Speaker Name', 'pwe_display_info'),
                         'param_name' => 'speaker_name',
                         'save_always' => true,
@@ -420,22 +427,28 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $speaker_bio = $speaker["speaker_bio"];
                 $speaker_bio_excerpt = isset($speaker["speaker_bio_excerpt"]) ? $speaker["speaker_bio_excerpt"] : '';
 
-                $speaker_image_src = wp_get_attachment_url($speaker_image);   
+                $speaker_image_src = wp_get_attachment_url($speaker_image); 
+                $speaker_image_doc_src = $speaker["speaker_image_doc"]; 
+
+                $speaker_img = !empty($speaker_image_doc_src) ? "https://" . $_SERVER['HTTP_HOST'] . "/doc/" . $speaker_image_doc_src : $speaker_image_src;
 
                 $item_speaker_id = 'pweSpeaker-' . $rnd;
 
                 if ($info_speakers_slider_on != true && !$mobile) {
-                    $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">
-                                    <img class="pwe-speaker-img" src="'. $speaker_image_src .'">
-                                    <h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>';
-                                    if (!empty($speaker_bio_excerpt)) {
-                                            $output .= '<div class="pwe-speaker-excerpt">'. $speaker_bio_excerpt .'</div>';
-                                    }
-                                    $output .= '
-                                    <div class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</div>';
-                                    if(!empty($speaker_bio)){
-                                        $output .='<button class="pwe-speaker-btn">BIO</button>';
-                                    }
+                    $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">';
+                        // Check if the URL exists
+                        if (filter_var($speaker_img, FILTER_VALIDATE_URL)) {
+                            // Check if the first header indicates a successful response (200 OK)
+                            if (isset(get_headers($speaker_img)[0]) && strpos(get_headers($speaker_img)[0], '200') !== false) {
+                                $output .= !empty($speaker_image_doc_src) ? '<img class="pwe-speaker-img" src="https://' . $_SERVER['HTTP_HOST'] . '/doc/' . $speaker_image_doc_src .'">' : '<img class="pwe-speaker-img" src="'. $speaker_image_src .'">';
+                            } else {
+                                $output .= '<img class="pwe-speaker-img" src="/wp-content/plugins/PWElements/includes/display-info/media/white_square.jpg">';
+                            }
+                        }
+                        $output .= '<h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>';
+                        $output .= !empty($speaker_bio_excerpt) ? '<div class="pwe-speaker-excerpt">'. $speaker_bio_excerpt .'</div>' : '';
+                        $output .= '<div class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</div>';
+                        $output .= !empty($speaker_bio) ? '<button class="pwe-speaker-btn">BIO</button>' : '';
                     $output .='</div>';
                 }
                 

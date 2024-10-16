@@ -668,7 +668,14 @@ class PWECatalog {
                         transform: translateY(-60%);
                     }
                 </style>';
-            } 
+            } else {
+                $output_html .= '
+                <style>
+                    .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
+                        display: none !important;
+                    } 
+                </style>';
+            }
         }
 
         $output_html .= '

@@ -176,7 +176,7 @@ class PWEProfile extends PWECommonFunctions {
         } else {
             echo '<script>console.log("File with class ' . $profile_type .' does not exist")</script>';
         }
-        
+       
         $output = do_shortcode($output);
 
         $profile_el_id = $profile_type == 'PWEProfileAllInOne' ? 'ProfileAllInOne' : 'ProfileSingle'. self::$rnd_id;
