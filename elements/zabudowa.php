@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementStand
@@ -17,7 +17,7 @@ class PWElementStand extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -26,7 +26,7 @@ class PWElementStand extends PWElements {
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
-        
+
         $output = '
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-btn {
@@ -45,7 +45,7 @@ class PWElementStand extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-container-stand {
                     display:flex;
                     flex-wrap: wrap;
-                    justify-content: center; 
+                    justify-content: center;
                 }
                 @media (max-width:960px) {
                     .pwelement_'. self::$rnd_id .' .pwe-container-stand {
@@ -57,13 +57,16 @@ class PWElementStand extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-container-stand .pwe-block-2 {
                         order:1;
                     }
+                    .pwelement_'. self::$rnd_id .' .hidden-mobile {
+                        display:none;
+                    }
                 }
             </style>
 
             <div id="stand" class="pwe-container-stand">
                 <div class="pwe-block-1 half-block-padding" style="flex:1;">
                     <div class="heading-text el-text main-heading-text text-centered">
-                    <h4>'. 
+                    <h4>'.
                         self::languageChecker(
                             <<<PL
                             DEDYKOWANA ZABUDOWA TARGOWA
@@ -74,8 +77,7 @@ class PWElementStand extends PWElements {
                         )
                     .'</h4>
                     </div>';
-                    if (!preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT'])) {
-                        $output .= '<p class="pwe-line-height" style="color '. $text_color .';">'. 
+                    $output .= '<p class="pwe-line-height hidden-mobile" style="color '. $text_color .';">'.
                         self::languageChecker(
                             <<<PL
                             Zobacz katalog stoisk targowych i przygotuj się na udział w targach w sposób jeszcze bardziej efektywny. Dzięki temu katalogowi będziesz miał dostęp do gotowych projektów stoisk, które ułatwią Ci przygotowanie się do targów i zyskasz cenną oszczędność czasu i pieniędzy. Wybierając już gotowy projekt stoiska, będziesz mógł skupić się na innych ważnych aspektach przygotowań do targów, takich jak przygotowanie oferty, zorganizowanie transportu czy zaplanowanie działań marketingowych.
@@ -85,10 +87,9 @@ class PWElementStand extends PWElements {
                             EN
                         )
                         .'</p>';
-                    }
                     $output .= '<div class="pwe-btn-container">
                         <span>
-                            <a class="pwe-link btn pwe-btn" target="_blank"'. 
+                            <a class="pwe-link btn pwe-btn" target="_blank"'.
                                 self::languageChecker(
                                     <<<PL
                                     href="https://warsawexpo.eu/zabudowa-targowa">Zobacz Więcej
@@ -100,7 +101,7 @@ class PWElementStand extends PWElements {
                             .'</a>
                         </span>
                         <span>
-                            <a class="pwe-link btn pwe-btn" target="_blank"'. 
+                            <a class="pwe-link btn pwe-btn" target="_blank"'.
                                 self::languageChecker(
                                     <<<PL
                                     href="https://warsawexpo.eu/katalog-zabudowy">Katalog Zabudowy

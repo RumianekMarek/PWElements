@@ -1446,7 +1446,7 @@ class PWElementGenerator extends PWElements {
                             if(!emailTrue){                 
                                 return;
                             }
-                            pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
+                            let pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
                             let company_name = "";
                             let emailColumn = "";
                             let nameColumn = "";

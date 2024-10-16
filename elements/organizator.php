@@ -40,161 +40,160 @@ class PWElementOrganizer extends PWElements {
         $output = '';
 
         $output .= '
-            <style>
-            .row-parent:has(.pwelement_' . self::$rnd_id . ' #organizator) {
-                max-width: 100%;
-                padding: 0 !important;
-            }
-            .custom-organizator-video.desktop {
-                height:500px;
-                position: relative;
-                overflow: hidden;
-            }
-            .custom-organizator-video.desktop iframe {
-                min-width: 180%; 
-                height:120vh; 
-                position: absolute;
-                top:50%;
-                left:50%;
-                transform: translate(-50%, -50%);
-            }
-            .custom-organizator-text {
-                position: relative;
-                padding: 1px 36px 50px 36px !important;
-            }
-            .pwelement_' . self::$rnd_id . ' :is(.custom-organizator-text, .custom-inner-mobile-text) :is(h5, p) {
-                ' . $text_color . '
-            }
-            .custom-inner-organizator {
-                max-width:1200px;
-                margin: auto;
-            }
-            .custom-organizator-header {
-                margin:0;
-            }
-            .pwelement_' . self::$rnd_id . ' .organizator-box-shadow-left {
-                margin-left: -18px;
-                margin-bottom: -20px;
-                box-shadow: -3px -3px ' . $border_color .';
-                width: 170px !important;
-                height: 40px;
-            }
-            .pwelement_' . self::$rnd_id . ' .organizator-box-shadow-right {
-                margin-right: -18px;
-                margin-top: -20px;
-                box-shadow: 3px 3px ' . $border_color .';
-                width: 170px !important;
-                height: 40px;
-                float: right;
-            }
-            @media (max-width:959px){
-                #organizator:has(.custom-inner-organizator) {
-                    padding: 0 36px 36px 36px;
-                }
-                .custom-box-bottom-right-white {
-                    margin: -9px -18px 24px 0;
-                }
-            }
+        <style>
+        .row-parent:has(.pwelement_' . self::$rnd_id . ' #organizator) {
+            max-width: 100%;
+            padding: 0 !important;
+        }
+        .custom-organizator-video.desktop {
+            height:500px;
+            position: relative;
+            overflow: hidden;
+        }
+        .custom-organizator-video.desktop iframe {
+            min-width: 180%; 
+            height:120vh; 
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+        }
+        .custom-organizator-text {
+            position: relative;
+            padding: 1px 36px 50px 36px !important;
+        }
+        .pwelement_' . self::$rnd_id . ' :is(.custom-organizator-text, .custom-inner-mobile-text) :is(h5, p) {
+            ' . $text_color . '
+        }
+        .custom-inner-organizator {
+            max-width:1200px;
+            margin: auto;
+        }
+        .custom-organizator-header {
+            margin:0;
+        }
+        .pwelement_' . self::$rnd_id . ' .organizator-box-shadow-left {
+            margin-left: -18px;
+            margin-bottom: -20px;
+            box-shadow: -3px -3px ' . $border_color .';
+            width: 170px !important;
+            height: 40px;
+        }
+        .pwelement_' . self::$rnd_id . ' .organizator-box-shadow-right {
+            margin-right: -18px;
+            margin-top: -20px;
+            box-shadow: 3px 3px ' . $border_color .';
+            width: 170px !important;
+            height: 40px;
+            float: right;
+        }
 
-            .custom-inner-organizator-mobile {
-                padding: 36px;
-            }
-            .custom-organizator-header-mobile {
-                display : flex;
-                justify-content: space-between;
-            }
-            .custom-organizator-header-mobile .image-ptak {
-                width: 80px;
-                border-radius: 10px;
-            }
-            .custom-inner-organizator-mobile .secondary-heading-text {
-                text-align: left;
+        .custom-inner-organizator-mobile {
+            display: none;
+            padding: 36px;
+        }
+        .custom-organizator-header-mobile {
+            display : flex;
+            justify-content: space-between;
+        }
+        .custom-organizator-header-mobile .image-ptak {
+            width: 80px;
+            border-radius: 10px;
+        }
+        .custom-inner-organizator-mobile .secondary-heading-text {
+            text-align: left;
+            
+        }
+        .custom-inner-organizator-mobile h4 {
+            margin: 0 !important;
+            color: white;
+        }
+        .custom-organizator-video.mobile {
+            position: relative;
+            margin-top: 18px;
+        }
+        .custom-organizator-video.mobile iframe {
+            aspect-ratio: 16 / 9 !important;
+            border-radius: 10px;
+        }
+        .custom-organizator-video .pwe-video-default {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+        }
                 
-            }
-            .custom-inner-organizator-mobile h4 {
-                margin: 0 !important;
-                color: white;
-            }
-            .custom-organizator-video.mobile {
-                position: relative;
-                margin-top: 18px;
-            }
-            .custom-organizator-video.mobile iframe {
-                aspect-ratio: 16 / 9 !important;
-                border-radius: 10px;
-            }
-            .custom-organizator-video .pwe-video-default {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                aspect-ratio: 16 / 9;
-                border-radius: 10px;
-            }
-                    
-            .custom-organizator-video .pwe-video-default img {
-                max-width: 80px;
-                cursor: pointer;
-                transition: .3s ease;
-                opacity: 0.4;
-            }
-            .custom-organizator-video .pwe-video-default img:hover {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            .custom-inner-organizator-mobile .pwe-btn {
-                color: '. $btn_text_color .';
-                background-color: '. $btn_color .';
-                border: 1px solid '. $btn_border .';
-            }
-            .custom-inner-organizator-mobile .pwe-btn:hover {
-                color: '. $btn_text_color .';
-                background-color: '. $darker_btn_color .'!important;
-                border: 1px solid '. $darker_btn_color .'!important;
-            }
-
-            .custom-organizator-header-mobile,
-            .custom-organizator-mobile-container {
-                max-width: 1200px;
-            }
-            .custom-organizator-mobile-container {
-                display: flex;
-                gap: 36px;
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-            .custom-organizator-mobile-container .custom-organizator-video,
-            .custom-organizator-mobile-container .custom-inner-mobile-text {
-                width: 50%;
-                max-width: 500px;
-            }
-            .custom-organizator-mobile-container .custom-inner-mobile-text {
-                display: flex;
-                flex-direction: column;
+        .custom-organizator-video .pwe-video-default img {
+            max-width: 80px;
+            cursor: pointer;
+            transition: .3s ease;
+            opacity: 0.4;
+        }
+        .custom-organizator-video .pwe-video-default img:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        .custom-inner-organizator-mobile .pwe-btn {
+            color: '. $btn_text_color .';
+            background-color: '. $btn_color .';
+            border: 1px solid '. $btn_border .';
+        }
+        .custom-inner-organizator-mobile .pwe-btn:hover {
+            color: '. $btn_text_color .';
+            background-color: '. $darker_btn_color .'!important;
+            border: 1px solid '. $darker_btn_color .'!important;
+        }
+        .custom-organizator-header-mobile,
+        .custom-organizator-video-mobile {
+            max-width: 1200px;
+        }
+        .custom-organizator-video-mobile {
+            display: flex;
+            gap: 36px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .custom-organizator-video-mobile .custom-organizator-video,
+        .custom-organizator-video-mobile .custom-inner-mobile-text {
+            width: 50%;
+            max-width: 500px;
+        }
+        .custom-organizator-video-mobile .custom-inner-mobile-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        @media (max-width:1050px){
+            .custom-organizator-video-mobile {
                 justify-content: center;
             }
-            @media (max-width:1050px){
-                .custom-organizator-mobile-container {
-                    justify-content: center;
-                }
-                .custom-organizator-mobile-container .custom-organizator-video,
-                .custom-organizator-mobile-container .custom-inner-mobile-text {
-                    width: 100%;
-                }
+            .custom-organizator-video-mobile .custom-organizator-video,
+            .custom-organizator-video-mobile .custom-inner-mobile-text {
+                width: 100%;
             }
-            @media (max-width:360px){
-                .custom-organizator-header-mobile .image-ptak {
-                    width: 60px;
-                }
+        }
+        @media (max-width:960px){
+            .custom-organizator-video-desktop {
+                display: none;
             }
-            </style>
+            .custom-inner-organizator-mobile {
+                display: block;
+            }
+        }
+        @media (max-width:360px){
+            .custom-organizator-header-mobile .image-ptak {
+                width: 60px;
+            }
+        }
+        </style>
 
-            <div id="organizator" class="custom-container-organizator style-accent-bg text-centered">';
+        <div id="organizator" class="custom-container-organizator style-accent-bg text-centered">
 
-            if (!preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT'])) {
-                $output .= '
+            <div class="custom-organizator-video-desktop">
                 <div class="custom-organizator-video desktop">
                     <iframe title="YouTube video player" frameborder="0" marginwidth="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" 
@@ -232,10 +231,8 @@ class PWElementOrganizer extends PWElements {
                         <p class="organizator-box-shadow-right">&nbsp;</p>
                     </div>
                 </div>
-            </div>';
+            </div>
 
-            } else {
-            $output .= '
             <div class="custom-inner-organizator-mobile">
                 <div class="custom-organizator-header-mobile">
                     <div class="secondary-heading-text">
@@ -255,7 +252,7 @@ class PWElementOrganizer extends PWElements {
                     
                 </div>
 
-                <div class="custom-organizator-mobile-container">
+                <div class="custom-organizator-video-mobile">
                     <div class="custom-organizator-video mobile">'. $video_default_html .'</div>
 
                     <div class="custom-inner-mobile-text text-left">
@@ -299,18 +296,17 @@ class PWElementOrganizer extends PWElements {
                             .'</a>  
                         </div>
                     </div>
-                </div>
-                
+                </div>              
             </div>
+
+        </div>
             
-            <script>
-                const videoOrganizator = document.querySelector(".custom-organizator-video.mobile");
-                videoOrganizator.addEventListener("click", () => {
-                    videoOrganizator.innerHTML = `<div class="pwe-video-iframe">'. $video_iframe_html .'</div>`;   
-                });
-            </script>
-            ';
-        }
+        <script>
+            const videoOrganizator = document.querySelector(".custom-organizator-video.mobile");
+            videoOrganizator.addEventListener("click", () => {
+                videoOrganizator.innerHTML = `<div class="pwe-video-iframe">'. $video_iframe_html .'</div>`;   
+            });
+        </script>';
 
         return $output;
     }

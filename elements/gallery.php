@@ -259,6 +259,10 @@ class PWElementHomeGallery extends PWElements {
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
+        wp_enqueue_style('slick-slider-css', plugins_url('../assets/slick-slider/slick.css', __FILE__));
+        wp_enqueue_style('slick-slider-theme-css', plugins_url('../assets/slick-slider/slick-theme.css', __FILE__));
+        wp_enqueue_script('slick-slider-js', plugins_url('../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
+
         extract( shortcode_atts( array(
             'gallery_new' => '',
             'mobile_text' => '',
@@ -365,8 +369,16 @@ class PWElementHomeGallery extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs {
                     display: flex;
-                    flex-direction: column;
+                    flex-wrap: wrap;
                     width: 100%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-item {
+                    width: 50%;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs img {
+                    width: 100%;
+                    padding: 5px;
+                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc {
                     background-color: #eaeaea;
@@ -377,18 +389,6 @@ class PWElementHomeGallery extends PWElements {
                     display: flex;
                     justify-content: left;
                     text-align: center;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top,
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom {
-                    display: flex;
-                    flex-wrap: wrap;
-                    width: 100%;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top img,
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-bottom img {
-                    width: 50%;
-                    padding: 5px;
-                    border-radius: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content h3,
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-content h3 p {
@@ -447,6 +447,9 @@ class PWElementHomeGallery extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-wrapper {
                         width: 100%;
                     }
+                    .pwelement_'. self::$rnd_id .' .pwe-btn-container.mobile {
+                        display: flex;
+                    }
                 }
                 @media (max-width: 600px) {
                     .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-top .mini-img:nth-of-type(2),
@@ -490,48 +493,27 @@ class PWElementHomeGallery extends PWElements {
                 <div class="pwe-gallery-wrapper">
                     <div class="pwe-gallery-section">
                         <div class="pwe-gallery-thumbs-wrapper">
-                            <div class="pwe-gallery-thumbs">';
-                                if (!$mobile) {
-                                    $output .= '
-                                    <div class="pwe-gallery-thumbs-top">
-                                        <img class="mini-img" src="' . $all_images[0] . '" alt="mini galery picture">
-                                        <img class="mini-img" src="' . $all_images[1] . '" alt="mini galery picture">
-                                    </div>
-                                    <div class="pwe-gallery-thumbs-bottom">
-                                        <img class="mini-img" src="' . $all_images[2] . '" alt="mini galery picture">
-                                        <img class="mini-img" src="' . $all_images[3] . '" alt="mini galery picture">
-                                    </div>';
-                                } else {
-                                    $src_mini = array_slice($all_images, 0, 4);
-                                    $images_url = array();
-                                    foreach ($src_mini as $image) {
-
-                                        $images_url[] = array(
-                                            "src_mini" => $image,
-                                        );
-                                    }
-                                    
-                                    include_once plugin_dir_path(__FILE__) . '/../scripts/gallery-slider.php';
-                                    $output .= PWEMediaGallerySlider::sliderOutput($images_url);
-                                }                               
-                            $output .= '
+                            <div class="pwe-gallery-thumbs">
+                                <div class="pwe-gallery-thumbs-item"><img class="mini-img" src="' . $all_images[0] . '" alt="mini galery picture"></div>
+                                <div class="pwe-gallery-thumbs-item"><img class="mini-img" src="' . $all_images[1] . '" alt="mini galery picture"></div>
+                                <div class="pwe-gallery-thumbs-item"><img class="mini-img" src="' . $all_images[2] . '" alt="mini galery picture"></div>
+                                <div class="pwe-gallery-thumbs-item"><img class="mini-img" src="' . $all_images[3] . '" alt="mini galery picture"></div>      
                             </div>
                             <div class="pwe-btn-box">';
 
                             if ($gallery_new != true) {
-                                if($mobile){
-                                    $output .= '
-                                    <span class="pwe-btn-container gallery-link-btn">'.
-                                        self::languageChecker(
-                                            <<<PL
-                                                <a class="pwe-link btn pwe-btn pwe-btn-black" href="/#profil-wystawcy" alt="link do galerii">Profil Wystawcy</a>
-                                            PL,
-                                            <<<EN
-                                                <a class="pwe-link btn pwe-btn pwe-btn-black" href="/en/#profil-wystawcy" alt="link to gallery">Exhibitor Profile</a>
-                                            EN
-                                        )
-                                    .'</span>';
-                                }
+                                $output .= '
+                                <span class="pwe-btn-container gallery-link-btn mobile" style="display: none;">'.
+                                    self::languageChecker(
+                                        <<<PL
+                                            <a class="pwe-link btn pwe-btn pwe-btn-black" href="/#profil-wystawcy" alt="link do galerii">Profil Wystawcy</a>
+                                        PL,
+                                        <<<EN
+                                            <a class="pwe-link btn pwe-btn pwe-btn-black" href="/en/#profil-wystawcy" alt="link to gallery">Exhibitor Profile</a>
+                                        EN
+                                    )
+                                .'</span>';
+                                
                                 $output .= '
                                 <span class="pwe-btn-container gallery-link-btn">'.
                                     self::languageChecker(
@@ -602,6 +584,40 @@ class PWElementHomeGallery extends PWElements {
                     </div>
                 </div>
             </div>';
+
+
+
+            $output .= '
+                <script>
+                if (window.matchMedia("(max-width: 960px)").matches) {
+                    jQuery(function ($) {
+                        $(".pwe-gallery-thumbs").slick({
+                                infinite: true,
+                                lazyLoad: "false",
+                                slidesToShow: 4,
+                                slidesToScroll: 1,
+                                arrows: false,
+                                autoplay: true,
+                                autoplaySpeed: 3000,
+                                dots: false,
+                                cssEase: "linear",
+                                responsive: [
+                                        {
+                                                breakpoint: 960,
+                                                settings: { slidesToShow: 2, slidesToScroll: 1, }
+                                        },
+                                        {
+                                                breakpoint: 500,
+                                                settings: { slidesToShow: 1, slidesToScroll: 1, }
+                                        }  
+                                ] 
+                        });  
+                        
+                        $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
+                    });      
+                }
+                       
+                </script>'; 
 
     return $output;
     }

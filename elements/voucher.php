@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementVoucher
@@ -12,12 +12,12 @@ class PWElementVoucher extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }    
-    
+    }
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -51,9 +51,12 @@ class PWElementVoucher extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-container-voucher {
                         flex-direction: column;
                     }
+                    .pwelement_'. self::$rnd_id .' .hidden-mobile {
+                        display:none !important;
+                    }
                 }
             </style>
-            
+
             <div id="PWEvoucher"class="pwe-container-voucher">
                 <div class="uncode-single-media-wrapper half-block-padding pwe-min-media-wrapper" style="flex:1;">
                     <img style="vertical-align: bottom;" src="/wp-content/plugins/PWElements/media/voucher.webp" alt="grafika przykładowego vouchera"/>
@@ -72,19 +75,16 @@ class PWElementVoucher extends PWElements {
                             )
                         .'</h4>
                     </div>';
-
-                    if (!preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT'])) {
-                        $output .= '<p class="pwe-line-height"  style="color '. $text_color .';">' .
-                            self::languageChecker(
-                                <<<PL
-                                    Z naszym kuponem masz pełną swobodę wyboru opcji, które najlepiej odpowiadają Twoim potrzebom. W ofercie znajdują się niestandardowe projekty stoisk, grafika i oznakowanie, podłogi i oświetlenie, meble, sprzęt AV i wiele innych. Wszystko, co musisz zrobić, to okazać nasz kupon przy zakupie, wartość zniżki zostanie uwzględniona w fakturze. Dzięki temu zaoszczędzisz pieniądze, a także zyskasz większą elastyczność i swobodę twórczą.
-                                PL,
-                                <<<EN
-                                    With our coupon, you have complete freedom to choose the options that best suit your needs. We offer pwe booth designs, graphics and signage, flooring and lighting, furniture, AV equipment and much more. All you need to do is present our coupon at the time of purchase, the value of the discount will be included in the invoice. This will save you money and give you more flexibility and creative freedom.
-                                EN
-                            )
-                            . '</p>';
-                    }
+                    $output .= '<p class="pwe-line-height hidden-mobile"  style="color '. $text_color .';">' .
+                        self::languageChecker(
+                            <<<PL
+                                Z naszym kuponem masz pełną swobodę wyboru opcji, które najlepiej odpowiadają Twoim potrzebom. W ofercie znajdują się niestandardowe projekty stoisk, grafika i oznakowanie, podłogi i oświetlenie, meble, sprzęt AV i wiele innych. Wszystko, co musisz zrobić, to okazać nasz kupon przy zakupie, wartość zniżki zostanie uwzględniona w fakturze. Dzięki temu zaoszczędzisz pieniądze, a także zyskasz większą elastyczność i swobodę twórczą.
+                            PL,
+                            <<<EN
+                                With our coupon, you have complete freedom to choose the options that best suit your needs. We offer pwe booth designs, graphics and signage, flooring and lighting, furniture, AV equipment and much more. All you need to do is present our coupon at the time of purchase, the value of the discount will be included in the invoice. This will save you money and give you more flexibility and creative freedom.
+                            EN
+                        )
+                    . '</p>';
 
                     $output .= '<div class="pwe-btn-container">
                         <span>
@@ -101,7 +101,7 @@ class PWElementVoucher extends PWElements {
                     </div>
                 </div>
             </div>';
-        
+
         return $output;
     }
 }
