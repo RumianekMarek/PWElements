@@ -71,6 +71,7 @@ class PWEMediaGallerySlider {
                 }
                 #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image {
                         margin: 5px !important;
+                        padding: 0 10px;
                 }
                 #PWEMediaGallerySlider-'. $id_rnd .' .pwe-media-gallery-image img {
                         border-radius: 18px;

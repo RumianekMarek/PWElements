@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.2.8
+ * Version: 2.2.9
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -53,8 +53,8 @@ class PWElementsPlugin {
         // require_once plugin_dir_path(__FILE__) . 'display-info/main-display-info.php';
         // $this->PWEDisplayInfo = new PWEDisplayInfo();
 
-        require_once plugin_dir_path(__FILE__) . 'media-gallery/media-gallery.php';
-        $this->PWEMediaGallery = new PWEMediaGallery();
+        // require_once plugin_dir_path(__FILE__) . 'media-gallery/media-gallery.php';
+        // $this->PWEMediaGallery = new PWEMediaGallery();
 
         require_once plugin_dir_path(__FILE__) . 'gf-upps/area-numbers/area_numbers_gf.php';
         $this->GFAreaNumbersField = new GFAreaNumbersField();
@@ -79,6 +79,9 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/display-info/display-info.php';
         $this->PWEDisplayInfo = new PWEDisplayInfo();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/media-gallery/media-gallery.php';
+        $this->PWEMediaGallery = new PWEMediaGallery();
     }
 
     // Czyszczenie pamięci wp_rocket

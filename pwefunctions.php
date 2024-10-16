@@ -87,8 +87,6 @@ class PWECommonFunctions {
         return $custom_element_colors;
     }
 
-
-    
     /**
      * Finding preset colors pallet.
      *
@@ -119,8 +117,6 @@ class PWECommonFunctions {
         return $custom_element_colors;
     }
 
-
-
     /**
      * Laguage check for text
      * 
@@ -132,7 +128,14 @@ class PWECommonFunctions {
         return get_locale() == 'pl_PL' ? $pl : $en;
     }
 
-
+    /**
+     * Checking if the location is PL
+     * 
+     * @return bool
+     */
+    public static function lang_pl() {
+        return get_locale() == 'pl_PL';
+    }
 
      /**
      * Function to change color brightness (taking color in hex format)
@@ -157,8 +160,6 @@ class PWECommonFunctions {
                 . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
     }
 
-
-
     /**
      * Finding all GF forms
      *
@@ -181,8 +182,6 @@ class PWECommonFunctions {
         return $pwe_forms_array;
     }  
 
-
-
     /**
      * Finding all target form id
      *
@@ -203,8 +202,6 @@ class PWECommonFunctions {
         return $pwe_form_id;
     }
 
-
-
     /**
      * Mobile displayer check
      * 
@@ -213,8 +210,6 @@ class PWECommonFunctions {
     public static function checkForMobile(){
         return (preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']));
     }
-
-
 
     /**
      * Laguage check for text
@@ -269,8 +264,6 @@ class PWECommonFunctions {
         }
     }
 
-
-
     /**
      * Finding URL of all images based on katalog
      */
@@ -296,8 +289,6 @@ class PWECommonFunctions {
         return $exhibitors_path;
     }
 
-
-
     /**
      * Laguage check for text
      * 
@@ -318,8 +309,6 @@ class PWECommonFunctions {
         }
     }
 
-
-
     /**
      * Trade fair date existance check
      * 
@@ -338,8 +327,6 @@ class PWECommonFunctions {
         }
         return false;
     }
-
-
 
     /**
      * Adding element input[type="range"]
@@ -365,8 +352,6 @@ class PWECommonFunctions {
             . '<span id="value_' . esc_attr( $id ) . '">' . esc_attr( $value ) . '</span>'
             . '</div>';
     }
-
-
 
     /**
      * Adding custom checkbox element
