@@ -86,10 +86,6 @@ class PWELogotypesSlider {
                 if ($logotypes_caption_on == true || $header_logotypes_caption_on == true) {
                         $output .= '
                         <style>
-                        .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div,
-                        #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div {
-                                display: block;
-                        }
                         .pwelement_'. $element_id .' .pwe-element-logotypes-slider .slides > div p,
                         #katalog-'. $element_id .' .pwe-element-logotypes-slider .slides > div p {
                                 width: 100%;
@@ -100,8 +96,8 @@ class PWELogotypesSlider {
                                 white-space: break-spaces;
                                 text-align: center;
                                 line-height: 1.1 !important;
-                                margin: 5px;
-                                padding: 8px 16px;
+                                padding: 5px;
+                                margin: 0 !important;
                         }';
                 }
                 $output .= '</style>';
@@ -143,18 +139,26 @@ class PWELogotypesSlider {
 
                                 if (($logotypes_caption_on == true || $header_logotypes_caption_on == true) && empty($imageCustomCaption)) {
                                         if (get_locale() == 'pl_PL') {
-                                                // Split folder_name into words and add <br> after the first word
-                                                $logotypes_caption_words = explode(" ", $imageCaption);
-                                                if (count($logotypes_caption_words) > 1) {
-                                                        $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
+                                                if (strpos($imageData['img'], 'expoplanner.com') !== false) {
+                                                        $logo_caption_text = '<p>Wystawca</p>';
                                                 } else {
-                                                        $logo_caption_text = '<p>' . $imageCaption . '</p>'; // When folder_name is one word
+                                                        // Split folder_name into words and add <br> after the first word
+                                                        $logotypes_caption_words = explode(" ", $imageCaption);
+                                                        if (count($logotypes_caption_words) > 1) {
+                                                                $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
+                                                        } else {
+                                                                $logo_caption_text = '<p>' . $imageCaption . '</p>'; // When folder_name is one word
+                                                        }
                                                 }
                                         } else {
-                                                if (array_key_exists($imageCaption, $caption_translations)) {
-                                                        $logo_caption_text = '<p>'. $caption_translations[$imageCaption] .'</p>';
+                                                if (strpos($imageData['img'], 'expoplanner.com') !== false) {
+                                                        $logo_caption_text = '<p>Exhibitor</p>';
                                                 } else {
-                                                        $logo_caption_text = '<p>'. $imageCaption .'</p>';
+                                                        if (array_key_exists($imageCaption, $caption_translations)) {
+                                                                $logo_caption_text = '<p>'. $caption_translations[$imageCaption] .'</p>';
+                                                        } else {
+                                                                $logo_caption_text = '<p>'. $imageCaption .'</p>';
+                                                        }
                                                 }
                                         }
                                 } else {
@@ -163,9 +167,17 @@ class PWELogotypesSlider {
                                 
                                 // Create HTML
                                 if (!empty($imageUrl)) {
-                                        $output .= '<div class="image-container"><a href="' . $imageUrl . '" ' . $imageTargetBlank . ' ' . $imageId . '"><div class="' . $imageClass . ' logo-with-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>'. $logo_caption_text .'</a></div>';
+                                        $output .= '
+                                        <div class="image-container">
+                                                <a href="' . $imageUrl . '" ' . $imageTargetBlank . ' ' . $imageId . '"><div class="' . $imageClass . ' logo-with-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>
+                                                '. $logo_caption_text .'</a>
+                                        </div>';
                                 } else {
-                                        $output .= '<div class="image-container"><div ' . $imageClass . ' logo-without-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>'. $logo_caption_text .'</div>';
+                                        $output .= '
+                                        <div class="image-container">
+                                                <div ' . $imageClass . ' logo-without-link" style="' . $imageStyles . ' ' . $imageStyle . '"></div>
+                                                '. $logo_caption_text .'
+                                        </div>';
                                 }
                         }
 
@@ -208,7 +220,7 @@ class PWELogotypesSlider {
                                         $output .= '
                                         <style>
                                                 .pwelement_'. $element_id .' .pwe-element-logotypes-slider .dots-container {
-                                                        margin-top: 72px !important;
+                                                        margin-top: 36px !important;
                                                 }
                                                 #katalog-'. $element_id .' .pwe-element-logotypes-slider .dots-container {
                                                         margin-top: 36px !important;

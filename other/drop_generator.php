@@ -25,19 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 foreach ($all_forms as $key => $value) {
                     switch (true) {
-                        // case (strpos(strtolower($value['title']), strtolower('PL (FB)')) !== false):
-                        //     $form['fb-pl'] = $value['id'];
-                        //     break;
-                    
-                        // case (strpos(strtolower($value['title']), strtolower('EN (FB)')) !== false):
-                        //     $form['fb-en'] = $value['id'];
-                        //     break;
-
-                        case (preg_match('/^\(.{4}\) Rejestracja PL$/i', $value['title'])) :
+                        case (preg_match('/^\(.{4}\) Rejestracja PL(\s?\(Branzowe\))?$/i', $value['title'])) :
                             $form['def-pl'] = $value['id'];
                             break;
-                    
-                        case (preg_match('/^\(.{4}\) Rejestracja EN$/i', $value['title'])) :
+                        
+                        case (preg_match('/^\(.{4}\) Rejestracja EN(\s?\(Branzowe\))?$/i', $value['title'])) :
                             $form['def-en'] = $value['id'];
                             break;
                     }
@@ -104,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
                     
-
                     if ($entry_id && !is_wp_error($entry_id)) {
                         try {
                             GFAPI::send_notifications($form, $entry);
