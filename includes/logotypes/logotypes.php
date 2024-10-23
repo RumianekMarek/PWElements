@@ -179,9 +179,16 @@ class PWELogotypes extends PWECommonFunctions {
                         array(
                             'type' => 'textfield',
                             'group' => 'PWE Element',
-                            'heading' => esc_html__('Logotypes name', 'pwe_logotypes'),
+                            'heading' => esc_html__('Logotypes captions title', 'pwe_logotypes'),
                             'param_name' => 'logotypes_name',
                             'description' => __('Set custom name thumbnails', 'pwe_logotypes'),
+                            'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'checkbox',
+                            'group' => 'PWE Element',
+                            'heading' => __('Turn on exhibitors (top 21)', 'pwe_header'),
+                            'param_name' => 'logotypes_exhibitors_on',
                             'save_always' => true,
                         ),
                         array(
@@ -229,6 +236,55 @@ class PWELogotypes extends PWECommonFunctions {
             ));
         }
     }
+
+    /**
+     * Get logotypes for catalog (top 21)
+     * 
+     * @param string $catalog_id fair id for api.
+     * @return array
+     */
+    public static function ExhibitorsCatalogChecker($catalog_id){
+        $today = new DateTime();
+        $formattedDate = $today->format('Y-m-d');
+        $token = md5("#22targiexpo22@@@#" . $formattedDate);
+        $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='. $token .'&id_targow='. $catalog_id;
+
+        $json = file_get_contents($canUrl);
+        $data = json_decode($json, true);
+
+        $basic_exhibitors = reset($data)['Wystawcy'];
+        $logotypes_array = array();
+
+        if($basic_exhibitors != '') {
+            $basic_exhibitors = array_reduce($basic_exhibitors, function($acc, $curr) {
+                $name = $curr['Nazwa_wystawcy'];
+                $existingIndex = array_search($name, array_column($acc, 'Nazwa_wystawcy'));
+                if ($existingIndex === false) {
+                    $acc[] = $curr;
+                } else {
+                    if($acc[$existingIndex]["Data_sprzedazy"] !== null && $curr["Data_sprzedazy"] !== null && strtotime($acc[$existingIndex]["Data_sprzedazy"]) < strtotime($curr["Data_sprzedazy"])){
+                        $acc[$existingIndex] = $curr;
+                    }
+                }
+                return $acc;
+            }, []);            
+        } else {
+            $basic_exhibitors = [];
+        }
+
+        $i = 0;
+        foreach($basic_exhibitors as $exhibitor){
+            if ($exhibitor['URL_logo_wystawcy']){ 
+                $logotypes_array[] = $exhibitor;
+                $i++;
+                if ($i >= 21) {
+                    break;
+                }
+            }
+        }
+        
+        return $logotypes_array;
+    }
  
 
     /**
@@ -247,6 +303,13 @@ class PWELogotypes extends PWECommonFunctions {
 
         $el_id = self::id_rnd();
 
+        // Exhibitors logotypes top 21
+        $exhibitors = self::ExhibitorsCatalogChecker(do_shortcode('[trade_fair_catalog]'));
+        $exhibitors_logotypes = array();
+        foreach($exhibitors as $exhibitor){
+            $exhibitors_logotypes[] = array('img' => $exhibitor['URL_logo_wystawcy']);
+        }  
+
         $output = '';
         
         // Replace strings
@@ -263,7 +326,7 @@ class PWELogotypes extends PWECommonFunctions {
         }
         
         // // Adding the result from additionalOutput to $output
-        $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $el_id);
+        $output .= PWElementAdditionalLogotypes::additionalOutput($atts, $el_id, null, $exhibitors_logotypes);
         
         $output = do_shortcode($output);
         

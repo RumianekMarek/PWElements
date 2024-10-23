@@ -273,20 +273,25 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
      * 
      * @param array @atts options
      */
-    private static function speakerImageMini($speaker_images, $speaker_images_doc) { 
+    private static function speakerImageMini($speaker_images) { 
         $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $base_url .= "://".$_SERVER['HTTP_HOST'];
       
-        // Merge images from two arrays, filtering out empty values
-        $head_images = array_merge(array_filter((array)$speaker_images_doc), array_filter((array)$speaker_images));
-    
+
+
+
+        // Filtering out empty values
+        $head_images = array_filter($speaker_images);
+        // Reindex the array
+        $head_images = array_values($head_images); 
+       
         // Check if the merged image array is empty
         if (empty($head_images)) {
             return ''; // Return an empty string if there are no images
         }
     
         $speaker_html = '<div class="pwe-box-speakers-img">';
-        $head_images = array_values($head_images); // Reindex the array
+        
     
         // Loop through images
         for ($i = 0; $i < count($head_images); $i++) {    
@@ -696,12 +701,13 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             $speakers_json = json_decode($speakers_urldecode, true);    
             if ($speakers_json !== null && is_array($speakers_json)) {
                 foreach ($speakers_json as $key => $speaker){
-                    if(isset($speaker["speaker_image"])){
+                    
+                    if(isset($speaker["speaker_image_doc"]) && !empty($speaker["speaker_image_doc"])){
+                        $speaker_images[] = $speaker["speaker_image_doc"];
+                    } else if (isset($speaker["speaker_image"]) && !empty($speaker["speaker_image"])){
                         $speaker_images[] = $speaker["speaker_image"];
-                    }
-                    if(isset($speaker["speaker_image_doc"])){
-                        $speaker_images_doc[] = $speaker["speaker_image_doc"];
-                    }        
+                    } 
+
                     if(isset($speaker["speaker_name"])){
                         $speaker_names[] = $speaker["speaker_name"];
                     }
@@ -710,16 +716,30 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                     }
     
                     // Image src for modal
-                    $images = $speaker["speaker_image"];
-                    $speaker_images_src = wp_get_attachment_url($images); 
-                    $speakers_json[$key]['speaker_image_url'] = $speaker_images_src;
+                    $speaker_images_src = wp_get_attachment_url($speaker["speaker_image"]); 
+                    
+                    $speakers_json[$key]['speaker_image'] = $speaker_images_src;
+                    $speakers_json[$key]['speaker_image_doc'] = $speaker_images_doc;
 
-                    $speakers_json[$key]['speaker_image_doc_url'] = $speaker_images_doc;
+                    if (isset($speaker["speaker_image_doc"]) && !empty($speaker["speaker_image_doc"])) {
+                        $speaker_images_doc_url = '/doc/' . $speaker["speaker_image_doc"];
+                        $speakers_json[$key]['speaker_image_doc_url'] = $speaker_images_doc_url;
+                    } else {
+                        $speaker_images_doc_url = '';
+                    }
+                    
+                    if (isset($speaker["speaker_image"]) && !empty($speaker["speaker_image"])) {
+                        $speaker_images_src = wp_get_attachment_url($speaker["speaker_image"]);
+                        $speakers_json[$key]['speaker_image_url'] = $speaker_images_src;
+                    } else {
+                        $speaker_images_src = '';
+                    }
+
                 }
             }
         }
         
-        if (empty($speaker_images[0])) {
+        if (empty($speaker_images[0]) && empty($speaker_images_doc[0])) {
             $output .= '
             <style>
                 #info-box-'. self::$rnd_id .' .pwe-box-speakers {
@@ -734,14 +754,14 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
             if ($info_box_hide_photo != true) {
                 $output .= '
                 <div id="pweBoxSpeakers-'. $rnd .'" class="pwe-box-speakers">';
-                    $output .= self::speakerImageMini($speaker_images, $speaker_images_doc);
+                    $output .= self::speakerImageMini($speaker_images);
                     if(!empty($speaker_bio[0])){
                         $output .='<button class="pwe-box-speaker-btn">BIO</button>';
                     }
                 $output .= '
                 </div>';
             }
-            
+
             $output .= '
             <div id="pweBoxInfo-'. $rnd .'" class="pwe-box-info">';
                 if(!empty($info_box_event_time)) {
@@ -807,16 +827,17 @@ class PWEDisplayInfoBox extends PWEDisplayInfo {
                             // Using innerHTML to add speakers
                             let speakersHTML = "";
                             speakers.forEach(speaker => {
+                            
                                 if (speaker.speaker_name != undefined && speaker.speaker_bio != undefined) {
                                     let speakerBlock = `<div class="pwe-box-modal-speaker">`;
 
-                                    if (speaker.speaker_image_doc_url != "") {
+                                    if (speaker.speaker_image_doc_url) {
                                         speakerBlock += `
                                             <div class="pwe-box-modal-speaker-img">
-                                                <img src="https://' . $_SERVER['HTTP_HOST'] . '/doc/${speaker.speaker_image_doc_url}" alt="Speaker Image" class="pwe-box-modal-image">
+                                                <img src="${speaker.speaker_image_doc_url}" alt="Speaker Image" class="pwe-box-modal-image">
                                             </div>
                                         `;
-                                    } else if (speaker.speaker_image_url != "") {
+                                    } else if (speaker.speaker_image_url) {
                                         speakerBlock += `
                                             <div class="pwe-box-modal-speaker-img">
                                                 <img src="${speaker.speaker_image_url}" alt="Speaker Image" class="pwe-box-modal-image">

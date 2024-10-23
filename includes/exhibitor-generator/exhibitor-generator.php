@@ -39,6 +39,7 @@ class PWEExhibitorGenerator{
 
         require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-visitor-generator.php';
         require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-worker-generator.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/mass-vip-sender.php';
       
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -161,6 +162,7 @@ class PWEExhibitorGenerator{
         $send_data = [
             'send_file' => plugins_url('assets/mass_vip.php', __FILE__ ),
             'secret' =>  hash_hmac('sha256', $_SERVER["HTTP_HOST"], '^GY0ZlZ!xzn1eM5'),
+            'lang' => get_locale(),
         ];
         
         $js_file = plugins_url('assets/exhibitor-generator-script.js', __FILE__);
@@ -264,49 +266,9 @@ class PWEExhibitorGenerator{
                 .'</h3>
 
             </div>
-        </div>
-        <div class="modal__element">
-            <div class="inner">
-                <span class="btn-close">x</span>
-                <p style="max-width:90%;">'.
-                    PWECommonFunctions::languageChecker(
-                        <<<PL
-                        Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
-                        PL,
-                        <<<EN
-                        Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
-                        EN
-                    )
-                .'</p>
-                <input type="text" class="company" placeholder="'.
-                    PWECommonFunctions::languageChecker(
-                        <<<PL
-                        Firma Zapraszająca (wpisz nazwę swojej firmy)
-                        PL,
-                        <<<EN
-                        Inviting Company (your company's name)
-                        EN
-                    )
-                .'"></input>
-                <div class="file-uloader">
-                    <label for="fileUpload">Wybierz plik z danymi</label>
-                    <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
-                    <p class="under-label">Dozwolone rozszerzenia .csv, .xls, .xlsx</p>
-                </div>
-                <button class="wyslij btn-gold">'.
-                    PWECommonFunctions::languageChecker(
-                        <<<PL
-                        Wyślij
-                        PL,
-                        <<<EN
-                        Send
-                        EN
-                    )
-                .'</button>
-            <div>
-        </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-        ';
+        </div>';
+        
+        $output_html .= PWEMassVipSender::output($atts);
 
         return $output_html;
     }
