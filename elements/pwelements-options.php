@@ -75,6 +75,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'header-new.php';
         require_once plugin_dir_path(__FILE__) . 'hale.php';
         require_once plugin_dir_path(__FILE__) . 'opinions.php';
+        require_once plugin_dir_path(__FILE__) . 'button.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -241,6 +242,7 @@ class PWElements {
                         ...PWElementTicketActConf::initElements(),
                         ...PWElementHale::initElements(),
                         ...PWElementOpinions::initElements(),
+                        ...PWElementButton::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -333,9 +335,10 @@ class PWElements {
             'Zabudowa'                       => 'PWElementStand',
             'Zaproszenie'                    => 'PWElementInvite',
             'Test'                           => 'PWElementTest',
-            'Test1'                           => 'PWElementTest1',
-            'Test2'                           => 'PWElementTest2',
-            'Header New'                           => 'PWElementHeaderNew',
+            'Test1'                          => 'PWElementTest1',
+            'Test2'                          => 'PWElementTest2',
+            'Header New'                     => 'PWElementHeaderNew',
+            'Button'                         => 'PWElementButton',
         );
     }
 
@@ -406,6 +409,7 @@ class PWElements {
             'PWElementTest2'            => 'test2.php',
             'PWElementHeaderNew'        => 'header-new.php',
             'PWElementHale'             => 'hale.php',
+            'PWElementButton'             => 'button.php',
         );
     }
 

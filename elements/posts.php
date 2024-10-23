@@ -263,22 +263,16 @@ class PWElementPosts extends PWElements {
                 <style>
                     .pwelement_'. self::$rnd_id .' .pwe-posts-wrapper {
                         max-width: 100% !important;  
-                        padding: 36px 0 !important; 
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-posts-title {
                         max-width: 1200px;
                         margin: 0 auto;
                         padding-left: 36px;
                     }
-                    .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
-                        margin-right: 36px !important;
-                        gap: 36px !important;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-post .t-entry-visual,
-                    .pwelement_'. self::$rnd_id .' .pwe-post .image-container,
-                    .pwelement_'. self::$rnd_id .' .pwe-post .pwe-post-thumbnail {
-                        min-width: 300px !important;
-                        max-width: 300px !important;
+                    @media (max-width: 1128px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-posts-title {
+                            padding-left: 0;
+                        }
                     }
                 </style>'; 
             }   

@@ -45,6 +45,13 @@ class PWElementOpinions extends PWElements {
                     ),
                     array(
                         'type' => 'textfield',
+                        'heading' => __('Company name', 'pwelement'),
+                        'param_name' => 'opinions_company',
+                        'save_always' => true,
+                        'admin_label' => true
+                    ),
+                    array(
+                        'type' => 'textfield',
                         'heading' => __('Person name', 'pwelement'),
                         'param_name' => 'opinions_name',
                         'save_always' => true,
@@ -90,15 +97,14 @@ class PWElementOpinions extends PWElements {
                     padding: 0 !important;  
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions {
-                    background-color: #eaeaea;
                     visibility: hidden;
                     opacity: 0;
                     transition: opacity 0.5s ease-in-out;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__wrapper {
-                    max-width: 1200px;
+                    max-width: 100%;
                     margin: 0 auto;
-                    padding: 18px 0;
+                    padding: 18px 36px;
                     position: relative;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__title {
@@ -108,82 +114,81 @@ class PWElementOpinions extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
                     position: relative;
-                    padding: 0 18px;
+                    padding: 18px;
+                    box-shadow: 0px 0px 12px #cccccc;
+                    border-radius: 18px;
+                    margin: 12px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item:not(:last-child)::after {
-                    content: "";
-                    position: absolute;
-                    bottom: 0;
-                    top: 0; 
-                    right: 0;
-                    width: 1px;
-                    background-color: black;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-images {
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company {
                     display: flex;
-                    justify-content: space-around;
+                    justify-content: space-between;
+                    padding: 10px 0;
+                    gap: 10px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-image-person {
-                    width: 45%;
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company p {
+                    margin: 0;
+                    line-height: 1.2;
+                    font-size: 14px;
+                    font-weight: 600;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-image-person,
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-image-person img  {
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo {
+                    max-width: 80px;
+                    display: flex;
+                    justify-content: center;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
+                    width: 100%;
                     object-fit: contain;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person {
+                    display: flex;
+                    gap: 10px;
+                    padding: 10px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-img {
+                    max-width: 50px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-img img {
+                    width: 100%;
                     border-radius: 50%;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-image-company {
-                    width: 45%;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-image-company,
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-image-company img {
-                    object-fit: contain;
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info {
                     display: flex;
-                    align-items: center;
+                    flex-direction: column;
+                    justify-content: center;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-content :is(h3, h5, p) {
-                    margin: 12px 0 0;
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info h3 {
+                    margin: 0;
+                    font-size: 14px;
+                    color: cornflowerblue;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-content p {
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info h5 {
+                    margin: 4px 0 0;
+                    font-size: 12px;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
+                    padding: 10px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion p {
                     font-size: 14px;
                     line-height: 1.4;
-                }  
+                    margin: 0;
+                } 
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow {
+                    display: block;
+                    position: absolute;
+                    top: 40%;
+                    font-size: 60px;
+                    font-weight: 700;
+                    z-index: 1;
                     cursor: pointer;
-                    display: none !important;
                 }
-                @media (max-width: 1200px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__items {
-                        margin-left: -1px;
-                    }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow-prev {
+                    left: 6px; 
                 }
-                @media (max-width: 500px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__items {
-                        padding: 0 36px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow {
-                        display: block !important;
-                        position: absolute;
-                        top: 40%;
-                        font-size: 74px;
-                        font-weight: 700;
-                        z-index: 1;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow-prev {
-                        left: 6px; 
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow-next {
-                        right: 6px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
-                        background-color: white;
-                        padding: 18px;
-                        margin: 0 9px;
-                        border-radius: 18px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item:not(:last-child)::after {
-                        content: none;
-                    }
-                }
+                .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow-next {
+                    right: 6px;
+                }  
                 
             </style>';
 
@@ -198,6 +203,7 @@ class PWElementOpinions extends PWElements {
                             foreach ($opinions_items_json as $opinion_item) {
                                 $opinions_face_img = $opinion_item["opinions_face_img"];
                                 $opinions_company_img = $opinion_item["opinions_company_img"];
+                                $opinions_company = $opinion_item["opinions_company"];
                                 $opinions_name = $opinion_item["opinions_name"];
                                 $opinions_desc = $opinion_item["opinions_desc"];
                                 $opinions_text = $opinion_item["opinions_text"];
@@ -207,15 +213,23 @@ class PWElementOpinions extends PWElements {
 
                                 $output .= '
                                 <div class="pwe-opinions__item">
-                                    <div class="pwe-opinions__item-images">';
-                                        $output .= !empty($opinions_face_img) ? '<img class="pwe-opinions__item-image-person" src="'. $opinions_face_img_src .'">' : '';
-                                        $output .= !empty($opinions_company_img) ?  '<img class="pwe-opinions__item-image-company" src="'. $opinions_company_img_src .'">' : '';
-                                    $output .= '
+                                    <div class="pwe-opinions__item-company">
+                                        ' . (!empty($opinions_company) ? '<p>' . $opinions_company . '</p>' : '<span></span>') . '
+                                        <div class="pwe-opinions__item-company_logo">
+                                            ' . (!empty($opinions_company_img) ? '<img src="' . $opinions_company_img_src . '">' : '') . '
+                                        </div>
                                     </div>
-                                    <div class="pwe-opinions__item-content">
-                                        <h3>'. $opinions_name .'</h3>
-                                        <h5>'. $opinions_desc .'</h5>
-                                        <p>„'. $opinions_text .'”</p>
+                                    <div class="pwe-opinions__item-person">
+                                        <div class="pwe-opinions__item-person-img">
+                                            ' . (!empty($opinions_face_img) ? '<img src="' . $opinions_face_img_src . '">' : '') . '
+                                        </div>
+                                        <div class="pwe-opinions__item-person-info">
+                                            <h3>' . $opinions_name . '</h3>
+                                            <h5>' . $opinions_desc . '</h5>
+                                        </div>
+                                    </div>
+                                    <div class="pwe-opinions__item-opinion">
+                                        <p>' . $opinions_text . '</p>
                                     </div>
                                 </div>';
                             }
@@ -232,9 +246,12 @@ class PWElementOpinions extends PWElements {
                 $output .= '
                 <script>
                 jQuery(function ($) {
-                        $("#pweOpinions .pwe-opinions__items").slick({
+                        const opinionsItems = $("#pweOpinions .pwe-opinions__items");
+                        const opinionsArrows = $(".pwe-opinions__arrow");
+
+                        opinionsItems.slick({
                                 infinite: true,
-                                slidesToShow: 4,
+                                slidesToShow: 5,
                                 slidesToScroll: 1,
                                 arrows: true,
                                 nextArrow: $("#pweOpinions .pwe-opinions__arrow-next"),
@@ -245,19 +262,59 @@ class PWElementOpinions extends PWElements {
                                 cssEase: "linear",
                                 responsive: [
                                         {
-                                                breakpoint: 1200,
-                                                settings: { slidesToShow: 3, slidesToScroll: 1, }
+                                            breakpoint: 1200,
+                                            settings: { slidesToShow: 4 }
                                         },
                                         {
-                                                breakpoint: 960,
-                                                settings: { slidesToShow: 2, slidesToScroll: 1, }
+                                            breakpoint: 960,
+                                            settings: { slidesToShow: 3 }
                                         },
                                         {
-                                                breakpoint: 500,
-                                                settings: { slidesToShow: 1, slidesToScroll: 1, }
-                                        }  
+                                            breakpoint: 768,
+                                            settings: { slidesToShow: 2 }
+                                        },
+                                        {
+                                            breakpoint: 550,
+                                            settings: { slidesToShow: 1 }
+                                        }
                                 ] 
                         });  
+
+                        if (opinionsItems.children().length <= 5 && $(window).width() >= 1200) {
+                            opinionsArrows.hide();
+                        }
+
+                        // Function to set equal height
+                        function setEqualHeight() {
+                            let maxHeight = 0;
+
+                            // Reset the heights before calculations
+                            $(".pwe-opinions__item").css("height", "auto");
+
+                            // Calculate the maximum height
+                            $(".pwe-opinions__item").each(function() {
+                                const thisHeight = $(this).outerHeight();
+                                if (thisHeight > maxHeight) {
+                                    maxHeight = thisHeight;
+                                }
+                            });
+
+                            // Set the same height for all
+                            $(".pwe-opinions__item").css("height", maxHeight);
+                        }
+
+                        // Call the function after loading the slider
+                        $(".pwe-opinions__items").on("init", function() {
+                            setEqualHeight();
+                        });
+
+                        // Call the function when changing the slide
+                        $(".pwe-opinions__items").on("afterChange", function() {
+                            setEqualHeight();
+                        });
+
+                        // Call the function at the beginning
+                        setEqualHeight();
                         
                         $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
                 });             

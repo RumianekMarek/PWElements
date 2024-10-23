@@ -97,6 +97,17 @@ class PWElementMapa extends PWElements {
                     'value' => 'PWElementMapa',
                 ),
             ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('More LOGOS', 'pwelement'),
+                'param_name' => 'pwe_mapa_more_logos',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMapa',
+                ),
+            ),
         );
         return $element_output;
     }
@@ -116,6 +127,8 @@ class PWElementMapa extends PWElements {
         $pwe_number_visitors = !empty($pwe_number_visitors) ? $pwe_number_visitors : 0;
         $pwe_percent_polish_visitors = !empty($pwe_percent_polish_visitors) ? $pwe_percent_polish_visitors : 0;
         $pwe_number_countries = !empty($pwe_number_countries) ? $pwe_number_countries : 15;
+
+        $map_more_logos = (isset($atts['pwe_mapa_more_logos'])) ? explode(';', $atts['pwe_mapa_more_logos']) : '';
 
         $output = '
         <style>
@@ -179,10 +192,22 @@ class PWElementMapa extends PWElements {
             }
             .pwe-mapa-stats-element-mobile {
                 display:none;
+            }';
+
+            if (is_array($map_more_logos)){
+                $output .=
+                '.pwe-mapa-logo-container img {
+                    max-width: 200px;
+                    margin: 10px;
+                }';
+            } else {
+                $output .=
+                '.pwe-mapa-logo-container img {
+                    max-width: 250px;
+                }';
             }
-            .pwe-mapa-logo-container img {
-                max-width: 250px;
-            }
+
+            $output .= '
             .pwe-mapa-right {
                 display: flex;
                 flex-direction: column;
@@ -359,8 +384,16 @@ class PWElementMapa extends PWElements {
                     <<<EN
                     <img src="/doc/logo-color-en.webp"/>
                     EN
-                    )
-                    .'<p class="pwe-mapa-right-data" style="text-align: center;">'. $pwe_event_date .'</p>
+                    );
+                if (is_array($map_more_logos)){
+                    foreach($map_more_logos as $single_logo){
+                        $output .= '<img src="' . $single_logo . '"/>';
+                    }
+                    $output .= '<p class="pwe-mapa-right-data" style="text-align: right;">'. $pwe_event_date .'</p>';
+                } else {
+                    $output .= '<p class="pwe-mapa-right-data" style="text-align: center;">'. $pwe_event_date .'</p>';
+                }
+                $output .= '
                 </div>
 
             <div class="pwe-mapa-rounded-element pwe-mapa-rounded-element-country-right">

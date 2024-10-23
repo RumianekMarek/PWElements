@@ -588,36 +588,34 @@ class PWElementHomeGallery extends PWElements {
 
 
             $output .= '
-                <script>
-                if (window.matchMedia("(max-width: 960px)").matches) {
-                    jQuery(function ($) {
-                        $(".pwe-gallery-thumbs").slick({
-                                infinite: true,
-                                lazyLoad: "false",
-                                slidesToShow: 4,
-                                slidesToScroll: 1,
-                                arrows: false,
-                                autoplay: true,
-                                autoplaySpeed: 3000,
-                                dots: false,
-                                cssEase: "linear",
-                                responsive: [
-                                        {
-                                                breakpoint: 960,
-                                                settings: { slidesToShow: 2, slidesToScroll: 1, }
-                                        },
-                                        {
-                                                breakpoint: 500,
-                                                settings: { slidesToShow: 1, slidesToScroll: 1, }
-                                        }  
-                                ] 
-                        });  
-                        
-                        $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
-                    });      
-                }
-                       
-                </script>'; 
+            <script>
+            if (window.matchMedia("(max-width: 960px)").matches) {
+                jQuery(function ($) {
+                    $(".pwe-gallery-thumbs").slick({
+                            infinite: true,
+                            lazyLoad: "false",
+                            slidesToShow: 4,
+                            slidesToScroll: 1,
+                            arrows: false,
+                            autoplay: true,
+                            autoplaySpeed: 3000,
+                            dots: false,
+                            cssEase: "linear",
+                            responsive: [
+                                    {
+                                            breakpoint: 960,
+                                            settings: { slidesToShow: 2, slidesToScroll: 1, }
+                                    },
+                                    {
+                                            breakpoint: 500,
+                                            settings: { slidesToShow: 1, slidesToScroll: 1, }
+                                    }  
+                            ] 
+                    });  
+                    
+                });      
+            }     
+            </script>'; 
 
     return $output;
     }

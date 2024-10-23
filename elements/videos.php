@@ -282,7 +282,7 @@ class PWElementVideos extends PWElements {
 
                         if ($pwe_videos_slider_off != true) {
                             include_once plugin_dir_path(__FILE__) . '/../scripts/iframes-slider.php';
-                            $output .= PWEIframesSlider::sliderOutput($iframes, 3000, $options);
+                            $output .= PWEIframesSlider::sliderOutput($iframes, 3000, $options); 
                         }
                     }
                 $output .= '
