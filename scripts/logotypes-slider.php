@@ -481,7 +481,7 @@ class PWELogotypesSlider {
          * @param int $slide_speed Speed of the slide transition.
          * @return string The HTML output for the slider.
          */
-        public static function sliderOutput($media_url, $slide_speed = 3000, $images_options = "") {
+        public static function sliderOutput($media_url = [], $slide_speed = 3000, $images_options = "") {
 
                 /*Random "id" if there is more than one element on page*/  
                 $id_rnd = rand(10000, 99999);
