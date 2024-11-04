@@ -4,7 +4,7 @@ BEGIN:VEVENT
 DTSTART:20250401T100000
 DTEND:20250401T100000
 SUMMARY:MR testowy
-DESCRIPTION:Branżowe Targi Technologii Filtracji i Zastosowania Filtrów
+DESCRIPTION:Industry Fair of Filtration Technology and Filter Application
 LOCATION:Al. Katowicka 62, 05-830 Nadarzyn
 END:VEVENT
 END:VCALENDAR
