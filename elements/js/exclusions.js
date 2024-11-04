@@ -1,7 +1,9 @@
 const accent_color = data_js.accent_color;
 
-// Header button
+
 document.addEventListener('DOMContentLoaded', function () {
+
+    // Header button <--------------------------------------------------------------------------<
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
     const htmlLang = document.documentElement.lang;
 
@@ -23,51 +25,80 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    const mainLogo = document.getElementById('main-logo');
-    const existingLink = mainLogo.querySelector('a');
 
-    if (mainLogo) {
-        // Move all children of the <a> element (i.e. logo) to its parent (i.e. #main-logo)
-        while (existingLink.firstChild) {
-            mainLogo.insertBefore(existingLink.firstChild, existingLink);
+    // Links for menu logotype <---------------------------------------------------------------------<
+    // Configuration for domains
+    const domainSettings = {
+        'wiretechpoland.com': { leftWidth: '20%', rightWidth: '80%' },
+        'labelingtechpoland.com': { leftWidth: '15%', rightWidth: '85%' },
+        // ...add more
+    };
+
+    const currentDomain = window.location.hostname;
+    const settings = domainSettings[currentDomain] || { leftWidth: '65px', rightWidth: 'calc(100% - 65px)' };
+
+    const commonStyles = {
+        position: 'absolute',
+        top: '0',
+        height: '100%',
+        zIndex: '10'
+    };
+
+    // Function to add links to the logo
+    function addLinksToLogo(logoElement) {
+        if (!logoElement) return;
+
+        const existingLink = logoElement.querySelector('a');
+        if (existingLink) {
+            // Move all children of the <a> element to the parent (e.g., #main-logo or #mobile-logo)
+            while (existingLink.firstChild) {
+                logoElement.insertBefore(existingLink.firstChild, existingLink);
+            }
+            // Remove the empty <a> element
+            existingLink.remove();
         }
-
-        // We remove the empty element <a>
-        existingLink.remove();
 
         // Create new links
         const leftLink = document.createElement('a');
         const rightLink = document.createElement('a');
 
         const pwePageLink = htmlLang === 'pl-PL' ? 'https://warsawexpo.eu/' : 'https://warsawexpo.eu/en/';
-        const mainPage = htmlLang === 'pl-PL' ? '/' : '/en/';
+        const mainPageLink = htmlLang === 'pl-PL' ? '/' : '/en/';
 
-        const commonStyles = {
-            position: 'absolute',
-            top: '0',
-            width: '50%',
-            height: '100%',
-            zIndex: '10'
-        };
-
-        // Assign a style to the left link
+        // Style for the left link
         Object.assign(leftLink.style, commonStyles);
+        leftLink.style.width = settings.leftWidth;
         leftLink.style.left = '0';
-        leftLink.href = pwePageLink;
+        leftLink.href = (window.innerWidth < 960 && logoElement.offsetWidth > 200) ? mainPageLink : pwePageLink;
         leftLink.target = '_blank';
 
-        // Assign a style to the right link
+        // Style for the right link
         Object.assign(rightLink.style, commonStyles);
+        rightLink.style.width = settings.rightWidth;
         rightLink.style.right = '0';
-        rightLink.href = mainPage;
+        rightLink.href = mainPageLink;
 
-        mainLogo.appendChild(leftLink);
-        mainLogo.appendChild(rightLink);  
+        // Append the links to the logo
+        logoElement.appendChild(leftLink);
+        logoElement.appendChild(rightLink);
     }
 
+    // Select the logos and add links to them
+    const mainLogo = document.querySelector('.logo-image.main-logo');
+    const mobileLogo = document.querySelector('.logo-image.mobile-logo');
+
+    addLinksToLogo(mainLogo);
+    addLinksToLogo(mobileLogo);
 
 
 
+
+
+
+
+
+
+    // Mobile header <--------------------------------------------------------------------------<
     const squaresModeBgs = document.querySelectorAll('.pwe-header-background .pwe-bg-image');
 
     if (squaresModeBgs && squaresModeBgs.length > 0) {
@@ -75,41 +106,41 @@ document.addEventListener('DOMContentLoaded', function () {
         let isFirstLoop = true;
 
         function changeBackground() {
-            // Wyzeruj wszystkie obrazy
+            // Reset all images
             squaresModeBgs.forEach((bg) => bg.classList.remove('visible'));
 
-            // Jeśli jesteśmy w pierwszej pętli, pokaż pierwszy obrazek tylko na początku
+            // If first loop active, show all images
             if (isFirstLoop) {
                 if (currentIndex === 0) {
-                    squaresModeBgs[0].classList.add('visible'); // Pierwszy obrazek na 3 sekundy
+                    squaresModeBgs[0].classList.add('visible'); // First image for 3 seconds
                     setTimeout(() => {
                         currentIndex = 1;
-                        changeBackground(); // Przejdź do drugiego obrazu po 3 sekundach
+                        changeBackground(); // Go to second image after 3 seconds
                     }, 3000);
                 } else if (currentIndex === 1) {
-                    squaresModeBgs[1].classList.add('visible'); // Drugi obrazek na 10 sekund
+                    squaresModeBgs[1].classList.add('visible'); // Second image for 10 seconds
                     setTimeout(() => {
                         currentIndex = 2;
-                        changeBackground(); // Przejdź do trzeciego obrazu po 10 sekundach
+                        changeBackground(); // Go to third image after 10 seconds
                     }, 10000);
                 } else if (currentIndex === 2) {
-                    squaresModeBgs[2].classList.add('visible'); // Trzeci obrazek na 10 sekund
+                    squaresModeBgs[2].classList.add('visible'); // Third image for 10 seconds
                     setTimeout(() => {
-                        isFirstLoop = false; // Ustaw flagę, że pierwsza pętla się skończyła
-                        currentIndex = 1; // Ustaw na drugi obraz na początek kolejnych pętli
+                        isFirstLoop = false; // Set the flag that the first loop has finished
+                        currentIndex = 1; // Set to the second image at the beginning of the next loops
                         changeBackground();
                     }, 10000);
                 }
             } else {
-                // Kolejne pętle: tylko drugi i trzeci obrazek
+                // Next loops: only second and third images
                 if (currentIndex === 1) {
-                    squaresModeBgs[1].classList.add('visible'); // Drugi obrazek na 10 sekund
+                    squaresModeBgs[1].classList.add('visible'); // Second image for 10 seconds
                     setTimeout(() => {
                         currentIndex = 2;
                         changeBackground();
                     }, 10000);
                 } else if (currentIndex === 2) {
-                    squaresModeBgs[2].classList.add('visible'); // Trzeci obrazek na 10 sekund
+                    squaresModeBgs[2].classList.add('visible'); // Third image for 10 seconds
                     setTimeout(() => {
                         currentIndex = 1;
                         changeBackground();

@@ -76,6 +76,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'hale.php';
         require_once plugin_dir_path(__FILE__) . 'opinions.php';
         require_once plugin_dir_path(__FILE__) . 'button.php';
+        require_once plugin_dir_path(__FILE__) . 'about.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -243,6 +244,7 @@ class PWElements {
                         ...PWElementHale::initElements(),
                         ...PWElementOpinions::initElements(),
                         ...PWElementButton::initElements(),
+                        ...PWElementAbout::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -304,6 +306,7 @@ class PWElements {
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
             'Kontakt'                        => 'PWElementContact',
             'Liczby'                         => 'PWElementNumbers',
+            'Main Page About'                => 'PWElementAbout',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
             'Mapa'                           => 'PWElementMapa',
             'Mapa test'                      => 'PWElementMapaTest',
@@ -363,6 +366,7 @@ class PWElements {
             'PWElementConfSection'      => 'confSection.php',
             'PWElementHeaderConference' => 'confHeader.php',
             'PWElementConfSideEvents'   => 'conf_side_events.php',
+            'PWElementAbout'            => 'about.php',
             'PWElementDonwload'         => 'download.php',
             'PWElementExhibitors'       => 'exhibitors-benefits.php',
             'PWElementFaq'              => 'faq.php',

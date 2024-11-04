@@ -372,9 +372,6 @@ class PWElementHomeGallery extends PWElements {
                     flex-wrap: wrap;
                     width: 100%;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-item {
-                    width: 50%;
-                }
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs img {
                     width: 100%;
                     padding: 5px;
@@ -415,13 +412,13 @@ class PWElementHomeGallery extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-paragraph {
                     margin-top: 12px !important;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-paragraph  p {
+                .pwelement_'. self::$rnd_id .' .pwe-gallery-desc-paragraph p {
                     display:inline !important;
                 }
-                .pwelement_'. self::$rnd_id .' #pweGallery .pwe-gallery-desc-paragraph  a {
+                .pwelement_'. self::$rnd_id .' #pweGallery .pwe-gallery-desc-paragraph a {
                     color: '. $link_color .';
                 } 
-                .pwelement_'. self::$rnd_id .' #pweGallery .pwe-gallery-desc-paragraph  a:hover {
+                .pwelement_'. self::$rnd_id .' #pweGallery .pwe-gallery-desc-paragraph a:hover {
                     color: '. $link_hover_color .';
                 } 
                 .pwelement_'. self::$rnd_id .' .pwe-btn-box {
@@ -434,6 +431,11 @@ class PWElementHomeGallery extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-btn-container {
                     padding-top: 0 !important;
                 }   
+                @media (min-width: 961px) {
+                    .pwelement_'. self::$rnd_id .' .pwe-gallery-thumbs-item {
+                        width: 50% !important;
+                    }
+                }
                 @media (max-width: 960px) {
                     .pwelement_'. self::$rnd_id .' .pwe-gallery-wrapper {
                         padding: 36px 36px;

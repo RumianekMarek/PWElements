@@ -371,7 +371,7 @@ class PWElementMainCountdown extends PWElements {
                 .pwelement_'. self::$rnd_id .' #main-timer p {
                     color: '. $text_color .';
                     margin: 9px auto;
-                    font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
+                    font-size: ' . $countdown_font_size . 'px !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-btn {
                     color: '. $btn_text_color .';
@@ -402,6 +402,11 @@ class PWElementMainCountdown extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
                     min-width: 450px;
                     text-align: center;
+                }
+                @media (min-width: 300px) and (max-width: 1200px) {
+                    .pwelement_'. self::$rnd_id .' #main-timer p {
+                        font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
+                    }
                 }
                 @media (max-width:570px){
                     .pwelement_'. self::$rnd_id .' .countdown-container {
