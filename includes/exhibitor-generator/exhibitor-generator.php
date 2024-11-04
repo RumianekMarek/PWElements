@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * PWEExhibitorGenerator Class
+ *
+ * This class handles the exhibitor generator functionality for the PWE plugin.
+ * It manages forms, color schemes, shortcode generation, and integrates with external
+ * classes to generate exhibitor guest and staff data.
+ */
+
 class PWEExhibitorGenerator{
     
     public static $rnd_id;
@@ -41,7 +49,6 @@ class PWEExhibitorGenerator{
         require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-worker-generator.php';
         require_once plugin_dir_path(__FILE__) . 'classes/mass-vip-sender.php';
       
-        // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
             vc_map(array(
                 'name' => __( 'PWE Exhibitor Generator', 'pwe_exhibitor_generator'),
@@ -147,7 +154,9 @@ class PWEExhibitorGenerator{
     }
 
     /**
-     * Adding Styles
+     * Enqueues styles for the exhibitor generator.
+     *
+     * Loads the CSS file from the `assets` folder and sets the version based on the file's last modified time.
      */
     public function addingStyles(){
         $css_file = plugins_url('assets/exhibitor-generator-style.css', __FILE__);
@@ -156,12 +165,17 @@ class PWEExhibitorGenerator{
     }
 
     /**
-     * Adding Scripts
+     * Enqueues scripts for the exhibitor generator.
+     *
+     * Loads the JS file from the `assets` folder and localizes data for backend communication, 
+     * such as the secret key and language strings.
+     *
+     * @param array $atts Shortcode attributes.
      */
     public function addingScripts($atts){
         $send_data = [
             'send_file' => plugins_url('assets/mass_vip.php', __FILE__ ),
-            'secret' =>  hash_hmac('sha256', $_SERVER["HTTP_HOST"], '^GY0ZlZ!xzn1eM5'),
+            'secret' =>  hash_hmac('sha256', $_SERVER["HTTP_HOST"], AUTH_KEY),
             'lang' => get_locale(),
         ];
         
@@ -172,10 +186,14 @@ class PWEExhibitorGenerator{
     }  
 
     /**
-     * Static method to hide specjal input.
-     * Returns form for GF filter.
+     * Hides Gravity Form fields based on their label.
      *
-     * @param array @form object
+     * Targets fields with labels 'FIRMA ZAPRASZAJĄCA', 'FIRMA', 'INVITING COMPANY', and 'COMPANY'.
+     * Adds the `gf_hidden` CSS class to hide these fields and sets a default value for the fields.
+     *
+     * @param array $form Gravity Form.
+     * @param string $com_name The company name to set as the default value.
+     * @return array Updated form with hidden fields.
      */
     public static function hide_field_by_label( $form, $com_name ) {
         $label_to_hide = ['FIRMA ZAPRASZAJĄCA', 'FIRMA', 'INVITING COMPANY', 'COMPANY'];
@@ -190,10 +208,13 @@ class PWEExhibitorGenerator{
     }
 
     /**
-     * Static method to create data for generator personalization.
-     * Returns data in array format.
+     * Retrieves exhibitor data from the trade show catalog based on the given exhibitor ID.
      *
-     * @param array @exhibitor_id string
+     * Makes a request to an external API using the token and show ID, then returns the exhibitor's data
+     * as an associative array.
+     *
+     * @param string $exhibitor_id The ID of the exhibitor.
+     * @return array|null Returns the exhibitor's data as an associative array, or null if no data exists.
      */
     public static function catalog_data($exhibitor_id) {
         $katalog_id = do_shortcode('[trade_fair_catalog]');
@@ -228,6 +249,8 @@ class PWEExhibitorGenerator{
         if ($this->findClassElements()[$exhibitor_generator_mode]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$exhibitor_generator_mode];
             
+            // Check which generator mode is in use (guest or staff).
+            // Based on the mode, load the appropriate class to generate the output.
             if (class_exists($exhibitor_generator_mode)) {
                 $output_class = new $exhibitor_generator_mode;
                 $output = $output_class->output($atts);
@@ -237,17 +260,20 @@ class PWEExhibitorGenerator{
                 $output = '';
             }
         } else {
+            // Log if class file doesn't exist
             echo '<script>console.log("File with class ' . $exhibitor_generator_mode .' does not exist")</script>';
         }
         
+        // Chengind shortcode in output 
         $output = do_shortcode($output);
 
+        // Finding with generator it is
         $exhibitor_generator_id_word = $exhibitor_generator_mode == 'PWEExhibitorVisitorGenerator' ? 'Visitor' : 'Worker';
         $exhibitor_generator_class_word = $exhibitor_generator_mode == 'PWEExhibitorVisitorGenerator' ? 'visitor' : 'worker';
-
         $exhibitor_generator_id = 'pweExhibitor'. $exhibitor_generator_id_word .'Generator';
         $exhibitor_generator_class = 'pwe-exhibitor-'. $exhibitor_generator_class_word .'-generator';
 
+        //Creating output for display
         $output_html = '
         <div id="'. $exhibitor_generator_id .'" class="'. $exhibitor_generator_class .'">
             ' . $output . '
@@ -268,6 +294,7 @@ class PWEExhibitorGenerator{
             </div>
         </div>';
         
+        // Adding mass generator to display
         $output_html .= PWEMassVipSender::output($atts);
 
         return $output_html;

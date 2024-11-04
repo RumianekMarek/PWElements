@@ -45,7 +45,7 @@ class PWEHeader extends PWECommonFunctions {
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
 
         $el_id = self::id_rnd();
-        
+
         global $registration_button_text, $pwe_header_form_id;
 
         extract( shortcode_atts( array(
@@ -70,7 +70,12 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_congress_logo_color' => '',
             'association_fair_logo_color' => '',
             'pwe_header_association_hide' => '',
+            'pwe_header_shadow' => '',
+            'pwe_header_shadow_value' => '',
             'pwe_replace' => '',
+            'pwe_header_center' => '',
+            'pwe_header_without_bg' => '',
+            'new_main_logotype' => '',
         ), $atts ));
 
         // Replace strings
@@ -84,7 +89,7 @@ class PWEHeader extends PWECommonFunctions {
                 $input_replace_array_html[] = $replace_item["input_replace_html"];
                 $output_replace_array_html[] = $replace_item["output_replace_html"];
             }
-        }      
+        }
 
         $pwe_header_logo_width = ($pwe_header_logo_width == '') ? '260px' : $pwe_header_logo_width;
         $pwe_header_logo_width = str_replace("px", "", $pwe_header_logo_width);
@@ -171,6 +176,9 @@ class PWEHeader extends PWECommonFunctions {
             @media (max-width: 960px) {
                 .row-parent:has(.pwelement_'.$el_id.' .pwe-header) {
                     padding: 0 !important;
+                }
+                .pwelement_'.$el_id.' .pwe-btn-container a {
+                    min-width: 280px !important;
                 }
             }
         </style>';
@@ -274,13 +282,13 @@ class PWEHeader extends PWECommonFunctions {
             require_once plugin_dir_path(__FILE__) . 'classes/header_squares.php';
         } else if ($pwe_header_modes == "video_mode") {
             require_once plugin_dir_path(__FILE__) . 'classes/header_video.php';
-        }   
+        }
 
         $output = do_shortcode($output);
 
         $file_cont = '<div class="pwelement pwelement_'. $el_id .'">' . $output . '</div>';
 
-        // Replace strings for content 
+        // Replace strings for content
         if ($input_replace_array_html && $output_replace_array_html) {
             $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);
         }

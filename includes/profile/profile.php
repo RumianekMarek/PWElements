@@ -37,6 +37,7 @@ class PWEProfile extends PWECommonFunctions {
      */
     public function initVCMapPWEProfile() { 
 
+        require_once plugin_dir_path(__FILE__) . 'classes/profile-tabs.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-all-in-one.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-single.php';
       
@@ -46,7 +47,7 @@ class PWEProfile extends PWECommonFunctions {
                 'name' => __( 'PWE Profile', 'pwe_profile'),
                 'base' => 'pwe_profile',
                 'category' => __( 'PWE Elements', 'pwe_profile'),
-                'admin_enqueue_css' => plugin_dir_url(dirname(dirname(__FILE__))) . 'backend/backendstyle.css',
+                'admin_enqueue_css' => plugin_dir_url(dirname( __DIR__ )) . 'backend/backendstyle.css',
                 'params' => array_merge(
                     array( 
                         array(
@@ -58,6 +59,7 @@ class PWEProfile extends PWECommonFunctions {
                             'admin_label' => true,
                             'value' => array(
                                 'All in one' => 'PWEProfileAllInOne',
+                                'Tabs' => 'PWEProfileTabs',
                                 'Single' => 'PWEProfileSingle', 
                             ),
                             'std' => 'PWEProfileAllInOne',
@@ -129,6 +131,7 @@ class PWEProfile extends PWECommonFunctions {
                             'value' => '',
                             'save_always' => true
                         ),
+                        ...PWEProfileTabs::initElements(),
                         ...PWEProfileAllInOne::initElements(),
                         ...PWEProfileSingle::initElements(),
                     ),
@@ -145,6 +148,7 @@ class PWEProfile extends PWECommonFunctions {
     private function findClassElements() {
         // Array off class placement
         return array(
+            'PWEProfileTabs'      => 'classes/profile-tabs.php',
             'PWEProfileAllInOne'     => 'classes/profile-all-in-one.php',
             'PWEProfileSingle'      => 'classes/profile-single.php',
         );
@@ -179,8 +183,16 @@ class PWEProfile extends PWECommonFunctions {
        
         $output = do_shortcode($output);
 
-        $profile_el_id = $profile_type == 'PWEProfileAllInOne' ? 'ProfileAllInOne' : 'ProfileSingle'. self::$rnd_id;
-        $profile_el_class = $profile_type == 'PWEProfileAllInOne' ? 'profile-all-in-one' : 'profile-single-'. self::$rnd_id;
+        if ($profile_type == 'PWEProfileAllInOne') {
+            $profile_el_id = 'ProfileAllInOne';
+            $profile_el_class = 'profile-all-in-one';
+        } else if ($profile_type == 'PWEProfileTabs') {
+            $profile_el_id = 'ProfileTabs';
+            $profile_el_class = 'profile-tabs';
+        } else {
+            $profile_el_id = 'ProfileSingle'. self::$rnd_id;
+            $profile_el_class = 'profile-single-'. self::$rnd_id;
+        }
 
         $output_html = '<div id="'. $profile_el_id .'" class="'. $profile_el_class .'">' . $output . '</div>';
 

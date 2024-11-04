@@ -263,7 +263,7 @@ class PWEProfileAllInOne extends PWEProfile {
             $video_id = 'R0Ckz1dVxoQ'; 
         }
 
-        $profile_iframe = '<iframe data-src="https://www.youtube.com/embed/'. $video_id .'?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist='. $video_id .'"
+        $profile_iframe = '<iframe src="https://www.youtube.com/embed/'. $video_id .'?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist='. $video_id .'"
                             title="YouTube video player" frameborder="0" marginwidth="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted">
                             </iframe>';
@@ -294,18 +294,24 @@ class PWEProfileAllInOne extends PWEProfile {
                                 if ($profile_title == 'profile_title_visitors') {
                                     $profile_id = "visitorProfile";
                                     $profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile"; 
+                                    $profile_caption = (get_locale() == 'pl_PL') ? "Dowiedz się, kogo będziemy gościć na targach." : "Find out who we will be hosting at the fair."; 
                                     $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/visitor_profile_icon.webp';
                                 } else if ($profile_title == 'profile_title_exhibitors') {
                                     $profile_id = "exhibitorProfile";
                                     $profile_title = (get_locale() == 'pl_PL') ? "Profil wystawcy" : "Exhibitor profile";
+                                    $profile_caption = (get_locale() == 'pl_PL') ? "Poznaj różnorodność branż, z których przyjadą wystawcy." : "Discover the diversity of industries from which exhibitors will come."; 
                                     $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/exhibitor_profile_icon.webp';
                                 } else if ($profile_title == 'profile_title_scope') {
                                     $profile_id = "industryScope";
                                     $profile_title = (get_locale() == 'pl_PL') ? "Zakres branżowy" : "Industry scope";
+                                    $profile_caption = (get_locale() == 'pl_PL') ? "Zapoznaj się z sektorami targów [trade_fair_name]" : "Explore the sectors of [trade_fair_name]"; 
                                     $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/industry_scope_icon.webp';
                                 } else {
                                     $profile_id = "customProfile-" . self::$rnd_id;
+                                    $profile_caption = '';
                                 }
+
+                                $profile_desc_content = !empty($profile_desc_content) ? $profile_desc_content : $profile_caption;
 
                                 $output .= '
                                 <div id="'. $profile_id .'" class="pwe-profiles__item">

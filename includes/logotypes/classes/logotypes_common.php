@@ -298,6 +298,8 @@ class PWElementAdditionalLogotypes {
                         array_unshift($logotypes_catalogs, 'catalog'); // Dodajemy "catalog" na początek tablicy
                     }
 
+                    $exhibitors_catalog = [];
+
                     // W przypadku, gdy $logotypes_exhibitors_on == true i $exhibitors_logotypes nie jest puste
                     if ($logotypes_exhibitors_on == true && !empty($exhibitors_logotypes)) {
                         foreach ($exhibitors_logotypes as $exhibitors_logotype) {

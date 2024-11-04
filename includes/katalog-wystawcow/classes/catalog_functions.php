@@ -165,7 +165,7 @@ function initVCMapPWECatalog() {
             'name' => __( 'PWE Katalog wystawców', 'pwe_katalog'),
             'base' => 'pwe_katalog',
             'category' => __( 'PWE Elements', 'pwe_katalog'),
-            'admin_enqueue_css' => plugin_dir_url(dirname( __FILE__ )) . 'backend/backendstyle.css',
+            'admin_enqueue_css' => plugin_dir_url(dirname(dirname( __DIR__ ))) . 'backend/backendstyle.css',
             //Add all vc_map PWECatalog files
             'params' => array(
                 array(

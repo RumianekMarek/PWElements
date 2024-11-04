@@ -92,9 +92,10 @@
 }
 .exhibitor-generator__right-form .gfield:has(input[placeholder^="IMIĘ I NAZWISKO"]),
 .exhibitor-generator__right-form .gfield:has(input[placeholder^="NAME AND SURNAME"]),
-.exhibitor-generator__right-form .gfield:has(input[placeholder^="FIRMA"]),
-.exhibitor-generator__right-form .gfield:has(input[placeholder^="COMPANY"]),
-.exhibitor-generator__right-form .gfield:has(input[placeholder^="E-MAIL"]) .ginput_container {
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="FIRMA ZAPRASZAJĄCA"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="INVITING COMPANY"]),
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="E-MAIL OSOBY ZAPRASZANEJ"]) .ginput_container,
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="E-MAIL OF THE INVITED PERSON"]) .ginput_container {
     position: relative;
     height: 35px;
     background-color: #D2D2D2 !important;
@@ -103,9 +104,10 @@
 }
 .exhibitor-generator__right-form .gfield input[placeholder^="IMIĘ I NAZWISKO"],
 .exhibitor-generator__right-form .gfield input[placeholder^="NAME AND SURNAME"],
-.exhibitor-generator__right-form .gfield input[placeholder^="FIRMA"],
-.exhibitor-generator__right-form .gfield input[placeholder^="COMPANY"],
-.exhibitor-generator__right-form .gfield input[placeholder^="E-MAIL"] {
+.exhibitor-generator__right-form .gfield input[placeholder^="FIRMA ZAPRASZAJĄCA"],
+.exhibitor-generator__right-form .gfield input[placeholder^="INVITING COMPANY"],
+.exhibitor-generator__right-form .gfield input[placeholder^="E-MAIL OSOBY ZAPRASZANEJ"],
+.exhibitor-generator__right-form .gfield input[placeholder^="E-MAIL OF THE INVITED PERSON"] {
     position: absolute;
     margin: 0;
     top: 0;
@@ -123,7 +125,7 @@
     --icon-url: url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/name.png");
 }
 .exhibitor-generator__right-form .gfield:has(input[placeholder^="FIRMA"]),
-.exhibitor-generator__right-form .gfield:has(input[placeholder^="COMPANY"]) {
+.exhibitor-generator__right-form .gfield:has(input[placeholder^="INVITING"]) {
     --icon-url: url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/box.png");
 }
 .exhibitor-generator__right-form .gfield:has(input[placeholder^="E-MAIL"]) {
@@ -258,9 +260,8 @@
     text-align: center;
 }
 
-.modal__element .inner :has(.spinner){
+.modal__element .blocked{
     pointer-events: none;
-    opacity: 0.5;
 }
 
 .tabela-masowa {
@@ -370,15 +371,18 @@
 .wyslij.btn-gold{
     margin:18px !important;
 }
-.file-size-error, .file-size-info{
+.modal__element, .file-size-error, .file-size-info{
     display: none;
 }
 .info-box-sign{
     cursor: pointer;
-    border: 2px solid red;
+    border: 2px solid;
     border-radius: 50%;
     font-weight: 800;
     padding:1px 8px;
+}
+.border-red{
+    border-color: red;
 }
 .file-size-info{
     text-align: left;

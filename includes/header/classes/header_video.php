@@ -6,8 +6,40 @@ $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'
 $btn_border = '1px solid ' . self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black');
 $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
+if ($pwe_header_shadow == true) {
+    $pwe_header_shadow_value = (empty($pwe_header_shadow_value)) ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 45%);" : $pwe_header_shadow_value;
+} else {
+    $pwe_header_shadow_value = "transparent";
+}
+
+$new_main_logotype_id = isset($new_main_logotype) ? $new_main_logotype : '';
+
+if (!empty($new_main_logotype_id)) {
+    $image_attributes = wp_get_attachment_image_src($new_main_logotype_id, 'full');
+    if ($image_attributes) {
+        $new_main_logotype = $image_attributes[0];
+    }
+}
+
+$logo_url = (empty($new_main_logotype)) ? $logo_url : $new_main_logotype;
+
 $output .= '
 <style>
+    .pwelement_'. $el_id .' .video-background {
+        position: relative;
+    }
+    .pwelement_'. $el_id .' .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+    .pwelement_'. $el_id .' .video-overlay {
+        background: '. $pwe_header_shadow_value . ';
+    }
     .pwelement_'. $el_id .' .pwe-header-wrapper {
         position: relative;
         max-width: 100%;
@@ -21,7 +53,7 @@ $output .= '
         display: flex;
         flex-direction: column;
         justify-content: left;
-        padding: 36px 0;
+        padding: 72px 0 36px;
     }
     .pwelement_'. $el_id .' .pwe-header-logo {
         max-width: '. $pwe_header_logo_width .'px !important;
@@ -53,6 +85,8 @@ $output .= '
     }
     .pwelement_'. $el_id .' .pwe-header-text p {
         color: '. $text_color .';
+    }
+    .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
         display: none;
     }
     .pwelement_'. $el_id .' .pwe-header-edition {
@@ -122,11 +156,9 @@ $output .= '
         width: 100%;
         height: 100%;
         overflow: hidden;
-        z-index: -1; /* Umieszczamy wideo za innymi elementami */
-        pointer-events: none; /* Blokujemy interakcje z wideo */
+        z-index: -1;
+        pointer-events: none;
     }
-
-    /* Dopasowanie wideo do całego tła */
     .pwelement_'. $el_id .' .pwe-header .video-background iframe {
         position: absolute;
         top: -36vh;
@@ -137,8 +169,6 @@ $output .= '
         z-index: -1; /* Wideo w tle za elementami */
         pointer-events: none; /* Brak interakcji z wideo */
     }
-
-    /* Kontener na całą zawartość */
     .pwelement_'. $el_id .' .pwe-header .pwe-header-container {
         position: relative;
         width: 100%;
@@ -151,7 +181,7 @@ $output .= '
 
     .pwelement_'. $el_id .' .pwe-header .pwe-header-wrapper {
         position: relative;
-        z-index: 1; /* Ustawia elementy nad wideo */
+        z-index: 1;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -178,6 +208,95 @@ $output .= '
         object-fit: cover; /* Sprawia, że wideo jest skalowane bez zniekształceń */
         transform: translate(-50%, -50%);
     }
+    .pwelement_'. $el_id .' .header-center-date {
+        display:none !important;
+    }';
+    if ($pwe_header_center == true) {
+        $output .= '
+        .pwelement_'. $el_id .' .pwe-header-column {
+            justify-content: center;
+            align-items: center;
+            padding: 36px 0;
+        }
+        .pwelement_'. $el_id .' .pwe-header-text h1 {
+            font-size: 32px;
+            max-width: 1200px;
+            text-align: center;
+        }
+        .pwelement_'. $el_id .' .pwe-header-text .header-center-date {
+            margin-top: 12px;
+            font-size: 56px;
+            font-weight: 600;
+            letter-spacing: 5px;
+        }
+        .pwelement_'. $el_id .' .pwe-header-text h3 {
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        .pwelement_'. $el_id .' .pwe-header-text p {
+            font-size: 30px;
+            font-weight: 500;
+            margin: 0;
+        }
+        .pwelement_'. $el_id .' .pwe-header-column-container {
+            background-color: transparent;
+            max-width: 800px;
+        }
+        .pwe-header-title {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pwelement_'. $el_id .' .pwe-header-date-block {
+            display:none !important;
+        }
+        .pwelement_'. $el_id .' .header-center-date {
+            display:block !important;
+        }
+        .pwe-header-main-content-block {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pwelement_'. $el_id .' .pwe-header-bottom {
+            margin: 0 auto;
+        }';
+    }
+    if($pwe_header_without_bg== true) {
+        $output .= '
+        .pwelement_'. $el_id .' .pwe-header-column {
+            max-width:100%;
+        }
+        .pwelement_'. $el_id .'  .pwe-header-column-container {
+            max-width: 800px;
+            background-color: transparent;
+        }
+        .pwelement_'. $el_id .' .pwe-header-text h1 {
+            font-size: 27px;
+            letter-spacing: 6px;
+            font-weight: 400 !important;
+            max-width: 800px;
+        }
+        .pwelement_'. $el_id .' .pwe-header-text h2 {
+            margin-top: 24px;
+            font-size: 38px;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            font-weight: 600;
+        }
+        .pwelement_'. $el_id .' .btn-angle-right {
+            display:none;
+        }
+        .pwelement_'. $el_id .' .pwe-header .pwe-btn {
+            border: 2px solid white !important;
+            border-radius: 10px !important;
+            letter-spacing: 4px;
+        }
+        ';
+    }
+    $output .='
     @media(max-width:1350px){
         .pwelement_'. $el_id .' .pwe-header .video-background iframe {
             width: 100vw;
@@ -255,7 +374,7 @@ $output .= '
             gap: 18px;
         }
         .pwelement_'. $el_id .' .pwe-header-date-block {
-            margin-top: 36px;
+            margin-top: 18px;
         }
         .pwelement_'. $el_id .' .pwe-header-text {
             display: flex;
@@ -263,7 +382,7 @@ $output .= '
             justify-content: center;
             align-items: center;
         }
-        .pwelement_'. $el_id .' .pwe-header-text p {
+        .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
             display: block;
             margin: 0;
         }
@@ -331,6 +450,28 @@ $output .= '
             width: 100% !important;
             max-width: 320px !important;
         }
+        .pwelement_'. $el_id .' .el-hidden-desktop {
+            display: none;
+        }';
+        if ($pwe_header_center == true) {
+            $output .= '
+            .pwelement_'. $el_id .' .pwe-header-main-content-block {
+                flex-direction: column;
+            }
+            .pwelement_'. $el_id .' .pwe-header .pwe-header-wrapper {
+                justify-content: center;
+            }
+            .pwelement_'. $el_id .' .pwe-header .header-center-date {
+                font-size: 34px;
+            }
+            .pwelement_'. $el_id .' .pwe-header-text p {
+                display: none;
+            }
+            .pwelement_'. $el_id .' .pwe-header  .pwe-header-title {
+                gap: 15px;
+            }';
+        }
+        $output .='
     }
     @media(max-width: 450px) {
         .pwelement_'. $el_id .' .pwe-header-date-block {
@@ -341,11 +482,10 @@ $output .= '
 
 <div id="pweHeader" class="pwe-header">
     <div class="pwe-header-container pwe-header-background" style="background-image: url('. $background_header .');">
-
         <div class="pwe-bg-image1 pwe-bg-image"></div>
         <div class="pwe-bg-image2 pwe-bg-image"></div>
         <div class="pwe-bg-image3 pwe-bg-image"></div>
-        
+
         <div class="pwe-header-wrapper">
 
             <div class="pwe-header-column pwe-header-content-column">
@@ -353,15 +493,19 @@ $output .= '
 
                     <div class="pwe-header-text">
                         <div class="pwe-header-main-content-block">
-                            <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
+                            <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">';
+                            $output .= ($pwe_header_center == true) ? '<h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>' : ''; $output .= '
                             <div class="pwe-header-title">
                                 <h1>'. $trade_fair_desc .'</h1>
-                                <h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>
+                                <h2 class="header-center-date">'. $actually_date .'</h2>';
+                                $city =  self::languageChecker('Warszawa', 'Warsaw');
+                                $output .= ($pwe_header_center != true) ? '<h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>' : ''; 
+                                $output .= ($pwe_header_center == true) ? '<p>'. $city .'</p>' : ''; $output .= '
                             </div>
                         </div>
                         <div class="pwe-header-date-block">
-                            <h2>'. $trade_fair_date .'</h2>
-                            <p>'. self::languageChecker('Warszawa, Polska', 'Warsaw, Poland') .'</p>
+                            <h2>'. $trade_fair_date .'<span class="el-hidden-desktop" style="text-transform: capitalize;">, '. $city .'</span></h2>
+                            <p class="pwe-header-city">'. self::languageChecker('Warszawa, Polska', 'Warsaw, Poland') .'</p>
                         </div>
                     </div>
 
@@ -381,6 +525,7 @@ $output .= '
             </div>
 
             <div class="video-background">
+                <div class="video-overlay"></div>
                 <video autoplay="" muted="" loop="" preload="auto" class="bg-video" src="/doc/header.mp4"></video>
             </div>
 

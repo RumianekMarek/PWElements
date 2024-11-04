@@ -13,8 +13,8 @@ function initVCMapHeader() {
             'name' => __('PWE Header', 'pwe_header'),
             'base' => 'pwe_header',
             'category' => __('PWE Elements', 'pwe_header'),
-            'admin_enqueue_css' => plugin_dir_url(dirname( __DIR__ )) . 'backend/backendstyle.css',
-            'admin_enqueue_js' => plugin_dir_url(dirname( __DIR__ )) . 'backend/backendscript.js', 
+            'admin_enqueue_css' => plugin_dir_url(dirname(dirname( __DIR__ ))) . 'backend/backendstyle.css',
+            'admin_enqueue_js' => plugin_dir_url(dirname(dirname( __DIR__ ))) . 'backend/backendscript.js',
             'params' => array_merge(
                 array(
                     // colors setup
@@ -452,6 +452,76 @@ function initVCMapHeader() {
                         'dependency' => array(
                             'element' => 'pwe_header_modes',
                             'value' => array(''),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'Options',
+                        'heading' => __('Show shadow', 'pwe_header'),
+                        'param_name' => 'pwe_header_shadow',
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_header') => 'true',),
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                'video_mode',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Options',
+                        'heading' => __('Shadow value', 'pwe_header'),
+                        'description' => __('linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 45%);', 'pwe_header'),
+                        'param_name' => 'pwe_header_shadow_value',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                'video_mode',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'Options',
+                        'heading' => __('Center text', 'pwe_header'),
+                        'param_name' => 'pwe_header_center',
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_header') => 'true',),
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                'video_mode',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'Options',
+                        'heading' => __('Left site text without bg', 'pwe_header'),
+                        'param_name' => 'pwe_header_without_bg',
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_header') => 'true',),
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                'video_mode',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'attach_image',
+                        'group' => 'Options',
+                        'heading' => __('Main fair logo', 'pwelement'),
+                        'param_name' => 'new_main_logotype',
+                        'save_always' => true,
+                        'admin_label' => true,
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                'video_mode',
+                            ),
                         ),
                     ),
                     array(

@@ -2,6 +2,8 @@
 
 /**
  * Class PWEExhibitorWorkerGenerator
+ * 
+ * This class adding creating html for exhibitors to easy register workers.
  */
 class PWEExhibitorWorkerGenerator extends PWEExhibitorGenerator {
 
@@ -14,10 +16,10 @@ class PWEExhibitorWorkerGenerator extends PWEExhibitorGenerator {
     }
 
     /**
-     * Static method to generate the HTML output for the PWE Element.
-     * Returns the HTML output as a string.
+     * Static method to generate the HTML output.
      * 
      * @param array @atts options
+     * @return string html output
      */
     public static function output($atts) {
 

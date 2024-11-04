@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
 $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
@@ -270,7 +270,7 @@ if (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode 
 
 $output .= '
 <div id="pweHeader" class="pwe-header">
-    <div style="background-image: url('. $background_header .');"  class="pwe-header-container pwe-header-background"> 
+    <div style="background-image: url('. $background_header .');"  class="pwe-header-container pwe-header-background">
         <div class="pwe-header-wrapper">
 
             <div class="header-info-column">
