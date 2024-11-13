@@ -282,11 +282,11 @@ class PWEExhibitorGenerator{
                     PWECommonFunctions::languageChecker(
                         <<<PL
                             Potrzebujesz pomocy?<br>
-                            Skontaktuj się z nami - <a href="mailto:info@warsawexpo.eu">info@warsawexpo.eu</a>
+                            Skontaktuj się z nami - <a href="mailto:generator.wystawcow@warsawexpo.eu.eu">generator.wystawcow@warsawexpo.eu.eu</a>
                         PL,
                         <<<EN
                             Need help?<br>
-                            Contact us - <a href="mailto:info@warsawexpo.eu">info@warsawexpo.eu</a>
+                            Contact us - <a href="mailto:generator.wystawcow@warsawexpo.eu.eu">generator.wystawcow@warsawexpo.eu.eu</a>
                         EN
                     )
                 .'</h3>

@@ -14,7 +14,7 @@ class PWELogotypes extends PWECommonFunctions {
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
 
         foreach(self::$fair_colors as $color_key => $color_value){
-            if(strpos($color_key, 'main2') != false){
+            if(strpos(strtolower($color_key), 'main2') !== false){
                 self::$main2_color = $color_value;
             }
         }

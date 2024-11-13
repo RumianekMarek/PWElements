@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWEProfile
@@ -22,11 +22,11 @@ class PWEProfile extends PWECommonFunctions {
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
 
         foreach(self::$fair_colors as $color_key => $color_value){
-            if(strpos($color_key, 'main2') != false){
+            if(strpos(strtolower($color_key), 'main2') !== false){
                 self::$main2_color = $color_value;
             }
         }
-        
+
         // Hook actions
         add_action('init', array($this, 'initVCMapPWEProfile'));
         add_shortcode('pwe_profile', array($this, 'PWEProfileOutput'));
@@ -35,12 +35,13 @@ class PWEProfile extends PWECommonFunctions {
     /**
      * Initialize VC Map PWEProfile.
      */
-    public function initVCMapPWEProfile() { 
+    public function initVCMapPWEProfile() {
 
         require_once plugin_dir_path(__FILE__) . 'classes/profile-tabs.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/profile-sitetabs.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-all-in-one.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-single.php';
-      
+
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
             vc_map( array(
@@ -49,7 +50,7 @@ class PWEProfile extends PWECommonFunctions {
                 'category' => __( 'PWE Elements', 'pwe_profile'),
                 'admin_enqueue_css' => plugin_dir_url(dirname( __DIR__ )) . 'backend/backendstyle.css',
                 'params' => array_merge(
-                    array( 
+                    array(
                         array(
                             'type' => 'dropdown',
                             'heading' => __('Select profile type', 'pwe_profile'),
@@ -58,9 +59,10 @@ class PWEProfile extends PWECommonFunctions {
                             'save_always' => true,
                             'admin_label' => true,
                             'value' => array(
-                                'All in one' => 'PWEProfileAllInOne',
+                                'Accordion' => 'PWEProfileAllInOne',
                                 'Tabs' => 'PWEProfileTabs',
-                                'Single' => 'PWEProfileSingle', 
+                                'Sitetabs' => 'PWEProfileSiteTabs',
+                                'Single' => 'PWEProfileSingle',
                             ),
                             'std' => 'PWEProfileAllInOne',
                         ),
@@ -132,6 +134,7 @@ class PWEProfile extends PWECommonFunctions {
                             'save_always' => true
                         ),
                         ...PWEProfileTabs::initElements(),
+                        ...PWEProfileSiteTabs::initElements(),
                         ...PWEProfileAllInOne::initElements(),
                         ...PWEProfileSingle::initElements(),
                     ),
@@ -149,6 +152,7 @@ class PWEProfile extends PWECommonFunctions {
         // Array off class placement
         return array(
             'PWEProfileTabs'      => 'classes/profile-tabs.php',
+            'PWEProfileSiteTabs'  => 'classes/profile-sitetabs.php',
             'PWEProfileAllInOne'     => 'classes/profile-all-in-one.php',
             'PWEProfileSingle'      => 'classes/profile-single.php',
         );
@@ -157,7 +161,7 @@ class PWEProfile extends PWECommonFunctions {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public function PWEProfileOutput($atts, $content = null) {
@@ -168,7 +172,7 @@ class PWEProfile extends PWECommonFunctions {
 
         if ($this->findClassElements()[$profile_type]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$profile_type];
-            
+
             if (class_exists($profile_type)) {
                 $output_class = new $profile_type;
                 $output = $output_class->output($atts, $content);
@@ -180,7 +184,7 @@ class PWEProfile extends PWECommonFunctions {
         } else {
             echo '<script>console.log("File with class ' . $profile_type .' does not exist")</script>';
         }
-       
+
         $output = do_shortcode($output);
 
         if ($profile_type == 'PWEProfileAllInOne') {
@@ -189,6 +193,9 @@ class PWEProfile extends PWECommonFunctions {
         } else if ($profile_type == 'PWEProfileTabs') {
             $profile_el_id = 'ProfileTabs';
             $profile_el_class = 'profile-tabs';
+        } else if ($profile_type == 'PWEProfileSiteTabs') {
+            $profile_el_id = 'ProfileSiteTabs';
+            $profile_el_class = 'profile-sitetabs';
         } else {
             $profile_el_id = 'ProfileSingle'. self::$rnd_id;
             $profile_el_class = 'profile-single-'. self::$rnd_id;

@@ -69,7 +69,7 @@ class PWEProfileAllInOne extends PWEProfile {
                     ),
                     array(
                         'type' => 'textarea_raw_html',
-                        'heading' => __('Person name', 'pwe_profile'),
+                        'heading' => __('Profile short description', 'pwe_profile'),
                         'param_name' => 'profile_desc',
                         'param_holder_class' => 'backend-textarea-raw-html',
                         'save_always' => true,

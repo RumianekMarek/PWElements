@@ -74,6 +74,26 @@ class PWEProfileTabs extends PWEProfile {
                         'param_holder_class' => 'backend-textarea-raw-html',
                         'save_always' => true,
                     ),
+                    array(
+                        'type' => 'param_group',
+                        'heading' => __('Items icons', 'pwe_profile'),
+                        'param_name' => 'profile_tabs_items_icons',
+                        'params' => array(
+                            array(
+                                'type' => 'attach_image',
+                                'heading' => __('Icon', 'pwe_profile'),
+                                'param_name' => 'profile_item_icon',
+                                'save_always' => true,
+                            ),
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Title', 'pwe_profile'),
+                                'param_name' => 'profile_item_title',
+                                'save_always' => true,
+                                'admin_label' => true,
+                            ),
+                        ),
+                    ),
                 ),
             ),
         );
@@ -111,10 +131,10 @@ class PWEProfileTabs extends PWEProfile {
             preg_match('/embed\/([^?]+)/', $src, $match);
             $video_id = $match[1];
         } else {
-            $video_id = 'R0Ckz1dVxoQ'; 
+            $video_id = 'R0Ckz1dVxoQ';  
         }
 
-        $profile_tabs_iframe = '<iframe src="https://www.youtube.com/embed/'. $video_id .'?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist='. $video_id .'"
+        $profile_tabs_iframe = '<iframe data-src="https://www.youtube.com/embed/'. $video_id .'?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist='. $video_id .'"
                             title="YouTube video player" frameborder="0" marginwidth="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted">
                             </iframe>';
@@ -146,7 +166,7 @@ class PWEProfileTabs extends PWEProfile {
                 width: 40%;
                 display: flex;
                 align-items: center;
-            }
+            }   
             .profile-tabs .pwe-profiles__iframe iframe,
             .profile-tabs .pwe-profiles__iframe .rll-youtube-player {
                 aspect-ratio: 16 / 9;
@@ -154,7 +174,7 @@ class PWEProfileTabs extends PWEProfile {
                 border-radius: 18px;
                 width: 100%;
             }
-            .profile-tabs .pwe-profiles__iframe iframe {
+            .profile-tabs .pwe-profiles__iframe iframe {  
                 pointer-events: none;
             }
             .profile-tabs .pwe-profiles__content {
@@ -162,7 +182,6 @@ class PWEProfileTabs extends PWEProfile {
                 width: 60%;
             }
             .profile-tabs .pwe-profiles__tabs-items  {
-
                 justify-content: space-around;
                 overflow: visible;
             }
@@ -204,6 +223,7 @@ class PWEProfileTabs extends PWEProfile {
             }
             .profile-tabs .pwe-profiles__tab-text {
                 width: 100%;
+                padding: 36px;
             }  
             .profile-tabs .pwe-profiles__tab-text ul {
                 margin: 0;
@@ -255,13 +275,52 @@ class PWEProfileTabs extends PWEProfile {
                 color: white;
             }
             .profile-tabs .pwe-profiles__tab-content {
-                display: none;
-                padding: 36px;
+                opacity: 0;
+                visibility: hidden;
+                height: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
                 position: relative;
 	            z-index: 9;
                 border-radius: 14px;
                 color: white;
             }
+            .pwe-profiles__tab-content.active {
+                opacity: 1;
+                visibility: visible;
+                height: auto;
+                pointer-events: auto;
+            }
+
+
+            .profile-tabs .pwe-profiles__item-icons {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+            .profile-tabs .pwe-profiles__item-icon {
+                display: flex;
+                flex-direction: column;
+                width: 30%;
+                align-items: center;
+                gap: 18px;
+            }
+            .profile-tabs .pwe-profiles__item-icon img {
+                background-color: '. self::$main2_color .';
+                border-radius: 50%;
+                padding: 10px;
+                max-width: 120px;
+            }
+            .profile-tabs .pwe-profiles__item-icon span {
+                text-transform: uppercase;
+                font-weight: 600;
+                font-size: 13px;
+                text-align: center;
+                width: 100%;
+                max-width: 200px;
+            }
+
 
             @media (max-width: 1250px) {
                 .profile-tabs .pwe-profiles__wrapper {
@@ -275,9 +334,8 @@ class PWEProfileTabs extends PWEProfile {
 
                 }
             }
-
             @media (max-width: 768px) {
-                .profile-tabs .pwe-profiles__tab-content {
+                .profile-tabs .pwe-profiles__tab-text {
                     padding: 18px;
                 }
                 .profile-tabs .pwe-profiles__tab-text ul li {
@@ -290,14 +348,12 @@ class PWEProfileTabs extends PWEProfile {
                     font-size: 14px;
                     white-space: break-spaces !important;
                 }
-            }
-                
+            }   
             @media (min-width: 600px) {
                 .profile-tabs .pwe-profiles__tabs-items .pwe-profiles__tab:not(.active):hover {
                     top: -60px;
                 }
-            }
-                
+            }  
             @media (max-width: 600px) {
                 .profile-tabs .pwe-profiles__tab-head img {
                     display: none;
@@ -366,13 +422,34 @@ class PWEProfileTabs extends PWEProfile {
                             $profile_title = !empty($profile_title_select) ? $profile_title_select : $profile_title_custom;
                             
                             $profile_id = strtolower(str_replace('_title', '', $profile_title));
+
+                            $profile_items_icons = $profile_item["profile_tabs_items_icons"];
+                            $profile_items_icons_urldecode = urldecode($profile_items_icons);
+                            $profile_items_icons_json = json_decode($profile_items_icons_urldecode, true);
                         
                             $profile_text_content = self::decode_clean_content($profile_text);
 
                             $output .= '
                             <div id="'. $profile_id .'" class="pwe-profiles__tab-content tab-content-'.self::id_rnd().'">
-                                <div class="pwe-profiles__tab-text">
-                                    '. $profile_text_content .'
+                                <div class="pwe-profiles__tab-text">';
+                                if (empty($profile_text_content)) {
+                                    $output .= '<div class="pwe-profiles__item-icons">';
+                                    foreach ($profile_items_icons_json as $profile_icon) {
+                                        $profile_item_icon = $profile_icon["profile_item_icon"];
+                                        $profile_item_title = $profile_icon["profile_item_title"];
+                                        $profile_item_icon_src = wp_get_attachment_url($profile_item_icon);  
+                                        
+                                        $output .= '
+                                        <div class="pwe-profiles__item-icon">
+                                            <img src="'. $profile_item_icon_src .'" />
+                                            <span>'. $profile_item_title .'</span>
+                                        </div>';
+                                    }
+                                    $output .= '</div>';
+                                } else {
+                                    $output .= $profile_text_content;
+                                }
+                                $output .= '   
                                 </div>
                             </div>';
                         }
@@ -399,19 +476,19 @@ class PWEProfileTabs extends PWEProfile {
         function openTab(evt, name) {
             var i, tabcontent, tab;
             tabcontent = document.getElementsByClassName("pwe-profiles__tab-content");
-            
+
             for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none"; // Użyj display: none do ukrywania
+                tabcontent[i].classList.remove("active"); // Usuń klasę active, aby ukryć zawartość
             }
-            
+
             tab = document.getElementsByClassName("pwe-profiles__tab");
             for (i = 0; i < tab.length; i++) {
                 tab[i].className = tab[i].className.replace(" active", "");
             }
-            
-            // Pokazanie aktywnego taba
+
+            // Dodaj klasę active do aktywnego taba
             var activeTab = document.getElementById(name);
-            activeTab.style.display = "flex"; // Ustawienie display na flex
+            activeTab.classList.add("active");
             evt.currentTarget.className += " active"; // Dodaj klasę active do klikniętej zakładki
         }
 
@@ -423,10 +500,10 @@ class PWEProfileTabs extends PWEProfile {
             // Ensure the first tab and its content are displayed and marked as active
             if (firsttab && firstTabContent) {
                 firsttab.classList.add("active");
-                firstTabContent.style.display = "flex"; // Ustawienie display na flex
+                firstTabContent.classList.add("active");
             }        
+        });
 
-        });  
 
         const tabHeads = document.querySelectorAll(".pwe-profiles__tab-head");
 

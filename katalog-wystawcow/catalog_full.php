@@ -29,7 +29,8 @@ class PWECatalogFull extends PWECatalog {
         
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
-        $exhibitors = self::logosChecker($identification, $atts['format']);
+        $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
+        $exhibitors = self::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
 
         if ($exhibitors === null){
             return;
@@ -114,7 +115,8 @@ class PWECatalogFull extends PWECatalog {
                         foreach ($exhibitors as $exhibitor) {
                             $singleExhibitor = '<div class="exhibitors__container-list">';
                             if ($exhibitor['URL_logo_wystawcy']) {
-                                $singleExhibitor .= '<div class="exhibitors__container-list-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ')"></div>';
+                                $logoUrl = str_replace([' ', '(', ')'], ['%20', '%28', '%29'], $exhibitor['URL_logo_wystawcy']);
+                                $singleExhibitor .= '<div class="exhibitors__container-list-img" style="background-image: url(' . $logoUrl . ')"></div>';
                             }
                             
                             if ($stand !== 'true') {

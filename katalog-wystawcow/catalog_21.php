@@ -10,7 +10,8 @@ class PWECatalog21 extends PWECatalog {
     }
 
     public static function output($atts, $identification) {
-        $exhibitors = self::logosChecker($identification, $atts['format']);
+        $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
+        $exhibitors = self::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
 
         if ($exhibitors === null){
             return;
