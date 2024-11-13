@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.3.2
+ * Version: 2.3.4
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -31,6 +31,7 @@ class PWElementsPlugin {
         $this->initClasses();
         $this->init();
         // $this -> resendTicket();
+        add_filter('rocket_exclude_defer_js', 'pwe_exclude_js_from_defer');
     }
 
     private function initClasses() {
@@ -82,6 +83,12 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/media-gallery/media-gallery.php';
         $this->PWEMediaGallery = new PWEMediaGallery();
+    }
+
+    function pwe_exclude_js_from_defer($excluded_files) {
+        $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/three.min.js';
+        $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js';
+        return $excluded_files;
     }
 
     // Czyszczenie pamięci wp_rocket
