@@ -122,14 +122,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(() => {
                         currentIndex = 2;
                         changeBackground(); // Go to third image after 10 seconds
-                    }, 10000);
+                    }, 3000);
                 } else if (currentIndex === 2) {
                     squaresModeBgs[2].classList.add('visible'); // Third image for 10 seconds
                     setTimeout(() => {
                         isFirstLoop = false; // Set the flag that the first loop has finished
                         currentIndex = 1; // Set to the second image at the beginning of the next loops
                         changeBackground();
-                    }, 10000);
+                    }, 3000);
                 }
             } else {
                 // Next loops: only second and third images
@@ -138,13 +138,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(() => {
                         currentIndex = 2;
                         changeBackground();
-                    }, 10000);
+                    }, 3000);
                 } else if (currentIndex === 2) {
                     squaresModeBgs[2].classList.add('visible'); // Third image for 10 seconds
                     setTimeout(() => {
                         currentIndex = 1;
                         changeBackground();
-                    }, 10000);
+                    }, 3000);
                 }
             }
         }

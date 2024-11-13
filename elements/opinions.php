@@ -37,6 +37,30 @@ class PWElementOpinions extends PWElements {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Display dots', 'pwe_display_info'),
+                'param_name' => 'opinions_dots_display',
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOpinions',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Limit width', 'pwe_display_info'),
+                'param_name' => 'opinions_limit_width',
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOpinions',
+                ),
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'param_name' => 'opinions_items',
@@ -50,14 +74,12 @@ class PWElementOpinions extends PWElements {
                         'heading' => __('Person image', 'pwelement'),
                         'param_name' => 'opinions_face_img',
                         'save_always' => true,
-                        'admin_label' => true
                     ),
                     array(
                         'type' => 'attach_image',
                         'heading' => __('Company image', 'pwelement'),
                         'param_name' => 'opinions_company_img',
                         'save_always' => true,
-                        'admin_label' => true
                     ),
                     array(
                         'type' => 'textfield',
@@ -78,14 +100,12 @@ class PWElementOpinions extends PWElements {
                         'heading' => __('Person description', 'pwelement'),
                         'param_name' => 'opinions_desc',
                         'save_always' => true,
-                        'admin_label' => true
                     ),
                     array(
                         'type' => 'textarea',
                         'heading' => __('Person opinion', 'pwelement'),
                         'param_name' => 'opinions_text',
                         'save_always' => true,
-                        'admin_label' => true
                     ),
                 ),
             ),
@@ -94,29 +114,31 @@ class PWElementOpinions extends PWElements {
     }    
 
     public static function output($atts) { 
-        wp_enqueue_style('slick-slider-css', plugins_url('../assets/slick-slider/slick.css', __FILE__));
-        wp_enqueue_style('slick-slider-theme-css', plugins_url('../assets/slick-slider/slick-theme.css', __FILE__));
-        wp_enqueue_script('slick-slider-js', plugins_url('../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
-
         extract( shortcode_atts( array(
             'opinions_preset' => '',
+            'opinions_dots_display' => '',
+            'opinions_limit_width' => '',
             'opinions_items' => '',
         ), $atts )); 
 
         $opinions_items_urldecode = urldecode($opinions_items);
         $opinions_items_json = json_decode($opinions_items_urldecode, true);
 
+        $opinions_width_element = ($opinions_limit_width == true) ? '1200px' : '100%';
+        $slides_to_show = ($opinions_limit_width == true) ? 4 : 5;
+
         $output = '';
         $output .= '
             <style>
                 .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-opinions) {
-                    max-width: 100% !important;
+                    max-width: '. $opinions_width_element .' !important;
                     padding: 0 !important;  
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions {
                     visibility: hidden;
                     opacity: 0;
                     transition: opacity 0.5s ease-in-out;
+                    padding: 18px 0;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__wrapper {
                     max-width: 100%;
@@ -137,23 +159,6 @@ class PWElementOpinions extends PWElements {
                     margin: 12px;
                 }
 
-
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow {
-                    display: block;
-                    position: absolute;
-                    top: 40%;
-                    font-size: 60px;
-                    font-weight: 700;
-                    z-index: 1;
-                    cursor: pointer;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow-prev {
-                    left: 6px; 
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-opinions__arrow-next {
-                    right: 6px;
-                }  
-                
             </style>';
 
             if ($opinions_preset == 'preset_1') {
@@ -245,6 +250,7 @@ class PWElementOpinions extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
                         height: 80px;
                         width: 100%;
+                        max-width: 160px;
                         object-fit: contain;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info {
@@ -276,7 +282,7 @@ class PWElementOpinions extends PWElements {
                         font-size: 14px;
                         line-height: 1.2;
                         margin: 0;
-                    }     
+                    }    
                 </style>';
             }
 
@@ -286,7 +292,7 @@ class PWElementOpinions extends PWElements {
                 <div id="pweOpinions"class="pwe-opinions">
                     <h2 class="pwe-opinions__title">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h2>
                     <div class="pwe-opinions__wrapper">
-                        <div class="pwe-opinions__items">';
+                        <div class="pwe-opinions__items pwe-slides">';
 
                             foreach ($opinions_items_json as $opinion_item) {
                                 $opinions_face_img = $opinion_item["opinions_face_img"];
@@ -356,52 +362,20 @@ class PWElementOpinions extends PWElements {
                         $output .= '
                         </div>
 
-                        <span class="pwe-opinions__arrow pwe-opinions__arrow-prev">‹</span>
-                        <span class="pwe-opinions__arrow pwe-opinions__arrow-next">›</span>
+                        <span class="pwe-opinions__arrow pwe-opinions__arrow-prev pwe-arrow pwe-arrow-prev">‹</span>
+                        <span class="pwe-opinions__arrow pwe-opinions__arrow-next pwe-arrow pwe-arrow-next">›</span>
 
                     </div>
                 </div>';
 
+                $opinions_arrows_display = 'true';
+
+                include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
+                $output .= PWESliderScripts::sliderScripts('opinions', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show);
+
                 $output .= '
                 <script>
-                jQuery(function ($) {
-                    const opinionsItems = $("#pweOpinions .pwe-opinions__items");
-                    const opinionsArrows = $(".pwe-opinions__arrow");
-
-                    opinionsItems.slick({
-                            infinite: true,
-                            slidesToShow: 5,
-                            slidesToScroll: 1,
-                            arrows: true,
-                            nextArrow: $("#pweOpinions .pwe-opinions__arrow-next"),
-                            prevArrow: $("#pweOpinions .pwe-opinions__arrow-prev"),
-                            autoplay: true,
-                            autoplaySpeed: 3000,
-                            dots: false,
-                            cssEase: "linear",
-                            responsive: [
-                                    {
-                                        breakpoint: 1400,
-                                        settings: { slidesToShow: 4 }
-                                    },
-                                    {
-                                        breakpoint: 1200,
-                                        settings: { slidesToShow: 3 }
-                                    },
-                                    {
-                                        breakpoint: 960,
-                                        settings: { slidesToShow: 2 }
-                                    },
-                                    {
-                                        breakpoint: 550,
-                                        settings: { slidesToShow: 1 }
-                                    }
-                            ] 
-                    });  
-
-                    if (opinionsItems.children().length <= 5 && $(window).width() >= 1200) {
-                        opinionsArrows.hide();
-                    }
+                jQuery(function ($) {                 
 
                     // Function to set equal height
                     function setEqualHeight() {

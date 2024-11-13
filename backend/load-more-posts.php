@@ -1,4 +1,3 @@
-    
 <?php 
 
 // Funkcja AJAX do ładowania dodatkowych postów

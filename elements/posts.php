@@ -474,6 +474,8 @@ class PWElementPosts extends PWElements {
                     include_once plugin_dir_path(__FILE__) . '/../scripts/posts-slider.php';
                     $output .= PWEPostsSlider::sliderOutput($post_image_urls);
 
+                    // include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
+                    // $output .= PWESliderScripts::sliderScripts('posts', '.pwelement_'. self::$rnd_id, $posts_dots_display = true, $posts_arrows_display = false, $slides_to_show = 4);
             
                     $output .= '</div>';
                     if ($posts_btn !== "true") {

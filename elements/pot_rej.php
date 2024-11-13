@@ -1063,6 +1063,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                                 </div>
                                                 PL,
                                                 <<<EN
+                                                
                                                 EN
                                             )
                                         .'</div>

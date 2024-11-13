@@ -77,6 +77,9 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'opinions.php';
         require_once plugin_dir_path(__FILE__) . 'button.php';
         require_once plugin_dir_path(__FILE__) . 'about.php';
+        require_once plugin_dir_path(__FILE__) . 'why-its-worth.php';
+        require_once plugin_dir_path(__FILE__) . 'qr-check.php';
+        require_once plugin_dir_path(__FILE__) . 'pot_vip.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -245,6 +248,9 @@ class PWElements {
                         ...PWElementOpinions::initElements(),
                         ...PWElementButton::initElements(),
                         ...PWElementAbout::initElements(),
+                        ...PWElementWhyItsWorth::initElements(),
+                        ...PWElementQRChekcer::initElements(),
+                        ...PWElementConfirmationVip::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -319,6 +325,7 @@ class PWElements {
             'Potwierdzenie Rejestracji'      => 'PWElementPotwierdzenieRejestracji',
             'Potwierdzenie Rejestracji Wystawcy' => 'PWElementStepTwoExhibitor',
             'Potwierdzenie Aktywacji Biletu' => 'PWElementTicketActConf',
+            'Potwierdzenie Vip'              => 'PWElementConfirmationVip',
             'Profile'                        => 'PWElementProfile',
             'Ramka Facebook'                 => 'PWElementSocials',
             'Registration'                   => 'PWElementRegistration',
@@ -342,6 +349,8 @@ class PWElements {
             'Test2'                          => 'PWElementTest2',
             'Header New'                     => 'PWElementHeaderNew',
             'Button'                         => 'PWElementButton',
+            'Why its worth'                  => 'PWElementWhyItsWorth',
+            'Qr checker'                     => 'PWElementQRChekcer',
         );
     }
 
@@ -364,6 +373,7 @@ class PWElements {
             'PWOfficeCalendarElement'   => 'calendarOffice.php',
             'PWElementConfCallendar'    => 'confCalendar.php',
             'PWElementConfSection'      => 'confSection.php',
+            'PWElementConfirmationVip'  => 'pot_vip.php',
             'PWElementHeaderConference' => 'confHeader.php',
             'PWElementConfSideEvents'   => 'conf_side_events.php',
             'PWElementAbout'            => 'about.php',
@@ -413,7 +423,9 @@ class PWElements {
             'PWElementTest2'            => 'test2.php',
             'PWElementHeaderNew'        => 'header-new.php',
             'PWElementHale'             => 'hale.php',
-            'PWElementButton'             => 'button.php',
+            'PWElementButton'           => 'button.php',
+            'PWElementWhyItsWorth'      => 'why-its-worth.php',
+            'PWElementQRChekcer'        => 'qr-check.php',
         );
     }
 
@@ -717,8 +729,6 @@ class PWElements {
         }
 
         $output = '';
-
-        
 
         if ($this->findClassElements()[$pwe_element]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$pwe_element];
