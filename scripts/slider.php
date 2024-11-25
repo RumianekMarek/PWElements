@@ -111,7 +111,7 @@ class PWESliderScripts {
                 }
                 '. $pwe_element .' .slick-dots li.slick-active {
                     transform-origin: center;
-                    background: '. $accent_color .';
+                    background: '. $main2_color .';
                 }
             </style>';
 
