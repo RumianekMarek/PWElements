@@ -216,6 +216,8 @@ class PWECatalog {
 
             <div id="katalog-' . self::$rnd_id . '" class="exhibitors-catalog">' . $output . '</div>';
 
+        $output_html = do_shortcode($output_html);
+
         return $output_html;
     }
 }
