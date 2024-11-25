@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.3.6
+ * Version: 2.3.7
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -48,8 +48,8 @@ class PWElementsPlugin {
         // require_once plugin_dir_path(__FILE__) . 'header/header.php';
         // $this->PWEHeader = new PWEHeader();
 
-        require_once plugin_dir_path(__FILE__) . 'katalog-wystawcow/main-katalog-wystawcow.php';
-        $this->PWECatalog = new PWECatalog();
+        // require_once plugin_dir_path(__FILE__) . 'katalog-wystawcow/main-katalog-wystawcow.php';
+        // $this->PWECatalog = new PWECatalog();
 
         // require_once plugin_dir_path(__FILE__) . 'display-info/main-display-info.php';
         // $this->PWEDisplayInfo = new PWEDisplayInfo();
@@ -63,8 +63,8 @@ class PWElementsPlugin {
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/katalog-wystawcow/main-katalog-wystawcow.php';
-        // $this->PWECatalog = new PWECatalog();
+        require_once plugin_dir_path(__FILE__) . 'includes/katalog-wystawcow/main-katalog-wystawcow.php';
+        $this->PWECatalog = new PWECatalog();
 
         require_once plugin_dir_path(__FILE__) . 'includes/exhibitor-generator/exhibitor-generator.php';
         $this->PWEExhibitorGenerator = new PWEExhibitorGenerator();
