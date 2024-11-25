@@ -319,3 +319,9 @@ strong {
     visibility: hidden !important;
     height: 0 !important;
 }
+
+
+
+#masthead .mobile-menu-button {
+    padding: 0 18px !important;
+}

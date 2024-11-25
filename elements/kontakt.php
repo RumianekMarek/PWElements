@@ -197,6 +197,26 @@ class PWElementContact extends PWElements {
                             </p>
                         </div>
                     </div>
+
+                    <div class="raw-pwe-container half-block-padding pwe-image-shadow">
+                        <img src="/wp-content/plugins/PWElements/media/Marketing.jpg" alt="grafika technicy">
+                        <div class="uncode_text_column" style="overflow-wrap: anywhere;">
+                            <p>';
+                                if (isset($atts["horizontal"]) && $atts["horizontal"] == "true") {
+                                    $output .= self::languageChecker(
+                                        <<<PL
+                                            Obsługa marketingowa<br>
+                                        PL,
+                                        <<<EN
+                                            Marketing service of exhibitors<br>
+                                        EN
+                                    ); 
+                                };
+                                $output .= '<a href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:block;"> konsultantmarketingowy</span><span style="display:block;">@warsawexpo.eu</span></a>
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>';         
 

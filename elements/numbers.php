@@ -320,12 +320,12 @@ class PWElementNumbers extends PWElements {
 
                         <div class="pwe-numbers__container-numbers">
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/flag.webp" />
+                                <img src="/wp-content/plugins/PWElements/media/numbers-el/exhibitors.webp" />
                                 <h3>20000</h3>
                                 <p>'. self::languageChecker('Wystawców', 'Exhibitors') .'</p>
                             </div>
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/hand.webp" />
+                                <img src="/wp-content/plugins/PWElements/media/numbers-el/visitors.webp" />
                                 <h3>1mln+</h3>
                                 <p>'. self::languageChecker('Odwiedzających', 'Visitors') .'</p>
                             </div>
@@ -333,12 +333,12 @@ class PWElementNumbers extends PWElements {
 
                         <div class="pwe-numbers__container-numbers">
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/alert.webp" />
+                                <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" />
                                 <h3>120+</h3>
                                 <p>'. self::languageChecker('targów B2B rocznie', 'B2B fairs per year') .'</p>
                             </div>
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/box.webp" />
+                                <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" />
                                 <h3>153k</h3>
                                 <p>'. self::languageChecker('Powierzchni m<sup>2</sup>', 'Surface area m<sup>2</sup>') .'</p>
                             </div>
