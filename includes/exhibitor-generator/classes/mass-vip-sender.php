@@ -157,8 +157,26 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
             <div class="modal__element">
                 <div class="inner">
                     <span class="btn-close">x</span>
-                    <h3 style="margin-top: 45px;">Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: <a href="mailto:info@warsawexpo.pl" style="text-decoration:underline; color:blue;">info@warsawexpo.pl</a></h3>
-                    <h3>Za utrudnienia przepraszamy</h3>
+                    <h3 style="margin-top: 45px;">'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: 
+                            PL,
+                            <<<EN
+                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at: 
+                            EN
+                        )
+                    .'<a href="mailto:generator.wystawcow@warsawexpo.eu" style="text-decoration:underline; color:blue;">generator.wystawcow@warsawexpo.eu</a></h3>
+                    <h3>'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Za utrudnienia przepraszamy
+                            PL,
+                            <<<EN
+                            We apologize for any inconvenience
+                            EN
+                        )
+                    .'</h3>
                 </div>
             </div>';
         }

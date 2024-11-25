@@ -25,7 +25,7 @@ class CatalogFunctions {
      * @param string $katalog_format format of display.
      * @return array
      */
-    public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull'){
+    public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull', $pwe_catalog_random = false){
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
@@ -109,6 +109,9 @@ class CatalogFunctions {
                     }
                 }
                 break;
+        }
+        if($pwe_catalog_random){
+            shuffle($logos_array);
         }
         return $logos_array;
     }
@@ -394,6 +397,15 @@ function initVCMapPWECatalog() {
                     'save_always' => true,
                     'value' => array(__('True', 'pwe_katalog') => 'true',),
                 ), 
+                array(
+                    'type' => 'checkbox',
+                    'heading' => __('Randomise katalog', 'pwe_katalog'),
+                    'param_name' => 'pwecatalog_display_random',
+                    'description' => __('Check if you want to display exhibitors randome.', 'pwe_katalog'),
+                    'admin_label' => true,
+                    'save_always' => true,
+                    'value' => array(__('True', 'pwe_katalog') => 'true',),
+                ),  
             ),
         ));
     }

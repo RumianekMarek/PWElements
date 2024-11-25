@@ -41,6 +41,8 @@ class PWEProfile extends PWECommonFunctions {
         require_once plugin_dir_path(__FILE__) . 'classes/profile-sitetabs.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-all-in-one.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-single.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/profile-three-cols.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/profile-buttons.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -63,6 +65,8 @@ class PWEProfile extends PWECommonFunctions {
                                 'Tabs' => 'PWEProfileTabs',
                                 'Sitetabs' => 'PWEProfileSiteTabs',
                                 'Single' => 'PWEProfileSingle',
+                                'Three columns' => 'PWEProfileThreeCols',
+                                'Buttons' => 'PWEProfileButtons',
                             ),
                             'std' => 'PWEProfileAllInOne',
                         ),
@@ -137,6 +141,8 @@ class PWEProfile extends PWECommonFunctions {
                         ...PWEProfileSiteTabs::initElements(),
                         ...PWEProfileAllInOne::initElements(),
                         ...PWEProfileSingle::initElements(),
+                        ...PWEProfileThreeCols::initElements(),
+                        ...PWEProfileButtons::initElements(),
                     ),
                 ),
             ));
@@ -153,8 +159,10 @@ class PWEProfile extends PWECommonFunctions {
         return array(
             'PWEProfileTabs'      => 'classes/profile-tabs.php',
             'PWEProfileSiteTabs'  => 'classes/profile-sitetabs.php',
-            'PWEProfileAllInOne'     => 'classes/profile-all-in-one.php',
-            'PWEProfileSingle'      => 'classes/profile-single.php',
+            'PWEProfileAllInOne'  => 'classes/profile-all-in-one.php',
+            'PWEProfileSingle'    => 'classes/profile-single.php',
+            'PWEProfileThreeCols' => 'classes/profile-three-cols.php',
+            'PWEProfileButtons'   => 'classes/profile-buttons.php',
         );
     }
 
@@ -196,6 +204,12 @@ class PWEProfile extends PWECommonFunctions {
         } else if ($profile_type == 'PWEProfileSiteTabs') {
             $profile_el_id = 'ProfileSiteTabs';
             $profile_el_class = 'profile-sitetabs';
+        } else if ($profile_type == 'PWEProfileThreeCols') {
+            $profile_el_id = 'PWEProfileThreeCols';
+            $profile_el_class = 'profile-threecols';
+        } else if ($profile_type == 'PWEProfileButtons') {
+            $profile_el_id = 'PWEProfileButtons';
+            $profile_el_class = 'profile-buttons';
         } else {
             $profile_el_id = 'ProfileSingle'. self::$rnd_id;
             $profile_el_class = 'profile-single-'. self::$rnd_id;

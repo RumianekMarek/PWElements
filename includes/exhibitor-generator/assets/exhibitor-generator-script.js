@@ -79,7 +79,7 @@ jQuery(document).ready(function($){
         // Function to decode file to (CSV format) text variable.
         reader.onload = function(e) {
             // If file size is over 1.2MB stop function and display error message.
-            if( file.size > 1200000) {
+            if( file.size > 1400000) {
                 $(".email-error").remove();
                 $(".file-size-error").show();
                 $("#spinner").remove();

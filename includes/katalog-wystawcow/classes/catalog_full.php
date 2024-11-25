@@ -30,7 +30,7 @@ class PWECatalogFull extends PWECatalog {
         $darker_btn_color = PWECommonFunctions::adjustBrightness($btn_color, -20);
 
         $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
-        $exhibitors = self::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
         if ($exhibitors === null){
             return;
         }
@@ -86,27 +86,9 @@ class PWECatalogFull extends PWECatalog {
                     <div class="exhibitor__header" style="background-image: url(&quot;'. $bg_link .'&quot;);">
                         <div>
                             <h1 class="pwe-text-color fontsize-">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']) .'</h1>
-                            <h2 class="pwe-text-color">'.
-                                PWECommonFunctions::languageChecker(
-                                    <<<PL
-                                        [trade_fair_name]
-                                    PL,
-                                    <<<EN
-                                        [trade_fair_name_eng]
-                                    EN
-                                )
-                            .'</h2>
+                            <h2 class="pwe-text-color">'. PWECommonFunctions::languageChecker('[trade_fair_name]', '[trade_fair_name_eng]') .'</h2>
                         </div>
-                        <input id="search" placeholder="'.
-                            PWECommonFunctions::languageChecker(
-                                <<<PL
-                                Szukaj
-                                PL,
-                                <<<EN
-                                Search
-                                EN
-                            )
-                        .'"/>
+                        <input id="search" placeholder="'. PWECommonFunctions::languageChecker('Szukaj', 'Search') .'"/>
                     </div>
                     
                     <div class="exhibitors__container">';
@@ -178,9 +160,9 @@ class PWECatalogFull extends PWECatalog {
 
                         if (get_locale() == "en_US") {
                             $output .='
-                                <span class="pwe-btn-container">
-                                    <a href="https://warsawexpo.eu/en/forms-for-agents/" class="pwe-btn" target="_blank">Become an agent</a>
-                                </span>';
+                            <span class="pwe-btn-container">
+                                <a href="https://warsawexpo.eu/en/forms-for-agents/" class="pwe-btn" target="_blank">Become an agent</a>
+                            </span>';
                         } 
                         
                         $output .='     

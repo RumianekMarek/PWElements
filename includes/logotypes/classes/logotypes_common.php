@@ -61,6 +61,16 @@ class PWElementAdditionalLogotypes {
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
             ), 
             array(
+                'type' => 'checkbox',
+                'group' => 'Aditional options',
+                'heading' => __('Randomise logotypes', 'pwe_logotypes'),
+                'param_name' => 'logotypes_display_random',
+                'description' => __('Check if you want to display logotypes random.', 'pwe_logotypes'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_logotypes') => 'true',),
+            ),  
+            array(
                 'type' => 'param_group',
                 'group' => 'Links',
                 'heading' => __('Add link', 'pwe_logotypes'),
@@ -121,6 +131,7 @@ class PWElementAdditionalLogotypes {
             'logotypes_slider_desktop' => '',
             'logotypes_grid_mobile' => '',
             'logotypes_dots_off' => '',
+            'logotypes_display_random' => '',
             'logotypes_slider_logo_white' => '',
             'logotypes_slider_logo_color' => '',
             'logotypes_files' => '',
@@ -370,6 +381,10 @@ class PWElementAdditionalLogotypes {
             }     
             
             if (count($files) > 0) {
+
+                if($logotypes_display_random){
+                    shuffle($files);
+                }
     
                 // Calculate width for header logotypes
                 if (isset($header_logotypes_width) && $header_logotypes_width . '%' !== '%') {

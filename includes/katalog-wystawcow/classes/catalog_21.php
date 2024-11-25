@@ -11,9 +11,9 @@ class PWECatalog21 extends PWECatalog {
 
     public static function output($atts, $identification) {
         $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
-        $exhibitors = self::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
 
-        if ($exhibitors === null){
+        if ($exhibitors === null){ 
             return;
         }
 
@@ -22,12 +22,11 @@ class PWECatalog21 extends PWECatalog {
 
         if ($mobile) {
             $output .= '
-                <style>
-                    .wpb_column:has(#katalog-' .self::$rnd_id. '){
-                        padding: 0 !important;
-                    }
-                </style>
-            ';
+            <style>
+                .wpb_column:has(#katalog-' .self::$rnd_id. '){
+                    padding: 0 !important;
+                }
+            </style>';
         }
 
         $output .= '

@@ -64,6 +64,7 @@ class PWECatalog {
         $btn_shadow_color = PWECommonFunctions::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important';
         $btn_border = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
 
+        $pwe_catalog_random = 
         // pwe_katalog output
         extract( shortcode_atts( array(
             'format' => '',
