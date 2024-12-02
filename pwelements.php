@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.3.7
+ * Version: 2.3.9
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -42,21 +42,6 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'elements/pwelements-options.php';
         $this->PWElements = new PWElements();
 
-        // require_once plugin_dir_path(__FILE__) . 'logotypes/logotypes.php';
-        // $this->PWELogotypes = new PWELogotypes();
-
-        // require_once plugin_dir_path(__FILE__) . 'header/header.php';
-        // $this->PWEHeader = new PWEHeader();
-
-        // require_once plugin_dir_path(__FILE__) . 'katalog-wystawcow/main-katalog-wystawcow.php';
-        // $this->PWECatalog = new PWECatalog();
-
-        // require_once plugin_dir_path(__FILE__) . 'display-info/main-display-info.php';
-        // $this->PWEDisplayInfo = new PWEDisplayInfo();
-
-        // require_once plugin_dir_path(__FILE__) . 'media-gallery/media-gallery.php';
-        // $this->PWEMediaGallery = new PWEMediaGallery();
-
         require_once plugin_dir_path(__FILE__) . 'gf-upps/area-numbers/area_numbers_gf.php';
         $this->GFAreaNumbersField = new GFAreaNumbersField();
 
@@ -83,6 +68,8 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/media-gallery/media-gallery.php';
         $this->PWEMediaGallery = new PWEMediaGallery();
+
+        // require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
     }
 
     function pwe_exclude_js_from_defer($excluded_files) {
