@@ -155,16 +155,18 @@ class PWElementHale extends PWElements {
 
             <div id="hale" class="hale-'. self::$rnd_id .'">
                 <div class="hale_info">
-                    <img src="'. $logo_href .'"/>
-                    <div class="information">
-                        <p class="upper"><strong>'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</strong></p>
-                        <p>'. $hale_text .'</p>
-                        <p>10:00-17:00</p>
-                        <p class="upper">'. self::languageChecker('DARMOWY PARKING', 'FREE PARKING') .'</p>
-                    </div>
-                    <div class="location">
-                        <i class="fa fa-location2 fa-1x fa-fw"></i>
-                        Al. Katowicka 62,05-830 Nadarzyn
+                    <div class="hale_info-container">
+                        <img src="'. $logo_href .'"/>
+                        <div class="information">
+                            <p class="upper"><strong>'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</strong></p>
+                            <p>'. $hale_text .'</p>
+                            <p>10:00-17:00</p>
+                            <p class="upper">'. self::languageChecker('DARMOWY PARKING', 'FREE PARKING') .'</p>
+                        </div>
+                        <div class="location">
+                            <i class="fa fa-location2 fa-1x fa-fw"></i>
+                            Al. Katowicka 62,05-830 Nadarzyn
+                        </div>
                     </div>';
 
                     if (is_array($hale_logotypes_json) && !empty($logotypes_media[0])) {

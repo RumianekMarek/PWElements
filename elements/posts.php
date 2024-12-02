@@ -641,13 +641,13 @@ class PWElementPosts extends PWElements {
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const pwePostsElement = document.querySelector(".pwelement_' . self::$rnd_id . ' .pwe-posts");
-                // const pweSliderElement = document.querySelector(".pwe-posts .slides");
-                // const pwePostsRow = document.querySelector(".row-container:has(.pwe-posts)");
+                const pweSliderElement = document.querySelector(".pwe-posts .slides");
+                const pwePostsRow = document.querySelector(".row-container:has(.pwe-posts)");
                 pwePostsElement.style.opacity = 1;
                 pwePostsElement.style.transition = "opacity 0.3s ease";
-                // if ((pwePostsElement && pwePostsElement.children.length === 0) || (pweSliderElement && pweSliderElement.children.length === 0)) {
-                //     pwePostsRow.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
-                // }
+                if ((pwePostsElement && pwePostsElement.children.length === 0) || (pweSliderElement && pweSliderElement.children.length === 0)) {
+                    pwePostsRow.classList.add("desktop-hidden", "tablet-hidden", "mobile-hidden");
+                }
 
                 const loadMoreButton = document.getElementById("load-more-posts");
 

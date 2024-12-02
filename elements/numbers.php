@@ -298,6 +298,8 @@ class PWElementNumbers extends PWElements {
                 }
                 .pwe-numbers__container-numbers h3, .pwe-numbers__container-numbers p {
                     margin:4px 0;
+                    line-height: 1.3;
+                    text-align: center;
                 }
                 @media(max-width:900px){
                     .pwe-numbers__wrapper {
@@ -310,7 +312,7 @@ class PWElementNumbers extends PWElements {
             </style>
 
             <div id="pweNumbers" class="pwe-numbers">
-                <h2 class="pwe-numbers__title">'. self::languageChecker('Największe Centrum Targowe w tej części Europy', 'The largest trade fair centre in this part of Europe') .'</h2>
+                <h2 class="pwe-numbers__title">'. self::languageChecker('NAJWIĘKSZE CENTRUM TARGOWE  W EUROPIE ŚRODKOWO-WSCHODNIEJ', 'THE LARGEST TRADE FAIR CENTER IN CENTRAL AND EASTERN EUROPE') .'</h2>
                 <div class="pwe-numbers__wrapper">
                     <div class="pwe-numbers__container">
                         <div class="pwe-numbers__container-ufi">
@@ -322,12 +324,12 @@ class PWElementNumbers extends PWElements {
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/exhibitors.webp" />
                                 <h3>20000</h3>
-                                <p>'. self::languageChecker('Wystawców', 'Exhibitors') .'</p>
+                                <p>'. self::languageChecker('Wystawców<br>rocznie', 'Exhibitors<br>per year') .'</p>
                             </div>
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/visitors.webp" />
                                 <h3>1mln+</h3>
-                                <p>'. self::languageChecker('Odwiedzających', 'Visitors') .'</p>
+                                <p>'. self::languageChecker('Odwiedzających<br>rocznie', 'Visitors<br>per year') .'</p>
                             </div>
                         </div>
 
@@ -335,7 +337,7 @@ class PWElementNumbers extends PWElements {
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" />
                                 <h3>120+</h3>
-                                <p>'. self::languageChecker('targów B2B rocznie', 'B2B fairs per year') .'</p>
+                                <p>'. self::languageChecker('Targów B2B<br>rocznie', 'B2B fairs<br>per year') .'</p>
                             </div>
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" />

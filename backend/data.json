@@ -1,0 +1,17 @@
+{
+    "fairs": {
+        "mrglasstec": {
+            "domain": "mr.glasstec.pl",
+            "visitors": 3207,
+            "exhibitors": 97,
+            "area": 25000
+        },
+        "roboticswarsaw": {
+            "domain": "warsawmetaltech.pl",
+            "visitors": 5396,
+            "exhibitors": 110,
+            "area": 22000
+        }
+    }
+}
+  

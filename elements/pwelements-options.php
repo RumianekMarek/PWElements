@@ -31,6 +31,25 @@ class PWElements {
 
         add_action('init', array($this, 'initVCMapElements'));
         add_shortcode('pwelement', array($this, 'PWElementsOutput'));
+            
+        add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);
+    }
+
+    public function entryToSession($entry, $form) {
+        $entry_returner = array();
+        
+        foreach($form['fields'] as $single_field){
+            if($single_field['type'] == 'email'){
+                $entry_returner['email'] = $entry[$single_field['id']];
+                continue;
+            }
+
+            if($single_field['type'] == 'phone'){
+                $entry_returner['phone'] = $entry[$single_field['id']];
+                continue;
+            }
+        }
+        $_SESSION['pwe_reg_entry'] = $entry_returner;
     }
 
     /**
@@ -80,6 +99,8 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'why-its-worth.php';
         require_once plugin_dir_path(__FILE__) . 'qr-check.php';
         require_once plugin_dir_path(__FILE__) . 'pot_vip.php';
+        require_once plugin_dir_path(__FILE__) . 'contact-form.php';
+        require_once plugin_dir_path(__FILE__) . 'single-image.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -251,6 +272,8 @@ class PWElements {
                         ...PWElementWhyItsWorth::initElements(),
                         ...PWElementQRChekcer::initElements(),
                         ...PWElementConfirmationVip::initElements(),
+                        ...PWElementContactForm::initElements(),
+                        ...PWElementSingleImage::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -293,6 +316,7 @@ class PWElements {
             'Countdown'                      => 'PWElementMainCountdown',
             'Conference Side Events'         => 'PWElementConfSideEvents',
             'Conference Header'              => 'PWElementHeaderConference',
+            'Contact form'                   => 'PWElementContactForm',
             'Dodaj do kalendarza'            => 'PWCallendarAddElement',
             'Dodaj do Apple Kalendarz'       => 'PWAppleCalendarElement',
             'Dodaj do Google Kalendarz'      => 'PWGoogleCalendarElement',
@@ -332,6 +356,7 @@ class PWElements {
             'Registration content'           => 'PWElementRegContent',
             'Resend ticket'                  => 'PWEResendTicket',
             'Sekcja konferencji'             => 'PWElementConfSection',
+            'Single image'                   => 'PWElementSingleImage',
             'Sticky buttons'                 => 'PWElementStickyButtons',
             'Step2'                          => 'PWElementStepTwo',
             'Ticket'                         => 'PWElementTicket',
@@ -374,6 +399,7 @@ class PWElements {
             'PWElementConfCallendar'    => 'confCalendar.php',
             'PWElementConfSection'      => 'confSection.php',
             'PWElementConfirmationVip'  => 'pot_vip.php',
+            'PWElementContactForm'      => 'contact-form.php',
             'PWElementHeaderConference' => 'confHeader.php',
             'PWElementConfSideEvents'   => 'conf_side_events.php',
             'PWElementAbout'            => 'about.php',
@@ -406,6 +432,7 @@ class PWElements {
             'PWElementStickyButtons'    => 'sticky-buttons.php',
             'PWElementStepTwo'          => 'step2.php',
             'PWElementStepTwoExhibitor' => 'pot_rej_wys.php',
+            'PWElementSingleImage'      => 'single-image.php',
             'PWElementTicketActConf'    => 'pot_akt_bil.php',
             'PWElementTicket'           => 'ticket.php',
             'PWElementTrendsPanel'      => 'trends-panel.php',

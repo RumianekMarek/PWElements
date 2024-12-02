@@ -178,13 +178,13 @@ class PWElementRegistration extends PWElements {
                 .pwelement_' .self::$rnd_id. ' .gfield_required {
                     display: none !important;
                 }
-                .pwelement_' .self::$rnd_id. ' .gform_button {
-                    visibility: hidden !important;
-                    width: 0 !important;
-                    height: 0 !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                }
+                // .pwelement_' .self::$rnd_id. ' .gform_button {
+                //     visibility: hidden !important;
+                //     width: 0 !important;
+                //     height: 0 !important;
+                //     padding: 0 !important;
+                //     margin: 0 !important;
+                // }
                 /*ROZWIJANE ZGODY*/
                 .pwelement_' .self::$rnd_id. ' .gfield_consent_description {
                     overflow: hidden !important;
@@ -228,6 +228,7 @@ class PWElementRegistration extends PWElements {
      * @param array @atts options
      */
     public static function output($atts) {
+
         $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') .' !important';
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') .' !important';
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], 'black') .'!important';
@@ -363,12 +364,14 @@ class PWElementRegistration extends PWElements {
         if (strpos($source_utm, 'utm_source=byli') !== false) {
             $output .= '
             <style>
-                .pwelement_'.self::$rnd_id.' #pweRegister {
+                .pwelement_'.self::$rnd_id.' #pweRegister,
+                .pwelement_'.self::$rnd_id.' input[type="submit"] {
                     background-color: '. $btn_color_vip .';
                     border: 2px solid '. $btn_color_vip .';
                     color: white;
                 }
-                .pwelement_'.self::$rnd_id.' #pweRegister:hover {
+                .pwelement_'.self::$rnd_id.' #pweRegister:hover,
+                .pwelement_'.self::$rnd_id.' input[type="submit"]:hover {
                     background-color: '. $darker_btn_vip_color .' !important;
                     border: 2px solid '. $darker_btn_vip_color .' !important;
                 }
@@ -376,12 +379,14 @@ class PWElementRegistration extends PWElements {
         } else if (strpos($source_utm, 'utm_source=premium') !== false) {
             $output .= '
             <style>
-                .pwelement_'.self::$rnd_id.' #pweRegister {
+                .pwelement_'.self::$rnd_id.' #pweRegister,
+                .pwelement_'.self::$rnd_id.' input[type="submit"] {
                     background-color: '. $btn_color_premium .';
                     border: 2px solid '. $btn_color_premium .';
                     color: white;
                 }
-                .pwelement_'.self::$rnd_id.' #pweRegister:hover {
+                .pwelement_'.self::$rnd_id.' #pweRegister:hover,
+                .pwelement_'.self::$rnd_id.' input[type="submit"]:hover {
                     background-color: '. $darker_btn_premium_color .' !important;
                     border: 2px solid '. $darker_btn_premium_color .' !important;
                 }
@@ -389,12 +394,14 @@ class PWElementRegistration extends PWElements {
         } else {
             $output .= '
             <style>
-                .pwelement_'. self::$rnd_id .' #pweRegister {
+                .pwelement_'. self::$rnd_id .' #pweRegister,
+                .pwelement_'.self::$rnd_id.' input[type="submit"] {
                     background-color: '. $main_form_color .';
                     border: 2px solid '. $main_form_color .';
                     color: '. $btn_text_color .';
                 }
-                .pwelement_'. self::$rnd_id .' #pweRegister:hover {
+                .pwelement_'. self::$rnd_id .' #pweRegister:hover,
+                .pwelement_'.self::$rnd_id.' input[type="submit"]:hover {
                     background-color: '. $darker_btn_color .' !important;
                     border: 2px solid '. $darker_btn_color .' !important;
                 }
@@ -403,6 +410,11 @@ class PWElementRegistration extends PWElements {
 
         $output .= '
         <style>
+            .pwelement_'.self::$rnd_id.' input[type="submit"] {
+                border-radius: 10px !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
             .pwelement_'. self::$rnd_id .' .gfield--type-consent {
                 line-height: 1.2 !important;
             }
@@ -495,13 +507,13 @@ class PWElementRegistration extends PWElements {
                         border: 2px solid #d6d6d6 !important;
                         border-radius: 50%;
                     }
-                    .pwelement_'.self::$rnd_id.' .gform_button {
-                        visibility: hidden !important;
-                        width: 0 !important;
-                        height: 0 !important;
-                        padding: 0 !important;
-                        margin: 0 !important;
-                    }
+                    // .pwelement_'.self::$rnd_id.' .gform_button {
+                    //     visibility: hidden !important;
+                    //     width: 0 !important;
+                    //     height: 0 !important;
+                    //     padding: 0 !important;
+                    //     margin: 0 !important;
+                    // }
                     .pwelement_'. self::$rnd_id .' .gfield_consent_label  {
                         font-size: 10px;
                         line-height: 1.2 !important;
@@ -782,13 +794,13 @@ class PWElementRegistration extends PWElements {
                     justify-content: center;
                     margin: 0 auto;
                 }
-                .pwelement_' .self::$rnd_id. ' .gform_button {
-                    visibility: hidden !important;
-                    width: 0 !important;
-                    height: 0 !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                }
+                // .pwelement_' .self::$rnd_id. ' .gform_button {
+                //     visibility: hidden !important;
+                //     width: 0 !important;
+                //     height: 0 !important;
+                //     padding: 0 !important;
+                //     margin: 0 !important;
+                // }
                 .pwelement_' .self::$rnd_id. ' .show-consent {
                     color: black;
                 }
@@ -1175,158 +1187,157 @@ class PWElementRegistration extends PWElements {
 
         }
 
-        if (class_exists('GFAPI')) {
-            function get_form_id_by_title($title) {
-                $forms = GFAPI::get_forms();
-                foreach ($forms as $form) {
-                    if ($form['title'] === $title) {
-                        return $form['id'];
-                    }
-                }
-                return null;
-            }
+        // if (class_exists('GFAPI')) {
+        //     function get_form_id_by_title($title) {
+        //         $forms = GFAPI::get_forms();
+        //         foreach ($forms as $form) {
+        //             if ($form['title'] === $title) {
+        //                 return $form['id'];
+        //             }
+        //         }
+        //         return null;
+        //     }
 
-            function custom_gform_submit_button($button, $form) {
-                global $registration_button_text, $registration_form_id;
-                $registration_form_id_nmb = get_form_id_by_title($registration_form_id);
+        //     function custom_gform_submit_button($button, $form) {
+        //         global $registration_button_text, $registration_form_id;
+        //         $registration_form_id_nmb = get_form_id_by_title($registration_form_id);
 
-                if ($form['id'] == $registration_form_id_nmb) {
-                    $button = '<input type="submit" id="gform_submit_button_'. $registration_form_id_nmb .'" class="gform_button button" value="'.$registration_button_text.'" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
-                    <button id="pweRegister" class="btn pwe-btn">'. $registration_button_text .'</button>';
-                }
-                return $button;
-            }
-            add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
-        }
+        //         if ($form['id'] == $registration_form_id_nmb) {
+        //             $button = '<input type="submit" id="gform_submit_button_'. $registration_form_id_nmb .'" class="gform_button button" value="'.$registration_button_text.'" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
+        //             <button id="pweRegister" class="btn pwe-btn">'. $registration_button_text .'</button>';
+        //         }
+        //         return $button;
+        //     }
+        //     add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
+        // }
 
-        $output .= '
-        <script>
+        // $output .= '
+        // <script>
 
-            // Funkcja zapisująca atrybut title do input
-            function updateCountryInput() {
-                // Znajdź element <div> z klasą iti__selected-flag
-                const selectedFlag = document.querySelector(".iti__flag-container .iti__selected-flag");
-                if (selectedFlag) {
-                    // Pobierz wartość atrybutu title
-                    let countryTitle = selectedFlag.getAttribute("title");
+        //     // Funkcja zapisująca atrybut title do input
+        //     function updateCountryInput() {
+        //         // Znajdź element <div> z klasą iti__selected-flag
+        //         const selectedFlag = document.querySelector(".iti__flag-container .iti__selected-flag");
+        //         if (selectedFlag) {
+        //             // Pobierz wartość atrybutu title
+        //             let countryTitle = selectedFlag.getAttribute("title");
 
-                    // Znajdź element input o klasie country
-                    const countryInput = document.querySelector(".country input");
-                    if (countryInput) {
-                        // Zapisz wartość title do input
-                        countryInput.value = countryTitle;
-                    }
-                }
-            }
+        //             // Znajdź element input o klasie country
+        //             const countryInput = document.querySelector(".country input");
+        //             if (countryInput) {
+        //                 // Zapisz wartość title do input
+        //                 countryInput.value = countryTitle;
+        //             }
+        //         }
+        //     }
 
-            // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza
-            function updateCountryInput() {
-                const countryInput = document.querySelector(".country input");
-                const selectedFlag = document.querySelector(".iti__selected-flag");
-                if (countryInput && selectedFlag) {
-                    countryInput.value = selectedFlag.getAttribute("title") || "";
-                }
-            }
+        //     // Funkcja dodająca nasłuchiwanie zdarzeń do elementów formularza
+        //     function updateCountryInput() {
+        //         const countryInput = document.querySelector(".country input");
+        //         const selectedFlag = document.querySelector(".iti__selected-flag");
+        //         if (countryInput && selectedFlag) {
+        //             countryInput.value = selectedFlag.getAttribute("title") || "";
+        //         }
+        //     }
 
-            function addEventListenersToForm() {
-                document.querySelectorAll("input, select, textarea, button").forEach(element => {
-                    ["change", "input", "click", "focus"].forEach(event => {
-                        element.addEventListener(event, updateCountryInput);
-                    });
-                });
-            }
+        //     function addEventListenersToForm() {
+        //         document.querySelectorAll("input, select, textarea, button").forEach(element => {
+        //             ["change", "input", "click", "focus"].forEach(event => {
+        //                 element.addEventListener(event, updateCountryInput);
+        //             });
+        //         });
+        //     }
 
-            function observeFlagChanges() {
-                const selectedFlag = document.querySelector(".iti__selected-flag");
-                if (selectedFlag) {
-                    new MutationObserver(mutations => {
-                        if (mutations.some(mutation => mutation.attributeName === "aria-expanded")) {
-                            updateCountryInput();
-                        }
-                    }).observe(selectedFlag, { attributes: true });
-                }
-            }
+        //     function observeFlagChanges() {
+        //         const selectedFlag = document.querySelector(".iti__selected-flag");
+        //         if (selectedFlag) {
+        //             new MutationObserver(mutations => {
+        //                 if (mutations.some(mutation => mutation.attributeName === "aria-expanded")) {
+        //                     updateCountryInput();
+        //                 }
+        //             }).observe(selectedFlag, { attributes: true });
+        //         }
+        //     }
 
-            // Uruchomienie funkcji
-            addEventListenersToForm();
-            observeFlagChanges();
+        //     // Uruchomienie funkcji
+        //     addEventListenersToForm();
+        //     observeFlagChanges();
 
-            window.onload = function () {
-                function getCookie(name) {
-                    let value = "; " + document.cookie;
-                    let parts = value.split("; " + name + "=");
-                    if (parts.length === 2) return parts.pop().split(";").shift();
-                    return null;
-                }
+        //     window.onload = function () {
+        //         function getCookie(name) {
+        //             let value = "; " + document.cookie;
+        //             let parts = value.split("; " + name + "=");
+        //             if (parts.length === 2) return parts.pop().split(";").shift();
+        //             return null;
+        //         }
 
-                function deleteCookie(name) {
-                    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                }
+        //         function deleteCookie(name) {
+        //             document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        //         }
 
-                let utmPWE = "'. $source_utm .'";
-                let utmCookie = getCookie("utm_params");
-                let utmInput = document.querySelector(".utm-class input");
+        //         let utmPWE = "'. $source_utm .'";
+        //         let utmCookie = getCookie("utm_params");
+        //         let utmInput = document.querySelector(".utm-class input");
 
-                if (utmCookie && (utmCookie.includes("utm_source=byli") || utmCookie.includes("utm_source=premium"))) {
-                    deleteCookie("utm_params");
-                }
+        //         if (utmCookie && (utmCookie.includes("utm_source=byli") || utmCookie.includes("utm_source=premium"))) {
+        //             deleteCookie("utm_params");
+        //         }
 
-                if (utmInput) {
-                    utmInput.value = utmPWE;
-                }
+        //         if (utmInput) {
+        //             utmInput.value = utmPWE;
+        //         }
 
-                var pweFormVisitors = document.querySelector("#pweRegister");
+        //         var pweFormVisitors = document.querySelector("#pweRegister");
 
-                if (pweFormVisitors) {
-                    pweFormVisitors.addEventListener("click", function (event) {
-                        event.preventDefault();
+        //         if (pweFormVisitors) {
+        //             pweFormVisitors.addEventListener("click", function (event) {
+        //                 event.preventDefault();
 
-                        const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
+        //                 const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
 
-                        let telValue;
-                        const telContainer = document.getElementsByClassName("ginput_container_phone")[0];
+        //                 let telValue;
+        //                 const telContainer = document.getElementsByClassName("ginput_container_phone")[0];
 
-                        if (telContainer) {
-                            telValue = telContainer.getElementsByTagName("input")[0].value;
-                        } else {
-                            telValue = "123456789";
-                        }
+        //                 if (telContainer) {
+        //                     telValue = telContainer.getElementsByTagName("input")[0].value;
+        //                 } else {
+        //                     telValue = "123456789";
+        //                 }
 
-                        let countryValue = "";
-                        const countryContainer = document.getElementsByClassName("country")[0];
-                        if (countryContainer) {
-                            const countryInput = countryContainer.getElementsByTagName("input")[0];
-                            if (countryInput) {
-                                countryValue = countryInput.value;
-                            }
-                        }
+        //                 let countryValue = "";
+        //                 const countryContainer = document.getElementsByClassName("country")[0];
+        //                 if (countryContainer) {
+        //                     const countryInput = countryContainer.getElementsByTagName("input")[0];
+        //                     if (countryInput) {
+        //                         countryValue = countryInput.value;
+        //                     }
+        //                 }
 
-                        localStorage.setItem("user_email", emailValue);
-                        localStorage.setItem("user_country", countryValue);
-                        localStorage.setItem("user_tel", telValue);';
+        //                 localStorage.setItem("user_email", emailValue);
+        //                 localStorage.setItem("user_country", countryValue);
+        //                 localStorage.setItem("user_tel", telValue);';
 
-                        if (get_locale() == 'pl_PL') {
-                            $output .= 'localStorage.setItem("user_direction", "rejpl");';
-                        } else {
-                            $output .= 'localStorage.setItem("user_direction", "rejen");';
-                        }
+        //                 if (get_locale() == 'pl_PL') {
+        //                     $output .= 'localStorage.setItem("user_direction", "rejpl");';
+        //                 } else {
+        //                     $output .= 'localStorage.setItem("user_direction", "rejen");';
+        //                 }
 
-                        $output .= '
-                        const areaContainer = document.getElementsByClassName("input-area")[0];
-                        if (areaContainer) {
-                            const areaValue = areaContainer.getElementsByTagName("input")[0].value;
-                            localStorage.setItem("user_area", areaValue);
-                        }
+        //                 $output .= '
+        //                 const areaContainer = document.getElementsByClassName("input-area")[0];
+        //                 if (areaContainer) {
+        //                     const areaValue = areaContainer.getElementsByTagName("input")[0].value;
+        //                     localStorage.setItem("user_area", areaValue);
+        //                 }
 
-                        const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
-                        buttonSubmit.click();
-                    });
-                }
-            }
+        //                 const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
+        //                 buttonSubmit.click();
+        //             });
+        //         }
+        //     }
 
-        </script>';
+        // </script>';
 
         return $output;
-
     }
 }

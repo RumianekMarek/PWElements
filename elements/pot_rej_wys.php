@@ -347,10 +347,10 @@ class PWElementStepTwoExhibitor extends PWElements {
                     var userDirection = localStorage.getItem("user_direction");
 
                     if (userEmail) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                        $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val("' . $_SESSION['pwe_reg_entry']['email'] . '");
                     }
                     if (userTel) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
+                        $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val("' . $_SESSION['pwe_reg_entry']['phone'] . '");
                     }
                     if (userArea) {
                         $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);

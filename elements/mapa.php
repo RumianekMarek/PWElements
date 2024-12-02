@@ -48,6 +48,18 @@ class PWElementMapa extends PWElements {
                 ),
             ),
             array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Overlay color', 'pwelement'),
+                'param_name' => 'pwe_map_overlay',
+                'description' => __('Write or select color of overlay', 'pwelement'),
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_map_mode',
+                    'value' => '3d_mode',
+                ),
+            ),
+            array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
                 'heading' => __('3D Model', 'pwelement'),
@@ -181,6 +193,7 @@ class PWElementMapa extends PWElements {
             'pwe_map_mode' => '',
             'pwe_map_default_3d' => '',
             'pwe_map_color' => '',
+            'pwe_map_overlay' => '',
             'pwe_map_default_color' => '',
             'pwe_map_image' => '',
             'pwe_custom_title' => '',
@@ -201,6 +214,7 @@ class PWElementMapa extends PWElements {
         if ($pwe_map_mode === '3d_mode') {
 
             $hex_color = !empty($pwe_map_color) ? ltrim($pwe_map_color, '#') : ltrim(self::$accent_color, '#');
+            $pwe_map_overlay = !empty($pwe_map_overlay) ? $pwe_map_overlay : 'inherit';
 
             $output = '
             <style>
@@ -212,6 +226,16 @@ class PWElementMapa extends PWElements {
                     width: 100% !important;
                     height: auto !important;
                     aspect-ratio: 1 / 1;
+                }
+                .pwe-map__canvas-overlay {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: '. $pwe_map_overlay .';
+                    z-index: 2;
                 }
                 .pwe-map__numbers {
                     position: absolute;
@@ -237,6 +261,7 @@ class PWElementMapa extends PWElements {
                         }
 
                         $output .= '
+                        <div class="pwe-map__canvas-overlay"></div>
                     </div>
                 </div>
             ';

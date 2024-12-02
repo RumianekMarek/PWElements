@@ -28,13 +28,14 @@ class PWElementAddress extends PWElements {
             <style>
                 #ptakAdress{
                     border: 1px solid black;
-                    min-height: 270px;
+                    border-radius: 18px;
                     max-width: 555px;
                     margin:auto;
                     min-width: 350px;
                     display: flex;
                     align-items: center;
                     justify-content: space-around;
+                    padding: 36px;
                 }
                 .row-container:has(#socialMedia) #ptakAdress {
                     max-width: 500px;
@@ -57,19 +58,11 @@ class PWElementAddress extends PWElements {
                     }
                 }
             </style>
-            <div id="ptakAdress" class="pwe-container-ptakAdress text-centered drive">
+            <div id="ptakAdress" class="pwe-container-ptakAdress text-centered">
                 <ul class="list-style-none pwe-text-ptakAdress" style="padding-left:0 !important; margin: 0 !important">
                     <li> Ptak Warsaw Expo </li>
                     <li> Al. Katowicka 62, </li>'.
-                        self::languageChecker(
-                            <<<PL
-                                <li> 05-830 Nadarzyn, Polska </li>
-                            PL,
-                            <<<EN
-                                <li> 05-830 Nadarzyn, Poland </li>
-                            EN
-                        )
-                    .'<li> info@warsawexpo.eu </li>
+                    self::languageChecker('<li> 05-830 Nadarzyn, Polska </li>', '<li> 05-830 Nadarzyn, Poland </li>').'
                 </ul>
             </div>';
 

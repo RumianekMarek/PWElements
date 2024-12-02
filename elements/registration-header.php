@@ -223,13 +223,13 @@ class PWElementRegHeader extends PWElements {
                     padding: 0;
                     text-align: center;
                 }
-                #pweForm input[type=submit].gform_button {
-                    visibility: hidden !important;
-                    width: 0;
-                    height: 0;
-                    padding: 0;
-                    margin: 0;
-                }
+                // #pweForm input[type=submit].gform_button {
+                //     visibility: hidden !important;
+                //     width: 0;
+                //     height: 0;
+                //     padding: 0;
+                //     margin: 0;
+                // }
                 #pweForm #pweRegister {
                     margin: 0;
                 }
@@ -239,10 +239,10 @@ class PWElementRegHeader extends PWElements {
                 }
                 #pweForm input[type=submit],
                 #pweForm .pwe-btn {
-                    background-color: '. $main_badge_color .';
-                    border-width: 1px;
-                    border-radius: 10px;
-                    border: 2px solid '. $main_badge_color .';
+                    background-color: '. $main_badge_color .' !important;
+                    border-width: 1px !important;
+                    border-radius: 10px !important;
+                    border: 2px solid '. $main_badge_color .' !important;
                     font-size: 14px;
                     color: white;
                     align-self: center;

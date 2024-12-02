@@ -24,16 +24,37 @@ class PWElementGroups extends PWElements {
 
         $output = '
             <style>
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy {
+                    border-radius: 18px;
+                    padding: 36px;
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-container-grupy :is(h4, p , a){
                     color:' . $text_color . ';
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-container-grupy h4 {
                     padding: 0 10px 5px 0;
-                    box-shadow: 9px 9px 0px -6px ' . $text_color . ';
                 }
                 .pwelement_'. self::$rnd_id .' #pweGroupsLink {
                     text-decoration: underline;
                     color:' . $text_color . ';
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy .pwe-btn {
+                    background-color: white;
+                    border-width: 1px;
+                    border-radius: 10px;
+                    border: 2px solid white;
+                    color: black !important;
+                    align-self: center;
+                    transform: scale(1) !important;
+                    padding: 6px;
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-container-grupy .pwe-btn:hover {
+                    background-color: #eeeeee;
+                    border: 2px solid #eeeeee;
                 }
                 @media (max-width:960px) {
                     .row:has(.pwelement_'. self::$rnd_id .') {
@@ -42,7 +63,7 @@ class PWElementGroups extends PWElements {
                 }
             </style>
             
-            <div class="pwe-container-grupy style-accent-bg shadow-black single-block-padding">
+            <div class="pwe-container-grupy style-accent-bg">
                 <div class="heading-text el-text text-uppercase">
                     <h4>'.
                         self::languageChecker(
@@ -72,6 +93,11 @@ class PWElementGroups extends PWElements {
                         )
                     .'</p>   
                 </div>
+
+                <div class="pwe-btn-container">
+                    <a class="pwe-btn" href="'. self::languageChecker('https://warsawexpo.eu/grupy/', 'https://warsawexpo.eu/en/groups/') .'" target="_blank">'. self::languageChecker('Formularz kontaktowy', 'Contact form') .'</a>
+                </div>
+                
             </div>';
 
         return $output;
