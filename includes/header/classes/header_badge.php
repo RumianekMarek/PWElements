@@ -409,19 +409,19 @@ $output .= '
                         return null;
                     }
 
-                    function custom_gform_submit_button($button, $form) {
-                        global $registration_button_text, $pwe_header_form_id;
-                        $registration_form_id_nmb = get_form_id_by_title($pwe_header_form_id);
+                    // function custom_gform_submit_button($button, $form) {
+                    //     global $registration_button_text, $pwe_header_form_id;
+                    //     $registration_form_id_nmb = get_form_id_by_title($pwe_header_form_id);
 
-                        if ($form['id'] == $registration_form_id_nmb) {
-                            $button = '<input type="submit" id="gform_submit_button_'.$registration_form_id_nmb.'" class="gform_button button" value="" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
-                            <div class="pwe-btn-container">
-                                <button id="pweRegister" class="btn pwe-btn">'. $registration_button_text .'</button>
-                            </div>';
-                        }
-                        return $button;
-                    }
-                    add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
+                    //     if ($form['id'] == $registration_form_id_nmb) {
+                    //         $button = '<input type="submit" id="gform_submit_button_'.$registration_form_id_nmb.'" class="gform_button button" value="" onclick="if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;}  if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  " onkeypress="if( event.keyCode == 13 ){ if(window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]){return false;} if( !jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity || jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;)[0].checkValidity()){window[&quot;gf_submitting_'.$registration_form_id_nmb.'&quot;]=true;}  jQuery(&quot;#gform_'.$registration_form_id_nmb.'&quot;).trigger(&quot;submit&quot;,[true]); }">
+                    //         <div class="pwe-btn-container">
+                    //             <button id="pweRegister" class="btn pwe-btn">'. $registration_button_text .'</button>
+                    //         </div>';
+                    //     }
+                    //     return $button;
+                    // }
+                    // add_filter('gform_submit_button', 'custom_gform_submit_button', 10, 2);
                 }
             $output .= '
             </div>
