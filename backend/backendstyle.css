@@ -9,7 +9,9 @@
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_media_gallery"],
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_display_info"],
 #vc_ui-panel-edit-element[data-vc-shortcode="pwe_exhibitor_generator"],
-#vc_ui-panel-edit-element[data-vc-shortcode="pwe_profile"] {
+#vc_ui-panel-edit-element[data-vc-shortcode="pwe_profile"],
+#vc_ui-panel-edit-element[data-vc-shortcode="pwe_registration"],
+#vc_ui-panel-edit-element[data-vc-shortcode="pwe_map"] {
 
     .backend-area-full-width { 
         width: 100% !important;

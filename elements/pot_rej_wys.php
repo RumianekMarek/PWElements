@@ -347,10 +347,10 @@ class PWElementStepTwoExhibitor extends PWElements {
                     var userDirection = localStorage.getItem("user_direction");
 
                     if (userEmail) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val("' . $_SESSION['pwe_reg_entry']['email'] . '");
+                        $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
                     }
                     if (userTel) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val("' . $_SESSION['pwe_reg_entry']['phone'] . '");
+                        $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
                     }
                     if (userArea) {
                         $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);
@@ -360,7 +360,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     $(".pwelement_'. self::$rnd_id .' form").submit();
                 });
             });
-            </script>
+            </script> 
         ';
 
         return $output;

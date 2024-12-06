@@ -101,6 +101,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'pot_vip.php';
         require_once plugin_dir_path(__FILE__) . 'contact-form.php';
         require_once plugin_dir_path(__FILE__) . 'single-image.php';
+        require_once plugin_dir_path(__FILE__) . 'medals.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -335,12 +336,13 @@ class PWElements {
             'Informacje kontaktowe'          => 'PWElementContactInfo',
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
             'Kontakt'                        => 'PWElementContact',
-            'Liczby'                         => 'PWElementNumbers',
             'Main Page About'                => 'PWElementAbout',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
-            'Mapa'                           => 'PWElementMapa',
-            'Mapa test'                      => 'PWElementMapaTest',
+            'Map'                           => 'PWElementMapa',
+            'Map test'                      => 'PWElementMapaTest',
+            'Medals'                         => 'PWElementMedals',
             'Mapka dojazdu'                  => 'PWElementRoute',
+            'Numbers'                         => 'PWElementNumbers',
             'Nie przegap'                    => 'PWElementDontMiss',
             'Organizator'                    => 'PWElementOrganizer',
             'Opinions'                       => 'PWElementOpinions',
@@ -413,6 +415,7 @@ class PWElements {
             'PWElementGroups'           => 'grupy.php',
             'PWElementMapa'             => 'mapa.php',
             'PWElementMapaTest'         => 'mapa-test.php',
+            'PWElementMedals'          => 'medals.php',
             'PWElementOrgInfo'          => 'org-information.php',
             'PWElementOpinions'         => 'opinions.php',
             'PWElementContactInfo'      => 'kontakt-info.php',

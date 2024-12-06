@@ -473,10 +473,10 @@ class PWElementRegHeader extends PWElements {
                         deleteCookie("utm_params");
                     }
 
-                    var pweFormVisitors = document.querySelector("#pweRegister");
+                    const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
 
-                    if (pweFormVisitors) {
-                        pweFormVisitors.addEventListener("click", function (event) {
+                    if (buttonSubmit) {
+                        buttonSubmit.addEventListener("click", function (event) {
                             event.preventDefault();
 
                             const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
@@ -513,8 +513,7 @@ class PWElementRegHeader extends PWElements {
                             }
 
                             $output .= '
-                            const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
-                            buttonSubmit.click();
+                            
                         });
                     }
                 }

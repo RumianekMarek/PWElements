@@ -200,7 +200,7 @@ class PWElementWhyItsWorth extends PWElements {
           }
         }
         $output .= '
-          </div>';
+          </div></div>';
 
         return $output;
 

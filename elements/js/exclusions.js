@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         changeBackground();
     }
-    
+
 });
 
 // // Funkcja do ustawiania cookie

@@ -110,11 +110,11 @@ class PWElementFaq extends PWElements {
                                 self::languageChecker(
                                     <<<PL
                                     <div class="pytanie half-block-padding">Ile kosztuje bilet na targi?</div>
-                                    <div class="odpowiedz half-block-padding">Bilety będą dostępne w przedsprzedaży internetowej oraz na miejscu w recepcjach podczas trwania targów. Wszystkie osoby, które dokonają rejestracji online lub w biurze targowym otrzymają bezpłatną wejściówkę wyłącznie na dni branżowe.</div>
+                                    <div class="odpowiedz half-block-padding">Wszystkie osoby, które dokonają rejestracji online lub w biurze targowym otrzymają bezpłatną wejściówkę.</div>
                                 PL,
                                 <<<EN
                                     <div class="pytanie half-block-padding">How much is the ticket to the fair?</div>
-                                    <div class="odpowiedz half-block-padding">Tickets will be available in online pre-sale and at the reception desks during the fair. All persons who register online or at the fair office will receive a free pass only for industry days.</div>
+                                    <div class="odpowiedz half-block-padding">All persons who register online or at the fair office will receive a free pass.</div>
                                 EN
                             )
                             .'</div>

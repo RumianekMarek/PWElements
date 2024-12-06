@@ -460,8 +460,8 @@ class PWElementStepTwo extends PWElements {
                             //     return;
                             // }
 
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val("' . $_SESSION['pwe_reg_entry']['email'] . '");
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val("' . $_SESSION['pwe_reg_entry']['phone'] . '");
+                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
+                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
                             $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
                             $(".pwelement_'. self::$rnd_id .' form").submit();
                         });
