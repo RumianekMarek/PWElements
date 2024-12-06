@@ -23,6 +23,7 @@ class PWECatalog10 extends PWECatalog {
         <style>
             .row-container:has(.pwe-registration) .exhibitors-catalog {
                 border: 2px solid #564949;
+                border-radius: 36px;
                 margin-top: 0 !important;
             }
             .row-container:has(.pwe-registration) :is(.wpb_column, .uncol, .uncoltable, .uncont, .exhibitors-catalog, .custom-catalog){
@@ -135,29 +136,30 @@ class PWECatalog10 extends PWECatalog {
         <div id="top10" class="custom-catalog main-heading-text">'; 
     
             if (count($exhibitors) < 10) {
-                $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';
-                $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.webp') ? $logo_file_path . '.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.png') ? $logo_file_path . '.png' : '');
-                $bg_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp') ? '/doc/header_mobile.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.jpg') ? '/doc/header_mobile.jpg' : '');
-                $output .= '
-                <style>
-                    .wpb_column:has(#top10) .exhibitors-catalog {
-                        border: 0 !important;
-                    }
-                    #top10 .custom-catalog-bg {
-                        background-position: center;
-                        height: 100%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 36px;
-                        background-repeat: no-repeat;
-                        background-size: cover;
-                    }
-                </style>
+                // $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';
+                // $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.webp') ? $logo_file_path . '.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.png') ? $logo_file_path . '.png' : '');
+                // $bg_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp') ? '/doc/header_mobile.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.jpg') ? '/doc/header_mobile.jpg' : '');
+                // $output .= '
+                // <style>
+                //     .wpb_column:has(#top10) .exhibitors-catalog {
+                //         border: 0 !important;
+                //     }
+                //     #top10 .custom-catalog-bg {
+                //         background-position: center;
+                //         height: 100%;
+                //         display: flex;
+                //         justify-content: center;
+                //         align-items: center;
+                //         padding: 36px;
+                //         background-repeat: no-repeat;
+                //         background-size: cover;
+                //     }
+                // </style>
 
-                <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
-                    <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
-                </div>';
+                // <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
+                //     <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
+                // </div>';
+                $output .= '';
             } else {
                 $output .= '
                 <h2 class="catalog-custom-title" style="width: fit-content;">'.CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']).'</h2>
@@ -187,9 +189,11 @@ class PWECatalog10 extends PWECatalog {
                                 </a>';
                         }
                     }
-            $output .= '</div>';
+                $output .= '
+                </div>';
             }
-        $output .= '</div>';
+        $output .= '
+        </div>';
 
         return $output;
     }

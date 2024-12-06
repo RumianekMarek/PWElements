@@ -147,7 +147,7 @@ class PWECatalog {
                         left: 0;
                         margin: auto;
                         max-width: 300px;
-                        height: auto;
+                        width: 90%;
                         background-image: url(/doc/logo.webp);
                         background-repeat: no-repeat;
                         background-size: contain;
@@ -179,7 +179,7 @@ class PWECatalog {
                         left: 0;
                         margin: auto;
                         max-width: 300px;
-                        height: auto;
+                        width: 90%;
                         background-image: url(/doc/logo.webp);
                         background-repeat: no-repeat;
                         background-size: contain;
@@ -192,7 +192,7 @@ class PWECatalog {
                     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
                         display: none !important;
                     } 
-                </style>';
+                </style>'; 
             }
         }
 
