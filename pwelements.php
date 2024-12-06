@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.4.0
+ * Version: 2.4.1
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -68,6 +68,12 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/media-gallery/media-gallery.php';
         $this->PWEMediaGallery = new PWEMediaGallery();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/registration/registration.php';
+        $this->PWERegistration = new PWERegistration();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
+        $this->PWEMap = new PWEMap();
 
         // require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
     }
