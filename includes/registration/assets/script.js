@@ -72,12 +72,10 @@ window.onload = function () {
         utmInput.value = utmPWE;
     }
 
-    const buttonSubmit = document.querySelector(".gform_footer input[type=submit]");
+    const buttonSubmit = document.querySelector("#pweRegistration .gform_footer input[type=submit]");
 
     if (buttonSubmit) {
-        buttonSubmit.addEventListener("click", function (event) {
-            event.preventDefault();
-
+        buttonSubmit.addEventListener("click", function () {
             const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
 
             let telValue;
