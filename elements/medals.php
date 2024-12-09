@@ -18,8 +18,6 @@ class PWElementMedals extends PWElements {
             
         $output = '
         <style>
-            .pwe-medals {
-            }
             .pwe-medals__wrapper {
                 display: flex;
                 flex-direction: column;
@@ -61,10 +59,18 @@ class PWElementMedals extends PWElements {
         <div id="pweMedals"class="pwe-medals">
             <div class="pwe-medals__wrapper">
                 <div class="pwe-medals__heading">
-                    <h4>ZDOBĄDŹ PRESTIŻOWĄ NAGRODĘ NA PTAK WARSAW EXPO!</h4>
+                    <h4>'. self::languageChecker('ZDOBĄDŹ PRESTIŻOWĄ NAGRODĘ NA PTAK WARSAW EXPO!', 'WIN A PRESTIGIOUS AWARD AT PTAK WARSAW EXPO!') .'</h4>
                 </div>
-                <div class="pwe-medals__text">
-                    <p>Dołącz do grona najlepszych na <strong>Targach Ptak Warsaw Expo</strong> i pokaż swoją firmę w świetle zwycięzców! <strong>Wyróżniamy liderów</strong>, którzy napędzają przyszłość i inspirują innych, przyznając <strong>prestiżowe nagrody</strong> w takich kategoriach jak:</p></div>
+                <div class="pwe-medals__text">'. 
+                    self::languageChecker(
+                        <<<PL
+                            <p>Dołącz do grona najlepszych na <strong>Targach Ptak Warsaw Expo</strong> i pokaż swoją firmę w świetle zwycięzców! <strong>Wyróżniamy liderów</strong>, którzy napędzają przyszłość i inspirują innych, przyznając <strong>prestiżowe nagrody</strong> w takich kategoriach jak:</p> 
+                        PL,
+                        <<<EN
+                            <p>Join the best at <strong>Ptak Warsaw Expo</strong> and show your company in the light of the winners! <strong>We recognize leaders</strong> who drive the future and inspire others by awarding <strong>prestigious awards</strong> in categories such as:</p>
+                        EN
+                    )
+                .'</div>
                 <div class="pwe-medals__items">
                     <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/nowe-technologie.webp"/></div>
                     <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/innowacje-roku.webp"/></div>
@@ -73,7 +79,7 @@ class PWElementMedals extends PWElements {
                     <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/prezes-roku.webp"/></div>
                 </div>
                 <div class="pwe-medals__heading">
-                    <h4>POKAŻ SIĘ ŚWIATU JAKO LIDER NA PTAK WARSAW EXPO!</h4>
+                    <h4>'. self::languageChecker('POKAŻ SIĘ ŚWIATU JAKO LIDER NA PTAK WARSAW EXPO!', 'SHOW YOURSELF TO THE WORLD AS A LEADER AT PTAK WARSAW EXPO!') .'</h4>
                 </div>
 
             </div>
