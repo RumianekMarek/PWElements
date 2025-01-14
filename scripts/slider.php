@@ -9,9 +9,8 @@ class PWESliderScripts {
 
         /**
          * Prepares and returns the scripts for the slider.
-         * 
          */
-        public static function sliderScripts($id = '', $pwe_element = '.pwelement', $dots_display = false, $arrows_display = false, $slides_to_show = 5) {
+        public static function sliderScripts($id = '', $pwe_element = '.pwelement', $dots_display = false, $arrows_display = false, $slides_to_show = 5, $options = null) {
             wp_enqueue_style('slick-slider-css', plugins_url('../assets/slick-slider/slick.css', __FILE__));
             wp_enqueue_style('slick-slider-theme-css', plugins_url('../assets/slick-slider/slick-theme.css', __FILE__));
             wp_enqueue_script('slick-slider-js', plugins_url('../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
@@ -26,68 +25,24 @@ class PWESliderScripts {
                 }
             }
 
-            if ($id == 'logotypes') {
-                $responsive = ' 
-                responsive: [
-                    { breakpoint: 959, settings: { slidesToShow: 5 }},
-                    { breakpoint: 600, settings: { slidesToShow: 3 }},
-                    { breakpoint: 400, settings: { slidesToShow: 2 }}
-                ]';
-                $get_initial_slides_to_show = ' 
-                return  elementWidth < 400 ? 2 :
-                        elementWidth < 600 ? 3 :
-                        elementWidth < 960 ? 5 :
-                        slidesToShowSetting;
-                ';
-            } else if ($id == 'opinions') {
-                $responsive = ' 
-                responsive: [
-                    { breakpoint: 1400, settings: { slidesToShow: 4 }},
-                    { breakpoint: 1200, settings: { slidesToShow: 3 }},
-                    { breakpoint: 960, settings: { slidesToShow: 2 }},
-                    { breakpoint: 550, settings: { slidesToShow: 1 }}
-                ] ';
-                $get_initial_slides_to_show = ' 
-                return  elementWidth < 550 ? 1 :
-                        elementWidth < 960 ? 2 :
-                        elementWidth < 1200 ? 3 :
-                        elementWidth < 1400 ? 4 :
-                        slidesToShowSetting;
-                ';
-            } else if ($id == 'posts') {
-                $responsive = ' 
-                responsive: [
-                    { breakpoint: 1100, settings: { slidesToShow: 4 }},
-                    { breakpoint: 900, settings: { slidesToShow: 3 }},
-                    { breakpoint: 600, settings: { slidesToShow: 2 }},
-                    { breakpoint: 400, settings: { slidesToShow: 1 }}
-                ] ';
-                $get_initial_slides_to_show = ' 
-                return  elementWidth < 400 ? 1 :
-                        elementWidth < 600 ? 2 :
-                        elementWidth < 900 ? 3 :
-                        elementWidth < 1100 ? 4 :
-                        slidesToShowSetting;
-                ';
-            }
-       
             $output = '
             <style>
                 '. $pwe_element .' .pwe-arrow {
                     display: block;
                     position: absolute;
-                    top: 40%;
+                    top: 50%;
+                    transform: translate(0, -50%);
                     font-size: 60px;
                     font-weight: 700;
                     z-index: 1;
                     cursor: pointer;
                 }
                 '. $pwe_element .' .pwe-arrow-prev {
-                    left: 14px; 
+                    left: 14px;
                 }
                 '. $pwe_element .' .pwe-arrow-next {
                     right: 14px;
-                }  
+                }
                 '. $pwe_element .' .slick-dots {
                     position: relative;
                     width: 100%;
@@ -115,9 +70,140 @@ class PWESliderScripts {
                 }
             </style>';
 
+            if ($id == 'media-gallery') { // media-gallery.php <-------------------------------------------------------------<
+
+                if ($options[0]["media_gallery_dots_inside"] == true) {
+                    $output .= '
+                    <style>
+                        '. $pwe_element .' .slick-dots {
+                            position: absolute;
+                            bottom: 10px;
+                            left: 50%;
+                            transform: translate(-50%);
+                        }
+                        '. $pwe_element .' .slick-dots li {
+                            width: 10px;
+                            height: 10px;
+                            margin: 0 10px;
+                            background-color: transparent;
+                            border: 1px solid white;
+                        }
+                        '. $pwe_element .' .slick-dots li.slick-active {
+                            transform-origin: center;
+                            background: white;
+                        }
+                    </style>';
+                } else {
+                    $output .= '
+                    <style>
+                        '. $pwe_element .' .pwe-gallery-container {
+                            overflow: visible;
+                        }
+                    </style>';
+                }
+                if ($options[0]["media_gallery_arrows_inside"] == true) {
+                    $output .= '
+                    <style>
+                        '. $pwe_element .' .pwe-arrow {
+                            top: 50%;
+                            transform: translate(0, -50%);
+                            background-color: white;
+                            height: 30px;
+                            width: 30px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 50%;
+                            font-size: 30px;
+                            padding-bottom: 5px;
+                        }
+                    </style>';
+                } else {
+                    $output .= '
+                    <style>
+                        '. $pwe_element .' .pwe-arrow-prev {
+                            left: -26px;
+                        }
+                        '. $pwe_element .' .pwe-arrow-next {
+                            right: -26px;
+                        }
+                    </style>';
+                }
+
+            }
+
+            if ($id == 'logotypes') { // logotypes_common.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 2 :
+                        elementWidth < 600 ? 3 :
+                        elementWidth < 960 ? 5 :
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'opinions') { // opinions.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 550 ? 1 :
+                        elementWidth < 960 ? 2 :
+                        elementWidth < 1100 ? 3 :
+                        elementWidth < 1400 ? 4 :
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'posts') { // posts.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 1 :
+                        elementWidth < 700 ? 2 :
+                        elementWidth < 900 ? 3 :
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'two-cols-logotypes') { // two-cols.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 2 :
+                        elementWidth < 600 ? 2 :
+                        elementWidth < 900 ? 3 :
+                        elementWidth < 1100 ? 4 :
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'pwe-medals__items_mobile') { // medals.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 2 :
+                        elementWidth < 600 ? 2 :
+                        elementWidth < 900 ? 3 :
+                        elementWidth < 1100 ? 4 :
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'sticky-buttons') { // sticky-buttons.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 1 :
+                        elementWidth < 600 ? 2 :
+                        elementWidth < 900 ? 3 :
+                        elementWidth < 1100 ? 4 : 
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'other-events') { // other-events.php <-------------------------------------------------------------<
+                if ($options[0]["other_events_preset"] == 'preset_1') {
+                    $get_initial_slides_to_show = '
+                    return  elementWidth < 900 ? 1 :
+                            slidesToShowSetting;
+                    ';
+                } else {
+                    $get_initial_slides_to_show = '
+                    return  elementWidth < 400 ? 1 :
+                            elementWidth < 600 ? 2 :
+                            elementWidth < 900 ? 3 :
+                            elementWidth < 1100 ? 4 :
+                            slidesToShowSetting;
+                    ';
+                }
+            } else if ($id == 'media-gallery') { // media-gallery.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < '. $options[0]["breakpoint-mobile"] .' ? '. $options[0]["count-visible-thumbs-mobile"] .' :
+                        elementWidth < '. $options[0]["breakpoint-tablet"] .' ? '. $options[0]["count-visible-thumbs-tablet"] .' :
+                        slidesToShowSetting;
+                ';
+            }
+
             $output .= '
             <script>
-                jQuery(function ($) {     
+                jQuery(function ($) {
                     const pweElement = $("'. $pwe_element .'");
                     const slickSlider = $("'. $pwe_element .' .pwe-slides");
                     const sliderArrows = $("'. $pwe_element .' .pwe-arrow");
@@ -129,9 +215,17 @@ class PWESliderScripts {
 
                     // Function to initialize Slick Slider
                     function initializeSlick(arrowsEnabled = false, dotsEnabled = false) {
-                        slickSlider.slick ({
+                        const currentSlidesToShow = getInitialSlidesToShow();
+
+                        // Destroy Slick if already initialized
+                        if (slickSlider.hasClass("slick-initialized")) {
+                            slickSlider.slick("unslick");
+                        }
+
+                        // Initialize Slick Slider
+                        slickSlider.slick({
                             infinite: true,
-                            slidesToShow: slidesToShowSetting,
+                            slidesToShow: currentSlidesToShow,
                             slidesToScroll: 1,
                             arrows: arrowsEnabled,
                             nextArrow: $("'. $pwe_element .' .pwe-arrow-next"),
@@ -141,49 +235,59 @@ class PWESliderScripts {
                             dots: dotsEnabled,
                             cssEase: "linear",
                             swipeToSlide: true,
-                            '. $responsive .' 
                         });
+
+                        // Hide arrows if arrows are disabled
+                        if (!arrowsEnabled) {
+                            sliderArrows.hide();
+                        } else {
+                            sliderArrows.show();
+                        }
                     }
 
-                    // Ustawienia dla slidesToShow na podstawie breakpointów
+                    // Settings for slidesToShow based on breakpoints
                     function getInitialSlidesToShow() {
                         const elementWidth = pweElement.width();
                         '. $get_initial_slides_to_show .'
                     }
 
-                    // Calculating `slidesToShow` before initialization
-                    const currentSlidesToShow = getInitialSlidesToShow();
-
                     // Check if arrows and dots should be enabled
-                    let dotsEnabled = totalSlides > currentSlidesToShow && sliderDotsDisplay === "true";
-                    let arrowsEnabled = totalSlides > currentSlidesToShow && sliderArrowsDisplay === "true";
+                    function updateSlickSettings() {
+                        const currentSlidesToShow = getInitialSlidesToShow();
+                        let dotsEnabled = totalSlides > currentSlidesToShow && sliderDotsDisplay === "true";
+                        let arrowsEnabled = totalSlides > currentSlidesToShow && sliderArrowsDisplay === "true";
 
-                    // Initializing of slider
-                    initializeSlick(arrowsEnabled, dotsEnabled);
+                        initializeSlick(arrowsEnabled, dotsEnabled);
 
-                    if (dotsEnabled) {
-                        slickSlider.on("afterChange", function(event, slick, currentSlide) {
-                            const $slickDots = $(event.target).find(".slick-dots");
-                            const dotWidth = 30;
+                        if (dotsEnabled) {
+                            slickSlider.on("afterChange", function (event, slick, currentSlide) {
+                                const $slickDots = $(event.target).find(".slick-dots");
+                                const dotWidth = 30;
 
-                            // Calculate the offset based on the currentSlide index
-                            const scrollPosition = (currentSlide - 1) * dotWidth;
+                                // Calculate the offset based on the currentSlide index
+                                const scrollPosition = (currentSlide - 1) * dotWidth;
 
-                            // Set scrollLeft directly on the .slick-dots container
-                            $slickDots.animate({ scrollLeft: scrollPosition }, 300);
-                        });
-
+                                // Set scrollLeft directly on the .slick-dots container
+                                $slickDots.animate({ scrollLeft: scrollPosition }, 300);
+                            });
+                        }
                     }
 
-                    // Hide arrows if arrows disabled
-                    if (!arrowsEnabled) {
-                        sliderArrows.hide();
-                    }
+                    // Initialize slider on document ready
+                    updateSlickSettings();
+
+                    // Reinitialize slider on window resize and element resize
+                    const resizeObserver = new ResizeObserver(() => {
+                        updateSlickSettings();
+                    });
+
+                    resizeObserver.observe(pweElement[0]);
+
                 });
-            </script>';   
-            
+            </script>';
+
             return $output;
         }
-} 
+}
 
 ?>

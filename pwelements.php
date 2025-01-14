@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.4.1
+ * Version: 2.4.4
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -13,6 +13,7 @@
 
 
 class PWElementsPlugin {
+    public $PWEStyleVar;
     public $PWElements;
     public $PWELogotypes;
     public $PWEHeader;
@@ -26,18 +27,54 @@ class PWElementsPlugin {
     public $PWEProfile;
 
     public function __construct() {
-        // Czyszczenie pamięci wp_rocket
+        // Clearing wp_rocket cache
         add_action( 'upgrader_process_complete', array( $this, 'clearWpRocketCacheOnPluginUpdate' ), 10, 2 );
+
+        // Initialize classes
         $this->initClasses();
         $this->init();
+
+        // Send CSS variables to <head>
+        add_action('wp_head', array($this->PWEStyleVar, 'pwe_enqueue_style_var'), 1);
+
+        // Add main CSS to wp_enqueue_scripts
+        add_action('wp_enqueue_scripts', array($this, 'pwe_enqueue_styles'));
+
         // $this -> resendTicket();
+
+        // Exclude JS from lazy loading in WP Rocket
         add_filter('rocket_exclude_defer_js', array( $this, 'pwe_exclude_js_from_defer' ), 10, 2);
+    }
+
+    public function pwe_enqueue_styles() {
+        $css_version = filemtime(plugin_dir_path(__FILE__) . 'pwe-style.css');
+        wp_enqueue_style(
+            'pwe-main-styles',
+            plugin_dir_url(__FILE__) . 'pwe-style.css',
+            array(),
+            $css_version,
+            'all'
+        );
     }
 
     private function initClasses() {
 
+        if (is_admin()) {
+            // Admin menu
+            include_once plugin_dir_path(__FILE__) . 'includes/settings/admin-menu.php';
+            // Settings nav menu
+            include_once plugin_dir_path(__FILE__) . 'includes/settings/nav-menu-settings.php';
+        }
+
         // Helpers functions
         require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
+
+        // Variables of styles
+        require_once plugin_dir_path(__FILE__) . 'pwe-style-var.php';
+        $this->PWEStyleVar = new PWEStyleVar();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/nav-menu/nav-menu.php';
+        $this->pweNavMenu = new pweNavMenu();
 
         require_once plugin_dir_path(__FILE__) . 'elements/pwelements-options.php';
         $this->PWElements = new PWElements();
@@ -75,12 +112,14 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
         $this->PWEMap = new PWEMap();
 
-        // require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
+        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
     }
 
     function pwe_exclude_js_from_defer($excluded_files) {
+        $excluded_files[] = '/wp-content/plugins/PWElements/elements/js/exclusions.js';
         $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/three.min.js';
         $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js';
+        $excluded_files[] = '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js';
         return $excluded_files;
     }
 

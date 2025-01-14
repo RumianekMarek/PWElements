@@ -9,6 +9,44 @@ class PWECommonFunctions {
         $id_rnd = rand(10000, 99999);
         return $id_rnd;
     }
+
+    /**
+     * Colors (accent or main2)
+     */
+    public static function pwe_color($color) {
+        $fair_colors = self::findPalletColorsStatic();
+        $result_color = null;
+    
+        // Handling color 'accent' 
+        if (strtolower($color) === 'accent' && isset($fair_colors['Accent'])) {
+            $result_color = $fair_colors['Accent'];
+        }
+    
+        // Handling color 'main2'
+        if (strtolower($color) === 'main2') {
+            foreach ($fair_colors as $color_key => $color_value) {
+                if (strpos(strtolower($color_key), 'main2') !== false) {
+                    $result_color = $color_value;
+                    break;
+                }
+            }
+        }
+    
+        return $result_color;
+    }
+
+    /**
+     * JSON all trade fairs
+     */
+    public static function json_fairs() {
+        // Pobranie JSON-a
+        $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
+        if (file_exists($json_file)) {
+            $json_data = @file_get_contents($json_file);
+            $fairs_data = json_decode($json_data, true);
+        }
+        return $fairs_data['fairs'];
+    }
     
     /**
      * Function to transform the date
