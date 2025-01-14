@@ -73,8 +73,8 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'pwe-style-var.php';
         $this->PWEStyleVar = new PWEStyleVar();
 
-        require_once plugin_dir_path(__FILE__) . 'includes/nav-menu/nav-menu.php';
-        $this->pweNavMenu = new pweNavMenu();
+        // require_once plugin_dir_path(__FILE__) . 'includes/nav-menu/nav-menu.php';
+        // $this->pweNavMenu = new pweNavMenu();
 
         require_once plugin_dir_path(__FILE__) . 'elements/pwelements-options.php';
         $this->PWElements = new PWElements();
