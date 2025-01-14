@@ -34,19 +34,6 @@ class PWElementFooter extends PWElements {
                     'value' => 'PWElementFooter',
                 ),
             ),
-            array(
-                'type' => 'checkbox',
-                'group' => 'PWE Element',
-                'heading' => __('Test', 'pwelement'),
-                'param_name' => 'footer_test',
-                'admin_label' => true,
-                'save_always' => true,
-                'value' => array(__('True', 'pwelement') => 'true',),
-                'dependency' => array(
-                    'element' => 'pwe_element',
-                    'value' => 'PWElementFooter',
-                ),
-            ),
         );
         return $element_output;
     }
@@ -60,7 +47,6 @@ class PWElementFooter extends PWElements {
     public static function output($atts) {   
         extract( shortcode_atts( array(
             'footer_logo_color_invert' => '',
-            'footer_test' => '',
         ), $atts ));
    
         $output = '
@@ -269,7 +255,6 @@ class PWElementFooter extends PWElements {
 
         <div id="pweFooter" class="pwe-footer">';
 
-        if ($footer_test != true) {
             $output .= '
             <div class="pwe-footer-bg" style="background-image: url(/wp-content/plugins/PWElements/media/footer.webp)">
                 <div class="pwe-footer-bg-wrapper">
@@ -308,130 +293,6 @@ class PWElementFooter extends PWElements {
                     .'</div>
                 </div>
             </div>';
-        } else {
-            $output .= '
-            <style>
-                .pwelement_'. self::$rnd_id .' .pwe-footer-iframe-wrapper {
-                    display: flex;
-                    max-width: 100%;
-                    position: relative;
-                    overflow: hidden;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-footer-column {
-                    width: 50%;
-                    background-color: white;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-footer-text {
-                    max-width: 600px;
-                    margin: 0 auto;
-                    padding: 54px 36px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-footer-text p {
-                    margin: 0;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-footer-text h4 {
-                    width: auto;
-                    padding-bottom: 18px;
-                    text-transform: uppercase;
-                    text-align: center;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-footer-video-container {
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                    border-radius: 0 18px 0 0;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-footer-video-container iframe,
-                .pwelement_'. self::$rnd_id .' .pwe-footer-video-container .rll-youtube-player {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    pointer-events: none;
-                    box-shadow: unset !important;
-                }
-
-                @media (max-width:1680px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container iframe,
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container .rll-youtube-player {
-                        transform: scale(1.4) !important;
-                    }
-                }
-                @media (min-width:1600px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container iframe,
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container .rll-youtube-player {
-                        transform: scale(1.2) !important;
-                    }
-                }
-                @media (max-width:1100px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container iframe,
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container .rll-youtube-player {
-                        transform: scale(1.4) !important;
-                    }
-                }
-                @media (max-width:960px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container iframe,
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container .rll-youtube-player {
-                        transform: scale(1.7) !important;
-                        aspect-ratio: 3 / 2;
-                        position: absolute;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-column.text-column {
-                        background-color: #00000091;
-                        z-index: 1;
-                        color: white;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-text p {
-                        font-size: 14px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-column.text-column b,
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-text h4 {
-                        color: white;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-column {
-                        width: 100%;
-                    }   
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-column.text-column {
-                        max-width: 100%;
-                        min-width: 100%;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-text {
-                        padding: 36px;
-                    }
-                }
-                @media (max-width:768px)  {
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-hide-mobile {
-                        display: none;
-                    }
-                }
-                @media (max-width:500px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container iframe,
-                    .pwelement_'. self::$rnd_id .' .pwe-footer-video-container .rll-youtube-player {
-                        transform: scale(1.4);
-                    }
-                }
-
-            </style>
-
-
-            <div class="pwe-footer-iframe-wrapper">
-                <div class="pwe-footer-column iframe-column">
-                    <div class="pwe-footer-video-container">
-                        <iframe data-src="https://www.youtube.com/embed/tMQHNwpw9jI?si=Vyul5EoXPg1krpIf&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=tMQHNwpw9jI"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                </div>
-                <div class="pwe-footer-column text-column">
-                    <div class="pwe-footer-text">
-                        <h4>O Organizatorze</h4>
-                        <p>
-                            <b>Ptak Warsaw Expo</b>, jedno z największych centrów targowych w Europie, corocznie organizuje <b>ponad 120 branżowych wydarzeń</b>, które przyciągają <b>milion odwiedzających</b> i współpracę z <b>ponad 20 tysiącami wystawców</b> z różnych sektorów gospodarki. <span class="pwe-footer-hide-mobile">Dzięki doskonałej lokalizacji i nowoczesnej infrastrukturze, stanowi kluczową platformę wymiany wiedzy, budowania relacji biznesowych i promowania innowacyjnych rozwiązań, wspierając dynamiczny rozwój wielu branż.</span>
-                        </p>
-                    </div>
-                </div>
-            </div>';
-        }
 
             $output .= '
             <div class="pwe-footer-images-bg">
@@ -439,7 +300,6 @@ class PWElementFooter extends PWElements {
             </div>';
 
             $menus = wp_get_nav_menus();
-            $menu_array = array();
 
             foreach ($menus as $menu) {
                 $menu_name_lower = strtolower($menu->name);
@@ -453,14 +313,6 @@ class PWElementFooter extends PWElements {
                     }
                 }
             }      
-            
-            // // Dodanie nowej pozycji do menu $menu_3_en
-            // $new_menu_item = (object) array(
-            //     'title' => 'Become an agent',
-            //     'url' => 'https://warsawexpo.eu/en/forms-for-agents/'
-            // );
-            // $menu_3_en_items = wp_get_nav_menu_items($menu_3_en);
-            // array_push($menu_3_en_items, $new_menu_item);
 
             function generateFooterNav($locale, $menus, $footer_logo_color_invert) {
                 $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";

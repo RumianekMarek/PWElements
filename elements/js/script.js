@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 /* Show more/less */
-jQuery(function ($) { 
+jQuery(function ($) {  
     let hiddenContentPWE = true; 
 
     $(".pwe-see-more").click(function(event) {
@@ -37,7 +37,7 @@ jQuery(function ($) {
         if (pweScriptData.locale === "pl_PL") {
             $(event.target).text(currentText === "więcej..." ? "ukryj..." : "więcej...");
         } else {
-            $(event.target).text(currentText === "more..." ? "hidden..." : "more...");
+            $(event.target).text(currentText === "more..." ? "hide..." : "more...");
         }
         hiddenContentPWE = !hiddenContentPWE;  
         $(event.target).prev().slideToggle();

@@ -25,7 +25,6 @@ class PWElementNumbers extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Mode', 'pwe_element'),
                 'param_name' => 'pwe_numbers_mode',
-                'param_holder_class' => 'backend-area-one-fourth-width',
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -36,6 +35,18 @@ class PWElementNumbers extends PWElements {
                     'Footer mode' => 'footer_mode',
                 ),
                 
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Turn on footer section', 'pwe_display_info'),
+                'param_name' => 'pwe_numbers_footer_section',
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_numbers_mode',
+                    'value' => 'footer_mode',
+                ),
             ),
             array(
                 'type' => 'dropdown',
@@ -140,6 +151,7 @@ class PWElementNumbers extends PWElements {
 
         extract( shortcode_atts( array(
             'pwe_numbers_mode' => '',
+            'pwe_numbers_footer_section' => '',
             'pwe_custom_title_first' => '',
             'pwe_number_first' => '',
             'pwe_custom_title_second' => '',
@@ -308,7 +320,16 @@ class PWElementNumbers extends PWElements {
                     .pwe-numbers__img {
                         min-height: 250px;
                     }
+                }';
+                if ($pwe_numbers_footer_section != true) {
+                    $output .= '
+                        .pwe-footer-bg,
+                        .pwe-footer-images-bg {
+                            display: none;
+                        }
+                    ';
                 }
+                $output .= '
             </style>
 
             <div id="pweNumbers" class="pwe-numbers">

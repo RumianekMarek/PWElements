@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // Links for menu logotype <---------------------------------------------------------------------<
+    // Links for menu logotype <---------------------------------------------------------------------< 
     // Configuration for domains
     const domainSettings = {
         'wiretechpoland.com': { leftWidth: '20%', rightWidth: '80%' },

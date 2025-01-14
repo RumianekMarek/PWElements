@@ -1,13 +1,41 @@
 {
     "fairs": {
-        "mrglasstec": {
-            "domain": "mr.glasstec.pl",
+        "mrglasstec.pl": {
+            "domain": "mr.glasstec.pl", 
+            "name_pl": "Strona do testowania elementów wtyczki", 
+            "name_en": "Page for testing plugin elements", 
             "visitors": 3207,
             "exhibitors": 97,
             "area": 25000
         },
-        "roboticswarsaw": {
-            "domain": "warsawmetaltech.pl",
+        "etradeshow.pl": {
+            "domain": "etradeshow.pl",
+            "name_pl": "NAJWIĘKSZE TARGI E-COMMERCE W EUROPIE",
+            "name_en": "THE LARGEST E-COMMERCE FAIR IN EUROPE",  
+            "visitors": 3207,
+            "exhibitors": 97,
+            "area": 25000
+        },
+        "roboticswarsaw.com": {
+            "domain": "roboticswarsaw.com",
+            "name_pl": "NAJWAŻNIEJSZE WYDARZENIE DLA BRANŻY ROBOTYKI PRZEMYSŁOWEJ",
+            "name_en": "THE MOST IMPORTANT EVENT FOR THE INDUSTRIAL ROBOTICS INDUSTRY",  
+            "visitors": 5000,
+            "exhibitors": 70,
+            "area": 15000
+        },
+        "franczyzaexpo.pl": {
+            "domain": "franczyzaexpo.pl",
+            "name_pl": "MIĘDZYNARODOWE TARGI SPRAWDZONEGO MODELU BIZNESOWEGO",
+            "name_en": "INTERNATIONAL FAIR OF PROVEN BUSINESS MODEL",  
+            "visitors": 3413,
+            "exhibitors": 49,
+            "area": 25000
+        },
+        "intralogisticapoland.com": {
+            "domain": "intralogisticapoland.com",
+            "name_pl": "MIĘDZYNARODOWE TARGI LOGISTYKI MAGAZYNOWEJ",
+            "name_en": "INTERNATIONAL WAREHOUSE LOGISTICS FAIR",  
             "visitors": 5396,
             "exhibitors": 110,
             "area": 22000

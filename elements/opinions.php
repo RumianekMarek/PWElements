@@ -168,7 +168,6 @@ class PWElementOpinions extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__title {
                     margin: 0 auto;
                     padding-top: 18px;
-                    font-size: 24px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
                     position: relative;
@@ -271,7 +270,7 @@ class PWElementOpinions extends PWElements {
                         justify-content: center;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
-                        height: 80px;
+                        height: 60px;
                         width: 100%;
                         max-width: 160px;
                         object-fit: contain;
@@ -415,168 +414,213 @@ class PWElementOpinions extends PWElements {
                 </style>';
             }
 
-            if (is_array($opinions_items_json)) {
+            $default_opinions = [
+                [
+                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
+                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
+                    'default_opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
+                    'default_opinions_name' => 'dr Radosław Dziuba',
+                    'default_opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
+                    'default_opinions_text' => self::languageChecker(
+                        'Ptak Warsaw Expo to partner, z którym wymieniamy się wiedzą i doświadczeniem w dziedzinach związanych z działalnością obydwu instytucji. Centrum targowo-wystawienniczym Ptak Warsaw Expo pozwala na nawiązywanie kluczowych kontaktów biznesowych, budowanie relacji z klientami oraz poznanie nowych trendów.',
+                        'Ptak Warsaw Expo is a partner with whom we exchange knowledge and experience in areas related to the activities of both institutions. The Ptak Warsaw Expo exhibition center facilitates establishing key business contacts, building client relationships, and discovering new trends.'
+                    )
+                ],
+                [
+                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jakub-Tyczkowski.webp',
+                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/rekpol-logo.webp',
+                    'default_opinions_company' => 'Rekopol Organizacja Odzysku Opakowań',
+                    'default_opinions_name' => 'Jakub Tyczkowski',
+                    'default_opinions_desc' => self::languageChecker('Prezes Rekopol', 'President of Rekopol'),
+                    'default_opinions_text' => self::languageChecker(
+                        'Rekopol Organizacja Odzysku Opakowań współpracuje z Ptak Warsaw Expo od samego początku. Nasze projekty cechuje zaangażowanie, dobra organizacja konferencji oraz świetna komunikacja.',
+                        'Rekopol Packaging Recovery Organization has been cooperating with Ptak Warsaw Expo from the very beginning. Our projects are characterized by commitment, good conference organization, and excellent communication.')
+                ],
+                [
+                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Krzysztof-Niczyporczuk.webp',
+                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pio-logo.webp',
+                    'default_opinions_company' => 'Polska Izba Opakowań',
+                    'default_opinions_name' => 'Mgr inż. Krzysztof Niczyporuk',
+                    'default_opinions_desc' => '',
+                    'default_opinions_text' => self::languageChecker(
+                        'PTAK Warsaw Expo to wysokiej klasy organizator imprez targowych i konferencji. Polska Izba Opakowań pozytywnie ocenia współpracę z Ptak Warsaw Expo jako rzetelnym partnerem.',
+                        'PTAK Warsaw Expo is a high-quality organizer of trade fairs and conferences. The Polish Packaging Chamber positively evaluates cooperation with Ptak Warsaw Expo as a reliable partner.')
+                ],
+                [
+                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
+                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
+                    'default_opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
+                    'default_opinions_name' => 'Piotr Fiejkiewicz',
+                    'default_opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
+                    'default_opinions_text' => self::languageChecker(
+                        'PTAK Warsaw Expo jest największym centrum wystawienniczym, z jakim współpracujemy. Firma inwestuje w rozwój infrastruktury, co zwiększa jakość organizowanych wydarzeń.',
+                        'PTAK Warsaw Expo is the largest exhibition center we work with. The company invests in infrastructure development, which enhances the quality of organized events.')
+                ],
+                [
+                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Janusz-Poulakowski.webp',
+                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/evoluma-logo.webp',
+                    'default_opinions_company' => 'Klaster Obróbki Metali',
+                    'default_opinions_name' => 'Janusz Poulakowski',
+                    'default_opinions_desc' => self::languageChecker('Dyrektor Operacyjny', 'Operational Director'),
+                    'default_opinions_text' => self::languageChecker(
+                        'Klaster Obróbki Metali współpracuje z Ptak Warsaw Expo od samego początku. Cenimy profesjonalizm, innowacyjność oraz stabilność współpracy z Ptak Warsaw Expo.',
+                        'The Metalworking Cluster has been cooperating with Ptak Warsaw Expo from the very beginning. We value professionalism, innovation, and stability in our cooperation with Ptak Warsaw Expo.')
+                ]
+            ];
 
-                $output .= '
-                <div id="pweOpinions"class="pwe-opinions">
-                    <h2 class="pwe-opinions__title">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h2>
-                    <div class="pwe-opinions__wrapper">
-                        <div class="pwe-opinions__items pwe-slides">';
+            $output .= '
+            <div id="pweOpinions"class="pwe-opinions">
+                <div class="pwe-posts-title main-heading-text">
+                    <h4 class="pwe-opinions__title pwe-uppercase">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h4>
+                </div> 
+                <div class="pwe-opinions__wrapper">
+                    <div class="pwe-opinions__items pwe-slides">';
 
-                            foreach ($opinions_items_json as $opinion_item) {
-                                $opinions_face_img = $opinion_item["opinions_face_img"];
-                                $opinions_company_img = $opinion_item["opinions_company_img"];
-                                $opinions_company = $opinion_item["opinions_company"];
-                                $opinions_name = $opinion_item["opinions_name"];
-                                $opinions_desc = $opinion_item["opinions_desc"];
-                                $opinions_text = $opinion_item["opinions_text"];
-                                $opinions_button = $opinion_item["opinions_button"];
-                
-                                $opinions_face_img_src = wp_get_attachment_url($opinions_face_img);  
-                                $opinions_company_img_src = wp_get_attachment_url($opinions_company_img);  
+                    $show_default = true;
 
-                                $opinions_company_img_src2 = $opinion_item["opinions_company_img_src"];
-                                $opinions_face_img_src2  = $opinion_item["opinions_face_img_src"];
-
-                                // Dzielenie tekstu na 30 słów i resztę
-                                $words = explode(" ", $opinions_text);
-                                $short_text = implode(" ", array_slice($words, 0, 30));
-                                $remaining_text = implode(" ", array_slice($words, 30));
-
-                                if ($opinions_preset == 'preset_1') {
-                                    $output .= '
-                                    <div class="pwe-opinions__item">
-                                        <div class="pwe-opinions__item-company">
-                                            ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
-                                            <div class="pwe-opinions__item-company_logo">';
-                                            
-                                                if (!empty($opinions_company_img_src2)) {
-                                                    $output .= '<img src="' . $opinions_company_img_src2 . '">';
-                                                } else if (!empty($opinions_company_img)) {
-                                                    $output .= '<img src="' . $opinions_company_img_src . '">';
-                                                } else $output .= '';
-
-                                            $output .= '
-                                            </div>
-                                        </div>
-                                        <div class="pwe-opinions__item-person">
-                                            <div class="pwe-opinions__item-person-img">';
-                                            
-                                                if (!empty($opinions_face_img_src2)) {
-                                                    $output .= '<img src="' . $opinions_face_img_src2 . '">';
-                                                } else if (!empty($opinions_face_img)) {
-                                                    $output .= '<img src="' . $opinions_face_img_src . '">';
-                                                } else $output .= '';
-
-                                            $output .= '
-                                            </div>
-                                            <div class="pwe-opinions__item-person-info">
-                                                <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
-                                                <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
-                                            </div>
-                                        </div>
-                                        <div class="pwe-opinions__item-opinion">
-                                            <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
-                                            (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
-                                            (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">więcej...</span>' : '') . '
-                                        </div>
-                                    </div>';
-                                } else if ($opinions_preset == 'preset_2') {
-                                    $output .= '
-                                    <div class="pwe-opinions__item">
-                                        <div class="pwe-opinions__item-media">
-                                            <div class="pwe-opinions__item-person-img">';
-                                            
-                                                if (!empty($opinions_face_img_src2)) {
-                                                    $output .= '<img src="' . $opinions_face_img_src2 . '">';
-                                                } else if (!empty($opinions_face_img)) {
-                                                    $output .= '<img src="' . $opinions_face_img_src . '">';
-                                                } else $output .= '';
-
-                                            $output .= '
-                                            </div>
-                                            <div class="pwe-opinions__item-company_logo">';
-                                            
-                                                if (!empty($opinions_company_img_src2)) {
-                                                    $output .= '<img src="' . $opinions_company_img_src2 . '">';
-                                                } else if (!empty($opinions_company_img)) {
-                                                    $output .= '<img src="' . $opinions_company_img_src . '">';
-                                                } else $output .= '';
-
-                                            $output .= '
-                                            </div>
-                                        </div>
-                                        <div class="pwe-opinions__item-person-info">
-                                            <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
-                                            ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
-                                            <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
-                                        </div>
-                                        <div class="pwe-opinions__item-opinion">
-                                            <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
-                                            (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
-                                            (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">więcej...</span>' : '') . '
-                                        </div>
-                                    </div>';
-                                } else if ($opinions_preset == 'preset_3') {
-                                    $output .= '                                            
-                                    <div class="pwe-opinions__item">';
-      
-                                        if (!empty($opinions_company_img_src2)) {
-                                            $output .= '<div class="pwe-opinions__item-company_logo"><img src="' . $opinions_company_img_src2 . '"></div>';
-                                        } else if (!empty($opinions_company_img)) {
-                                            $output .= '<div class="pwe-opinions__item-company_logo"><img src="' . $opinions_company_img_src . '"></div>';
-                                        } else $output .= '';
-
-                                        $output .= '
-                                        <div class="pwe-opinions__item-speaker-container">
-                                            <div class="pwe-opinions__item-speaker-img">';
-                                                
-                                            if (!empty($opinions_face_img_src2)) {
-                                                $output .= '<img src="' . $opinions_face_img_src2 . '">';
-                                            } else if (!empty($opinions_face_img)) {
-                                                $output .= '<img src="' . $opinions_face_img_src . '">';
-                                            } else $output .= '';
-
-                                            $output .= '
-                                            </div>
-                                         </div>
-                                      
-                                         <div class="pwe-opinions__item-speaker">
-                                            <div class="pwe-opinions__item-speaker-info">
-                                                <h5 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h5>
-                                                ' . (!empty($opinions_desc) ? '<h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>' : '<span></span>') . '
-                                                ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
-                                            </div>
-                                            <div class="pwe-opinions__item-opinion">
-                                                <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
-                                                (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
-                                                (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">więcej...</span>' : '') . '
-                                            </div>
-                                        </div>
-                                        <div class="pwe-opinions__item-btn">
-                                            <a href="'. $opinions_button .'">'. self::languageChecker('ZOBACZ WIĘCEJ', 'SEE MORE') .'</a>
-                                        </div>
-                                    </div>';
-                                }  
+                    if (is_array($opinions_items_json) && !empty($opinions_items_json)) {
+                        foreach ($opinions_items_json as $opinion_item) {
+                            if (!empty($opinion_item['opinions_text'])) {
+                                $show_default = false;
+                                break;
                             }
+                        }
+                    }
 
-                        $output .= '
-                        </div>
+                    // If $opinions_items_json is empty or has empty values ​​-> show default
+                    $opinions_to_display = $show_default ? $default_opinions : $opinions_items_json;
 
-                        <span class="pwe-opinions__arrow pwe-opinions__arrow-prev pwe-arrow pwe-arrow-prev">‹</span>
-                        <span class="pwe-opinions__arrow pwe-opinions__arrow-next pwe-arrow pwe-arrow-next">›</span>
+                    foreach ($opinions_to_display as $opinion_item) {
+                        $opinions_face_img_media = isset($opinion_item['opinions_face_img']) ? $opinion_item['opinions_face_img'] : null;
+                        $opinions_company_img_media = isset($opinion_item['opinions_company_img']) ? $opinion_item['opinions_company_img'] : null;
+                        $opinions_face_img_src_media = $opinions_face_img_media ? wp_get_attachment_url($opinions_face_img_media) : '';
+                        $opinions_company_src_media = $opinions_company_img_media ? wp_get_attachment_url($opinions_company_img_media) : '';
 
+                        $opinions_face_img_src_catalog = isset($opinion_item["opinions_company_img_src"]) ? $opinion_item["opinions_company_img_src"] : null;
+                        $opinions_company_img_src_catalog = isset($opinion_item["opinions_face_img_src"]) ? $opinion_item["opinions_face_img_src"] : null;
+
+                        $opinions_face_img_src = !empty($opinions_face_img_src_catalog) ? $opinions_face_img_src_catalog : $opinions_face_img_src_media;
+                        $opinions_company_img_src = !empty($opinions_company_img_src_catalog) ? $opinions_company_img_src_catalog : $opinions_company_src_media;
+        
+                        // Default values ​​or values ​​from JSON
+                        $opinions_face_img = $show_default ? $opinion_item['default_opinions_face_img'] : $opinions_face_img_src;
+                        $opinions_company_img = $show_default ? $opinion_item['default_opinions_company_img'] : $opinions_company_img_src;
+                        $opinions_company = $show_default ? $opinion_item['default_opinions_company'] : $opinion_item['opinions_company'];
+                        $opinions_name = $show_default ? $opinion_item['default_opinions_name'] : $opinion_item['opinions_name'];
+                        $opinions_desc = $show_default ? $opinion_item['default_opinions_desc'] : $opinion_item['opinions_desc'];
+                        $opinions_text = $show_default ? $opinion_item['default_opinions_text'] : $opinion_item['opinions_text'];
+        
+                        $opinions_button = isset($opinion_item["opinions_button"]) ? $opinion_item["opinions_button"] : null;
+
+                        // Splitting the text into 30 words and the rest
+                        $words = explode(" ", $opinions_text);
+                        $short_text = implode(" ", array_slice($words, 0, 24));
+                        $remaining_text = implode(" ", array_slice($words, 24));
+
+                        if ($opinions_preset == 'preset_1') {
+                            $output .= '
+                            <div class="pwe-opinions__item">
+                                <div class="pwe-opinions__item-company">
+                                    ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
+                                    <div class="pwe-opinions__item-company_logo">
+                                        <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                    </div>
+                                </div>
+                                <div class="pwe-opinions__item-person">
+                                    <div class="pwe-opinions__item-person-img">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                    </div>
+                                    <div class="pwe-opinions__item-person-info">
+                                        <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                        <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                    </div>
+                                </div>
+                                <div class="pwe-opinions__item-opinion">
+                                    <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
+                                    (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
+                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                </div>
+                            </div>';
+                        } else if ($opinions_preset == 'preset_2') {
+                            $output .= '
+                            <div class="pwe-opinions__item">
+                                <div class="pwe-opinions__item-media">
+                                    <div class="pwe-opinions__item-person-img">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                    </div>
+                                    <div class="pwe-opinions__item-company_logo">
+                                        <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                    </div>
+                                </div>
+                                <div class="pwe-opinions__item-person-info">
+                                    <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                    ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
+                                    <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                </div>
+                                <div class="pwe-opinions__item-opinion">
+                                    <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
+                                    (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
+                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                </div>
+                            </div>';
+                        } else if ($opinions_preset == 'preset_3') {
+                            $output .= '                                            
+                            <div class="pwe-opinions__item">';
+
+                                if (!empty($opinions_company_img)) {
+                                    $output .= ' 
+                                    <div class="pwe-opinions__item-company_logo">
+                                        <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                    </div>';
+                                }
+
+                                $output .= ' 
+                                <div class="pwe-opinions__item-speaker-container">
+                                    <div class="pwe-opinions__item-speaker-img">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                    </div>
+                                    </div>
+                                
+                                    <div class="pwe-opinions__item-speaker">
+                                    <div class="pwe-opinions__item-speaker-info">
+                                        <h5 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h5>
+                                        ' . (!empty($opinions_desc) ? '<h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>' : '<span></span>') . '
+                                        ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
+                                    </div>
+                                    <div class="pwe-opinions__item-opinion">
+                                        <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
+                                        (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
+                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                    </div>
+                                </div>';
+                                if (!empty($opinions_button)) {
+                                    $output .= ' 
+                                    <div class="pwe-opinions__item-btn">
+                                        <a href="'. $opinions_button .'">'. self::languageChecker('ZOBACZ WIĘCEJ', 'SEE MORE') .'</a>
+                                    </div>';
+                                }
+                            $output .= ' 
+                            </div>';
+                        }  
+                    }    
+                        
+                    $output .= '
                     </div>
-                </div>';
 
-                $opinions_arrows_display = 'true';
+                    <span class="pwe-opinions__arrow pwe-opinions__arrow-prev pwe-arrow pwe-arrow-prev">‹</span>
+                    <span class="pwe-opinions__arrow pwe-opinions__arrow-next pwe-arrow pwe-arrow-next">›</span>
 
-                include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
-                $output .= PWESliderScripts::sliderScripts('opinions', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show);
+                </div>
+            </div>';
 
-                $output .= '
-                <script>
-                jQuery(function ($) {                 
+            $opinions_arrows_display = 'true';
+
+            include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
+            $output .= PWESliderScripts::sliderScripts('opinions', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show);
+
+            $output .= '
+            <script>
+                jQuery(function ($) {                  
 
                     // Function to set equal height
                     function setEqualHeight() {
@@ -612,9 +656,7 @@ class PWElementOpinions extends PWElements {
                     
                     $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
                 });             
-                </script>'; 
-
-            }
+            </script>'; 
 
         return $output;
     }

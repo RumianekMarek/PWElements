@@ -31,13 +31,13 @@ class PWElements {
 
         add_action('init', array($this, 'initVCMapElements'));
         add_shortcode('pwelement', array($this, 'PWElementsOutput'));
-            
-        add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);
+
+        add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);   
     }
 
     public function entryToSession($entry, $form) {
         $entry_returner = array();
-        
+
         foreach($form['fields'] as $single_field){
             if($single_field['type'] == 'email'){
                 $entry_returner['email'] = $entry[$single_field['id']];
@@ -102,6 +102,8 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'contact-form.php';
         require_once plugin_dir_path(__FILE__) . 'single-image.php';
         require_once plugin_dir_path(__FILE__) . 'medals.php';
+        require_once plugin_dir_path(__FILE__) . 'other_events.php';
+        require_once plugin_dir_path(__FILE__) . 'two_cols.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -266,15 +268,17 @@ class PWElements {
                         ...PWElementStepTwoExhibitor::initElements(),
                         ...PWElementStepTwo::initElements(),
                         ...PWElementTicketActConf::initElements(),
-                        ...PWElementHale::initElements(),
                         ...PWElementOpinions::initElements(),
                         ...PWElementButton::initElements(),
+                        ...PWElementHale::initElements(),
                         ...PWElementAbout::initElements(),
                         ...PWElementWhyItsWorth::initElements(),
                         ...PWElementQRChekcer::initElements(),
                         ...PWElementConfirmationVip::initElements(),
                         ...PWElementContactForm::initElements(),
                         ...PWElementSingleImage::initElements(),
+                        ...PWElementOtherEvents::initElements(),
+                        ...PWElementTwoCols::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -331,7 +335,7 @@ class PWElements {
             'For Visitors'                   => 'PWElementForVisitors',
             'Generator wystawcow'            => 'PWElementGenerator',
             'Grupy zorganizowane'            => 'PWElementGroups',
-            'Hale'                           => 'PWElementHale',
+            'Halls'                           => 'PWElementHale',
             'Informacje organizacyjne'       => 'PWElementOrgInfo',
             'Informacje kontaktowe'          => 'PWElementContactInfo',
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
@@ -346,6 +350,7 @@ class PWElements {
             'Nie przegap'                    => 'PWElementDontMiss',
             'Organizator'                    => 'PWElementOrganizer',
             'Opinions'                       => 'PWElementOpinions',
+            'Other Events'                   => 'PWElementOtherEvents',
             'Panel trendów'                  => 'PWElementTrendsPanel',
             'Posts'                          => 'PWElementPosts',
             'Potwierdzenie Rejestracji'      => 'PWElementPotwierdzenieRejestracji',
@@ -362,6 +367,7 @@ class PWElements {
             'Sticky buttons'                 => 'PWElementStickyButtons',
             'Step2'                          => 'PWElementStepTwo',
             'Ticket'                         => 'PWElementTicket',
+            'Two cols'                       => 'PWElementTwoCols',
             'Videos'                         => 'PWElementVideos',
             'Visitors Timer'                 => 'PWElementVisitorsTimer',
             'Voucher'                        => 'PWElementVoucher',
@@ -418,6 +424,7 @@ class PWElements {
             'PWElementMedals'          => 'medals.php',
             'PWElementOrgInfo'          => 'org-information.php',
             'PWElementOpinions'         => 'opinions.php',
+            'PWElementOtherEvents'      => 'other_events.php',
             'PWElementContactInfo'      => 'kontakt-info.php',
             'PWElementContact'          => 'kontakt.php',
             'PWElementHomeGallery'      => 'gallery.php',
@@ -456,6 +463,7 @@ class PWElements {
             'PWElementButton'           => 'button.php',
             'PWElementWhyItsWorth'      => 'why-its-worth.php',
             'PWElementQRChekcer'        => 'qr-check.php',
+            'PWElementTwoCols'          => 'two_cols.php',
         );
     }
 
@@ -720,7 +728,7 @@ class PWElements {
      *
      * @return bool
      */
-    public static function isTradeDateExist(){
+    public static function isTradeDateExist() { 
 
         $seasons = ["nowa data", "wiosna", "lato", "jesień", "zima", "new date", "spring", "summer", "autumn", "winter"];
         $trade_date_lower = strtolower(do_shortcode('[trade_fair_date]'));

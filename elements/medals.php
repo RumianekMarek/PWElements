@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementMedals
@@ -12,10 +12,31 @@ class PWElementMedals extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }    
+    }
 
-    public static function output($atts) {     
-            
+    public static function output($atts) {
+
+        $darker_btn_color = self::adjustBrightness(self::$accent_color, -20);
+
+        $medals = [
+            'innowacyjnosc' => [
+                'pl' => '/wp-content/plugins/PWElements/media/medals/innowacyjnosc.webp',
+                'en' => '/wp-content/plugins/PWElements/media/medals/innowacyjnosc-en.webp'
+            ],
+            'premiera-targowa' => [
+                'pl' => '/wp-content/plugins/PWElements/media/medals/premiera-targowa.webp',
+                'en' => '/wp-content/plugins/PWElements/media/medals/premiera-targowa-en.webp'
+            ],
+            'produkt-targowy' => [
+                'pl' => '/wp-content/plugins/PWElements/media/medals/produkt-targowy.webp',
+                'en' => '/wp-content/plugins/PWElements/media/medals/produkt-targowy-en.webp'
+            ],
+            'ekspozycja-targowa' => [
+                'pl' => '/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa.webp',
+                'en' => '/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa-en.webp'
+            ]
+        ];
+
         $output = '
         <style>
             .pwe-medals__wrapper {
@@ -32,8 +53,17 @@ class PWElementMedals extends PWElements {
             }
             .pwe-medals__items {
                 display: grid;
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(4, 1fr);
                 gap: 10px;
+            }
+            .pwe-medals__wrapper .pwe-medals__items {
+                display: grid;
+            }
+            .pwe-medals__wrapper .pwe-medals__items_mobile {
+                display: none;
+            }
+            .pwe-medals__wrapper .pwe-button-link {
+                transform-origin: center !important;
             }
             @media(max-width: 650px) {
                 .pwe-medals__wrapper {
@@ -41,6 +71,7 @@ class PWElementMedals extends PWElements {
                 }
                 .pwe-medals__text p {
                     line-height: 1.3;
+                    text-align: left;
                 }
                 .pwe-medals__items {
                     display: flex;
@@ -53,33 +84,73 @@ class PWElementMedals extends PWElements {
                 .pwe-medals__item img {
                     width: 100%;
                 }
+                .pwe-medals__wrapper .pwe-medals__items_mobile {
+                    display: block;
+                }
+                .pwe-medals__wrapper .pwe-medals__items {
+                    display: none;
+                }
+            }
+            .pwe-medals .pwe-button-link {
+                color: white;
+                background-color: ' . self::$accent_color . ';
+                border: 1px solid ' . self::$accent_color . ';
+                border-radius: 10px;
+                min-width: 240px;
+            }
+            .pwe-medals .pwe-button-link:hover {
+                color: white !important;
+                background-color: '. $darker_btn_color .'!important;
+                border: 1px solid '. $darker_btn_color .'!important;
             }
         </style>
 
-        <div id="pweMedals"class="pwe-medals">
+        <div id="pweMedals" class="pwe-medals">
             <div class="pwe-medals__wrapper">
                 <div class="pwe-medals__heading">
-                    <h4>'. self::languageChecker('ZDOBĄDŹ PRESTIŻOWĄ NAGRODĘ NA PTAK WARSAW EXPO!', 'WIN A PRESTIGIOUS AWARD AT PTAK WARSAW EXPO!') .'</h4>
+                    <h4>'. self::languageChecker('ZDOBĄDŹ PRESTIŻOWĄ NAGRODĘ W PTAK WARSAW EXPO!', 'WIN A PRESTIGIOUS AWARD AT PTAK WARSAW EXPO!') .'</h4>
                 </div>
-                <div class="pwe-medals__text">'. 
+                <div class="pwe-medals__text">'.
                     self::languageChecker(
                         <<<PL
-                            <p>Dołącz do grona najlepszych na <strong>Targach Ptak Warsaw Expo</strong> i pokaż swoją firmę w świetle zwycięzców! <strong>Wyróżniamy liderów</strong>, którzy napędzają przyszłość i inspirują innych, przyznając <strong>prestiżowe nagrody</strong> w takich kategoriach jak:</p> 
+                            <p>Dołącz do grona najlepszych na <strong>Targach Ptak Warsaw Expo</strong> i pokaż swoją firmę w świetle zwycięzców! Nagrody są przyznawane przez <strong>Krajową Izbę Targową</strong> oraz <strong>Ptak Warsaw Expo</strong>  – wyróżnij się i zdobądź uznanie!</p>
                         PL,
                         <<<EN
-                            <p>Join the best at <strong>Ptak Warsaw Expo</strong> and show your company in the light of the winners! <strong>We recognize leaders</strong> who drive the future and inspire others by awarding <strong>prestigious awards</strong> in categories such as:</p>
+                            <p>Join the ranks of the best at <strong>Ptak Warsaw Expo</strong> and showcase your company as a winner! Awards are granted by the <strong>National Chamber of Trade Fairs</strong> and <strong>Ptak Warsaw Expo</strong> – stand out and gain recognition!</p>
                         EN
                     )
                 .'</div>
                 <div class="pwe-medals__items">
-                    <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/nowe-technologie.webp"/></div>
-                    <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/innowacje-roku.webp"/></div>
-                    <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/produkt-roku.webp"/></div>
-                    <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/odkrycie-roku.webp"/></div>
-                    <div class="pwe-medals__item"><img src="/wp-content/plugins/PWElements/media/medals/prezes-roku.webp"/></div>
-                </div>
+                    <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/innowacyjnosc.webp', '/wp-content/plugins/PWElements/media/medals/innowacyjnosc-en.webp') .'"/></div>
+                    <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/premiera-targowa.webp', '/wp-content/plugins/PWElements/media/medals/premiera-targowa-en.webp') .'"/></div>
+                    <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/produkt-targowy.webp', '/wp-content/plugins/PWElements/media/medals/produkt-targowy-en.webp') .'"/></div>
+                    <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa.webp', '/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa-en.webp') .'"/></div>
+                </div>';
+
+                $output .= '<div class="pwe-medals__items_mobile pwe-slides">';
+
+                foreach ($medals as $key => $paths) {
+                    $img_src = self::languageChecker($paths['pl'], $paths['en']);
+                    $output .= '<img data-no-lazy="1" src="' . htmlspecialchars($img_src, ENT_QUOTES, 'UTF-8') . '" alt="Medal ' . $key . '"/>';
+                }
+                 $output .= '</div>';
+
+                // Dodanie slidera
+                include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
+                $output .= PWESliderScripts::sliderScripts(
+                    'pwe-medals__items_mobile',
+                    '#pweMedals',
+                    $opinions_dots_display = 'true',
+                    $opinions_arrows_display = false,
+                    5
+                );
+
+                $output .= '
                 <div class="pwe-medals__heading">
-                    <h4>'. self::languageChecker('POKAŻ SIĘ ŚWIATU JAKO LIDER NA PTAK WARSAW EXPO!', 'SHOW YOURSELF TO THE WORLD AS A LEADER AT PTAK WARSAW EXPO!') .'</h4>
+                    <h4>'. self::languageChecker('POKAŻ SIĘ ŚWIATU JAKO LIDER W PTAK WARSAW EXPO!', 'SHOWCASE YOURSELF AS A LEADER AT PTAK WARSAW EXPO!') .'</h4>
+                </div>
+                <div class="pwe-medals__button">
+                    <a class="pwe-button-link btn" href="' . self::languageChecker('/zostan-wystawca/', '/en/become-an-exhibitor/') . '">'. self::languageChecker('Zostań wystawcą', 'Book a stand') .'</a>
                 </div>
 
             </div>

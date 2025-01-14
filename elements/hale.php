@@ -128,7 +128,17 @@ class PWElementHale extends PWElements {
                     width:: 100%;
                     object-fit: contain;
                 }
-
+                @media(max-width:960px){
+                    .hale-'. self::$rnd_id .' {
+                        flex-direction: column;
+                    }
+                    .hale-'. self::$rnd_id .' .side-events {
+                        position: static;
+                    }
+                    .hale-'. self::$rnd_id .' .hale-img {
+                        max-width: 100%;
+                    }
+                }
                 @media(min-width:681px){
                     .hale-'. self::$rnd_id .' .hale_info .side-events {
                         position: absolute;

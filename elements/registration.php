@@ -1290,8 +1290,6 @@ class PWElementRegistration extends PWElements {
 
                 if (buttonSubmit) {
                     buttonSubmit.addEventListener("click", function (event) {
-                        event.preventDefault();
-
                         const emailValue = document.getElementsByClassName("ginput_container_email")[0].getElementsByTagName("input")[0].value;
 
                         let telValue;
