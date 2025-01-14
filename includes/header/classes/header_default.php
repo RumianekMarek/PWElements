@@ -202,7 +202,7 @@ $output .= '
                         </div>';
                     }
 
-                    $pwe_header_buttons_urldecode = urldecode($pwe_header_buttons);
+                    $pwe_header_buttons_urldecode = urldecode($pwe_header_buttons); 
                     $pwe_header_buttons_json = json_decode($pwe_header_buttons_urldecode, true);
                     if (is_array($pwe_header_buttons_json)) {
                         foreach ($pwe_header_buttons_json as $button) {

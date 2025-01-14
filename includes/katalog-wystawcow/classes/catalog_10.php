@@ -11,7 +11,7 @@ class PWECatalog10 extends PWECatalog {
 
     public static function output($atts, $identification) {
         
-        $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
+        $pwecatalog_display_random = isset($atts['pwecatalog_display_random1']) ? $atts['pwecatalog_display_random1'] : false;
         $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
         if ($exhibitors === null){
             return;
@@ -133,66 +133,38 @@ class PWECatalog10 extends PWECatalog {
         }
 
         $output .= '
-        <div id="top10" class="custom-catalog main-heading-text">'; 
+        <div id="top10" class="custom-catalog main-heading-text">
     
-            if (count($exhibitors) < 10) {
-                // $logo_file_path = get_locale() == 'pl_PL' ? '/doc/logo' : '/doc/logo-en';
-                // $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.webp') ? $logo_file_path . '.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . $logo_file_path . '.png') ? $logo_file_path . '.png' : '');
-                // $bg_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp') ? '/doc/header_mobile.webp' : (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.jpg') ? '/doc/header_mobile.jpg' : '');
-                // $output .= '
-                // <style>
-                //     .wpb_column:has(#top10) .exhibitors-catalog {
-                //         border: 0 !important;
-                //     }
-                //     #top10 .custom-catalog-bg {
-                //         background-position: center;
-                //         height: 100%;
-                //         display: flex;
-                //         justify-content: center;
-                //         align-items: center;
-                //         padding: 36px;
-                //         background-repeat: no-repeat;
-                //         background-size: cover;
-                //     }
-                // </style>
+            <h2 class="catalog-custom-title" style="width: fit-content;">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']) .'</h2>
+            <div class="img-container-top10">';
+                if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )) {
+                    $slider_array = array();
+                    foreach($exhibitors as $exhibitor){
+                        $slider_array[] = array(
+                            'img' => $exhibitor['URL_logo_wystawcy'],
+                            'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www'])
+                        );
+                    }      
+                    $images_options = array();
+                    $images_options[] = array(
+                        "element_id" => self::$rnd_id,
+                        "logotypes_dots_off" => $atts["slider_dots_off"]  
+                    );                           
+                    require_once plugin_dir_path(dirname(dirname(dirname( __FILE__ )))) . 'scripts/logotypes-slider.php';
+                    $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
 
-                // <div class="custom-catalog-bg" style="background-image: url('. $bg_url .');">
-                //     <img src="'. $logo_url .'" alt="logo-[trade_fair_name]">
-                // </div>';
-                $output .= '';
-            } else {
-                $output .= '
-                <h2 class="catalog-custom-title" style="width: fit-content;">'.CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']).'</h2>
-                <div class="img-container-top10">';
-                    if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )) {
-                        $slider_array = array();
-                        foreach($exhibitors as $exhibitor){
-                            $slider_array[] = array(
-                                'img' => $exhibitor['URL_logo_wystawcy'],
-                                'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www'])
-                            );
-                        }      
-                        $images_options = array();
-                        $images_options[] = array(
-                            "element_id" => self::$rnd_id,
-                            "logotypes_dots_off" => $atts["slider_dots_off"]  
-                        );                           
-                        require_once plugin_dir_path(dirname(dirname(dirname( __FILE__ )))) . 'scripts/logotypes-slider.php';
-                        $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
-    
-                    } else { 
-                        foreach ($exhibitors as $exhibitor){
-                            $exhibitorsUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www']);
-                            $output .= '
-                                <a target="_blank" href="'. $exhibitorsUrl .'">
-                                    <div class="cat-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
-                                </a>';
-                        }
+                } else { 
+                    foreach ($exhibitors as $exhibitor){
+                        $exhibitorsUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www']);
+                        $output .= '
+                            <a target="_blank" href="'. $exhibitorsUrl .'">
+                                <div class="cat-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
+                            </a>';
                     }
-                $output .= '
-                </div>';
-            }
-        $output .= '
+                }
+            $output .= '
+            </div> 
+              
         </div>';
 
         return $output;

@@ -55,6 +55,7 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_simple_conference' => '',
             'pwe_header_conference_link' => '',
             'pwe_header_conference_logo_url' => '',
+            'pwe_header_custom_title' => '',
             'pwe_header_bg_position' => '',
             'pwe_header_tickets_button_link' => '',
             'pwe_header_register_button_link' => '',
@@ -76,6 +77,12 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_center' => '',
             'pwe_header_without_bg' => '',
             'new_main_logotype' => '',
+            'pwe_header_counter' => '',
+            'pwe_header_partners_position' => '',
+            'pwe_header_partners_title' => '',
+            'pwe_header_partners_items' => '',
+            'pwe_header_partners_title_color' => '',
+            'pwe_header_partners_background_color' => '',
         ), $atts ));
 
         // Replace strings
@@ -183,7 +190,7 @@ class PWEHeader extends PWECommonFunctions {
             }
         </style>';
 
-        $output .= '<script>console.log("mobile == '. preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']) .' ('. $_SERVER['HTTP_USER_AGENT'].') (line 178)");</script>';
+        // $output .= '<script>console.log("mobile == '. preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']) .' ('. $_SERVER['HTTP_USER_AGENT'].') (line 178)");</script>';
 
         $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $base_url .= "://".$_SERVER['HTTP_HOST'];
@@ -192,14 +199,14 @@ class PWEHeader extends PWECommonFunctions {
         $trade_fair_date = (self::lang_pl()) ? '[trade_fair_date]' : '[trade_fair_date_eng]';
 
         if ($pwe_header_modes == "simple_mode" &&  $pwe_header_simple_conference == true) {
-            $trade_fair_desc = get_the_title();
+            $trade_fair_desc = !empty($pwe_header_custom_title) ? $pwe_header_custom_title : get_the_title();
             if($pwe_header_logo_color != 'true') {
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres.webp') ? '/doc/kongres.webp' : "/doc/logo.webp";
             } else {
                 $logo_url = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/kongres-color.webp') ? '/doc/kongres-color.webp' : '/doc/kongres.webp';
             }
         } else {
-            $trade_fair_desc = (self::lang_pl()) ? '[trade_fair_desc]' : '[trade_fair_desc_eng]';
+            $trade_fair_desc = !empty($pwe_header_custom_title) ? $pwe_header_custom_title : ((self::lang_pl()) ? '[trade_fair_desc]' : '[trade_fair_desc_eng]');
             if($pwe_header_logo_color != 'true') {
                 if (self::lang_pl()) {
                     $logo_url = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/logo.webp') ? '/doc/logo.webp' : '/doc/logo.png');

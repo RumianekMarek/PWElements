@@ -180,34 +180,34 @@ class PWEProfileThreeCols extends PWEProfile {
         $output = '
 <style>
     /* Color */
-    #column-profile_scope {
+    #PWEProfileThreeCols #column-profile_scope {
         background-color: '. $profile_color_scope_custom .';
         border:2px solid '. $profile_color_scope_custom .';
     }
 
-    #column-profile_exhibitors {
+    #PWEProfileThreeCols #column-profile_exhibitors {
         background-color: '. $profile_color_exhibitor_custom .';
         border:2px solid '. $profile_color_exhibitor_custom .';
     }
 
-    #column-profile_visitors {
+    #PWEProfileThreeCols #column-profile_visitors {
         background-color:'. $profile_color_visitor_custom .';
         border:2px solid '. $profile_color_visitor_custom .';
     }
-    .column.large {
+    #PWEProfileThreeCols .column.large {
         background-color: white !important;
     }
-    .small h2 {
+    #PWEProfileThreeCols .small h2 {
         color:white;
     }
-    .container {
+    #PWEProfileThreeCols .container {
         display: grid;
         grid-template-columns: 80% 10% 10%;
         height: 450px;
         transition: grid-template-columns 0.5s ease;
     }
 
-    .column {
+    #PWEProfileThreeCols .column {
         background-color: #f0f0f0;
         border: 2px solid #ccc;
         display: flex;
@@ -220,11 +220,11 @@ class PWEProfileThreeCols extends PWEProfile {
         position: relative;
     }
 
-    .column:hover {
+    #PWEProfileThreeCols .column:hover {
         background-color: #e0e0e0;
     }
 
-    .content {
+    #PWEProfileThreeCols .content {
         transition: transform 0.5s ease;
         display: flex;
         align-items: center;
@@ -234,68 +234,104 @@ class PWEProfileThreeCols extends PWEProfile {
         flex-direction: column;
     }
 
-    .column h2 {
+    #PWEProfileThreeCols .column h2 {
         font-size: 1.5rem;
         margin: 20px 0;
         white-space: nowrap;
         transition: transform 0.5s ease;
     }
 
-    .column.small h2 {
+    #PWEProfileThreeCols .column.small h2 {
         transform: rotate(-90deg);
     }
 
-    .column.large h2 {
+    #PWEProfileThreeCols .column.large h2 {
         transform: rotate(0);
     }
 
     /* Kontener na treść wewnątrz kolumny */
-    .profile-content {
+    #PWEProfileThreeCols .profile-content {
         display: none;
         width: 100%;
         padding: 20px;
         opacity: 0;
         transition: opacity 1s ease;
     }
-    .profile-content.opacity-1 {
+    #PWEProfileThreeCols .profile-content.opacity-1 {
         opacity: 1;
     }
 
-    .column.large .profile-content {
+    #PWEProfileThreeCols .column.large .profile-content {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         gap:10px;
     }
 
-    .profile-content-element {
+    #PWEProfileThreeCols .profile-content-element {
         width: 30%;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    .profile-content-element img {
+    #PWEProfileThreeCols .profile-content-element img {
         max-width:80px;
     }
-    .profile-content-element p {
+    #PWEProfileThreeCols .profile-content-element p {
         line-height: 1.2;
         margin-top: 0px;
     }
-    .profile-threecols h2 {
+    #PWEProfileThreeCols .profile-threecols h2 {
         text-transform: uppercase !important;;
     }
-    .profile-content-element p {
+    #PWEProfileThreeCols .profile-content-element p {
         text-transform: uppercase;
         font-weight: 500;
         padding-top: 8px;
     }
     @media(max-width: 450px) {
-        .profile-threecols h2 {
+        #PWEProfileThreeCols .profile-threecols h2 {
             font-size: 16px !important;
         }
-        .profile-content-element p {
+        #PWEProfileThreeCols .profile-content-element p {
             padding-top:4px;
+        }
+    }
+    @media(max-width:620px){
+        #PWEProfileThreeCols {
+            display: flex;
+            justify-content: center;
+            margin: 0px auto;
+            min-height: 850px;
+            align-items: center;
+        }
+        #PWEProfileThreeCols .container {
+            transform: rotate(90deg);
+            min-width: 700px;
+            min-height: 370px;
+            height: 370px;
+        }
+        #PWEProfileThreeCols .content {
+            transform: rotate(-90deg);
+        }
+        #PWEProfileThreeCols  .profile-content {
+            gap: 0px !important;
+            padding: 5px;
+        }
+        #PWEProfileThreeCols .column.large .profile-content {
+            justify-content: center;
+        }
+        #PWEProfileThreeCols .profile-content-element {
+            width: 185px;
+        }
+        #PWEProfileThreeCols .profile-content-element p {
+            max-width: 90%;
+            margin: 0 auto;
+            font-size: 10px;
+        }
+        #PWEProfileThreeCols .column.small h2 {
+            transform: none;
         }
     }
     @media(max-width:960px){

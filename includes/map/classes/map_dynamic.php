@@ -50,6 +50,20 @@ class PWEMapDynamic extends PWEMap {
 
         $map_more_logotypes = (isset($atts['map_more_logotypes'])) ? explode(';', $atts['map_more_logotypes']) : '';
 
+        if (!empty($map_number_visitors_previous) || !empty($map_number_exhibitors_previous) || !empty($map_exhibition_space_previous)) {
+            $max_visitors = max($map_number_visitors, $map_number_visitors_previous);
+            $map_number_visitors_percentage = ($map_number_visitors / $max_visitors) * 100;
+            $map_number_visitors_previous_percentage = ($map_number_visitors_previous / $max_visitors) * 100;
+            
+            $max_exhibitors = max($map_number_exhibitors, $map_number_exhibitors_previous);
+            $map_number_exhibitors_percentage = ($map_number_exhibitors / $max_exhibitors) * 100;
+            $map_number_exhibitors_previous_percentage = ($map_number_exhibitors_previous / $max_exhibitors) * 100;
+            
+            $max_exhibition_space = max($map_exhibition_space, $map_exhibition_space_previous);
+            $map_exhibition_space_percentage = ($map_exhibition_space / $max_exhibition_space) * 100;
+            $map_exhibition_space_previous_percentage = ($map_exhibition_space_previous / $max_exhibition_space) * 100;
+        }
+
         // CSS <----------------------------------------------------------------------------------------------<
         require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 

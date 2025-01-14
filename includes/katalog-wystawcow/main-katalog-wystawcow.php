@@ -15,7 +15,7 @@ class PWECatalog {
         self::$rnd_id = rand(10000, 99999);
         self::$fair_colors = PWECommonFunctions::findPalletColorsStatic();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
-        
+
         foreach(self::$fair_colors as $color_key => $color_value){
             if(strpos($color_key, 'main2') != false){
                 self::$main2_color = $color_value;
@@ -26,7 +26,7 @@ class PWECatalog {
 
         add_shortcode('pwe_katalog', array($this, 'PWECatalogOutput'));
     }
-    
+
     public function catalogFunctions() {
         require_once plugin_dir_path(__FILE__) . 'classes/catalog_functions.php';
     }
@@ -64,7 +64,6 @@ class PWECatalog {
         $btn_shadow_color = PWECommonFunctions::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important';
         $btn_border = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
 
-        $pwe_catalog_random = 
         // pwe_katalog output
         extract( shortcode_atts( array(
             'format' => '',
@@ -81,21 +80,21 @@ class PWECatalog {
         }
 
         $slider_path = dirname(plugin_dir_path(__FILE__)) . '/scripts/slider.php';
-        
+
         if (file_exists($slider_path)){
             include_once $slider_path;
-        }        
+        }
 
         if (!empty($atts['identification'])) {
-            $identification = $atts['identification']; 
+            $identification = $atts['identification'];
         } else {
             $identification = do_shortcode('[trade_fair_catalog]');
         }
         $catalog_format = CatalogFunctions::findClassElements()[$format];
-        
+
         if ($catalog_format){
             require_once plugin_dir_path(__FILE__) . $catalog_format;
-            
+
             if (class_exists($format) && $identification) {
                 $output_class = new $format;
                 $output = $output_class->output($atts, $identification, $content);
@@ -117,12 +116,12 @@ class PWECatalog {
                 return '<style>.row-container:has(.catalog-not-found-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-found-' . self::$rnd_id . '"></div>';
             }
         }
-        
+
         if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
             if (isset($_SERVER['argv'][0])) {
                 $source_utm = $_SERVER['argv'][0];
             } else {
-                $source_utm = ''; 
+                $source_utm = '';
             }
 
             $current_page = $_SERVER['REQUEST_URI'];
@@ -137,7 +136,7 @@ class PWECatalog {
                         background-position: center;
                         background-size: cover;
                         padding: 0;
-                    } 
+                    }
                     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .'):before {
                         content: "";
                         position: absolute;
@@ -169,7 +168,10 @@ class PWECatalog {
                         background-position: center;
                         background-size: cover;
                         padding: 0;
-                    } 
+                    }
+                    #katalog-'. self::$rnd_id .' #top10 {
+                        display: none;
+                    }
                     #katalog-'. self::$rnd_id .':before {
                         content: "";
                         position: absolute;
@@ -191,8 +193,8 @@ class PWECatalog {
                 <style>
                     .row-container:has(.pwe-registration) .wpb_column:has(#katalog-'. self::$rnd_id .') {
                         display: none !important;
-                    } 
-                </style>'; 
+                    }
+                </style>';
             }
         }
 

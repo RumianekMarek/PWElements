@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class CatalogFunctions {
 
@@ -20,17 +20,17 @@ class CatalogFunctions {
 
     /**
      * Get logos for catalog
-     * 
+     *
      * @param string $katalog_id fair id for api.
      * @param string $katalog_format format of display.
      * @return array
      */
-    public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull', $pwe_catalog_random = false){
+    public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull', $pwe_catalog_random = false, $catalog_display_duplicate = false){
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
         $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id;
-        
+
         if ( current_user_can( 'administrator' ) ) {
             echo '<script>console.log("'.$canUrl.'")</script>';
         }
@@ -41,8 +41,11 @@ class CatalogFunctions {
         $basic_wystawcy = reset($data)['Wystawcy'];
         $logos_array = array();
 
+
+
         if($basic_wystawcy != '') {
-            $basic_wystawcy = array_reduce($basic_wystawcy, function($acc, $curr) {
+            if(!$catalog_display_duplicate){
+                $basic_wystawcy = array_reduce($basic_wystawcy, function($acc, $curr) {
                 $name = $curr['Nazwa_wystawcy'];
                 $existingIndex = array_search($name, array_column($acc, 'Nazwa_wystawcy'));
                 if ($existingIndex === false) {
@@ -53,7 +56,8 @@ class CatalogFunctions {
                     }
                 }
                 return $acc;
-            }, []);            
+                }, []);
+            }
         } else {
             $basic_wystawcy = [];
         }
@@ -122,36 +126,15 @@ class CatalogFunctions {
     // public static function initElements() {
     // }
     public static function checkTitle($title, $format) {
-        
+
         if (substr($title, 0, 2) === "``") {
             $exhibitors_title = substr($title, 2, -2);
         } elseif($format == 'PWECatalogFull'){
-            $exhibitors_title = PWECommonFunctions::languageChecker(
-                <<<PL
-                    Katalog wystawców 
-                PL,
-                <<<EN
-                    Exhibitor Catalog 
-                EN
-            ) . $title;
+            $exhibitors_title = PWECommonFunctions::languageChecker('Katalog wystawców ','Exhibitor Catalog ') . $title;
         } elseif ($format == 'PWECatalog21' || $format == 'PWECatalog10'){
-            $exhibitors_title = PWECommonFunctions::languageChecker(
-                <<<PL
-                    Wystawcy 
-                PL,
-                <<<EN
-                    Exhibitors 
-                EN
-            ) . (($title) ? $title : do_shortcode('[trade_fair_catalog_year]'));
+            $exhibitors_title = PWECommonFunctions::languageChecker('Wystawcy ','Exhibitors ') . (($title) ? $title : do_shortcode('[trade_fair_catalog_year]'));
         } elseif ($format == 'PWECatalog7'){
-            $exhibitors_title = PWECommonFunctions::languageChecker(
-                <<<PL
-                    Nowi wystawcy na targach 
-                PL,
-                <<<EN
-                    New exhibitors at the fair 
-                EN
-            ) . $title;
+            $exhibitors_title = PWECommonFunctions::languageChecker('Nowi wystawcy na targach ','New exhibitors at the fair ') . $title;
         }
         return $exhibitors_title;
     }
@@ -261,7 +244,7 @@ function initVCMapPWECatalog() {
                     'description' => __('Write hex number for text shadow color for the element.', 'pwe_katalog'),
                     'value' => '',
                     'save_always' => true,
-                ),                        
+                ),
                 array(
                     'type' => 'dropdown',
                     'heading' => __('Select button color <a href="#" onclick="yourFunction(`btn_color_manual_hidden`, `btn_color`)">Hex</a>', 'pwe_katalog'),
@@ -396,16 +379,40 @@ function initVCMapPWECatalog() {
                     'admin_label' => true,
                     'save_always' => true,
                     'value' => array(__('True', 'pwe_katalog') => 'true',),
-                ), 
+                ),
                 array(
                     'type' => 'checkbox',
                     'heading' => __('Randomise katalog', 'pwe_katalog'),
-                    'param_name' => 'pwecatalog_display_random',
+                    'param_name' => 'pwecatalog_display_random1',
                     'description' => __('Check if you want to display exhibitors randome.', 'pwe_katalog'),
                     'admin_label' => true,
                     'save_always' => true,
                     'value' => array(__('True', 'pwe_katalog') => 'true',),
-                ),  
+                ),
+                array(
+                    'type' => 'checkbox',
+                    'heading' => __('Show duplicate exhibitor', 'pwe_katalog'),
+                    'param_name' => 'catalog_display_duplicate',
+                    'description' => __('Check if you want to show exhibitors duplicate.', 'pwe_katalog'),
+                    'admin_label' => true,
+                    'save_always' => true,
+                    'value' => array(__('True', 'pwe_katalog') => 'true',),
+                ),
+                array(
+                    'type' => 'checkbox',
+                    'heading' => __('Items shadow', 'pwe_logotypes'),
+                    'param_name' => 'catalog_items_shadow',
+                    'description' => __('2px 2px 12px #cccccc', 'pwe_logotypes'),
+                    'admin_label' => true,
+                    'save_always' => true,
+                    'value' => array(__('True', 'pwe_logotypes') => 'true',),
+                ),
+                array(
+                    'type' => 'textfield',
+                    'heading' => __('Custom css of items', 'pwe_logotypes'),
+                    'param_name' => 'catalog_items_custom_style',
+                    'save_always' => true,
+                ),
             ),
         ));
     }

@@ -1,9 +1,20 @@
 <?php
 
 class PWElementAdditionalLogotypes {
-    
+
     public static function additionalArray() {
         return array(
+            array(
+                'type' => 'dropdown',
+                'group' => 'PWE Element',
+                'heading' => __('Layout', 'pwe_logotypes'),
+                'param_name' => 'logotypes_layout',
+                'save_always' => true,
+                'value' => array(
+                    'Flex' => 'flex',
+                    'Grid' => 'grid',
+                ),
+            ),
             array(
                 'type' => 'textfield',
                 'group' => 'Aditional options',
@@ -15,9 +26,34 @@ class PWElementAdditionalLogotypes {
             array(
                 'type' => 'textfield',
                 'group' => 'Aditional options',
-                'heading' => __('Min width logotypes', 'pwe_logotypes'),
+                'heading' => __('Min width logotypes (flex only)', 'pwe_logotypes'),
                 'param_name' => 'logotypes_min_width_logo',
-                'description' => __('Default min width for grid 140px', 'pwe_logotypes'),
+                'description' => __('Default min width for flex 140px', 'pwe_logotypes'),
+                'save_always' => true,
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'Aditional options',
+                'heading' => __('Number of logotypes in slider', 'pwe_logotypes'),
+                'param_name' => 'slides_to_show',
+                'description' => __('Default 7', 'pwe_logotypes'),
+                'save_always' => true,
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'Aditional options',
+                'heading' => __('Items shadow', 'pwe_logotypes'),
+                'param_name' => 'logotypes_items_shadow',
+                'description' => __('2px 2px 12px #cccccc', 'pwe_logotypes'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_logotypes') => 'true',),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'Aditional options',
+                'heading' => __('Custom css of items', 'pwe_logotypes'),
+                'param_name' => 'logotypes_items_custom_style',
                 'save_always' => true,
             ),
             array(
@@ -49,7 +85,7 @@ class PWElementAdditionalLogotypes {
                 'admin_label' => true,
                 'save_always' => true,
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
-            ), 
+            ),
             array(
                 'type' => 'checkbox',
                 'group' => 'Aditional options',
@@ -59,17 +95,17 @@ class PWElementAdditionalLogotypes {
                 'admin_label' => true,
                 'save_always' => true,
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
-            ), 
+            ),
             array(
                 'type' => 'checkbox',
                 'group' => 'Aditional options',
                 'heading' => __('Randomise logotypes', 'pwe_logotypes'),
-                'param_name' => 'logotypes_display_random',
+                'param_name' => 'logotypes_display_random1',
                 'description' => __('Check if you want to display logotypes random.', 'pwe_logotypes'),
                 'admin_label' => true,
                 'save_always' => true,
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
-            ),  
+            ),
             array(
                 'type' => 'param_group',
                 'group' => 'Links',
@@ -112,7 +148,7 @@ class PWElementAdditionalLogotypes {
                 ),
             ),
         );
-    } 
+    }
 
     public static function additionalOutput($atts, $el_id, $logotypes = null, $exhibitors_logotypes = null) {
 
@@ -121,6 +157,7 @@ class PWElementAdditionalLogotypes {
         extract( shortcode_atts( array(
             'logotypes_media' => '',
             'logotypes_catalog' => '',
+            'logotypes_layout' => '',
             'logotypes_title' => '',
             'logotypes_name' => '',
             'logotypes_exhibitors_on' => '',
@@ -131,52 +168,59 @@ class PWElementAdditionalLogotypes {
             'logotypes_slider_desktop' => '',
             'logotypes_grid_mobile' => '',
             'logotypes_dots_off' => '',
-            'logotypes_display_random' => '',
+            'logotypes_display_random1' => '',
             'logotypes_slider_logo_white' => '',
             'logotypes_slider_logo_color' => '',
+            'logotypes_items_shadow' => '',
+            'logotypes_items_custom_style' => '',
             'logotypes_files' => '',
-            'pwe_header_logotypes' => '', 
-            'conf_logotypes_catalog' => '',   
-        ), $atts )); 
- 
+            'pwe_header_logotypes' => '',
+            'conf_logotypes_catalog' => '',
+            'slides_to_show' => '',
+        ), $atts ));
+
         if ($logotypes_position_title == ''){
             $logotypes_position_title = 'left';
-        } 
+        }
 
         $output = '';
 
         if ($logotypes_media != '' || $logotypes_catalog != '' || !empty($pwe_header_logotypes) || !empty($conf_logotypes_catalog)){
 
-            $logotypes_default_width = $mobile == 1 ? '120px' : '140px';
+            $logotypes_default_width = $mobile == 1 ? '80px' : '140px';
             $logotypes_min_width_logo = !empty($logotypes_min_width_logo) ? $logotypes_min_width_logo : $logotypes_default_width;
+            $slides_to_show = !empty($slides_to_show) ? $slides_to_show : 7;
+            $logotypes_items_shadow = $logotypes_items_shadow == true ? '2px 2px 12px #cccccc' : 'none';
+            $slider_class = ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) ? 'pwe-slides' : '';
 
             $output .= '
             <style>
-                .pwe-container-logotypes-gallery {
+                .pwelement_'. $el_id .' .pwe-container-logotypes-gallery {
                     z-index: 1;
                 }
-                .pwe-logotypes-gallery-wrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-wrap: wrap;
-                    gap: 10px;
-                    margin-top: 18px;
+                .pwelement_'. $el_id .' .pwe-logo-item-container {
+                    box-shadow: '. $logotypes_items_shadow .';
+                    '. ($logotypes_items_shadow !== 'none' ? 'background-color: white;' : '') .'
+                    border-radius: 10px;
+                    overflow: hidden;
+                    padding: 5px;
+                    '. ($logotypes_items_shadow !== 'none' ? 'padding: 10px 0;' : '') .'
+                    background-color: white !important;
+                    '. ($logotypes_items_shadow !== 'none' ? 'min-width: 200px;' : '') .'
                 }
-                .pwe-logo-item-container {
+                .pwelement_'. $el_id .' .pwe-logo-item {
+                    max-width: '. $logotypes_min_width_logo .';
+                    '. ($logotypes_items_shadow !== 'none' ? 'max-width: 100px;' : $logotypes_min_width_logo) .'
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    padding: 5px;
+                    margin: 0 auto;
                 }
-                .pwelement_'. $el_id .' .pwe-logo-item,
-                .pwe-conferences .pwe-logo-item {
-                    max-width: '. $logotypes_min_width_logo .';
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    aspect-ratio: 3/2; 
+                .pwelement_'. $el_id .' .pwe-logo-item p {
+                    margin: 8px 0 0;
+                    font-size: 14px;
+                    font-weight: 500;
                 }
                 .pwelement_'. $el_id .' .slick-slide .pwe-logo-item {
                     max-width: 100%;
@@ -207,7 +251,7 @@ class PWElementAdditionalLogotypes {
                 .pwe-color-logotypes div[style*="background-image"] {
                     filter: none !important;
                 }
-                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title { 
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title {
                     justify-content: center;
                 }
 
@@ -221,8 +265,79 @@ class PWElementAdditionalLogotypes {
                     line-height: 1.1 !important;
                     margin: 5px;
                 }
+
+                @media(max-width:920px){
+                    .pwelement_'. $el_id .' .pwe-logo-item-container {
+                        '. ($logotypes_items_shadow !== 'none' ? 'min-width: 135px;' : '') .'
+                    }
+                }
+                @media(max-width:620px){
+                    .pwelement_'. $el_id .' .pwe-logo-item-container {
+                    '. ($logotypes_items_shadow !== 'none' ? 'max-width: 22% !important;' : '') .'
+                    '. ($logotypes_items_shadow !== 'none' ? 'min-width: 22% !important;' : '') .'
+                    '. ($logotypes_items_shadow !== 'none' ? 'padding: 5px !important;' : '') .'
+                    }
+                    .pwelement_'. $el_id .' .pwe-logo-item-container p {
+                    '. ($logotypes_items_shadow !== 'none' ? 'font-size: 9px !important;' : '') .'
+                    '. ($logotypes_items_shadow !== 'none' ? 'font-weight: 600 !important;' : '') .'
+                    }
+                }
             </style>';
-            
+
+            if ($slider_class !== 'pwe-slides') {
+
+                if ($logotypes_layout == "" || $logotypes_layout == "flex") {
+                    $output .= '
+                    <style>
+                    .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        gap: 10px;
+                        margin-top: 18px;
+                    }
+                    </style>';
+                } else {
+                    $output .= '
+                    <style>
+                    .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
+                        display: grid;
+                        grid-template-columns: repeat(6, 1fr);
+                        gap: 16px;
+                    }
+                    @media(max-width: 960px) {
+                        .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
+                            grid-template-columns: repeat(5, 1fr);
+                            gap: 16px;
+                        }
+                        .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper .pwe-logo-item {
+                            margin: 0;
+                            min-width: 100%;
+                        }
+                    }
+    
+                    @media(max-width: 550px) {
+                        .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 10px !important;
+                        }
+                    }
+                    @media(max-width: 450px) {
+                        .pwelement_'. $el_id .' .pwe-logo-item-container p {
+                            font-size: 10px;
+                        }
+                    }
+                    @media(max-width: 380px) {
+                        .pwelement_'. $el_id .' .pwe-logo-item-container p {
+                            font-size: 8px;
+                        }
+                    }
+                    </style>';
+                }
+
+            }
+
             $pwe_header_logotypes_urldecode = urldecode($pwe_header_logotypes);
             $pwe_header_logotypes_json = json_decode($pwe_header_logotypes_urldecode, true);
             $header_logotypes_media_urls = [];
@@ -248,14 +363,14 @@ class PWElementAdditionalLogotypes {
                         $header_logotypes_slider_off = $logotypes_item["logotypes_slider_off"];
                         $header_logotypes_caption_on = $logotypes_item["logotypes_caption_on"];
                         $header_logotypes_items_width = $logotypes_item["logotypes_items_width"];
-                    }   
-                    $header_logotypes_media_ids = explode(',', $header_logotypes_media);  
+                    }
+                    $header_logotypes_media_ids = explode(',', $header_logotypes_media);
                 }
             }
-    
+
             if (isset($header_logotypes_media_ids)) {
                 foreach ($header_logotypes_media_ids as $id) {
-                    $url = wp_get_attachment_url($id); 
+                    $url = wp_get_attachment_url($id);
                     if ($url) {
                         $header_logotypes_media_urls[] = $url;
                     }
@@ -265,29 +380,31 @@ class PWElementAdditionalLogotypes {
             $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
             $domain = $_SERVER['HTTP_HOST'];
             $server_url = ($is_https ? 'https://' : 'http://') . $domain;
-    
+
             $unique_id = rand(10000, 99999);
             $element_unique_id = 'pweLogotypes-' . $unique_id;
 
             if (!empty($conf_logotypes_catalog)) {
                 $logotypes_catalog = $conf_logotypes_catalog;
             }
-            
+
             if (!empty($pwe_header_logotypes)) {
                 $logotypes_catalog = $header_logotypes_url;
                 $logotypes_title = $header_logotypes_title;
                 $logotypes_name = $header_logotypes_name;
             }
-            
+
             $files = [];
-            
+
             if ($logotypes_catalog == "partnerzy obiektu") {
                 $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/partnerzy-obiektu/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
+            } else if ($logotypes_catalog == "wspierają nas") {
+                $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/wspieraja-nas/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
             } else if (($logotypes_catalog == "" && $logotypes_media == "") && $header_logotypes_media_urls !== "") {
                 $files = $header_logotypes_media_urls;
             } else {
                 $logotypes_media = explode(',', $logotypes_media);
-                
+
                 // Add media URLs if they exist
                 if (!empty($logotypes_media)) {
                     foreach ($logotypes_media as $image_id) {
@@ -297,9 +414,9 @@ class PWElementAdditionalLogotypes {
                         }
                     }
                 }
-            
+
                 // Processing logotypes_catalog
-                if (!empty($logotypes_catalog)) { 
+                if (!empty($logotypes_catalog)) {
                     // Sprawdzenie, czy "catalog" już istnieje w $logotypes_catalog
                     $logotypes_catalog = trim($logotypes_catalog, ','); // Usuwamy ewentualne nadmiarowe przecinki
 
@@ -378,14 +495,14 @@ class PWElementAdditionalLogotypes {
                     }
                 }
 
-            }     
-            
+            }
+
             if (count($files) > 0) {
 
-                if($logotypes_display_random){
+                if($logotypes_display_random1){
                     shuffle($files);
                 }
-    
+
                 // Calculate width for header logotypes
                 if (isset($header_logotypes_width) && $header_logotypes_width . '%' !== '%') {
                     if ($header_logotypes_width >= 70 && $header_logotypes_width < 100) {
@@ -394,12 +511,12 @@ class PWElementAdditionalLogotypes {
                         $header_logotypes_width  -= 2;
                     } else if ($header_logotypes_width >= 30 && $header_logotypes_width < 50) {
                         $header_logotypes_width  -= 1;
-                    } 
+                    }
                     $output .= '<style>
                                     #'.$element_unique_id .' {
                                         width: '.$header_logotypes_width.'%;
                                     }
-                                </style>';   
+                                </style>';
                 }
 
                 if (empty($logotypes_title)) {
@@ -407,16 +524,16 @@ class PWElementAdditionalLogotypes {
                                     #'. $element_unique_id .' .pwe-logotypes-title {
                                         display: none !important;
                                     }
-                                </style>';            
+                                </style>';
                 }
-        
-                $slider_class = ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) ? 'pwe-slides' : ''; 
 
                 $output .= '
                 <div id="'. $element_unique_id .'" class="pwe-container-logotypes-gallery">
-                    <div class="pwe-logotypes-title main-heading-text">
+                    <div class="pwe-logotypes-title main-heading-text">';
+                    $logotypes_title = str_replace(array('`{`', '`}`'), array('[', ']'), $logotypes_title);
+                    $output .= '
                         <h4 class="pwe-uppercase"><span>'. $logotypes_title .'</span></h4>
-                    </div> 
+                    </div>
                     <div class="'. $slider_class .' pwe-logotypes-gallery-wrapper'; $output .= ($logotypes_slider_logo_white == "true") ? ' pwe-white-logotypes' : '';
                                                                 $output .= ($logotypes_slider_logo_color == "true") ? ' pwe-color-logotypes' : '';
                                                                 $output .= (isset($logotypes_slider_full_width) && $logotypes_slider_full_width == "true") ? ' pwe-full-width' : '';
@@ -428,9 +545,9 @@ class PWElementAdditionalLogotypes {
                     // Search all files and generate their URL paths
                     foreach ($files as $index => $file) {
                         $short_path = '';
-                        
+
                         // Deciding on the path structure depending on the directory
-                        if ($logotypes_catalog == "partnerzy obiektu") {
+                        if ($logotypes_catalog == "partnerzy obiektu" || $logotypes_catalog == "wspierają nas") {
                             $short_path = substr($file, strpos($file, '/wp-content/'));
                         } else {
                             $short_path = substr($file, strpos($file, '/doc/'));
@@ -472,13 +589,13 @@ class PWElementAdditionalLogotypes {
                                 $style = ($logotype["logotype_style"] === "") ? '' : $logotype["logotype_style"];
                                 $target_blank = (strpos($site, 'http') !== false) ? 'target="_blank"' : '';
                                 break;
-                            }   
+                            }
                         }
 
                         // Add the HTTPS protocol if it is not included in the link
                         if (!empty($site) && !preg_match("~^(?:f|ht)tps?://~i", $site) && (strpos($site, 'http') !== false)) {
                             $site = "https://" . $site;
-                        }    
+                        }
 
                         // Extract folder name from the path
                         $folder_name = basename(dirname($image));
@@ -530,7 +647,7 @@ class PWElementAdditionalLogotypes {
 
                     // Output logotypes
                     if (count($updated_images_url) > 0) {
-                        foreach ($updated_images_url as $url) { 
+                        foreach ($updated_images_url as $url) {
 
                             if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
                                 if (get_locale() == 'pl_PL') {
@@ -544,7 +661,7 @@ class PWElementAdditionalLogotypes {
                                         } else {
                                             $logo_caption_text = '<p>' . $url["folder_name"] . '</p>'; // When folder_name is one word
                                         }
-                                    }              
+                                    }
                                 } else {
                                     if (strpos($url["img"], 'expoplanner.com') !== false) {
                                         $logo_caption_text = '<p>Exhibitor</p>';
@@ -569,41 +686,43 @@ class PWElementAdditionalLogotypes {
                             if (!empty($image)) {
                                 if (!empty($url["site"])) {
                                     $output .= '
-                                    <a '. $target_blank .' href="'. $url["site"] .'"><div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                        <img src="' . $url["img"] . '"/>
-                                        '. $logo_caption_text .'</div>
+                                    <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
+                                        <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
+                                            <img data-no-lazy="1" src="' . $url["img"] . '"/>
+                                            '. $logo_caption_text .'
+                                        </div>
                                     </a>';
                                 } else  {
                                     $output .= '
-                                    <div class="pwe-logo-item-container">
+                                    <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
                                         <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                            <img src="' . $url["img"] . '"/>  
+                                            <img data-no-lazy="1" src="' . $url["img"] . '"/>
+                                            '. $logo_caption_text .'
                                         </div>
-                                        '. $logo_caption_text .'
                                     </div>';
                                 }
-                            } 
+                            }
                         }
                     }
-                                         
+
                     $output .= '
                     </div>
                 </div>';
 
                 if ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) {
-                    $slides_to_show = 7;
+
                     $opinions_dots_display = $logotypes_dots_off != true ? 'true' : '';
 
                     include_once plugin_dir_path(dirname(dirname(__DIR__))) . 'scripts/slider.php';
                     $output .= PWESliderScripts::sliderScripts('logotypes', '#'. $element_unique_id, $opinions_dots_display, $opinions_arrows_display = false, $slides_to_show);
                 }
-            
+
             }
         }
-        
+
         return $output;
     }
-    
+
 }
 
 ?>

@@ -43,6 +43,7 @@ class PWEProfile extends PWECommonFunctions {
         require_once plugin_dir_path(__FILE__) . 'classes/profile-single.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-three-cols.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-buttons.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/profile-cards.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -67,6 +68,7 @@ class PWEProfile extends PWECommonFunctions {
                                 'Single' => 'PWEProfileSingle',
                                 'Three columns' => 'PWEProfileThreeCols',
                                 'Buttons' => 'PWEProfileButtons',
+                                'Cards' => 'PWEProfileCards',
                             ),
                             'std' => 'PWEProfileAllInOne',
                         ),
@@ -143,6 +145,7 @@ class PWEProfile extends PWECommonFunctions {
                         ...PWEProfileSingle::initElements(),
                         ...PWEProfileThreeCols::initElements(),
                         ...PWEProfileButtons::initElements(),
+                        ...PWEProfileCards::initElements(),
                     ),
                 ),
             ));
@@ -163,6 +166,7 @@ class PWEProfile extends PWECommonFunctions {
             'PWEProfileSingle'    => 'classes/profile-single.php',
             'PWEProfileThreeCols' => 'classes/profile-three-cols.php',
             'PWEProfileButtons'   => 'classes/profile-buttons.php',
+            'PWEProfileCards'     => 'classes/profile-cards.php',
         );
     }
 
@@ -210,12 +214,15 @@ class PWEProfile extends PWECommonFunctions {
         } else if ($profile_type == 'PWEProfileButtons') {
             $profile_el_id = 'PWEProfileButtons';
             $profile_el_class = 'profile-buttons';
+        } else if ($profile_type == 'PWEProfileCards') {
+            $profile_el_id = 'PWEProfileCards';
+            $profile_el_class = 'profile-cards';
         } else {
             $profile_el_id = 'ProfileSingle'. self::$rnd_id;
             $profile_el_class = 'profile-single-'. self::$rnd_id;
         }
 
-        $output_html = '<div id="'. $profile_el_id .'" class="'. $profile_el_class .'">' . $output . '</div>';
+        $output_html = '<div id="'. $profile_el_id .'" class="'. $profile_el_class .' '. $profile_el_class . '-' . self::$rnd_id . '">' . $output . '</div>';
 
         return $output_html;
     }

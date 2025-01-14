@@ -26,11 +26,13 @@ class PWECatalogFull extends PWECatalog {
         $btn_border = PWECommonFunctions::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color);
 
         $divContainerExhibitors = '';
-        
-        $darker_btn_color = PWECommonFunctions::adjustBrightness($btn_color, -20);
 
-        $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
-        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
+        $darker_btn_color = PWECommonFunctions::adjustBrightness($btn_color, -20);
+        $catalog_display_duplicate = isset($atts['catalog_display_duplicate']) ? $atts['catalog_display_duplicate'] : false;
+        $pwecatalog_display_random = isset($atts['pwecatalog_display_random1']) ? $atts['pwecatalog_display_random1'] : false;
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random, $catalog_display_duplicate);
+
+
         if ($exhibitors === null){
             return;
         }
@@ -38,7 +40,7 @@ class PWECatalogFull extends PWECatalog {
         $output = '';
 
         $bg_link = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/background.webp') ? '/doc/background.webp' : '/doc/background.jpg';
-        
+
         $output .= '
             <style>
                 #katalog-'. self::$rnd_id .' .pwe-text-color {
@@ -76,7 +78,7 @@ class PWECatalogFull extends PWECatalog {
                 }
                 @media (min-width:960px) {
                     #katalog-'. self::$rnd_id .' #full {
-                        margin-left: 36px 
+                        margin-left: 36px
                     }
                 }
             </style>
@@ -90,7 +92,7 @@ class PWECatalogFull extends PWECatalog {
                         </div>
                         <input id="search" placeholder="'. PWECommonFunctions::languageChecker('Szukaj', 'Search') .'"/>
                     </div>
-                    
+
                     <div class="exhibitors__container">';
                         //WYSTAWCY
                         foreach ($exhibitors as $exhibitor) {
@@ -99,7 +101,7 @@ class PWECatalogFull extends PWECatalog {
                                 $logoUrl = str_replace([' ', '(', ')'], ['%20', '%28', '%29'], $exhibitor['URL_logo_wystawcy']);
                                 $singleExhibitor .= '<div class="exhibitors__container-list-img" style="background-image: url(' . $logoUrl . ')"></div>';
                             }
-                            
+
                             if ($stand !== 'true') {
                                 $singleExhibitor .= '<div class="exhibitors__container-list-text">
                                                         <h2 class="exhibitors__container-list-text-name">' . $exhibitor['Nazwa_wystawcy'] . '</h2>
@@ -120,7 +122,7 @@ class PWECatalogFull extends PWECatalog {
                     // Get wordpress menus
                     $menus = wp_get_nav_menus();
                     $menu_array = array();
-                    
+
                     foreach ($menus as $menu) {
                         $menu_name_lower = strtolower($menu->name);
                         $patterns = ['1 pl', '1 en', '2 pl', '2 en', '3 pl', '3 en'];
@@ -132,7 +134,7 @@ class PWECatalogFull extends PWECatalog {
                             }
                         }
                     }
-                    
+
                     if (get_locale() == 'pl_PL'){
                         $menu_3_data = wp_get_nav_menu_items($menu_3_pl);
                     } else {
@@ -147,7 +149,7 @@ class PWECatalogFull extends PWECatalog {
                             'url' => $item->url
                         );
                     }
-                    
+
                     $output .='
                     <div class="exhibitors__buttons">
                         <span class="pwe-btn-container">';
@@ -155,7 +157,7 @@ class PWECatalogFull extends PWECatalog {
                                 $output .='<a href="'. $menu_3[0]["url"] .'" class="pwe-btn">Zostań wystawcą</a>';
                             } else {
                                 $output .='<a href="'. $menu_3[0]["url"] .'" class="pwe-btn">Become an exhibitor</a>';
-                            } $output .='    
+                            } $output .='
                         </span>';
 
                         if (get_locale() == "en_US") {
@@ -163,9 +165,9 @@ class PWECatalogFull extends PWECatalog {
                             <span class="pwe-btn-container">
                                 <a href="https://warsawexpo.eu/en/forms-for-agents/" class="pwe-btn" target="_blank">Become an agent</a>
                             </span>';
-                        } 
-                        
-                        $output .='     
+                        }
+
+                        $output .='
                     </div>
                 </div>
             </div>';

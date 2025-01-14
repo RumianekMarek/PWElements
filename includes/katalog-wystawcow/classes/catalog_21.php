@@ -10,7 +10,7 @@ class PWECatalog21 extends PWECatalog {
     }
 
     public static function output($atts, $identification) {
-        $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
+        $pwecatalog_display_random = isset($atts['pwecatalog_display_random1']) ? $atts['pwecatalog_display_random1'] : false;
         $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
 
         if ($exhibitors === null){ 
@@ -72,10 +72,10 @@ class PWECatalog21 extends PWECatalog {
                     <span style="display: flex; justify-content: center;" class="btn-container">'.
                       PWECommonFunctions::languageChecker(
                             <<<PL
-                                <a href="/katalog-wystawcow/" class="custom-link btn border-width-0 btn-accent" title="Katalog wystawców">Katalog wystawców</a>
+                                <a href="/katalog-wystawcow/" class="custom-link btn border-width-0 btn-accent" title="Katalog wystawców">ZOBACZ PEŁNY KATALOG</a>
                             PL,
                             <<<EN
-                                <a href="/en/exhibitors-catalog/" class="custom-link btn border-width-0 btn-accent" title="Exhibitor Catalog">Exhibitor Catalog</a>
+                                <a href="/en/exhibitors-catalog/" class="custom-link btn border-width-0 btn-accent" title="Exhibitor Catalog">SEE FULL CATALOG</a>
                             EN
                         )
                     .'</span>

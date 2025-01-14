@@ -187,9 +187,23 @@ class PWELogotypes extends PWECommonFunctions {
                         array(
                             'type' => 'checkbox',
                             'group' => 'PWE Element',
-                            'heading' => __('Turn on exhibitors (top 21)', 'pwe_header'),
+                            'heading' => __('Turn on exhibitors (default top 21)', 'pwe_header'),
                             'param_name' => 'logotypes_exhibitors_on',
                             'save_always' => true,
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'group' => 'PWE Element',
+                            'heading' => __('Exhibitors count logotypes', 'pwe_header'),
+                            'param_name' => 'logotypes_exhibitors_count',
+                            'description' => __('Set exhibitors count of logotypes', 'pwe_logotypes'),
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'logotypes_exhibitors_on',
+                                'value' => array(
+                                    'true'
+                                ),
+                            ),
                         ),
                         array(
                             'type' => 'checkbox',
@@ -203,7 +217,7 @@ class PWELogotypes extends PWECommonFunctions {
                             'group' => 'Aditional options',
                             'heading' => __('Logotypes white', 'pwe_logotypes'),
                             'param_name' => 'logotypes_slider_logo_white',
-                            'description' => __('Check if you want to change the logotypes color to white. ', 'pwe_logotypes'),
+                            'description' => __('Check if you want to change the logotypes color to white.', 'pwe_logotypes'),
                             'admin_label' => true,
                             'save_always' => true,
                             'value' => array(__('True', 'pwe_logotypes') => 'true',),
@@ -243,7 +257,7 @@ class PWELogotypes extends PWECommonFunctions {
      * @param string $catalog_id fair id for api.
      * @return array
      */
-    public static function exhibitors_catalog_checker($catalog_id){
+    public static function exhibitors_catalog_checker($catalog_id, $logotypes_exhibitors_count = 21){
         if  (!empty($catalog_id)) {
             $today = new DateTime();
             $formattedDate = $today->format('Y-m-d');
@@ -287,7 +301,7 @@ class PWELogotypes extends PWECommonFunctions {
                 if ($exhibitor['URL_logo_wystawcy']){ 
                     $logotypes_array[] = $exhibitor;
                     $i++;
-                    if ($i >= 21) {
+                    if ($i >= $logotypes_exhibitors_count) {
                         break;
                     }
                 }
@@ -310,12 +324,15 @@ class PWELogotypes extends PWECommonFunctions {
 
         extract( shortcode_atts( array(
             'pwe_replace' => '',
+            'logotypes_exhibitors_count' => '', 
         ), $atts ));
+
+        $logotypes_exhibitors_count = !empty($logotypes_exhibitors_count) ? $logotypes_exhibitors_count : 21;
 
         $el_id = self::id_rnd();
 
         // Exhibitors logotypes top 21
-        $exhibitors = self::exhibitors_catalog_checker(do_shortcode('[trade_fair_catalog]'));
+        $exhibitors = self::exhibitors_catalog_checker(do_shortcode('[trade_fair_catalog]'), $logotypes_exhibitors_count);
         if (!empty($exhibitors)) {
             $exhibitors_logotypes = array();
             foreach($exhibitors as $exhibitor){

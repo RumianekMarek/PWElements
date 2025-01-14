@@ -11,7 +11,7 @@ class PWECatalog7 extends PWECatalog {
 
     public static function output($atts, $identification) {
         
-        $pwecatalog_display_random = isset($atts['pwecatalog_display_random']) ? $atts['pwecatalog_display_random'] : false;
+        $pwecatalog_display_random = isset($atts['pwecatalog_display_random1']) ? $atts['pwecatalog_display_random1'] : false;
         $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
         if ($exhibitors === null){
             return;

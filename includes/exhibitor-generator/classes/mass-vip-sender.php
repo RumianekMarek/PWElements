@@ -42,9 +42,15 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
         $date_diffarance = $today_date->diff($fair_start_date);
 
         if($date_diffarance->invert == 0){
-            $hours_remaining = ($date_diffarance->days * 24) - 24;
+            $hours_remaining = ($date_diffarance->days * 24 + $date_diffarance->h) - 34;
             $total_email_capacity = $hours_remaining * 100;
     
+            $canSend = $total_email_capacity - $count_new;
+            
+            if($canSend < -2000 || $canSend > 0){
+                echo '<script>console.log('.$canSend.')</script>';
+            }
+            
             if($total_email_capacity > $count_new){
                 return true;
             } 
@@ -64,7 +70,7 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
         
         // Check if there is more space for email send, 
         // 2400 per day until day before starts of the fair minus mails already in queue,
-        if(self::senderFlowChecker()){
+        if(self::senderFlowChecker() || current_user_can('administrator')){
             $output .='
             <div class="modal__element">
                 <div class="inner">

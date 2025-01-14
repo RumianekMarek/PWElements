@@ -1,6 +1,8 @@
 <?php  
 
 if ($map_type === 'PWEMapDynamic') {
+
+    $lighter_accent_color = self::adjustBrightness(self::$accent_color, +70);
     
     if ($map_dynamic_3d == true && $map_dynamic_preset == 'preset_1') {
         $output = '
@@ -8,7 +10,8 @@ if ($map_type === 'PWEMapDynamic') {
             .pwe-map__wrapper {
                 position: relative;
                 display: flex;
-                justify-content: space-between
+                justify-content: space-between;
+                margin-top: 18px;
             }
             .pwe-map__staticts {
                 display: flex;
@@ -22,7 +25,7 @@ if ($map_type === 'PWEMapDynamic') {
             .pwe-map__title {
                 margin-top: 0;
                 text-transform: uppercase;
-                font-size: 40px;
+                font-size: 34px;
                 max-width: 550px;
                 text-shadow: 0px 0px 2px white;
             }
@@ -45,6 +48,9 @@ if ($map_type === 'PWEMapDynamic') {
                 margin-top: 0px;
                 line-height: 1;
             }
+            .pwe-map__stats-container.mobile {
+                display: none;
+            }
             .pwe-map__stats-element-title {
                 font-weight: 700;
                 font-size: 26px;
@@ -57,14 +63,20 @@ if ($map_type === 'PWEMapDynamic') {
                 text-shadow: 0px 0px 2px white;
             }
             .pwe-map__logotypes {
+                align-items: flex-end;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
                 max-width: 260px;
                 z-index: 1;
                 background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1) 100%);
             }   
             .pwe-map__logo-container {
+                max-width: 260px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
+                padding-bottom: 18px;
             }
             .pwe-map__logotypes-data {
                 margin-top: 12px;
@@ -78,9 +90,9 @@ if ($map_type === 'PWEMapDynamic') {
                 max-width: 600px;
                 display: flex;
                 align-items: center;
-                bottom: 0;
+                top: 50%;
                 left: 50%;
-                transform: translate(-50%, 0);
+                transform: translate(-50%, -50%);
             }
             .pwe-map__container-3d canvas {
                 width: 100% !important;
@@ -89,35 +101,67 @@ if ($map_type === 'PWEMapDynamic') {
             }
             @media (max-width: 960px) {
                 .pwe-map__title {
-                    font-size: 34px !important;
+                    font-size: 24px !important;
+                }
+                .pwe-map__staticts {
+                    background: none;
                 }
             }
             @media (max-width: 650px) {
+                .pwe-map__wrapper {
+                    flex-direction: column;
+                }
                 .pwe-map__logotypes {
                     display: none;
+                }
+                .pwe-map__heading {
+                    flex-direction: column;
+                }
+                .pwe-map__logo-container{
+                margin: 0 auto;
                 }
                 .pwe-map__staticts {
                     max-width: 100%;
                     padding: 72px 0;
                 }
-                .pwe-map__stats-container {
+                .pwe-map__stats-container.desktop {
+                    display: none;
+                }
+                .pwe-map__stats-container.mobile {
                     display: flex;
                     flex-wrap: wrap;
                 }
-                .pwe-map__stats-element {
-                    width: 50%;
+                .pwe-map__rounded-stat .pwe-map__rounded-element {
+                    min-height: auto;
+                    border-radius: 14px;
+                    border: 2px solid black;
+                    padding: 10px;
+                }
+                .pwe-map__stats-element-55 {
+                    width: 55%; 
+                }
+                .pwe-map__stats-element-45 {
+                    width: 45%; 
                 }
                 .pwe-map__stats-element-title,
                 .pwe-map__stats-element-desc {
                     font-size: 22px;
                 }
-                .pwe-map__staticts {
-                    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
-                }  
+                // .pwe-map__staticts {
+                //     background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+                // } 
+                
+                .pwe-map__container-3d {
+                    position: relative;
+                    max-width: auto;
+                    top: auto;
+                    left: auto;
+                    transform: none;
+                }
             } 
             @media (max-width: 600px) {
                 .pwe-map__staticts {
-                    padding: 36px 0;
+                    padding: 0;
                     gap: 18px;
                 }        
             }
@@ -130,6 +174,297 @@ if ($map_type === 'PWEMapDynamic') {
                     font-size: 18px;
                 }
             }
+
+            @media (min-width: 651px) {
+                .pwe-map__stats-diagram.mobile {
+                    display: none;
+                }
+                .pwe-map__stats-diagram.desktop {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 18px;
+                }
+                .pwe-map__stats-diagram-years-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    gap: 24px;
+                }
+                .pwe-map__stats-diagram-year {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .pwe-map__stats-diagram-year-box {
+                    width: 20px;
+                    aspect-ratio: 1 / 1;
+                    background: '. self::$accent_color .';
+                }
+                .pwe-map__stats-diagram-year:first-of-type .pwe-map__stats-diagram-year-box {
+                    background: '. $lighter_accent_color .';
+                }
+                .pwe-map__stats-diagram-bars-container {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                }
+                .pwe-map__stats-diagram-bars {
+                    display: flex;
+                    flex-direction: column-reverse;
+                    align-items: center;
+                }
+                .pwe-map__stats-diagram-bars-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 18px;
+                    justify-content: center;
+                }
+                .pwe-map__stats-diagram-bar {
+                    display: flex;
+                    align-items: flex-end;
+                    position: relative;
+                    justify-content: flex-end;
+                    gap: 8px;
+                }
+                .pwe-map__stats-diagram-bar.visitors {
+                    width: 160px;
+                }
+                .pwe-map__stats-diagram-bar.visitors .pwe-map__stats-diagram-bar-number {
+                    position: absolute;
+                    left: -50px;
+                }
+                .pwe-map__stats-diagram-bar.exhibitors {
+                    width: 210px;
+                }
+                .pwe-map__stats-diagram-bar.exhibitors .pwe-map__stats-diagram-bar-number {
+                    position: absolute;
+                    left: -30px;
+                }
+                .pwe-map__stats-diagram-bar.area {
+                    width: 250px;
+                }
+                .pwe-map__stats-diagram-bar.area .pwe-map__stats-diagram-bar-number {
+                    position: absolute;
+                    left: -60px;
+                }
+                .pwe-map__stats-diagram-bar-item {
+                    background: '. self::$accent_color .';
+                    width: 0;
+                    height: 25px;
+                    border-radius: 12px 0 0 12px;
+                    position: relative;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                }
+                .pwe-map__stats-diagram-bar:first-of-type .pwe-map__stats-diagram-bar-item {
+                    background: '. $lighter_accent_color .';
+                }
+                .pwe-map__stats-diagram-bar-number {
+                    display: flex;
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                    align-self: center;
+                }
+                .pwe-map__stats-diagram-bar-number sup {
+                    top: 0;
+                }
+                .pwe-map__stats-diagram-bars-label {
+                    margin-top: 8px;
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                    align-self: end;
+                }
+                .pwe-map__stats-section span, .pwe-map__stats-section p {
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+                .pwe-map__stats-diagram-countries-container {
+                    width: 18%;
+                    min-width: 150px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
+                }
+                .pwe-map__stats-diagram-countries {
+                    width: 140px;
+                    aspect-ratio: 1 / 1;
+                    border-radius: 50%;
+                    border: 2px solid;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 6px;
+                }
+                .pwe-map__stats-diagram-countries *{
+                    margin: 0;
+                }
+                .pwe-map__stats-diagram-countries h2 {
+                    min-width: unset;
+                }  
+                .pwe-map__stats-diagram-countries h2 span {
+                    color: '. self::$accent_color .';
+                    font-size: 40px;
+                    font-weight: 800;
+                } 
+
+            }
+
+
+
+        // @media (max-width: 650px) {
+        //     .pwe-map__stats-diagram.mobile {
+        //         display: flex;
+        //     }
+        //     .pwe-map__stats-diagram.mobile {
+                
+        //         display: flex;
+        //         flex-direction: column;
+        //         align-items: center;
+        //         gap: 36px;
+
+
+        //         max-width: 650px;
+        //         margin-top: 40px;
+        //     }
+        //     .pwe-map__stats-diagram-years-container {
+        //         width: 100%;
+        //         display: flex;
+        //         justify-content: center;
+        //         gap: 24px;
+        //     }
+        //     .pwe-map__stats-diagram-year {
+        //         display: flex;
+        //         align-items: center;
+        //         gap: 8px;
+        //     }
+        //     .pwe-map__stats-diagram-year-box {
+        //         width: 20px;
+        //         aspect-ratio: 1 / 1;
+        //         background: '. self::$accent_color .';
+        //     }
+        //     .pwe-map__stats-diagram-year:first-of-type .pwe-map__stats-diagram-year-box {
+        //         background: '. $lighter_accent_color .';
+        //     }
+        //     .pwe-map__stats-diagram-bars-container {
+        //         width: 100%;
+        //         height: 100%;
+        //         display: flex;
+
+
+
+        //         justify-content: space-evenly;
+
+
+
+        //         align-items: flex-end;
+        //     }
+        //     .pwe-map__stats-diagram-bars {
+        //         display: flex;
+        //         flex-direction: column;
+        //         align-items: center;
+        //     }
+        //     .pwe-map__stats-diagram-bars-wrapper {
+        //         display: flex;
+
+
+
+        //         gap: 36px;
+
+
+
+        //         justify-content: center;
+
+        //     }
+        //     .pwe-map__stats-diagram-bar {
+        //         display: flex;
+        //         flex-direction: column;
+        //         align-items: center;
+        //         position: relative;
+        //         justify-content: flex-end;
+        //         height: 150px;
+        //         width: auto;
+        //     }
+        //     .pwe-map__stats-diagram-bar-item {
+        //         background: '. self::$accent_color .';
+
+
+
+        //         border-radius: 12px 12px 0 0;
+        //         width: 25px;
+        //         height: 0;
+
+
+
+
+        //         position: relative;
+        //         display: flex;
+        //         align-items: flex-end;
+        //         justify-content: center;
+        //     }
+        //     .pwe-map__stats-diagram-bar:first-of-type .pwe-map__stats-diagram-bar-item {
+        //         background: '. $lighter_accent_color .';
+        //     }
+        //     .pwe-map__stats-diagram-bar-number {
+        //         position: absolute;
+        //         bottom: 100%;
+        //         transform: translateY(0);
+        //         text-align: center;
+        //         font-size: 16px;
+        //         font-weight: 600;
+        //     }
+        //     .pwe-map__stats-diagram-bars-label {
+        //         margin-top: 8px;
+        //         text-align: center;
+        //         font-size: 16px;
+        //         font-weight: 600;
+        //     }
+        //     .pwe-map__stats-section span, .pwe-map__stats-section p {
+        //         text-align: center;
+        //         font-size: 16px;
+        //         font-weight: 600;
+        //     }
+        //     .pwe-map__stats-diagram-countries-container {
+        //         width: 18%;
+        //         min-width: 150px;
+        //         display: flex;
+        //         justify-content: center;
+        //         align-items: flex-start;
+        //     }
+        //     .pwe-map__stats-diagram-countries {
+        //         width: 140px;
+        //         aspect-ratio: 1 / 1;
+        //         border-radius: 50%;
+        //         border: 2px solid;
+        //         display: flex;
+        //         flex-direction: column;
+        //         align-items: center;
+        //         justify-content: center;
+        //         gap: 6px;
+        //     }
+        //     .pwe-map__stats-diagram-countries *{
+        //         margin: 0;
+        //     }
+        //     .pwe-map__stats-diagram-countries h2 {
+        //         min-width: unset;
+        //     }  
+        //     .pwe-map__stats-diagram-countries h2 span {
+        //         color: '. self::$accent_color .';
+        //         font-size: 40px;
+        //         font-weight: 800;
+        //     }  
+
+        // }
+
+
         </style>';
 
     } else if ($map_dynamic_3d !== true && $map_dynamic_preset == 'preset_1') {
@@ -424,6 +759,9 @@ if ($map_type === 'PWEMapDynamic') {
                 text-align: center;
                 font-size: 16px;
                 font-weight: 600;
+            }
+            .pwe-map__stats-diagram-bar-number sup {
+                top: 0;
             }
             .pwe-map__stats-diagram-bars-label {
                 margin-top: 8px;

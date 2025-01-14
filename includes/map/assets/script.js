@@ -4,35 +4,6 @@ const map_dynamic_preset = data_js.map_dynamic_preset;
 const map_color = data_js.map_color;
 const hex_color = map_color != '' ? map_color : accent_color;
 
-function animateBars(sectionElement) {
-    const animationSpeed = parseInt(sectionElement.dataset.speed, 10);
-
-    const bars = sectionElement.querySelectorAll(".pwe-map__stats-diagram-bar-item");
-    bars.forEach(bar => {
-        const percentage = parseFloat(bar.getAttribute("data-count"));
-        const targetHeight = percentage + "%"; // Procentowy target
-
-        bar.style.height = "0";
-        const numberElement = bar.querySelector(".pwe-map__stats-diagram-bar-number");
-
-        let currentHeight = 0;
-        const frameRate = 15;
-        const totalFrames = animationSpeed / frameRate;
-        const heightIncrement = percentage / totalFrames;
-
-        const interval = setInterval(() => {
-            currentHeight += heightIncrement;
-
-            if (currentHeight >= percentage) {
-                currentHeight = percentage;
-                clearInterval(interval);
-            }
-            bar.style.height = currentHeight + "%";
-        }, frameRate);
-    });
-}
-
-
 function animateCount(element) {
     const targetValue = parseInt(element.getAttribute("data-count"), 10);
     const duration = 3000; 
@@ -52,12 +23,60 @@ function animateCount(element) {
     requestAnimationFrame(update);
 }
 
+function animateBars(sectionElement) {
+    const animationSpeed = parseInt(sectionElement.dataset.speed, 10);
+
+    const bars = sectionElement.querySelectorAll(".pwe-map__stats-diagram-bar-item");
+    bars.forEach(bar => {
+        const percentage = parseFloat(bar.getAttribute("data-count"));
+
+        // Domyślne szerokości i wysokości dla określonych kolumn
+        let targetHeight, targetWidth;
+        if (map_dynamic_3d && map_dynamic_preset === 'preset_1') {
+            if (window.innerWidth > 650) {
+                targetWidth = percentage + "%";
+                bar.style.width = "0";
+            } else {
+                targetHeight = percentage + "%";
+                bar.style.height = "0";
+            }
+        } else {
+            targetHeight = percentage + "%";
+            bar.style.height = "0";
+        }
+
+        const numberElement = bar.querySelector(".pwe-map__stats-diagram-bar-number");
+
+        let currentHeight = 0;
+        const frameRate = 15;
+        const totalFrames = animationSpeed / frameRate;
+        const heightIncrement = percentage / totalFrames;
+
+        const interval = setInterval(() => {
+            currentHeight += heightIncrement;
+
+            if (currentHeight >= percentage) {
+                currentHeight = percentage;
+                clearInterval(interval);
+            }
+
+            if (map_dynamic_3d && map_dynamic_preset === 'preset_1') {
+                if (window.innerWidth > 650) {
+                    bar.style.width = currentHeight + "%";
+                } else {
+                    bar.style.height = currentHeight + "%";
+                }
+            } else {
+                bar.style.height = currentHeight + "%";
+            }
+        }, frameRate);
+    });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const countUpElements = document.querySelectorAll(".countup");
     const barSections = document.querySelectorAll(".pwe-map__stats-diagram-bars");
 
-    // Unified observer for visibility-triggered animations
     const observer = new IntersectionObserver(
         (entries, observerInstance) => {
             entries.forEach(entry => {
@@ -71,30 +90,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         target.dataset.animated = true;
                     }
 
-                    // Stop observing once animated
-                    observerInstance.unobserve(target); 
+                    observerInstance.unobserve(target);
                 }
             });
         },
         {
-            // Trigger when 10% visible
-            threshold: 0.1 
+            threshold: 0.1
         }
     );
 
-    // Add observers to elements
     countUpElements.forEach(element => observer.observe(element));
-    barSections.forEach((section, index) => {
-        // Set specific scaling and speed parameters
-        const sectionParams = [
-            { scaleFactor: "300", speed: "2000" },
-            { scaleFactor: "4", speed: "1500" },
-            { scaleFactor: "300", speed: "2500" }
-        ];
-        const params = sectionParams[index] || sectionParams[0]; // Default to the first set
-        section.dataset.scaleFactor = params.scaleFactor;
-        section.dataset.speed = params.speed;
-
+    barSections.forEach(section => {
+        section.dataset.speed = "3000"; // Domyślny czas animacji
         observer.observe(section);
     });
 });

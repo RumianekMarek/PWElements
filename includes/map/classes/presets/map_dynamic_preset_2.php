@@ -1,24 +1,12 @@
 <?php  
 
-$max_visitors = max($map_number_visitors, $map_number_visitors_previous);
-$map_number_visitors_percentage = ($map_number_visitors / $max_visitors) * 100;
-$map_number_visitors_previous_percentage = ($map_number_visitors_previous / $max_visitors) * 100;
-
-$max_exhibitors = max($map_number_exhibitors, $map_number_exhibitors_previous);
-$map_number_exhibitors_percentage = ($map_number_exhibitors / $max_exhibitors) * 100;
-$map_number_exhibitors_previous_percentage = ($map_number_exhibitors_previous / $max_exhibitors) * 100;
-
-$max_exhibition_space = max($map_exhibition_space, $map_exhibition_space_previous);
-$map_exhibition_space_percentage = ($map_exhibition_space / $max_exhibition_space) * 100;
-$map_exhibition_space_previous_percentage = ($map_exhibition_space_previous / $max_exhibition_space) * 100;
-
 $output .= '
 <div id="pweMap" class="pwe-map">
     <div class="pwe-map__wrapper">
 
         <div class="pwe-map__title-section">
             <h2 class="pwe-map__title">'. $map_custom_title .'</h2>
-            <p class="pwe-map__subtitle">Liczby, które mówią same za siebie</p>
+            <p class="pwe-map__subtitle">'. self::languageChecker('Liczby, które mówią same za siebie', 'Numbers that speak for themselves') .'</p> 
         </div>
 
         <div class="pwe-map__stats-section">
@@ -52,7 +40,7 @@ $output .= '
                                     </div>
                                 </div>
                             </div>
-                            <p class="pwe-map__stats-diagram-bars-label">Odwiedzający</p>
+                            <p class="pwe-map__stats-diagram-bars-label">'. self::languageChecker('Odwiedzający', 'Visitors') .'</p>
                         </div>
 
                         <!-- Bar 2 -->
@@ -69,7 +57,7 @@ $output .= '
                                     </div>
                                 </div>
                             </div>
-                            <p class="pwe-map__stats-diagram-bars-label">Wystawcy</p>
+                            <p class="pwe-map__stats-diagram-bars-label">'. self::languageChecker('Wystawcy', 'Exhibitors') .'</p>
                         </div>
 
                         <!-- Bar 3 -->
@@ -86,7 +74,7 @@ $output .= '
                                     </div>
                                 </div>
                             </div>
-                            <p class="pwe-map__stats-diagram-bars-label">Powierzchnia</p>
+                            <p class="pwe-map__stats-diagram-bars-label">'. self::languageChecker('Powierzchnia', 'Surface') .'</p>
                         </div>
                     </div>
                 </div>
@@ -95,7 +83,7 @@ $output .= '
                 <div class="pwe-map__stats-diagram-countries-container">
                     <div class="pwe-map__stats-diagram-countries pwe-map__stats-number-box">
                         <h2><span class="countup" data-count="'. $map_number_countries .'">0</span></h2>
-                        <p>krajów</p>
+                        <p>'. self::languageChecker('krajów', 'countries') .'</p>
                     </div>
                 </div>
             </div>
@@ -105,7 +93,7 @@ $output .= '
                     <h2><span class="countup" data-count="'. $map_number_visitors .'">0</span></h2>
                     <div class="pwe-map__stats-number-box-text">
                         <span>+</span>
-                        <p>odwiedzających</p>
+                        <p>'. self::languageChecker('odwiedzających', 'visitors') .'</p>
                     </div>
                 </div>
                 
@@ -113,7 +101,7 @@ $output .= '
                     <h2><span class="countup" data-count="'. $map_number_exhibitors .'">0</span></h2>
                     <div class="pwe-map__stats-number-box-text">
                         <span>+</span>
-                        <p>wystawców</p>
+                        <p>'. self::languageChecker('wystawców', 'exhibitors') .'</p>
                     </div>
                 </div>
                 
@@ -121,7 +109,7 @@ $output .= '
                     <h2><span class="countup" data-count="'. $map_exhibition_space .'">0</span> m<sup>2</sup></h2>
                     <div class="pwe-map__stats-number-box-text">
                         <span>+</span>
-                        <p>powierzchni wystawienniczej</p>
+                        <p>'. self::languageChecker('powierzchni wystawienniczej', 'exhibition space') .'</p>
                     </div>
                 </div>
             </div>

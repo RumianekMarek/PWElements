@@ -33,6 +33,42 @@ class PWEProfileSiteTabs extends PWEProfile {
                 ),
             ),
             array(
+                'type' => 'textfield',
+                'heading' => __('Custom scope color', 'pwe_profile'),
+                'param_name' => 'profilesitetabs_color_scope_custom',
+                'param_holder_class' => 'backend-area-one-third-width',
+                'save_always' => true,
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileSiteTabs',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'heading' => __('Custom exhibitor color', 'pwe_profile'),
+                'param_name' => 'profilesitetabs_color_exhibitor_custom',
+                'param_holder_class' => 'backend-area-one-third-width',
+                'save_always' => true,
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileSiteTabs',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'heading' => __('Custom visitor color', 'pwe_profile'),
+                'param_name' => 'profilesitetabs_color_visitor_custom',
+                'param_holder_class' => 'backend-area-one-third-width',
+                'save_always' => true,
+                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileSiteTabs',
+                ),
+            ),
+            array(
                 'type' => 'param_group',
                 'heading' => __('Items', 'pwe_profile'),
                 'param_name' => 'profile_sitetabs_items',
@@ -112,6 +148,9 @@ class PWEProfileSiteTabs extends PWEProfile {
         extract( shortcode_atts( array(
             'profile_sitetabs_iframe' => '',
             'profile_sitetabs_items' => '',
+            'profilesitetabs_color_scope_custom' => '',
+            'profilesitetabs_color_exhibitor_custom' => '',
+            'profilesitetabs_color_visitor_custom' => '',
         ), $atts ));
 
         $profile_sitetabs_items_urldecode = urldecode($profile_sitetabs_items);
@@ -133,7 +172,9 @@ class PWEProfileSiteTabs extends PWEProfile {
         } else {
             $video_id = 'R0Ckz1dVxoQ';
         }
-
+        $profilesitetabs_color_scope_custom = !empty($profilesitetabs_color_scope_custom) ? $profilesitetabs_color_scope_custom : '#03045E';
+        $profilesitetabs_color_exhibitor_custom = !empty($profilesitetabs_color_exhibitor_custom) ? $profilesitetabs_color_exhibitor_custom : '#0077B6';
+        $profilesitetabs_color_visitor_custom = !empty($profilesitetabs_color_visitor_custom) ? $profilesitetabs_color_visitor_custom : '#00B4D8';
 
         $output = '
       <style>
@@ -176,15 +217,15 @@ class PWEProfileSiteTabs extends PWEProfile {
         }
 
         .container-'. self::$rnd_id .' .tab-profile_visitors .profile-menu-item-element {
-          background-color: #00B4D8;
+          background-color: '. $profilesitetabs_color_visitor_custom .';
         }
 
         .container-'. self::$rnd_id .' .tab-profile_exhibitors .profile-menu-item-element {
-          background-color: #0077B6;
+          background-color: '. $profilesitetabs_color_exhibitor_custom .';
         }
 
         .container-'. self::$rnd_id .' .tab-profile_scope .profile-menu-item-element {
-          background-color: #03045E;
+          background-color: '. $profilesitetabs_color_scope_custom .';
         }
 
         .container-'. self::$rnd_id .' .icon {
@@ -327,88 +368,85 @@ class PWEProfileSiteTabs extends PWEProfile {
 
         $output .= '
         <div class="container-'. self::$rnd_id .'">
-            <div class="profile-menu">';
+          <div class="profile-menu">';
+            if (is_array($profile_sitetabs_items_json)) {
+              foreach ($profile_sitetabs_items_json as $profile_item) {
+                $profile_icon_nmb = $profile_item["profile_icon"];
+                $profile_icon_src = wp_get_attachment_url($profile_icon_nmb);
 
-                        if (is_array($profile_sitetabs_items_json)) {
-                            foreach ($profile_sitetabs_items_json as $profile_item) {
-                                $profile_icon_nmb = $profile_item["profile_icon"];
-                                $profile_icon_src = wp_get_attachment_url($profile_icon_nmb);
+                $profile_title_select = $profile_item["profile_title_select"];
+                $profile_title_custom = $profile_item["profile_title_custom"];
+                $profile_title = !empty($profile_title_select) ? $profile_title_select : $profile_title_custom;
 
-                                $profile_title_select = $profile_item["profile_title_select"];
-                                $profile_title_custom = $profile_item["profile_title_custom"];
-                                $profile_title = !empty($profile_title_select) ? $profile_title_select : $profile_title_custom;
+                $profile_id = strtolower(str_replace('_title', '', $profile_title));
 
-                                $profile_id = strtolower(str_replace('_title', '', $profile_title));
+                if ($profile_title == 'profile_title_visitors') {
+                    $profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile";
+                    $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/visitor_profile_icon_white.webp';
+                } else if ($profile_title == 'profile_title_exhibitors') {
+                    $profile_title = (get_locale() == 'pl_PL') ? "Profil wystawcy" : "Exhibitor profile";
+                    $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/exhibitor_profile_icon_white.webp';
+                } else if ($profile_title == 'profile_title_scope') {
+                    $profile_title = (get_locale() == 'pl_PL') ? "Zakres branżowy" : "Industry scope";
+                    $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/industry_scope_icon_white.webp';
+                }
 
-                                if ($profile_title == 'profile_title_visitors') {
-                                    $profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile";
-                                    $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/visitor_profile_icon_white.webp';
-                                } else if ($profile_title == 'profile_title_exhibitors') {
-                                    $profile_title = (get_locale() == 'pl_PL') ? "Profil wystawcy" : "Exhibitor profile";
-                                    $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/exhibitor_profile_icon_white.webp';
-                                } else if ($profile_title == 'profile_title_scope') {
-                                    $profile_title = (get_locale() == 'pl_PL') ? "Zakres branżowy" : "Industry scope";
-                                    $profile_icon_src = !empty($profile_icon_src) ? $profile_icon_src : '/wp-content/plugins/PWElements/includes/profile/media/industry_scope_icon_white.webp';
-                                }
+                $active = ($profile_title == 'profile_title_scope') ? 'active' : '';
 
-                                $active = ($profile_title == 'profile_title_scope') ? 'active' : '';
+                $output .= '
+                <div class="profile-menu-item tab-'. $profile_id .' " onclick="toggleprofilemenuItem(this, \''. $profile_id .'\')">
+                  <div class="profile-menu-item-element">
+                    <div style="background:url('. $profile_icon_src .');" class="icon"></div>
+                    <span class="profile-menu-text">'. $profile_title .'</span>
+                  </div>
+                </div>';
+              }
+            }
 
-                                $output .= '
-                                <div class="profile-menu-item tab-'. $profile_id .' " onclick="toggleprofilemenuItem(this, \''. $profile_id .'\')">
-                                  <div class="profile-menu-item-element">
-                                    <div style="background:url('. $profile_icon_src .');" class="icon"></div>
-                                    <span class="profile-menu-text">'. $profile_title .'</span>
-                                  </div>
-                                </div>';
-                            }
-                        }
+            $output .= '
+          </div>
 
-                    $output .= '
-                    </div>
+          <div class="profile-content">';
 
-                    <div class="profile-content">';
+            foreach ($profile_sitetabs_items_json as $profile_item) {
+                $profile_text = $profile_item["profile_text"];
+                $profile_title_select = $profile_item["profile_title_select"];
+                $profile_title_custom = $profile_item["profile_title_custom"];
+                $profile_title = !empty($profile_title_select) ? $profile_title_select : $profile_title_custom;
 
-                        foreach ($profile_sitetabs_items_json as $profile_item) {
-                            $profile_text = $profile_item["profile_text"];
-                            $profile_title_select = $profile_item["profile_title_select"];
-                            $profile_title_custom = $profile_item["profile_title_custom"];
-                            $profile_title = !empty($profile_title_select) ? $profile_title_select : $profile_title_custom;
+                $profile_id = strtolower(str_replace('_title', '', $profile_title));
 
-                            $profile_id = strtolower(str_replace('_title', '', $profile_title));
+                $profile_items_icons = $profile_item["profile_sitetabs_items_icons"];
+                $profile_items_icons_urldecode = urldecode($profile_items_icons);
+                $profile_items_icons_json = json_decode($profile_items_icons_urldecode, true);
 
-                            $profile_items_icons = $profile_item["profile_sitetabs_items_icons"];
-                            $profile_items_icons_urldecode = urldecode($profile_items_icons);
-                            $profile_items_icons_json = json_decode($profile_items_icons_urldecode, true);
+                $profile_text_content = self::decode_clean_content($profile_text);
 
-                            $profile_text_content = self::decode_clean_content($profile_text);
+                $output .= '
+                <div id="'. $profile_id .'" class="view">';
+                    if (empty($profile_text_content)) {
+                        foreach ($profile_items_icons_json as $profile_icon) {
+                            $profile_item_icon = $profile_icon["profile_item_icon"];
+                            $profile_item_title = $profile_icon["profile_item_title"];
+                            $profile_item_icon_src = wp_get_attachment_url($profile_item_icon);
 
-                            $output .= '
-                            <div id="'. $profile_id .'" class="view">';
-                                if (empty($profile_text_content)) {
-                                    foreach ($profile_items_icons_json as $profile_icon) {
-                                        $profile_item_icon = $profile_icon["profile_item_icon"];
-                                        $profile_item_title = $profile_icon["profile_item_title"];
-                                        $profile_item_icon_src = wp_get_attachment_url($profile_item_icon);
+                             $output .= '
+                             <div class="profile-content-element">
+                                 <img src="'. $profile_item_icon_src .'" />
+                                 <p>'. $profile_item_title .'</p>
+                             </div>';
+                         }
+                     } else {
+                         $output .= $profile_text_content;
+                     }
+                     $output .= '
 
-                                        $output .= '
-                                        <div class="profile-content-element">
-                                            <img src="'. $profile_item_icon_src .'" />
-                                            <p>'. $profile_item_title .'</p>
-                                        </div>';
-                                    }
-                                } else {
-                                    $output .= $profile_text_content;
-                                }
-                                $output .= '
+                </div>';
+              }
 
-                            </div>';
-                        }
-
-                    $output .= '
-                    </div>
-                </div>
-            </div>
-        </div>';
+            $output .= '
+        </div>
+      </div>';
 
         $output .= '
         <script>

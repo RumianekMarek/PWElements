@@ -97,9 +97,11 @@ $output .= '
     }
     .pwelement_'. $el_id .' .pwe-header-bottom {
         display: flex;
+        flex-wrap: wrap;
         justify-content: start;
         align-items: center;
         padding-top: 24px;
+        gap: 18px;
     }
     .pwelement_'. $el_id .' .pwe-header-bottom .header-button {
         width: 40%;
@@ -178,7 +180,6 @@ $output .= '
         align-items: center;
         overflow: hidden;
     }
-
     .pwelement_'. $el_id .' .pwe-header .pwe-header-wrapper {
         position: relative;
         z-index: 1;
@@ -240,7 +241,7 @@ $output .= '
         }
         .pwelement_'. $el_id .' .pwe-header-column-container {
             background-color: transparent;
-            max-width: 800px;
+            max-width: 700px;
         }
         .pwe-header-title {
             display: flex;
@@ -261,10 +262,14 @@ $output .= '
             align-items: center;
         }
         .pwelement_'. $el_id .' .pwe-header-bottom {
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
             margin: 0 auto;
         }';
     }
-    if($pwe_header_without_bg== true) {
+    if($pwe_header_without_bg == true) {
         $output .= '
         .pwelement_'. $el_id .' .pwe-header-column {
             max-width:100%;
@@ -294,7 +299,14 @@ $output .= '
             border-radius: 10px !important;
             letter-spacing: 4px;
         }
-        ';
+        .pwelement_'. $el_id .' .pwe-header-bottom {
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+        #countdownCustom {
+          margin: 0px !important;
+          width: 360px !important;
+        }';
     }
     $output .='
     @media(max-width:1350px){
@@ -410,7 +422,7 @@ $output .= '
             padding: 36px 18px;
         }
         .pwelement_'. $el_id .' .pwe-header-bottom {
-            flex-direction: column-reverse;
+            flex-direction: column;
             justify-content: center;
             gap: 18px;
             padding-top: 18px;
@@ -469,6 +481,9 @@ $output .= '
             }
             .pwelement_'. $el_id .' .pwe-header  .pwe-header-title {
                 gap: 15px;
+            }
+            .pwelement_'. $el_id .' .pwe-header-bottom {
+                margin: 0 auto;
             }';
         }
         $output .='
@@ -499,8 +514,9 @@ $output .= '
                                 <h1>'. $trade_fair_desc .'</h1>
                                 <h2 class="header-center-date">'. $actually_date .'</h2>';
                                 $city =  self::languageChecker('Warszawa', 'Warsaw');
-                                $output .= ($pwe_header_center != true) ? '<h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>' : ''; 
-                                $output .= ($pwe_header_center == true) ? '<p>'. $city .'</p>' : ''; $output .= '
+                                $output .= ($pwe_header_center != true) ? '<h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>' : '';
+                                $output .= ($pwe_header_center == true) ? '<p>'. $city .'</p>' : '';
+                                $output .= '
                             </div>
                         </div>
                         <div class="pwe-header-date-block">
@@ -518,9 +534,48 @@ $output .= '
                                 </span>
                             </a>
                             <span class="btn-angle-right">&#8250;</span>
-                        </div>
-                    </div>
+                        </div>';
 
+                        $pwe_header_buttons_urldecode = urldecode($pwe_header_buttons);
+                        $pwe_header_buttons_json = json_decode($pwe_header_buttons_urldecode, true);
+                        if ($pwe_header_buttons_json["0"]["pwe_header_button_text"]) {
+                            $output .= '
+                            <style>
+                                .pwelement_'. $el_id .' #pweBtnRegistration {
+                                    display: none;
+                                }
+                                .pwelement_'. $el_id .' .pwe-header .pwe-btn-container {
+                                    width: 240px;
+                                }
+                            </style>';
+                        }
+                        if (is_array($pwe_header_buttons_json)) {
+                            foreach ($pwe_header_buttons_json as $button) {
+                                $button_url = $button["pwe_header_button_link"];
+                                $button_text = $button["pwe_header_button_text"];
+
+                                $target_blank_aditional = (strpos($button_url, 'http') !== false) ? 'target="blank"' : '';
+                                if(!empty($button_url) && !empty($button_text) ) {
+                                    $output .= '<div class="pwe-btn-container header-button">
+                                        <a class="pwe-link pwe-btn" href="'. $button_url .'" '. $target_blank_aditional .' alt="'. $button_url .'">'. $button_text .'</a>
+                                    </div>';
+                                }
+                            }
+                        }
+
+                    $output .= '
+                    </div>';
+
+                    // Countdown widget --------------------------------------------------------------------------------------<
+                    if ($pwe_header_counter) {
+                        require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/counter-to-fair.php';
+                    }
+
+                    // Partners widget --------------------------------------------------------------------------------------<     
+                    if (!empty($pwe_header_partners_items)) {
+                        require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
+                    }
+                    $output .= '
                 </div>
             </div>
 

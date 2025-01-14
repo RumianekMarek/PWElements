@@ -267,6 +267,25 @@ function initVCMapHeader() {
                         ),
                     ),
                     array(
+                        'type' => 'textfield',
+                        'group' => 'Options',
+                        'heading' => __('Custom title', 'pwe_header'),
+                        'description' => __('Change main title', 'pwe_header'),
+                        'param_name' => 'pwe_header_custom_title',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                '',
+                                'simple_mode',
+                                'registration_mode',
+                                'conference_mode',
+                                'squares_mode',
+                                'video_mode',
+                            ),
+                        ),
+                    ),
+                    array(
                         'type' => 'dropdown',
                         'group' => 'Options',
                         'heading' => __('Background position', 'pwe_header'),
@@ -451,7 +470,10 @@ function initVCMapHeader() {
                         ),
                         'dependency' => array(
                             'element' => 'pwe_header_modes',
-                            'value' => array(''),
+                            'value' => array(
+                                '',
+                                'video_mode'
+                            ),
                         ),
                     ),
                     array(
@@ -501,6 +523,20 @@ function initVCMapHeader() {
                         'group' => 'Options',
                         'heading' => __('Left site text without bg', 'pwe_header'),
                         'param_name' => 'pwe_header_without_bg',
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_header') => 'true',),
+                        'dependency' => array(
+                            'element' => 'pwe_header_modes',
+                            'value' => array(
+                                'video_mode',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'Options',
+                        'heading' => __('Show counter in header', 'pwe_header'),
+                        'param_name' => 'pwe_header_counter',
                         'save_always' => true,
                         'value' => array(__('True', 'pwe_header') => 'true',),
                         'dependency' => array(
@@ -618,6 +654,47 @@ function initVCMapHeader() {
                         'description' => __('Check if you want to change the logotypes color to color. ', 'pwe_header'),
                         'save_always' => true,
                         'value' => array(__('True', 'pwe_header') => 'true',),
+                    ),
+                    array(
+                        'type' => 'dropdown',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Widget position', 'pwe_header'),
+                        'param_name' => 'pwe_header_partners_position',
+                        'value' => array(
+                            'Top' => 'top',
+                            'Center' => 'center',
+                            'Bottom' => 'bottom'
+                        ),
+                        'std' => 'center',
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Title widget', 'pwe_header'),
+                        'param_name' => 'pwe_header_partners_title',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'colorpicker',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Color title', 'pwe_header'),
+                        'param_name' => 'pwe_header_partners_title_color',
+                        'param_holder_class' => 'backend-area-half-width',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'colorpicker',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Color background', 'pwe_header'),
+                        'param_name' => 'pwe_header_partners_background_color',
+                        'param_holder_class' => 'backend-area-half-width',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'attach_images',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Partners logotypes', 'pwe_header'),
+                        'param_name' => 'pwe_header_partners_items',
                     ),
                     array(
                         'type' => 'param_group',

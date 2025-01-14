@@ -96,7 +96,6 @@ class PWEMediaGallery extends PWECommonFunctions {
                         'type' => 'dropdown',
                         'heading' => __('Layout', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_layout',
-                        'description' => __('Action after clicking on the image', 'pwe_media_gallery'),
                         'param_holder_class' => 'media_gallery_layout',
                         'save_always' => true,
                         'value' => array(
@@ -176,6 +175,22 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),  
                     array(
                         'type' => 'textfield',
+                        'heading' => __('Border radius', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_border_radius',
+                        'description' => __('Set the items border radius.', 'pwe_media_gallery'),
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'columns',
+                                'grid',
+                                'flex',
+                                'carousel',
+                            ),
+                        ),
+                    ),  
+                    array(
+                        'type' => 'textfield',
                         'heading' => __('Margin items', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_margin',
                         'description' => __('Set the items margin.', 'pwe_media_gallery'),
@@ -201,6 +216,80 @@ class PWEMediaGallery extends PWECommonFunctions {
                                 'grid',
                                 'flex',
                                 'slider',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'heading' => __('Turn on dots', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_dots_display',
+                        'description' => __('Check if you want to turn on dots.', 'pwe_media_gallery'),
+                        'admin_label' => true,
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_media_gallery') => 'true',),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'carousel',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'heading' => __('Dots inside of container', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_dots_inside',
+                        'description' => __('Check if you want to turn on dots inside of container.', 'pwe_media_gallery'),
+                        'admin_label' => true,
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_media_gallery') => 'true',),
+                        'dependency' => array(
+                            'element' => 'media_gallery_dots_display',
+                            'value' => array(
+                                'true',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'heading' => __('Turn on arrow', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_arrows_display',
+                        'description' => __('Check if you want to turn on arrows.', 'pwe_media_gallery'),
+                        'admin_label' => true,
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_media_gallery') => 'true',),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'carousel',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'heading' => __('Arrows inside of container', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_arrows_inside',
+                        'description' => __('Check if you want to turn on arrows inside of container.', 'pwe_media_gallery'),
+                        'admin_label' => true,
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_media_gallery') => 'true',),
+                        'dependency' => array(
+                            'element' => 'media_gallery_arrows_display',
+                            'value' => array(
+                                'true',
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'heading' => __('Add button (Go to gallery)', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_button',
+                        'admin_label' => true,
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_media_gallery') => 'true',),
+                        'dependency' => array(
+                            'element' => 'media_gallery_layout',
+                            'value' => array(
+                                'carousel',
                             ),
                         ),
                     ),
@@ -384,8 +473,14 @@ class PWEMediaGallery extends PWECommonFunctions {
             'media_gallery_justify_last_row' => '',
             'media_gallery_aspect_ratio' => '',
             'media_gallery_gap' => '',
+            'media_gallery_border_radius' => '',
             'media_gallery_margin' => '',
             'media_gallery_full_width' => '',
+            'media_gallery_dots_display' => '',
+            'media_gallery_dots_inside' => '',
+            'media_gallery_arrows_display' => '',
+            'media_gallery_arrows_inside' => '',
+            'media_gallery_button' => '',
             'media_gallery_thumbnails_width_desktop' => '',
             'media_gallery_thumbnails_width_tablet' => '',
             'media_gallery_thumbnails_width_mobile' => '',
@@ -446,12 +541,16 @@ class PWEMediaGallery extends PWECommonFunctions {
         // Set margin for images
         $media_gallery_margin = (empty($media_gallery_margin)) ? '5' : $media_gallery_margin;
 
+        // Set border radius for images
+        $media_gallery_border_radius = (empty($media_gallery_border_radius)) ? '0' : $media_gallery_border_radius;
+
         // Removing px if it exists
         $media_gallery_breakpoint_tablet = str_replace("px", "", $media_gallery_breakpoint_tablet);
         $media_gallery_breakpoint_mobile = str_replace("px", "", $media_gallery_breakpoint_mobile);
         $media_gallery_thumbnails_rows_height = str_replace("px", "", $media_gallery_thumbnails_rows_height);
         $media_gallery_gap = str_replace("px", "", $media_gallery_gap);
         $media_gallery_margin = str_replace("px", "", $media_gallery_margin);
+        $media_gallery_border_radius = str_replace("px", "", $media_gallery_border_radius);
         
         $output = '';
 
@@ -476,6 +575,9 @@ class PWEMediaGallery extends PWECommonFunctions {
                                             }
                                             #'. $media_gallery_id .' .pwe-media-gallery-image {
                                                 padding: '. $media_gallery_gap .'px;
+                                            }
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image img {
+                                                border-radius: '. $media_gallery_border_radius .'px;
                                             }
                                             @media (min-width: '. ($media_gallery_breakpoint_tablet + 1) .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery {
@@ -507,6 +609,9 @@ class PWEMediaGallery extends PWECommonFunctions {
                                                 display: grid;
                                                 gap: '. $media_gallery_gap .'px;
                                             } 
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image img {
+                                                border-radius: '. $media_gallery_border_radius .'px;
+                                            }
                                             @media (min-width: '. ($media_gallery_breakpoint_tablet + 1) .'px) {
                                                 #'. $media_gallery_id .' .pwe-media-gallery {
                                                     grid-template-columns: repeat('. $grid_thumbnails_desktop .', 1fr);
@@ -535,6 +640,9 @@ class PWEMediaGallery extends PWECommonFunctions {
                                                 opacity: 1 !important;
                                                 min-height: auto !important;
                                             }
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image img {
+                                                border-radius: '. $media_gallery_border_radius .'px;
+                                            }
                                         </style>';
                             break;
                         case 'carousel':
@@ -544,12 +652,38 @@ class PWEMediaGallery extends PWECommonFunctions {
                             $carousel_thumbnails_tablet = ($media_gallery_thumbnails_width_tablet == '') ? '2' : (string) $media_gallery_thumbnails_width_tablet;
                             $carousel_thumbnails_mobile = ($media_gallery_thumbnails_width_mobile == '') ? '2' : (string) $media_gallery_thumbnails_width_mobile;
 
-                            $media_gallery_gap = 0;
+                            if ($carousel_thumbnails_desktop == 1 && $carousel_thumbnails_tablet == 1 && $carousel_thumbnails_mobile == 1) {
+                                $output .=  '<style>
+                                                /* Carousel */
+                                                #'. $media_gallery_id .' .pwe-gallery-container {
+                                                    position: relative;
+                                                    border-radius: '. $media_gallery_border_radius .'px;
+                                                    overflow: hidden;
+                                                }
+                                                #'. $media_gallery_id .' .media-gallery-btn {
+                                                    position: absolute;
+                                                    bottom: 6px;
+                                                    right: 6px;
+                                                    color: white;
+                                                    padding: 4px 8px;
+                                                    font-size: 12px;
+                                                    font-weight: 700;
+                                                    text-transform: uppercase;
+                                                    border: 2px solid white;
+                                                    background: #00000075;
+                                                    border-radius: 12px;
+                                                    height: unset !important;
+                                                }
+                                            </style>';
+                            }
 
                             $output .=  '<style>
                                             /* Carousel */
-                                            #'. $media_gallery_id .' .slides {
-                                                gap: '. $media_gallery_gap .'px;
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image {
+                                                margin: '. ($media_gallery_gap / 2) .'px;
+                                            }
+                                            #'. $media_gallery_id .' .pwe-media-gallery-image img {
+                                                border-radius: '. $media_gallery_border_radius .'px;
                                             }
                                         </style>';
                             break;
@@ -575,7 +709,8 @@ class PWEMediaGallery extends PWECommonFunctions {
 
                     $simple_layout_types = ['columns', 'grid', 'flex'];
                     if (array_intersect($simple_layout_types, $layouts)) { // Gallery <--------------------------------------<
-                        $output .= '<div class="pwe-gallery-container pwe-media-gallery">
+                        $output .= '
+                        <div class="pwe-gallery-container pwe-media-gallery">
                         <link href="/wp-content/plugins/PWElements/includes/media-gallery/assets/justified-gallery/justifiedGallery.css" rel="stylesheet">
                         <script src="/wp-content/plugins/PWElements/includes/media-gallery/assets/justified-gallery/jquery.justifiedGallery.js"></script>
                         ';
@@ -598,28 +733,48 @@ class PWEMediaGallery extends PWECommonFunctions {
                         $output .= '</div>';  
                     } else if (in_array('carousel', $layouts)) { // Carousel <--------------------------------------<
                         $aspect_ratio_style = ($aspect_ratio_style == '') ? 'aspect-ratio: 4/3; object-fit: cover;' : $aspect_ratio_style;
-                        $output .= '<div class="pwe-gallery-container pwe-media-gallery-carousel">';
+                        $output .= '
+                        <div class="pwe-gallery-container pwe-media-gallery-carousel pwe-slides">';
+
                             foreach ($media_gallery_array as $image_url) {
                                 $path_parts = pathinfo($image_url);
                                 $image_filename = $path_parts['basename'];
 
-                                // Check if the key exists in $media_gallery_links_map
-                                $link = isset($media_gallery_links_map[$image_filename]) ? $media_gallery_links_map[$image_filename] : '';
-
-                                $media_gallery_urls[] = array(
-                                    "img"          => $image_url,
-                                    "link"         => $link,
-                                    "aspect-ratio" => $aspect_ratio_style,
+                                $media_gallery_options[] = array(
                                     "count-visible-thumbs-desktop" => $carousel_thumbnails_desktop,
                                     "count-visible-thumbs-tablet" => $carousel_thumbnails_tablet,
                                     "count-visible-thumbs-mobile" => $carousel_thumbnails_mobile,
                                     "breakpoint-tablet" => $media_gallery_breakpoint_tablet,
                                     "breakpoint-mobile" => $media_gallery_breakpoint_mobile,
+                                    "media_gallery_dots_inside" => $media_gallery_dots_inside,
+                                    "media_gallery_arrows_inside" => $media_gallery_arrows_inside,
                                 );
+                                
+                                if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                    $output .= '<a href="'. $media_gallery_links_map[$image_filename] .'">
+                                                    <div class="pwe-media-gallery-image">
+                                                        <img src="' . $image_url . '" style="' . $aspect_ratio_style . '">
+                                                    </div>
+                                                </a>';
+                                } else { 
+                                    $output .= '<div class="pwe-media-gallery-image">
+                                                    <img src="' . $image_url . '" style="' . $aspect_ratio_style . '">
+                                                </div>';
+                                }
                             }
-                            include_once plugin_dir_path(dirname(__DIR__)) . 'scripts/gallery-slider.php';
-                            $output .= PWEMediaGallerySlider::sliderOutput($media_gallery_urls);
-                        $output .= '</div>';  
+                            
+                        $output .= '</div>';
+
+                        if ($media_gallery_button && ($carousel_thumbnails_desktop == 1 && $carousel_thumbnails_tablet == 1 && $carousel_thumbnails_mobile == 1)) {
+                            $output .=  '<a href="'. self::languageChecker('/galeria/', '/en/gallery/') .'" class="media-gallery-btn">'. self::languageChecker('Przejdź do galerii', 'Go to gallery') .'</a>';
+                        }
+
+                        $output .= '
+                        <span class="pwe-opinions__arrow pwe-opinions__arrow-prev pwe-arrow pwe-arrow-prev">‹</span>
+                        <span class="pwe-opinions__arrow pwe-opinions__arrow-next pwe-arrow pwe-arrow-next">›</span>';  
+
+                        include_once plugin_dir_path(dirname(__DIR__)) . 'scripts/slider.php';
+                        $output .= PWESliderScripts::sliderScripts('media-gallery', '#'. $media_gallery_id, $media_gallery_dots_display, $media_gallery_arrows_display, $carousel_thumbnails_desktop, $media_gallery_options);
                     } else if (in_array('slider', $layouts)) { // Slider <--------------------------------------<
                         $output .= '<div class="pwe-gallery-container pwe-media-gallery-slider" style="margin: 0 auto; max-width: 1000px;">
                     
@@ -654,7 +809,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                         </div>';  
                     }
 
-                    $output .= '
+                    $output .= '  
                 </div>
             </div>';
 
@@ -793,7 +948,7 @@ class PWEMediaGallery extends PWECommonFunctions {
 
         }
 
-        $output .= '
+        $output .= ' 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 let pweElement = document.querySelector(".pwelement_'. self::$rnd_id .'");
