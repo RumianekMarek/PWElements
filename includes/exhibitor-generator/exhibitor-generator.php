@@ -218,38 +218,21 @@ class PWEExhibitorGenerator{
      */
     public static function catalog_data($exhibitor_id) {
         $katalog_id = do_shortcode('[trade_fair_catalog]');
-        if (empty($katalog_id)) {
-            error_log("Brak katalogu ID.");
-            return null;
-        }
-    
+        
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
         $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id;
-    
-        try {
-            $json = @file_get_contents($canUrl);
-            if ($json === false) {
-                throw new Exception("Nie udało się pobrać danych z $canUrl");
-            }
-    
-            $data_array = json_decode($json, true);
-            if ($data_array === null) {
-                throw new Exception("Nieprawidłowe dane JSON: $json");
-            }
-    
+        $json = file_get_contents($canUrl);
+        if ($json !== null){
             $search_id = $exhibitor_id . '.00';
-            $exhibitors_data = reset($data_array)['Wystawcy'] ?? [];
-            if (isset($exhibitors_data[$search_id])) {
-                return $exhibitors_data[$search_id];
-            }
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-        }
-    
+            $data_array = json_decode($json, true);
+            $exhibitors_data = reset($data_array)['Wystawcy'];
+            $exhibitor =  $exhibitors_data[$search_id];
+            return  $exhibitor;
+        };
         return null;
-    }
+    }   
     
 
     /**
