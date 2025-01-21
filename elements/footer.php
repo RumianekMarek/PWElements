@@ -367,16 +367,18 @@ class PWElementFooter extends PWElements {
             $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
+                    const uncodeNavMenu = document.querySelector("#masthead");
+                    const pweNavMenu = document.querySelector("#pweMenu");
 
                     // Top main menu "For exhibitors"
-                    const mainMenu = document.querySelector("ul.menu-primary-inner");
+                    const mainMenu = pweNavMenu ? document.querySelector(".pwe-menu__nav") : document.querySelector("ul.menu-primary-inner");
                     const secondChild = mainMenu.children[1];
-                    const dropMenu = secondChild.querySelector("ul.drop-menu");
+                    const dropMenu = pweNavMenu ? secondChild.querySelector(".pwe-menu__submenu") : secondChild.querySelector("ul.drop-menu");
 
                     // Create new element li
                     const newMenuItem = document.createElement("li");
-                    newMenuItem.id = "menu-item-99999";
-                    newMenuItem.className = "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
+                    newMenuItem.id = pweNavMenu ? "" : "menu-item-99999";
+                    newMenuItem.className = pweNavMenu ? "pwe-menu__submenu-item" : "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
                     newMenuItem.innerHTML = `<a title="Become an agent" target="_blank" href="https://warsawexpo.eu/en/forms-for-agents/">Become an agent</a>`;
 
                     // Add new element
