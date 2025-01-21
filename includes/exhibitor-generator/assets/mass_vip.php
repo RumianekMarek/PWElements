@@ -43,6 +43,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                 $fields['email'] = $field['id'];
                             } elseif(strpos(strtolower($field['label']), 'firma') !== false || strpos(strtolower($field['label']), 'company') !== false){
                                 $fields['company'] = $field['id'];
+                            } elseif(strpos(strtolower($field['label']), 'telefon') !== false || strpos(strtolower($field['label']), 'phone') !== false){
+                                $fields['phone'] = $field['id'];
                             }
                         }
                         break;
@@ -51,11 +53,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
                 // Process entry data.
                 foreach($data as $val){
+                    $phoneVal =  $val['phone'] ? $val['phone'] : '' ?? '';
                     $entry = [
                         'form_id' => $form_id,
                         $fields['name'] => $val['name'],
                         $fields['email'] => $val['email'],
                         $fields['company'] => $_POST['company'],
+                        $fields['phone'] => $phoneVal,
                     ];
 
                     // Add entry to form.
@@ -102,6 +106,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         )
                     );
                 }
+
                 // Insert all not valid entries IDs in to database as "error"
                 foreach($all_not_valid as $single_id){
                     $wpdb->insert(
@@ -116,6 +121,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         )
                     );
                 }
+                
                 $response = 'true';
             }
         }

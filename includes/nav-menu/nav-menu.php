@@ -4,15 +4,15 @@ class pweNavMenu extends PWECommonFunctions {
 
     public function __construct() {
 
-        $pwe_menu_options = get_option('pwe_menu_options');
+        $pwe_menu_options = get_option('pwe_menu_options', []);
 		if (isset($pwe_menu_options['pwe_menu_active']) && $pwe_menu_options['pwe_menu_active']) {
             // Hook actions
             add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
             add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
-        }
 
-        // Registering a function
-        add_action('wp_head', array($this, 'pwe_nav_menu'), 5);
+            // Registering a function
+            add_action('wp_head', array($this, 'pwe_nav_menu'), 5);
+        }
     }
 
     // Styles
@@ -22,114 +22,151 @@ class pweNavMenu extends PWECommonFunctions {
         wp_enqueue_style('nav-menu-css', $css_file, array(), $css_version);
     }
 
-    
     // Scripts
     public function addingScripts(){
+        $menu_js_array = array(
+            'menu_transparent' => !empty(get_option('pwe_menu_options', [])['pwe_menu_transparent']) ? "true" : "false"
+        );
+
         $js_file = plugins_url('assets/script.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/script.js');
         wp_enqueue_script('nav-menu-js', $js_file, array('jquery'), $js_version, true);
+        wp_localize_script( 'nav-menu-js', 'menu_js', $menu_js_array );
     }
 
-    // Menu generating function
     public function pwe_nav_menu() { 
 
-        // Get menu location
+        // Get menu locations
         $locations = get_nav_menu_locations();
+    
+        // Check if 'primary' location exists
+        if (!isset($locations['primary'])) {
+            return '<script>console.error("Menu location `primary` not found.");</script>';
+        }
+    
+        // Get menu ID for 'primary' location
+        $menu_id = $locations['primary']; 
 
-        // Check if 'primary' location is set
-        if (isset($locations['primary'])) {
-            // Menu ID assigned to location 'primary'
-            $menu_id = $locations['primary']; 
-            // Get menu items
-            $menu = wp_get_nav_menu_items($menu_id); 
-        } else {
-            // If location doesn't exist, no menu
-            $menu = null; 
+        // WPML - Get the translated menu ID for the current language
+        if (function_exists('icl_object_id')) {
+            $menu_id = icl_object_id($menu_id, 'nav_menu', true, ICL_LANGUAGE_CODE);
+        }
+    
+        // Get menu items
+        $menu = wp_get_nav_menu_items($menu_id);
+        if (empty($menu) || !is_array($menu)) {
+            return '<script>console.error("No menu items found or invalid menu structure for menu ID: '. $menu_id .'");</script>';
+        }
+    
+        // Organize menu items by ID
+        $menu_items = array();
+        foreach ($menu as $item) {
+            if (isset($item->ID)) {
+                $menu_items[$item->ID] = $item;
+            } else {
+                return '<script>console.error("Menu item without valid ID found.");</script>';
+            }
         }
 
-        if ($menu) {
-            $menu_items = array();
-            // Menu item group (parents and children)
-            foreach ($menu as $item) {
-                $menu_items[$item->ID] = $item;
-            }
+    
+        $output = '';
 
-            $output = '';
-            
+        if (empty(get_option('pwe_menu_options', [])['pwe_menu_transparent'])) {
             $output .= '
-            <div id="pweMenu" class="pwe-menu">
-                <div class="pwe-menu__wrapper">
-
-                    <div class="pwe-menu__main-logo">
-                        <a class="pwe-menu__main-logo-ptak ' . (file_exists($_SERVER['DOCUMENT_ROOT'] . self::languageChecker('/doc/logo-x-pl.webp', '/doc/logo-x-en.webp')) ? "hidden-mobile" : "") . '" target="_blank" href="https://warsawexpo.eu'. self::languageChecker('/', '/en/') .'" target="_blank">
-                            <img data-no-lazy="1" src="/wp-content/plugins/PWElements/media/logo_pwe.webp" alt="logo ptak">
-                        </a>
-                        <a class="pwe-menu__main-logo-fair" href="'. self::languageChecker('/', '/en/') .'">';
-                            if (self::lang_pl()) {
-                                $output .= '<img data-no-lazy="1" src="' . (file_exists($_SERVER['DOCUMENT_ROOT'] . "/doc/logo-x-pl.webp") ? "/doc/logo-x-pl.webp" : "/doc/favicon.webp") . '" alt="logo fair">';
-                            } else {
-                                $output .= '<img data-no-lazy="1" src="' . (file_exists($_SERVER['DOCUMENT_ROOT'] . "/doc/logo-x-en.webp") ? "/doc/logo-x-en.webp" : "/doc/favicon.webp") . '" alt="logo fair">';
-                            }
-                        $output .= '
-                        </a>
-                    </div>
-
-                    <div class="pwe-menu__right-side">
-                        <div class="pwe-menu__register-btn">
-                            <a href="'. self::languageChecker('/rejestracja/', '/en/registration/') .'">'. self::languageChecker('WEŹ UDZIAŁ', 'TAKE A PART') .'</a>
-                        </div>
-                        
-                        <div class="pwe-menu__burger">
-                            <input class="pwe-menu__burger-checkbox" type="checkbox">
-                            <span></span>
-                        </div>
-                    </div>
-
-                    <div class="pwe-menu__container">
-                        <ul class="pwe-menu__nav">';
-                            
-                            foreach ($menu_items as $item) {
-                                if ($item->menu_item_parent == 0) {
-                                    $has_children = !empty(array_filter($menu_items, function($child) use ($item) {
-                                        return $child->menu_item_parent == $item->ID;
-                                    }));
-
-                                    $target_blank = !empty($item->target) ? 'target="_blank"' : '';
-
-                                    $output .= '<li class="pwe-menu__item' . ($has_children ? ' has-children' : '') . ' ' . $item->button . '">';
-                                    $output .= '<a '. $target_blank .' href="' . esc_url($item->url) . '">' . wp_kses_post($item->title) . ($has_children ? '<span class="pwe-menu__arrow">›</span>' : '') . '</a>';
-                                    $output .= $this->display_sub_menu($item->ID, $menu_items);
-                                    $output .= '</li>';
-                                }
-                            }
-
-            $output .= '</ul>';
-                        
-            $socials = ot_get_option('_uncode_social_list');
-            if (!empty($socials)) {
-                $output .= '<ul class="pwe-menu__social">';
-                foreach ($socials as $social) { 
-                    $output .= '<li class="pwe-menu__social-item-link social-icon '.$social['_uncode_social_unique_id'].'">
-                                    <a href="'.$social['_uncode_link'].'" class="social-menu-link" target="_blank">
-                                        <i class="'.$social['_uncode_social'].'"></i>
-                                    </a>
-                                </li>';
-                }
-                $output .= '</ul>';
+            <style>
+            body.home .pwe-menu {
+                background-color: var(--accent-color);
             }
-
-            $output .= '
+            </style>';
+        }
+        
+        $output .= '
+        <header id="pweMenu" class="pwe-menu is_stuck">
+            <div class="pwe-menu__wrapper">
+    
+                <div class="pwe-menu__main-logo">
+                    <a class="pwe-menu__main-logo-ptak ' . (file_exists($_SERVER['DOCUMENT_ROOT'] . self::languageChecker('/doc/logo-x-pl.webp', '/doc/logo-x-en.webp')) ? "hidden-mobile" : "") . '" target="_blank" href="https://warsawexpo.eu'. self::languageChecker('/', '/en/') .'">
+                        <img data-no-lazy="1" src="/wp-content/plugins/PWElements/media/logo_pwe.webp" alt="logo ptak">
+                    </a>
+                    <a class="pwe-menu__main-logo-fair" href="'. self::languageChecker('/', '/en/') .'">';
+                        if (self::lang_pl()) {
+                            $output .= '<img data-no-lazy="1" src="' . (file_exists($_SERVER['DOCUMENT_ROOT'] . "/doc/logo-x-pl.webp") ? "/doc/logo-x-pl.webp" : "/doc/favicon.webp") . '" alt="logo fair">';
+                        } else {
+                            $output .= '<img data-no-lazy="1" src="' . (file_exists($_SERVER['DOCUMENT_ROOT'] . "/doc/logo-x-en.webp") ? "/doc/logo-x-en.webp" : "/doc/favicon.webp") . '" alt="logo fair">';
+                        }
+                    $output .= '
+                    </a> 
+                </div>
+    
+                <div class="pwe-menu__right-side">
+                    <div class="pwe-menu__register-btn">
+                        <a href="'. self::languageChecker('/rejestracja/', '/en/registration/') .'">'. self::languageChecker('WEŹ UDZIAŁ', 'TAKE A PART') .'</a>
+                    </div>
+                    
+                    <div class="pwe-menu__burger">
+                        <input class="pwe-menu__burger-checkbox" type="checkbox">
+                        <span></span>
                     </div>
                 </div>
-                <div class="pwe-menu__overlay"></div>
-            </div>';
-
-            return $output;
+    
+                <div class="pwe-menu__container">
+                    <ul class="pwe-menu__nav">';
+                        
+                        foreach ($menu_items as $item) {
+                            if (!isset($item->menu_item_parent) || !isset($item->ID)) {
+                                $output .= '<script>console.error("Invalid menu item structure detected.");</script>';
+                                continue;
+                            }
+    
+                            if ($item->menu_item_parent == 0) {
+                                $has_children = !empty(array_filter($menu_items, function($child) use ($item) {
+                                    return $child->menu_item_parent == $item->ID;
+                                }));
+    
+                                $target_blank = !empty($item->target) ? 'target="_blank"' : '';
+    
+                                $output .= '<li class="pwe-menu__item' . ($has_children ? ' has-children' : '') . ' ' . ($item->button ?? '') . '">';
+                                $output .= '<a '. $target_blank .' href="' . esc_url($item->url) . '"> ' . wp_kses_post($item->title);
+                                $output .= (strpos($item->ID, 'wpml') === false) ? ($has_children ? '<span class="pwe-menu__arrow">›</span>' : '') : '';
+                                $output .= '</a>';
+                                $output .= (strpos($item->ID, 'wpml') === false) ? $this->display_sub_menu($item->ID, $menu_items) : '';
+                                $output .= '</li>';
+                            }
+                        }
+    
+        $output .= '</ul>'; 
+                    
+        $socials = ot_get_option('_uncode_social_list');
+        if (!empty($socials) && is_array($socials)) {
+            $output .= '<ul class="pwe-menu__social">';
+            foreach ($socials as $social) { 
+                $output .= '<li class="pwe-menu__social-item-link social-icon '.esc_attr($social['_uncode_social_unique_id']).'">
+                                <a href="'.esc_url($social['_uncode_link']).'" class="social-menu-link" target="_blank">
+                                    <i class="'.esc_attr($social['_uncode_social']).'"></i>
+                                </a>
+                            </li>';
+            }
+            $output .= '</ul>';
         }
+    
+        $output .= '
+                </div>
+            </div>
+            <div class="pwe-menu__overlay"></div>
+        </header>';
+    
+        return $output;
     }
-
+    
     // Function to display submenu
-    private function display_sub_menu($parent_id, $menu_items) {
+    private function display_sub_menu($parent_id, $menu_items, $depth = 1) {
+        // Maximum nesting depth
+        $max_depth = 10;
+
+        if ($depth > $max_depth) { // Zatrzymujemy rekurencję po osiągnięciu maksymalnej głębokości
+            return '<script>console.error("Maximum submenu depth reached for parent ID: '. $parent_id .'");</script>';
+        }
+
         // Filter children for a given parent
         $children = array_filter($menu_items, function($item) use ($parent_id) {
             return $item->menu_item_parent == $parent_id;
@@ -148,7 +185,7 @@ class pweNavMenu extends PWECommonFunctions {
 
                 $output .= '<li class="pwe-menu__submenu-item' . ($has_submenu_children ? ' has-children' : '') . '">';
                 $output .= '<a '. $target_blank .' href="' . esc_url($child->url) . '">' . wp_kses_post($child->title) . ($has_submenu_children ? '<span class="pwe-menu__arrow">›</span>' : '') . '</a>';
-                $output .= $this->display_sub_menu($child->ID, $menu_items);
+                $output .= $this->display_sub_menu($child->ID, $menu_items, $depth + 1);
                 $output .= '</li>';
             }
             $output .= '</ul>';
@@ -156,9 +193,8 @@ class pweNavMenu extends PWECommonFunctions {
             return $output;
         }
 
-        return ''; // If there are no children
+        return '';
     }
-
 
 }
 
@@ -234,4 +270,3 @@ final class Kama_Collapse_Toolbar {
 }
 
 Kama_Collapse_Toolbar::init();
-

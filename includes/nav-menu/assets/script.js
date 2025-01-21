@@ -1,3 +1,5 @@
+const menu_transparent = menu_js.menu_transparent;
+
 document.addEventListener("DOMContentLoaded", function () {
     const pweNavMenu = document.querySelector('.pwe-menu');
     const pweNavMenuHome = document.querySelector("body.home .pwe-menu");
@@ -5,14 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const menuContainer = document.querySelector('.pwe-menu__container');
 
     // Background color for nav menu
-    if (pweNavMenuHome && window.innerWidth >= 960) {
-        window.addEventListener("scroll", function () {
-            if (window.scrollY > 70) {
-                pweNavMenuHome.style.background = accent_color;
-            } else {
-                pweNavMenuHome.style.background = "transparent";
-            }
-        });
+    if (menu_transparent === "true") {
+        if (pweNavMenuHome && window.innerWidth >= 960) {
+            window.addEventListener("scroll", function () {
+                if (window.scrollY > 70) {
+                    pweNavMenuHome.style.background = accent_color;
+                } else {
+                    pweNavMenuHome.style.background = "transparent";
+                }
+            });
+        }
     }
 
     // Click outside the menu container

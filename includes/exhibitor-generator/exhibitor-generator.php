@@ -15,6 +15,7 @@ class PWEExhibitorGenerator{
     public static $accent_color;
     public static $main2_color;
     public static $fair_forms;
+    private $atts;
 
     /**
      * Constructor method for initializing the plugin.
@@ -33,11 +34,9 @@ class PWEExhibitorGenerator{
         }
         add_action('init', array($this, 'initVCMapPWEExhibitorGenerator'));
         add_shortcode('pwe_exhibitor_generator', array($this, 'PWEExhibitorGeneratorOutput'));
-        
+
         // Hook actions
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
-        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
-
     }
 
     /**
@@ -88,6 +87,13 @@ class PWEExhibitorGenerator{
                         'param_holder_class' => 'backend-textarea-raw-html',
                         'save_always' => true,
 
+                    ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'PWE Element',
+                        'heading' => __('Włącza dodatkowe pole telefon', 'pwelement'),
+                        'param_name' => 'phone_field',
+                        'save_always' => true,
                     ),
                     array(
                         'type' => 'checkbox',
@@ -174,6 +180,7 @@ class PWEExhibitorGenerator{
      */
     public function addingScripts($atts){
         $send_data = [
+            'phone_field' => $atts['phone_field'],
             'send_file' => plugins_url('assets/mass_vip.php', __FILE__ ),
             'secret' =>  hash_hmac('sha256', $_SERVER["HTTP_HOST"], AUTH_KEY),
             'lang' => get_locale(),
@@ -233,7 +240,6 @@ class PWEExhibitorGenerator{
         };
         return null;
     }   
-    
 
     /**
      * Output method for pwe_exhibitor_generator shortcode.
@@ -243,6 +249,7 @@ class PWEExhibitorGenerator{
      * @return string
      */
     public function PWEExhibitorGeneratorOutput($atts) {
+        
         extract( shortcode_atts( array(
             'exhibitor_generator_mode' => '',
         ), $atts ));
@@ -297,6 +304,8 @@ class PWEExhibitorGenerator{
         
         // Adding mass generator to display
         $output_html .= PWEMassVipSender::output($atts);
+
+        $this->addingScripts($atts);
 
         return $output_html;
     }

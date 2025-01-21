@@ -481,12 +481,14 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                             speaker.style.justifyContent = "flex-start";
                         }
 
-                        if (img.src == undefined) {
+                        if (img && img.src == undefined) {
                             const backgroundImage = window.getComputedStyle(img).getPropertyValue("background-image");
                             // Extracting the URL from the background-image value in the slider
                             const urlMatch = backgroundImage.match(/url\\(\\"?(.*?)\\"?\\)/);
                             const imageUrl = urlMatch ? urlMatch[1] : null;
-                            img.src = imageUrl;
+                            if (imageUrl) {
+                                img.src = imageUrl;
+                            }
                         }
                         
                         if (btn) {
@@ -497,11 +499,17 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                                 modalDiv.innerHTML = `
                                     <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
                                         <span class="pwe-speaker-modal-close">&times;</span>
-                                        <img class="pwe-speaker-modal-image" src="${img.src}" alt="Speaker Image" style="width:100%; max-width:150px;">
+                                        <img class="pwe-speaker-modal-image" src="" alt="Speaker Image" style="width:100%; max-width:150px;">
                                         <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>
                                         <div class="pwe-speaker-modal-desc">${desc.innerHTML}</div>
                                     </div>
                                 `;
+
+                                if (img) {
+                                    modalDiv.querySelector(".pwe-speaker-modal-image").src = img.src;
+                                } else {
+                                    modalDiv.querySelector(".pwe-speaker-modal-image").style.display = "none";
+                                }
                                 
                                 document.body.appendChild(modalDiv);
                                 requestAnimationFrame(() => {

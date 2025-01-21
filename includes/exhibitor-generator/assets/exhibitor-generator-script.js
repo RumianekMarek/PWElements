@@ -14,7 +14,8 @@ jQuery(document).ready(function($){
     const closeBtn = modal.find(".btn-close");
 
     const pageLang = (send_data['lang'] == "pl_PL") ? 'pl' : 'en';
-    
+    const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
+
     // Button "Wysyłka Zbiorcze" functionality
     // Show odal and hide footer
     $(".tabela-masowa").on("click",function(){
@@ -128,10 +129,14 @@ jQuery(document).ready(function($){
             $("#spinner").remove();
             $(".modal__element").find('.inner').removeClass("blocked");
 
-            // Create drop downs for email a name,
+            // Create drop downs for email, name and phone,
             // Populate the drop downs with file labels.
+            if(phone_field){
+                $(".file-uloader").after("<div class='file-selector'><label>Kolumna z numerami telefonów</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
+            }
             $(".file-uloader").after("<div class='file-selector'><label>Kolumna z adresami e-mail</label><select type='select' id='email-column' name='email-column' class='selectoret'></select></div>");
             $(".file-uloader").after("<div class='file-selector'><label>Kolumna z imionami i nazwiskami</label><select type='select' id='name-column' name='name-column' class='selectoret'></select></div>");
+            
             
             $(".selectoret").each(function(){
                 $(this).append("<option value=''>Wybierz</option>");
@@ -198,6 +203,7 @@ jQuery(document).ready(function($){
         let company_name = "";
         let emailColumn = "";
         let nameColumn = "";
+        let phoneColumn = "";
         let fileTrue = false;
 
         // Check if file uploded correctly.
@@ -243,6 +249,18 @@ jQuery(document).ready(function($){
                 $(".file-selector").has("#name-column").after("<p class='name-column-error error-color'>Names required</p>");
             }
         }
+
+        // Check if phone column is chosen.
+        if (phone_field &&  $("#phone-column").length > 0 && $("#phone-column").val() != ""){
+            phoneColumn = $("#phone-column").val();
+        } 
+        // else if($(".name-column-error").length == 0 ){
+        //     if(pageLang == "pl"){
+        //         $(".file-selector").has("#name-column").after("<p class='name-column-error error-color'>Wybierz kolumne z danymi</p>");
+        //     } else {
+        //         $(".file-selector").has("#name-column").after("<p class='name-column-error error-color'>Names required</p>");
+        //     }
+        // }
         
         // Check if any of needed variables is not empty.
         if(company_name == "" || emailColumn == "" || nameColumn == "" || fileTrue === false){
@@ -252,13 +270,21 @@ jQuery(document).ready(function($){
         // Creating chosen columns idexes for file data.
         const namelIndex = fileLabel.indexOf(nameColumn);
         const emailIndex = fileLabel.indexOf(emailColumn);
+        let phoneIndex = '';
+        if(phoneColumn) {
+            phoneIndex = fileLabel.indexOf(phoneColumn);
+        }
         let emailErrors = 0;
 
-        // Create special array with names and emails for post
+        // Create special array for post
         const tableCont = filteredArray.reduce((acc, row) => {
             const rowArray = row;
             if (rowArray[emailIndex] && rowArray[emailIndex].length > 5 && emailErrors < 5) {
-                acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex] });
+                if(phoneColumn) {
+                    acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex], "phone": rowArray[phoneIndex] });
+                } else {
+                    acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex]});
+                }
             } else if (emailErrors < 5) {
                 emailErrors++;
             } else {
@@ -267,6 +293,7 @@ jQuery(document).ready(function($){
             return acc;
         }, []);
 
+        console.log(tableCont);
         // Sending data via POST for procesing to mass-vip.php 
         // Check if tableCont is populated, has less then 5000 elements and there is less then 5 email errors
         if (tableCont.length > 0 && tableCont.length < 5000 && emailErrors < 5){
