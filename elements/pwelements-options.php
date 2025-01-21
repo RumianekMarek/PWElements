@@ -270,7 +270,6 @@ class PWElements {
                         ...PWElementTicketActConf::initElements(),
                         ...PWElementOpinions::initElements(),
                         ...PWElementButton::initElements(),
-                        ...PWElementHale::initElements(),
                         ...PWElementAbout::initElements(),
                         ...PWElementWhyItsWorth::initElements(),
                         ...PWElementQRChekcer::initElements(),
@@ -279,6 +278,7 @@ class PWElements {
                         ...PWElementSingleImage::initElements(),
                         ...PWElementOtherEvents::initElements(),
                         ...PWElementTwoCols::initElements(),
+                        ...PWElementHale::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',

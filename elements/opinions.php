@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementOpinions
@@ -130,15 +130,15 @@ class PWElementOpinions extends PWElements {
             ),
         );
         return $element_output;
-    }    
+    }
 
-    public static function output($atts) { 
+    public static function output($atts) {
         extract( shortcode_atts( array(
             'opinions_preset' => '',
             'opinions_dots_display' => '',
             'opinions_limit_width' => '',
             'opinions_items' => '',
-        ), $atts )); 
+        ), $atts ));
 
         $opinions_items_urldecode = urldecode($opinions_items);
         $opinions_items_json = json_decode($opinions_items_urldecode, true);
@@ -151,7 +151,7 @@ class PWElementOpinions extends PWElements {
             <style>
                 .row-parent:has(.pwelement_'. self::$rnd_id .' .pwe-opinions) {
                     max-width: '. $opinions_width_element .' !important;
-                    padding: 0 !important;  
+                    padding: 0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-opinions {
                     visibility: hidden;
@@ -239,7 +239,7 @@ class PWElementOpinions extends PWElements {
                         font-size: 14px;
                         line-height: 1.4;
                         margin: 0;
-                    } 
+                    }
                 </style>';
             } else if ($opinions_preset == 'preset_2') {
                 $output .= '
@@ -250,7 +250,7 @@ class PWElementOpinions extends PWElements {
                         border-radius: 18px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-media {
-                        display: flex;  
+                        display: flex;
                         flex-direction: column;
                         align-items: center;
                         gap: 10px;
@@ -276,7 +276,7 @@ class PWElementOpinions extends PWElements {
                         object-fit: contain;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info {
-                        text-align: center;  
+                        text-align: center;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-name {
                         margin: 0;
@@ -293,7 +293,7 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc {
                         width: auto;
-                        text-align: center;  
+                        text-align: center;
                         margin: 8px 0 0;
                         font-size: 14px;
                     }
@@ -304,7 +304,7 @@ class PWElementOpinions extends PWElements {
                         font-size: 14px;
                         line-height: 1.2;
                         margin: 0;
-                    }    
+                    }
                 </style>';
             } else if ($opinions_preset == 'preset_3') {
                 $output .= '
@@ -330,14 +330,14 @@ class PWElementOpinions extends PWElements {
 
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-container {
-                        display: flex;  
+                        display: flex;
                         flex-direction: column;
                         align-items: center;
                         margin-top: 18px;
                         margin-bottom: -50px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker {
-                        display: flex;  
+                        display: flex;
                         flex-direction: column;
                         align-items: center;
                         box-shadow: 2px 2px 12px #cccccc !important;
@@ -357,13 +357,13 @@ class PWElementOpinions extends PWElements {
                         object-position: top;
                         border: 1px solid #3d3d3d;
                     }
-                    
+
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info {
-                        text-align: center;  
+                        text-align: center;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info h5 {
                         width: 100%;
-                        text-align: center;  
+                        text-align: center;
                         font-size: 16px;
                         margin: 0;
                     }
@@ -381,7 +381,7 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info-desc {
                         width: auto;
-                        text-align: center;  
+                        text-align: center;
                         margin: 8px 0 0;
                         font-size: 14px;
                     }
@@ -394,7 +394,7 @@ class PWElementOpinions extends PWElements {
                         font-size: 12px;
                         line-height: 1.2;
                         margin: 0;
-                    }  
+                    }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-btn {
                         margin-top: 18px;
                     }
@@ -416,53 +416,53 @@ class PWElementOpinions extends PWElements {
 
             $default_opinions = [
                 [
-                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
-                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
-                    'default_opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
-                    'default_opinions_name' => 'dr Radosław Dziuba',
-                    'default_opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
-                    'default_opinions_text' => self::languageChecker(
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
+                    'opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
+                    'opinions_name' => 'dr Radosław Dziuba',
+                    'opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
+                    'opinions_text' => self::languageChecker(
                         'Ptak Warsaw Expo to partner, z którym wymieniamy się wiedzą i doświadczeniem w dziedzinach związanych z działalnością obydwu instytucji. Centrum targowo-wystawienniczym Ptak Warsaw Expo pozwala na nawiązywanie kluczowych kontaktów biznesowych, budowanie relacji z klientami oraz poznanie nowych trendów.',
                         'Ptak Warsaw Expo is a partner with whom we exchange knowledge and experience in areas related to the activities of both institutions. The Ptak Warsaw Expo exhibition center facilitates establishing key business contacts, building client relationships, and discovering new trends.'
                     )
                 ],
                 [
-                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jakub-Tyczkowski.webp',
-                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/rekpol-logo.webp',
-                    'default_opinions_company' => 'Rekopol Organizacja Odzysku Opakowań',
-                    'default_opinions_name' => 'Jakub Tyczkowski',
-                    'default_opinions_desc' => self::languageChecker('Prezes Rekopol', 'President of Rekopol'),
-                    'default_opinions_text' => self::languageChecker(
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jakub-Tyczkowski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/rekpol-logo.webp',
+                    'opinions_company' => 'Rekopol Organizacja Odzysku Opakowań',
+                    'opinions_name' => 'Jakub Tyczkowski',
+                    'opinions_desc' => self::languageChecker('Prezes Rekopol', 'President of Rekopol'),
+                    'opinions_text' => self::languageChecker(
                         'Rekopol Organizacja Odzysku Opakowań współpracuje z Ptak Warsaw Expo od samego początku. Nasze projekty cechuje zaangażowanie, dobra organizacja konferencji oraz świetna komunikacja.',
                         'Rekopol Packaging Recovery Organization has been cooperating with Ptak Warsaw Expo from the very beginning. Our projects are characterized by commitment, good conference organization, and excellent communication.')
                 ],
                 [
-                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Krzysztof-Niczyporczuk.webp',
-                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pio-logo.webp',
-                    'default_opinions_company' => 'Polska Izba Opakowań',
-                    'default_opinions_name' => 'Mgr inż. Krzysztof Niczyporuk',
-                    'default_opinions_desc' => '',
-                    'default_opinions_text' => self::languageChecker(
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Krzysztof-Niczyporczuk.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pio-logo.webp',
+                    'opinions_company' => 'Polska Izba Opakowań',
+                    'opinions_name' => 'Mgr inż. Krzysztof Niczyporuk',
+                    'opinions_desc' => '',
+                    'opinions_text' => self::languageChecker(
                         'PTAK Warsaw Expo to wysokiej klasy organizator imprez targowych i konferencji. Polska Izba Opakowań pozytywnie ocenia współpracę z Ptak Warsaw Expo jako rzetelnym partnerem.',
                         'PTAK Warsaw Expo is a high-quality organizer of trade fairs and conferences. The Polish Packaging Chamber positively evaluates cooperation with Ptak Warsaw Expo as a reliable partner.')
                 ],
                 [
-                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
-                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
-                    'default_opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
-                    'default_opinions_name' => 'Piotr Fiejkiewicz',
-                    'default_opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
-                    'default_opinions_text' => self::languageChecker(
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
+                    'opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
+                    'opinions_name' => 'Piotr Fiejkiewicz',
+                    'opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
+                    'opinions_text' => self::languageChecker(
                         'PTAK Warsaw Expo jest największym centrum wystawienniczym, z jakim współpracujemy. Firma inwestuje w rozwój infrastruktury, co zwiększa jakość organizowanych wydarzeń.',
                         'PTAK Warsaw Expo is the largest exhibition center we work with. The company invests in infrastructure development, which enhances the quality of organized events.')
                 ],
                 [
-                    'default_opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Janusz-Poulakowski.webp',
-                    'default_opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/evoluma-logo.webp',
-                    'default_opinions_company' => 'Klaster Obróbki Metali',
-                    'default_opinions_name' => 'Janusz Poulakowski',
-                    'default_opinions_desc' => self::languageChecker('Dyrektor Operacyjny', 'Operational Director'),
-                    'default_opinions_text' => self::languageChecker(
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Janusz-Poulakowski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/evoluma-logo.webp',
+                    'opinions_company' => 'Klaster Obróbki Metali',
+                    'opinions_name' => 'Janusz Poulakowski',
+                    'opinions_desc' => self::languageChecker('Dyrektor Operacyjny', 'Operational Director'),
+                    'opinions_text' => self::languageChecker(
                         'Klaster Obróbki Metali współpracuje z Ptak Warsaw Expo od samego początku. Cenimy profesjonalizm, innowacyjność oraz stabilność współpracy z Ptak Warsaw Expo.',
                         'The Metalworking Cluster has been cooperating with Ptak Warsaw Expo from the very beginning. We value professionalism, innovation, and stability in our cooperation with Ptak Warsaw Expo.')
                 ]
@@ -472,44 +472,62 @@ class PWElementOpinions extends PWElements {
             <div id="pweOpinions"class="pwe-opinions">
                 <div class="pwe-posts-title main-heading-text">
                     <h4 class="pwe-opinions__title pwe-uppercase">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h4>
-                </div> 
+                </div>
                 <div class="pwe-opinions__wrapper">
                     <div class="pwe-opinions__items pwe-slides">';
 
-                    $show_default = true;
+                    $max_opinions = 5; // Maksymalna liczba opinii wyświetlanych łącznie
+                    $user_opinions = [];
 
+                    // Przeanalizuj opinie użytkownika i zbierz niepuste
                     if (is_array($opinions_items_json) && !empty($opinions_items_json)) {
                         foreach ($opinions_items_json as $opinion_item) {
                             if (!empty($opinion_item['opinions_text'])) {
-                                $show_default = false;
-                                break;
+                                $user_opinions[] = $opinion_item;
                             }
                         }
                     }
 
-                    // If $opinions_items_json is empty or has empty values ​​-> show default
-                    $opinions_to_display = $show_default ? $default_opinions : $opinions_items_json;
+                    // Jeśli liczba opinii użytkownika jest większa niż maksymalna liczba opinii
+                    if (count($user_opinions) > $max_opinions) {
+
+                        $opinions_to_display = array_slice($user_opinions, 0, 15);
+                    } else {
+                        $remaining_slots = $max_opinions - count($user_opinions);
+                        $default_opinions_to_add = array_slice($default_opinions, 0, $remaining_slots);
+                        $opinions_to_display = array_merge($user_opinions, $default_opinions_to_add);
+                    }
 
                     foreach ($opinions_to_display as $opinion_item) {
-                        $opinions_face_img_media = isset($opinion_item['opinions_face_img']) ? $opinion_item['opinions_face_img'] : null;
-                        $opinions_company_img_media = isset($opinion_item['opinions_company_img']) ? $opinion_item['opinions_company_img'] : null;
-                        $opinions_face_img_src_media = $opinions_face_img_media ? wp_get_attachment_url($opinions_face_img_media) : '';
-                        $opinions_company_src_media = $opinions_company_img_media ? wp_get_attachment_url($opinions_company_img_media) : '';
+                        if (!empty($opinion_item['opinions_face_img'])) {
+                            if (is_numeric($opinion_item['opinions_face_img'])) {
+                                $opinions_face_img_src = wp_get_attachment_url($opinion_item['opinions_face_img']);
+                            } else {
+                                $opinions_face_img_src = $opinion_item['opinions_face_img'];
+                            }
+                        } else {
+                            $opinions_face_img_src = '';
+                        }
 
-                        $opinions_face_img_src_catalog = isset($opinion_item["opinions_company_img_src"]) ? $opinion_item["opinions_company_img_src"] : null;
-                        $opinions_company_img_src_catalog = isset($opinion_item["opinions_face_img_src"]) ? $opinion_item["opinions_face_img_src"] : null;
+                        // Obsługa obrazów firmy (company image)
+                        if (!empty($opinion_item['opinions_company_img'])) {
+                            if (is_numeric($opinion_item['opinions_company_img'])) {
+                                $opinions_company_img_src = wp_get_attachment_url($opinion_item['opinions_company_img']);
+                            } else {
+                                $opinions_company_img_src = $opinion_item['opinions_company_img'];
+                            }
+                        } else {
+                            $opinions_company_img_src = '';
+                        }
 
-                        $opinions_face_img_src = !empty($opinions_face_img_src_catalog) ? $opinions_face_img_src_catalog : $opinions_face_img_src_media;
-                        $opinions_company_img_src = !empty($opinions_company_img_src_catalog) ? $opinions_company_img_src_catalog : $opinions_company_src_media;
-        
                         // Default values ​​or values ​​from JSON
-                        $opinions_face_img = $show_default ? $opinion_item['default_opinions_face_img'] : $opinions_face_img_src;
-                        $opinions_company_img = $show_default ? $opinion_item['default_opinions_company_img'] : $opinions_company_img_src;
-                        $opinions_company = $show_default ? $opinion_item['default_opinions_company'] : $opinion_item['opinions_company'];
-                        $opinions_name = $show_default ? $opinion_item['default_opinions_name'] : $opinion_item['opinions_name'];
-                        $opinions_desc = $show_default ? $opinion_item['default_opinions_desc'] : $opinion_item['opinions_desc'];
-                        $opinions_text = $show_default ? $opinion_item['default_opinions_text'] : $opinion_item['opinions_text'];
-        
+                        $opinions_face_img =  $opinions_face_img_src;
+                        $opinions_company_img =  $opinions_company_img_src;
+                        $opinions_company = $opinion_item['opinions_company'];
+                        $opinions_name = $opinion_item['opinions_name'];
+                        $opinions_desc = $opinion_item['opinions_desc'];
+                        $opinions_text = $opinion_item['opinions_text'];
+
                         $opinions_button = isset($opinion_item["opinions_button"]) ? $opinion_item["opinions_button"] : null;
 
                         // Splitting the text into 30 words and the rest
@@ -537,7 +555,7 @@ class PWElementOpinions extends PWElements {
                                 </div>
                                 <div class="pwe-opinions__item-opinion">
                                     <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
-                                    (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
+                                    (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                     (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                 </div>
                             </div>';
@@ -559,28 +577,27 @@ class PWElementOpinions extends PWElements {
                                 </div>
                                 <div class="pwe-opinions__item-opinion">
                                     <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
-                                    (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
+                                    (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                     (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                 </div>
                             </div>';
                         } else if ($opinions_preset == 'preset_3') {
-                            $output .= '                                            
+                            $output .= '
                             <div class="pwe-opinions__item">';
-
                                 if (!empty($opinions_company_img)) {
-                                    $output .= ' 
+                                    $output .= '
                                     <div class="pwe-opinions__item-company_logo">
                                         <img data-no-lazy="1" src="' . $opinions_company_img . '">
                                     </div>';
                                 }
 
-                                $output .= ' 
+                                $output .= '
                                 <div class="pwe-opinions__item-speaker-container">
                                     <div class="pwe-opinions__item-speaker-img">
                                         <img data-no-lazy="1" src="' . $opinions_face_img . '">
                                     </div>
                                     </div>
-                                
+
                                     <div class="pwe-opinions__item-speaker">
                                     <div class="pwe-opinions__item-speaker-info">
                                         <h5 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h5>
@@ -589,21 +606,21 @@ class PWElementOpinions extends PWElements {
                                     </div>
                                     <div class="pwe-opinions__item-opinion">
                                         <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
-                                        (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') . 
+                                        (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                         (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                     </div>
                                 </div>';
                                 if (!empty($opinions_button)) {
-                                    $output .= ' 
+                                    $output .= '
                                     <div class="pwe-opinions__item-btn">
                                         <a href="'. $opinions_button .'">'. self::languageChecker('ZOBACZ WIĘCEJ', 'SEE MORE') .'</a>
                                     </div>';
                                 }
-                            $output .= ' 
+                            $output .= '
                             </div>';
-                        }  
-                    }    
-                        
+                        }
+                    }
+
                     $output .= '
                     </div>
 
@@ -620,7 +637,7 @@ class PWElementOpinions extends PWElements {
 
             $output .= '
             <script>
-                jQuery(function ($) {                  
+                jQuery(function ($) {
 
                     // Function to set equal height
                     function setEqualHeight() {
@@ -653,10 +670,10 @@ class PWElementOpinions extends PWElements {
 
                     // Call the function at the beginning
                     setEqualHeight();
-                    
+
                     $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
-                });             
-            </script>'; 
+                });
+            </script>';
 
         return $output;
     }

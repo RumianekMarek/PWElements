@@ -875,7 +875,9 @@ class PWElementStickyButtons extends PWElements {
                     const tilesCropped = pweElement.querySelector(".custom-sticky-buttons-cropped");
                     const tilesFullSize = pweElement.querySelector(".custom-sticky-buttons-full-size");
                     const stickyHeadContainer = pweElement.querySelector(".custom-sticky-head-container");
-                    const containerMasthead = document.querySelector("#masthead .menu-container");
+                    const uncodeMasthead = document.querySelector("#masthead .menu-container");
+                    const customMasthead = document.querySelector("#pweMenu");
+                    const containerMasthead = uncodeMasthead ? uncodeMasthead : customMasthead;
                     const pweMenu = document.querySelector("#pweMenu");
                     const containerPageHeader = document.querySelector("#page-header");
                     const containerCustomHeader = document.querySelector("#pweHeader");
@@ -1075,7 +1077,8 @@ class PWElementStickyButtons extends PWElements {
                                     // Scroll to the desired section
                                     if (stickyScroll !== "true") {
                                         // if (stickyButtonsFullSize == "true" && (stickyMiniUrlsImg == "" || (stickyMiniUrlsImg != "" && stickyMiniHide == "true"))) {
-                                            targetElement.style.scrollMarginTop = containerMasthead.offsetHeight + "px";
+                                            
+                                        targetElement.style.scrollMarginTop = containerMasthead.offsetHeight + "px";
                                             targetElement.scrollIntoView({ behavior: "smooth" }); 
                                         // } else {
                                         //     pweElement.querySelectorAll(".custom-sticky-button-item").forEach(function(button) {
