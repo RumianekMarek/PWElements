@@ -41,10 +41,9 @@ class PWECommonFunctions {
     public static function json_fairs() {
         // Pobranie JSON-a
         $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
-        if (file_exists($json_file)) {
-            $json_data = @file_get_contents($json_file);
-            $fairs_data = json_decode($json_data, true);
-        }
+        $json_data = @file_get_contents($json_file);
+        $fairs_data = json_decode($json_data, true);
+        
         return $fairs_data['fairs'];
     }
     
