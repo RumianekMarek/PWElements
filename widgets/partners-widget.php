@@ -47,7 +47,7 @@ $output .= '
         }
         @media(max-width: 1100px) {
             .pwe-header-partners {
-                position: relative;
+                position: static;
                 top: unset;
                 right: unset;
                 transform: unset;
