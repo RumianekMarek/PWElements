@@ -15,7 +15,7 @@ jQuery(document).ready(function($){
 
     const pageLang = (send_data['lang'] == "pl_PL") ? 'pl' : 'en';
     const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
-
+    console.log(pageLang);
     // Button "Wysyłka Zbiorcze" functionality
     // Show odal and hide footer
     $(".tabela-masowa").on("click",function(){
@@ -131,17 +131,27 @@ jQuery(document).ready(function($){
 
             // Create drop downs for email, name and phone,
             // Populate the drop downs with file labels.
-            if(phone_field){
-                $(".file-uloader").after("<div class='file-selector'><label>Kolumna z numerami telefonów</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
-            }
-            $(".file-uloader").after("<div class='file-selector'><label>Kolumna z adresami e-mail</label><select type='select' id='email-column' name='email-column' class='selectoret'></select></div>");
-            $(".file-uloader").after("<div class='file-selector'><label>Kolumna z imionami i nazwiskami</label><select type='select' id='name-column' name='name-column' class='selectoret'></select></div>");
-            
-            
-            $(".selectoret").each(function(){
-                $(this).append("<option value=''>Wybierz</option>");
-            });
+            if(pageLang == "pl"){
+                if(phone_field){
+                    $(".file-uloader").after("<div class='file-selector'><label>Kolumna z numerami telefonów</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
+                }
+                $(".file-uloader").after("<div class='file-selector'><label>Kolumna z adresami e-mail</label><select type='select' id='email-column' name='email-column' class='selectoret'></select></div>");
+                $(".file-uloader").after("<div class='file-selector'><label>Kolumna z imionami i nazwiskami</label><select type='select' id='name-column' name='name-column' class='selectoret'></select></div>");
+                $(".selectoret").each(function(){
+                    $(this).append("<option value=''>Wybierz</option>");
+                });
+            } else {
+                if(phone_field){
+                    $(".file-uloader").after("<div class='file-selector'><label>Phone numbers column</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
+                }
+                $(".file-uloader").after("<div class='file-selector'><label>Email address column</label><select type='select' id='email-column' name='email-column' class='selectoret'></select></div>");
+                $(".file-uloader").after("<div class='file-selector'><label>Names column</label><select type='select' id='name-column' name='name-column' class='selectoret'></select></div>");
 
+                $(".selectoret").each(function(){
+                    $(this).append("<option value=''>Chose</option>");
+                });
+            }
+            
             fileLabel.forEach(function(element) {
                 $(".selectoret").each(function(){
                     if(element != ""){
@@ -294,6 +304,7 @@ jQuery(document).ready(function($){
         }, []);
 
         console.log(tableCont);
+
         // Sending data via POST for procesing to mass-vip.php 
         // Check if tableCont is populated, has less then 5000 elements and there is less then 5 email errors
         if (tableCont.length > 0 && tableCont.length < 5000 && emailErrors < 5){

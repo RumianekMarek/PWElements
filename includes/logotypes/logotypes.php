@@ -360,7 +360,7 @@ class PWELogotypes extends PWECommonFunctions {
         
         $output = do_shortcode($output);
         
-        $file_cont = '<div class="pwelement pwelement_'. $el_id .'">' . $output . '</div>';
+        $file_cont = '<div class="pwelement pwelement_'. $el_id .' pwe_logotypes">' . $output . '</div>';
 
         if ($input_replace_array_html && $output_replace_array_html) {
             $file_cont = str_replace($input_replace_array_html, $output_replace_array_html, $file_cont);

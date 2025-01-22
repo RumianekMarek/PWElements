@@ -1,5 +1,7 @@
-.pwe-header-column, .sections-container {
-    padding-top: 70px !important;
+@media (min-width: 961px) {
+    .pwe-header-wrapper {
+        padding-top: 70px !important;
+    }
 }
 
 .pwe-menu {
@@ -13,9 +15,6 @@
 }
 body.home .pwe-menu {
     background-color: transparent;
-}
-body.home .sections-container {
-    padding-top: 0 !important;
 }
 .pwe-menu__wrapper {
     width: 100%;
@@ -187,14 +186,8 @@ body.home .sections-container {
 }
 
 @media (max-width: 960px) {
-    .sections-container {
-        padding-top: 50px !important;
-    }
-    body.home .sections-container {
-        padding-top: 0 !important;
-    }
-    body.home .pwe-header-column {
-        padding-top: 90px !important;
+    body.home .pwe-header-wrapper {
+        padding-top: 60px !important;
     }
     .pwe-menu {
         height: 60px;

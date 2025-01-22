@@ -1,10 +1,19 @@
 const menu_transparent = menu_js.menu_transparent;
 
 document.addEventListener("DOMContentLoaded", function () {
-    const pweNavMenu = document.querySelector('.pwe-menu');
-    const pweNavMenuHome = document.querySelector("body.home .pwe-menu");
-    const burgerCheckbox = document.querySelector('.pwe-menu__burger-checkbox');
-    const menuContainer = document.querySelector('.pwe-menu__container');
+    const pweNavMenu = document.querySelector('#pweMenu');
+    const pweNavMenuHome = document.querySelector("body.home #pweMenu");
+    const burgerCheckbox = pweNavMenu.querySelector('.pwe-menu__burger-checkbox');
+    const menuContainer = pweNavMenu.querySelector('.pwe-menu__container');
+
+    const mainContainer = document.querySelector('.main-container');
+
+    const uncodePageHeader = document.querySelector("#page-header");
+    const pweCustomHeader = document.querySelector("#pweHeader");
+
+    if (pweNavMenu && mainContainer && !(uncodePageHeader || pweCustomHeader)) {
+        mainContainer.style.marginTop = pweNavMenu.offsetHeight + 'px';
+    }
 
     // Background color for nav menu
     if (menu_transparent === "true") {

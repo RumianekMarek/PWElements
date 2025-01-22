@@ -154,7 +154,7 @@ class PWElementAdditionalLogotypes {
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
-        extract( shortcode_atts( array(
+        extract( shortcode_atts( array(  
             'logotypes_media' => '',
             'logotypes_catalog' => '',
             'logotypes_layout' => '',
@@ -198,7 +198,7 @@ class PWElementAdditionalLogotypes {
                 .pwelement_'. $el_id .' .pwe-container-logotypes-gallery {
                     z-index: 1;
                 }
-                .pwelement_'. $el_id .' .pwe-logo-item-container {
+                .pwelement_'. $el_id .'.pwe_logotypes .pwe-logo-item-container {
                     box-shadow: '. $logotypes_items_shadow .';
                     '. ($logotypes_items_shadow !== 'none' ? 'background-color: white;' : '') .'
                     border-radius: 10px;
@@ -207,6 +207,9 @@ class PWElementAdditionalLogotypes {
                     '. ($logotypes_items_shadow !== 'none' ? 'padding: 10px 0;' : '') .'
                     background-color: white !important;
                     '. ($logotypes_items_shadow !== 'none' ? 'min-width: 200px;' : '') .'
+                }
+                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container {
+                    margin: 5px;
                 }
                 .pwelement_'. $el_id .' .pwe-logo-item {
                     max-width: '. $logotypes_min_width_logo .';
@@ -239,16 +242,19 @@ class PWElementAdditionalLogotypes {
                 .row-parent:has(.pwelement_'. $el_id .' .pwe-full-width)  {
                     max-width: 100% !important;
                 }
-                .pwe-white-logotypes img,
-                .pwe-header .pwe-logotypes-gallery-wrapper img {
+                .pwelement_'. $el_id .' .pwe-white-logotypes img,
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-gallery-wrapper img {
                     filter: brightness(0) invert(1);
                     transition: all .3s ease;
                 }
-                .pwe-white-logotypes img:hover,
-                .pwe-header .pwe-logotypes-gallery-wrapper img:hover {
+                .pwelement_'. $el_id .' .pwe-white-logotypes img:hover,
+                .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-gallery-wrapper img:hover {
                     filter: none;
                 }
-                .pwe-color-logotypes div[style*="background-image"] {
+                .pwelement_'. $el_id .' .pwe-logo-original img {
+                    filter: none !important;
+                }
+                .pwelement_'. $el_id .' .pwe-color-logotypes .pwe-logo-item img {
                     filter: none !important;
                 }
                 .pwelement_'. $el_id .' .pwe-header .pwe-logotypes-title {

@@ -27,6 +27,10 @@ class PWEProfileCards extends PWEProfile {
                 'param_name' => 'profile_cards_title',
                 'description' => __('Set title to diplay over the profiles'),
                 'save_always' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileCards', 
+                ),
             ),
             array(
                 'type' => 'textfield',
@@ -34,6 +38,10 @@ class PWEProfileCards extends PWEProfile {
                 'param_name' => 'profile_min_width_cards',
                 'save_always' => true,
                 'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileCards', 
+                ),
             ),
             array(
                 'type' => 'textfield',
@@ -41,6 +49,10 @@ class PWEProfileCards extends PWEProfile {
                 'param_name' => 'profile_border_radius_cards',
                 'save_always' => true,
                 'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileCards', 
+                ),
             ),
             array(
                 'type' => 'colorpicker',
@@ -48,6 +60,10 @@ class PWEProfileCards extends PWEProfile {
                 'param_name' => 'profile_hover_bg_cards',
                 'save_always' => true,
                 'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileCards', 
+                ),
             ),
             array(
                 'type' => 'param_group',

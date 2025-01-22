@@ -81,7 +81,7 @@ class pweNavMenu extends PWECommonFunctions {
         }
         
         $output .= '
-        <header id="pweMenu" class="pwe-menu is_stuck">
+        <header id="pweMenu" class="pwe-menu"> 
             <div class="pwe-menu__wrapper">
     
                 <div class="pwe-menu__main-logo">
@@ -270,3 +270,4 @@ final class Kama_Collapse_Toolbar {
 }
 
 Kama_Collapse_Toolbar::init();
+
