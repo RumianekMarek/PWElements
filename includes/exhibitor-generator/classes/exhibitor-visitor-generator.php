@@ -143,7 +143,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                         </div>';
 
                         // Add a mass invite send button if not on a personal exhibitor page
-                        if(!isset($company_array['exhibitor_name'])  && self::fairStartDateCheck()){
+                        if((!isset($company_array['exhibitor_name'])  && self::fairStartDateCheck()) || current_user_can('administrator')){
                             $output .= '<button class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
                         }
 

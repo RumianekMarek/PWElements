@@ -66,25 +66,48 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
      * @return string html output
      */
     public static function output($atts) {
+        extract( shortcode_atts( array(
+            'phone_field' => '',
+        ), $atts ));
+
         $output = '';
-        
+
         // Check if there is more space for email send, 
         // 2400 per day until day before starts of the fair minus mails already in queue,
         if(self::senderFlowChecker() || current_user_can('administrator')){
             $output .='
             <div class="modal__element">
                 <div class="inner">
-                    <span class="btn-close">x</span>
-                    <p style="max-width:90%;">'.
-                        PWECommonFunctions::languageChecker(
-                            <<<PL
-                            Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
-                            PL,
-                            <<<EN
-                            Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
-                            EN
-                        )
-                    .'</p>
+                    <span class="btn-close">x</span>';
+
+                    if ($phone_field){
+                        $output .='
+                        <p style="max-width:90%;">'.
+                            PWECommonFunctions::languageChecker(
+                                <<<PL
+                                Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność swoich danych z załączonym przez nas przykładem prawidłowego pliku.
+                                PL,
+                                <<<EN
+                                Fill in the name of the inviting company below and upload a file (csv, xls, xlsx) with the data of those who should receive VIP GOLD invitations. Before sending, verify the compatibility of your data with the example of a valid file we have attached.
+                                EN
+                            )
+                        .'</p>';
+                    } else {
+                        $output .='
+                            <p style="max-width:90%;">'.
+                                PWECommonFunctions::languageChecker(
+                                    <<<PL
+                                    Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
+                                    PL,
+                                    <<<EN
+                                    Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
+                                    EN
+                                )
+                            .'</p>
+                        ';
+                    }
+
+                    $output .='
                     <input type="text" class="company" placeholder="'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
@@ -141,7 +164,25 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                                     </ul>
                                 EN
                             ). '
-                        </div>    
+                        </div>';
+                        if ($phone_field){
+                            $output .='
+                                <a href="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/genrator-example.xlsx">
+                                    <button class="btn-gen-file">'.
+                                        PWECommonFunctions::languageChecker(
+                                            <<<PL
+                                            Przykładowy Plik
+                                            PL,
+                                            <<<EN
+                                            Example File
+                                            EN
+                                        )
+                                    .'</button>
+                                </a>
+                            ';
+                        }
+                        
+                    $output .='
                     </div>
                     <button class="wyslij btn-gold">'.
                         PWECommonFunctions::languageChecker(

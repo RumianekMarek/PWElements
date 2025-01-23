@@ -15,7 +15,7 @@ jQuery(document).ready(function($){
 
     const pageLang = (send_data['lang'] == "pl_PL") ? 'pl' : 'en';
     const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
-    console.log(pageLang);
+
     // Button "Wysyłka Zbiorcze" functionality
     // Show odal and hide footer
     $(".tabela-masowa").on("click",function(){

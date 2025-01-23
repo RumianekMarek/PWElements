@@ -1,6 +1,7 @@
 const menu_transparent = menu_js.menu_transparent;
 
 document.addEventListener("DOMContentLoaded", function () {
+    const adminBar = document.querySelector("#wpadminbar");
     const pweNavMenu = document.querySelector('#pweMenu');
     const pweNavMenuHome = document.querySelector("body.home #pweMenu");
     const burgerCheckbox = pweNavMenu.querySelector('.pwe-menu__burger-checkbox');
@@ -13,6 +14,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (pweNavMenu && mainContainer && !(uncodePageHeader || pweCustomHeader)) {
         mainContainer.style.marginTop = pweNavMenu.offsetHeight + 'px';
+    } 
+
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // Uncode sticky element
+    const uncodeStickyElement = document.querySelector('.row-container.sticky-element');
+    if (uncodeStickyElement && !isMobile) {
+        let stickyHeight = uncodeStickyElement.offsetHeight;
+        let stickyPos;
+
+        if (adminBar) {
+            stickyPos = uncodeStickyElement.getBoundingClientRect().top + window.scrollY - (adminBar.offsetHeight * 2);
+        } else {
+            stickyPos = uncodeStickyElement.getBoundingClientRect().top + (window.scrollY - pweNavMenu.offsetHeight);
+        }
+
+        // Create a negative margin to prevent content "jumps":
+        const jumpPreventDiv = document.createElement("div");
+        jumpPreventDiv.className = "jumps-prevent";
+        uncodeStickyElement.parentNode.insertBefore(jumpPreventDiv, uncodeStickyElement.nextSibling);
+        uncodeStickyElement.style.zIndex = "99";
+
+        function jumpsPrevent() {
+            stickyHeight = uncodeStickyElement.offsetHeight;
+            uncodeStickyElement.style.marginBottom = "-" + stickyHeight + "px";
+            uncodeStickyElement.nextElementSibling.style.paddingTop = stickyHeight + "px";
+        }
+
+        jumpsPrevent();
+
+        window.addEventListener("resize", function () {
+            jumpsPrevent();
+        });
+
+        function stickerFn() {
+            const winTop = window.scrollY;
+
+            if (winTop >= stickyPos) {
+                if (pweNavMenu) {
+                    uncodeStickyElement.style.position = 'fixed';
+
+                    if (adminBar) {
+                        uncodeStickyElement.style.top = (pweNavMenu.offsetHeight + adminBar.offsetHeight) + 'px';
+                    } else {
+                        uncodeStickyElement.style.top = pweNavMenu.offsetHeight + 'px';
+                    }
+                }
+            } else {
+                uncodeStickyElement.style.position = 'relative';
+                uncodeStickyElement.style.top = '0';
+            } 
+        }
+
+        window.addEventListener("scroll", function () {
+            stickerFn();
+        });
     }
 
     // Background color for nav menu

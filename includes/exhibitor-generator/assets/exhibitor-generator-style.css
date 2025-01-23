@@ -407,3 +407,10 @@
 .inner .spinner {
     height: 0 !important;
 }
+
+.btn-gen-file{
+    color: black;
+    padding: 5px 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
