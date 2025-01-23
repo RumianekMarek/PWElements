@@ -357,15 +357,14 @@ class PWElementStepTwo extends PWElements {
                                 )
                             .'</button>';
 
-
-                            $trade_fair_date = do_shortcode('[trade_fair_datetotimer]');
+                            $trade_fair_date = do_shortcode('[trade_fair_enddata]');
 
                             $trade_fair_timestamp = strtotime($trade_fair_date);
                             $current_timestamp = time();
 
                             $days_difference = ($trade_fair_timestamp - $current_timestamp) / (60 * 60 * 24);
 
-                            if (($days_difference > $current_timestamp && $days_difference > 14) || $trade_fair_timestamp < $current_timestamp || empty($trade_fair_date) || $trade_fair_timestamp == false) {
+                            if (($trade_fair_timestamp == false || empty($trade_fair_date)) || $days_difference > 17 || $trade_fair_timestamp < $current_timestamp) {
                                 $output .= '
                                 <a href="'. $step2_link_exhibitor_no .'">
                                     <button type="submit" class="btn exhibitor-no" name="exhibitor-no">'. 
