@@ -365,7 +365,7 @@ class PWElementStepTwo extends PWElements {
 
                             $days_difference = ($trade_fair_timestamp - $current_timestamp) / (60 * 60 * 24);
 
-                            if (($days_difference > $current_timestamp && $days_difference > 14) || $trade_fair_timestamp > $current_timestamp || empty($trade_fair_date) || $trade_fair_timestamp == false) {
+                            if (($days_difference > $current_timestamp && $days_difference > 14) || $trade_fair_timestamp < $current_timestamp || empty($trade_fair_date) || $trade_fair_timestamp == false) {
                                 $output .= '
                                 <a href="'. $step2_link_exhibitor_no .'">
                                     <button type="submit" class="btn exhibitor-no" name="exhibitor-no">'. 

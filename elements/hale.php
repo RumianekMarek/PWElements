@@ -54,28 +54,28 @@ class PWElementHale extends PWElements {
 
         $hall_image_src = wp_get_attachment_url($hall_image); 
 
-        // Pobranie bieżącej domeny
+        // Get current domain
         $current_domain = do_shortcode('[trade_fair_domainadress]');
 
-        // Daty targów
+        // Fair dates
         $trade_fair_start = do_shortcode('[trade_fair_datetotimer]');
         $trade_fair_end = do_shortcode('[trade_fair_enddata]');
 
-        // Konwersja dat na timestampy
+        // Converting dates to timestamps
         $trade_fair_start_timestamp = strtotime($trade_fair_start);
         $trade_fair_end_timestamp = strtotime($trade_fair_end);
 
-        // Pobranie JSON-a
+        // Get JSON
         $fairs_json = PWECommonFunctions::json_fairs();
 
         $fair_items_json = [];
 
         foreach ($fairs_json as $fair) {
-            // Pobieranie dat startu i końca
+            // Getting start and end dates
             $date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
             $date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
 
-            // Sprawdzanie czy data jest w przedziale
+            // Checking if the date is in the range
             if ($date_start && $date_end) {
                 if (($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
                     ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) {  
@@ -90,9 +90,9 @@ class PWElementHale extends PWElements {
 
         $all_halls = '';
 
-        // Konwersja hal do tablicy i dodanie odpowiednich danych do zmiennych JS
         $json_data_all = [];
         $json_data_active = [];
+
         foreach ($fair_items_json as $item) {
             $halls = array_map('trim', explode(',', $item['halls']));
             foreach ($halls as $hall) {
@@ -101,6 +101,7 @@ class PWElementHale extends PWElements {
                     "domain" => $item['domain']
                 ];
             }
+            
             if ($item['domain'] === $current_domain) {
                 foreach ($halls as $hall) {
                     $json_data_active[] = [
@@ -108,7 +109,7 @@ class PWElementHale extends PWElements {
                         "color" => $item['color']
                     ];
 
-                    // Dodanie hali do $all_halls bez cyfr
+                    // Adding halls to $all_halls without numbers
                     $clean_hall = preg_replace('/\d/', '', $hall);
                     if (!str_contains($all_halls, $clean_hall)) {
                         $all_halls .= $clean_hall . ', ';
@@ -185,7 +186,6 @@ class PWElementHale extends PWElements {
 
                         <defs>
                             <style>
-
                                 .pwe-halls__element.active {
                                     transform: translate(10px, -20px);
                                     filter: drop-shadow(-10px 20px 20px black);
@@ -1375,7 +1375,7 @@ class PWElementHale extends PWElements {
             </div>
            
             <script>
-                // Dane przekazane z PHP
+                // Data passed from PHP
                 const allItems = '. json_encode($json_data_all) .';
                 const activeItems = '. json_encode($json_data_active) .';
 
@@ -1393,17 +1393,18 @@ class PWElementHale extends PWElements {
                         }
                     });
 
+                    // Iterate over active elements (full halls)
                     activeItemsFull.forEach(item => {
                         const fullObject = document.querySelector(`#${item.id}`);
 
                         if (fullObject) {
-                            // Dodanie klasy "active" do hali
+                            // Adding the "active" class to the hall
                             fullObject.classList.add("active");
 
-                            // Znalezienie wszystkich elementów z klasą "pwe-halls__element-color" w aktywnym elemencie
+                            // Find all elements with class "pwe-halls__element-color" in the active element
                             const fullObjectColors = fullObject.querySelectorAll(".pwe-halls__element-color");
                             fullObjectColors.forEach(colorElement => {
-                                // Ustawienie koloru dla aktywnego elementu
+                                // Set the color for the active element
                                 colorElement.style.fill = item.color;
                             });
                         }
@@ -1428,7 +1429,7 @@ class PWElementHale extends PWElements {
                         }
                     });
 
-                    // Iteracja po aktywnych elementach i sprawdzanie połączeń (kombinacje)
+                    // Iterate over active elements (half halls)
                     const combinedId = [];
                     activeItemsQuarter.forEach((item1, index) => {
                         activeItemsQuarter.slice(index + 1).forEach(item2 => {
@@ -1465,7 +1466,6 @@ class PWElementHale extends PWElements {
                 
                 addActiveClassToHalfObject();
 
-
                 const addActiveClassToQuarterObject = () => {
                     let activeItemsQuarter = [];
                     activeItems.forEach(item => {
@@ -1477,15 +1477,16 @@ class PWElementHale extends PWElements {
                         }
                     });
 
+                    // Iterate over active elements (quarter halls)
                     activeItemsQuarter.forEach(item => {
                         const quarterObject = document.querySelector(`#${item.id}`);
                         if (quarterObject) {
-                            // Sprawdzamy rodzica z klasą pwe-halls__element-full
+                            // Check the parent with class pwe-halls__element-full
                             const parentFullElement = quarterObject.closest(".pwe-halls__element.half");
                             if (parentFullElement && !parentFullElement.classList.contains("active")) {
                                 quarterObject.classList.add("active");
 
-                                // Znalezienie wszystkich elementów z klasą "pwe-halls__element-color" w aktywnym elemencie
+                                // Find all elements with class "pwe-halls__element-color" in the active element
                                 const quarterObjectColors = quarterObject.querySelectorAll(".pwe-halls__element-color");
                                 quarterObjectColors.forEach(colorElement => {
                                     // Ustawienie koloru dla aktywnego elementu
@@ -1513,20 +1514,21 @@ class PWElementHale extends PWElements {
                         }
                     });
 
+                    // Iterate over all elements (full halls)
                     allItemsFull.forEach(item => {
                         const fullObject = document.querySelector(`#${item.id}`);
 
                         if (fullObject) {
-                            // Znalezienie wszystkich elementów z klasą "pwe-halls__element-color" w aktywnym elemencie
+                            // Find all elements with class "pwe-halls__element-color"
                             const fullObjectsLogotypes = fullObject.querySelectorAll(".pwe-halls__element-logo-link.full");
                             fullObjectsLogotypes.forEach(logoElement => {
                                 const logo = logoElement.querySelector(".pwe-halls__element-logo");
                                 if (fullObject.classList.contains("active")) {
-                                    // Ustawienie białego logotypu dla aktywnego elementu
+                                    // Set white logo for active element
                                     logoElement.setAttribute("href", `https://${item.domain}`);
                                     logo.setAttribute("href", `https://${item.domain}/doc/logo.webp`);
                                 } else {
-                                    // Ustawienie kolorowego logotypu dla aktywnego elementu
+                                    // Set a colored logo for the active element
                                     logoElement.setAttribute("href", `https://${item.domain}`);
                                     logo.setAttribute("href", `https://${item.domain}/doc/logo-color.webp`);
                                 }
@@ -1552,11 +1554,11 @@ class PWElementHale extends PWElements {
                         }
                     });
 
-                    // Iteracja po aktywnych elementach i sprawdzanie połączeń (kombinacje)
+                    // Iterate over all elements (half halls)
                     const combinedId = [];
                     allItemsQuarter.forEach((item1, index) => {
                         allItemsQuarter.slice(index + 1).forEach(item2 => {
-                            // Sprawdzenie, czy domeny są takie same
+                            // Check if domains are the same
                             if (item1.domain === item2.domain) {
                                 const combinedIds = [
                                     `${item1.id}_${item2.id}`,
@@ -1570,11 +1572,11 @@ class PWElementHale extends PWElements {
                                         halfObjectsLogotypes.forEach(logoElement => {
                                             const logo = logoElement.querySelector(".pwe-halls__element-favicon");
                                             if (combinedElement.classList.contains("active")) {
-                                                // Ustawienie białego logotypu dla aktywnego elementu
+                                                // Set white logo for active element
                                                 logoElement.setAttribute("href", `https://${item1.domain}`);
                                                 logo.setAttribute("href", `https://${item1.domain}/doc/favicon.webp`);
                                             } else {
-                                                // Ustawienie kolorowego logotypu dla aktywnego elementu
+                                                // Set a colored logo for the active element
                                                 logoElement.setAttribute("href", `https://${item1.domain}`);
                                                 logo.setAttribute("href", `https://${item1.domain}/doc/favicon-color.webp`);
                                             }
@@ -1603,20 +1605,21 @@ class PWElementHale extends PWElements {
                         }
                     });
 
+                    // Iterate over all elements (quarter halls)
                     allItemsQuarter.forEach(item => {
                         const quarterObject = document.querySelector(`#${item.id}`);
 
                         if (quarterObject) {
-                            // Znalezienie wszystkich elementów z klasą "pwe-halls__element-color" w aktywnym elemencie
+                            // Find all elements with class "pwe-halls__element-color"
                             const quarterObjectsLogotypes = quarterObject.querySelectorAll(".pwe-halls__element-logo-link.quarter");
                             quarterObjectsLogotypes.forEach(logoElement => {
                                 const logo = logoElement.querySelector(".pwe-halls__element-logo");
                                 if (quarterObject.classList.contains("active")) {
-                                    // Ustawienie białego logotypu dla aktywnego elementu
+                                    // Set white logo for active element
                                     logoElement.setAttribute("href", `https://${item.domain}`);
                                     logo.setAttribute("href", `https://${item.domain}/doc/logo.webp`);
                                 } else {
-                                    // Ustawienie kolorowego logotypu dla aktywnego elementu
+                                    // Set a colored logo for the active element
                                     logoElement.setAttribute("href", `https://${item.domain}`);
                                     logo.setAttribute("href", `https://${item.domain}/doc/logo-color.webp`);
                                 }
@@ -1632,15 +1635,15 @@ class PWElementHale extends PWElements {
                 addLogoToQuarterObject();
 
                 const filterCombinedIds = (items) => {
-                    // Wyciągnij wszystkie złożone identyfikatory
+                    // Extract all composite ids
                     const combinedIds = items
                         .filter(item => item.id.includes("_")) // Filtruje elementy zawierające "_"
                         .map(item => item.id.split("_"));    // Dzieli je na poszczególne identyfikatory
 
-                    // Przekształć tablicę złożonych identyfikatorów w pojedyncze identyfikatory
+                    // Convert array of composite ids into single ids
                     const idsToRemove = new Set(combinedIds.flat());
 
-                    // Przefiltruj tablicę, usuwając obiekty o ID w `idsToRemove`
+                    // Filter the array by removing objects with IDs in `idsToRemove`
                     return items.filter(item => !idsToRemove.has(item.id));
                 };
 
@@ -1651,7 +1654,7 @@ class PWElementHale extends PWElements {
                 filteredAllItems.forEach(item => {
                     const svgElement = document.querySelector(`#${item.id}`);
                     if (svgElement) {
-                        // Sprawdzenie, czy element jest aktywny
+                        // Check if the element is active
                         const isActive = filteredActiveItems.some(activeItem => activeItem.id === item.id);
                         if (!isActive) {
                             // Dodanie klasy "unactive"
@@ -1659,8 +1662,7 @@ class PWElementHale extends PWElements {
                         }
                     }
                 });
-
-           </script>';
+            </script>';
         } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
     
         return $output;

@@ -143,8 +143,21 @@ class PWElementStickyButtons extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Show dropdown buttons', 'pwelement'),
+                'heading' => __('Show dropdown buttons (mobile in default shown)', 'pwelement'),
                 'param_name' => 'sticky_buttons_dropdown',
+                'param_holder_class' => 'backend-area-one-fifth-width',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Hide dropdown buttons for mobile', 'pwelement'),
+                'param_name' => 'sticky_buttons_dropdown_mobile',
                 'param_holder_class' => 'backend-area-one-fifth-width',
                 'save_always' => true,
                 'value' => array(__('True', 'pwelement') => 'true',),
@@ -372,6 +385,7 @@ class PWElementStickyButtons extends PWElements {
         extract( shortcode_atts( array(
             'sticky_buttons' => '',
             'sticky_buttons_dropdown' => '',
+            'sticky_buttons_dropdown_mobile' => '',
             'sticky_buttons_full_size' => '',
             'sticky_buttons_cropped_background' => '',
             'sticky_buttons_full_size_background' => '',
@@ -398,7 +412,7 @@ class PWElementStickyButtons extends PWElements {
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
         // Turn on dropdown on mobile
-        if ($mobile == 1) {
+        if ($mobile == 1 && $sticky_buttons_dropdown_mobile != true) {
             $sticky_buttons_dropdown = "true";
         } 
         

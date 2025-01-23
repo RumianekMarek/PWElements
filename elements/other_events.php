@@ -98,30 +98,30 @@ class PWElementOtherEvents extends PWElements {
             }
         }
 
-        // Pobranie bieżącej domeny
+        // Get current domain
         $current_domain = do_shortcode('[trade_fair_domainadress]');
 
-        // Daty targów
+        // Fair dates
         $trade_fair_start = do_shortcode('[trade_fair_datetotimer]');
         $trade_fair_end = do_shortcode('[trade_fair_enddata]');
 
-        // Konwersja dat na timestampy
+        // Converting dates to timestamps
         $trade_fair_start_timestamp = strtotime($trade_fair_start);
         $trade_fair_end_timestamp = strtotime($trade_fair_end);
 
-        // Pobranie JSON-a
+        // Get JSON
         $fairs_json = PWECommonFunctions::json_fairs();
 
-        // Sprawdzenie czy $other_events_items_json[0]["other_events_domain"] jest puste
+        // Check if there is any data entered into the element
         if (empty($other_events_items_json[0]["other_events_domain"])) {
-            $other_events_items_json = []; // Zresetowanie tablicy dla automatycznego generowania
+            $other_events_items_json = [];
 
             foreach ($fairs_json as $fair) {
-                // Pobieranie dat startu i końca
+                // Getting start and end dates
                 $date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
                 $date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
         
-                // Sprawdzanie czy data jest w przedziale
+                // Checking if the date is in the range
                 if ($date_start && $date_end) {
                     if ((($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
                         ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) && 
@@ -288,7 +288,7 @@ class PWElementOtherEvents extends PWElements {
                     </div>
                     <div class="pwe-other-events__items pwe-slides">';
                     
-                    // Generowanie HTML
+                    // Generating HTML
                     foreach ($other_events_items_json as $other_events_item) {
                         $other_events_domain = $other_events_item["other_events_domain"];
                         $other_events_text = $other_events_item["other_events_text"];
