@@ -125,7 +125,7 @@ class pweNavMenu extends PWECommonFunctions {
     
                                 $target_blank = !empty($item->target) ? 'target="_blank"' : '';
     
-                                $output .= '<li class="pwe-menu__item' . ($has_children ? ' has-children' : '') . ' ' . ($item->button ?? '') . '">';
+                                $output .= '<li class="pwe-menu__item' . ((strpos($item->ID, 'wpml') === false) ? ($has_children ? ' has-children' : '') : '') . ' ' . ($item->button ?? '') . '">';
                                 $output .= '<a '. $target_blank .' href="' . esc_url($item->url) . '"> ' . wp_kses_post($item->title);
                                 $output .= (strpos($item->ID, 'wpml') === false) ? ($has_children ? '<span class="pwe-menu__arrow">›</span>' : '') : '';
                                 $output .= '</a>';
