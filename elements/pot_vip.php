@@ -27,7 +27,7 @@ class PWElementConfirmationVip extends PWElements {
                 'param_name' => 'conf_vip_form',
                 'save_always' => true,
                 'value' => array_merge(
-                    array('Wybierz' => ''),
+                    array('Wybierz' => ''), 
                     self::$fair_forms,
                 ),
                 'dependency' => array(
@@ -48,6 +48,8 @@ class PWElementConfirmationVip extends PWElements {
         extract( shortcode_atts( array(
             'conf_vip_form' => '',
         ), $atts ));
+
+        $form_id = self::findFormsID($conf_vip_form);
 
         // Processing edition shortcode
         $trade_fair_edition_shortcode = do_shortcode('[trade_fair_edition]');
@@ -264,7 +266,45 @@ class PWElementConfirmationVip extends PWElements {
             <div class="pwe-conf-vip__form">
                 [gravityform id="'. $conf_vip_form .'" title="false" description="false" ajax="false"]               
             </div>
-        </div>';
+        </div>
+        
+        <script>
+            jQuery(document).ready(function() {
+                var url_string = window.location.href;
+                var url = new URL(url_string);
+
+                var getname = url.searchParams.get("getname");
+                var getphone = url.searchParams.get("getphone");
+                var getemail = url.searchParams.get("getemail");
+                var entry_id = url.searchParams.get("entry_id");
+                var getid = url.searchParams.get("getid");
+                var badge = url.searchParams.get("badge");
+                var firma = url.searchParams.get("firma");
+                var kanal = url.searchParams.get("kanal");
+
+                let idmail = [];
+                if (getid) {
+                    idmail = getid.split(",");
+                }
+
+                document.getElementById("input_'. $form_id .'_1").value = getname;
+                document.getElementById("input_'. $form_id .'_5").value = getphone;
+                document.getElementById("input_'. $form_id .'_4").value = getemail;
+                document.getElementById("input_'. $form_id .'_9").value = getid;
+                document.getElementById("input_'. $form_id .'_10").value = badge;
+                document.getElementById("input_'. $form_id .'_11").value = firma;
+                document.getElementById("input_'. $form_id .'_13").value = idmail[2];
+                document.getElementById("input_'. $form_id .'_15").value = idmail[3]
+                document.getElementById("input_'. $form_id .'_17").value = idmail[1];
+                document.getElementById("input_'. $form_id .'_18").value = kanal;
+
+                if(getid) {
+                    setTimeout(function(){
+                        jQuery("#gform_'. $form_id .'").trigger("submit",[true]);
+                    }, 200);
+                }
+            });
+        </script>';
 
         return $output;
     }
