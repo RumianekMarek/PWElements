@@ -6,6 +6,8 @@
 
 .pwe-menu {
     position: fixed;
+    left: 0px;
+    right: 0px;
     width: 100%;
     height: 70px;
     z-index: 99;
@@ -39,6 +41,9 @@ body.home .pwe-menu {
     height: 100%;
     width: auto;
     object-fit: contain;
+}
+.pwe-menu__main-logo-fair {
+    margin-left: 8px;
 }
 .pwe-menu__container {
     display: flex;

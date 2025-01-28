@@ -122,7 +122,7 @@ $output .= '
                     <div class="pwe-header-simple-logo">
                         <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
                         <div id="pweBtnRegistration" class="pwe-btn-container header-button">
-                            <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'?utm_source=conference&utm_medium=button&utm_campaign=refferal" '.
+                            <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
                                 self::languageChecker('alt="link do rejestracji">Weź udział</span>', 'alt="link to registration">Take a part</span>')
                             .'</a>
                         </div>
