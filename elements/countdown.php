@@ -272,7 +272,7 @@ class PWElementMainCountdown extends PWElements {
      * 
      * @param array @atts options
      */
-    public static function output($atts, $content = '') {
+    public static function output($atts) {
         extract(shortcode_atts(array(
             'custom_timer' => '',
             'turn_off_timer_bg' => '',
@@ -282,204 +282,448 @@ class PWElementMainCountdown extends PWElements {
 
         $output = '';
 
-        $countdown = vc_param_group_parse_atts($countdowns);
+        // Get current domain
+        $current_domain = do_shortcode('[trade_fair_domainadress]');
 
-        foreach($countdown as $main_id => $main_value){
-            if (($custom_timer || $add_timer) && $main_value["countdown_end"] == '') {
-                $main_value["countdown_end"] = do_shortcode('[trade_fair_datetotimer]');
+        // Getting shortcode values
+        $trade_fair_start_date = do_shortcode('[trade_fair_datetotimer]'); // ex. "2027/01/14 10:00"
+        $trade_fair_end_date = do_shortcode('[trade_fair_enddata]'); // ex. "2027/01/16 17:00"
+
+        // Convert to timestamp
+        $trade_fair_start_date_timestamp = strtotime($trade_fair_start_date);
+        $trade_fair_end_date_timestamp = strtotime($trade_fair_end_date);
+        $current_timestamp = time();
+
+        // Get the day of the week
+        $trade_fair_start_date_week = date('l', $trade_fair_start_date_timestamp);
+        $trade_fair_end_date_week = date('l', $trade_fair_end_date_timestamp);
+        // Get time
+        $trade_fair_start_date_hour = date('H:i', $trade_fair_start_date_timestamp);
+        $trade_fair_end_date_hour = date('H:i', $trade_fair_end_date_timestamp);
+
+        // Changing English names of days to Polish ones
+        if(get_locale() == 'pl_PL') {
+            $days = [
+                'Monday' => 'Poniedziałek',
+                'Tuesday' => 'Wtorek',
+                'Wednesday' => 'Środa',
+                'Thursday' => 'Czwartek',
+                'Friday' => 'Piątek',
+                'Saturday' => 'Sobota',
+                'Sunday' => 'Niedziela'
+            ];
+
+            $trade_fair_start_date_week = $days[$trade_fair_start_date_week] ?? $trade_fair_start_date_week;
+            $trade_fair_end_date_week = $days[$trade_fair_end_date_week] ?? $trade_fair_end_date_week;
+        }
+
+        // Get JSON
+        $fairs_json = PWECommonFunctions::json_fairs();
+
+        $fair_items_json = [];
+
+        foreach ($fairs_json as $fair) {
+            // Getting start and end dates
+            $date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
+            $date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
+
+            // Checking if the date is in the range
+            if ($date_start && $date_end) {
+                if (($date_start >= $trade_fair_start_date_timestamp && $date_start <= $trade_fair_end_date_timestamp) ||
+                    ($date_end >= $trade_fair_start_date_timestamp && $date_end <= $trade_fair_end_date_timestamp)) {  
+                    $fair_items_json[] = [
+                        "domain" => $fair["domain"],
+                        "halls" => $fair["hall"],
+                        "color" => $fair["color_accent"]
+                    ];
+                } else {
+                    if ($fair["domain"] === $current_domain) { 
+                        if (!$error_displayed) { 
+                            $output .= '<script>console.error("Shortcode dates and JSON dates do not match. Shortcode dates - ('. $trade_fair_start_date .' - '. $trade_fair_end_date .')JSON dates - ('. $fair['date_start'] .' - '. $fair['date_end'] .')");</script>';
+                        } 
+                    }
+                }
             }
-            foreach($main_value as $id => $key){
-                $countdown[$main_id][$id] = do_shortcode($key);     
+        } 
+
+        $all_halls = '';
+
+        $json_data_all = [];
+        $json_data_active = [];
+
+        foreach ($fair_items_json as $item) {
+            $halls = array_map('trim', explode(',', $item['halls']));
+            foreach ($halls as $hall) {
+                $json_data_all[] = [
+                    "id" => $hall,
+                    "domain" => $item['domain']
+                ];
+            }
+            
+            if ($item['domain'] === $current_domain) {
+                foreach ($halls as $hall) {
+                    $json_data_active[] = [
+                        "id" => $hall
+                    ];
+
+                    // Adding halls to $all_halls without numbers
+                    $clean_hall = preg_replace('/\d/', '', $hall);
+                    if (!str_contains($all_halls, $clean_hall)) {
+                        $all_halls .= $clean_hall . ', ';
+                    }
+                }  
             }
         }
-        
-        $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
-        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
-        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
-        $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
-        $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
-        
-        if(($custom_timer || $add_timer)){
-            $right_countdown = self::getRightData($countdown);
-        } else {
-            $right_countdown = self::getRightData(self::main_timer());
+        // Convert to string
+        $all_halls = rtrim($all_halls, ', ');
+
+        // Using the plural or singular form of a word
+        $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1) 
+            ? self::languageChecker('Hale', 'Halls') 
+            : self::languageChecker('Hala', 'Hall');
+
+
+        $all_entries = '';
+
+        // Map assigning halls to their entrances
+        $hall_entries = [
+            'A' => ['A8'],
+            'B' => ['B8', 'B16'],
+            'C' => ['C8', 'C16'],
+            'D' => ['D8', 'D16'],
+            'E' => ['E1', 'E6'],
+            'F' => ['F1', 'F7'],
+            'A1' => ['A8'], 'A2' => ['A8'],
+            'B1' => ['B8'], 'B2' => ['B8'], 'B3' => ['B16'], 'B4' => ['B16'],
+            'C1' => ['C8'], 'C2' => ['C8'], 'C3' => ['C16'], 'C4' => ['C16'],
+            'D1' => ['D8'], 'D2' => ['D8'], 'D3' => ['D16'], 'D4' => ['D16'],
+            'E1' => ['E1'], 'E2' => ['E1'], 'E3' => ['E6'], 'E4' => ['E6'],
+            'F1' => ['F7'], 'F2' => ['F7'], 'F3' => ['F1'], 'F4' => ['F1']
+        ];
+
+        $matching_entries = [];
+
+        // Iterate through active halls
+        foreach ($json_data_active as $item) {
+            $hall_id = $item['id'];
+
+            // Check if the hall has an assigned entrance
+            if (isset($hall_entries[$hall_id])) {
+                // Adding input to the output list
+                foreach ($hall_entries[$hall_id] as $entry) {
+                    $matching_entries[] = $entry;
+                }
+            }
         }
 
-        $turn_off_countdown_bg = (isset($right_countdown[0]['turn_off_countdown_bg']) && !empty($right_countdown[0]['turn_off_countdown_bg'])) ? $right_countdown[0]['turn_off_countdown_bg'] : '';
-        $countdown_limit_width = (isset($right_countdown[0]['countdown_limit_width']) && !empty($right_countdown[0]['countdown_limit_width'])) ? $right_countdown[0]['countdown_limit_width'] : '';
-        $countdown_weight = (isset($right_countdown[0]['countdown_weight']) && !empty($right_countdown[0]['countdown_weight'])) ? $right_countdown[0]['countdown_weight'] : '';
-        $countdown_column = (isset($right_countdown[0]['countdown_column']) && !empty($right_countdown[0]['countdown_column'])) ? $right_countdown[0]['countdown_column'] : '';
+        // Remove duplicates and convert to string
+        $all_entries = implode(', ', array_unique($matching_entries));
 
-        $countdown_bg = ($turn_off_countdown_bg == 'true') ? 'inherit' : self::$accent_color;
-        $countdown_width = ($countdown_limit_width == 'true') ? '1200px' : '100%';
-        $countdown_font_weight = ($countdown_weight == '') ? '700' : $countdown_weight;
+        // Using the plural or singular form of a word
+        $entries_word = (count(array_filter(array_map('trim', explode(',', $all_entries)))) > 1) 
+            ? self::languageChecker('Wejścia', 'Entrances') 
+            : self::languageChecker('Wejście', 'Entrance');
 
-        if ($mobile != 1) {
-            $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '18px';
-        } else {
-            $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '16px';
-        }
-        
-        $countdown_font_size = str_replace("px", "", $countdown_font_size);
-        
-        $ending_date = new DateTime($right_countdown[0]['countdown_end']);
-        
-        $date_dif = self::$today_date->diff($ending_date);
+        $diff_timestamp = ($trade_fair_start_date_timestamp - $current_timestamp);
+        $time_to_end_timestamp = ($trade_fair_end_date_timestamp - $current_timestamp);
 
-        $flex_direction = ($countdown_column == true) ? 'flex-direction: column;' : '';
+        if ((($trade_fair_start_date_timestamp != false && $trade_fair_end_date_timestamp != false) && !empty($trade_fair_start_date)) && 
+            $diff_timestamp < (7 * 60 * 60) && $time_to_end_timestamp > 0) {
 
-        // if ($atts['custom_timer'] == 'true' && $atts['countdown_end'] == '') {
-        //     $countdown_end = do_shortcode('[trade_fair_enddata]');
-        // }
-
-        if ($atts['custom_timer'] != true) {
-            $output = '';
-            // $output .= '
-            // <style>
-            //     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-            //         opacity: 0;
-            //     }
-            // </style>';
-        }
-
-        if ($atts['turn_off_timer_bg'] == true) {
-            $output .= 
-            '<style>
-                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                    background: inherit;
-                    max-width: ' . $countdown_width . ';
-                    padding: 0 !important;
-                }';
-        } else {
-            $output .= 
-            '<style>
-                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                    background: ' . $countdown_bg . ';
-                    max-width: ' . $countdown_width . ';
-                    padding: 0 !important;
-                }';
-        }
-        
-        if (count($right_countdown)){
             $output .= '
-                .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                    background: ' . $countdown_bg . '; 
-                    max-width: ' . $countdown_width . ';
+            <style>
+                .row-parent:has(.pwelement_'. self::$rnd_id .') {
+                    max-width: 100% !important;
                     padding: 0 !important;
                 }
-                .pwelement_'. self::$rnd_id .' #main-timer p {
-                    color: '. $text_color .';
-                    margin: 9px auto;
-                    font-size: ' . $countdown_font_size . 'px !important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-btn {
-                    color: '. $btn_text_color .';
-                    background-color: '. $btn_color .';
-                    border: 1px solid '. $btn_color .';
-                    margin: 9px 18px; 
-                    transform: scale(1) !important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
-                    color: '. $btn_text_color .';
-                    background-color: '. $darker_btn_color .'!important;
-                    border: 1px solid '. $darker_btn_color .'!important;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-timer-text {
-                    font-weight: ' . $countdown_font_weight . ';
-                    text-transform: uppercase;
-                    margin: 9px auto;
-                }
-                .pwelement_'. self::$rnd_id .' .countdown-container {                    
+                .pwelement_'. self::$rnd_id .' .opening-hours {
+                    background-color: var(--accent-color);
                     display: flex;
-                    justify-content: space-evenly;
                     flex-wrap: wrap;
-                    ' . $flex_direction . '
-                    align-items: center;
-                    max-width: 1200px;
+                    justify-content: center;
+                    /* max-width: 1200px; */
                     margin: 0 auto;
+                    padding: 10px 36px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
-                    min-width: 450px;
-                    text-align: center;
+                .pwelement_'. self::$rnd_id .' .opening-hours p {
+                    font-size: 20px;
+                    color: white;
+                    margin: 0 !important;
                 }
-                @media (min-width: 300px) and (max-width: 1200px) {
-                    .pwelement_'. self::$rnd_id .' #main-timer p {
-                        font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
+                .pwelement_'. self::$rnd_id .' .opening-hours__block {
+                    display: flex;
+                }
+                .pwelement_'. self::$rnd_id .' .opening-hours__title {
+                    font-weight: 700;
+                }
+                .pwelement_'. self::$rnd_id .' .opening-hours__date {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 0 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .opening-hours__date .hours {
+                    font-weight: 700;
+                    padding: 0 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .opening-hours__hall {
+                    padding:0 25px;
+                    display: flex;
+                }
+                .pwelement_'. self::$rnd_id .' .opening-hours__hall p {
+                    padding:0 10px;
+                }
+                @media(max-width: 1050px) {
+                    .pwelement_'. self::$rnd_id .' .opening-hours {
+                        justify-content: center;
                     }
-                }
-                @media (max-width:570px){
-                    .pwelement_'. self::$rnd_id .' .countdown-container {
-                        display: flex;
+                    .pwelement_'. self::$rnd_id .' .opening-hours p {
+                        font-size: 18px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .opening-hours__block {
                         flex-wrap: wrap;
-                        justify-content: space-evenly;
-                        align-items: baseline;
-                        margin: 8px auto;
+                        justify-content: center;
+                        gap: 0;
                     }
-                    .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
-                        min-width: 100%;
-                    }  
+                }
+                @media(max-width: 500px) {
+                    .pwelement_'. self::$rnd_id .' .opening-hours {
+                        padding: 10px 18px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .opening-hours p {
+                        font-size: 16px;
+                        text-align: center;
+                        line-height: 1.4;
+                    }
+                    .pwelement_'. self::$rnd_id .' .opening-hours__date {
+                        padding: 0;
+                    }
+                }
+                @media(max-width: 370px) {
+                    .pwelement_'. self::$rnd_id .' .opening-hours p {
+                        font-size: 14px;
+                    }
+                }
+            </style>
+
+            <div id="openingHours" class="opening-hours">
+                <div class="opening-hours__block">
+                    <p class="opening-hours__title">'. self::languageChecker('GODZINY OTWARCIA:', 'OPENING HOURS:') .'</p>
+                    <p class="opening-hours__date pwe-uppercase">'. $trade_fair_start_date_week .' - '. $trade_fair_end_date_week .'<span class="hours">'. $trade_fair_start_date_hour .' - '. $trade_fair_end_date_hour .'</span></p>
+                    <div class="opening-hours__hall">
+                        <p>'. $halls_word .' <strong>'. $all_halls .'</strong></p>
+                        <p>'. $entries_word .' <strong>'. $all_entries .'</strong></p>
+                    </div>
+                </div>
+                <p class="opening-hours__adress">Al. Katowicka 62, 05-830 Nadarzyn</p>
+            </div>
+            
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    document.querySelector(".row-container:has(.pwelement_'. self::$rnd_id .')").classList.add("sticky-element");
+                });
+            </script>';
+        } else if ($trade_fair_start_date_timestamp != false && !empty($trade_fair_start_date)) {
+            $countdown = vc_param_group_parse_atts($countdowns);
+
+            foreach($countdown as $main_id => $main_value){
+                if (($custom_timer || $add_timer) && $main_value["countdown_end"] == '') {
+                    $main_value["countdown_end"] = do_shortcode('[trade_fair_datetotimer]');
+                }
+                foreach($main_value as $id => $key){
+                    $countdown[$main_id][$id] = do_shortcode($key);     
+                }
+            }
+            
+            $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
+            $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+            $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
+            $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
+            $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
+            
+            if(($custom_timer || $add_timer)){
+                $right_countdown = self::getRightData($countdown);
+            } else {
+                $right_countdown = self::getRightData(self::main_timer());
+            }
+
+            $turn_off_countdown_bg = (isset($right_countdown[0]['turn_off_countdown_bg']) && !empty($right_countdown[0]['turn_off_countdown_bg'])) ? $right_countdown[0]['turn_off_countdown_bg'] : '';
+            $countdown_limit_width = (isset($right_countdown[0]['countdown_limit_width']) && !empty($right_countdown[0]['countdown_limit_width'])) ? $right_countdown[0]['countdown_limit_width'] : '';
+            $countdown_weight = (isset($right_countdown[0]['countdown_weight']) && !empty($right_countdown[0]['countdown_weight'])) ? $right_countdown[0]['countdown_weight'] : '';
+            $countdown_column = (isset($right_countdown[0]['countdown_column']) && !empty($right_countdown[0]['countdown_column'])) ? $right_countdown[0]['countdown_column'] : '';
+
+            $countdown_bg = ($turn_off_countdown_bg == 'true') ? 'inherit' : self::$accent_color;
+            $countdown_width = ($countdown_limit_width == 'true') ? '1200px' : '100%';
+            $countdown_font_weight = ($countdown_weight == '') ? '700' : $countdown_weight;
+
+            if ($mobile != 1) {
+                $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '18px';
+            } else {
+                $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '16px';
+            }
+            
+            $countdown_font_size = str_replace("px", "", $countdown_font_size);
+            
+            $ending_date = new DateTime($right_countdown[0]['countdown_end']);
+            
+            $date_dif = self::$today_date->diff($ending_date);
+
+            $flex_direction = ($countdown_column == true) ? 'flex-direction: column;' : '';
+
+            // if ($atts['custom_timer'] == 'true' && $atts['countdown_end'] == '') {
+            //     $countdown_end = do_shortcode('[trade_fair_enddata]');
+            // }
+
+            if ($atts['custom_timer'] != true) {
+                $output = '';
+                // $output .= '
+                // <style>
+                //     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                //         opacity: 0;
+                //     }
+                // </style>';
+            }
+
+            if ($atts['turn_off_timer_bg'] == true) {
+                $output .= 
+                '<style>
+                    .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                        background: inherit;
+                        max-width: ' . $countdown_width . ';
+                        padding: 0 !important;
+                    }';
+            } else {
+                $output .= 
+                '<style>
+                    .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                        background: ' . $countdown_bg . ';
+                        max-width: ' . $countdown_width . ';
+                        padding: 0 !important;
+                    }';
+            }
+            
+            if (count($right_countdown)){
+                $output .= '
+                    .row-parent:has(.pwelement_' . self::$rnd_id . ') {
+                        background: ' . $countdown_bg . '; 
+                        max-width: ' . $countdown_width . ';
+                        padding: 0 !important;
+                    }
                     .pwelement_'. self::$rnd_id .' #main-timer p {
+                        color: '. $text_color .';
+                        margin: 9px auto;
+                        font-size: ' . $countdown_font_size . 'px !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-btn {
+                        color: '. $btn_text_color .';
+                        background-color: '. $btn_color .';
+                        border: 1px solid '. $btn_color .';
+                        margin: 9px 18px; 
+                        transform: scale(1) !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
+                        color: '. $btn_text_color .';
+                        background-color: '. $darker_btn_color .'!important;
+                        border: 1px solid '. $darker_btn_color .'!important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-timer-text {
+                        font-weight: ' . $countdown_font_weight . ';
+                        text-transform: uppercase;
+                        margin: 9px auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .countdown-container {                    
+                        display: flex;
+                        justify-content: space-evenly;
+                        flex-wrap: wrap;
+                        ' . $flex_direction . '
+                        align-items: center;
+                        max-width: 1200px;
                         margin: 0 auto;
                     }
-                }';
-                $output .= '
-                @media (max-width:959px){
-                    .wpb_column:has(.pwelement_'. self::$rnd_id .') {
-                        padding-top: 0 !important;
+                    .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
+                        min-width: 450px;
+                        text-align: center;
                     }
-                }';
+                    @media (min-width: 300px) and (max-width: 1200px) {
+                        .pwelement_'. self::$rnd_id .' #main-timer p {
+                            font-size: calc(14px + (' . $countdown_font_size . ' - 14) * ( (100vw - 300px) / (1200 - 300) )) !important;
+                        }
+                    }
+                    @media (max-width:570px){
+                        .pwelement_'. self::$rnd_id .' .countdown-container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: space-evenly;
+                            align-items: baseline;
+                            margin: 8px auto;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
+                            min-width: 100%;
+                        }  
+                        .pwelement_'. self::$rnd_id .' #main-timer p {
+                            margin: 0 auto;
+                        }
+                    }';
+                    $output .= '
+                    @media (max-width:959px){
+                        .wpb_column:has(.pwelement_'. self::$rnd_id .') {
+                            padding-top: 0 !important;
+                        }
+                    }';
 
-            $output .= '</style>';
-                
-            $output .='<div id="main-timer" class="countdown-container" data-show-register-bar="'. $atts['show_register_bar'] .'">';
+                $output .= '</style>';
+                    
+                $output .='<div id="main-timer" class="countdown-container" data-show-register-bar="'. $atts['show_register_bar'] .'">';
 
-            $turn_off_countdown_text = isset($right_countdown[0]['turn_off_countdown_text']) ? $right_countdown[0]['turn_off_countdown_text'] : '';
+                $turn_off_countdown_text = isset($right_countdown[0]['turn_off_countdown_text']) ? $right_countdown[0]['turn_off_countdown_text'] : '';
 
-            if ($turn_off_countdown_text != true && $right_countdown[0]['countdown_text'] != '') {    
-                $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
-            };
-            if (get_locale() == "pl_PL") {
-                $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                            ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
-                            if(!$mobile){
-                                $output .= $date_dif->s . ' sekund 
-                                           </p>';
-                            } else {
-                                $output .= '</p>';
-                            }
-            } else {
-                $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                            ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
-                            if(!$mobile){
-                                $output .= $date_dif->s . ' seconds
-                                        </p>';
-                            } else {
-                                $output .= '</p>';
-                            }
-            }
-            $turn_off_countdown_button = isset($right_countdown[0]['turn_off_countdown_button']) ? $right_countdown[0]['turn_off_countdown_button'] : '';
-            if ($turn_off_countdown_button != true && $right_countdown[0]['countdown_btn_text'] != '') {
-                $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
-            };
-            $output .='</div>';
-        
-            PWECountdown::output($right_countdown, self::$countdown_rnd_id);
+                if ($turn_off_countdown_text != true && $right_countdown[0]['countdown_text'] != '') {    
+                    $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
+                };
+                if (get_locale() == "pl_PL") {
+                    $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                                ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
+                                if(!$mobile){
+                                    $output .= $date_dif->s . ' sekund 
+                                            </p>';
+                                } else {
+                                    $output .= '</p>';
+                                }
+                } else {
+                    $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                                ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
+                                if(!$mobile){
+                                    $output .= $date_dif->s . ' seconds
+                                            </p>';
+                                } else {
+                                    $output .= '</p>';
+                                }
+                }
+                $turn_off_countdown_button = isset($right_countdown[0]['turn_off_countdown_button']) ? $right_countdown[0]['turn_off_countdown_button'] : '';
+                if ($turn_off_countdown_button != true && $right_countdown[0]['countdown_btn_text'] != '') {
+                    $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
+                };
+                $output .='</div>';
             
-        } else {
-            $output .= '</style>';
-        }
+                PWECountdown::output($right_countdown, self::$countdown_rnd_id);
+                
+            } else {
+                $output .= '</style>';
+            }
 
-        // $output .= '
-        // <script>
-        //     document.addEventListener("DOMContentLoaded", function() {
-        //         if (document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')")) {
-        //             const countdownEl = document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')");
-        //             countdownEl.style.opacity = 1;
-        //             countdownEl.style.transition = "opacity 0.3s ease";
-        //         }
-        //     });
-        // </script>';
+            // $output .= '
+            // <script>
+            //     document.addEventListener("DOMContentLoaded", function() {
+            //         if (document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')")) {
+            //             const countdownEl = document.querySelector(".row-parent:has(.pwelement_' . self::$rnd_id . ')");
+            //             countdownEl.style.opacity = 1;
+            //             countdownEl.style.transition = "opacity 0.3s ease";
+            //         }
+            //     });
+            // </script>';
+        } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
 
         return $output;
     }

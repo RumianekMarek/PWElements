@@ -476,10 +476,10 @@ class PWElementOpinions extends PWElements {
                 <div class="pwe-opinions__wrapper">
                     <div class="pwe-opinions__items pwe-slides">';
 
-                    $max_opinions = 5; // Maksymalna liczba opinii wyświetlanych łącznie
+                    $max_opinions = 5; // Maximum number of reviews displayed together
                     $user_opinions = [];
 
-                    // Przeanalizuj opinie użytkownika i zbierz niepuste
+                    // Analyze user feedback and collect non-empty
                     if (is_array($opinions_items_json) && !empty($opinions_items_json)) {
                         foreach ($opinions_items_json as $opinion_item) {
                             if (!empty($opinion_item['opinions_text'])) {
@@ -488,9 +488,8 @@ class PWElementOpinions extends PWElements {
                         }
                     }
 
-                    // Jeśli liczba opinii użytkownika jest większa niż maksymalna liczba opinii
+                    // If the number of user reviews is greater than the maximum number of reviews
                     if (count($user_opinions) > $max_opinions) {
-
                         $opinions_to_display = array_slice($user_opinions, 0, 15);
                     } else {
                         $remaining_slots = $max_opinions - count($user_opinions);
@@ -499,6 +498,8 @@ class PWElementOpinions extends PWElements {
                     }
 
                     foreach ($opinions_to_display as $opinion_item) {
+
+                        // Person image
                         if (!empty($opinion_item['opinions_face_img'])) {
                             if (is_numeric($opinion_item['opinions_face_img'])) {
                                 $opinions_face_img_src = wp_get_attachment_url($opinion_item['opinions_face_img']);
@@ -506,10 +507,10 @@ class PWElementOpinions extends PWElements {
                                 $opinions_face_img_src = $opinion_item['opinions_face_img'];
                             }
                         } else {
-                            $opinions_face_img_src = '';
+                            $opinions_face_img_src = $opinion_item["opinions_face_img_src"];
                         }
 
-                        // Obsługa obrazów firmy (company image)
+                        // Company image
                         if (!empty($opinion_item['opinions_company_img'])) {
                             if (is_numeric($opinion_item['opinions_company_img'])) {
                                 $opinions_company_img_src = wp_get_attachment_url($opinion_item['opinions_company_img']);
@@ -517,10 +518,9 @@ class PWElementOpinions extends PWElements {
                                 $opinions_company_img_src = $opinion_item['opinions_company_img'];
                             }
                         } else {
-                            $opinions_company_img_src = '';
+                            $opinions_company_img_src = $opinion_item["opinions_company_img_src"];
                         }
 
-                        // Default values ​​or values ​​from JSON
                         $opinions_face_img =  $opinions_face_img_src;
                         $opinions_company_img =  $opinions_company_img_src;
                         $opinions_company = $opinion_item['opinions_company'];
