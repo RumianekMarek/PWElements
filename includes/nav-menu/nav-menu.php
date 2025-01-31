@@ -25,7 +25,9 @@ class pweNavMenu extends PWECommonFunctions {
     // Scripts
     public function addingScripts(){
         $menu_js_array = array(
-            'menu_transparent' => !empty(get_option('pwe_menu_options', [])['pwe_menu_transparent']) ? "true" : "false"
+            'menu_transparent' => !empty(get_option('pwe_menu_options', [])['pwe_menu_transparent']) ? "true" : "false",
+            'trade_fair_datetotimer' => do_shortcode('[trade_fair_datetotimer]'),
+            'trade_fair_enddata' => do_shortcode('[trade_fair_enddata]')
         );
 
         $js_file = plugins_url('assets/script.js', __FILE__);
@@ -98,7 +100,7 @@ class pweNavMenu extends PWECommonFunctions {
                     </a> 
                 </div>
     
-                <div class="pwe-menu__right-side">
+                <div class="pwe-menu__container-mobile">
                     <div class="pwe-menu__register-btn">
                         <a href="'. self::languageChecker('/rejestracja/', '/en/registration/') .'">'. self::languageChecker('WEŹ UDZIAŁ', 'TAKE A PART') .'</a>
                     </div>
@@ -163,12 +165,13 @@ class pweNavMenu extends PWECommonFunctions {
         // Maximum nesting depth
         $max_depth = 10;
 
-        if ($depth > $max_depth) { // Zatrzymujemy rekurencję po osiągnięciu maksymalnej głębokości
+        // Stop recursion after reaching the maximum depth
+        if ($depth > $max_depth) { 
             return '<script>console.error("Maximum submenu depth reached for parent ID: '. $parent_id .'");</script>';
         }
 
         // Filter children for a given parent
-        $children = array_filter($menu_items, function($item) use ($parent_id) {
+        $children = array_filter($menu_items, function($item) use ($parent_id) { 
             return $item->menu_item_parent == $parent_id;
         });
 

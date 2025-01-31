@@ -1,4 +1,6 @@
 const menu_transparent = menu_js.menu_transparent;
+const trade_fair_datetotimer = menu_js.trade_fair_datetotimer;
+const trade_fair_enddata = menu_js.trade_fair_enddata;
 
 document.addEventListener("DOMContentLoaded", function () {
     const adminBar = document.querySelector("#wpadminbar");
@@ -75,8 +77,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Background color for nav menu
     if (menu_transparent === "true") {
         if (pweNavMenuHome && window.innerWidth >= 960) {
+            if (window.scrollY > pweNavMenu.offsetHeight) {
+                pweNavMenuHome.style.background = accent_color;
+            }
             window.addEventListener("scroll", function () {
-                if (window.scrollY > 70) {
+                if (window.scrollY > pweNavMenu.offsetHeight) {
                     pweNavMenuHome.style.background = accent_color;
                 } else {
                     pweNavMenuHome.style.background = "transparent";
@@ -84,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     }
-
+    
     // Click outside the menu container
     if (burgerCheckbox && menuContainer) {
         document.addEventListener("click", function (e) {
@@ -212,5 +217,76 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
+    }
+
+    const registerButtons = document.querySelectorAll('.pwe-menu__item.button a');
+    const mobileRegisterButton = document.querySelector('.pwe-menu__register-btn a');
+    const mobileRegisterButtonContainer = document.querySelector('.pwe-menu__register-btn');
+
+    if (registerButtons.length > 0 && mobileRegisterButton) {
+        // Get the page language
+        const htmlLang = document.documentElement.lang;
+
+        registerButtons.forEach(registerButton => {
+            if (
+                registerButton.innerText.toLowerCase() === (htmlLang === 'pl-PL' ? 'weź udział' : 'join us') ||
+                registerButton.innerText.toLowerCase() === (htmlLang === 'pl-PL' ? 'zostań wystawcą' : 'book a stand')
+            ) {
+                // Create a Date object based on the trade fair end date
+                let endDate = new Date(trade_fair_enddata);
+
+                // Get today's date
+                let todayDate = new Date();
+
+                // Add 90 days to today's date
+                let threeMonths = new Date(todayDate);
+                threeMonths.setDate(todayDate.getDate() + 90);
+
+                const currentDomain = window.location.hostname;
+                const b2cDomains = [
+                    'animalsdays.eu',
+                    'fiwe.pl',
+                    'warsawmotorshow.com',
+                    'oldtimerwarsaw.com',
+                    'motorcycleshow.pl'
+                ];
+
+                // Check if the current domain is NOT in the B2C domains list
+                if (!b2cDomains.includes(currentDomain)) {
+                    let newText, newHref;
+                    
+                    // Check if the trade fair end date is less than 90 days away
+                    if (endDate < threeMonths) {
+                        newText = (htmlLang === 'pl-PL') ? 'WEŹ UDZIAŁ' : 'JOIN US';
+                        newHref = (htmlLang === 'pl-PL') ? '/rejestracja/' : '/en/registration/';
+                    } else {
+                        newText = (htmlLang === 'pl-PL') ? 'ZOSTAŃ WYSTAWCĄ' : 'BOOK A STAND';
+                        newHref = (htmlLang === 'pl-PL') ? '/zostan-wystawca/' : '/en/become-an-exhibitor/';
+                    }
+
+                    // Update text and link for both desktop and mobile buttons
+                    registerButton.innerText = newText;
+                    registerButton.href = newHref;
+                    mobileRegisterButton.innerText = newText;
+                    mobileRegisterButton.href = newHref;
+                }
+            }
+        });
+
+        window.addEventListener("resize", function () {
+            if (window.innerWidth < 960) {
+                mobileRegisterButtonContainer.classList.add("visible");
+            } else {
+                mobileRegisterButtonContainer.classList.remove("visible");
+            }
+        });
+        
+        // Run once on page load to set initial state
+        if (window.innerWidth < 960) {
+            mobileRegisterButtonContainer.classList.add("visible");
+        } else {
+            mobileRegisterButtonContainer.classList.remove("visible");
+        }
+        
     }
 });
