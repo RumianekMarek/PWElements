@@ -236,10 +236,12 @@ body.home .pwe-menu {
         transform: translateX(-105%);
         transition: .3s;
     }
+    .pwe-menu.burger-menu .pwe-menu__container {
+        transform: translateX(0);
+    }
     .pwe-menu__container-mobile {
         width: auto;
     }
-    
     /* Menu nav */
     .pwe-menu__nav {
         flex-direction: column;
@@ -325,9 +327,6 @@ body.home .pwe-menu {
         z-index: 100;
         flex-direction: column;
         justify-content: center;
-    }
-    .pwe-menu.burger-menu .pwe-menu__container {
-        transform: translateX(0);
     }
     .pwe-menu .pwe-menu__burger span {
         position: relative;

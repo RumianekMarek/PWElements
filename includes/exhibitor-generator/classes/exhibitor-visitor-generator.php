@@ -54,40 +54,42 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
             // Verify if the exhibitor catalog is connected to the site
             if ($generator_catalog){
                 // Generate personal exhibitor information based on the catalog number
-                $catalog_array =  self::catalog_data($_GET['katalog']);
+                $catalog_array = self::catalog_data($_GET['katalog']);
                 $company_array['exhibitor_token'] = $_GET['katalog'];
                 $company_array['exhibitor_heder'] = '';
-                $company_array['catalog_logo'] = $catalog_array['URL_logo_wystawcy'];
-                $company_array['exhibitor_name'] = $catalog_array['Nazwa_wystawcy'];
+                $company_array['catalog_logo'] = self::$exhibitor_logo_url = $catalog_array['URL_logo_wystawcy'];
+                $company_array['exhibitor_name'] = self::$exhibitor_name = $catalog_array['Nazwa_wystawcy'];
             }
         // Check if ?wystawca=* exists in the URL
         } else if(isset($_GET['wystawca'])){
             // Generate personal exhibitor information based on PWElement config name
             $company_edition = vc_param_group_parse_atts( $atts['company_edition'] );
-            foreach ($company_edition as $company){
-                if($_GET['wystawca'] == $company['exhibitor_token']){
+            foreach ($company_edition as $company){                
+                if(strtolower($_GET['wystawca']) == strtolower($company['exhibitor_token'])){
                     $company_array = $company;
                     break;
                 }
             }
+            self::$exhibitor_name = $company_array['exhibitor_name'];
+            self::$exhibitor_logo_url = wp_get_attachment_url($company_array['exhibitor_logo']);
         }
 
         // If personal exhibitor information is available, filter out the exhibitor name field from the form.
         // The company name field will be populated with $company_array['exhibitor_name']
-        if (isset($company_array['exhibitor_name'])){
-            add_filter( 'gform_pre_render', function( $form ) use ( $company_array ) {
-                return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
-            });
-            add_filter( 'gform_pre_validation', function( $form ) use ( $company_array ) {
-                return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
-            });
-            add_filter( 'gform_pre_submission_filter', function( $form ) use ( $company_array ) {
-                return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
-            });
-            add_filter( 'gform_admin_pre_render', function( $form ) use ( $company_array ) {
-                return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
-            });
-        }
+        // if (isset($company_array['exhibitor_name'])){
+        //     add_filter( 'gform_pre_render', function( $form ) use ( $company_array ) {
+        //         return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+        //     });
+        //     add_filter( 'gform_pre_validation', function( $form ) use ( $company_array ) {
+        //         return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+        //     });
+        //     add_filter( 'gform_pre_submission_filter', function( $form ) use ( $company_array ) {
+        //         return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+        //     });
+        //     add_filter( 'gform_admin_pre_render', function( $form ) use ( $company_array ) {
+        //         return self::hide_field_by_label( $form, $company_array['exhibitor_name'] );
+        //     });
+        // }
         // Determine the path to the mass invite sending functionality file
         $send_file = plugins_url('other/mass_vip.php', dirname(dirname(dirname(__FILE__))));
 
@@ -106,12 +108,11 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                     <div class="exhibitor-generator__right-wrapper">
                         <div class="exhibitor-generator__right-title">
                             <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ</br>IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>';
-                            // Display personal exhibitor logo if available, otherwise use catalog logo
-                            if(isset($company_array['exhibitor_logo'])){
-                                $output .= '<img style="max-height: 120px;" src="' . wp_get_attachment_url($company_array['exhibitor_logo']) . '">';
-                            } else if(isset($company_array['catalog_logo'])){
-                                $output .= '<img style="max-height: 80px;" src="' . $company_array['catalog_logo'] . '">';
-                            }
+                            if (!empty(self::$exhibitor_logo_url) ){
+                                $output .= '
+                                <img id="exhibitor_logo_img" style="max-height: 120px;" src="' . self::$exhibitor_logo_url . '">
+                                <h3>' . self::$exhibitor_name . '</h3>';
+                            };
                         $output .= '
                         </div>
                         <div class="exhibitor-generator__right-icons">
@@ -152,11 +153,29 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                             $output .= '<div class="exhibitor-generator__right-text">' . $generator_html_text_content . '</div>';
                         }
 
-                    $output .= '    
+                    $output .= '
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+           jQuery(document).ready(function($){
+                const exhibitor_name = "' . self::$exhibitor_name . '";
+                $(".exhibitor_logo input").val("' . self::$exhibitor_logo_url . '");
+                $(".exhibitor_logo input").val("' . self::$exhibitor_logo_url . '");
+                $(".exhibitors_name input").val(exhibitor_name);
+                $(`input[placeholder="INVITING COMPANY"]`).val(exhibitor_name);
+                $(`input[placeholder="FIRMA ZAPRASZAJĄCA"]`).val(exhibitor_name);
+
+                $(".badge_name").on("change", function(){
+                    if($(this).find("input").prop("checked")){
+                        $(".exhibitors_name input").val("");
+                    } else {
+                        $(".exhibitors_name input").val(exhibitor_name);
+                    }
+                });
+           });
+        </script>
         ';
 
         return $output; 

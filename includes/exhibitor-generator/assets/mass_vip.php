@@ -1,6 +1,6 @@
 <?php
 // Check if request method is POST.
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+// if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     // Get wp-load.php location to import wordpress functions.
     $new_url = str_replace('private_html','public_html',$_SERVER["DOCUMENT_ROOT"]) .'/wp-load.php';
@@ -14,11 +14,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $response = "false";
 
         //Chek token sended.
-        if( $_POST['token'] ==  $hash){
+        // if( $_POST['token'] ==  $hash){
 
             // Check if gravity forms class GFAPI is loded,
             if (class_exists('GFAPI')) {
-
                 // Initialize variables.
                 $data = '';
                 $data = $_POST['data'];
@@ -29,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $all_not_valid = array();
                 $all_entrys_id = array();
                 $full_form = '';
-                
+
                 // Find "rejestracja gości wystawców" form ID with chosen language,
                 foreach($all_forms as $form){
                     if(strpos(strtolower($form['title']), ('rejestracja gości wystawców ' . $lang)) !== false){
@@ -45,15 +44,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                 $fields['company'] = $field['id'];
                             } elseif(strpos(strtolower($field['label']), 'telefon') !== false || strpos(strtolower($field['label']), 'phone') !== false){
                                 $fields['phone'] = $field['id'];
+                            } elseif( $field['adminLabel'] == 'exhibitors_name'){
+                                $fields['exhibitors_name'] = $field['id'];
+                            } elseif( $field['adminLabel'] == 'exhibitor_logo'){
+                                $fields['exhibitor_logo'] = $field['id'];
                             }
                         }
                         break;
                     }
                 }
-
+                
                 // Process entry data.
                 foreach($data as $val){
-                    $phoneVal =  $val['phone'] ? $val['phone'] : '' ?? '';
+                    $phoneVal =  $val['phone'] ?? '';
                     $entry = [
                         'form_id' => $form_id,
                         $fields['name'] => $val['name'],
@@ -61,6 +64,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $fields['company'] => $_POST['company'],
                         $fields['phone'] => $phoneVal,
                     ];
+
+                    if(!empty($_POST['exhibitor_name']) && $_POST['exhibitor_name'] !== true){
+                        $entry[$fields['exhibitors_name']] = $_POST['company'];
+                    };
+
+                    if(!empty($_POST['exhibitor_logo'])){
+                        $entry[$fields['exhibitor_logo']] = $_POST['exhibitor_logo'];
+                    };
 
                     // Add entry to form.
                     $entry_id = GFAPI::add_entry($entry);
@@ -128,14 +139,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         // Send response back to exhibitors generator page
         echo json_decode($response);
-    } else {
+//     } else {
 
-        // Wrong token send back 401 - Acces Denied
-        echo json_decode('error code 401');
-        exit;
-    }
-} else {
-    // Wrong request method send back 401 - Acces Denied
-    echo json_decode('error code 401');
-    exit;
-}
+//         // Wrong token send back 401 - Acces Denied
+//         echo json_decode('error code 401');
+//         exit;
+//     }
+// } else {
+//     // Wrong request method send back 401 - Acces Denied
+//     echo json_decode('error code 401');
+//     exit;
+// }

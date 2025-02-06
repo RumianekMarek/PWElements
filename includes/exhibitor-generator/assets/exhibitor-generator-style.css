@@ -414,3 +414,12 @@
     border: 1px solid black;
     border-radius: 10px;
 }
+
+.mass_checkbox, .badge_name input{
+    border-color: black !important;
+}
+
+.mass_checkbox_label{
+    margin-top: 10px;
+    font-size: 14px !important;
+}

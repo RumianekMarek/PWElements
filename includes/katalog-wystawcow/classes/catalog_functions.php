@@ -25,7 +25,7 @@ class CatalogFunctions {
      * @param string $katalog_format format of display.
      * @return array
      */
-    public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull', $pwe_catalog_random = false, $catalog_display_duplicate = false){
+    public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull', $pwe_catalog_random = false, $file_changer = null, $catalog_display_duplicate = false){
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
@@ -40,8 +40,8 @@ class CatalogFunctions {
 
         $basic_wystawcy = reset($data)['Wystawcy'];
         $logos_array = array();
-
-
+        
+        $basic_wystawcy = (!empty($file_changer)) ? self::orderChanger($file_changer, $basic_wystawcy) : $basic_wystawcy;
 
         if($basic_wystawcy != '') {
             if(!$catalog_display_duplicate){
@@ -121,6 +121,92 @@ class CatalogFunctions {
     }
 
     /**
+     * Order Changer
+     */
+    public static function orderChanger($change, $data) {
+        $change = html_entity_decode($change, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $change_array = explode(';;', $change);
+
+        foreach($change_array as $single_change){
+        if (strpos($single_change, '<=>') !== false) {
+            $id = [];
+            $names = explode('<=>', $single_change);
+            foreach($names as $name){
+              $name = trim($name);
+              if(is_numeric($name)){
+                $id[] = $name. '.00';
+              } else {
+                $found = false;
+                foreach($data as $index => $exhi){
+                  if(stripos($exhi['Nazwa_wystawcy'],  $name) !== false){
+                    $id[] = $index;
+                    $found = true;
+                    break;
+                  }
+                }
+                if (!$found) {
+                  echo '<script>console.error("nie znaleziono wystawcy ' . $name . '")</script>';
+                  break;
+                }
+              }
+            }
+            if($id[0] && $id[1] && count($data) > $id[0] && count($data) > $id[1]){
+              list($data[$id[0]], $data[$id[1]]) = [$data[$id[1]], $data[$id[0]]];
+            } elseif($id[0] && $id[1]) {
+              echo '<script>console.error("lista zawiera tylko '. count($data) .' wystawców, wystawców, sprawdź poprawność '.$single_change.'")</script>';
+            }
+          }
+          elseif (strpos($single_change, '=>>') !== false) {
+            $id = [];
+            $names = explode('=>>', $single_change);
+            foreach($names as $name){                
+              $name = trim($name);
+              if(is_numeric($name)){
+                $id[] = $name.'.00';
+              } else {
+                $found = false;
+                foreach($data as $index => $exhi){
+                  if(stripos($exhi['Nazwa_wystawcy'],  $name) !== false){
+                    $id[] = $index;
+                    $found = true;
+                    break;
+                  }
+                }
+                if (!$found) {
+                  echo '<script>console.error("nie znaleziono wystawcy ' . $name . '")</script>';
+                  break;
+                }
+              }
+            }
+            if(count($data) > $id[0] && count($data) > $id[1]){
+              if($id[0]>$id[1]){
+                $temp = $data[$id[1]];
+                $data[$id[1]] = $data[$id[0]];
+                for($i = ($id[1]+1).'.00'; $i<$id[0]; $i= ($i+1).".00"){
+                  $temp1 = $data[$i];
+                  $data[$i] = $temp;
+                  $temp = $temp1;
+                }
+                $data[$id[0]] = $temp;
+              } else {
+                $temp = $data[$id[1]];
+                $data[$id[1]] = $data[$id[0]];
+                for($i = ($id[1]-1).'.00'; $i>$id[0]; $i= ($i-1).'.00'){
+                  $temp1 = $data[$i];
+                  $data[$i] = $temp;
+                  $temp = $temp1;
+                }
+                $data[$id[0]] = $temp;
+              }
+            } else {
+              echo '<script>console.error("lista zawiera tylko '. count($data) .' wystawców, sprawdź poprawność '.$single_change.'")</script>';
+            }
+          }
+        }
+        return $data;
+    }
+
+    /**
      * Check Title for Exhibitors Catalog
      */
     // public static function initElements() {
@@ -192,7 +278,7 @@ function initVCMapPWECatalog() {
                     'type' => 'textfield',
                     'heading' => __( 'Logos changer', 'pwe_katalog'),
                     'param_name' => 'file_changer',
-                    'description' => __( 'Changer for logos divided by ";" try to put names <br> change places "name<=>name or position";<br> move to position "name=>>name or position";', 'pwe_katalog'),
+                    'description' => __( 'Changer for logos divided by ";;" try to put names <br> change places "name<=>name or position";<br> move to position "name=>>name or position";', 'pwe_katalog'),
                     'save_always' => true,
                     'dependency' => array(
                     'element' => 'format',

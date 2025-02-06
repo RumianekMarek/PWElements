@@ -291,7 +291,7 @@ jQuery(document).ready(function($){
             const rowArray = row;
             if (rowArray[emailIndex] && rowArray[emailIndex].length > 5 && emailErrors < 5) {
                 if(phoneColumn) {
-                    acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex], "phone": rowArray[phoneIndex] });
+                    acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex], "phone": rowArray[phoneIndex]});
                 } else {
                     acc.push({ "name": rowArray[namelIndex], "email": rowArray[emailIndex]});
                 }
@@ -304,6 +304,7 @@ jQuery(document).ready(function($){
         }, []);
 
         console.log(tableCont);
+        
 
         // Sending data via POST for procesing to mass-vip.php 
         // Check if tableCont is populated, has less then 5000 elements and there is less then 5 email errors
@@ -315,6 +316,8 @@ jQuery(document).ready(function($){
                 token: send_data['secret'],
                 lang: pageLang,
                 company: $(".company").val(),
+                exhibitor_name: $('#mass_exhibitor_badge').prop("checked"),
+                exhibitor_logo: $('#exhibitor_logo_img').prop("src") ?? '',
                 data: tableCont
             
             // Process response 
@@ -323,7 +326,7 @@ jQuery(document).ready(function($){
                 $(".modal__element .inner").children().each(function(){
                     $(this).not('.btn-close').remove();
                 })
-
+                console.log(resdata);
                 if (resdata == 1){
                     $(".modal__element .inner").append("<p style='color:green; font-weight: 600; width: 90%;'>Dziękujemy za skorzystanie z generatora zaproszeń. Państwa goście wkrótce otrzymają zaproszenia VIP.</p>");
                 } else {

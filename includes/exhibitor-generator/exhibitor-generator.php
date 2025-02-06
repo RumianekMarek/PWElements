@@ -10,6 +10,8 @@
 
 class PWEExhibitorGenerator{
     
+    public static $exhibitor_logo_url;
+    public static $exhibitor_name;
     public static $rnd_id;
     public static $fair_colors;
     public static $accent_color;

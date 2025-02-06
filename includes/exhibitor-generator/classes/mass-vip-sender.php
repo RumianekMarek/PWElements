@@ -106,9 +106,11 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                             .'</p>
                         ';
                     }
-
+                    if (!empty(self::$exhibitor_logo_url)){
+                        $output .='<img style="max-height: 70px;" src="' . self::$exhibitor_logo_url . '">';
+                    }
                     $output .='
-                    <input type="text" class="company" placeholder="'.
+                    <input type="text" class="company" value="' . self::$exhibitor_name .'" placeholder="'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
                             Firma Zapraszająca (wpisz nazwę swojej firmy)
@@ -118,6 +120,10 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                             EN
                         )
                     .'"></input>
+                    <label class="mass_checkbox_label">
+                        <input type="checkbox" id="mass_exhibitor_badge" name="mass_exhibitor_badge" class="mass_checkbox">
+                        Brak uwzględnienia nazwy firmy na identyfikatorze
+                    </label>
                     <div class="file-uloader">
                         <label for="fileUpload">Wybierz plik z danymi</label>
                         <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
