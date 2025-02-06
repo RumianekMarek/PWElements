@@ -74,9 +74,22 @@ function register_dynamic_shortcodes() {
         return handle_fair_shortcode($atts, 'exhibitors');
     });
 
+    add_shortcode('pwe_countries', function($atts) {
+        return handle_fair_shortcode($atts, 'countries');
+    });
+
     add_shortcode('pwe_area', function($atts) {
         return handle_fair_shortcode($atts, 'area');
     });
+
+    add_shortcode('pwe_color_accent', function($atts) {
+        return handle_fair_shortcode($atts, 'color_accent');
+    });
+
+    add_shortcode('pwe_color_main2', function($atts) {
+        return handle_fair_shortcode($atts, 'color_main2');
+    });
+
 }
 
 add_action('init', 'register_dynamic_shortcodes');

@@ -124,6 +124,11 @@ class PWElementHale extends PWElements {
             ? self::languageChecker('Hale', 'Halls') 
             : self::languageChecker('Hala', 'Hall');
 
+
+        $time_to_start_timestamp = ($trade_fair_start_timestamp - $current_timestamp);
+        $time_to_end_timestamp = ($trade_fair_end_timestamp - $current_timestamp);
+        // && $time_to_start_timestamp < (60 * 24 * 60 * 60) && $time_to_end_timestamp
+
         if (!empty($all_halls)) {
             $output = '
             <style>
