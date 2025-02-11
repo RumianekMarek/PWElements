@@ -491,22 +491,38 @@ class PWElementTwoCols extends PWElements {
 
         /* Wystawcy */
 
-        if($pwe_two_cols_show_exhibitors){
-
+        if ($pwe_two_cols_show_exhibitors) {
           $identification = do_shortcode('[trade_fair_catalog]');
-          $exhibitors = ($identification) ? CatalogFunctions::logosChecker($identification, "PWECatalog10") : 0;
-
-          $logotypy = array_map(function ($exhibitor) {
-              return $exhibitor['URL_logo_wystawcy'];
-          }, $exhibitors);
-
-          $logotypy = array_slice($logotypy, 0, 10);
-        }
-
-
-
+          $exhibitors = CatalogFunctions::logosChecker($identification, "PWECatalog10");
+  
+          if (!is_array($exhibitors) || empty($exhibitors)) {
+              echo '<script>console.error("Błąd: logosChecker nie zwrócił poprawnej listy wystawców")</script>';
+              $logotypy = [];
+          } else {
+              // Check if each element has the key 'URL_logo_wystawcy'
+              $logotypy = array_map(function ($exhibitor) {
+                  return isset($exhibitor['URL_logo_wystawcy']) ? $exhibitor['URL_logo_wystawcy'] : null;
+              }, $exhibitors);
+  
+              // Removing empty values ​​from the array
+              $logotypy = array_filter($logotypy);
+  
+              // Trim the array to 10 elements
+              $logotypy = array_slice($logotypy, 0, 10);
+          }  
+      }
+      
       $output = '
       <style>
+
+        .'. $element_unique_id .' .pwe-slides {
+          visibility: hidden;
+          opacity: 0;
+          height: 0;
+          width: 0;
+          transition: .3s ease;
+        }
+
         .wpb_column:has(.'. $element_unique_id .'){
           padding-top:0 !important;
         }
@@ -916,13 +932,11 @@ class PWElementTwoCols extends PWElements {
               $output .= '
               <div class="logo-exhibitors">
                 <h3>'. self::languageChecker('Wystawcy', 'Exhibitors') .'</h3>
-                <div class="logotypes-container">';
+                <div class="logotypes-container pwe-container-logotypes">';
+                  foreach ($logotypy as $logo) {
 
-
-              foreach ($logotypy as $logo) {
-
-                $output .= '<img data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="Logo wystawcy">';
-              }
+                    $output .= '<img data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="Logo wystawcy">';
+                  }
               $output .= '</div></div>';
             }
 
@@ -930,7 +944,7 @@ class PWElementTwoCols extends PWElements {
             if($pwe_two_cols_show_mediapatrons){
               $output .= '<div class="logo-exhibitors">
                 <h3>'. self::languageChecker('Patroni', 'Patrons') .'</h3>
-                <div class="logotypes-container">';
+                <div class="logotypes-container pwe-container-logotypes">';
 
               foreach ($logotypy as $logo) {
 
@@ -986,9 +1000,24 @@ class PWElementTwoCols extends PWElements {
 
         };
       $output .= '
-       </div></div>';
+       </div></div>
+       
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const twoColsSlider = document.querySelector(".'. $element_unique_id .' .pwe-slides");
+                twoColsSlider.style.visibility = "visible";
+                twoColsSlider.style.opacity = 1;
+                twoColsSlider.style.height = "auto";
+                twoColsSlider.style.width = "auto";
 
-
+                const pweContainerLogotypes = document.querySelector(".'. $element_unique_id .' .pwe-container-logotypes");
+                if (pweContainerLogotypes && pweContainerLogotypes.children.length === 0) {
+                    const loader = document.createElement("div");
+                    loader.className = "pwe-loader";
+                    pweContainerLogotypes.appendChild(loader);
+                }
+            });
+        </script>';
 
         return $output;
     }

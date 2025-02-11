@@ -364,7 +364,7 @@ class PWElementStepTwo extends PWElements {
 
                             $days_difference = ($trade_fair_timestamp - $current_timestamp) / (60 * 60 * 24);
 
-                            if (($trade_fair_timestamp == false || empty($trade_fair_date)) || $days_difference > 17 || $trade_fair_timestamp < $current_timestamp) {
+                            if ((($trade_fair_timestamp == false || empty($trade_fair_date)) || $days_difference > 17 || $trade_fair_timestamp < $current_timestamp) && get_locale() == "pl_PL") {
                                 $output .= '
                                 <a href="'. $step2_link_exhibitor_no .'">
                                     <button type="submit" class="btn exhibitor-no" name="exhibitor-no">'. self::languageChecker("Nie, dziękuję", "No, thank you") .'</button>

@@ -125,11 +125,15 @@ class PWElementHale extends PWElements {
             : self::languageChecker('Hala', 'Hall');
 
 
-        $time_to_start_timestamp = ($trade_fair_start_timestamp - $current_timestamp);
-        $time_to_end_timestamp = ($trade_fair_end_timestamp - $current_timestamp);
-        // && $time_to_start_timestamp < (60 * 24 * 60 * 60) && $time_to_end_timestamp
+        $current_day_timestamp = time();
 
-        if (!empty($all_halls)) {
+        $days_to_event = (($trade_fair_start_timestamp - $current_day_timestamp) / (60 * 60 * 24));
+        $days_after_event = ($current_day_timestamp - $trade_fair_end_timestamp) / (60 * 60 * 24);
+
+        $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 60;
+        $more_1_day_after = ($trade_fair_start_timestamp != false || !empty($trade_fair_end)) && $days_after_event > 0 && $days_after_event < 1;
+
+        if (!empty($all_halls) && ($less_2_month_before || $more_1_day_after)) {
             $output = '
             <style>
                 .pwe-halls {
@@ -161,6 +165,28 @@ class PWElementHale extends PWElements {
                         width: 100%;
                     }        
                 }
+
+                .pwe-halls__svg {
+                    position: relative;
+                    overflow: hidden;
+                }
+                .pwe-halls__loupe {
+                    position: absolute;
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                    border: 2px solid #000;
+                    overflow: hidden;
+                    pointer-events: none;
+                    display: none;
+                    background: white;
+                }
+
+                .pwe-halls__loupe svg {
+                    position: absolute;
+                    transform-origin: top left;
+                }
+
             </style>
 
             <div id="pweHalls" class="pwe-halls">
@@ -1667,6 +1693,38 @@ class PWElementHale extends PWElements {
                         }
                     }
                 });
+
+                // document.addEventListener("DOMContentLoaded", function () {
+                //     const pweHallsSvg = document.querySelector(".pwe-halls__svg");
+                //     const loupe = document.createElement("div");
+                //     loupe.classList.add("pwe-halls__loupe");
+
+                //     // Skopiowanie zawartości SVG
+                //     const clonedSvg = pweHallsSvg.cloneNode(true);
+                //     loupe.appendChild(clonedSvg);
+                //     pweHallsSvg.parentElement.appendChild(loupe);
+
+                //     pweHallsSvg.addEventListener("mousemove", function (e) {
+                //         const rect = pweHallsSvg.getBoundingClientRect();
+                //         const scale = 2; // Powiększenie
+
+                //         const x = e.clientX - rect.left;
+                //         const y = e.clientY - rect.top;
+
+                //         loupe.style.left = `${e.clientX - loupe.offsetWidth / 2}px`;
+                //         loupe.style.top = `${e.clientY - loupe.offsetHeight / 2}px`;
+                //         loupe.style.display = "block";
+
+                //         clonedSvg.style.transform = `scale(${scale})`;
+                //         clonedSvg.style.left = `-${x * (scale - 1)}px`;
+                //         clonedSvg.style.top = `-${y * (scale - 1)}px`;
+                //     });
+
+                //     pweHallsSvg.addEventListener("mouseleave", function () {
+                //         loupe.style.display = "none";
+                //     });
+                // });
+
             </script>';
         } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
     

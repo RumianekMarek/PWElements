@@ -104,6 +104,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'medals.php';
         require_once plugin_dir_path(__FILE__) . 'other_events.php';
         require_once plugin_dir_path(__FILE__) . 'two_cols.php';
+        require_once plugin_dir_path(__FILE__) . 'conference_cap.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -279,6 +280,7 @@ class PWElements {
                         ...PWElementOtherEvents::initElements(),
                         ...PWElementTwoCols::initElements(),
                         ...PWElementHale::initElements(),
+                        ...PWElementConferenceCap::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -339,6 +341,7 @@ class PWElements {
             'Informacje organizacyjne'       => 'PWElementOrgInfo',
             'Informacje kontaktowe'          => 'PWElementContactInfo',
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
+            'Konferencja Cap'                => 'PWElementConferenceCap',
             'Kontakt'                        => 'PWElementContact',
             'Main Page About'                => 'PWElementAbout',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
@@ -464,6 +467,7 @@ class PWElements {
             'PWElementWhyItsWorth'      => 'why-its-worth.php',
             'PWElementQRChekcer'        => 'qr-check.php',
             'PWElementTwoCols'          => 'two_cols.php',
+            'PWElementConferenceCap'    => 'conference_cap.php',
         );
     }
 
