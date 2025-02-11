@@ -10,7 +10,9 @@ class PWECatalog {
      * Constructor method for initializing the plugin.
      */
     public function __construct() {
-        $this->catalogFunctions();
+        require_once plugin_dir_path(__FILE__) . 'classes/catalog_functions.php';
+
+        
 
         self::$rnd_id = rand(10000, 99999);
         self::$fair_colors = PWECommonFunctions::findPalletColorsStatic();
@@ -24,11 +26,27 @@ class PWECatalog {
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
 
+        add_action('init', array($this, 'initVCMapElements'));
+
         add_shortcode('pwe_katalog', array($this, 'PWECatalogOutput'));
     }
 
-    public function catalogFunctions() {
-        require_once plugin_dir_path(__FILE__) . 'classes/catalog_functions.php';
+    public function initVCMapElements() {
+        if (class_exists('Vc_Manager')) {
+            vc_map(array(
+                'name' => __( 'PWE Katalog wystawców', 'pwe_katalog'),
+                'base' => 'pwe_katalog',
+                'category' => __( 'PWE Elements', 'pwe_katalog'),
+                'admin_enqueue_css' => plugin_dir_url(dirname(dirname( __DIR__ ))) . 'backend/backendstyle.css',
+                //Add all vc_map PWECatalog files
+                'params' => array_merge(
+                    array(
+                        ...CatalogFunctions::initVCMapPWECatalog(),
+                        ...CatalogFunctions::vcMapPWECatalogCustom(),
+                    )
+                )
+            ));
+        }
     }
 
     /**
@@ -117,7 +135,7 @@ class PWECatalog {
             }
         }
 
-        if ((empty($identification) || count($exhibitors_top10) < 10) && $format == 'PWECatalog10') {
+        if ((empty($identification) || count($exhibitors_top10) < 12) && $format == 'PWECatalog10') {
             if (isset($_SERVER['argv'][0])) {
                 $source_utm = $_SERVER['argv'][0];
             } else {
@@ -216,7 +234,19 @@ class PWECatalog {
                 }
             </style>
 
-            <div id="katalog-' . self::$rnd_id . '" class="exhibitors-catalog">' . $output . '</div>';
+            <div id="katalog-' . self::$rnd_id . '" class="exhibitors-catalog">' . $output . '</div>
+            
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const pweContainerLogotypes = document.querySelector("#katalog-' . self::$rnd_id . ' .pwe-container-logotypes");
+
+                    if (pweContainerLogotypes && pweContainerLogotypes.children.length === 0) {
+                        const loader = document.createElement("div");
+                        loader.className = "pwe-loader";
+                        pweContainerLogotypes.appendChild(loader);
+                    }
+                });
+            </script>';
 
         $output_html = do_shortcode($output_html);
 

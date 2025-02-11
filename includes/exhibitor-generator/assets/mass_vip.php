@@ -65,13 +65,13 @@
                         $fields['phone'] => $phoneVal,
                     ];
 
-                    if(!empty($_POST['exhibitor_name']) && $_POST['exhibitor_name'] !== true){
+                    if(!empty($_POST['exhibitor_name']) && $_POST['exhibitor_name'] != 'true'){
                         $entry[$fields['exhibitors_name']] = $_POST['company'];
                     };
 
-                    if(!empty($_POST['exhibitor_logo'])){
-                        $entry[$fields['exhibitor_logo']] = $_POST['exhibitor_logo'];
-                    };
+                    $entry[$fields['exhibitor_logo']] = !empty($_POST['exhibitor_logo']) ? 
+                        $_POST['exhibitor_logo'] : 
+                        'https:// ' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
 
                     // Add entry to form.
                     $entry_id = GFAPI::add_entry($entry);

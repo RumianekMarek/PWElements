@@ -95,7 +95,7 @@ class PWECatalogFull extends PWECatalog {
                         <input id="search" placeholder="'. PWECommonFunctions::languageChecker('Szukaj', 'Search') .'"/>
                     </div>
 
-                    <div class="exhibitors__container">';
+                    <div class="exhibitors__container pwe-container-logotypes">';
                         //WYSTAWCY
                         foreach ($exhibitors as $exhibitor) {
                             $singleExhibitor = '<div class="exhibitors__container-list">';

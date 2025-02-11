@@ -246,6 +246,7 @@ $output .= '
             justify-content: center;
             flex-direction: column;
             align-items: center;
+            text-shadow: 0 0 6px black;
         }
         .pwelement_'. $el_id .' .pwe-header-date-block {
             display:none !important;

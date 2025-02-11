@@ -223,6 +223,14 @@ class PWELogotypes extends PWECommonFunctions {
                             'value' => array(__('True', 'pwe_logotypes') => 'true',),
                         ),
                         array(
+                            'type' => 'textfield',
+                            'group' => 'Aditional options',
+                            'heading' => __( 'Logotypes changer', 'pwe_logotypes'),
+                            'param_name' => 'logotypes_file_changer',
+                            'description' => __( 'Changer for logos divided by ";;" try to put names <br> change places "name<=>name or position";<br> move to position "name=>>name or position";', 'pwe_logotypes'),
+                            'save_always' => true,
+                        ),
+                        array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
                             'param_name' => 'pwe_replace',
@@ -257,27 +265,32 @@ class PWELogotypes extends PWECommonFunctions {
      * @param string $catalog_id fair id for api.
      * @return array
      */
-    public static function exhibitors_catalog_checker($catalog_id, $logotypes_exhibitors_count = 21){
+    public static function exhibitors_catalog_checker($catalog_id, $logotypes_exhibitors_count = 21, $file_changer = null){
         if  (!empty($catalog_id)) {
             $today = new DateTime();
             $formattedDate = $today->format('Y-m-d');
             $token = md5("#22targiexpo22@@@#" . $formattedDate);
             $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='. $token .'&id_targow='. $catalog_id;
 
-            $json = file_get_contents($canUrl);
-            $data = json_decode($json, true);
-
-            if (is_array($data) && !empty($data)) {
-                $first_item = reset($data);
-                if (isset($first_item['Wystawcy'])) {
-                    $basic_exhibitors = $first_item['Wystawcy'];
-                } else {
-                    $basic_exhibitors = [];
+            try {
+                $json = @file_get_contents($canUrl);
+                if ($json === false) {
+                    throw new Exception('Nie można pobrać danych JSON.');
                 }
-            } else {
+        
+                $data = json_decode($json, true);
+                if ($data === null) {
+                    throw new Exception('Błąd dekodowania danych JSON.');
+                }
+        
+                $basic_exhibitors = reset($data)['Wystawcy'];
+            } catch (Exception $e) {
+                echo '<script>console.error("Błąd w exhibitors_catalog_checker: ' . addslashes($e->getMessage()) . '")</script>';
                 $basic_exhibitors = [];
             }
             $logotypes_array = array();
+
+            $basic_exhibitors = (!empty($file_changer)) ? CatalogFunctions::orderChanger($file_changer, $basic_exhibitors) : $basic_exhibitors;
 
             if($basic_exhibitors != '') {
                 $basic_exhibitors = array_reduce($basic_exhibitors, function($acc, $curr) {
@@ -324,7 +337,8 @@ class PWELogotypes extends PWECommonFunctions {
 
         extract( shortcode_atts( array(
             'pwe_replace' => '',
-            'logotypes_exhibitors_count' => '', 
+            'logotypes_exhibitors_count' => '',
+            'logotypes_file_changer' => ''
         ), $atts ));
 
         $logotypes_exhibitors_count = !empty($logotypes_exhibitors_count) ? $logotypes_exhibitors_count : 21;
@@ -332,7 +346,8 @@ class PWELogotypes extends PWECommonFunctions {
         $el_id = self::id_rnd();
 
         // Exhibitors logotypes top 21
-        $exhibitors = self::exhibitors_catalog_checker(do_shortcode('[trade_fair_catalog]'), $logotypes_exhibitors_count);
+        $exhibitors = self::exhibitors_catalog_checker(do_shortcode('[trade_fair_catalog]'), $logotypes_exhibitors_count, $logotypes_file_changer);
+
         if (!empty($exhibitors)) {
             $exhibitors_logotypes = array();
             foreach($exhibitors as $exhibitor){

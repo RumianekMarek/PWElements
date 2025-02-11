@@ -11,7 +11,9 @@ class PWECatalog21 extends PWECatalog {
 
     public static function output($atts, $identification) {
         $pwecatalog_display_random = isset($atts['pwecatalog_display_random1']) ? $atts['pwecatalog_display_random1'] : false;
-        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
+        $file_changer = isset($atts['file_changer']) ? $atts['file_changer'] : null;
+        
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random, $file_changer);
 
         if ($exhibitors === null){ 
             return;
@@ -38,7 +40,7 @@ class PWECatalog21 extends PWECatalog {
                 $output .= '<h2 class="catalog-custom-title" style="width: fit-content;">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']).'</h2>';
             }
             $output .= '
-                <div class="img-container-top21">';                
+                <div class="img-container-top21 pwe-container-logotypes">';                
                     if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )){
                         $slider_array = array();
                         foreach($exhibitors as $exhibitor){

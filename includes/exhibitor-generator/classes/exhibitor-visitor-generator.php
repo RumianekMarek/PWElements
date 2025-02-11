@@ -72,6 +72,8 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
             }
             self::$exhibitor_name = $company_array['exhibitor_name'];
             self::$exhibitor_logo_url = wp_get_attachment_url($company_array['exhibitor_logo']);
+        } else {
+            self::$exhibitor_logo_url = 'https://' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
         }
 
         // If personal exhibitor information is available, filter out the exhibitor name field from the form.
@@ -160,15 +162,21 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
         </div>
         <script>
            jQuery(document).ready(function($){
-                const exhibitor_name = "' . self::$exhibitor_name . '";
-                $(".exhibitor_logo input").val("' . self::$exhibitor_logo_url . '");
+                let exhibitor_name = "' . self::$exhibitor_name . '";
                 $(".exhibitor_logo input").val("' . self::$exhibitor_logo_url . '");
                 $(".exhibitors_name input").val(exhibitor_name);
-                $(`input[placeholder="INVITING COMPANY"]`).val(exhibitor_name);
-                $(`input[placeholder="FIRMA ZAPRASZAJĄCA"]`).val(exhibitor_name);
 
+                $(`input[placeholder="FIRMA ZAPRASZAJĄCA"]`).val(exhibitor_name);
+                    
+                $(`input[placeholder="FIRMA ZAPRASZAJĄCA"]`).on("input", function(){
+                    if(!$(".badge_name").find("input").is(":checked")){
+                        $(".exhibitors_name input").val($(this).val());
+                    }
+                    exhibitor_name = $(this).val();
+                });
+                
                 $(".badge_name").on("change", function(){
-                    if($(this).find("input").prop("checked")){
+                    if($(this).find("input").is(":checked")){
                         $(".exhibitors_name input").val("");
                     } else {
                         $(".exhibitors_name input").val(exhibitor_name);

@@ -11,9 +11,11 @@ class PWECatalog10 extends PWECatalog {
 
     public static function output($atts, $identification) {
         
-        $pwecatalog_display_random = isset($atts['pwecatalog_display_random1']) ? $atts['pwecatalog_display_random1'] : false;
-        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random);
-        if ($exhibitors === null){
+        $pwecatalog_display_random = true;
+        $file_changer = isset($atts['file_changer']) ? $atts['file_changer'] : null;
+        
+        $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random, $file_changer);
+        if ($exhibitors === null) {
             return;
         }
 
@@ -44,7 +46,8 @@ class PWECatalog10 extends PWECatalog {
             $source_utm = ''; 
         }
 
-        if(count($exhibitors) == 10 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false)){
+        if(count($exhibitors) >= 12 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false)){
+
             $output .= '
             <style>
                 .row-container:has(.pwe-registration) .wpb_column:has(#top10) {
@@ -136,14 +139,22 @@ class PWECatalog10 extends PWECatalog {
         <div id="top10" class="custom-catalog main-heading-text">
     
             <h2 class="catalog-custom-title" style="width: fit-content;">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']) .'</h2>
-            <div class="img-container-top10">';
+            <div class="img-container-top10 pwe-container-logotypes">';
+                $logotypes_limit = 12;
+                $logotypes_count = 0;
                 if (($atts["slider_desktop"] == 'true' && PWECommonFunctions::checkForMobile() != '1' ) || ($atts["grid_mobile"] != 'true' && PWECommonFunctions::checkForMobile() == '1' )) {
                     $slider_array = array();
                     foreach($exhibitors as $exhibitor){
+                        if ($logotypes_count >= $logotypes_limit) {
+                            break;
+                        }    
+
                         $slider_array[] = array(
                             'img' => $exhibitor['URL_logo_wystawcy'],
                             'site' => "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www'])
                         );
+
+                        $logotypes_count++;
                     }      
                     $images_options = array();
                     $images_options[] = array(
@@ -155,11 +166,17 @@ class PWECatalog10 extends PWECatalog {
 
                 } else { 
                     foreach ($exhibitors as $exhibitor){
+                        if ($logotypes_count >= $logotypes_limit) {
+                            break;
+                        } 
+
                         $exhibitorsUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www']);
                         $output .= '
-                            <a target="_blank" href="'. $exhibitorsUrl .'">
-                                <div class="cat-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
-                            </a>';
+                        <a target="_blank" href="'. $exhibitorsUrl .'">
+                            <div class="cat-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
+                        </a>';
+                        
+                        $logotypes_count++;
                     }
                 }
             $output .= '

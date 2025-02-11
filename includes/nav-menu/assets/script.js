@@ -5,6 +5,7 @@ const trade_fair_enddata = menu_js.trade_fair_enddata;
 document.addEventListener("DOMContentLoaded", function () {
     const adminBar = document.querySelector("#wpadminbar");
     const pweNavMenu = document.querySelector('#pweMenu');
+    const bodyHome = document.querySelector("body.home");
     const pweNavMenuHome = document.querySelector("body.home #pweMenu");
     const burgerCheckbox = pweNavMenu.querySelector('.pwe-menu__burger-checkbox');
     const menuContainer = pweNavMenu.querySelector('.pwe-menu__container');
@@ -14,9 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const uncodePageHeader = document.querySelector("#page-header");
     const pweCustomHeader = document.querySelector("#pweHeader");
 
-    if (pweNavMenu && mainContainer && !(uncodePageHeader || pweCustomHeader)) {
-        mainContainer.style.marginTop = pweNavMenu.offsetHeight + 'px';
-    } 
+    if (pweNavMenu && mainContainer) {
+        if (!(uncodePageHeader && pweCustomHeader)) {
+            mainContainer.style.marginTop = pweNavMenu.offsetHeight + 'px';
+        } else if (uncodePageHeader && pweCustomHeader && !bodyHome) {
+            mainContainer.style.marginTop = pweNavMenu.offsetHeight + 'px';
+        }
+    }
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 

@@ -107,6 +107,16 @@ class PWElementAdditionalLogotypes {
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'Aditional options',
+                'heading' => __('Randomise logotypes (top 20)', 'pwe_logotypes'),
+                'param_name' => 'logotypes_display_random_top_20',
+                'description' => __('Check if you want to display logotypes random (top 20 only).', 'pwe_logotypes'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_logotypes') => 'true',),
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'Links',
                 'heading' => __('Add link', 'pwe_logotypes'),
@@ -169,6 +179,7 @@ class PWElementAdditionalLogotypes {
             'logotypes_grid_mobile' => '',
             'logotypes_dots_off' => '',
             'logotypes_display_random1' => '',
+            'logotypes_display_random_top_20' => '',
             'logotypes_slider_logo_white' => '',
             'logotypes_slider_logo_color' => '',
             'logotypes_items_shadow' => '',
@@ -423,28 +434,46 @@ class PWElementAdditionalLogotypes {
 
                 // Processing logotypes_catalog
                 if (!empty($logotypes_catalog)) {
-                    // Sprawdzenie, czy "catalog" już istnieje w $logotypes_catalog
-                    $logotypes_catalog = trim($logotypes_catalog, ','); // Usuwamy ewentualne nadmiarowe przecinki
+                    // Remove any excess commas
+                    $logotypes_catalog = trim($logotypes_catalog, ','); 
 
                     $logotypes_catalogs = explode(',', $logotypes_catalog);
-                    $logotypes_catalogs = array_map('trim', $logotypes_catalogs); // Usunięcie białych znaków dla każdego elementu
+                    // Remove whitespace for each element
+                    $logotypes_catalogs = array_map('trim', $logotypes_catalogs);
 
 
-                    // Jeśli "catalog" nie istnieje, dodaj go na początku
+                    // If "catalog" doesn't exist, add it at the beginning
                     if (!in_array('catalog', $logotypes_catalogs)) {
-                        array_unshift($logotypes_catalogs, 'catalog'); // Dodajemy "catalog" na początek tablicy
+                        array_unshift($logotypes_catalogs, 'catalog');
                     }
 
                     $exhibitors_catalog = [];
 
-                    // W przypadku, gdy $logotypes_exhibitors_on == true i $exhibitors_logotypes nie jest puste
                     if ($logotypes_exhibitors_on == true && !empty($exhibitors_logotypes)) {
                         foreach ($exhibitors_logotypes as $exhibitors_logotype) {
                             $exhibitors_catalog[] = $exhibitors_logotype['img'];
                         }
+
+                        if ($logotypes_display_random_top_20 == true) {
+                            if (count($exhibitors_catalog) >= 20) {
+                                // Split the array: first 20 elements + the rest
+                                $first_20 = array_slice($exhibitors_catalog, 0, 20);
+                                $remaining = array_slice($exhibitors_catalog, 20);
+
+                                // Only shuffle the first 20 items
+                                shuffle($first_20);
+
+                                // Merge both parts back into one array
+                                $exhibitors_catalog = array_merge($first_20, $remaining);
+                            } else {
+                                // If there are less than 20 elements, shuffle the whole thing
+                                shuffle($exhibitors_catalog);
+                            }   
+                        }
                     }
 
-                    // Złącz ponownie katalogi w jeden ciąg znaków
+
+                    // Re-join directories into one string
                     $logotypes_catalog = implode(',', $logotypes_catalogs);
 
                     // Queue for processing directories
@@ -454,7 +483,7 @@ class PWElementAdditionalLogotypes {
 
                         // Ignoring "/"
                         if ($catalog === '/') {
-                            continue; // Skip this directory
+                            continue;
                         }
 
                         $full_path = $_SERVER['DOCUMENT_ROOT'] . '/doc/' . $catalog;
@@ -472,7 +501,7 @@ class PWElementAdditionalLogotypes {
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
                     if (in_array('catalog', $logotypes_catalogs)) {
                         foreach ($exhibitors_catalog as $catalog_img) {
-                            $files[] = $catalog_img;  // Dodaj obrazy z $exhibitors_catalog do $files
+                            $files[] = $catalog_img; 
                         }
                     }
 
@@ -500,7 +529,6 @@ class PWElementAdditionalLogotypes {
                         }
                     }
                 }
-
             }
 
             if (count($files) > 0) {
@@ -730,5 +758,3 @@ class PWElementAdditionalLogotypes {
     }
 
 }
-
-?>
