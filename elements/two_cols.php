@@ -1005,10 +1005,12 @@ class PWElementTwoCols extends PWElements {
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const twoColsSlider = document.querySelector(".'. $element_unique_id .' .pwe-slides");
-                twoColsSlider.style.visibility = "visible";
-                twoColsSlider.style.opacity = 1;
-                twoColsSlider.style.height = "auto";
-                twoColsSlider.style.width = "auto";
+                if (twoColsSlider) {
+                  twoColsSlider.style.visibility = "visible";
+                  twoColsSlider.style.opacity = 1;
+                  twoColsSlider.style.height = "auto";
+                  twoColsSlider.style.width = "auto";
+                }
 
                 const pweContainerLogotypes = document.querySelector(".'. $element_unique_id .' .pwe-container-logotypes");
                 if (pweContainerLogotypes && pweContainerLogotypes.children.length === 0) {
