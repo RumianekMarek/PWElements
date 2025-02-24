@@ -645,8 +645,9 @@ class PWElementStickyButtons extends PWElements {
             }
             if ($sticky_buttons_cursor_unset) {
                 $output .= '<style>
-                                .pwelement_'. self::$rnd_id .' .custom-sticky-button-item img {
-                                    cursor: unset;
+                                .pwelement_'. self::$rnd_id .' .custom-sticky-button-item img,
+                                .pwelement_'. self::$rnd_id .' .custom-sticky-button-item div {
+                                    cursor: unset !important;
                                 }
                             </style>';
             }

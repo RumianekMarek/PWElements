@@ -130,10 +130,10 @@ class PWElementHale extends PWElements {
         $days_to_event = (($trade_fair_start_timestamp - $current_day_timestamp) / (60 * 60 * 24));
         $days_after_event = ($current_day_timestamp - $trade_fair_end_timestamp) / (60 * 60 * 24);
 
-        $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 60;
+        $less_1_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 30;
         $more_1_day_after = ($trade_fair_start_timestamp != false || !empty($trade_fair_end)) && $days_after_event > 0 && $days_after_event < 1;
 
-        if (!empty($all_halls) && ($less_2_month_before || $more_1_day_after)) {
+        if (!empty($all_halls) && ($less_1_month_before || $more_1_day_after)) {
             $output = '
             <style>
                 .pwe-halls {
@@ -164,27 +164,6 @@ class PWElementHale extends PWElements {
                     .pwe-halls__info {
                         width: 100%;
                     }        
-                }
-
-                .pwe-halls__svg {
-                    position: relative;
-                    overflow: hidden;
-                }
-                .pwe-halls__loupe {
-                    position: absolute;
-                    width: 150px;
-                    height: 150px;
-                    border-radius: 50%;
-                    border: 2px solid #000;
-                    overflow: hidden;
-                    pointer-events: none;
-                    display: none;
-                    background: white;
-                }
-
-                .pwe-halls__loupe svg {
-                    position: absolute;
-                    transform-origin: top left;
                 }
 
             </style>
@@ -1694,37 +1673,35 @@ class PWElementHale extends PWElements {
                     }
                 });
 
-                // document.addEventListener("DOMContentLoaded", function () {
-                //     const pweHallsSvg = document.querySelector(".pwe-halls__svg");
-                //     const loupe = document.createElement("div");
-                //     loupe.classList.add("pwe-halls__loupe");
+                if (window.innerWidth >= 960) {
+                    const svgHale = document.querySelector("#pweHallsSvg");
+                    const zoomFactor = 2;
 
-                //     // Skopiowanie zawartości SVG
-                //     const clonedSvg = pweHallsSvg.cloneNode(true);
-                //     loupe.appendChild(clonedSvg);
-                //     pweHallsSvg.parentElement.appendChild(loupe);
+                    if (svgHale) {
+                        // Get original viewBox
+                        const originalViewBox = svgHale.getAttribute("viewBox");
+                        const viewBoxValues = originalViewBox.split(" ").map(Number);
 
-                //     pweHallsSvg.addEventListener("mousemove", function (e) {
-                //         const rect = pweHallsSvg.getBoundingClientRect();
-                //         const scale = 2; // Powiększenie
+                        svgHale.addEventListener("mousemove", (e) => {
+                            const rect = svgHale.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
 
-                //         const x = e.clientX - rect.left;
-                //         const y = e.clientY - rect.top;
+                            // Calculating a new viewBox
+                            const viewBoxX = viewBoxValues[0] + (x / rect.width) * viewBoxValues[2] - (viewBoxValues[2] / zoomFactor) / 2;
+                            const viewBoxY = viewBoxValues[1] + (y / rect.height) * viewBoxValues[3] - (viewBoxValues[3] / zoomFactor) / 2;
+                            const viewBoxWidth = viewBoxValues[2] / zoomFactor;
+                            const viewBoxHeight = viewBoxValues[3] / zoomFactor;
 
-                //         loupe.style.left = `${e.clientX - loupe.offsetWidth / 2}px`;
-                //         loupe.style.top = `${e.clientY - loupe.offsetHeight / 2}px`;
-                //         loupe.style.display = "block";
+                            svgHale.setAttribute("viewBox", `${viewBoxX} ${viewBoxY} ${viewBoxWidth} ${viewBoxHeight}`);
+                        });
 
-                //         clonedSvg.style.transform = `scale(${scale})`;
-                //         clonedSvg.style.left = `-${x * (scale - 1)}px`;
-                //         clonedSvg.style.top = `-${y * (scale - 1)}px`;
-                //     });
-
-                //     pweHallsSvg.addEventListener("mouseleave", function () {
-                //         loupe.style.display = "none";
-                //     });
-                // });
-
+                        svgHale.addEventListener("mouseleave", () => {
+                            svgHale.setAttribute("viewBox", originalViewBox); // Resetujemy viewBox do oryginalnego
+                        });
+                    }
+                }
+        
             </script>';
         } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
     

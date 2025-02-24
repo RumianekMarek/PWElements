@@ -45,7 +45,7 @@ class PWElementContact extends PWElements {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
         $edition_1 = [
-            "mr.glasstec.pl" => "Agata", //+
+            "mr.glasstec.pl" => "Agata",
             "tubetechnicpoland.com" => "Agata",
             "wiretechpoland.com" => "Agata",
             "maintenancepoland.com" => "Patrycja",
@@ -188,8 +188,9 @@ class PWElementContact extends PWElements {
             $service_mail = "biuro.podawcze3";
             $contact_name = strtolower($edition_3[$current_url]);
         } else {
-            $edition_number = "";
-            $contact_name = "";
+            $edition_number = "edition_3";
+            $service_mail = "biuro.podawcze3";
+            $contact_name = strtolower($edition_3[$current_url]);
         }
 
         $output = '';
@@ -295,8 +296,8 @@ class PWElementContact extends PWElements {
                         <div class="uncode_text_column">
                             <p>
                                 <b>'.self::languageChecker('Obsługa techniczna wystawców<br>', 'Technical support for exhibitors<br>').'</b>
-                                <a href="mailto:konsultantmarketingowy@warsawexpo.eu">
-                                    <span> konsultantmarketingowy</span><span>@warsawexpo.eu</span>
+                                <a href="mailto:konsultanttechniczny@warsawexpo.eu">
+                                    <span>konsultanttechniczny</span><span>@warsawexpo.eu</span>
                                 </a>
                             </p>
                         </div>

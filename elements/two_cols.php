@@ -515,14 +515,6 @@ class PWElementTwoCols extends PWElements {
       $output = '
       <style>
 
-        .'. $element_unique_id .' .pwe-slides {
-          visibility: hidden;
-          opacity: 0;
-          height: 0;
-          width: 0;
-          transition: .3s ease;
-        }
-
         .wpb_column:has(.'. $element_unique_id .'){
           padding-top:0 !important;
         }
@@ -1003,20 +995,19 @@ class PWElementTwoCols extends PWElements {
        </div></div>
        
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const twoColsSlider = document.querySelector(".'. $element_unique_id .' .pwe-slides");
-                if (twoColsSlider) {
-                  twoColsSlider.style.visibility = "visible";
-                  twoColsSlider.style.opacity = 1;
-                  twoColsSlider.style.height = "auto";
-                  twoColsSlider.style.width = "auto";
-                }
-
+            document.addEventListener("DOMContentLoaded", function () {              
+                const infoImageBox = document.querySelector(".'. $element_unique_id .' .info-image-box");
                 const pweContainerLogotypes = document.querySelector(".'. $element_unique_id .' .pwe-container-logotypes");
-                if (pweContainerLogotypes && pweContainerLogotypes.children.length === 0) {
-                    const loader = document.createElement("div");
-                    loader.className = "pwe-loader";
-                    pweContainerLogotypes.appendChild(loader);
+                if ("'. current_user_can('administrator') .'" == true) {
+                  if (pweContainerLogotypes && pweContainerLogotypes.children.length === 0) {
+                      const loader = document.createElement("div");
+                      loader.className = "pwe-loader";
+                      pweContainerLogotypes.appendChild(loader);
+                  }
+                } else {
+                  if (infoImageBox && pweContainerLogotypes && pweContainerLogotypes.children.length === 0) {
+                    infoImageBox.style.display = "none";
+                  }
                 }
             });
         </script>';

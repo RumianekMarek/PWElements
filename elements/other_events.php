@@ -12,7 +12,8 @@ class PWElementOtherEvents extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }    
+    }   
+    
 
     /**
      * Static method to initialize Visual Composer elements.
@@ -128,7 +129,7 @@ class PWElementOtherEvents extends PWElements {
                         strpos($fair['domain'], $current_domain) === false) {  
                         $other_events_items_json[] = [
                             "other_events_domain" => $fair["domain"],
-                            "other_events_text" => PWECommonFunctions::languageChecker($fair["name_pl"], $fair["name_en"])
+                            "other_events_text" => PWECommonFunctions::languageChecker($fair["desc_pl"], $fair["desc_en"])
                         ];
                     }
                 }
@@ -294,7 +295,7 @@ class PWElementOtherEvents extends PWElements {
                         $other_events_text = $other_events_item["other_events_text"];
                         $other_events_text_content = $is_empty ? $other_events_text : PWECommonFunctions::decode_clean_content($other_events_text);
 
-                        $other_events_text_content = !empty($other_events_text_content) ? $other_events_text_content : '<p>[pwe_name_' . PWECommonFunctions::languageChecker('pl', 'en') . ' domain="' . $other_events_domain . '"]</p>';
+                        $other_events_text_content = !empty($other_events_text_content) ? $other_events_text_content : '<p>[pwe_desc_' . PWECommonFunctions::languageChecker('pl', 'en') . ' domain="' . $other_events_domain . '"]</p>';
                         if (strpos($other_events_domain, $current_domain) === false) {
                             $output .= '
                                 <div class="pwe-other-events__item" style="'. $other_events_style .'">

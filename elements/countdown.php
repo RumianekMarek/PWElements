@@ -17,7 +17,7 @@ class PWElementMainCountdown extends PWElements {
         self::$countdown_rnd_id = rand(10000, 99999);
         parent::__construct();
 
-        require_once plugin_dir_path(__FILE__) . 'js/countdown.php';
+        require_once plugin_dir_path(__FILE__) . 'js/countdown.php'; 
     }
 
     /**
@@ -174,24 +174,20 @@ class PWElementMainCountdown extends PWElements {
      *      * 
      * @param array @right_date array off only new timers
      */
-    private static function getRightData($count) {
-        foreach($count as $value){
-            if ($value['countdown_start'] != ''){
-                $start_date = new DateTime($value['countdown_start']);
-            } else {
-                $start_date = self::$today_date;
-            }
-
-            $end_date = new DateTime($value['countdown_end']);
-
-            if($start_date > self::$today_date || $end_date < self::$today_date){
-                array_shift($count);
+    private static function getRightData($count) { 
+        foreach ($count as $key => $value) {
+            $start_date = !empty($value["countdown_start"]) ? new DateTime($value["countdown_start"]) : self::$today_date;
+            $end_date = new DateTime($value["countdown_end"]);
+        
+            if ($start_date > self::$today_date || $end_date < self::$today_date) {
+                unset($count[$key]);
             } else {
                 break;
             }
         }
-        return $count;
-    }  
+        return array_values($count);
+    }
+    
 
     /**
      * Set up default stats.
@@ -276,7 +272,6 @@ class PWElementMainCountdown extends PWElements {
         extract(shortcode_atts(array(
             'custom_timer' => '',
             'turn_off_timer_bg' => '',
-            'add_timer' => '',
             'countdowns' => '',
         ), $atts ));
 
@@ -429,7 +424,7 @@ class PWElementMainCountdown extends PWElements {
         $time_to_end_timestamp = ($trade_fair_end_date_timestamp - $current_timestamp);
 
         if ((($trade_fair_start_date_timestamp != false && $trade_fair_end_date_timestamp != false) && !empty($trade_fair_start_date)) && 
-            $diff_timestamp < (7 * 60 * 60) && $time_to_end_timestamp > 0) {
+            $diff_timestamp < (7 * 60 * 60) && $time_to_end_timestamp > 0 && $custom_timer != true && $fff) {
 
             $output .= '
             <style>
@@ -528,11 +523,11 @@ class PWElementMainCountdown extends PWElements {
             $countdown = vc_param_group_parse_atts($countdowns);
 
             foreach($countdown as $main_id => $main_value){
-                if (($custom_timer || $add_timer) && $main_value["countdown_end"] == '') {
+                if ($custom_timer && $main_value["countdown_end"] == '') {
                     $main_value["countdown_end"] = do_shortcode('[trade_fair_datetotimer]');
                 }
                 foreach($main_value as $id => $key){
-                    $countdown[$main_id][$id] = do_shortcode($key);     
+                    $countdown[$main_id][$id] = do_shortcode($key);  
                 }
             }
             
@@ -543,7 +538,7 @@ class PWElementMainCountdown extends PWElements {
 
             $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
             
-            if(($custom_timer || $add_timer)){
+            if(($custom_timer)){
                 $right_countdown = self::getRightData($countdown);
             } else {
                 $right_countdown = self::getRightData(self::main_timer());
@@ -572,20 +567,6 @@ class PWElementMainCountdown extends PWElements {
 
             $flex_direction = ($countdown_column == true) ? 'flex-direction: column;' : '';
 
-            // if ($atts['custom_timer'] == 'true' && $atts['countdown_end'] == '') {
-            //     $countdown_end = do_shortcode('[trade_fair_enddata]');
-            // }
-
-            if ($atts['custom_timer'] != true) {
-                $output = '';
-                // $output .= '
-                // <style>
-                //     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                //         opacity: 0;
-                //     }
-                // </style>';
-            }
-
             if ($atts['turn_off_timer_bg'] == true) {
                 $output .= 
                 '<style>
@@ -603,7 +584,6 @@ class PWElementMainCountdown extends PWElements {
                         padding: 0 !important;
                     }';
             }
-            
             if (count($right_countdown)){
                 $output .= '
                     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
@@ -712,6 +692,7 @@ class PWElementMainCountdown extends PWElements {
             } else {
                 $output .= '</style>';
             }
+
 
             // $output .= '
             // <script>
