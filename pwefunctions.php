@@ -39,12 +39,43 @@ class PWECommonFunctions {
      * JSON all trade fairs
      */
     public static function json_fairs() {
-        // Pobranie JSON-a
-        $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
-        $json_data = @file_get_contents($json_file);
-        $fairs_data = json_decode($json_data, true);
-        
-        return $fairs_data['fairs'];
+        global $pwe_fairs;
+
+        if (!empty($pwe_fairs)) {
+            $fairs_data = ["fairs" => []];
+
+            foreach ($pwe_fairs as $fair) {
+                if (!isset($fair->fair_domain) || empty($fair->fair_domain)) {
+                    continue;
+                }
+    
+                $domain = $fair->fair_domain;
+    
+                $fairs_data["fairs"][$domain] = [
+                    "domain" => $domain,
+                    "date_start" => $fair->fair_date_start ?? "",
+                    "date_end" => $fair->fair_date_end ?? "",
+                    "edition" => $fair->fair_edition ?? "",
+                    "name_pl" => $fair->fair_name_pl ?? "",
+                    "name_en" => $fair->fair_name_en ?? "",
+                    "desc_pl" => $fair->fair_desc_pl ?? "",
+                    "desc_en" => $fair->fair_desc_en ?? "",
+                    "visitors" => $fair->fair_visitors ?? "",
+                    "exhibitors" => $fair->fair_exhibitors ?? "",
+                    "countries" => $fair->fair_countries ?? "",
+                    "area" => $fair->fair_area ?? "",
+                    "color_accent" => $fair->fair_color_accent ?? "",
+                    "color_main2" => $fair->fair_color_main2 ?? "",
+                    "hall" => $fair->fair_hall ?? ""
+                ];
+            }
+        } else {
+            $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
+            $json_data = @file_get_contents($json_file);
+            $fairs_data = json_decode($json_data, true);
+        }
+
+        return $fairs_data['fairs'];  
     }
     
     /**
@@ -79,6 +110,16 @@ class PWECommonFunctions {
     public static function decode_clean_content($encoded_content) {
         $decoded_content = wpb_js_remove_wpautop(urldecode(base64_decode($encoded_content)), true);
         return $decoded_content;
+    }
+
+    /**
+     * Decodes URL-encoded string
+     * Decodes a JSON string
+     */
+    public static function json_decode($encoded_variable) {
+        $encoded_variable_urldecode = urldecode($encoded_variable);
+        $encoded_variable_json = json_decode($encoded_variable_urldecode, true);
+        return $encoded_variable_json;
     }
 
     /**

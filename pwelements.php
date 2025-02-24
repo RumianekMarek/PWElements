@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.4.9.2
+ * Version: 2.5.0
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -25,6 +25,8 @@ class PWElementsPlugin {
     public $PWECatalog1;
     public $PWEExhibitorGenerator;
     public $PWEProfile;
+    public $PWEStore;
+    public $PWEConferenceCap;
 
     public function __construct() {
         // Clearing wp_rocket cache
@@ -42,8 +44,14 @@ class PWElementsPlugin {
 
         // $this -> resendTicket();
 
-        // Exclude JS from lazy loading in WP Rocket
-        add_filter('rocket_exclude_defer_js', array( $this, 'pwe_exclude_js_from_defer' ), 10, 2);
+        // JavaScript files to be excluded from delaying execution
+        add_filter('rocket_delay_js_exclusions', function ($excluded_files) {
+            $excluded_files[] = '/wp-content/plugins/PWElements/elements/js/exclusions.js';
+            $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/three.min.js';
+            $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js';
+            $excluded_files[] = '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js';
+            return $excluded_files;
+        });
     }
 
     public function pwe_enqueue_styles() {
@@ -62,6 +70,8 @@ class PWElementsPlugin {
         if (is_admin()) {
             // Admin menu
             include_once plugin_dir_path(__FILE__) . 'includes/settings/admin-menu.php';
+            // Settings nav menu
+            include_once plugin_dir_path(__FILE__) . 'includes/settings/general-settings.php';
             // Settings nav menu
             include_once plugin_dir_path(__FILE__) . 'includes/settings/nav-menu-settings.php';
         }
@@ -112,17 +122,15 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
         $this->PWEMap = new PWEMap();
 
+        // require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
+        // $this->PWEStore = new PWEStore();
+
+        // require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
+        // $this->PWEConferenceCap = new PWEConferenceCap();
+
         require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
     }
-
-    function pwe_exclude_js_from_defer($excluded_files) {
-        $excluded_files[] = '/wp-content/plugins/PWElements/elements/js/exclusions.js';
-        $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/three.min.js';
-        $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js';
-        $excluded_files[] = '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js';
-        return $excluded_files;
-    }
-
+    
     // Czyszczenie pamięci wp_rocket
     public function clearWpRocketCacheOnPluginUpdate( $upgrader_object, $options ) {
         $plugin = isset( $options['plugin'] ) ? $options['plugin'] : '';
@@ -172,6 +180,85 @@ class PWElementsPlugin {
         $myUpdateChecker->getVcsApi()->enableReleaseAssets();
     }
 }
+
+class CAPDatabase {
+
+    private static function connectToDatabaseFairs() {
+        if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
+            $database_host = 'localhost';
+            $database_name = 'automechanicawar_dodatkowa';
+            $database_user = 'automechanicawar_admin-dodatkowa';
+            $database_password = '9tL-2-88UAnO_x2e';
+        } else {
+            $database_host = 'localhost';
+            $database_name = 'warsawexpo_dodatkowa';
+            $database_user = 'warsawexpo_admin-dodatkowy';
+            $database_password = 'N4c-TsI+I4-C56@q';
+        }
+
+        if ($database_user && $database_password && $database_name && $database_host) {
+            $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+        }
+        
+        // Check for errors errors
+        if (!empty($cap_db->last_error)) {
+            echo '<script>console.error("Błąd połączenia z bazą danych: '. $cap_db->last_error .'")</script>';
+            return false;
+        }
+
+        // Additional connection test
+        if (!$cap_db->dbh || mysqli_connect_errno()) {
+            echo '<script>console.error("Błąd połączenia MySQL: '. mysqli_connect_error() .'")</script>';
+            return false;
+        }
+
+        return $cap_db;
+    }
+
+    public static function getDatabaseDataFairs() {
+
+        $cap_db = self::connectToDatabaseFairs();
+
+        if (!$cap_db) {
+            return [];
+        }
+
+        $results = $cap_db->get_results("SELECT fair_domain, 
+                                                fair_name_pl, 
+                                                fair_name_en, 
+                                                fair_desc_pl, 
+                                                fair_desc_en, 
+                                                fair_date_start, 
+                                                fair_date_end, 
+                                                fair_edition, 
+                                                fair_visitors, 
+                                                fair_exhibitors, 
+                                                fair_countries, 
+                                                fair_area, 
+                                                fair_hall, 
+                                                fair_color_accent, 
+                                                fair_color_main2,
+                                                fair_kw
+                                        FROM fairs");
+
+        // Debugging SQL errors
+        if ($cap_db->last_error) {
+            echo '<script>console.error("Błąd SQL: "'. $cap_db->last_error .'")</script>';
+            return [];
+        }
+
+        return $results;
+    }
+
+}
+
+// Global function
+// function pwe_fairs() {
+//     return CAPDatabase::getDatabaseDataFairs();
+// }
+
+// global $pwe_fairs;
+// $pwe_fairs = pwe_fairs(); 
 
 // Inicjalizacja wtyczki jako obiektu klasy
 $PWElementsPlugin = new PWElementsPlugin();

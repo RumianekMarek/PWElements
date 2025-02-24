@@ -27,6 +27,16 @@ class PWESliderScripts {
 
             $output = '
             <style>
+                '. $pwe_element .' .pwe-slides {
+                    visibility: hidden;
+                    opacity: 0;
+                    height: 0;
+                    width: 0;
+                    transition: .3s ease;
+                }
+                '. $pwe_element .' .slick-slide {
+                    height: auto;
+                }
                 '. $pwe_element .' .pwe-arrow {
                     display: block;
                     position: absolute;
@@ -231,7 +241,8 @@ class PWESliderScripts {
                             nextArrow: $("'. $pwe_element .' .pwe-arrow-next"),
                             prevArrow: $("'. $pwe_element .' .pwe-arrow-prev"),
                             autoplay: true,
-                            autoplaySpeed: 3000,
+                            autoplaySpeed: 5000,
+                            speed: 600,
                             dots: dotsEnabled,
                             cssEase: "linear",
                             swipeToSlide: true,
@@ -282,6 +293,13 @@ class PWESliderScripts {
                     });
 
                     resizeObserver.observe(pweElement[0]);
+
+                    slickSlider.css({
+                        "visibility": "visible",
+                        "opacity": "1",
+                        "height": "auto",
+                        "width": "auto"
+                    });
 
                 });
             </script>';
