@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.5.0
+ * Version: 2.5.0.1
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -122,11 +122,11 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
         $this->PWEMap = new PWEMap();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
-        // $this->PWEStore = new PWEStore();
+        require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
+        $this->PWEStore = new PWEStore();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
-        // $this->PWEConferenceCap = new PWEConferenceCap();
+        require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
+        $this->PWEConferenceCap = new PWEConferenceCap();
 
         require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
     }
@@ -188,12 +188,12 @@ class CAPDatabase {
             $database_host = 'localhost';
             $database_name = 'automechanicawar_dodatkowa';
             $database_user = 'automechanicawar_admin-dodatkowa';
-            $database_password = '9tL-2-88UAnO_x2e';
+            $database_password = defined('PWE_DB_PASSWORD_1') ? PWE_DB_PASSWORD_1 : '';
         } else {
             $database_host = 'localhost';
             $database_name = 'warsawexpo_dodatkowa';
             $database_user = 'warsawexpo_admin-dodatkowy';
-            $database_password = 'N4c-TsI+I4-C56@q';
+            $database_password = defined('PWE_DB_PASSWORD_2') ? PWE_DB_PASSWORD_2 : '';
         }
 
         if ($database_user && $database_password && $database_name && $database_host) {
@@ -253,12 +253,12 @@ class CAPDatabase {
 }
 
 // Global function
-// function pwe_fairs() {
-//     return CAPDatabase::getDatabaseDataFairs();
-// }
+function pwe_fairs() {
+    return CAPDatabase::getDatabaseDataFairs();
+}
 
-// global $pwe_fairs;
-// $pwe_fairs = pwe_fairs(); 
+global $pwe_fairs;
+$pwe_fairs = pwe_fairs(); 
 
 // Inicjalizacja wtyczki jako obiektu klasy
 $PWElementsPlugin = new PWElementsPlugin();
