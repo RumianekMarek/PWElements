@@ -101,6 +101,7 @@ class PWECatalogFull extends PWECatalog {
                             $singleExhibitor = '<div class="exhibitors__container-list">';
                             if ($exhibitor['URL_logo_wystawcy']) {
                                 $logoUrl = str_replace([' ', '(', ')'], ['%20', '%28', '%29'], $exhibitor['URL_logo_wystawcy']);
+                                // var_dump(file_get_contents($exhibitor['URL_logo_wystawcy']));
                                 $singleExhibitor .= '<div class="exhibitors__container-list-img" style="background-image: url(' . $logoUrl . ')"></div>';
                             }
 

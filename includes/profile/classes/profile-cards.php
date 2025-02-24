@@ -150,8 +150,7 @@ class PWEProfileCards extends PWEProfile {
         $profile_border_radius_cards = (!empty($atts['profile_border_radius_cards'])) ? $atts['profile_border_radius_cards'] : '18px';
         $profile_min_width_cards = (!empty($atts['profile_min_width_cards'])) ? $atts['profile_min_width_cards'] : '100%';
 
-        $profile_items_cards_urldecode = urldecode($profile_items_cards);
-        $profile_items_cards_json = json_decode($profile_items_cards_urldecode, true);
+        $profile_items_cards_json = PWECommonFunctions::json_decode($profile_items_cards);
 
         $output = '
         <style>

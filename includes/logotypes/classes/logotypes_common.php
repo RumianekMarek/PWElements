@@ -164,7 +164,7 @@ class PWElementAdditionalLogotypes {
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
-        extract( shortcode_atts( array(  
+        extract( shortcode_atts( array(
             'logotypes_media' => '',
             'logotypes_catalog' => '',
             'logotypes_layout' => '',
@@ -314,6 +314,9 @@ class PWElementAdditionalLogotypes {
                         gap: 10px;
                         margin-top: 18px;
                     }
+                    .pwelement_'. $el_id .' .pwe-logo-item  {
+                        min-height: 90px;
+                    }
                     </style>';
                 } else {
                     $output .= '
@@ -333,7 +336,7 @@ class PWElementAdditionalLogotypes {
                             min-width: 100%;
                         }
                     }
-    
+
                     @media(max-width: 550px) {
                         .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
                             grid-template-columns: repeat(4, 1fr);
@@ -435,7 +438,7 @@ class PWElementAdditionalLogotypes {
                 // Processing logotypes_catalog
                 if (!empty($logotypes_catalog)) {
                     // Remove any excess commas
-                    $logotypes_catalog = trim($logotypes_catalog, ','); 
+                    $logotypes_catalog = trim($logotypes_catalog, ',');
 
                     $logotypes_catalogs = explode(',', $logotypes_catalog);
                     // Remove whitespace for each element
@@ -468,7 +471,7 @@ class PWElementAdditionalLogotypes {
                             } else {
                                 // If there are less than 20 elements, shuffle the whole thing
                                 shuffle($exhibitors_catalog);
-                            }   
+                            }
                         }
                     }
 
@@ -501,7 +504,7 @@ class PWElementAdditionalLogotypes {
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
                     if (in_array('catalog', $logotypes_catalogs)) {
                         foreach ($exhibitors_catalog as $catalog_img) {
-                            $files[] = $catalog_img; 
+                            $files[] = $catalog_img;
                         }
                     }
 
@@ -530,6 +533,21 @@ class PWElementAdditionalLogotypes {
                     }
                 }
             }
+
+            // Sorting - moving files from “Partner Targów” to the end of the array
+            usort($files, function ($a, $b) {
+                $a = str_replace('//', '/', $a);
+                $b = str_replace('//', '/', $b);
+
+                $a_is_partner = strpos($a, 'Logotypy/Rotator 2/Partner Targów') !== false;
+                $b_is_partner = strpos($b, 'Logotypy/Rotator 2/Partner Targów') !== false;
+
+                if ($a_is_partner === $b_is_partner) {
+                    return 0;
+                }
+
+                return $a_is_partner ? 1 : -1;
+            });
 
             if (count($files) > 0) {
 
