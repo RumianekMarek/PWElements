@@ -10,7 +10,8 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
         parent::__construct();
     }
 
- public static function output($atts, $sessions, $conf_function, &$speakersDataMapping){
+ public static function output($atts, $sessions, $conf_function, &$speakersDataMapping, $tab_index, $conf_slug_index){
+
 
     extract(shortcode_atts(array(
         'conference_cap_title' => '',
@@ -27,7 +28,7 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
         }
         
         $lecture_counter++;
-        $lectureId = 'cap-lecture-' . $lecture_counter;
+        $lectureId = $conf_slug_index . '-' . $tab_index . '-' . 'lecture-' . $lecture_counter;
         $time  = isset($session['time']) ? $session['time'] : '';
         $title = isset($session['title']) ? $session['title'] : '';
         $desc  = isset($session['desc']) ? $session['desc'] : '';
@@ -81,6 +82,7 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
                 $speakersDataMapping[$lectureId] = $speakers_bios;
                 $content .= '<button class="conference_cap__lecture-speaker-btn">BIO</button>';
             }
+
         }
         
         $content .= '</div>';

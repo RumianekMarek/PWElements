@@ -1,0 +1,65 @@
+.conference_cap__lecture-box {
+  display: flex;
+  text-align: left;
+  gap: 18px;
+  margin-top: 36px;
+  padding: 10px;
+}
+
+.conference_cap__lecture-speaker {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.conference_cap__lecture-speaker-item {
+  margin-bottom: 10px;
+}
+.conference_cap__lecture-box-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+.conference_cap__lecture-time, .conference_cap__lecture-name, .conference_cap__lecture-title, .conference_cap__lecture-desc p {
+  margin: 0;
+}
+.conference_cap__lecture-speaker-img img {
+  border-radius: 50%;
+  max-width: 80%;
+  background: white;
+  border: 2px solid gray;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.conference_cap__lecture-speaker-btn {
+  margin: 10px auto !important;
+  color: white;
+  background-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  padding: 6px 16px;
+  font-weight: 600;
+  width: 80px;
+  border-radius: 10px;
+  transition: .3s ease;
+}
+.conference_cap__lecture-speaker-btn:hover {
+  color: white;
+  background-color: color-mix(in srgb, var(--accent-color), black 20%);
+  border: 1px solid color-mix(in srgb, var(--accent-color), black 20%);
+}   
+
+@media (max-width: 600px) {
+
+  .conference_cap__lecture-box {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .conference_cap__lecture-desc p {
+    text-align: left;
+  }
+
+}
