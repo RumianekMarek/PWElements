@@ -300,7 +300,9 @@
     background-size: cover !important;
     aspect-ratio: 1/1; 
     cursor: pointer;
-    transition: .3s all;
+    transition: .5s all;
+    border-radius: 18px;
+    opacity: 0;
 }
 .pwe-store__fairs-item::after {
     content: attr(data-tooltip);

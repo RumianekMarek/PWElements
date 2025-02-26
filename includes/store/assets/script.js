@@ -142,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 : "https://warsawexpo.eu/en/shop-premium-services/";
             
             if (currentDomain === "mr.glasstec.pl") {
-                
                 const pweStore = document.querySelector(".pwe-store");
 
                 if (pweStore) {
@@ -160,13 +159,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     const fairItem = document.createElement("div");
                     fairItem.className = "pwe-store__fairs-item";
                     fairItem.id = fair.domain.replace(/\.[^.]*$/, "");
-                    fairItem.style.background = `url('https://${fair.domain}/doc/kafelek.jpg')`; 
+                
+                    // Ustawienie początkowej szerokości i wysokości 1px
+                    fairItem.style.opacity = 0;
                     
-                    fairItem.setAttribute("data-name", fair.name); // Fair name as attribute
-                    fairItem.setAttribute("data-tooltip", fair.desc); // Fair description as attribute
-                    fairItem.setAttribute("data-date", fair.date); // Fair date as attribute
-                    fairItem.setAttribute("data-edition", fair.edition); // Fair edition as attribute
-                    fairItem.setAttribute("data-domain", fair.domain); // Fair domain as attribute
+                    const imgUrl = `https://${fair.domain}/doc/kafelek.jpg`;
+                    
+                    // Wczytanie obrazu w tle
+                    const img = new Image();
+                    img.src = imgUrl;
+                    
+                    img.onload = () => {
+                        fairItem.style.backgroundImage = `url('${imgUrl}')`;
+                        fairItem.style.opacity = 1;
+                    };
+                
+                    // Ustawienie atrybutów
+                    fairItem.setAttribute("data-name", fair.name);
+                    fairItem.setAttribute("data-tooltip", fair.desc);
+                    fairItem.setAttribute("data-date", fair.date);
+                    fairItem.setAttribute("data-edition", fair.edition);
+                    fairItem.setAttribute("data-domain", fair.domain);
                     
                     fairsItems.appendChild(fairItem);
                 });
