@@ -424,7 +424,7 @@ class PWElementMainCountdown extends PWElements {
         $time_to_end_timestamp = ($trade_fair_end_date_timestamp - $current_timestamp);
 
         if ((($trade_fair_start_date_timestamp != false && $trade_fair_end_date_timestamp != false) && !empty($trade_fair_start_date)) && 
-            $diff_timestamp < (7 * 60 * 60) && $time_to_end_timestamp > 0 && $custom_timer != true && $fff) {
+            $diff_timestamp < (7 * 60 * 60) && $time_to_end_timestamp > 0 && $custom_timer != true) {
 
             $output .= '
             <style>

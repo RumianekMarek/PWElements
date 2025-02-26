@@ -12,7 +12,7 @@ class PWElementStepTwo extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }    
+    }
 
     // /**
     //  * Static method to initialize Visual Composer elements.
@@ -102,6 +102,15 @@ class PWElementStepTwo extends PWElements {
             'step2_overlay_range' => '',
         ), $atts ));
 
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $userSessionEmail = $_SESSION["pwe_reg_entry"]["email"]  ?? null;
+        $userSessionPhone = $_SESSION["pwe_reg_entry"]["phone"] ?? null;
+
+        $file_url = plugins_url('elements/session_fetch.php', dirname(__FILE__));
+
         $fair_logo = (get_locale() == "pl_PL") ? "/doc/logo-color.webp" : "/doc/logo-color-en.webp";
 
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
@@ -115,7 +124,7 @@ class PWElementStepTwo extends PWElements {
         } else {
             $step2_link_exhibitor_no = (empty($atts['step2_link_exhibitor_no'])) ? '/en/registration-confirmation/' : $atts['step2_link_exhibitor_no'];
         }
-        
+
         $output = '
             <style>
                 .row-container:has(#Step2 .gform_wrapper) .row-parent {
@@ -134,7 +143,7 @@ class PWElementStepTwo extends PWElements {
                 .pwelement_'. self::$rnd_id .' .form-2 span {
                     color: ' . $text_color . '
                 }
-                
+
 
                 .pwelement_'. self::$rnd_id .' .form-2>div {
                     max-width: 500px;
@@ -302,7 +311,7 @@ class PWElementStepTwo extends PWElements {
             <div id="Step2">
                 <div class="form-2">
                     <div>
-                        <h5 class="krok"> '. 
+                        <h5 class="krok"> '.
                             self::languageChecker(
                                 <<<PL
                                     Krok <span class="text-accent-color">2 z 2
@@ -312,7 +321,7 @@ class PWElementStepTwo extends PWElements {
                                 EN
                             )
                         .'</span></h5>
-                        <h2 class="text-color-jevc-color">'. 
+                        <h2 class="text-color-jevc-color">'.
                             self::languageChecker(
                                 <<<PL
                                     Twój bilet został<br>wygenerowany pomyślnie!
@@ -322,7 +331,7 @@ class PWElementStepTwo extends PWElements {
                                 EN
                             )
                         .'</h2>
-                        <p class="font13">'. 
+                        <p class="font13">'.
                             self::languageChecker(
                                 <<<PL
                                     Otrzymasz go na wskazany adres e-mail.<br>Może to potrwać kilka minut.
@@ -332,7 +341,7 @@ class PWElementStepTwo extends PWElements {
                                 EN
                             )
                         .'</p>
-                        <h3 class="wystawca">'. 
+                        <h3 class="wystawca">'.
                             self::languageChecker(
                                 <<<PL
                                     Czy chcesz zostać <span class="text-accent-color">wystawcą</span> targów [trade_fair_name] ?
@@ -343,10 +352,10 @@ class PWElementStepTwo extends PWElements {
                             )
                         .'</h3>
                         <div class="pwe-gravity-form">
-                            [gravityform id="'. $reg_form_name_step2 .'" title="false" description="false" ajax="false"]               
+                            [gravityform id="'. $reg_form_name_step2 .'" title="false" description="false" ajax="false"]
                         </div>
                         <div class="pwe-submitting-buttons">
-                            <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">'. 
+                            <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">'.
                                 self::languageChecker(
                                     <<<PL
                                         Tak, jestem zainteresowany
@@ -379,7 +388,7 @@ class PWElementStepTwo extends PWElements {
                         </div>
                     </div>
                 </div>
-                <div class="form-2-right">'. 
+                <div class="form-2-right">'.
                         self::languageChecker(
                             <<<PL
                                 <img src="/doc/logo.webp">
@@ -390,7 +399,7 @@ class PWElementStepTwo extends PWElements {
                                 <h4>[trade_fair_date_eng]</h4>
                             EN
                         )
-                    .'                    
+                    .'
                     <h6>w Ptak Warsaw Expo</h6>
                 </div>
             </div>
@@ -400,7 +409,7 @@ class PWElementStepTwo extends PWElements {
                         <a href="https://warsawexpo.eu/" target="_blanc"><img src="' . plugin_dir_url(dirname( __FILE__ )) . "/media/logo_pwe_black.webp" . '"></a>
                     </div>
                     <div class="fair-logo">
-                        <a href="'. 
+                        <a href="'.
                         self::languageChecker(
                             <<<PL
                                /
@@ -415,26 +424,26 @@ class PWElementStepTwo extends PWElements {
                 <div class="numbers">
                     <div class="for-exhibitors">
                         <i class="fa fa-envelope-o fa-3x fa-fw"></i>
-                        <p>'. 
+                        <p>'.
                         self::languageChecker(
                             <<<PL
-                                "Zostań wystawcą" 
+                                "Zostań wystawcą"
                             PL,
                             <<<EN
-                                "Become an exhibitor" 
+                                "Become an exhibitor"
                             EN
                         )
                     .'<br> <a href="tel:48 517 121 906">+48 517 121 906</a>
                     </div>
                     <div class="for-visitors">
                         <i class="fa fa-phone fa-3x fa-fw"></i>
-                        <p>'. 
+                        <p>'.
                         self::languageChecker(
                             <<<PL
-                                "Odwiedzający" 
+                                "Odwiedzający"
                             PL,
                             <<<EN
-                                "Visitors" 
+                                "Visitors"
                             EN
                         )
                     .'<br> <a href="tel:48 513 903 628">+48 513 903 628</a>
@@ -468,12 +477,50 @@ class PWElementStepTwo extends PWElements {
                             //     return;
                             // }
 
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
-                            $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
-                            $(".pwelement_'. self::$rnd_id .' form").submit();
+                            // jQuery.ajax({
+                            //     url: "'.$file_url.'",
+                            //     method: "GET",
+                            //     dataType: "json",
+                            //     success: function (sessionData) {
+                            //         let userEmail = sessionData.user_email ;
+                            //         let userPhone = sessionData.user_phone ;
+
+                            //         jQuery(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                            //         jQuery(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userPhone);
+                            //         jQuery(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
+                            //         jQuery(".pwelement_'. self::$rnd_id .' form").submit();
+
+                            //     },
+                            //     error: function () {
+                            //         console.log("error");
+                            //     }
+                            // });
+                            jQuery.ajax({
+                                url: "'.$file_url.'",
+                                method: "GET",
+                                dataType: "json",
+                                success: function (sessionData) {
+                                    let userEmail = sessionData.user_email || localStorage.getItem("user_email");
+                                    let userPhone = sessionData.user_phone || localStorage.getItem("user_tel");
+
+                                    jQuery(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                                    jQuery(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userPhone);
+                                    jQuery(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
+                                    jQuery(".pwelement_'. self::$rnd_id .' form").submit();
+                                },
+                                error: function () {
+                                    let userEmail = localStorage.getItem("user_email");
+                                    let userPhone = localStorage.getItem("user_tel");
+
+                                    jQuery(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                                    jQuery(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userPhone);
+                                    jQuery(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
+                                    jQuery(".pwelement_'. self::$rnd_id .' form").submit();
+                                }
+                            });
                         });
                     });
+
             </script>
         ';
 

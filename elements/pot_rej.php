@@ -35,6 +35,17 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     'value' => 'PWElementPotwierdzenieRejestracji',
                 ),
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Update entries one form', 'pwelement'),
+                'param_name' => 'reg_form_update_entries',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementPotwierdzenieRejestracji',
+                ),
+            ),
         );
         return $element_output;
     }
@@ -47,7 +58,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
 
         extract( shortcode_atts( array(
             'reg_form_name_pr' => '',
+            'reg_form_update_entries' => '',
         ), $atts ));
+
+        $file_url = plugins_url('elements/fetch.php', dirname(__FILE__));
 
         $source_utm = $_SERVER['argv'][0];
         $selected_form_id = '';
@@ -120,6 +134,36 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         } else {
             $actually_date = $formatted_date;
         }
+
+                /* Update text tranform */
+        $lang = get_locale();
+
+        $translations = [
+            'pl' => [
+                'name' => 'Imię i Nazwisko',
+                'street' => 'Ulica',
+                'house' => 'Numer budynku/mieszkania',
+                'post' => 'Kod pocztowy',
+                'city' => 'Miasto',
+                'button' => 'Aktualizuj dane',
+                'success' => 'Dane zostały zaktualizowane!',
+                'error' => 'Wszystkie pola są wymagane!',
+                'confirm_text' => 'Dziękujemy za skontaktowanie się z nami, odezwiemy się do Ciebie wkrótce.',
+            ],
+            'en' => [
+                'name' => 'Full Name',
+                'street' => 'Street',
+                'house' => 'Building/Apartment Number',
+                'post' => 'Postal Code',
+                'city' => 'City',
+                'button' => 'Update Data',
+                'success' => 'Data has been updated!',
+                'error' => 'All fields are required!',
+                'confirm_text' => 'Thank you for contacting us, we will get back to you soon.',
+            ]
+        ];
+
+        $t = (strpos($lang, 'en') !== false) ? $translations['en'] : $translations['pl'];
 
         $output = '
             <style>
@@ -348,6 +392,17 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .pwelement_'.self::$rnd_id.' .pwe-registration-step-text p {
                     margin: 0;
                 }
+                .pwelement_'.self::$rnd_id.' .error-border {
+                    border: 2px solid red !important;
+                }
+                .pwelement_'.self::$rnd_id.' .status-message.error {
+                    border: 3px solid red;
+                    padding: 9px 10px;
+                    border-radius: 10px;
+                    text-align: center;
+                    background: white;
+                    font-weight: 600;
+                }
                 @media (max-width:1100px) {
                     .pwelement_' . self::$rnd_id . ' .form-3 {
                         padding: 18px;
@@ -535,26 +590,84 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         }
                     }
 
+                    if(!$reg_form_update_entries){
                     $output .= '
-                    <div class="pwe-gravity-form">
-                        [gravityform id="'. $form_name .'" title="false" description="false" ajax="false"]
+                        <div class="pwe-gravity-form">
+                            [gravityform id="'. $form_name .'" title="false" description="false" ajax="false"]
+                        </div>
+                        <div class="pwe-submitting-buttons display-befor-subbmit">
+                            <button id="pweSendStepTwo" class="btn pwe-btn pwe_reg_visitor">'. $confirmation_page_text_btn .'</button>
+                        </div>
+                        <div class="pwe-submitting-buttons display-after-subbmit">
+                            <a href="'.
+                            self::languageChecker(
+                                <<<PL
+                                /
+                                PL,
+                                <<<EN
+                                    /en/
+                                EN
+                            )
+                        .'"><button class="btn pwe-btn pwe_reg_visitor">'. $main_page_text_btn .'</button></a>
+                        </div>
+                    </div>';
+                    } else {
+                    $output .= '
+                        <div class="pwe-gravity-form">
+                            <div class="gf_browser_chrome gform_wrapper gravity-theme gform-theme--no-framework">
+                                <form id="addressUpdateForm">
+                                    <div class="gform-body gform_body">
+                                        <div class="gform_fields">
+                                            <div class="gfield gfield--width-full">
+                                                <label class="gfield_label gform-field-label">' . $t['name'] . '</label>
+                                                <input type="text" id="name" placeholder="' . $t['name'] . '" required />
+                                            </div>
+                                            <div class="gfield gfield--width-full">
+                                                <label class="gfield_label gform-field-label">' . $t['street'] . '</label>
+                                                <input type="text" id="street" placeholder="' . $t['street'] . '" required />
+                                            </div>
+                                            <div class="gfield gfield--width-full">
+                                                <label class="gfield_label gform-field-label">' . $t['house'] . '</label>
+                                                <input type="text" id="house" placeholder="' . $t['house'] . '" required />
+                                            </div>
+                                            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+                                                <div style="flex:1;" class="gfield gfield--width-half">
+                                                    <label class="gfield_label gform-field-label">' . $t['post'] . '</label>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <input type="text" id="post1" maxlength="2" placeholder="00" required />
+                                                        <span style="margin: 0 5px;">-</span>
+                                                        <input type="text" id="post2" maxlength="3" placeholder="000" required />
+                                                    </div>
+                                                </div>
+                                                <div style="flex:1;" class="gfield gfield--width-half">
+                                                    <label class="gfield_label gform-field-label">' . $t['city'] . '</label>
+                                                    <input type="text" id="city" placeholder="' . $t['city'] . '" required />
+                                                </div>
+                                            </div>
+                                            <div id="statusMessage" class="status-message"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="pwe-submitting-buttons display-befor-subbmit">
+                            <button id="pweSendStepTwo"  type="button" class="update-button btn pwe-btn pwe_reg_visitor"  onclick="updateGravityForm()">'. $confirmation_page_text_btn .'</button>
+                        </div>
+                        <div class="pwe-submitting-buttons display-after-subbmit">
+                            <a href="'.
+                            self::languageChecker(
+                                <<<PL
+                                /
+                                PL,
+                                <<<EN
+                                    /en/
+                                EN
+                            )
+                        .'"><button class="btn pwe-btn pwe_reg_visitor">'. $main_page_text_btn .'</button></a>
+                        </div>
                     </div>
-                    <div class="pwe-submitting-buttons display-befor-subbmit">
-                        <button id="pweSendStepTwo" class="btn pwe-btn pwe_reg_visitor">'. $confirmation_page_text_btn .'</button>
-                    </div>
-                    <div class="pwe-submitting-buttons display-after-subbmit">
-                        <a href="'.
-                        self::languageChecker(
-                            <<<PL
-                               /
-                            PL,
-                            <<<EN
-                                /en/
-                            EN
-                        )
-                    .'"><button class="btn pwe-btn pwe_reg_visitor">'. $main_page_text_btn .'</button></a>
-                    </div>
-                </div>';
+                    ';
+                    }
 
                 if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
                     $output .= '
@@ -745,35 +858,149 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     }
                 }
             $output .= '
-            </div>
+            </div>';
 
-            <script>
-                jQuery(document).ready(function($){
-                    $(".pwe_utm").find("input").val("'.$source_utm.'");
-                    $(".pwelement_' . self::$rnd_id . ' .pwe_reg_visitor").on("click", function(event){
-                        var userEmail = localStorage.getItem("user_email");
-                        var userTel = localStorage.getItem("user_tel");
-                        var userDirection = localStorage.getItem("user_direction");
-                        var userCountry = localStorage.getItem("user_country");
+            if(!$reg_form_update_entries){
+                $output .= '
+                <script>
+                    jQuery(document).ready(function($){
+                        $(".pwe_utm").find("input").val("'.$source_utm.'");
+                        $(".pwelement_' . self::$rnd_id . ' .pwe_reg_visitor").on("click", function(event){
+                            let userEmail = localStorage.getItem("user_email");
+                            let userTel = localStorage.getItem("user_tel");
+                            let userDirection = localStorage.getItem("user_direction");
+                            let userCountry = localStorage.getItem("user_country");
 
-                        if (userEmail) {
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
-                        }
-                        if (userTel) {
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
-                        }
-                        if (userDirection) {
-                            $(".pwelement_'. self::$rnd_id .' input[placeholder=\"Kongres\"]").val(userDirection);
-                        }
-                        if (userCountry) {
-                            $(".pwelement_'. self::$rnd_id .' .country input").val(userCountry);
-                        }
-                        $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
-                        $(".pwelement_'. self::$rnd_id .' form").submit();
+                            if (userEmail) {
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                            }
+                            if (userTel) {
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
+                            }
+                            if (userDirection) {
+                                $(".pwelement_'. self::$rnd_id .' input[placeholder=\"Kongres\"]").val(userDirection);
+                            }
+                            if (userCountry) {
+                                $(".pwelement_'. self::$rnd_id .' .country input").val(userCountry);
+                            }
+                            $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
+                            $(".pwelement_'. self::$rnd_id .' form").submit();
+                        });
                     });
-                });
-            </script>
-        ';
+                </script>';
+            } else {
+                $output .= '
+                <script>
+                console.log(document.getElementById("xForm").getElementsByClassName("display-after-subbmit")[0]);
+                    function updateGravityForm() {
+                        const fields = ["name", "street", "house", "city", "post1", "post2"];
+                        let hasError = false;
+                        let firstErrorField = null;
+
+                        // Resetowanie błędów
+                        document.getElementById("statusMessage").innerText = "";
+                        document.getElementById("statusMessage").classList.remove("error");
+
+                        // Sprawdzanie czy pola są puste
+                        fields.forEach(id => {
+                            const field = document.getElementById(id);
+                            if (!field.value.trim()) {
+                                field.classList.add("error-border");
+                                if (!firstErrorField) {
+                                    firstErrorField = field;
+                                }
+                                hasError = true;
+                            } else {
+                                field.classList.remove("error-border");
+                            }
+                        });
+
+                        // Jeśli są puste pola, pokazujemy błąd i nie idziemy dalej
+                        if (hasError) {
+                            document.getElementById("statusMessage").innerText = "Wszystkie pola są wymagane!";
+                            document.getElementById("statusMessage").classList.add("error");
+                            firstErrorField.focus();
+                            return;
+                        }
+
+                        // Pobranie kodu pocztowego i sprawdzenie formatu
+                        const post1 = document.getElementById("post1");
+                        const post2 = document.getElementById("post2");
+                        const postCode = `${post1.value.trim()}-${post2.value.trim()}`;
+                        const postPattern = /^\d{2}-\d{3}$/;
+
+                        if (!postPattern.test(postCode)) {
+                            post1.classList.add("error-border");
+                            post2.classList.add("error-border");
+                            document.getElementById("statusMessage").innerText = "Niepoprawny format kodu pocztowego (wymagany XX-XXX).";
+                            document.getElementById("statusMessage").classList.add("error");
+                            post1.focus();
+                            return;
+                        } else {
+                            post1.classList.remove("error-border");
+                            post2.classList.remove("error-border");
+                        }
+
+                        // Jeśli wszystko OK, wysyłamy dane
+                        const formData = {
+                            name: document.getElementById("name").value.trim(),
+                            street: document.getElementById("street").value.trim(),
+                            house: document.getElementById("house").value.trim(),
+                            post: postCode,
+                            city: document.getElementById("city").value.trim(),
+                            formName: "'.$form_name.'",
+                            direction: "registration"
+                        };
+
+                        fetch("'.$file_url.'", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": "qg58yn58q3yn5v"
+                            },
+                            body: JSON.stringify(formData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message === "Dane zaktualizowane" || data.message === "Data has been updated!") {
+                                document.getElementById("addressUpdateForm").classList.add("hidden");
+
+                                const confirmationWrapper = document.createElement("div");
+                                confirmationWrapper.classList.add("gform_confirmation_wrapper");
+                                confirmationWrapper.style.textAlign = "center";
+                                confirmationWrapper.innerText = "'.$t['confirm_text'].'";
+
+                                document.getElementById("xForm").getElementsByClassName("form-3")[0].prepend(confirmationWrapper);
+                            } else {
+                                document.getElementById("statusMessage").innerText = "Wystąpił błąd: " + data.message;
+                                document.getElementById("statusMessage").classList.add("error");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Błąd:", error);
+                            document.getElementById("statusMessage").innerText = "Wystąpił problem z aktualizacją.";
+                            document.getElementById("statusMessage").classList.add("error");
+                        });
+                    }
+
+                    // Ograniczenie pól post1 i post2 do cyfr oraz automatyczne przechodzenie do kolejnego pola
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const post1 = document.getElementById("post1");
+                        const post2 = document.getElementById("post2");
+
+                        post1.addEventListener("input", function() {
+                            this.value = this.value.replace(/\D/g, ""); // Usuwa nie-cyfry
+                            if (this.value.length === 2) {
+                                post2.focus();
+                            }
+                        });
+
+                        post2.addEventListener("input", function() {
+                            this.value = this.value.replace(/\D/g, ""); // Usuwa nie-cyfry
+                        });
+                    });
+                </script>';
+            }
 
         if (strpos($source_utm, 'utm_source=byli') !== false) {
 
@@ -1001,10 +1228,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    if (document.querySelector(".gform_confirmation_wrapper")) {
-                        var xForm = document.getElementById("xForm");
-
-                        xForm.innerHTML = `
+                    const content = `
                         <div class="confirmation-vip">
                             <div class="confirmation-vip-wrapper">
                                 <div class="confirmation-vip-content-column confirmation-vip-column">
@@ -1063,7 +1287,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                                 </div>
                                                 PL,
                                                 <<<EN
-                                                
+
                                                 EN
                                             )
                                         .'</div>
@@ -1105,6 +1329,30 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             EN
                         )
                         .'</div>`;
+
+                    const targetNode = document.getElementById("xForm");
+
+                    const observer = new MutationObserver(mutationsList => {
+                        for (const mutation of mutationsList) {
+                            if (mutation.type === "childList") {
+                                for (const addedNode of mutation.addedNodes) {
+                                    if (addedNode.nodeType === Node.ELEMENT_NODE && addedNode.classList.contains("gform_confirmation_wrapper")) {
+                                        let xForm = document.getElementById("xForm");
+                                        xForm.innerHTML = content;
+                                        xForm.classList.add("has-confirmation");
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const config = { childList: true, subtree: true };
+
+                    observer.observe(targetNode, config);
+
+                    if (document.querySelector(".gform_confirmation_wrapper")) {
+                        let xForm = document.getElementById("xForm");
+                        xForm.innerHTML = content;
                     }
                 });
             </script>';
@@ -1359,10 +1607,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    if (document.querySelector(".gform_confirmation_wrapper")) {
-                        var xForm = document.getElementById("xForm");
-
-                        xForm.innerHTML = `
+                    const content = `
                         <div class="pwe-confirmation-premium">
                             <div class="pwe-confirmation-premium-wrapper">
                                 <div class="pwe-confirmation-premium-left">
@@ -1442,6 +1687,30 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                 </div>
                             </div>
                         </div>`;
+
+                    const targetNode = document.getElementById("xForm");
+
+                    const observer = new MutationObserver(mutationsList => {
+                        for (const mutation of mutationsList) {
+                            if (mutation.type === "childList") {
+                                for (const addedNode of mutation.addedNodes) {
+                                    if (addedNode.nodeType === Node.ELEMENT_NODE && addedNode.classList.contains("gform_confirmation_wrapper")) {
+                                        let xForm = document.getElementById("xForm");
+                                        xForm.innerHTML = content;
+                                        xForm.classList.add("has-confirmation");
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const config = { childList: true, subtree: true };
+
+                    observer.observe(targetNode, config);
+
+                    if (document.querySelector(".gform_confirmation_wrapper")) {
+                        let xForm = document.getElementById("xForm");
+                        xForm.innerHTML = content;
                     }
                 });
             </script>';

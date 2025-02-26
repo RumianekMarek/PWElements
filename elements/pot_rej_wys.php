@@ -12,7 +12,7 @@ class PWElementStepTwoExhibitor extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }    
+    }
 
     // /**
     //  * Static method to initialize Visual Composer elements.
@@ -35,6 +35,32 @@ class PWElementStepTwoExhibitor extends PWElements {
                     'value' => 'PWElementStepTwoExhibitor',
                 ),
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Update entries one form', 'pwelement'),
+                'param_name' => 'registration_form_step2_exhibitor_update_entries',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementStepTwoExhibitor',
+                ),
+            ),
+            array(
+                'type' => 'dropdown',
+                'group' => 'PWE Element',
+                'heading' => __('Registration form www2', 'pwelement'),
+                'param_name' => 'registration_form_step2_exhibitor_www2',
+                'save_always' => true,
+                'value' => array_merge(
+                    array('Wybierz dodatkowy formularz' => ''),
+                    self::$fair_forms,
+                ),
+                'dependency' => array(
+                    'element' => 'registration_form_step2_exhibitor_update_entries',
+                    'value' => 'true',
+                ),
+            ),
         );
         return $element_output;
     }
@@ -52,16 +78,49 @@ class PWElementStepTwoExhibitor extends PWElements {
 
         extract( shortcode_atts( array(
             'registration_form_step2_exhibitor' => '',
+            'registration_form_step2_exhibitor_update_entries' => '',
+            'registration_form_step2_exhibitor_www2' => '',
         ), $atts ));
 
         $confirmation_button_text = (get_locale() == 'pl_PL') ? "Wygeneruj ofertę" : "Generate an offer" ;
         $main_page_text_btn = (get_locale() == 'pl_PL') ? "Powrót do strony głównej" : "Back to main page" ;
-                
+
+        $file_url = plugins_url('elements/fetch.php', dirname(__FILE__));
+
+        /* Update text tranform */
+        $lang = get_locale();
+
+
+        $directUrl = $_SESSION['pwe_exhibitor_entry']['current_url'];
+        if($directUrl =="/en/step2/" || $directUrl =="/krok2/"){
+            $form_to_update = $registration_form_step2_exhibitor_www2;
+        } else {
+            $form_to_update = $registration_form_step2_exhibitor;
+        }
+        $translations = [
+            'pl' => [
+                'name' => 'Imię i Nazwisko',
+                'area' => 'Wybierz powierzchnię wystawienniczą',
+                'company' => 'Firma',
+                'confirm_text' => 'Dziękujemy za uzupełnienie danych. Do usłyszenia już wkrótce. Zespół Ptak Warsaw Expo',
+                'error' => 'Wszystkie pola są wymagane!',
+            ],
+            'en' => [
+                'name' => 'Name',
+                'area' => 'Select exhibition area',
+                'company' => 'Company',
+                'confirm_text' => 'Thank you for completing the data. We look forward to hearing from you soon. Ptak Warsaw Expo Team',
+                'error' => 'All fields are required!',
+            ]
+        ];
+
+        $t = (strpos($lang, 'en') !== false) ? $translations['en'] : $translations['pl'];
+
         $output = '
             <style>
                 .row-parent:has(.pwelement_'. self::$rnd_id .' #pweForm){
                     max-width: 100%;
-                    padding: 0 !important;  
+                    padding: 0 !important;
                 }
                 .wpb_column:has(.pwelement_'. self::$rnd_id .' #pweForm) {
                     max-width: 100%;
@@ -138,7 +197,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     color: '. $btn_text_color .';
                     border-radius: 10px !important;
                     font-size: 1em;
-                    margin: 18px auto 0; 
+                    margin: 18px auto 0;
                     align-self: center;
                     box-shadow: none !important;
                     font-size: 12px;
@@ -195,7 +254,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     font-weight: 600;
                     text-align: center;
                 }
-                
+
                 .pwelement_'. self::$rnd_id .' .pwe_reg_exhibitor {
                     margin-top: 18px;
                     color: white;
@@ -212,33 +271,58 @@ class PWElementStepTwoExhibitor extends PWElements {
                     display: grid !important;
                     grid-template-columns: 1fr 1fr;
                     gap: 5px;
-                } 
+                }
                 .pwelement_'. self::$rnd_id .' .gfield_checkbox .gchoice {
                     min-width:120px;
                 }
-                .pwelement_'. self::$rnd_id .' .gfield_checkbox input[type="checkbox"]  { 
+                .pwelement_'. self::$rnd_id .' .gfield_checkbox input[type="checkbox"]  {
                     width: 16px !important;
                     height: 16px !important;
                     border-radius: 50% !important;
-                }  
+                }
                 .pwelement_'. self::$rnd_id .' .gfield_checkbox label {
                     font-weight: 500 !important;
-                } 
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-submitting-buttons .pwe-btn {
                     transform: scale(1) !important;
                 }
-                .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description, legend), 
+                .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, .gfield_description, legend),
                 .pwelement_'. self::$rnd_id .' p {
-                    color: '. $text_color .' !important;   
+                    color: '. $text_color .' !important;
                 }
                 .pwelement_'. self::$rnd_id .' .gform_wrapper :is(label, legend) {
                     font-size: 14px !important;
-                    font-weight: 700;   
+                    font-weight: 700;
                 }
+
+                /* Range container */
+
+                .pwelement_'. self::$rnd_id .' .range_container {
+                    margin-top:9px;
+                    background: white;
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    padding: 10px 15px !important;
+                }
+                .pwelement_'. self::$rnd_id .' .range_container input {
+                    margin: 0px !important;
+                }
+                .pwelement_'.self::$rnd_id.' .error-border {
+                    border: 2px solid red !important;
+                }
+                .pwelement_'.self::$rnd_id.' .status-message.error {
+                    border: 3px solid red;
+                    padding: 9px 10px;
+                    border-radius: 10px;
+                    text-align: center;
+                    background: white;
+                    font-weight: 600;
+                }
+
                 @media (min-width:650px) and (max-width:1080px){
                     .pwelement_'. self::$rnd_id .' .form-right {
                         display:none;
-                    } 
+                    }
                 }
                 @media (max-width:650px){
                     .pwelement_'. self::$rnd_id .' #pweForm {
@@ -288,11 +372,42 @@ class PWElementStepTwoExhibitor extends PWElements {
                                 <p>This will help us to choose the right conditions and improve communication.</p>
                             EN
                         )
-                    .'</div>
-                    [gravityform id="'. $registration_form_step2_exhibitor .'" title="false" description="false" ajax="false"]
-                    <input type="submit" id="pweConfirmation" class="display-before-submit" value="'. $confirmation_button_text .'">
+                    .'</div>';
+
+                    if(!$registration_form_step2_exhibitor_update_entries){
+                        $output .= '[gravityform id="'. $registration_form_step2_exhibitor .'" title="false" description="false" ajax="false"]';
+                    } else {
+                        $output .= '
+                        <div class="gf_browser_chrome gform_wrapper gravity-theme gform-theme--no-framework">
+                            <form id="addressUpdateForm">
+                                <div class="gform-body gform_body">
+                                    <div class="gform_fields">
+                                        <div class="gfield gfield--width-full">
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['name'] . '</label>
+                                            <input type="text" id="name" placeholder="' . $t['name'] . '" required/>
+                                        </div>
+                                        <div class="gfield gfield--width-full">
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['area'] . ' <strong>(<span id="areaValue">125</span>m<sup>2</sup>)</strong></label>
+                                            <div class="range_container">
+                                                <input type="range" id="areaSlider" min="10" max="250" value="125" step="1">
+                                            </div>
+                                            <input type="text" id="area" name="area" hidden required/>
+                                        </div>
+                                        <div class="gfield gfield--width-full">
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['company'] . '</label>
+                                            <input type="text" id="company" placeholder="' . $t['company'] . '" required/>
+                                        </div>
+                                        <div id="statusMessage" class="status-message"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>';
+                    }
+
+                    $output .= '
+                    <input type="submit" id="pweConfirmation" class="display-before-submit" value="'. $confirmation_button_text .'" onclick="updateGravityForm()">
                     <div class="pwe-submitting-buttons display-after-submit">
-                        <a href="'. 
+                        <a href="'.
                         self::languageChecker(
                             <<<PL
                                /
@@ -309,7 +424,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                 $output .= '
                 <div class="form-right">
                     <img class="img-stand" src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
-                    <h5>'. 
+                    <h5>'.
                         self::languageChecker(
                             <<<PL
                                 Dedykowana Zabudowa Targowa
@@ -319,7 +434,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                             EN
                         )
                     .'</h5>
-                        <a class="pwe-link btn pwe-btn btn-stand" target="_blank" '. 
+                        <a class="pwe-link btn pwe-btn btn-stand" target="_blank" '.
                             self::languageChecker(
                                 <<<PL
                                     href="https://warsawexpo.eu/zabudowa-targowa">Sprawdź ofertę zabudowy
@@ -333,35 +448,131 @@ class PWElementStepTwoExhibitor extends PWElements {
             </div>
         ';
 
-        $output .= '
-        <script>
-            jQuery(document).ready(function($){
-                var userArea = localStorage.getItem("user_area");
-                if (userArea && userArea.trim() !== "") {
-                    $(".con-area").hide();
-                }
+        if(!$registration_form_step2_exhibitor_update_entries){
+            $output .= '
+            <script>
+                jQuery(document).ready(function($){
+                    let userArea = localStorage.getItem("user_area");
+                    if (userArea && userArea.trim() !== "") {
+                        $(".con-area").hide();
+                    }
 
-                $(".pwelement_'. self::$rnd_id .' #pweConfirmation").on("click", function() {
-                    var userEmail = localStorage.getItem("user_email"); 
-                    var userTel = localStorage.getItem("user_tel");
-                    var userDirection = localStorage.getItem("user_direction");
+                    $(".pwelement_'. self::$rnd_id .' #pweConfirmation").on("click", function() {
+                        let userEmail = localStorage.getItem("user_email");
+                        let userTel = localStorage.getItem("user_tel");
+                        let userDirection = localStorage.getItem("user_direction");
 
-                    if (userEmail) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
-                    }
-                    if (userTel) {
-                        $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
-                    }
-                    if (userArea) {
-                        $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);
-                    }
-                    
-                    $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
-                    $(".pwelement_'. self::$rnd_id .' form").submit();
+                        if (userEmail) {
+                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
+                        }
+                        if (userTel) {
+                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
+                        }
+                        if (userArea) {
+                            $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);
+                        }
+
+                        $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
+                        $(".pwelement_'. self::$rnd_id .' form").submit();
+                    });
                 });
-            });
-            </script> 
-        ';
+            </script>';
+        } else {
+            $output .= '
+            <script>
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    let slider = document.getElementById("areaSlider");
+                    let areaValue = document.getElementById("areaValue");
+                    let hiddenInput = document.getElementById("area");
+
+                    function updateLabel() {
+                        let value = slider.value;
+                        areaValue.textContent = value;
+                        hiddenInput.value = value;
+                    }
+
+                    slider.addEventListener("input", updateLabel);
+                    updateLabel();
+                });
+                function updateGravityForm() {
+                    const fields = ["name", "area", "company"];
+                    let hasError = false;
+                    let firstErrorField = null;
+
+                    fields.forEach(id => {
+                        const field = document.getElementById(id);
+                        if (!field.value.trim()) {
+                            field.classList.add("error-border");
+                            if (!firstErrorField) {
+                                firstErrorField = field;
+                            }
+                            hasError = true;
+                        } else {
+                            field.classList.remove("error-border");
+                        }
+                    });
+
+                    if (hasError) {
+                        document.getElementById("statusMessage").innerText = "'.$t['error'].'";
+                        document.getElementById("statusMessage").classList.add("error");
+                        firstErrorField.focus();
+                        return;
+                    }
+
+                    const name = document.getElementById("name").value.trim();
+                    const area = document.getElementById("area").value.trim();
+                    const company = document.getElementById("company").value.trim();
+                    const statusMessage = document.getElementById("statusMessage");
+                    const formName = "'.$form_to_update.'";
+                    const direction = "exhibitor";
+
+                    if (!name || !area || !company) {
+                        statusMessage.innerText = "' . $t['error'] . '";
+                        statusMessage.classList.add("error");
+                        return;
+                    }
+
+                    const formData = { name, area, company, formName, direction };
+
+                    fetch("'.$file_url.'", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "qg58yn58q3yn5v"
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === "Dane zaktualizowane" || data.message === "Data has been updated!") {
+                            document.getElementById("addressUpdateForm").classList.add("hidden"); // Ukrycie formularza
+
+                            const confirmationWrapper = document.createElement("div");
+                            confirmationWrapper.classList.add("gform_confirmation_wrapper");
+                            statusMessage.appendChild(confirmationWrapper);
+
+                            const messageContainer = document.querySelector("#pweForm .form");
+
+                            const message = document.createElement("div");
+                            message.classList.add("gform_confirmation_message");
+                            message.innerText = "' . $t['confirm_text'] . '";
+
+
+                            messageContainer.insertBefore(message, messageContainer.firstChild);
+                        } else {
+                            statusMessage.innerText = "Wystąpił błąd: " + data.message;
+                            statusMessage.classList.add("error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Błąd:", error);
+                        statusMessage.innerText = "Wystąpił problem z aktualizacją.";
+                        statusMessage.classList.add("error");
+                    });
+                }
+            </script>';
+        }
 
         return $output;
     }
