@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.5.1
+ * Version: 2.5.1.1
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -44,14 +44,23 @@ class PWElementsPlugin {
 
         // $this -> resendTicket();
 
-        // JavaScript files to be excluded from delaying execution
-        add_filter('rocket_delay_js_exclusions', function ($excluded_files) {
-            $excluded_files[] = '/wp-content/plugins/PWElements/elements/js/exclusions.js';
-            $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/three.min.js';
-            $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js';
-            $excluded_files[] = '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js';
-            return $excluded_files;
+         // List of JavaScript files to exclude
+         $excluded_js_files = [
+            '/wp-content/plugins/PWElements/elements/js/exclusions.js',
+            '/wp-content/plugins/PWElements/assets/three-js/three.min.js',
+            '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
+            '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js',
+        ];
+
+        // Excluding JS files from delayed loading (delay JS)
+        add_filter('rocket_delay_js_exclusions', function ($excluded_files) use ($excluded_js_files) {
+            return array_merge((array) $excluded_files, $excluded_js_files);
         });
+
+        // Excluding JS files from defer (lazy loading)
+        add_filter('rocket_exclude_defer_js', function ($defer_files) use ($excluded_js_files) {
+            return array_merge((array) $defer_files, $excluded_js_files);
+        }, 10, 1);
     }
 
     public function pwe_enqueue_styles() {

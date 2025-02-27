@@ -43,7 +43,8 @@ function get_fair_data($specific_domain = null) {
                     "instagram" => $fair->fair_instagram ?? "",
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->badge ?? ""
+                    "badge" => $fair->badge ?? "",
+                    "catalog" => $fair->fair_kw ?? ""
                 ];
             }
         } else {
@@ -126,11 +127,12 @@ function register_dynamic_shortcodes() {
         'pwe_hall' => 'hall',
         'pwe_color_accent' => 'color_accent',
         'pwe_color_main2' => 'color_main2',
-        'pwe_badge' => 'badge',
         'pwe_facebook' => 'facebook',
         'pwe_instagram' => 'instagram',
         'pwe_linkedin' => 'linkedin',
-        'pwe_youtube' => 'youtube'
+        'pwe_youtube' => 'youtube',
+        'pwe_badge' => 'badge',
+        'pwe_catalog' => 'catalog'
     ];
 
     // Shortcode handling function
