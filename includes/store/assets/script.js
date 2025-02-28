@@ -1,6 +1,52 @@
-const tradeFairName = store_js.trade_fair_name;
-const fairs_array = store_js.fairs_array;
+const fairs_array_js = {
+    edition_1: [
+        "mr.glasstec.pl", "bathceramicsexpo.com", "warsawstone.com", "smarthomeexpo.pl",
+        "cleantechexpo.pl", "worldofbuildexpo.com", "safetyrescueexpo.com", "filtratecexpo.com",
+        "medivisionforum.com", "automechanicawarsaw.com", "futureenergyweekpoland.com", "labotec.pl",
+        "aluminiumtechexpo.com", "industrialbuildingexpo.pl", "cybersecurityexpo.pl", "chemtecpoland.com",
+        "pneumaticswarsaw.com", "lasertechnicapoland.com", "isoltexexpo.com", "coldtechpoland.com",
+        "coiltechexpo.com", "funeralexpo.pl", "pharmacyexpopoland.com", "polandsustainabilityexpo.com",
+        "warsawoptiexpo.com", "coffeeeuropeexpo.com", "hairbarberweekpoland.com", "warsawwindowexpo.com",
+        "glasstechpoland.com", "valvespumpsexpo.com", "grindtechexpo.com", "concreteexpo.pl",
+        "fastechexpo.com", "cosmopharmpack.com", "aiindustryexpo.com", "worldofhydrogenexpo.com",
+        "solidsexpopoland.com", "emobilityexpo.pl", "photonicsexpo.pl", "decarbonisationexpo.com",
+        "warsawgardentech.com", "lightexpo.pl", "agrofarmaexpo.com", "veterinaryexpopoland.com",
+        "globalfoodexpo.pl", "warsawfleetexpo.com", "waterexpopoland.com", "autotuningshow.com",
+        "warsawliftexpo.com", "medinnovationsexpo.com", "huntingexpo.pl", "forumwarzywa.com",
+        "biurotexexpo.com", "lingerietrends.pl", "warsawshopexpo.com"
+    ],
+    edition_2: [
+        "warsawmetaltech.pl", "warsawplastexpo.com", "forumbhp.com", "weldexpopoland.com",
+        "warsawprinttech.com", "heatingtechexpo.com", "recyclingexpo.pl", "warsawsweettech.com",
+        "wodkantech.com", "gastroquickservice.com", "bioagropolska.com", "poultrypoland.com",
+        "electroinstalexpo.com", "polandcoatings.com", "warsawsecurityexpo.com", "warsawmedicalexpo.com",
+        "facadeexpo.pl", "roofexpo.pl", "fruitpolandexpo.com", "packagingpoland.pl",
+        "intralogisticapoland.com", "warsawtoys.com", "esteticaexpo.com", "furnitechexpo.pl",
+        "furniturecontractexpo.com", "batteryforumpoland.com", "floorexpo.pl", "door-tec.pl",
+        "electronics-show.com", "winewarsawexpo.com", "beerwarsawexpo.com", "boattechnica.com",
+        "automotive-expo.eu", "buildoutdoorexpo.com", "warsawtoolsshow.com", "warsawconstructionexpo.com",
+        "foodtechexpo.pl", "labelingtechpoland.com", "woodwarsawexpo.com", "automaticaexpo.com",
+        "targirehabilitacja.pl", "tubetechnicpoland.com", "wiretechpoland.com", "maintenancepoland.com",
+        "controldrivespoland.com", "roboticswarsaw.com", "compositepoland.com"
+    ],
+    edition_3: [
+        "warsawpack.pl", "industryweek.pl", "dentalmedicashow.pl", "warsawgardenexpo.com",
+        "boatshow.pl", "campercaravanshow.com", "bioexpo.pl", "warsawfoodexpo.pl",
+        "fasttextile.com", "centralnetargirolnicze.com", "motorcycleshow.pl", "mttsl.pl",
+        "warsawgiftshow.com", "warsawbusexpo.eu", "eurogastro.com.pl", "remadays.com",
+        "warsawhomefurniture.com", "warsawbuild.eu", "warsawhomekitchen.com", "warsawhomelight.com",
+        "warsawhometextile.com", "warsawhomebathroom.com", "etradeshow.pl", "franczyzaexpo.pl",
+        "worldhotel.pl", "beautydays.pl", "solarenergyexpo.com", "warsawhvacexpo.com",
+        "warsawhome.eu"
+    ],
+    edition_b2c: [
+        "ttwarsaw.pl", "fiwe.pl", "animalsdays.eu", "warsawmotorshow.com", "oldtimerwarsaw.com"
+    ]
+};
+
 const admin = store_js.admin;
+const tradeFairName = store_js.trade_fair_name;
+const fairs_array = (admin && store_js.fairs_array && store_js.fairs_array.length > 0) ? store_js.fairs_array : fairs_array_js;
 
 document.addEventListener('DOMContentLoaded', function() {
     const elImages = document.querySelectorAll(".pwe-store__featured-image");
@@ -104,9 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         parent = parent.parentElement;
     }
 
-    
-
-    const allEditions = [...fairs_array.edition_1, ...fairs_array.edition_2, ...fairs_array.edition_3, ...fairs_array.edition_b2c];
+    const allEditions =  [...fairs_array.edition_1, ...fairs_array.edition_2, ...fairs_array.edition_3, ...fairs_array.edition_b2c];
     allEditions.sort((a, b) => new Date(a.date) - new Date(b.date));
   
     // Get domain address
@@ -141,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? "https://warsawexpo.eu/sklep-uslugi-premium/" 
                 : "https://warsawexpo.eu/en/shop-premium-services/";
             
-            if (currentDomain === "mr.glasstec.pl") {
+            if (admin && currentDomain === "mr.glasstec.pl") {
                 const pweStore = document.querySelector(".pwe-store");
 
                 if (pweStore) {
