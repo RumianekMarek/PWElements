@@ -78,7 +78,7 @@ class PWElementOtherEvents extends PWElements {
     }
 
     public static function output($atts) {  
-        
+
         extract( shortcode_atts( array(
             'other_events_preset' => '',
             'other_events_style' => '',

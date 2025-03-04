@@ -26,14 +26,64 @@ class PWERegistration extends PWECommonFunctions {
                 self::$main2_color = $color_value;
             }
         }
-        
+
         // Hook actions
         add_action('init', array($this, 'initVCMapPWERegistration'));
         add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
-        
+
         add_shortcode('pwe_registration', array($this, 'PWERegistrationOutput'));
+        add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);
     }
 
+    public function entryToSession($entry, $form) {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $current_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+        $current_path = parse_url($current_url, PHP_URL_PATH);
+
+        $is_exhibitor_page = strpos($current_url, '/zostan-wystawca/') !== false ||
+                            strpos($current_url, '/en/become-an-exhibitor/') !== false ||
+                            strpos($current_url, '/krok2/') !== false ||
+                            strpos($current_url, '/step2/') !== false;
+
+        $is_registration_page = strpos($current_url, '/rejestracja/') !== false ||
+                                strpos($current_url, '/en/registration/') !== false;
+
+
+        if ($is_exhibitor_page) {
+            $_SESSION['pwe_exhibitor_entry'] = [
+                'entry_id' => $entry['id'],
+                'current_url' => $current_path,
+            ];
+        } elseif ($is_registration_page) {
+            $_SESSION['pwe_reg_entry'] = [
+                'entry_id' => $entry['id'],
+            ];
+        }
+
+        foreach ($form['fields'] as $single_field) {
+            if ($single_field['type'] == 'email') {
+                if ($is_exhibitor_page) {
+                    $_SESSION['pwe_exhibitor_entry']['email'] = $entry[$single_field['id']];
+                } elseif ($is_registration_page) {
+                    $_SESSION['pwe_reg_entry']['email'] = $entry[$single_field['id']];
+                }
+                continue;
+            }
+
+            if ($single_field['type'] == 'phone') {
+                if ($is_exhibitor_page) {
+                    $_SESSION['pwe_exhibitor_entry']['phone'] = $entry[$single_field['id']];
+                } elseif ($is_registration_page) {
+                    $_SESSION['pwe_reg_entry']['phone'] = $entry[$single_field['id']];
+                }
+                continue;
+            }
+        }
+    }
     /**
  * Initialize VC Map PWERegistration.
  */
@@ -178,6 +228,7 @@ public function initVCMapPWERegistration() {
         return array(
             'PWERegistrationVisitors'      => 'classes/registration_visitors.php',
             'PWERegistrationExhibitors'      => 'classes/registration_exhibitors.php',
+
         );
     }
 
@@ -190,7 +241,7 @@ public function initVCMapPWERegistration() {
     public function PWERegistrationOutput($atts) {
 
         extract( shortcode_atts( array(
-            'registration_type' => '', 
+            'registration_type' => '',
             'registration_form_id' => '',
             'pwe_replace' => '',
         ), $atts ));
@@ -243,6 +294,6 @@ public function initVCMapPWERegistration() {
             $output_html = str_replace($input_replace_array_html, $output_replace_array_html, $output_html);
         }
 
-        return $output_html; 
+        return $output_html;
     }
 }

@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.5.0
+ * Version: 2.5.1.2
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -44,14 +44,23 @@ class PWElementsPlugin {
 
         // $this -> resendTicket();
 
-        // JavaScript files to be excluded from delaying execution
-        add_filter('rocket_delay_js_exclusions', function ($excluded_files) {
-            $excluded_files[] = '/wp-content/plugins/PWElements/elements/js/exclusions.js';
-            $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/three.min.js';
-            $excluded_files[] = '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js';
-            $excluded_files[] = '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js';
-            return $excluded_files;
+         // List of JavaScript files to exclude
+         $excluded_js_files = [
+            '/wp-content/plugins/PWElements/elements/js/exclusions.js',
+            '/wp-content/plugins/PWElements/assets/three-js/three.min.js',
+            '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
+            '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js',
+        ];
+
+        // Excluding JS files from delayed loading (delay JS)
+        add_filter('rocket_delay_js_exclusions', function ($excluded_files) use ($excluded_js_files) {
+            return array_merge((array) $excluded_files, $excluded_js_files);
         });
+
+        // Excluding JS files from defer (lazy loading)
+        add_filter('rocket_exclude_defer_js', function ($defer_files) use ($excluded_js_files) {
+            return array_merge((array) $defer_files, $excluded_js_files);
+        }, 10, 1);
     }
 
     public function pwe_enqueue_styles() {
@@ -122,11 +131,11 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
         $this->PWEMap = new PWEMap();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
-        // $this->PWEStore = new PWEStore();
+        require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
+        $this->PWEStore = new PWEStore();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
-        // $this->PWEConferenceCap = new PWEConferenceCap();
+        require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
+        $this->PWEConferenceCap = new PWEConferenceCap();
 
         require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
     }
@@ -184,81 +193,84 @@ class PWElementsPlugin {
 class CAPDatabase {
 
     private static function connectToDatabaseFairs() {
+        // Initialize connection variables
+        $cap_db = null;
+        
+        // Set connection data depending on the server
         if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
             $database_host = 'localhost';
-            $database_name = 'automechanicawar_dodatkowa';
-            $database_user = 'automechanicawar_admin-dodatkowa';
-            $database_password = '9tL-2-88UAnO_x2e';
+            $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+            $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+            $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
         } else {
             $database_host = 'localhost';
-            $database_name = 'warsawexpo_dodatkowa';
-            $database_user = 'warsawexpo_admin-dodatkowy';
-            $database_password = 'N4c-TsI+I4-C56@q';
+            $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
+            $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
+            $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
         }
 
+        // Check if there is complete data for connection
         if ($database_user && $database_password && $database_name && $database_host) {
-            $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
-        }
-        
-        // Check for errors errors
-        if (!empty($cap_db->last_error)) {
-            echo '<script>console.error("Błąd połączenia z bazą danych: '. $cap_db->last_error .'")</script>';
+            try {
+                $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+            } catch (Exception $e) {
+                return false;
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
+                }
+            }
+        } else {
             return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
+            }
         }
-
-        // Additional connection test
+    
+        // Check for connection errors
         if (!$cap_db->dbh || mysqli_connect_errno()) {
-            echo '<script>console.error("Błąd połączenia MySQL: '. mysqli_connect_error() .'")</script>';
             return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
+            }
         }
-
+    
         return $cap_db;
     }
-
+    
     public static function getDatabaseDataFairs() {
-
+        // Database connection
         $cap_db = self::connectToDatabaseFairs();
-
+        // If connection failed, return empty array
         if (!$cap_db) {
             return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
         }
-
-        $results = $cap_db->get_results("SELECT fair_domain, 
-                                                fair_name_pl, 
-                                                fair_name_en, 
-                                                fair_desc_pl, 
-                                                fair_desc_en, 
-                                                fair_date_start, 
-                                                fair_date_end, 
-                                                fair_edition, 
-                                                fair_visitors, 
-                                                fair_exhibitors, 
-                                                fair_countries, 
-                                                fair_area, 
-                                                fair_hall, 
-                                                fair_color_accent, 
-                                                fair_color_main2,
-                                                fair_kw
-                                        FROM fairs");
-
-        // Debugging SQL errors
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM fairs");
+    
+        // SQL error checking
         if ($cap_db->last_error) {
-            echo '<script>console.error("Błąd SQL: "'. $cap_db->last_error .'")</script>';
             return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
         }
-
+    
         return $results;
-    }
+    }    
 
 }
 
 // Global function
-// function pwe_fairs() {
-//     return CAPDatabase::getDatabaseDataFairs();
-// }
+function pwe_fairs() {
+    return CAPDatabase::getDatabaseDataFairs();
+}
 
-// global $pwe_fairs;
-// $pwe_fairs = pwe_fairs(); 
+global $pwe_fairs;
+$pwe_fairs = pwe_fairs(); 
 
 // Inicjalizacja wtyczki jako obiektu klasy
 $PWElementsPlugin = new PWElementsPlugin();

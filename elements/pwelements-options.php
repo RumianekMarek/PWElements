@@ -32,25 +32,25 @@ class PWElements {
         add_action('init', array($this, 'initVCMapElements'));
         add_shortcode('pwelement', array($this, 'PWElementsOutput'));
 
-        add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);   
+        // add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);
     }
 
-    public function entryToSession($entry, $form) {
-        $entry_returner = array();
+    // public function entryToSession($entry, $form) {
+    //     $entry_returner = array();
 
-        foreach($form['fields'] as $single_field){
-            if($single_field['type'] == 'email'){
-                $entry_returner['email'] = $entry[$single_field['id']];
-                continue;
-            }
+    //     foreach($form['fields'] as $single_field){
+    //         if($single_field['type'] == 'email'){
+    //             $entry_returner['email'] = $entry[$single_field['id']];
+    //             continue;
+    //         }
 
-            if($single_field['type'] == 'phone'){
-                $entry_returner['phone'] = $entry[$single_field['id']];
-                continue;
-            }
-        }
-        $_SESSION['pwe_reg_entry'] = $entry_returner;
-    }
+    //         if($single_field['type'] == 'phone'){
+    //             $entry_returner['phone'] = $entry[$single_field['id']];
+    //             continue;
+    //         }
+    //     }
+    //     $_SESSION['pwe_reg_entry'] = $entry_returner;
+    // }
 
     /**
      * Initialize VC Map Elements.
@@ -104,7 +104,6 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'medals.php';
         require_once plugin_dir_path(__FILE__) . 'other_events.php';
         require_once plugin_dir_path(__FILE__) . 'two_cols.php';
-        require_once plugin_dir_path(__FILE__) . 'conference_cap.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -280,7 +279,6 @@ class PWElements {
                         ...PWElementOtherEvents::initElements(),
                         ...PWElementTwoCols::initElements(),
                         ...PWElementHale::initElements(),
-                        ...PWElementConferenceCap::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -341,7 +339,6 @@ class PWElements {
             'Informacje organizacyjne'       => 'PWElementOrgInfo',
             'Informacje kontaktowe'          => 'PWElementContactInfo',
             'Kalendarz do potwierdzenia'     => 'PWElementConfCallendar',
-            'Konferencja Cap'                => 'PWElementConferenceCap',
             'Kontakt'                        => 'PWElementContact',
             'Main Page About'                => 'PWElementAbout',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
@@ -467,7 +464,6 @@ class PWElements {
             'PWElementWhyItsWorth'      => 'why-its-worth.php',
             'PWElementQRChekcer'        => 'qr-check.php',
             'PWElementTwoCols'          => 'two_cols.php',
-            'PWElementConferenceCap'    => 'conference_cap.php',
         );
     }
 
@@ -732,7 +728,7 @@ class PWElements {
      *
      * @return bool
      */
-    public static function isTradeDateExist() { 
+    public static function isTradeDateExist() {
 
         $seasons = ["nowa data", "wiosna", "lato", "jesień", "zima", "new date", "spring", "summer", "autumn", "winter"];
         $trade_date_lower = strtolower(do_shortcode('[trade_fair_date]'));

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWERegistrationExhibitors
@@ -13,11 +13,11 @@ class PWERegistrationExhibitors extends PWEProfile {
     public function __construct() {
         parent::__construct();
     }
- 
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts, $registration_type, $registration_form_id) {
@@ -67,7 +67,7 @@ class PWERegistrationExhibitors extends PWEProfile {
                 </div>
             </div>
         </div>';
-        
+
         return $output;
     }
 }

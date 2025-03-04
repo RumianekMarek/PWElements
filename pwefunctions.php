@@ -54,7 +54,9 @@ class PWECommonFunctions {
                 $fairs_data["fairs"][$domain] = [
                     "domain" => $domain,
                     "date_start" => $fair->fair_date_start ?? "",
+                    "date_start_hour" => $fair->fair_date_start_hour ?? "",
                     "date_end" => $fair->fair_date_end ?? "",
+                    "date_end_hour" => $fair->fair_date_end_hour ?? "",
                     "edition" => $fair->fair_edition ?? "",
                     "name_pl" => $fair->fair_name_pl ?? "",
                     "name_en" => $fair->fair_name_en ?? "",
@@ -66,7 +68,13 @@ class PWECommonFunctions {
                     "area" => $fair->fair_area ?? "",
                     "color_accent" => $fair->fair_color_accent ?? "",
                     "color_main2" => $fair->fair_color_main2 ?? "",
-                    "hall" => $fair->fair_hall ?? ""
+                    "hall" => $fair->fair_hall ?? "",
+                    "facebook" => $fair->fair_facebook ?? "",
+                    "instagram" => $fair->fair_instagram ?? "",
+                    "linkedin" => $fair->fair_linkedin ?? "",
+                    "youtube" => $fair->fair_youtube ?? "",
+                    "badge" => $fair->badge ?? "",
+                    "catalog" => $fair->fair_kw ?? ""
                 ];
             }
         } else {
@@ -83,24 +91,31 @@ class PWECommonFunctions {
      */
     public static function transform_dates($start_date, $end_date) {
         // Convert date strings to DateTime objects
-        $start_date_obj = DateTime::createFromFormat('Y/m/d H:i', $start_date);
-        $end_date_obj = DateTime::createFromFormat('Y/m/d H:i', $end_date);
-
+        $start_date_obj = DateTime::createFromFormat("Y/m/d H:i", $start_date);
+        $end_date_obj = DateTime::createFromFormat("Y/m/d H:i", $end_date);
+    
         // Check if the conversion was correct
         if ($start_date_obj && $end_date_obj) {
             // Get the day, month and year from DateTime objects
-            $start_day = $start_date_obj->format('d');
-            $end_day = $end_date_obj->format('d');
-            $month = $start_date_obj->format('m');
-            $year = $start_date_obj->format('Y');
-
-            //Build the desired format
-            $formatted_date = "{$start_day}-{$end_day}|{$month}|{$year}";
+            $start_day = $start_date_obj->format("d");
+            $end_day = $end_date_obj->format("d");
+            $start_month = $start_date_obj->format("m");
+            $end_month = $end_date_obj->format("m");
+            $year = $start_date_obj->format("Y");
+    
+            // Check if months are the same
+            if ($start_month === $end_month) {
+                $formatted_date = "{$start_day}-{$end_day}|{$start_month}|{$year}";
+            } else {
+                $formatted_date = "{$start_day}|{$start_month}-{$end_day}|{$end_month}|{$year}";
+            }
+    
             return $formatted_date;
         } else {
             return "Invalid dates";
         }
     }
+    
 
     /**
      * Decoding Base64

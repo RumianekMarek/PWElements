@@ -188,9 +188,9 @@ class PWElementContact extends PWElements {
             $service_mail = "biuro.podawcze3";
             $contact_name = strtolower($edition_3[$current_url]);
         } else {
-            $edition_number = "edition_3";
-            $service_mail = "biuro.podawcze3";
-            $contact_name = strtolower($edition_3[$current_url]);
+            $edition_number = "edition_1";
+            $service_mail = "biuro.podawcze1";
+            $contact_name = strtolower($edition_1[$current_url]);
         }
 
         $output = '';

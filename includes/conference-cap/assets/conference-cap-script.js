@@ -1,6 +1,5 @@
 window.speakersData = speakersData.data || {};
 jQuery(document).ready(function($){
-//   console.log(speakersData);
 
     $(".conference_cap__lecture-speaker-btn").each(function() {
         $(this).on("click", function(){
@@ -21,14 +20,12 @@ jQuery(document).ready(function($){
     }
 
     function openSpeakersModal(speakers) {
-                            // console.log(speakers);
         var overlay = $("<div>").addClass("custom-modal-overlay");
 
         var modal = $("<div>").addClass("custom-modal visible");
 
         var modalContent = "";
         $(speakers).each(function(index, speaker) {
-        console.log(speaker);
             modalContent += `<div class="modal-speaker">
                 ${ speaker.url ? `<img src="${speaker.url}" alt="${speaker.name}">` : "" }
                 <h2>${speaker.name}</h2>

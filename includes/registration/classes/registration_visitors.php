@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWERegistrationVisitors
@@ -12,12 +12,48 @@ class PWERegistrationVisitors extends PWEProfile {
      */
     public function __construct() {
         parent::__construct();
+        add_filter('gform_pre_render', array($this, 'hideFieldsBasedOnAdminLabel'));
     }
- 
+
+    /**
+     * Pobiera ID pola na podstawie jego Admin Label.
+     *
+     * @param array $form Formularz Gravity Forms jako tablica
+     * @param string $admin_label Etykieta administratora pola (Admin Label)
+     * @return int|null ID pola lub null, jeśli nie znaleziono
+     */
+    public static function getFieldIdByAdminLabel($form, $admin_label) {
+        foreach ($form['fields'] as $field) {
+            if (isset($field->adminLabel) && $field->adminLabel === $admin_label) {
+                error_log('Found field ID ' . $field->id . ' for admin label: ' . $admin_label);
+                return $field->id;
+            }
+        }
+        error_log('No field found for admin label: ' . $admin_label);
+        return null;
+    }
+
+    /**
+     * Ukrywa pola w formularzu na podstawie etykiety admina.
+     *
+     * @param array $form Formularz Gravity Forms
+     * @return array Zaktualizowany formularz
+     */
+    public function hideFieldsBasedOnAdminLabel($form) {
+        if (is_page('rejestracja')) {
+            foreach ($form['fields'] as &$field) {
+                if (in_array($field->adminLabel, ['name', 'street', 'house', 'post', 'city'])) {
+                    $field->visibility = 'hidden';
+                }
+            }
+        }
+        return $form;
+    }
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts, $registration_type, $registration_form_id) {
@@ -25,6 +61,7 @@ class PWERegistrationVisitors extends PWEProfile {
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
 
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
@@ -59,7 +96,7 @@ class PWERegistrationVisitors extends PWEProfile {
                         <h4>'. self::languageChecker('Twój bilet na targi', 'Your ticket to the fair') .'</h4>
                     </div>
                     <div class="pwe-registration-form">
-                        [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"] 
+                        [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
                     </div>
                 </div>
             </div>';
@@ -89,7 +126,7 @@ class PWERegistrationVisitors extends PWEProfile {
                 </div>
             </div>';
         }
-        
+
         return $output;
     }
 }

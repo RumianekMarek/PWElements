@@ -188,7 +188,7 @@ class PWEStore extends PWECommonFunctions {
         ];
         
         $formatted_editions = [];
-        
+         
         foreach ($editions as $edition_key => $domains) {
             foreach ($domains as $domain) {
                 $formatted_editions["edition_" . $edition_key][] = [
@@ -219,7 +219,7 @@ class PWEStore extends PWECommonFunctions {
     public function addingScripts(){
         $store_js_array = array(
             'trade_fair_name' => self::languageChecker(do_shortcode('[trade_fair_name]'), do_shortcode('[trade_fair_name_eng]')),
-            'fairs_array' => self::fairs_array(),
+            'fairs_array' => (current_user_can('administrator') && $_SERVER['HTTP_HOST'] == 'mr.glasstec.pl') ? self::fairs_array() : [],
             'admin' => current_user_can('administrator')
         );
 
@@ -706,7 +706,7 @@ class PWEStore extends PWECommonFunctions {
                 <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'BILET NA WIECZÓR BRANŻOWY' : 'TICKET FOR THE INDUSTRY EVENING' ) .'</span>
                 <div class="pwe-store__featured-content">
                     <div class="pwe-store__featured-image">
-                        <img src="/wp-content/plugins/PWElements/media/store/bilet-na-gale.webp" alt="Bilet na Wieczór Branżowy">
+                        <img src="'. ( self::lang_pl() ? '/wp-content/plugins/PWElements/media/store/bilet-na-gale.webp' : '/wp-content/plugins/PWElements/media/store/bilet-na-gale-en.webp' ) .'" alt="Bilet na Wieczór Branżowy">
                     </div>
                     <div class="pwe-store__featured-details">
                         <div class="pwe-store__featured-text">
@@ -801,7 +801,7 @@ class PWEStore extends PWECommonFunctions {
                 <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'BILET VIP GOLD' : 'VIP GOLD TICKET' ) .'</span>
                 <div class="pwe-store__featured-content">
                     <div class="pwe-store__featured-image">
-                        <img src="/wp-content/plugins/PWElements/media/store/bilet-vip-gold.webp" alt="VIP GOLD">
+                        <img src="'. ( self::lang_pl() ? '/wp-content/plugins/PWElements/media/store/bilet-vip-gold.webp' : '/wp-content/plugins/PWElements/media/store/bilet-vip-gold-en.webp' ) .'" alt="VIP GOLD">
                     </div>
                     <div class="pwe-store__featured-details">
                         <div class="pwe-store__featured-text">
@@ -1271,7 +1271,7 @@ class PWEStore extends PWECommonFunctions {
                 <div class="pwe-store__service-card pwe-store__service">
                     <a href="#" data-featured="bilet-na-wieczor">
                         <div class="pwe-store__service-image">
-                            <img src="/wp-content/plugins/PWElements/media/store/bilet-na-gale.webp" alt="Bilet na Wieczór Branżowy">
+                            <img src="'. ( self::lang_pl() ? '/wp-content/plugins/PWElements/media/store/bilet-na-gale.webp' : '/wp-content/plugins/PWElements/media/store/bilet-na-gale-en.webp' ) .'" alt="Bilet na Wieczór Branżowy">
                         </div>
                         <div class="pwe-store__service-content">
                             '. ( self::lang_pl() ? '
@@ -1297,7 +1297,7 @@ class PWEStore extends PWECommonFunctions {
                 <div class="pwe-store__service-card pwe-store__service">
                     <a href="#" data-featured="bilet-vip-gold">
                         <div class="pwe-store__service-image">
-                            <img src="/wp-content/plugins/PWElements/media/store/bilet-vip-gold.webp" alt="VIP GOLD">
+                            <img src="'. ( self::lang_pl() ? '/wp-content/plugins/PWElements/media/store/bilet-vip-gold.webp' : '/wp-content/plugins/PWElements/media/store/bilet-vip-gold-en.webp' ) .'" alt="VIP GOLD">
                         </div>
                         <div class="pwe-store__service-content">
                             '. ( self::lang_pl() ? '
