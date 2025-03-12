@@ -450,7 +450,7 @@ class PWElementOpinions extends PWElements {
                     'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
                     'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
                     'opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
-                    'opinions_name' => 'Piotr Fiejkiewicz',
+                    'opinions_name' => 'Piotr Flejszar',
                     'opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
                     'opinions_text' => self::languageChecker(
                         'PTAK Warsaw Expo jest największym centrum wystawienniczym, z jakim współpracujemy. Firma inwestuje w rozwój infrastruktury, co zwiększa jakość organizowanych wydarzeń.',

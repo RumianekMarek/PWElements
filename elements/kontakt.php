@@ -90,6 +90,7 @@ class PWElementContact extends PWElements {
             "decarbonisationexpo.com" => "",
             "warsawgardentech.com" => "",
             "lightexpo.pl" => "Izabela",
+            "warsawtoys.com" => "",
             "labelingtechpoland.com" => "Agata, Patrycja",
         ];
         
@@ -116,7 +117,6 @@ class PWElementContact extends PWElements {
             "fruitpolandexpo.com" => "",
             "packagingpoland.pl" => "Agata, Patrycja",
             "intralogisticapoland.com" => "",
-            "warsawtoys.com" => "",
             "esteticaexpo.com" => "",
             "furnitechexpo.pl" => "",
             "furniturecontractexpo.com" => "",
@@ -130,6 +130,7 @@ class PWElementContact extends PWElements {
             "automotive-expo.eu" => "",
             "buildoutdoorexpo.com" => "",
             "warsawtoolsshow.com" => "",
+            "woodwarsawexpo.com" => "",
             "warsawconstructionexpo.com" => ""
         ];
         
@@ -166,7 +167,6 @@ class PWElementContact extends PWElements {
             "solarenergyexpo.com" => "",
             "warsawhvacexpo.com" => "",
             "foodtechexpo.pl" => "",
-            "woodwarsawexpo.com" => "",
             "automaticaexpo.com" => "",
             "targirehabilitacja.pl" => ""
         ];

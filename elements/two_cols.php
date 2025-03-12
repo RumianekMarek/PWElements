@@ -149,6 +149,30 @@ class PWElementTwoCols extends PWElements {
                 ),
             ),
             array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Custom conference directory', 'pwelement'),
+                'param_name' => 'pwe_two_cols_custom_directory',
+                'param_holder_class' => 'backend-area-half-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementTwoCols',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Custom slider numbers', 'pwelement'),
+                'param_name' => 'pwe_two_cols_custom_slider_numbers',
+                'param_holder_class' => 'backend-area-half-width',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementTwoCols',
+                ),
+            ),
+            array(
               'type' => 'colorpicker',
               'group' => 'PWE Element',
               'heading' => __('Button right color', 'pwe_map'),
@@ -244,6 +268,18 @@ class PWElementTwoCols extends PWElements {
                     'element' => 'pwe_element',
                     'value' => 'PWElementTwoCols',
                 ),
+            ),
+            array(
+              'type' => 'checkbox',
+              'group' => 'PWE Element',
+              'heading' => __('Disable randomization', 'pwelement'),
+              'param_holder_class' => 'backend-area-one-fifth-width',
+              'param_name' => 'remove_randomize',
+              'save_always' => true,
+              'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementTwoCols',
+              ),
             ),
             array(
                 'type' => 'checkbox',
@@ -450,6 +486,9 @@ class PWElementTwoCols extends PWElements {
             'pwe_two_cols_images_right' => '',
             'pwe_two_cols_shadow_link_left' => '',
             'pwe_two_cols_shadow_link_right' => '',
+            'pwe_two_cols_custom_directory' => '',
+            'pwe_two_cols_custom_slider_numbers' => '',
+            'remove_randomize' => '',
         ), $atts ));
 
         $colas_text = PWECommonFunctions::decode_clean_content($pwe_two_cols_text);
@@ -481,9 +520,23 @@ class PWElementTwoCols extends PWElements {
 
         /* Patroni */
 
+
         if($pwe_two_cols_show_mediapatrons || $pwe_two_cols_slider){
-          $base_directory = '/doc/Logotypy/Rotator 2';
-          $patronImages = PWEProfileButtons::getImagesFromDirectory($base_directory, $limit = 9);
+
+          if(empty($pwe_two_cols_custom_directory)){
+            $base_directory = '/doc/Logotypy/Rotator 2';
+          } else {
+            $base_directory = $pwe_two_cols_custom_directory;
+          }
+
+          if(empty($pwe_two_cols_custom_slider_numbers)){
+            $limit = 9;
+          } else {
+            $limit = $pwe_two_cols_custom_slider_numbers;
+          }
+
+          $patronImages = PWEProfileButtons::getImagesFromDirectory($base_directory, $limit, $remove_randomize);
+
           $logotypy = array_slice($patronImages, 0, 10);
         }
 
@@ -494,7 +547,7 @@ class PWElementTwoCols extends PWElements {
         if ($pwe_two_cols_show_exhibitors) {
           $identification = do_shortcode('[trade_fair_catalog]');
           $exhibitors = CatalogFunctions::logosChecker($identification, "PWECatalog10");
-  
+
           if (!is_array($exhibitors) || empty($exhibitors)) {
               echo '<script>console.error("Błąd: logosChecker nie zwrócił poprawnej listy wystawców")</script>';
               $logotypy = [];
@@ -503,15 +556,15 @@ class PWElementTwoCols extends PWElements {
               $logotypy = array_map(function ($exhibitor) {
                   return isset($exhibitor['URL_logo_wystawcy']) ? $exhibitor['URL_logo_wystawcy'] : null;
               }, $exhibitors);
-  
+
               // Removing empty values ​​from the array
               $logotypy = array_filter($logotypy);
-  
+
               // Trim the array to 10 elements
               $logotypy = array_slice($logotypy, 0, 10);
-          }  
+          }
       }
-      
+
       $output = '
       <style>
 
@@ -993,9 +1046,9 @@ class PWElementTwoCols extends PWElements {
         };
       $output .= '
        </div></div>
-       
+
         <script>
-            document.addEventListener("DOMContentLoaded", function () {              
+            document.addEventListener("DOMContentLoaded", function () {
                 const infoImageBox = document.querySelector(".'. $element_unique_id .' .info-image-box");
                 const pweContainerLogotypes = document.querySelector(".'. $element_unique_id .' .pwe-container-logotypes");
                 if ("'. current_user_can('administrator') .'" == true) {

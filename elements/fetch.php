@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    if($direction == "registration"){
+    if ($direction == "registration") {
         $entry_id = $_SESSION['pwe_reg_entry']['entry_id'];
     } else {
         $entry_id = $_SESSION['pwe_exhibitor_entry']['entry_id'];
@@ -65,7 +65,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return null;
     }
 
-    if($direction == "registration"){
+    function createField($form_id, $admin_label, $label) {
+        $new_field = new GF_Field_Text(); // Tworzymy pole tekstowe
+        $new_field->label = $label;
+        $new_field->adminLabel = $admin_label;
+        $new_field->type = 'text'; // Nadal pole tekstowe
+        $new_field->visibility = 'hidden'; // Ukrycie pola
+        $new_field->isRequired = false;
+
+        $form = GFAPI::get_form($form_id);
+        $form['fields'][] = $new_field;
+        GFAPI::update_form($form);
+
+        return $new_field->id;
+    }
+
+
+    $field_labels = [
+        'name' => 'Imię i nazwisko',
+        'street' => 'Ulica',
+        'house' => 'Numer domu',
+        'post' => 'Kod pocztowy',
+        'city' => 'Miasto'
+    ];
+
+    if ($direction == "registration") {
         $fields_to_update = [
             'name' => 'name',
             'street' => 'street',
@@ -78,13 +102,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'name' => 'name',
             'area' => 'area',
             'company' => 'company',
+            'nip' => 'nip',
         ];
     }
 
     foreach ($fields_to_update as $admin_label => $key) {
-        $field_id = getFieldIdByAdminLabel($form, $admin_label);
-        if ($field_id && !empty($data[$key])) {
-            $entry[$field_id] = $data[$key];
+        if (!empty($data[$key])) {
+            $field_id = getFieldIdByAdminLabel($form, $admin_label);
+
+            // Jeśli direction == "registration", tworzymy brakujące pole
+            if (!$field_id && $direction == "registration") {
+                $field_id = createField($form_id, $admin_label, $field_labels[$admin_label] ?? ucfirst($admin_label));
+            }
+
+            // Aktualizacja wartości pola tylko jeśli pole istnieje
+            if ($field_id) {
+                $entry[$field_id] = $data[$key];
+            }
         }
     }
 
@@ -93,28 +127,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (is_wp_error($result)) {
         echo json_encode(["message" => "Błąd aktualizacji"]);
     } else {
-        if ($direction !== "registration") {
-            // Pobranie ID powiadomienia "Admin Notification Potwierdzenie"
-            $notifications = $form['notifications'];
-            $notification_id = null;
-
-            $notification_names = ['Admin Notification Potwierdzenie'];
-
-            foreach ($form["notifications"] as $id => &$key) {
-                if (in_array($key['name'], $notification_names)) {
-                    $key['isActive'] = true;
-                } else {
-                    $key['isActive'] = false;
-                }
-            }
-            $result = GFAPI::send_notifications($form, $entry);
+        if ($direction == "registration") {
+            unset($_SESSION['pwe_reg_entry']);
+        } else {
+            unset($_SESSION['pwe_exhibitor_entry']);
         }
 
-        echo json_encode([
-            "message" => "Dane zaktualizowane",
-            "direction" => $notification_id,
-            "test" => $test,
-        ]);
+        if ($direction !== "registration") {
+            $notifications = $form['notifications'];
+            foreach ($form["notifications"] as $id => &$key) {
+                $key['isActive'] = in_array($key['name'], ['Admin Notification Potwierdzenie']);
+            }
+            GFAPI::send_notifications($form, $entry);
+        }
+
+        echo json_encode(["message" => "Dane zaktualizowane"]);
     }
 }
 ?>

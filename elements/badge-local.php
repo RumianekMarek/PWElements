@@ -49,7 +49,7 @@ class PWBadgeElement extends PWElements {
      */
     public static function massGenerator($badge_form_id) {
         // 1. Checks if the form was submitted and necessary inputs are present.
-        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3'])){
+        if (isset($_POST["gform_submit"]) && $_POST["gform_submit"] == $badge_form_id && !empty($_POST['input_6']) && isset($_POST['input_3'])){
             
             // 2. Updates the URL of the confirmation message.
             echo '<script>
@@ -117,7 +117,7 @@ class PWBadgeElement extends PWElements {
      */
     public static function qrOnlyDownload($badge_form_id) {
         // 1. Checks if the form was submitted and necessary inputs are present.
-        if (isset($_POST["submit"]) && !empty($_POST['input_6']) && isset($_POST['input_3'])){
+        if (isset($_POST["gform_submit"]) && $_POST["gform_submit"] == $badge_form_id && !empty($_POST['input_6']) && isset($_POST['input_3'])){
             
             // 2. Updates the URL of the confirmation message.
             $time = new DateTime();
@@ -283,8 +283,6 @@ class PWBadgeElement extends PWElements {
                 jQuery(function ($) {
                     const gfWraper = $("#gform_wrapper_' . $atts['badge_form_id'] . '");
                     const gfFields = gfWraper.find(".gform_fields");
-                    const gfButton = gfWraper.find(".gform_button");
-                    gfButton.attr("name", "submit");
                     const multiInput = $("<input>", {
                         placeholder: "ilość identyfikatorów",
                         type: "text",
