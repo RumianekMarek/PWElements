@@ -48,7 +48,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
         ), $atts ));
 
         $company_array = array();
-
+        
         // Check if ?katalog = * exists in the URL
         if(isset($_GET['katalog'])){
             // Verify if the exhibitor catalog is connected to the site
@@ -59,6 +59,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                 $company_array['exhibitor_heder'] = '';
                 $company_array['catalog_logo'] = self::$exhibitor_logo_url = $catalog_array['URL_logo_wystawcy'];
                 $company_array['exhibitor_name'] = self::$exhibitor_name = $catalog_array['Nazwa_wystawcy'];
+                $company_array['exhibitor_desc'] = self::$exhibitor_desc = $catalog_array['Opis_pl'];
             }
         // Check if ?wystawca=* exists in the URL
         } else if(isset($_GET['wystawca'])){
@@ -71,11 +72,12 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                 }
             }
             self::$exhibitor_name = $company_array['exhibitor_name'];
+            self::$exhibitor_desc = $company_array['exhibitor_desc'];
+            self::$exhibitor_stand = $company_array['exhibitor_stand'];
             self::$exhibitor_logo_url = wp_get_attachment_url($company_array['exhibitor_logo']);
         } else {
             self::$exhibitor_logo_url = 'https://' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
         }
-
         // If personal exhibitor information is available, filter out the exhibitor name field from the form.
         // The company name field will be populated with $company_array['exhibitor_name']
         // if (isset($company_array['exhibitor_name'])){
@@ -99,7 +101,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
         $generator_html_text_decoded = base64_decode($exhibitor_generator_html_text);
         $generator_html_text_decoded = urldecode($generator_html_text_decoded);
         $generator_html_text_content = wpb_js_remove_wpautop($generator_html_text_decoded, true);
-
+        
         //Creating HTML output
         $output = '';
         $output .= '
@@ -163,8 +165,13 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
         <script>
            jQuery(document).ready(function($){
                 let exhibitor_name = "' . self::$exhibitor_name . '";
+                let exhibitor_desc = `' . self::$exhibitor_desc . '`;
+                let exhibitor_stand = "' . self::$exhibitor_stand . '";
+
                 $(".exhibitor_logo input").val("' . self::$exhibitor_logo_url . '");
                 $(".exhibitors_name input").val(exhibitor_name);
+                $(".exhibitor_desc input").val(exhibitor_desc);
+                $(".exhibitor_stand input").val(exhibitor_stand);
 
                 $(`input[placeholder="FIRMA ZAPRASZAJĄCA"]`).val(exhibitor_name);
                     

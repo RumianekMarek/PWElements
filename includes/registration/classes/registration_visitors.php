@@ -4,7 +4,7 @@
  * Class PWERegistrationVisitors
  * Extends PWEProfile class and defines a custom Visual Composer element.
  */
-class PWERegistrationVisitors extends PWEProfile {
+class PWERegistrationVisitors extends PWERegistration {
 
     /**
      * Constructor method.
@@ -93,7 +93,7 @@ class PWERegistrationVisitors extends PWEProfile {
                         <p>'. self::languageChecker('Krok 1 z 2', 'Step 1 of 2') .'</p>
                     </div>
                     <div class="pwe-registration-title">
-                        <h4>'. self::languageChecker('Twój bilet na targi', 'Your ticket to the fair') .'</h4>
+                        <h4>'. self::languageChecker('Twój bilet na targi', 'Your ticket to the trade fair') .'</h4>
                     </div>
                     <div class="pwe-registration-form">
                         [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]

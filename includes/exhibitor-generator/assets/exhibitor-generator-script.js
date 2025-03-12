@@ -12,7 +12,6 @@ jQuery(document).ready(function($){
     let emailTrue = true;
     const modal = $(".modal__element");
     const closeBtn = modal.find(".btn-close");
-
     const pageLang = (send_data['lang'] == "pl_PL") ? 'pl' : 'en';
     const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
 
@@ -318,6 +317,7 @@ jQuery(document).ready(function($){
                 company: $(".company").val(),
                 exhibitor_name: $('#mass_exhibitor_badge').prop("checked"),
                 exhibitor_logo: $('#exhibitor_logo_img').prop("src") ?? '',
+                exhibitor_desc: $('.exhibitor_desc input').val() ?? '',
                 data: tableCont
             
             // Process response 

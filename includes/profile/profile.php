@@ -10,14 +10,12 @@ class PWEProfile extends PWECommonFunctions {
     public static $fair_colors;
     public static $accent_color;
     public static $main2_color;
-    public static $fair_forms;
 
     /**
      * Constructor method for initializing the plugin.
      */
     public function __construct() {
         self::$rnd_id = rand(10000, 99999);
-        self::$fair_forms = $this->findFormsGF();
         self::$fair_colors = $this->findPalletColors();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
 
@@ -177,7 +175,7 @@ class PWEProfile extends PWECommonFunctions {
      * @param array @atts options
      */
     public function PWEProfileOutput($atts, $content = null) {
-
+        
         extract( shortcode_atts( array(
             'profile_type' => '',
         ), $atts ));

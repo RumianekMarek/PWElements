@@ -1,4 +1,5 @@
-const fairs_array_js = {
+const tradeFairName = store_js.trade_fair_name;
+const fairs_array = {
     edition_1: [
         "mr.glasstec.pl", "bathceramicsexpo.com", "warsawstone.com", "smarthomeexpo.pl",
         "cleantechexpo.pl", "worldofbuildexpo.com", "safetyrescueexpo.com", "filtratecexpo.com",
@@ -44,10 +45,6 @@ const fairs_array_js = {
     ]
 };
 
-const admin = store_js.admin;
-const tradeFairName = store_js.trade_fair_name;
-const fairs_array = (admin && store_js.fairs_array && store_js.fairs_array.length > 0) ? store_js.fairs_array : fairs_array_js;
-
 document.addEventListener('DOMContentLoaded', function() {
     const elImages = document.querySelectorAll(".pwe-store__featured-image");
     const pweMenu = document.querySelector("#pweMenu");
@@ -81,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.addEventListener("scroll", updateImagesPosition);
             updateImagesPosition();
         }
-    });
+    }); 
 
     if (window.innerWidth > 1024) {
         window.addEventListener("scroll", updateImagesPosition);
@@ -147,12 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
             parent.style.overflow = 'unset';
         }
 
-        parent = parent.parentElement;
+        parent = parent.parentElement; 
     }
 
-    const allEditions =  [...fairs_array.edition_1, ...fairs_array.edition_2, ...fairs_array.edition_3, ...fairs_array.edition_b2c];
-    allEditions.sort((a, b) => new Date(a.date) - new Date(b.date));
-  
     // Get domain address
     const currentUrl = window.location.hostname;
 
@@ -168,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         editionNumber = "other";
     }
-
+    
     // Redirect page to warsawexpo.eu with parameters for contact form
     const redirectButtons = document.querySelectorAll(".pwe-store__redirect-button");
     redirectButtons.forEach(button => {
@@ -179,13 +173,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const serviceName = this.closest(".pwe-store__service").querySelector(".pwe-store__service-name-mailing").textContent.trim();
             // Get domain 
             const currentDomain = window.location.hostname;
+            
             // Get the page language
             const htmlLang = document.documentElement.lang;
             const baseUrl = (htmlLang === "pl-PL") 
                 ? "https://warsawexpo.eu/sklep-uslugi-premium/" 
                 : "https://warsawexpo.eu/en/shop-premium-services/";
             
-            if (admin && currentDomain === "mr.glasstec.pl") {
+            if (currentDomain === "mr.glasstec.pl") {
                 const pweStore = document.querySelector(".pwe-store");
 
                 if (pweStore) {
@@ -195,51 +190,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
 
-                const fairsItemsContainer = document.querySelector(".pwe-store__fairs");
-                fairsItemsContainer.style.display = "flex";
-                const fairsItems = document.querySelector(".pwe-store__fairs-items");
-                // Add options to select
-                allEditions.forEach(fair => {
-                    const fairItem = document.createElement("div");
-                    fairItem.className = "pwe-store__fairs-item";
-                    fairItem.id = fair.domain.replace(/\.[^.]*$/, "");
+                const fairsContainer = document.querySelector(".pwe-store__fairs");
+                fairsContainer.style.display = "flex";
+                setTimeout(() => {
+                    fairsContainer.style.opacity = "1";
+                }, "500");
                 
-                    // Ustawienie początkowej szerokości i wysokości 1px
-                    fairItem.style.opacity = 0;
-                    
-                    const imgUrl = `https://${fair.domain}/doc/kafelek.jpg`;
-                    
-                    // Wczytanie obrazu w tle
-                    const img = new Image();
-                    img.src = imgUrl;
-                    
-                    img.onload = () => {
-                        fairItem.style.backgroundImage = `url('${imgUrl}')`;
-                        fairItem.style.opacity = 1;
-                    };
-                
-                    // Ustawienie atrybutów
-                    fairItem.setAttribute("data-name", fair.name);
-                    fairItem.setAttribute("data-tooltip", fair.desc);
-                    fairItem.setAttribute("data-date", fair.date);
-                    fairItem.setAttribute("data-edition", fair.edition);
-                    fairItem.setAttribute("data-domain", fair.domain);
-                    
-                    fairsItems.appendChild(fairItem);
-                });
-
-                // Add select to pweStore container
-                pweStore.appendChild(fairsItemsContainer);
-
-                // Nasłuchuj na zdarzenie w polu wyszukiwania
+                // Listen for event in search box
                 const searchInput = document.querySelector(".pwe-store__fairs-search-input");
                 searchInput.addEventListener("input", function () {
                     const searchTerm = searchInput.value.toLowerCase();
 
-                    // Przechodzimy przez wszystkie elementy fairs
-                    const allTales = document.querySelectorAll(".pwe-store__fairs-item");
-
-                    allTales.forEach(item => {
+                    const allTiles = document.querySelectorAll(".pwe-store__fairs-item");
+                    allTiles.forEach(item => {
                         const name = item.getAttribute("data-name").toLowerCase();
                         const tooltip = item.getAttribute("data-tooltip").toLowerCase();
 
@@ -252,9 +215,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
 
-                const allTales = document.querySelectorAll(".pwe-store__fairs-item");
-
-                allTales.forEach(item => {
+                const allTiles = document.querySelectorAll(".pwe-store__fairs-item");
+                allTiles.forEach(item => {
                     item.addEventListener("click", function () {
                         const selectedDomain = this.getAttribute("data-domain");
                         const selectedEdition = this.getAttribute("data-edition");

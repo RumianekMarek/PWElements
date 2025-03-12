@@ -48,6 +48,8 @@
                                 $fields['exhibitors_name'] = $field['id'];
                             } elseif( $field['adminLabel'] == 'exhibitor_logo'){
                                 $fields['exhibitor_logo'] = $field['id'];
+                            } elseif( $field['adminLabel'] == 'exhibitor_desc'){
+                                $fields['exhibitor_desc'] = $field['id'];
                             }
                         }
                         break;
@@ -63,6 +65,7 @@
                         $fields['email'] => $val['email'],
                         $fields['company'] => $_POST['company'],
                         $fields['phone'] => $phoneVal,
+                        $fields['exhibitor_desc'] => $_POST['exhibitor_desc'] ?? '',
                     ];
 
                     if(!empty($_POST['exhibitor_name']) && $_POST['exhibitor_name'] != 'true'){

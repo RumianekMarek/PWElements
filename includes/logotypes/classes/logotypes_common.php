@@ -552,7 +552,27 @@ class PWElementAdditionalLogotypes {
             if (count($files) > 0) {
 
                 if($logotypes_display_random1){
+                    // Random files
                     shuffle($files);
+                } else {
+                    usort($files, function($a, $b) {
+                        $fileA = basename($a);
+                        $fileB = basename($b);
+                
+                        // Get the number from the beginning of the file name
+                        preg_match('/^(\d+)/', $fileA, $matchA);
+                        preg_match('/^(\d+)/', $fileB, $matchB);
+                
+                        $numA = isset($matchA[1]) ? (int)$matchA[1] : 0;
+                        $numB = isset($matchB[1]) ? (int)$matchB[1] : 0;
+                
+                        // If numbers are equal, sort alphabetically
+                        if ($numA === $numB) {
+                            return strcasecmp($fileA, $fileB);
+                        }
+                        
+                        return $numA <=> $numB;
+                    });
                 }
 
                 // Calculate width for header logotypes

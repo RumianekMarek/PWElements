@@ -12,6 +12,8 @@ class PWEExhibitorGenerator{
     
     public static $exhibitor_logo_url;
     public static $exhibitor_name;
+    public static $exhibitor_desc;
+    public static $exhibitor_stand;
     public static $rnd_id;
     public static $fair_colors;
     public static $accent_color;
@@ -124,7 +126,6 @@ class PWEExhibitorGenerator{
                                 'heading' => __('Header Custom', 'pwelement'),
                                 'param_name' => 'exhibitor_heder',
                                 'save_always' => true,
-                                'admin_label' => true,
                                 'value' => '',
                             ),
                             array(
@@ -138,7 +139,20 @@ class PWEExhibitorGenerator{
                                 'heading' => __('Nazwa Wystawcy', 'pwelement'),
                                 'param_name' => 'exhibitor_name',
                                 'save_always' => true,
-                                'admin_label' => true,
+                                'value' => '',
+                            ),
+                            array(
+                                'type' => 'textarea',
+                                'heading' => __('Opis Wystawcy', 'pwelement'),
+                                'param_name' => 'exhibitor_desc',
+                                'save_always' => true,
+                                'value' => '',
+                            ),
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Pozycja na targach', 'pwelement'),
+                                'param_name' => 'exhibitor_stand',
+                                'save_always' => true,
                                 'value' => '',
                             ),
                         ),
