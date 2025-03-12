@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.5.1.2
+ * Version: 2.5.2
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -101,9 +101,6 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'gf-upps/area-numbers/area_numbers_gf.php';
         $this->GFAreaNumbersField = new GFAreaNumbersField();
 
-        // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
-        // $this->PWEQRActive = new PWEQRActive();
-
         require_once plugin_dir_path(__FILE__) . 'includes/katalog-wystawcow/main-katalog-wystawcow.php';
         $this->PWECatalog = new PWECatalog();
 
@@ -138,6 +135,10 @@ class PWElementsPlugin {
         $this->PWEConferenceCap = new PWEConferenceCap();
 
         require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
+
+
+        // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
+        // $this->PWEQRActive = new PWEQRActive();
     }
     
     // Czyszczenie pamięci wp_rocket
@@ -197,16 +198,18 @@ class CAPDatabase {
         $cap_db = null;
         
         // Set connection data depending on the server
-        if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
-            $database_host = 'localhost';
-            $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
-            $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
-            $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-        } else {
-            $database_host = 'localhost';
-            $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
-            $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
-            $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+        if (isset($_SERVER['SERVER_ADDR'])) {
+            if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
+            } else {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
+                $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
+                $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+            }
         }
 
         // Check if there is complete data for connection
