@@ -72,6 +72,26 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
         return $results;
     }    
 
+    public static function findConferenceMode() {
+        return array(
+            'PWEConferenceCapFullMode' => [
+                'php' => 'classes/conference-cap-full-mode/conference-cap-full-mode.php',
+                'css' => 'classes/conference-cap-full-mode/conference-cap-full-mode-style.css',
+                'class' => 'PWEConferenceCapFullMode'
+            ],
+            'PWEConferenceCapSimpleMode' => [
+                'php' => 'classes/conference-cap-simple-mode/conference-cap-simple-mode.php',
+                'css' => 'classes/conference-cap-simple-mode/conference-cap-simple-mode-style.css',
+                'class' => 'PWEConferenceCapSimpleMode'
+            ],
+            'PWEConferenceCapMedalCeremony' => [
+                'php' => 'classes/conference-cap-medal-ceremony/conference-cap-medal-ceremony.php',
+                'css' => 'classes/conference-cap-medal-ceremony/conference-cap-medal-ceremony-style.css',
+                'class' => 'PWEConferenceCapMedalCeremony'
+            ],
+        );
+    }
+
     public static function speakerImageMini($speaker_images) { 
         // Filtrowanie pustych wartości
         $head_images = array_filter($speaker_images);
