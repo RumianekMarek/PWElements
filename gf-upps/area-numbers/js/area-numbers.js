@@ -60,6 +60,12 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         });
 
         const succesCountryIp = (countryCode) => {
+
+            // if ($(phone_id).val().startsWith('+') && $(phone_id).val().length > 4) {
+            //     $(phone_id).prop('disabled', false);
+            //     return;
+            // }
+
             let options = {
                 initialCountry: countryCode,
                 utilsScript: "https://" + domain + "/wp-content/plugins/PWElements/gf-upps/area-numbers/js/utils.js",
