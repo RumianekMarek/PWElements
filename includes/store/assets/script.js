@@ -48,6 +48,7 @@ const fairs_array = {
 document.addEventListener('DOMContentLoaded', function() {
     const elImages = document.querySelectorAll(".pwe-store__featured-image");
     const pweMenu = document.querySelector("#pweMenu");
+    const mainSection = document.querySelector('.pwe-store__main-section');
 
     function updateImagesPosition() {
         const viewportHeight = window.innerHeight;
@@ -59,10 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (pweMenu) {
                 if (containerRect.top >= pweMenu.offsetHeight) {
                     elImage.classList.remove("sticky");
-                    elImage.style.paddingTop = "0px";
+                    elImage.style.top = "0px";
                 } else if (containerRect.top < pweMenu.offsetHeight && containerRect.bottom > viewportHeight) {
                     elImage.classList.add("sticky");
-                    elImage.style.paddingTop = pweMenu.offsetHeight + 50 + "px";
+                    elImage.style.top = pweMenu.offsetHeight + 50 + "px";
                 } 
             } else {
                 if (containerRect.top >= 0) {
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
     window.addEventListener("resize", function () {
         if (window.innerWidth > 1024) {
             window.addEventListener("scroll", updateImagesPosition);
@@ -84,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener("scroll", updateImagesPosition);
         updateImagesPosition();
     }
-
 
     // Handle clicking the "MORE" button and card item
     const moreButtons = document.querySelectorAll('.pwe-store__service-card a');
@@ -99,11 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
             url.searchParams.set('featured-service', featuredId);
             window.history.pushState({}, '', url);
 
+            const categoryActive = document.querySelector('.pwe-store__section-hide:has(.pwe-store__featured-service.active)');
+            categoryActive.style.display = "block";
+
+            const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
+            const categoryHeadersActive = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service.active) .pwe-store__category-header');
+            // Hide the main section and show the category header
+            showCategoryHeader(mainSection, categoryHeaders, categoryHeadersActive);
+
             // Scroll to top of page
-            window.scrollTo({
-                top: 18,
-                behavior: "smooth"
-            });
+            scrollToTop();
         });
     });
 
@@ -113,9 +119,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (featuredServiceParam) {
         showFeaturedService(featuredServiceParam);
 
+        const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
+        const categoryHeadersActive = document.querySelectorAll(`.pwe-store__section-hide:has(.pwe-store__featured-service.active) .pwe-store__category-header`);
+        // Hide the main section and show the category header
+        showCategoryHeader(mainSection, categoryHeaders, categoryHeadersActive);
+
         // Scroll to top of page
+        scrollToTop();
+    }
+
+    // Scroll to top of page
+    function scrollToTop() {
         window.scrollTo({
-            top: 18,
+            top: 0,
             behavior: "smooth"
         });
     }
@@ -123,17 +139,56 @@ document.addEventListener('DOMContentLoaded', function() {
     function showFeaturedService(featuredId) {
         // Hide all pwe-store__featured-service sections
         const featuredServices = document.querySelectorAll('.pwe-store__featured-service');
-        featuredServices.forEach(service => service.style.display = 'none');
+        featuredServices.forEach(service => service.classList.remove("active"));
 
         // Show the appropriate section
         const featuredService = document.getElementById(featuredId);
         if (featuredService) {
-            featuredService.style.display = 'block';
+            featuredService.classList.add("active");
         }
     }
 
-    let parent = document.querySelector('.pwe-store__featured-image')?.parentElement;
+    // Hide the main section and show the category header
+    function showCategoryHeader(mainSection, categoryHeaders, categoryHeadersActive) {
+        // Hide main section
+        mainSection.style.display = "none";
+        categoryHeaders.forEach(header => {
+            if (header) {
+                // Show the category header
+                header.style.display = "none";
+            }
+        });
+        categoryHeadersActive.forEach(headerActive => {
+            if (headerActive) {
+                // Show the category header
+                headerActive.style.display = "flex";
+            }
+        });
+    }
 
+     // Show the main section and hide the category header
+    function hideCategoryHeader(mainSection, categoryHeaders) {
+        // Show main section
+        mainSection.style.display = "block";
+        categoryHeaders.forEach(header => {
+            if (header) {
+                // Hide the category header
+                header.style.display = "none";
+            }
+        });
+    }
+
+    // Function to remove query parameters from URL
+    function removeURLParams() {
+        // Get the current URL
+        const url = new URL(window.location.href);
+        // Remove all query parameters
+        url.search = '';
+        // Remove parameters
+        window.history.replaceState({}, '', url.toString());
+    }
+
+    let parent = document.querySelector('.pwe-store__featured-image')?.parentElement;
     while (parent) {
         const computedStyle = getComputedStyle(parent);
         const hasOverflow = computedStyle.overflow;
@@ -240,5 +295,98 @@ document.addEventListener('DOMContentLoaded', function() {
             
         });
     });
+
+    const sortingButtons = document.querySelectorAll(".pwe-store__sorting-item");
+    // Iterujemy po każdym przycisku i dodajemy nasłuchiwanie na kliknięcie
+    sortingButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            // document.querySelector(".pwe-store__main-section").style.display = "none";
+
+            // Pobieramy ID klikniętego przycisku
+            const buttonId = this.id;
+
+            // Usuwamy klasę 'active' ze wszystkich przycisków
+            sortingButtons.forEach(b => b.classList.remove('active'));
+
+            // Dodajemy klasę 'active' do klikniętego przycisku
+            this.classList.add('active');
+
+            // Pobieramy wszystkie elementy z klasą 'pwe-store__section'
+            const elements = document.querySelectorAll('.pwe-store__section');
+
+            // Usuwamy klasę 'active' ze wszystkich elementów
+            elements.forEach(e => e.classList.remove('active'));
+
+            // Iterujemy po wszystkich elementach i sprawdzamy ich ID
+            elements.forEach(element => {
+                // Jeśli ID elementu zawiera ID przycisku, dodajemy klasę 'active'
+                if (element.id.includes(buttonId)) {
+                    element.classList.add('active');
+                }
+            });
+
+
+            const mainSectioText = document.querySelectorAll('.pwe-store__main-section-text');
+            mainSectioText.forEach(text => {
+                // Jeśli ID elementu zawiera ID przycisku, dodajemy klasę 'active'
+                if (text.className.includes(buttonId)) {
+                    text.style.display = "block";
+                } else {
+                    text.style.display = "none";
+                }
+            });
+
+
+            // Pobieramy wszystkie elementy z klasą 'pwe-store__section-hide'
+            const hideElements = document.querySelectorAll('.pwe-store__section-hide');
+            // Usuwamy klasę 'active' ze wszystkich elementów
+            hideElements.forEach(e => e.style.display = "none");
+            // Iterujemy po wszystkich elementach i sprawdzamy ich ID
+            hideElements.forEach(element => {
+                // Jeśli ID elementu zawiera ID przycisku, dodajemy klasę 'active'
+                if (element.id.includes(buttonId)) {
+                    element.style.display = "block";
+                }
+            });
+
+            const featuredService = document.querySelectorAll(".pwe-store__featured-service");
+            featuredService.forEach(service => {
+                service.classList.remove('active');
+            });
+
+            const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
+            // Show the main section and hide the category header
+            hideCategoryHeader(mainSection, categoryHeaders);
+
+            // Wywołanie funkcji
+            removeURLParams();
+        });
+    });
+
+    const arrowBack = document.querySelectorAll(".pwe-store__category-header-arrow");
+    arrowBack.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+    
+            // Pokaż sekcję główną
+            mainSection.style.display = "block";
+            // Zidentyfikuj odpowiednią sekcję do pokazania na podstawie aktywnego elementu
+            
+            const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
+            // Show the main section and hide the category header
+            hideCategoryHeader(mainSection, categoryHeaders);
+    
+            const featuredService = document.querySelectorAll(".pwe-store__featured-service");
+            featuredService.forEach(service => {
+                service.classList.remove('active');
+            });
+    
+            removeURLParams();
+    
+            // Scroll to top of page
+            scrollToTop();
+        });
+    });
+    
 
 });
