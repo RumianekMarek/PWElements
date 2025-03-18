@@ -84,17 +84,21 @@ class PWElementConfirmationVip extends PWElements {
             .wpb_column:has(#pweConfVip) {
                 max-width: 100%;
             }
-            .pwe-conf-vip {
-            }
             .pwe-conf-vip__wrapper {
             }
             .pwe-conf-vip__columns {
                 display: flex;
-                min-height: 75vh;
+                min-height: 80vh;
             }
             .pwe-conf-vip__column {
                 width: 50%;
                 display: flex;
+            }
+            .pwe-conf-vip__column.bg {
+                background-image: url(/doc/background.webp);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
             }
             .pwe-conf-vip__column-content {
                 display: flex;
@@ -129,6 +133,9 @@ class PWElementConfirmationVip extends PWElements {
                 color: white;
                 padding: 8px 18px;
                 border-radius: 10px;
+            }
+            .pwe-conf-vip__column-content-btn-container a:hover {
+                color: #999 !important;
             }
             .pwe-conf-vip__column-content-edition {
                 max-width: 360px;
@@ -235,12 +242,12 @@ class PWElementConfirmationVip extends PWElements {
                 <div class="pwe-conf-vip__columns">
                     <div class="pwe-conf-vip__column">
                         <div class="pwe-conf-vip__column-content">
-                            <h2>Dziękjemy za aktywację zaproszenia VIP</h2>
-                            <p>Na państwa mail wysłaliśmy potwierdzenie wraz z kodem QR upoważniającym do wejścia na targi</p>
+                            <h2>'. self::languageChecker('Dziękujemy za aktywację zaproszenia VIP', 'Thank you for activating your VIP invitation') .'</h2>
+                            <p>'. self::languageChecker('Na państwa mail wysłaliśmy potwierdzenie wraz z kodem QR upoważniającym do wejścia na targi', 'We have sent a confirmation to your email along with a QR code authorizing entry to the fair.') .'</p>
                             <div class="pwe-conf-vip__column-content-btn-container">'. self::languageChecker('<a href="/">Strona główna</a>', '<a href="/en/">Home page</a>') .'</div>
                         </div>
                     </div>
-                    <div class="pwe-conf-vip__column" style="background-image: url(/doc/background.webp);">
+                    <div class="pwe-conf-vip__column bg">
                         <div class="pwe-conf-vip__column-content">
                             <img class="pwe-conf-vip__column-content-logo" src="'. self::languageChecker('/doc/logo.webp', '/doc/logo-en.webp') .'">';
                             if (!empty($trade_fair_edition_shortcode)) {
@@ -258,7 +265,7 @@ class PWElementConfirmationVip extends PWElements {
                         </div>
                         <div class="pwe-conf-vip__footer-column">
                             <p>INFO@WARSAWEXPO.EU</p>
-                            <p>ŚLEDŹ NAS NA <a href="[trade_fair_facebook]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a></p>
+                            <p>'. self::languageChecker('ŚLEDŹ NAS NA', 'FOLLOW US ON') .' <a href="[trade_fair_facebook]" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a></p>
                         </div>
                     </div>
                 </div>

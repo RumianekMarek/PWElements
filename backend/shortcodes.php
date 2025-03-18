@@ -47,7 +47,7 @@ function get_fair_data($specific_domain = null) {
                     "instagram" => $fair->fair_instagram ?? "",
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->badge ?? ""
+                    "badge" => $fair->fair_badge ?? ""
                 ];
             }
         } else {
