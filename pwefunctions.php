@@ -77,7 +77,7 @@ class PWECommonFunctions {
                     "instagram" => $fair->fair_instagram ?? "",
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->badge ?? ""
+                    "badge" => $fair->fair_badge ?? ""
                 ];
             }
         } else {
