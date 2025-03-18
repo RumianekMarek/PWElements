@@ -91,6 +91,7 @@ public function initVCMapPWERegistration() {
 
     require_once plugin_dir_path(__FILE__) . 'classes/registration_visitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_exhibitors.php';
+    require_once plugin_dir_path(__FILE__) . 'classes/registration_potential_exhibitors.php';
 
     // Check if Visual Composer is available
     if (class_exists('Vc_Manager')) {
@@ -111,6 +112,7 @@ public function initVCMapPWERegistration() {
                         'value' => array(
                             'Visitors' => 'PWERegistrationVisitors',
                             'Exhibitors' => 'PWERegistrationExhibitors',
+                            'Potential exhibitors' => 'PWERegistrationPotentialExhibitors',
                         ),
                         'std' => 'PWERegistrationVisitors',
                     ),
@@ -226,9 +228,9 @@ public function initVCMapPWERegistration() {
     private function findClassElements() {
         // Array off class placement
         return array(
-            'PWERegistrationVisitors'      => 'classes/registration_visitors.php',
-            'PWERegistrationExhibitors'      => 'classes/registration_exhibitors.php',
-
+            'PWERegistrationVisitors'               => 'classes/registration_visitors.php',
+            'PWERegistrationExhibitors'             => 'classes/registration_exhibitors.php',
+            'PWERegistrationPotentialExhibitors'    => 'classes/registration_potential_exhibitors.php',
         );
     }
 

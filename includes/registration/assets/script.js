@@ -115,3 +115,167 @@ window.onload = function () {
         });
     }
 }
+
+// Potential exhibitors form
+document.addEventListener("DOMContentLoaded", function() {
+    const potentialExhibitorsElement = document.querySelector(".pwe-registration.potential-exhibitors");
+    if (potentialExhibitorsElement) {
+        const customSelect = document.getElementById("fairSelect");
+        const optionsContainer = customSelect.querySelector(".pwe-registration-fairs-options-container");
+        const searchInput = customSelect.querySelector("#searchInput");
+        const selectedText = customSelect.querySelector(".pwe-registration-fairs-selected-text");
+
+        // Show options and search field after clicking customSelect
+        customSelect.addEventListener("click", function(event) {
+            // Prevent the menu from closing when clicking the search box
+            if (event.target !== searchInput && !event.target.classList.contains("pwe-registration-fairs-option")) {
+                customSelect.classList.toggle("open");
+                searchInput.value = ""; // Resetuje wartość pola wyszukiwania
+                filterOptions(""); // Zresetowanie filtracji
+            }
+        });
+
+        // Close the select by clicking outside it, but not in the search field
+        document.addEventListener("click", function(event) {
+            // Jeśli kliknięto poza customSelect i polem wyszukiwania
+            if (!customSelect.contains(event.target) && event.target !== searchInput) {
+                customSelect.classList.remove("open");
+            }
+        });
+
+        // Filter options based on entered text
+        searchInput.addEventListener("input", function() {
+            const filter = searchInput.value.toLowerCase();
+            filterOptions(filter);
+        });
+
+        // Function to filter options
+        function filterOptions(filter) {
+            const options = customSelect.querySelectorAll(".pwe-registration-fairs-option");
+            options.forEach(function(option) {
+                const nameText = option.getAttribute("name");
+                const domainText = option.getAttribute("domain");
+
+                // Check if "name" and "domain" attributes exist before using toLowerCase()
+                const combinedText = (nameText ? nameText.toLowerCase() : "") + " " + (domainText ? domainText.toLowerCase() : "");
+
+                if (combinedText.indexOf(filter.toLowerCase()) > -1) {
+                    option.style.display = "block";
+                } else {
+                    option.style.display = "none";
+                }
+            });
+        }
+
+        const inputFairName = document.querySelector(".potential-exhibitors-input-fair-name input");
+        const inputFairDomain = document.querySelector(".potential-exhibitors-input-fair-domain input");
+        const inputFairDate = document.querySelector(".potential-exhibitors-input-fair-date input");
+        const inputFairLang = document.querySelector(".potential-exhibitors-input-fair-lang input");
+
+        if (!inputFairName || !inputFairDomain || !inputFairDate || !inputFairLang) {
+            console.error("Brak wymaganych pól w formularzu");
+            return;
+        }
+
+        const radioInputsLang = document.querySelectorAll(".pwe-registration-fairs-radio-buttons input");
+        let lang = "pl-PL";
+
+        // Check if inputFairLang exists and set the language
+        if (inputFairLang) {
+            inputFairLang.value = "PL";
+            lang = (inputFairLang.value === "PL") ? "pl-PL" : "en-US";
+        }
+
+        // Add event listeners to radio buttons
+        radioInputsLang.forEach(input => {
+            input.addEventListener("change", function() {
+                const selectedLanguage = document.querySelector(`input[name="language"]:checked`);
+                const checkedLabel = selectedLanguage.closest("label");
+                inputFairLang.value = checkedLabel.textContent.trim();
+                lang = (inputFairLang.value === "PL") ? "pl-PL" : "en-US";
+                updateDate();
+            });
+        });
+
+        // Function that updates the date after changing the language
+        function updateDate() {
+            const dateStart = document.querySelector(".pwe-registration-fairs-option.active").getAttribute("date-start");
+            const dateEnd = document.querySelector(".pwe-registration-fairs-option.active").getAttribute("date-end");
+
+            if (dateStart && dateEnd) {
+                const startDate = new Date(dateStart);
+                const endDate = new Date(dateEnd);
+
+                // Date formatting function
+                function formatDate(date) {
+                    const day = date.getDate();
+                    const month = date.toLocaleString(lang, { month: "long" });  // Używamy języka z inputFairLang
+                    const year = date.getFullYear();
+                    return { day, month, year };
+                }
+
+                const startDateFormatted = formatDate(startDate);
+                const endDateFormatted = formatDate(endDate);
+
+                // Format the date depending on whether the months are the same
+                let fairDate;
+                if (startDateFormatted.month === endDateFormatted.month) {
+                    // If the dates are in the same month
+                    fairDate = `${startDateFormatted.day} - ${endDateFormatted.day} ${endDateFormatted.month} ${endDateFormatted.year}`;
+                } else {
+                    // If the dates are in different months
+                    fairDate = `${startDateFormatted.day} ${startDateFormatted.month} - ${endDateFormatted.day} ${endDateFormatted.month} ${endDateFormatted.year}`;
+                }
+
+                inputFairDate.value = fairDate; // Ustawiamy sformatowaną datę
+            } else {
+                inputFairDate.value = (lang == "pl-PL") ? "Nowa data wkrótce" : "New date comming soon"; // Jeśli daty nie są dostępne
+            }
+        }
+
+        // Selecting options
+        optionsContainer.addEventListener("click", function(e) {
+            if (e.target.classList.contains("pwe-registration-fairs-option")) {
+                // Removing the "active" class from other options
+                const options = customSelect.querySelectorAll(".pwe-registration-fairs-option");
+                options.forEach(function(option) {
+                    option.classList.remove("active");
+                });
+
+                // Save selected option data to the form inputs
+                inputFairName.value = e.target.getAttribute("name");
+                inputFairDomain.value = e.target.getAttribute("domain");
+
+                // Adding the "active" class to the selected option
+                e.target.classList.add("active");
+
+                // Update the displayed text
+                selectedText.textContent = e.target.textContent;
+                customSelect.classList.remove("open");
+
+                // Date processing
+                updateDate();
+
+            }
+        });
+
+        const inputFairId = document.querySelector(".potential-exhibitors-input-id-data input");
+        const selectId = document.querySelector(".potential-exhibitors-select-id .gfield_select");
+        const form = document.querySelector("#pweRegistration form");
+
+        // Submitting the form
+        if (form) {
+            form.addEventListener("submit", function(e) {
+                let emailId = selectId.value.split(",");
+                inputFairId.value = emailId[2];
+            });
+        }
+        
+        const confirmationMessage = document.querySelector(".gform_confirmation_message");
+        const fairsSelectContainer = document.querySelector(".pwe-registration-fairs-select-container");
+
+        if (confirmationMessage && fairsSelectContainer) {
+            fairsSelectContainer.style.display = "none";
+        }
+    }
+});
