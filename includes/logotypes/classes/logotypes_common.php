@@ -558,20 +558,36 @@ class PWElementAdditionalLogotypes {
                     usort($files, function($a, $b) {
                         $fileA = basename($a);
                         $fileB = basename($b);
-                
-                        // Get the number from the beginning of the file name
+                    
+                        // Trying to extract the number from the beginning of the file name
                         preg_match('/^(\d+)/', $fileA, $matchA);
                         preg_match('/^(\d+)/', $fileB, $matchB);
-                
-                        $numA = isset($matchA[1]) ? (int)$matchA[1] : 0;
-                        $numB = isset($matchB[1]) ? (int)$matchB[1] : 0;
-                
-                        // If numbers are equal, sort alphabetically
-                        if ($numA === $numB) {
-                            return strcasecmp($fileA, $fileB);
+                    
+                        // Check if the file contains a number
+                        $hasNumA = !empty($matchA);
+                        $hasNumB = !empty($matchB);
+                    
+                        // If one of the files has a number and the other one doesn't, the file with the number takes precedence
+                        if ($hasNumA && !$hasNumB) {
+                            return -1;
                         }
-                        
-                        return $numA <=> $numB;
+                        if (!$hasNumA && $hasNumB) {
+                            return 1;
+                        }
+                    
+                        // If both files have a number - sort numerically, and if the numbers are equal, sort alphabetically
+                        if ($hasNumA && $hasNumB) {
+                            $numA = (int)$matchA[1];
+                            $numB = (int)$matchB[1];
+                    
+                            if ($numA === $numB) {
+                                return strcasecmp($fileA, $fileB);
+                            }
+                            return $numA <=> $numB;
+                        }
+                    
+                        // If none of the files contain a number - sort alphabetically
+                        return strcasecmp($fileA, $fileB);
                     });
                 }
 
