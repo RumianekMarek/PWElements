@@ -273,12 +273,69 @@ class PWElementConfirmationVip extends PWElements {
             <div class="pwe-conf-vip__form">
                 [gravityform id="'. $conf_vip_form .'" title="false" description="false" ajax="false"]               
             </div>
-        </div>
+        </div>';
+
+        if (class_exists('GFAPI')) {
+            $all_forms = GFAPI::get_forms();
+            
+            foreach($all_forms as $single_form) {
+                if (stripos($single_form['title'], 'potencjalny wystawca') !== false) {
+                    foreach($single_form['fields'] as $single_field){
+
+                        $label = strtolower($single_field['label']);
+
+                        switch (true) {
+
+                            case (stripos($label, 'nazwisk') !== false || stripos($label, 'imie') !== false || stripos($label, 'imię') !== false || stripos($label, 'imiĘ') !== false || stripos($label, 'name') !== false) && stripos($label, 'id') === false:
+                                $input_name = $label;
+                                continue 2;
+
+                            case stripos($label, 'mail') !== false && stripos($label, 'id') === false:
+                                $input_email = $label;
+                                continue 2;
+
+                            case (stripos($label, 'tel') !== false || stripos($label, 'phone') !== false) && stripos($label, 'id') === false:
+                                $input_phone = $label;
+                                continue 2;
+
+                            case stripos($label, 'firma') !== false || stripos($label, 'company') !== false:
+                                $input_company = $label;
+                                continue 2;
+                            
+                            case stripos($label, 'kanał') !== false || stripos($label, 'kanal') !== false:
+                                $input_channel = $label;
+                                continue 2;
+
+                            case stripos($label, 'badge') !== false:
+                                $input_badge = $label;
+                                continue 2;
+                            
+                            case stripos($label, 'id') !== false && stripos($label, 'name') === false && stripos($label, 'mail') === false && stripos($label, 'phone') === false:
+                                $input_id = $label;
+                                continue 2;
+                            
+                            case stripos($label, 'idname') !== false:
+                                $input_idname = $label;
+                                continue 2;
+
+                            case stripos($label, 'idemail') !== false:
+                                $input_idemail = $label;
+                                continue 2;
+
+                            case stripos($label, 'idphone') !== false:
+                                $input_idphone = $label;
+                                continue 2;  
+                        }
+                    }
+                }  
+            }
+        }
         
+        $output .= '
         <script>
-            jQuery(document).ready(function() {
-                var url_string = window.location.href;
-                var url = new URL(url_string);
+            document.addEventListener("DOMContentLoaded", function () {
+                var urlString = window.location.href;
+                var url = new URL(urlString);
 
                 var getname = url.searchParams.get("getname");
                 var getphone = url.searchParams.get("getphone");
@@ -290,24 +347,64 @@ class PWElementConfirmationVip extends PWElements {
                 var kanal = url.searchParams.get("kanal");
 
                 let idmail = [];
+                if (getid) idmail = getid.split(",");
+
+                let inputName, inputEmail, inputPhone, inputCompany, inputChannel, inputBadge, inputID, inputIDname, inputIDemail, inputIDphone;
+
+                var fields = document.querySelectorAll("#pweConfVip .gfield");
+                fields.forEach(function(field) {
+                    var label = field.querySelector("label");
+                    if (label) {
+                        const labelText = label.textContent.toLowerCase().trim();
+                        
+                        inputName = (labelText && "'. $input_name .'" && labelText.includes("'. $input_name .'") && !labelText.includes("id")) ? field.querySelector("input") : inputName;
+                        inputEmail = (labelText && "'. $input_email .'" && labelText.includes("'. $input_email .'") && !labelText.includes("id")) ? field.querySelector("input") : inputEmail;
+                        inputPhone = (labelText && "'. $input_phone .'" && labelText.includes("'. $input_phone .'") && !labelText.includes("id")) ? field.querySelector("input") : inputPhone;
+                        inputCompany = (labelText && "'. $input_company .'" && labelText.includes("'. $input_company .'")) ? field.querySelector("input") : inputCompany;
+                        inputChannel = (labelText && "'. $input_channel .'" && labelText.includes("'. $input_channel .'")) ? field.querySelector("input") : inputChannel;
+                        inputBadge = (labelText && "'. $input_badge .'" && labelText.includes("'. $input_badge .'")) ? field.querySelector("input") : inputBadge;
+
+                        if (labelText && "'. $input_id .'" && labelText.includes("'. $input_id .'") && 
+                            !labelText.includes("name") && 
+                            !labelText.includes("email") && 
+                            !labelText.includes("phone")) {
+                            inputID = field.querySelector("input");
+                        }
+
+                        inputIDname = (labelText && "'. $input_idname .'" && labelText.includes("'. $input_idname .'")) ? field.querySelector("input") : inputIDname;
+                        inputIDemail = (labelText && "'. $input_idemail .'" && labelText.includes("'. $input_idemail .'")) ? field.querySelector("input") : inputIDemail;
+                        inputIDphone = (labelText && "'. $input_idphone .'" && labelText.includes("'. $input_idphone .'")) ? field.querySelector("input") : inputIDphone;
+                    }
+                });
+
+                const inputVipName = inputName || document.querySelector("#input_'. $form_id .'_1");
+                const inputVipPhone = inputPhone || document.querySelector("#input_'. $form_id .'_5");
+                const inputVipEmail = inputEmail || document.querySelector("#input_'. $form_id .'_4");
+                const inputVipBadge = inputBadge || document.querySelector("#input_'. $form_id .'_10");
+                const inputVipCompany = inputCompany || document.querySelector("#input_'. $form_id .'_11");
+                const inputVipChannel = inputChannel || document.querySelector("#input_'. $form_id .'_18");
+                const inputVipID = inputID || document.querySelector("#input_'. $form_id .'_9");
+                const inputVipIDname = inputIDname || document.querySelector("#input_'. $form_id .'_17");
+                const inputVipIDemail = inputIDemail || document.querySelector("#input_'. $form_id .'_13");
+                const inputVipIDphone = inputIDphone || document.querySelector("#input_'. $form_id .'_15");
+
+                if (inputVipName) inputVipName.value = getname;
+                if (inputVipEmail) inputVipEmail.value = getemail;
+                if (inputVipPhone) inputVipPhone.value = getphone;
+                if (inputVipCompany) inputVipCompany.value = firma;
+                if (inputVipChannel) inputVipChannel.value = kanal;
+                if (inputVipBadge) inputVipBadge.value = badge;
+                if (inputVipID) inputVipID.value = getid;
+                if (inputVipIDname && idmail.length > 1) inputVipIDname.value = idmail[1];
+                if (inputVipIDemail && idmail.length > 2) inputVipIDemail.value = idmail[2];
+                if (inputVipIDphone && idmail.length > 3) inputVipIDphone.value = idmail[3];
+
                 if (getid) {
-                    idmail = getid.split(",");
-                }
-
-                document.getElementById("input_'. $form_id .'_1").value = getname;
-                document.getElementById("input_'. $form_id .'_5").value = getphone;
-                document.getElementById("input_'. $form_id .'_4").value = getemail;
-                document.getElementById("input_'. $form_id .'_9").value = getid;
-                document.getElementById("input_'. $form_id .'_10").value = badge;
-                document.getElementById("input_'. $form_id .'_11").value = firma;
-                document.getElementById("input_'. $form_id .'_13").value = idmail[2];
-                document.getElementById("input_'. $form_id .'_15").value = idmail[3]
-                document.getElementById("input_'. $form_id .'_17").value = idmail[1];
-                document.getElementById("input_'. $form_id .'_18").value = kanal;
-
-                if(getid) {
-                    setTimeout(function(){
-                        jQuery("#gform_'. $form_id .'").trigger("submit",[true]);
+                    setTimeout(function() {
+                        var form = document.getElementById("gform_'. $form_id .'");
+                        if (form) {
+                            form.submit();
+                        } else console.log("Formularz został wysłany");
                     }, 200);
                 }
             });
@@ -316,3 +413,4 @@ class PWElementConfirmationVip extends PWElements {
         return $output;
     }
 }
+
