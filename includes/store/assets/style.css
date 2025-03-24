@@ -451,11 +451,22 @@
     margin: 0;
     color: #1a1a1a;
 }
-.pwe-store__service-card p {
+.pwe-store__service-card p,
+.pwe-store__service-card ul {
     font-size: 14px;
     line-height: 1.4;
     color: #666;
     margin-bottom: 18px;
+}
+.pwe-store__service-card ul {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.pwe-store__service-card li {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #666;
 }
 .pwe-store__service-footer {
     margin-top: auto;

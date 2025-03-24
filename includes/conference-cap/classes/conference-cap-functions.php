@@ -1,4 +1,3 @@
-
 <?php
 class PWEConferenceCapFunctions extends PWEConferenceCap{
 
@@ -30,10 +29,10 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
                 }
             }
         } else {
-            return false;
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
             }
+            return false;
         }
     
         // Check for connection errors
@@ -57,9 +56,22 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM conferences");
+
+
+        $domena = $_SERVER['HTTP_HOST'];
+        $lang = 'pl'; 
+
+        if (strpos($_SERVER['REQUEST_URI'], '/en/') !== false) {
+            $lang = 'en';
+        }
+
+        $results = $cap_db->get_results(
+            $cap_db->prepare(
+                "SELECT * FROM conferences WHERE conf_site_link LIKE %s AND RIGHT(conf_slug, 2) = %s",
+                '%' . $domena . '%',
+                $lang
+            )
+        );
     
         // SQL error checking
         if ($cap_db->last_error) {
@@ -72,24 +84,25 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
         return $results;
     }    
 
-    public static function findConferenceMode() {
-        return array(
-            'PWEConferenceCapFullMode' => [
-                'php' => 'classes/conference-cap-full-mode/conference-cap-full-mode.php',
-                'css' => 'classes/conference-cap-full-mode/conference-cap-full-mode-style.css',
-                'class' => 'PWEConferenceCapFullMode'
-            ],
-            'PWEConferenceCapSimpleMode' => [
+    public static function findConferenceMode($new_class) {
+
+        switch ($new_class){
+            case 'PWEConferenceCapSimpleMode' : 
+                return array (
                 'php' => 'classes/conference-cap-simple-mode/conference-cap-simple-mode.php',
                 'css' => 'classes/conference-cap-simple-mode/conference-cap-simple-mode-style.css',
-                'class' => 'PWEConferenceCapSimpleMode'
-            ],
-            'PWEConferenceCapMedalCeremony' => [
-                'php' => 'classes/conference-cap-medal-ceremony/conference-cap-medal-ceremony.php',
-                'css' => 'classes/conference-cap-medal-ceremony/conference-cap-medal-ceremony-style.css',
-                'class' => 'PWEConferenceCapMedalCeremony'
-            ],
-        );
+                );
+            case 'PWEConferenceCapMedalCeremony' : 
+                return array (
+                    'php' => 'classes/conference-cap-medal-ceremony/conference-cap-medal-ceremony.php',
+                    'css' => 'classes/conference-cap-medal-ceremony/conference-cap-medal-ceremony-style.css',
+                );
+            default :
+                return array (
+                    'php' => 'classes/conference-cap-full-mode/conference-cap-full-mode.php',
+                    'css' => 'classes/conference-cap-full-mode/conference-cap-full-mode-style.css',
+                );
+        };
     }
 
     public static function speakerImageMini($speaker_images) { 

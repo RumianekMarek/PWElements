@@ -319,8 +319,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Iterujemy po wszystkich elementach i sprawdzamy ich ID
             elements.forEach(element => {
-                // Jeśli ID elementu zawiera ID przycisku, dodajemy klasę 'active'
-                if (element.id.includes(buttonId)) {
+                const category = element.getAttribute('category');
+        
+                // Jeśli atrybut 'category' jest równy ID przycisku, dodajemy klasę 'active'
+                if (category === buttonId) {
                     element.classList.add('active');
                 }
             });

@@ -172,11 +172,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const inputFairDate = document.querySelector(".potential-exhibitors-input-fair-date input");
         const inputFairLang = document.querySelector(".potential-exhibitors-input-fair-lang input");
 
-        if (!inputFairName || !inputFairDomain || !inputFairDate || !inputFairLang) {
-            console.error("Brak wymaganych pól w formularzu");
-            return;
-        }
-
         const radioInputsLang = document.querySelectorAll(".pwe-registration-fairs-radio-buttons input");
         let lang = "pl-PL";
 
