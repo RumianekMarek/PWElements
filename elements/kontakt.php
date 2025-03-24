@@ -45,7 +45,6 @@ class PWElementContact extends PWElements {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
         $edition_1 = [
-            "mr.glasstec.pl" => "Agata",
             "tubetechnicpoland.com" => "Agata",
             "wiretechpoland.com" => "Agata",
             "maintenancepoland.com" => "Patrycja",
@@ -135,41 +134,35 @@ class PWElementContact extends PWElements {
         ];
         
         $edition_3 = [
+            "mr.glasstec.pl" => "",
             "warsawpack.pl" => "",
-            "industryweek.pl" => "",
-            "dentalmedicashow.pl" => "",
-            "boatshow.pl" => "",
-            "campercaravanshow.com" => "",
-            "bioexpo.pl" => "",
-            "warsawfoodexpo.pl" => "",
-            "fasttextile.com" => "",
-            "centralnetargirolnicze.com" => "",
-            "warsawmotorshow.com" => "",
-            "motorcycleshow.pl" => "",
-            "animalsdays.eu" => "",
             "mttsl.pl" => "",
-            "warsawgiftshow.com" => "",
             "warsawbusexpo.eu" => "",
-            "eurogastro.com.pl" => "",
-            "remadays.com" => "",
+            "warsawfoodexpo.pl" => "",
+            "dentalmedicashow.pl" => "",
+            "beautydays.pl" => "",
+            "bioexpo.pl" => "",
+            "boatshow.pl" => "",
+            "warsawhome.eu" => "",
             "warsawhomefurniture.com" => "",
-            "warsawbuild.eu" => "",
             "warsawhomekitchen.com" => "",
             "warsawhomelight.com" => "",
             "warsawhometextile.com" => "",
             "warsawhomebathroom.com" => "",
-            "ttwarsaw.pl" => "",
-            "fiwe.pl" => "",
-            "etradeshow.pl" => "",
-            "franczyzaexpo.pl" => "",
-            "worldhotel.pl" => "",
-            "beautydays.pl" => "",
+            "warsawbuild.eu" => "",
+            "industryweek.pl" => "",
+            "fasttextile.com" => "",
+            "centralnetargirolnicze.com" => "",
             "solarenergyexpo.com" => "",
-            "warsawhvacexpo.com" => "",
-            "foodtechexpo.pl" => "",
-            "automaticaexpo.com" => "",
-            "targirehabilitacja.pl" => ""
-        ];
+            "remadays.com" => "",
+            "franczyzaexpo.pl" => "",
+            "etradeshow.pl" => "",
+            "warsawgardenexpo.com" => "",
+            "warsawgiftshow.com" => "",
+            "eurogastro.com.pl" => "",
+            "worldhotel.pl" => "",
+            "warsawhvacexpo.com" => ""
+        ];        
 
         // Get domain address
         $current_url = $_SERVER['HTTP_HOST'];
@@ -178,18 +171,22 @@ class PWElementContact extends PWElements {
         if (array_key_exists($current_url, $edition_1)) {
             $edition_number = "edition_1";
             $service_mail = "biuro.podawcze1";
+            $media_mail = "media";
             $contact_name = strtolower($edition_1[$current_url]);
         } elseif (array_key_exists($current_url, $edition_2)) {
             $edition_number = "edition_2";
             $service_mail = "biuro.podawcze2";
+            $media_mail = "media";
             $contact_name = strtolower($edition_2[$current_url]);
         } elseif (array_key_exists($current_url, $edition_3)) {
             $edition_number = "edition_3";
             $service_mail = "biuro.podawcze3";
+            $media_mail = "media3";
             $contact_name = strtolower($edition_3[$current_url]);
         } else {
             $edition_number = "edition_1";
             $service_mail = "biuro.podawcze1";
+            $media_mail = "media";
             $contact_name = strtolower($edition_1[$current_url]);
         }
 
@@ -316,8 +313,8 @@ class PWElementContact extends PWElements {
                         <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                             <p>
                                 <b>'. self::languageChecker('Obsługa marketingowa i media', 'Marketing and media services').'</b>
-                                <a href="mailto:media@warsawexpo.eu">
-                                    <span>media</span><span>@warsawexpo.eu</span>
+                                <a href="mailto:'. $media_mail .'@warsawexpo.eu">
+                                    <span>'. $media_mail .'</span><span>@warsawexpo.eu</span>
                                 </a>
                             </p>
                         </div>
