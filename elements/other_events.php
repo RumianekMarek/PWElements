@@ -31,6 +31,7 @@ class PWElementOtherEvents extends PWElements {
                 'value' => array(
                     'Preset 1 (with descriptions)' => 'preset_1',
                     'Preset 2 (with names)' => 'preset_2',
+                    'Preset 3 (with background)' => 'preset_3',
                 ),
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -252,6 +253,66 @@ class PWElementOtherEvents extends PWElements {
                         }
                     }
                 </style>';
+            }else if ($other_events_preset == 'preset_3') {
+                $slides_to_show = 4;
+
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item {
+                        padding: 16px;
+                        box-shadow: 2px 2px 5px #cccccc;
+                        border-radius: 18px;
+                        transition: .3s ease;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-logo {
+                        height: 180px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-logo img{
+                        object-fit: cover;
+                        height: 160px;
+                        border-radius: 12px;
+                        width: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-text {
+                        text-align: left;
+                        font-weight: 600;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item a {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 18px;
+                        height: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item:hover {
+                        transform: scale(0.95);
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-text,
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-text p {
+                        font-weight: 500;
+                        text-align: left;
+                        margin: 0;
+                        text-transform: uppercase;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic {
+                        align-items: flex-start !important;
+                        text-align: left !important;
+                        justify-content: space-between;
+                        height: 60%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic-numbers-block {
+                        width: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic-numbers {
+                        padding: 4px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic-numbers:nth-child(odd){
+                        background: #F4F4F4;
+                    }
+                    .pwelement_'. self::$rnd_id .' .slick-track {
+                        display: flex !important;
+                        align-items: stretch;
+                    }
+                </style>';
             } else {
                 $slides_to_show = 4;
 
@@ -299,7 +360,31 @@ class PWElementOtherEvents extends PWElements {
                         if (strpos($other_events_domain, $current_domain) === false) {
                             $output .= '
                                 <div class="pwe-other-events__item" style="'. $other_events_style .'">
-                                    <a href="https://'. $other_events_domain .''. PWECommonFunctions::languageChecker('/', '/en/') .'" target="_blank">
+                                    <a href="https://'. $other_events_domain .''. PWECommonFunctions::languageChecker('/', '/en/') .'" target="_blank">';
+                                    if ($other_events_preset == 'preset_3') {
+                                        $output .= '
+                                        <div class="pwe-other-events__item-logo">
+                                            <img data-no-lazy="1" src="https://'. $other_events_domain .'/doc/kafelek.jpg"/>
+                                            </div>
+                                            <div class="pwe-other-events__item-statistic">
+                                            <div class="pwe-other-events__item-text">'. $other_events_text_content .'</div>
+                                            <div class="pwe-other-events__item-statistic-numbers-block">
+                                                <div class="pwe-other-events__item-statistic-numbers">
+                                                    <div class="pwe-other-events__item-statistic-number">[pwe_visitors domain="'. $other_events_domain .'"]</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('odwiedzających', 'visitors') .'</div>
+                                                </div>
+                                                <div class="pwe-other-events__item-statistic-numbers">
+                                                    <div class="pwe-other-events__item-statistic-number">[pwe_exhibitors domain="'. $other_events_domain .'"]</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('wystawców', 'exhibitors') .'</div>
+                                                </div>
+                                                <div class="pwe-other-events__item-statistic-numbers">
+                                                    <div class="pwe-other-events__item-statistic-number">[pwe_area domain="'. $other_events_domain .'"] m2</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('powierzchni<br>wystawienniczej', 'exhibition space') .'</div>
+                                                </div>
+                                            </div>
+                                        </div>';
+                                    }else {
+                                        $output .= '
                                         <div class="pwe-other-events__item-statistic">
                                             <div class="pwe-other-events__item-logo">
                                                 <img data-no-lazy="1" src="https://'. $other_events_domain .'/doc/logo-color.webp"/>
@@ -319,7 +404,9 @@ class PWElementOtherEvents extends PWElements {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="pwe-other-events__item-text">'. $other_events_text_content .'</div>
+                                        <div class="pwe-other-events__item-text">'. $other_events_text_content .'</div>';
+                                    }
+                                    $output .= '
                                     </a>
                                 </div>
                             ';

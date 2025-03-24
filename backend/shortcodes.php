@@ -21,7 +21,7 @@ function get_fair_data($specific_domain = null) {
     
                 $domain = $fair->fair_domain;
     
-                $fairs_data["fairs"][$domain] = [
+                $fairs_data["fairs"][$domain] = [ 
                     "domain" => $domain,
                     "date_start" => $fair->fair_date_start ?? "",
                     "date_start_hour" => $fair->fair_date_start_hour ?? "",
@@ -47,7 +47,8 @@ function get_fair_data($specific_domain = null) {
                     "instagram" => $fair->fair_instagram ?? "",
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->fair_badge ?? ""
+                    "badge" => $fair->fair_badge ?? "",
+                    "catalog" => $fair->fair_kw ?? ""
                 ];
             }
         } else {
@@ -138,7 +139,8 @@ function register_dynamic_shortcodes() {
         'pwe_facebook' => 'facebook',
         'pwe_instagram' => 'instagram',
         'pwe_linkedin' => 'linkedin',
-        'pwe_youtube' => 'youtube'
+        'pwe_youtube' => 'youtube',
+        'pwe_catalog' => 'catalog'
     ];
 
     // Shortcode handling function

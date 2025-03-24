@@ -108,8 +108,7 @@ class PWElementStepTwoExhibitor extends PWElements {
 
         $userSessionEmail = $_SESSION["pwe_reg_entry"]["email"]  ?? null;
         $userSessionPhone = $_SESSION["pwe_reg_entry"]["phone"] ?? null;
-
-
+        // var_dump($_SESSION);
 
         $directUrl = $_SESSION['pwe_exhibitor_entry']['current_url'];
 
@@ -131,6 +130,8 @@ class PWElementStepTwoExhibitor extends PWElements {
                 'tax' => 'NIP',
                 'company_desc' => 'Dodatkowe informacje o firmie',
                 'consent' => '* pola oznaczone gwiazdką są obowiązkowe',
+                'from' => 'od',
+                'to' => 'do',
             ],
             'en' => [
                 'name' => 'Name',
@@ -141,6 +142,8 @@ class PWElementStepTwoExhibitor extends PWElements {
                 'tax' => 'TAX ID',
                 'company_desc' => 'Additional information about the company',
                 'consent' => '* fields marked with an asterisk are required',
+                'from' => 'from',
+                'to' => 'to',
             ]
         ];
 
@@ -188,6 +191,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     display: flex;
                     flex-direction: column;
                     // gap: 18px;
+                    padding:0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' .form form label{
                     text-align: left;
@@ -197,7 +201,8 @@ class PWElementStepTwoExhibitor extends PWElements {
                     color: black;
                 }
                 .pwelement_'. self::$rnd_id .' .form form :is(input:not([type="checkbox"]), textarea) {
-                    // margin-bottom: 18px;
+                    margin-top: 4px !important;
+                    margin-bottom:0px !important;
                     width: 100%;
                     border-radius: 10px;
                     box-shadow: none !important;
@@ -337,8 +342,12 @@ class PWElementStepTwoExhibitor extends PWElements {
                     font-size: 14px !important;
                     font-weight: 700;
                 }
+                .pwelement_'. self::$rnd_id .'  .gform_wrapper  .gfield_consent_label {
+                    font-size: 12px !important;
+                }
                 .pwelement_'. self::$rnd_id .' .gform_legacy_markup_wrapper ul li.gfield {
-                    margin-top:0 !importantl
+                    margin-top:5px !important;
+
                 }
                 .pwelement_'. self::$rnd_id .' .gform_wrapper .ginput_container_consent  :is(label, legend) {
                     font-weight: 500;
@@ -360,7 +369,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     margin-bottom: 18px;
                     margin-top: 9px !important;
                 }
-                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"] {
+                .pwelement_'. self::$rnd_id .' .form form .input-range-container input[type="range"] {
                     -webkit-appearance: none;
                     -moz-appearance: none;
                     appearance: none;
@@ -374,7 +383,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     background-color: transparent;
                     pointer-events: none;
                     border:0px !important;
-                    margin-bottom:18px;
+                    margin-bottom:18px !important;
                 }
                 .pwelement_'. self::$rnd_id .' .input-range-container .input-range-track {
                     width: 100%;
@@ -470,6 +479,10 @@ class PWElementStepTwoExhibitor extends PWElements {
                     text-align: center;
                     background: white;
                     font-weight: 600;
+                }
+                .pwelement_'. self::$rnd_id .' textarea {
+                    padding: 9px 8px !important;
+                    height: 45px  !important;
                 }
                 @media (min-width:650px) and (max-width:1080px){
                     .pwelement_'. self::$rnd_id .' .form-right {
@@ -700,20 +713,20 @@ class PWElementStepTwoExhibitor extends PWElements {
                 const formEmail = form.querySelector(".input-area");
 
                 document.addEventListener("DOMContentLoaded", function() {
-                    let gformFields = document.querySelector(".gform_fields"); // Znajdź kontener pól formularza
+                    let gformFields = document.querySelector(".gform_fields");
                     if (gformFields) {
-                        let newParagraph = document.createElement("p"); // Stwórz nowy element <p>
+                        let newParagraph = document.createElement("p");
                         newParagraph.style.fontWeight = "500";
                         newParagraph.style.marginTop = "5px";
                         newParagraph.style.fontSize = "12px";
-                        newParagraph.innerHTML = "'. $t['consent'] .'"; // Wstaw dynamiczny tekst
+                        newParagraph.innerHTML = "'. $t['consent'] .'";
 
-                        gformFields.appendChild(newParagraph); // Dodaj jako ostatni element
+                        gformFields.appendChild(newParagraph);
                     }
 
 
                     jQuery(document).ready(function($){
-
+                        const buttonSubmit = document.querySelector(".pwelement_'. self::$rnd_id .' .gform_footer input[type=submit]");
                         let userArea = localStorage.getItem("user_area");
                         if (userArea && userArea.trim() !== "") {
                             $(".con-area").hide();
@@ -725,16 +738,16 @@ class PWElementStepTwoExhibitor extends PWElements {
                             let userDirection = localStorage.getItem("user_direction");
 
                             if (userEmail) {
-                                $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
                             }
                             if (userTel) {
-                                $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
                             }
                             if (userArea) {
                                 $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);
                             }
 
-                            $(".pwelement_'. self::$rnd_id .' form").submit();
+                            buttonSubmit.click();
                         });
 
 
@@ -768,12 +781,12 @@ class PWElementStepTwoExhibitor extends PWElements {
                             <input type="range" min="16" max="100" value="36" id="inputRange2" oninput="slideTwo()">
                         </div>
                         <div class="input-range-values">
-                            <span class="input-range-value-label">od</span>
+                            <span class="input-range-value-label">'.$t['from'].'</span>
                             <div class="input-container">
                                 <input type="number" min="0" max="999" value="16" id="inputRangeValue1" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
                                 <span class="unit-label">m²</span>
                             </div>
-                            <span class="input-range-value-label">do</span>
+                            <span class="input-range-value-label">'.$t['to'].'</span>
                             <div class="input-container">
                                 <input type="number" min="0" max="999" value="36" id="inputRangeValue2" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
                                 <span class="unit-label">m²</span>
@@ -799,12 +812,13 @@ class PWElementStepTwoExhibitor extends PWElements {
                 let sliderTwo = document.getElementById("inputRange2");
                 let displayValOne = document.getElementById("inputRangeValue1");
                 let displayValTwo = document.getElementById("inputRangeValue2");
-                let minGap = 0;
+                let minGap = 1;
                 let sliderTrack = document.querySelector(".input-range-track");
-                let sliderMaxValue = sliderOne.max;
+                let sliderMaxValue = parseInt(sliderOne.max);
+                let sliderMinValue = parseInt(sliderOne.min);
 
                 function slideOne() {
-                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) < minGap) {
                         sliderOne.value = parseInt(sliderTwo.value) - minGap;
                     }
                     displayValOne.value = sliderOne.value;
@@ -813,7 +827,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                 }
 
                 function slideTwo() {
-                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) < minGap) {
                         sliderTwo.value = parseInt(sliderOne.value) + minGap;
                     }
                     displayValTwo.value = sliderTwo.value;
@@ -822,9 +836,9 @@ class PWElementStepTwoExhibitor extends PWElements {
                 }
 
                 function fillColor() {
-                    let percent1 = ((sliderOne.value - sliderOne.min) / (sliderMaxValue - sliderOne.min)) * 100;
-                    let percent2 = ((sliderTwo.value - sliderTwo.min) / (sliderMaxValue - sliderTwo.min)) * 100;
-                    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , '. self::$accent_color .' ${percent1}% , '. self::$accent_color .' ${percent2}%, #dadae5 ${percent2}%)`;
+                    let percent1 = ((sliderOne.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
+                    let percent2 = ((sliderTwo.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
+                    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}%, #007bff ${percent1}%, #007bff ${percent2}%, #dadae5 ${percent2}%)`;
                 }
 
                 function updateArea() {
@@ -837,6 +851,32 @@ class PWElementStepTwoExhibitor extends PWElements {
                         }
                     }
                 }
+
+                displayValOne.addEventListener("input", function () {
+                    let val = parseInt(displayValOne.value);
+                    if (val < sliderMinValue) val = sliderMinValue;
+                    if (val > parseInt(sliderTwo.value) - minGap) val = parseInt(sliderTwo.value) - minGap;
+                    sliderOne.value = val;
+                    slideOne();
+                });
+
+                displayValTwo.addEventListener("input", function () {
+                    let val = parseInt(displayValTwo.value);
+                    if (val > sliderMaxValue) val = sliderMaxValue;
+                    if (val < parseInt(sliderOne.value) + minGap) val = parseInt(sliderOne.value) + minGap;
+                    sliderTwo.value = val;
+                    slideTwo();
+                });
+
+                function preventTyping(event) {
+                    if (event.key !== "ArrowUp" && event.key !== "ArrowDown" && event.key !== "Tab") {
+                        event.preventDefault();
+                    }
+                }
+
+                displayValOne.addEventListener("keydown", preventTyping);
+                displayValTwo.addEventListener("keydown", preventTyping);
+
             </script>';}
         return $output;
     }

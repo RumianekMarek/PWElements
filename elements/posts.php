@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementPosts
@@ -112,6 +112,18 @@ class PWElementPosts extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
+                'heading' => __('Box model', 'pwelement'),
+                'param_name' => 'posts_box_model',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                  'element' => 'posts_modes',
+                  'value' => 'posts_slider_mode',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
                 'heading' => __('Display all categories (<= 5 posts)', 'pwelement'),
                 'param_name' => 'posts_all_cat',
                 'save_always' => true,
@@ -153,7 +165,7 @@ class PWElementPosts extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -176,7 +188,9 @@ class PWElementPosts extends PWElements {
             'posts_all_cat' => '',
             'posts_all' => '',
             'posts_full_width' => '',
-        ), $atts )); 
+            'posts_box_model' => '',
+        ), $atts ));
+
 
         $trade_end = do_shortcode('[trade_fair_enddata]');
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
@@ -191,13 +205,13 @@ class PWElementPosts extends PWElements {
             $posts_link = ($posts_link == "") ? "/en/news/" : $posts_link;
             $posts_text = "See all";
         }
-        
+
         if ($posts_modes == "posts_slider_mode") {
             $posts_ratio = ($posts_ratio == "") ? "1/1" : $posts_ratio;
         } else {
             $posts_ratio = ($posts_ratio == "") ? "21/9" : $posts_ratio;
         }
-        
+
         $output = '';
         $output .= '
         <style>
@@ -224,7 +238,6 @@ class PWElementPosts extends PWElements {
         </style>';
 
         if ($posts_modes == "posts_slider_mode") {
-            
             $output .= '
             <style>
                 .row-parent:has(.pwelement_'.self::$rnd_id.' .pwe-container-posts) {
@@ -232,10 +245,10 @@ class PWElementPosts extends PWElements {
                     padding: 0 !important;
                 }
                 .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
-                    max-width: 1200px; 
-                    margin: 0 auto; 
-                    padding: 36px;  
-                } 
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 36px;
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-posts {
                     opacity: 0;
                 }
@@ -261,22 +274,42 @@ class PWElementPosts extends PWElements {
                 }
                 @media (max-width: 1128px) {
                     .pwelement_'.self::$rnd_id.' .pwe-posts-wrapper {
-                        padding: 36px;  
-                    } 
+                        padding: 36px;
+                    }
                 }
                 @media (max-width: 650px) {
                     .pwelement_'. self::$rnd_id .' .pwe-posts .slides {
                         gap: 18px;
-                    } 
+                    }
                 }
             </style>';
+            if($posts_box_model){
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-post {
+                        border:1px solid rgba(235, 235, 235, 1);
+                        padding:16px;
+                        border-radius:12px;
+                        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+                    }
+                    .pwelement_'. self::$rnd_id .'  .slick-track {
+                        display: flex !important;
+                        align-items: stretch;
+                    }
 
+                    .pwelement_'. self::$rnd_id .'  .slick-slide  {
+                        display: flex;
+                        align-items: center; /* Opcjonalnie, jeśli chcesz wyśrodkować zawartość */
+                    }
+                </style>
+                ';
+            }
             // Display all categories across the full width of the page
             if ($posts_full_width === 'true' && $mobile != 1) {
                 $output .= '
                 <style>
                     .pwelement_'. self::$rnd_id .' .pwe-posts-wrapper {
-                        max-width: 100% !important;  
+                        max-width: 100% !important;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-posts-title {
                         max-width: 1200px;
@@ -288,8 +321,9 @@ class PWElementPosts extends PWElements {
                             padding-left: 0;
                         }
                     }
-                </style>'; 
-            }   
+                </style>';
+            }
+
         } else {
             if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode") {
                 $output .= '
@@ -312,7 +346,7 @@ class PWElementPosts extends PWElements {
                     }
                 </style>';
             }
-            $output .= ' 
+            $output .= '
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-post {
                     display: flex;
@@ -328,7 +362,7 @@ class PWElementPosts extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post:hover {
                     transform: scale(1.05);
-                }   
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-post-title {
                     font-weight: 600;
                 }
@@ -344,7 +378,7 @@ class PWElementPosts extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post:hover .pwe-post-thumbnail .image-container  {
                     transform: scale(1.05);
-                }  
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-post-date {
                     position: absolute;
                     bottom: 10px;
@@ -375,7 +409,7 @@ class PWElementPosts extends PWElements {
                     height: 50%;
                     z-index: 2;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-post-title, 
+                .pwelement_'. self::$rnd_id .' .pwe-post-title,
                 .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
                     text-align: left;
                     color: #222;
@@ -399,7 +433,7 @@ class PWElementPosts extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-btn:hover  {
                     background-color: '. $darker_main2_color .';
-                } 
+                }
 
                 .pwelement_'. self::$rnd_id .' .load-more-btn-container {
                     margin: 36px auto;
@@ -415,26 +449,26 @@ class PWElementPosts extends PWElements {
                 }
                 @media (max-width: 960px) {
                     .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
-                        font-size: 14px;  
-                    }    
+                        font-size: 14px;
+                    }
                 }
-            </style>'; 
+            </style>';
         }
 
         $output .= '<div id="pwePosts" class="pwe-container-posts">
-                        
-            <div class="pwe-posts-wrapper">'; 
+
+            <div class="pwe-posts-wrapper">';
 
                 if ($posts_modes == "posts_slider_mode") {
 
                     $posts_count = ($posts_count == "") ? 5 : $posts_count;
-                
+
                     $output .= '
                     <div class="pwe-posts-title main-heading-text">
                         <h4 class="pwe-uppercase"><span>' . $posts_title . '</span></h4>
-                    </div>  
+                    </div>
                     <div class="pwe-posts pwe-slides">';
-            
+
                     $all_categories = get_categories(array('hide_empty' => true));
 
                     if (!empty($posts_category) && term_exists($posts_category, 'category')) {
@@ -447,15 +481,15 @@ class PWElementPosts extends PWElements {
                             // Checks if the category name contains the word 'news'
                             if (strpos(strtolower($category->name), 'news') !== false) {
                                 // Use slug instead of category name
-                                $category_names[] = $category->slug; 
+                                $category_names[] = $category->slug;
                             }
                         }
 
-                        $category_name = implode(', ', $category_names); 
-                    }  
-        
+                        $category_name = implode(', ', $category_names);
+                    }
+
                     $max_posts = ($posts_all !== 'true') ? min($posts_count, 18) : -1;
-        
+
                     $args = array(
                         'posts_per_page' => $max_posts,
                         'orderby' => 'date',
@@ -478,7 +512,7 @@ class PWElementPosts extends PWElements {
                             $post_image_urls[] = array(
                                 "img" => $image,
                                 "link" => $link,
-                                "title" => $title 
+                                "title" => $title
                             );
 
                             if (!empty($image) && !empty($link) && !empty($title)){
@@ -486,18 +520,18 @@ class PWElementPosts extends PWElements {
                                 <a class="pwe-post" href="'. $link .'">
                                         <div class="pwe-post-thumbnail">
                                             <div class="image-container" style="background-image:url('. $image .');"></div>
-                                        </div> 
-                                        <h5 class="pwe-post-title">'. $title .'</h5>
-                                </a>';
-                            }    
+                                        </div>
+                                        <h5 class="pwe-post-title">'. $title .'</h5>';
+                                $output .= '</a>';
+                            }
                         endwhile;
                     }
-        
+
                     wp_reset_postdata();
-            
+
                     $output .= '</div>
 
-                    <span class="pwe-opinions__arrow pwe-opinions__arrow-prev pwe-arrow pwe-arrow-prev">‹</span> 
+                    <span class="pwe-opinions__arrow pwe-opinions__arrow-prev pwe-arrow pwe-arrow-prev">‹</span>
                     <span class="pwe-opinions__arrow pwe-opinions__arrow-next pwe-arrow pwe-arrow-next">›</span>';
 
                     $posts_to_show = (!empty($posts_to_show)) ? $posts_to_show : 3;
@@ -525,7 +559,7 @@ class PWElementPosts extends PWElements {
                         $max_posts = $posts_count;
                     } else if ($posts_modes == "posts_full_newest_slider_mode") {
                         $posts_count = ($posts_count == "") ? 10 : $posts_count;
-                        $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;  
+                        $max_posts = ($posts_all !== 'true') ? min($posts_count, 10) : -1;
                     }
 
                     $all_categories = get_categories(array('hide_empty' => true));
@@ -540,12 +574,12 @@ class PWElementPosts extends PWElements {
                             // Checks if the category name contains the word 'news'
                             if (strpos(strtolower($category->name), 'news') !== false) {
                                 // Use slug instead of category name
-                                $category_names[] = $category->slug; 
+                                $category_names[] = $category->slug;
                             }
                         }
 
-                        $category_name = implode(', ', $category_names); 
-                    }      
+                        $category_name = implode(', ', $category_names);
+                    }
 
                     $args = array(
                         'posts_per_page' => $max_posts,
@@ -556,7 +590,7 @@ class PWElementPosts extends PWElements {
                     );
 
                     $query = new WP_Query($args);
-                    
+
                     $posts_displayed = $query->post_count;
 
                     $post_image_urls = array();
@@ -567,31 +601,31 @@ class PWElementPosts extends PWElements {
 
                             // Get post content
                             $post_content = get_post_field('post_content', $post_id);
-                    
+
                             // Extract content inside [vc_column_text] shortcode
                             preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches);
                             $vc_content = isset($matches[1]) ? $matches[1] : '';
-                    
+
                             // Remove HTML
                             $vc_content = wp_strip_all_tags($vc_content);
-                    
+
                             // Check if the content is not empty
                             if (!empty($vc_content)) {
                                 // Split content into words
                                 $words = explode(' ', $vc_content);
-                    
+
                                 // Extract the first $word_count words
                                 $excerpt = array_slice($words, 0, $word_count);
-                    
+
                                 // Combine words into one string
                                 $excerpt = implode(' ', $excerpt);
-                    
+
                                 // Add an ellipsis at the end
                                 $excerpt .= '...';
                             } else {
                                 $excerpt = '';
                             }
-                    
+
                             $link = get_permalink();
                             $image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '';
                             $title = get_the_title();
@@ -605,7 +639,7 @@ class PWElementPosts extends PWElements {
                             // Format the date
                             $date_obj = new DateTime($date);
                             $formatted_date = $date_obj->format('d M'); // Format as DD Mmm
-                            
+
                             if (get_locale() == 'pl_PL') {
                                 // Convert month abbreviations to Polish
                                 $formatted_date = str_replace(
@@ -614,7 +648,7 @@ class PWElementPosts extends PWElements {
                                     $formatted_date
                                 );
                             }
-                    
+
                             $post_image_urls[] = array(
                                 "img" => $image,
                                 "link" => $link,
@@ -622,23 +656,23 @@ class PWElementPosts extends PWElements {
                                 "excerpt" => $excerpt,
                                 "date" => $formatted_date
                             );
-            
+
                             if (!empty($image) && !empty($link) && !empty($title)){
                                 $output .= '
                                 <a class="pwe-post" href="'. $link .'">
                                     <div class="pwe-post-thumbnail">
                                         <div class="image-container" style="background-image:url('. $image .');"></div>
                                         <p class="pwe-post-date">'. $formatted_date .'</p>
-                                    </div> 
+                                    </div>
                                     <h5 class="pwe-post-title">'. $title .'</h5>
                                     <p class="pwe-post-excerpt">'. $excerpt .'</p>
                                     <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
                                 </a>';
                             }
-                    
+
                         endwhile;
                     }
-                    
+
                     wp_reset_postdata();
 
                     $output .= '</div>';
@@ -656,14 +690,14 @@ class PWElementPosts extends PWElements {
                             <button id="load-more-posts" class="pwe-btn" data-offset="18">' . self::languageChecker('Załaduj więcej','Load more') . '</button>
                         </div>';
                     }
-                    
+
                 }
-                
+
             $output .= '
             </div>
-                        
+
         </div>';
-        
+
         $output .= '
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -694,10 +728,10 @@ class PWElementPosts extends PWElements {
                                 const response = xhr.responseText;
                                 const container = document.querySelector(".pwe-posts");
                                 container.insertAdjacentHTML("beforeend", response);
-                                
+
                                 const newOffset = offset + 18;
                                 button.setAttribute("data-offset", newOffset);
-                                
+
                                 // Check if all posts have been loaded
                                 if (response.trim() === "") {
                                     button.remove();
