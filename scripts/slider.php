@@ -142,6 +142,9 @@ class PWESliderScripts {
 
             }
 
+            $center_mode = "";
+            $center_padding = "";
+
             if ($id == 'logotypes') { // logotypes_common.php <-------------------------------------------------------------<
                 $get_initial_slides_to_show = '
                 return  elementWidth < 400 ? '. $slides_to_show_3 .' :
@@ -157,6 +160,19 @@ class PWESliderScripts {
                         elementWidth < 1400 ? 4 :
                         slidesToShowSetting;
                 ';
+            } else if ($id == 'opinions-preset-4') { // opinions.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 600 ? 1 :
+                        elementWidth < 960 ? 1 :
+                        elementWidth < 1100 ? 1 :
+                        elementWidth < 1400 ? 1 :
+                        slidesToShowSetting;
+                ';
+
+                $center_mode = 'centerMode: true,';
+                $center_padding = 'centerPadding: slickSlider.width() < 960 ? "0px" : "100px"';
+
+
             } else if ($id == 'posts') { // posts.php <-------------------------------------------------------------<
                 $get_initial_slides_to_show = '
                 return  elementWidth < 400 ? 1 :
@@ -254,6 +270,8 @@ class PWESliderScripts {
                             dots: dotsEnabled,
                             cssEase: "linear",
                             swipeToSlide: true,
+                            '. $center_mode .'
+                            '. $center_padding .'
                         });
 
                         // Hide arrows if arrows are disabled

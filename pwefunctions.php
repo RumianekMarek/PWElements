@@ -78,7 +78,8 @@ class PWECommonFunctions {
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
                     "badge" => $fair->fair_badge ?? "",
-                    "catalog" => $fair->fair_kw ?? ""
+                    "catalog" => $fair->fair_kw ?? "",
+                    "shop" => $fair->fair_shop ?? ""
                 ];
             }
         } else {
