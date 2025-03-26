@@ -3,7 +3,7 @@
 * Class PWElementHalls
 * Extends PWElements class and defines a pwe Visual Composer element.
 */
-class PWElementHale extends PWElements { 
+class PWElementHale extends PWElements {
 
     /**
      * Constructor method.
@@ -41,6 +41,17 @@ class PWElementHale extends PWElements {
                     'value' => 'PWElementHale',
                 ),
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Show hall', 'pwelement'),
+                'param_name' => 'hall_show',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementHale',
+                ),
+            ),
         );
         return $element_output;
     }
@@ -50,9 +61,10 @@ class PWElementHale extends PWElements {
         extract( shortcode_atts( array(
             'hall_names' => '',
             'hall_image' => '',
+            'hall_show' => '',
         ), $atts ));
 
-        $hall_image_src = wp_get_attachment_url($hall_image); 
+        $hall_image_src = wp_get_attachment_url($hall_image);
 
         // Get current domain
         $current_domain = do_shortcode('[trade_fair_domainadress]');
@@ -78,7 +90,7 @@ class PWElementHale extends PWElements {
             // Checking if the date is in the range
             if ($date_start && $date_end) {
                 if (($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
-                    ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) {  
+                    ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) {
                     $fair_items_json[] = [
                         "domain" => $fair["domain"],
                         "halls" => $fair["hall"],
@@ -86,7 +98,7 @@ class PWElementHale extends PWElements {
                     ];
                 }
             }
-        } 
+        }
 
         $all_halls = '';
 
@@ -101,7 +113,7 @@ class PWElementHale extends PWElements {
                     "domain" => $item['domain']
                 ];
             }
-            
+
             if ($item['domain'] === $current_domain) {
                 foreach ($halls as $hall) {
                     $json_data_active[] = [
@@ -114,14 +126,14 @@ class PWElementHale extends PWElements {
                     if (!str_contains($all_halls, $clean_hall)) {
                         $all_halls .= $clean_hall . ', ';
                     }
-                }  
+                }
             }
         }
 
         $all_halls = rtrim($all_halls, ', ');
 
-        $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1) 
-            ? self::languageChecker('Hale', 'Halls') 
+        $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1)
+            ? self::languageChecker('Hale', 'Halls')
             : self::languageChecker('Hala', 'Hall');
 
 
@@ -130,10 +142,12 @@ class PWElementHale extends PWElements {
         $days_to_event = (($trade_fair_end_timestamp - $current_day_timestamp) / (60 * 60 * 24));
         $days_after_event = ($current_day_timestamp - $trade_fair_end_timestamp) / (60 * 60 * 24);
 
-        $less_1_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 30;
+        $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 60;
         $less_1_day_after = ($trade_fair_start_timestamp != false || !empty($trade_fair_end)) && $days_after_event > 0 && $days_after_event < 1;
 
-        if (!empty($all_halls) && ($less_1_month_before || $less_1_day_after)) {
+        // (!empty($all_halls) && ($less_2_month_before || $less_1_day_after) || $hall_show === true ) {
+
+        if ((!empty($all_halls) && ($less_2_month_before || $less_1_day_after)) || $hall_show ) {
             $output = '
             <style>
                 .pwe-halls {
@@ -163,7 +177,7 @@ class PWElementHale extends PWElements {
                     }
                     .pwe-halls__info {
                         width: 100%;
-                    }        
+                    }
                 }
 
             </style>
@@ -221,7 +235,7 @@ class PWElementHale extends PWElements {
                                     fill: transparent;
                                     opacity: .7;
                                 }
-                                
+
                                 .pwe-halls__element-logo image {
                                     width: 300px;
                                     height: 200px;
@@ -232,27 +246,27 @@ class PWElementHale extends PWElements {
                                 }
 
                                 #A .pwe-halls__element-logo,
-                                #B .pwe-halls__element-logo, 
-                                #C .pwe-halls__element-logo, 
+                                #B .pwe-halls__element-logo,
+                                #C .pwe-halls__element-logo,
                                 #D .pwe-halls__element-logo {
-                                    transform: rotateX(55deg) rotateZ(56deg); 
+                                    transform: rotateX(55deg) rotateZ(56deg);
                                 }
                                 #A .pwe-halls__element-favicon,
-                                #B .pwe-halls__element-favicon, 
-                                #C .pwe-halls__element-favicon, 
+                                #B .pwe-halls__element-favicon,
+                                #C .pwe-halls__element-favicon,
                                 #D .pwe-halls__element-favicon {
-                                    transform: rotateX(55deg) rotateZ(-30deg); 
+                                    transform: rotateX(55deg) rotateZ(-30deg);
                                 }
 
 
-                                #E .pwe-halls__element-logo, 
+                                #E .pwe-halls__element-logo,
                                 #F .pwe-halls__element-logo {
                                     transform: rotateX(56deg) rotateZ(-27deg);
                                 }
-                                #E .pwe-halls__element-favicon, 
+                                #E .pwe-halls__element-favicon,
                                 #F .pwe-halls__element-favicon {
-                                    transform: rotateX(55deg) rotateZ(-30deg); 
-                                } 
+                                    transform: rotateX(55deg) rotateZ(-30deg);
+                                }
 
                                 .st0 {
                                     fill: #42ab36;
@@ -1371,7 +1385,7 @@ class PWElementHale extends PWElements {
                             <path class="st29" d="M369.3,1007.2c-.6,0-1.7-.2-1.7-1.5v-37.5h3.9v37.5c0,1.3-1.4,1.6-2.2,1.5h0Z"/>
                             <path class="st66" d="M357.7,998.7c-.6,0-1.7-.2-1.7-1.5v-37.5h3.9v37.5c0,1.3-1.4,1.6-2.2,1.5h0Z"/>
                         </g>
-                        
+
                         <g id="tunel_A">
                             <path class="st24" d="M363.1,982.4l4.1-1.1,13.6-3.8c1.1-.3,1.8-1.3,1.8-2.4v-18.4l-18.3-1.7v23.5c0,2.8-1.3,3.9-1.3,3.9h0Z"/>
                             <path class="st71" d="M361.8,982.1l-10-8.3c-.9-.8-1.5-1.9-1.5-3.1v-20.1c.3-3,4.2-2.8,5.1-3.7l7,6.4c1.2,1.1,2,2.7,2,4.3v23.3c0,1.3-1.6,2.1-2.6,1.2h0Z"/>
@@ -1383,7 +1397,7 @@ class PWElementHale extends PWElements {
 
             $output .= '
             </div>
-           
+
             <script>
                 // Data passed from PHP
                 const allItems = '. json_encode($json_data_all) .';
@@ -1473,7 +1487,7 @@ class PWElementHale extends PWElements {
                         });
                     });
                 }
-                
+
                 addActiveClassToHalfObject();
 
                 const addActiveClassToQuarterObject = () => {
@@ -1510,7 +1524,7 @@ class PWElementHale extends PWElements {
                         }
                     });
                 }
-                
+
                 addActiveClassToQuarterObject();
 
                 const addLogoToFullObject = () => {
@@ -1590,8 +1604,8 @@ class PWElementHale extends PWElements {
                                                 logoElement.setAttribute("href", `https://${item1.domain}`);
                                                 logo.setAttribute("href", `https://${item1.domain}/doc/favicon-color.webp`);
                                             }
-                                        }); 
-                                        
+                                        });
+
                                         allItemsObject.push({
                                             id: combinedElement.id
                                         });
@@ -1601,7 +1615,7 @@ class PWElementHale extends PWElements {
                         });
                     });
                 }
-                
+
                 addLogoToHalfObject();
 
                 const addLogoToQuarterObject = () => {
@@ -1641,7 +1655,7 @@ class PWElementHale extends PWElements {
                         }
                     });
                 }
-                
+
                 addLogoToQuarterObject();
 
                 const filterCombinedIds = (items) => {
@@ -1701,10 +1715,10 @@ class PWElementHale extends PWElements {
                         });
                     }
                 }
-        
+
             </script>';
         } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
-    
+
         return $output;
     }
 }

@@ -561,7 +561,7 @@ class PWElementTwoCols extends PWElements {
               $logotypy = array_filter($logotypy);
 
               // Trim the array to 10 elements
-              $logotypy = array_slice($logotypy, 0, 10);
+              $logotypy = array_slice($logotypy, 0, 20);
           }
       }
 
@@ -687,7 +687,7 @@ class PWElementTwoCols extends PWElements {
         .'. $element_unique_id .' .logo-exhibitors div img {
           display:none;
         }
-        .'. $element_unique_id .' .logo-exhibitors div img:nth-child(-n+9) {
+        .'. $element_unique_id .' .logo-exhibitors div img {
           display: block;
           width: 30%;
           aspect-ratio: 3 / 2;
@@ -973,16 +973,18 @@ class PWElementTwoCols extends PWElements {
             }
 
             /* Wystawcy */
-            if($pwe_two_cols_show_exhibitors){
-              $output .= '
-              <div class="logo-exhibitors">
-                <h3>'. self::languageChecker('Wystawcy', 'Exhibitors') .'</h3>
-                <div class="logotypes-container pwe-container-logotypes">';
-                  foreach ($logotypy as $logo) {
+            if ($pwe_two_cols_show_exhibitors) {
+                $output .= '
+                <div class="logo-exhibitors">
+                    <h3>' . self::languageChecker('Wystawcy', 'Exhibitors') . '</h3>
+                    <div id="logotypes-container" class="logotypes-container pwe-container-logotypes" data-logos=\'' . json_encode($logotypy) . '\'>';
 
-                    $output .= '<img data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="Logo wystawcy">';
-                  }
-              $output .= '</div></div>';
+                // Tworzymy 9 pustych miejsc na logotypy
+                for ($i = 0; $i < 9; $i++) {
+                    $output .= '<img class="logo-placeholder" data-no-lazy="1"  alt="Logo wystawcy" style="visibility: hidden;">';
+                }
+
+                $output .= '</div></div>';
             }
 
             /* Medialni */
@@ -1044,6 +1046,36 @@ class PWElementTwoCols extends PWElements {
             </div></div>';
 
         };
+        if ($pwe_two_cols_show_exhibitors || $pwe_two_cols_show_mediapatrons) {
+          $output .= '
+          <script>
+          document.addEventListener("DOMContentLoaded", function () {
+                let container = document.getElementById("logotypes-container");
+                let placeholders = container.querySelectorAll(".logo-placeholder");
+                let logos = JSON.parse(container.getAttribute("data-logos"));
+
+                if (logos.length >= 9) {
+                    let randomIndexes = new Set();
+
+                    // Wylosowanie 9 unikalnych indeksów
+                    while (randomIndexes.size < 9) {
+                        let randomIndex = Math.floor(Math.random() * logos.length);
+                        randomIndexes.add(randomIndex);
+                    }
+
+                    let randomLogos = Array.from(randomIndexes).map(index => logos[index]);
+
+                    setTimeout(() => {
+                        placeholders.forEach((img, i) => {
+                            img.src = randomLogos[i];
+                            img.style.opacity = "1";
+                            img.style.visibility = "visible";
+                        });
+                    }, 10);
+                }
+            });
+          </script>';
+        }
       $output .= '
        </div></div>
 

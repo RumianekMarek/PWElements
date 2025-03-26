@@ -117,12 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Aktualizacja wartości pola tylko jeśli pole istnieje
             if ($field_id) {
-                $entry[$field_id] = $data[$key];
+                GFAPI::update_entry_field($entry_id, $field_id, $data[$key]);
             }
         }
     }
-
-    $result = GFAPI::update_entry($entry);
 
     if (is_wp_error($result)) {
         echo json_encode(["message" => "Błąd aktualizacji"]);
