@@ -1,5 +1,6 @@
 :root {
     --gold-color: #dbb960;
+    --gold-color-hover: #c6a857;
 }
 
 
@@ -30,7 +31,7 @@
 }
 #pweStore h3 {
     text-align: start;
-    font-size: 32px !important;
+    font-size: 24px !important;
     font-weight: bold;
     margin-top: 0 !important;
 }
@@ -205,53 +206,53 @@
 
 
 
-.pwe-store__sorting {
+.pwe-store__category {
     padding: 36px 18px;
 }
-.pwe-store__sorting-wrapper {
+.pwe-store__category-wrapper {
     display: flex;
     gap: 36px;
 }
-.pwe-store__sorting-text {
+.pwe-store__category-text {
     display: flex;
     align-items: center;
 }
-.pwe-store__sorting-text p {
+.pwe-store__category-text p {
     font-size: 18px;
     font-weight: 600;
 }
-.pwe-store__sorting-items {
+.pwe-store__category-items {
     display: flex;
     flex-wrap: wrap;
     gap: 18px;
 }
-.pwe-store__sorting-item {
+.pwe-store__category-item {
     padding: 18px;
     background: #fff;
     border-radius: 14px;
     cursor: pointer;
     transition: .3s ease;
 }
-.pwe-store__sorting-item:not(.active):hover {
+.pwe-store__category-item:not(.active):hover {
     background: #FAEEB5;
 }
-.pwe-store__sorting-item.active {
+.pwe-store__category-item.active {
     background: var(--gold-color);
 }
-.pwe-store__sorting-item p {
+.pwe-store__category-item p {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
 }
 @media (max-width: 768px) {
-    .pwe-store__sorting-wrapper {
+    .pwe-store__category-wrapper {
         flex-wrap: wrap;
         justify-content: center;
     }
-    .pwe-store__sorting-items {
+    .pwe-store__category-items {
         justify-content: center;
     }
-    .pwe-store__sorting-item {
+    .pwe-store__category-item {
         width: 100%;
         text-align: center;
     }
@@ -381,6 +382,9 @@
     text-decoration: none;
     transition: 0.3s ease;
 }
+.pwe-store__buy-button:hover {
+    background-color: var(--gold-color-hover);
+}
 .pwe-store__sold-out .pwe-store__buy-button {
     background: #999;
     pointer-events: none;
@@ -390,9 +394,6 @@
 .pwe-store__redirect-button {
     display: flex;
     align-items: center;
-}
-.pwe-store__buy-button:hover {
-    background-color: #b91c1c;
 }
 .pwe-store__more-button {
     background-color: white;
@@ -486,9 +487,6 @@
     padding-bottom: 18px;
     margin: 0;
 }
-.pwe-store__buy-button:hover {
-    background-color: #b91c1c;
-}
 
 @media (max-width: 768px) {
     .pwe-store__featured-image {
@@ -539,6 +537,24 @@
     gap: 18px;
     transition: .3s ease;
 }
+.pwe-store__fairs-arrow-back {
+    position: absolute;
+    background: black;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .3s ease;
+}
+.pwe-store__fairs-arrow-back:hover {
+    background: rgb(49, 49, 49);
+}
+.pwe-store__fairs-arrow-back span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: white;
+    padding: 20px;
+}
 .pwe-store__fairs-search {
     display: flex;
     flex-direction: column;
@@ -547,6 +563,7 @@
     margin: 0 auto;
 }
 .pwe-store__fairs-search h4 {
+    margin: 0;
     text-transform: uppercase;
 }
 .pwe-store__fairs-search input {

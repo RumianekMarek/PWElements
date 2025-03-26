@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = new URL(window.location);
             url.searchParams.set('featured-service', featuredId);
             window.history.pushState({}, '', url);
-
+            console.log(url);
             const categoryActive = document.querySelector('.pwe-store__section-hide:has(.pwe-store__featured-service.active)');
             categoryActive.style.display = "block";
 
@@ -203,16 +203,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Get domain address
-    const currentUrl = window.location.hostname;
+    const currentDomain = window.location.hostname;
 
     let editionNumber = "";
-    if (fairs_array.edition_1.includes(currentUrl)) {
+    if (fairs_array.edition_1.includes(currentDomain)) {
         editionNumber = "1";
-    } else if (fairs_array.edition_2.includes(currentUrl)) {
+    } else if (fairs_array.edition_2.includes(currentDomain)) {
         editionNumber = "2";
-    } else if (fairs_array.edition_3.includes(currentUrl)) {
+    } else if (fairs_array.edition_3.includes(currentDomain)) {
         editionNumber = "3";
-    } else if (fairs_array.edition_b2c.includes(currentUrl)) {
+    } else if (fairs_array.edition_b2c.includes(currentDomain)) {
         editionNumber = "b2c";
     } else {
         editionNumber = "other";
@@ -250,6 +250,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => {
                     fairsContainer.style.opacity = "1";
                 }, "500");
+
+                document.querySelector(".pwe-store__fairs-arrow-back").addEventListener("click", function () {
+                    // Hide pwe-store
+                    Array.from(pweStore.children).forEach(child => {
+                        child.style.display = "block";
+                    });
+
+                    fairsContainer.style.opacity = "0";
+                    setTimeout(() => {
+                        fairsContainer.style.display = "none";
+                    }, "500");
+                });
                 
                 // Listen for event in search box
                 const searchInput = document.querySelector(".pwe-store__fairs-search-input");
@@ -287,6 +299,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         window.location.replace(window.location.origin + window.location.pathname);
                     });
                 });
+
+                // Scroll to top of page
+                scrollToTop();
+
             } else {
                 const redirectUrl = `${baseUrl}?service=${encodeURIComponent(serviceName)}&domain=${encodeURIComponent(currentDomain)}&event=${encodeURIComponent(tradeFairName)}&edition=${encodeURIComponent(editionNumber)}`;
                 // Open new window
@@ -296,14 +312,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const sortingButtons = document.querySelectorAll(".pwe-store__sorting-item");
+    const sortingButtons = document.querySelectorAll(".pwe-store__category-item"); 
+    const currentUrl = new URL(window.location.href);
+    const categoryParam = currentUrl.searchParams.get("category");
+
     // Iterujemy po każdym przycisku i dodajemy nasłuchiwanie na kliknięcie
     sortingButtons.forEach(button => {
         button.addEventListener("click", function() {
-            // document.querySelector(".pwe-store__main-section").style.display = "none";
-
             // Pobieramy ID klikniętego przycisku
             const buttonId = this.id;
+
+            // Aktualizacja parametru kategorii
+            currentUrl.searchParams.set('category', buttonId);
+            window.history.pushState({}, '', currentUrl.toString());
 
             // Usuwamy klasę 'active' ze wszystkich przycisków
             sortingButtons.forEach(b => b.classList.remove('active'));
@@ -361,9 +382,30 @@ document.addEventListener('DOMContentLoaded', function() {
             hideCategoryHeader(mainSection, categoryHeaders);
 
             // Wywołanie funkcji
-            removeURLParams();
+            // removeURLParams();
         });
     });
+
+    // === Krok 1: Jeśli przycisk jest aktywny i URL nie zawiera category, dodaj go ===
+    const activeButton = Array.from(sortingButtons).find(btn => btn.classList.contains("active"));
+    if (activeButton && !categoryParam) {
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set("category", activeButton.id);
+        window.history.replaceState({}, '', newUrl.toString());
+    }
+
+    // === Krok 2: Jeśli URL ma category, ustaw aktywny przycisk i pokaż właściwą kategorię ===
+    if (categoryParam) {
+        sortingButtons.forEach(btn => {
+            btn.classList.remove("active");
+            if (btn.id === categoryParam) {
+                btn.classList.add("active");
+
+                // Symulujemy kliknięcie, by aktywować widok
+                btn.click();
+            }
+        });
+    }
 
     const arrowBack = document.querySelectorAll(".pwe-store__category-header-arrow");
     arrowBack.forEach(button => {

@@ -3,7 +3,7 @@
 $output .= '
 <!-- Post promocyjny -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="post-promocyjny">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="post-promocyjny">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Post promocyjny">
         </div>
@@ -14,7 +14,6 @@ $output .= '
                 <li>Grafika promocyjna zostanie opublikowana wraz z oznaczeniem firmy na Facebooku oraz Instagramie danego projektu targowego, w ustalonym terminie przed targami.</li>
                 <li>Możliwość przesłania 2-3 zdań od klienta, które mają się pojawić w publikacji.</li>
             </ul>
-            
             ':'
             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">PROMOTIONAL POST</h4>
             <ul>
@@ -36,7 +35,7 @@ $output .= '
 
 <!-- Udostępnienie publikacji klienta -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="udostepnienie-publikacji">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="udostepnienie-publikacji">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/udostepnienie-publikacji.webp" alt="Udostępnienie publikacji klienta">
         </div>
@@ -61,7 +60,7 @@ $output .= '
 
 <!-- 10 zdjęć stoiska -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="zdjecia-stoiska">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="zdjecia-stoiska">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/10x-zdjecia-stoiska.webp" alt="10 zdjęć stoiska">
         </div>
@@ -86,7 +85,7 @@ $output .= '
 
 <!-- Wideo promocyjne -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="wideo-promocyjne">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="wideo-promocyjne">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/wideo-promocyjne.webp" alt="Wideo promocyjne">
         </div>
@@ -119,7 +118,7 @@ $output .= '
 
 <!-- Relacja -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="relacja">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="relacja">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/relacja.webp" alt="Relacja">
         </div>
@@ -144,7 +143,7 @@ $output .= '
 
 <!-- Wywiad -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="wywiad">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="wywiad">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/wywiad.webp" alt="Wywiad">
         </div>
@@ -179,7 +178,7 @@ $output .= '
 
 <!-- Współtworzony post na instagranie -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="wspoltworzony-post">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="wspoltworzony-post">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/social-media/wspoltworzony-post.webp" alt="Współtworzony post na instagranie">
         </div>

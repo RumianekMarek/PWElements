@@ -2,8 +2,8 @@
 
 $output .= '
 <!-- Spersonalizowane Smyczki -->
-<div class="pwe-store__service-card pwe-store__service pwe-store__sold-out">
-    <a href="#" data-featured="smycze">
+<div class="pwe-store__service-card pwe-store__service">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="smycze">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/smycze-z-logotypem.webp" alt="Smycze z logotypem">
         </div>
@@ -28,8 +28,8 @@ $output .= '
 </div>
 
 <!-- Logotyp na Identyfikatorach -->
-<div class="pwe-store__service-card pwe-store__service pwe-store__limit">
-    <a href="#" data-featured="logotyp">
+<div class="pwe-store__service-card pwe-store__service">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="logotyp">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/logotyp-na-identyfikatorach.webp" alt="Logotyp na identyfikatorach">
         </div>
@@ -55,7 +55,7 @@ $output .= '
 
 <!-- Sponsor Planu Targowego -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="sponsor-planu">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="sponsor-planu">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/sponsor-planu-targowego.webp" alt="Sponsor Planu Targowego">
         </div>
@@ -81,7 +81,7 @@ $output .= '
 
 <!-- Partner VIP Room -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="vip-room">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="vip-room">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/partner-vip-room.webp" alt="Partner VIP Room">
         </div>
@@ -107,7 +107,7 @@ $output .= '
 
 <!-- Sponsor Restauracji -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="sponsor-restauracji">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="sponsor-restauracji">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/sponsor-resturacji.webp" alt="Sponsor Restauracji">
         </div>
@@ -133,7 +133,7 @@ $output .= '
 
 <!-- Sponsor of the Industry Evening -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="sponsor-wieczoru">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="sponsor-wieczoru">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/sponsor-gali.webp" alt="Sponsor Gali">
         </div>
@@ -159,7 +159,7 @@ $output .= '
 
 <!-- Bilet na Wieczór Branżowy -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="bilet-na-wieczor">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="bilet-na-wieczor">
         <div class="pwe-store__service-image">
             <img src="'. ( self::lang_pl() ? '/wp-content/plugins/PWElements/media/store/premium/bilet-na-gale.webp' : '/wp-content/plugins/PWElements/media/store/premium/bilet-na-gale-en.webp' ) .'" alt="Bilet na Wieczór Branżowy">
         </div>
@@ -185,7 +185,7 @@ $output .= '
 
 <!-- Bilet VIP GOLD -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="bilet-vip-gold">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="bilet-vip-gold">
         <div class="pwe-store__service-image">
             <img src="'. ( self::lang_pl() ? '/wp-content/plugins/PWElements/media/store/premium/bilet-vip-gold.webp' : '/wp-content/plugins/PWElements/media/store/premium/bilet-vip-gold-en.webp' ) .'" alt="VIP GOLD">
         </div>
@@ -211,7 +211,7 @@ $output .= '
 
 <!-- Sponsor Insertu Reklamowego -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="sponsor-wkladki-reklamowej">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="sponsor-wkladki-reklamowej">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/sponsor-wkladki.webp" alt="Wkładka Reklamowa">
         </div>
@@ -237,7 +237,7 @@ $output .= '
 
 <!-- Sekcja w Mailingu -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="sekcja-mailingu">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="sekcja-mailingu">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/sekcja-w-mailingu.webp" alt="Mailing">
         </div>
@@ -263,7 +263,7 @@ $output .= '
 
 <!-- Lokowanie w SMS -->
 <div class="pwe-store__service-card pwe-store__service">
-    <a href="#" data-featured="lokowanie-w-sms">
+    <a class="pwe-store__service-card-wrapper" href="#" data-featured="lokowanie-w-sms">
         <div class="pwe-store__service-image">
             <img src="/wp-content/plugins/PWElements/media/store/premium/lokowanie-sms.webp" alt="SMS Marketing">
         </div>

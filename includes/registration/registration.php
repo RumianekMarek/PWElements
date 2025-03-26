@@ -50,7 +50,8 @@ class PWERegistration extends PWECommonFunctions {
                             strpos($current_url, '/step2/') !== false;
 
         $is_registration_page = strpos($current_url, '/rejestracja/') !== false ||
-                                strpos($current_url, '/en/registration/') !== false;
+                                strpos($current_url, '/en/registration/') !== false ||
+                                strpos($current_url, '/registration/') !== false;
 
 
         if ($is_exhibitor_page) {

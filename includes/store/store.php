@@ -226,13 +226,107 @@ class PWEStore extends PWECommonFunctions {
         wp_enqueue_script('pwe-store-js', $js_file, array('jquery'), $js_version, true);
         wp_localize_script( 'pwe-store-js', 'store_js', $store_js_array );
     }
+
+    public function connectToDatabaseStore() {
+        // Initialize connection variables
+        $cap_db = null;
+        
+        // Set connection data depending on the server
+        if (isset($_SERVER['SERVER_ADDR'])) {
+            if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
+            } else {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
+                $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
+                $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+            }
+        }
+
+        // Check if there is complete data for connection
+        if ($database_user && $database_password && $database_name && $database_host) {
+            try {
+                $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+            } catch (Exception $e) {
+                return false;
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
+                }
+            }
+        } else {
+            return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Check for connection errors
+        if (!$cap_db->dbh || mysqli_connect_errno()) {
+            return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
+            }
+        }
+    
+        return $cap_db;
+    }
+    
+    public function getDatabaseDataStore() {
+        // Database connection
+        $cap_db = self::connectToDatabaseStore();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM shop");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
     
     /**
      * Output method for PWEStore shortcode.
      *
      * @return string
      */ 
-    public function PWEStoreOutput() {   
+    public function PWEStoreOutput() {  
+
+        $pwe_store_data = self::getDatabaseDataStore(); 
+        $pwe_store_data_json_encode = json_encode($pwe_store_data);
+
+        // echo '<pre>';
+        // var_dump($pwe_store_data);
+        // echo '</pre>';
+
+
+        $fairs_json = PWECommonFunctions::json_fairs();
+        $store_options = [];
+        foreach ($fairs_json as $fair) {
+            $store_options[] = array(
+                "domain" => $fair["domain"],
+                "options" => $fair["shop"]
+            );
+        }
+        $pwe_store_data_options_json_encode = json_encode($store_options);
+
+        // echo '<pre>';
+        // var_dump($store_options);
+        // echo '</pre>';
 
         $output = '
         <style>
@@ -244,7 +338,6 @@ class PWEStore extends PWECommonFunctions {
             .pwe-store__limit .pwe-store__service-image:before {
                 content: "'. (self::lang_pl() ? 'OGRANICZONY LIMIT' : 'LIMITED') .'";
             }
-
 
             .pwe-store__service-header {
                 background: #EDE4D5;
@@ -605,14 +698,14 @@ class PWEStore extends PWECommonFunctions {
 
             </div>
 
-            <div class="pwe-store__sorting">
-                <div class="pwe-store__sorting-wrapper">
-                    <div class="pwe-store__sorting-text"><p>SORTUJ:</p></div>
-                    <div class="pwe-store__sorting-items">
-                        <div id="premium" class="pwe-store__sorting-item active"><p>USŁUGI PREMIUM</p></div>
-                        <div id="marketing" class="pwe-store__sorting-item"><p>USŁUGI MARKETINGOWE</p></div>
-                        <div id="social-media" class="pwe-store__sorting-item"><p>USŁUGI SOCIAL MEDIA</p></div>
-                        <div id="packages" class="pwe-store__sorting-item"><p>PAKIETY</p></div>
+            <div class="pwe-store__category">
+                <div class="pwe-store__category-wrapper">
+                    <div class="pwe-store__category-text"><p>SORTUJ:</p></div>
+                    <div class="pwe-store__category-items">
+                        <div id="premium" class="pwe-store__category-item active"><p>USŁUGI PREMIUM</p></div>
+                        <div id="marketing" class="pwe-store__category-item"><p>USŁUGI MARKETINGOWE</p></div>
+                        <div id="social-media" class="pwe-store__category-item"><p>USŁUGI SOCIAL MEDIA</p></div>
+                        <!-- <div id="packages" class="pwe-store__category-item"><p>PAKIETY</p></div> -->
                     </div>
                 </div>
             </div>
@@ -719,6 +812,7 @@ class PWEStore extends PWECommonFunctions {
             </div>
 
             <div class="pwe-store__fairs">
+                <div class="pwe-store__fairs-arrow-back"><span>WRÓĆ</span></div>
                 <div class="pwe-store__fairs-search">
                     <h4>Wyszukaj wydarzenie albo wybierz z listy</h4>
                     <input class="pwe-store__fairs-search-input" type="text">
@@ -781,7 +875,60 @@ class PWEStore extends PWECommonFunctions {
                 </div>
             </div>
         </div>';
-    
+
+        $output .= '
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const domain = window.location.hostname;
+            const storeData = ' . $pwe_store_data_json_encode . ';
+            const storeDataOptions = ' . $pwe_store_data_options_json_encode . ';
+            
+            console.log(storeData);
+            console.log(storeDataOptions);
+
+            function updatePrice (containerEl, priceEl, product) {
+                if (containerEl && priceEl) {
+                    priceEl.innerHTML = product.prod_price_pl ? product.prod_price_pl : "'. ( self::lang_pl() ? 'Cena wkrótce': 'Price coming soon' ) .'";     
+                }
+            }
+
+            storeData.forEach(product => {
+                const productCardWrapper = document.querySelector(`.pwe-store__service-card-wrapper[data-featured="${product.prod_slug}"]`);
+                const priceCardElement = productCardWrapper.querySelector(".pwe-store__price");
+                const productDescContainer = document.querySelector(`#${product.prod_slug}`);
+                const priceDescElement = productDescContainer.querySelector(".pwe-store__featured-pwe-store__price");
+                
+                // updatePrice(productCardWrapper, priceCardElement, product);
+                // updatePrice(productDescContainer, priceDescElement, product);
+            });
+
+            function updateAvailabilityStatus(productSlug, productData) {
+                const cardWrapper = document.querySelector(`.pwe-store__service-card-wrapper[data-featured="${productSlug}"]`);
+                const descContainer = document.getElementById(productSlug);
+
+                if (productData.sold_out === true) {
+                    if (cardWrapper) cardWrapper.classList.add("pwe-store__sold-out");
+                    if (descContainer) descContainer.classList.add("pwe-store__sold-out");
+                } 
+                // else if (productData.limit === true) {
+                //     if (cardWrapper) cardWrapper.classList.add("pwe-store__limit");
+                //     if (descContainer) descContainer.classList.add("pwe-store__limit");
+                // }
+            }
+
+            storeDataOptions.forEach(fairOption => {
+                if (domain == fairOption.domain) {
+                    const options = JSON.parse(fairOption.options);
+                    if (options && typeof options === "object") {
+                        Object.entries(options).forEach(([productSlug, productData]) => {
+                            updateAvailabilityStatus(productSlug, productData);
+                        });
+                    }
+                }
+            });
+        });
+        </script>';
+
         $output = do_shortcode($output); 
         
         return $output;

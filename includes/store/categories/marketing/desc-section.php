@@ -73,8 +73,8 @@ $output .= '
             <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Udostępnienie przestrzeni na roll-up/winder">
         </div>
         <div class="pwe-store__featured-details">
-            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'HOSTESSA' : 'HOSTESS' ) .'</h3>
-            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'HOSTESSA' : 'HOSTESS' ) .'</span>
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'UDOSTĘPNIENIE PRZESTRZENI NA ROLL-UP / WINDER' : 'PROVIDING SPACE FOR ROLL-UP / WINDER' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'UDOSTĘPNIENIE PRZESTRZENI NA ROLL-UP / WINDER' : 'PROVIDING SPACE FOR ROLL-UP / WINDER' ) .'</span>
             <div class="pwe-store__featured-text">
             '. ( self::lang_pl() ? '
                 <p class="pwe-store__featured-description"><strong>Wyróżnij swoją markę na targach dzięki roll-upowi lub winderowi!</strong></p>
@@ -138,8 +138,8 @@ $output .= '
             <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Udostępnienie przestrzeni na roll-up/winder">
         </div>
         <div class="pwe-store__featured-details">
-            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'HOSTESSA' : 'HOSTESS' ) .'</h3>
-            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'HOSTESSA' : 'HOSTESS' ) .'</span>
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'ROLL-UP REKLAMOWY / WINDER' : 'ROLL-UP ADVERTISING / WINDER' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'ROLL-UP REKLAMOWY / WINDER' : 'ROLL-UP ADVERTISING / WINDER' ) .'</span>
             <div class="pwe-store__featured-text">
             '. ( self::lang_pl() ? '
                 <p class="pwe-store__featured-description"><strong>Wyróżnij swoją markę na targach dzięki roll-upowi lub winderowi!</strong></p>
@@ -601,6 +601,552 @@ $output .= '
             </div>
             <div class="pwe-store__featured-footer">
                 <span class="pwe-store__featured-pwe-store__price">4000 '. ( self::lang_pl() ? 'zł / 3 dni' : 'pln / 3 days' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mailing tworzony przez nas -->
+<div class="pwe-store__featured-service pwe-store__service" id="mailing-tworzony-przez-nas">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Mailing tworzony przez nas">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'MAILING TWORZONY PRZEZ NAS' : 'MAILING CREATED BY US' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'MAILING TWORZONY PRZEZ NAS' : 'MAILING CREATED BY US' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Dotrzyj do tysięcy potencjalnych klientów dzięki mailingowi targowemu!</strong></p>
+                <p class="pwe-store__featured-description">Zwiększ widoczność swojej marki i skutecznie promuj swoją ofertę wśród <strong>ponad 10 000 odwiedzających targi</strong> dzięki profesjonalnie przygotowanemu mailingowi. To doskonały sposób na <strong>bezpośrednią komunikację z grupą docelową</strong>, budowanie świadomości marki i zwiększenie liczby osób odwiedzających Twoje stoisko.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Profesjonalnie przygotowany mailing</strong> – nasz zespół stworzy atrakcyjną i skuteczną wiadomość e-mailową</li>
+                        <li><strong>Dotarcie do precyzyjnie dobranej grupy</strong> – wysyłka do bazy ok. 10 000 odwiedzających</li>
+                        <li><strong>Elastyczny termin wysyłki</strong> – dopasowany do Twoich potrzeb i strategii promocyjnej</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Bezpośredni kontakt z potencjalnymi klientami</strong> – Twoja wiadomość trafi bezpośrednio do skrzynek e-mailowych odwiedzających targi</li>
+                        <li><strong>Wysoka skuteczność</strong> – e-mail marketing to jedno z najefektywniejszych narzędzi promocyjnych</li>
+                        <li><strong>Zwiększona frekwencja na stoisku</strong> – skutecznie zachęcisz odbiorców do odwiedzenia Twojej przestrzeni wystawienniczej</li>
+                        <li><strong>Budowanie świadomości marki</strong> – Twoja oferta trafi do osób faktycznie zainteresowanych branżą</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>5000 zł</strong> – koszt obejmuje przygotowanie i wysyłkę mailingu do bazy ok. 10 000 odwiedzających</p>
+                <p><strong>Termin wysyłki do uzgodnienia</strong> – dopasujemy najlepszy czas na dotarcie do Twoich klientów</p>
+                <br>
+                <p><strong>Liczba kampanii ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Reach thousands of potential customers with trade fair mailing!</strong></p>
+                <p class="pwe-store__featured-description">Increase your brand visibility and effectively promote your offer to <strong>over 10,000 trade fair visitors</strong> with professionally prepared mailing. It`s a great way to <strong>communicate directly with your target group</strong>, build brand awareness and increase the number of people visiting your stand.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Professionally prepared mailing</strong> - our team will create an attractive and effective email message</li>
+                        <li><strong>Reaching a precisely selected group</strong> - sending to a database of approx. 10,000 visitors</li>
+                        <li><strong>Flexible shipping date</strong> - tailored to your needs and promotional strategy</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Direct contact with potential customers</strong> - your message will go directly to their inboxes e-mail visitors to the fair</li>
+                        <li><strong>High effectiveness</strong> – e-mail marketing is one of the most effective promotional tools</li>
+                        <li><strong>Increased attendance at the stand</strong> – you will effectively encourage recipients to visit your exhibition space</li>
+                        <li><strong>Building brand awareness</strong> – your offer will reach people who are actually interested in the industry</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>5000 PLN</strong> – the cost includes preparation and sending of the mailing to a database of approx. 10,000 visitors</p>
+                <p><strong>Sending date to be agreed</strong> – we will adjust the best time to reach your customers</p>
+                <br>
+                <p><strong>The number of campaigns is limited!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">5000 '. ( self::lang_pl() ? 'zł netto' : 'PLN net' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mailing tworzony przez klienta -->
+<div class="pwe-store__featured-service pwe-store__service" id="mailing-tworzony-przez-klienta">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Mailing tworzony przez klienta">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'MAILING TWORZONY PRZEZ KLIENTA' : 'CUSTOMERS-CREATED MAILING' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'MAILING TWORZONY PRZEZ KLIENTA' : 'CUSTOMERS-CREATED MAILING' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Wyślij swoją wiadomość do tysięcy odwiedzających targi!</strong></p>
+                <p class="pwe-store__featured-description">Masz gotowy mailing i chcesz dotrzeć do <strong>ponad 10 000 potencjalnych klientów?</strong> Skorzystaj z naszej bazy odwiedzających i wyślij swoją ofertę <strong>bezpośrednio do osób zainteresowanych targami!</strong> To szybki i skuteczny sposób na promocję Twojej marki oraz zwiększenie liczby gości na stoisku.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Wysyłka do precyzyjnie dobranej grupy</strong> – Twoja wiadomość trafi do ok. 10 000 odwiedzających targi</li>
+                        <li><strong>Elastyczny termin wysyłki</strong> – możliwość dopasowania czasu kampanii do Twoich działań promocyjnych</li>
+                        <li><strong>Twoja treść, nasza baza</strong> – mailing w formie dostarczonej przez Ciebie, wysyłany przez nas</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Bezpośrednie dotarcie do grupy docelowej</strong> – Twoja wiadomość trafi bezpośrednio do osób związanych z branżą</li>
+                        <li><strong>Większa skuteczność kampanii</strong> – docierasz do osób faktycznie zainteresowanych wydarzeniem</li>
+                        <li><strong>Zwiększona frekwencja na stoisku</strong> – mailing to skuteczna zachęta do odwiedzenia Twojej przestrzeni wystawienniczej</li>
+                        <li><strong>Minimalny wysiłek, maksymalny efekt</strong> – my zajmujemy się wysyłką, a Ty cieszysz się większym zainteresowaniem</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>4500 zł</strong> – koszt obejmuje wysyłkę mailingu dostarczonego przez klienta do bazy ok. 10 000 odwiedzających</p>
+                <p><strong>Termin wysyłki do uzgodnienia</strong> – dopasujemy najlepszy czas na dotarcie do Twoich klientów</p>
+                <br>
+                <p><strong>Liczba kampanii ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Send your message to thousands of trade fair visitors!</strong></p>
+                <p class="pwe-store__featured-description">Do you have a mailing ready and want to reach <strong>over 10,000 potential customers?</strong> Use our visitor database and send your offer <strong>directly to people interested in the trade fair!</strong> It`s a fast and effective way to promote your brand and increase the number of visitors to your stand.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Sending to a precisely selected group</strong> – your message will reach approx. 10,000 trade fair visitors</li>
+                        <li><strong>Flexible shipping date</strong> – the ability to adjust the campaign time to your promotional activities</li>
+                        <li><strong>Your content, our database</strong> – mailing in the form provided by you, sent by us</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Direct access to the target group</strong> – your message will go directly to people associated with the industry</li>
+                        <li><strong>Increased campaign effectiveness</strong> – you reach people who are actually interested event</li>
+                        <li><strong>Increased attendance at the stand</strong> – mailing is an effective incentive to visit your exhibition space</li>
+                        <li><strong>Minimum effort, maximum effect</strong> – we handle the shipping, and you enjoy greater interest</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>4500 PLN</strong> – the cost includes sending mailings provided by the client to a database of approx. 10,000 visitors</p>
+                <p><strong>Sending date to be agreed</strong> – we will choose the best time to reach your customers</p>
+                <br>
+                <p><strong>Number of campaigns limited!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">4500 '. ( self::lang_pl() ? 'zł netto' : 'PLN net' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mailing wzmianka -->
+<div class="pwe-store__featured-service pwe-store__service" id="mailing-wzmianka">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Mailing wzmianka">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'MAILING WZMIANKA' : 'MAILING MENTION' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'MAILING WZMIANKA' : 'MAILING MENTION' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Wzmianka o Twojej marce w mailingu do odwiedzających targi!</strong></p>
+                <p class="pwe-store__featured-description">Zwiększ rozpoznawalność swojej firmy i dotrzyj do <strong>ponad 10 000 odwiedzających targi</strong> poprzez krótką <strong>wzmiankę o Twojej marce w naszym oficjalnym mailingu</strong>. To ekonomiczna i skuteczna forma promocji, która pozwala <strong>wyróżnić Twoją ofertę</strong> i przyciągnąć uwagę potencjalnych klientów.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Wzmianka o Twojej firmie w treści maila</strong> – umieścimy Twoje logo, nazwę lub krótką informację promocyjną</li>
+                        <li><strong>Treść przygotowana przez Klienta</strong> – Klient dostarcza gotowe materiały do umieszczenia w mailingu</li>
+                        <li><strong>Wysyłka do precyzyjnie dobranej grupy</strong> – mailing trafia do ok. 10 000 odwiedzających targi</li>
+                        <li><strong>Termin wysyłki do uzgodnienia</strong> – możliwość dopasowania kampanii do Twoich działań promocyjnych</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Ekonomiczna forma promocji</strong> – atrakcyjna cena za dotarcie do szerokiego grona odbiorców</li>
+                        <li><strong>Większa świadomość Twojej marki</strong> – obecność w oficjalnej komunikacji targowej wzmacnia Twój wizerunek</li>
+                        <li><strong>Bezpośrednie dotarcie do potencjalnych klientów</strong> – mailing trafia do osób faktycznie zainteresowanych wydarzeniem</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>1500 zł</strong> – koszt obejmuje wzmiankę o Twojej marce w mailingu do bazy ok. 10 000 odwiedzających</p>
+                <p><strong>Termin wysyłki do uzgodnienia</strong> – dostosujemy wysyłkę do Twoich potrzeb</p>
+                <br>
+                <p><strong>Liczba kampanii ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Mention your brand in mailings to trade fair visitors!</strong></p>
+                <p class="pwe-store__featured-description">Increase your company`s visibility and reach <strong>over 10,000 trade fair visitors</strong> with a short <strong>mention of your brand in our official mailing</strong>. This is an economical and effective form of promotion that allows you to <strong>highlight your offer</strong> and attract the attention of potential customers.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Mention your company in the email content</strong> – we will place your logo, name or short promotional information</li>
+                        <li><strong>Content prepared by the Client</strong> – the Client provides ready-made materials to be included in the mailing</li>
+                        <li><strong>Sending to a precisely selected group</strong> – the mailing goes to approx. 10,000 visitors to the fair</li>
+                        <li><strong>Sending date to be agreed</strong> – the campaign can be tailored to your promotional activities</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT ARE YOU GAINING?</p>
+                    <ul>
+                        <li><strong>Economical form of promotion</strong> – attractive price for reaching a wide audience</li>
+                        <li><strong>Increased awareness of your brand</strong> – presence in official trade fair communication strengthens your image</li>
+                        <li><strong>Direct access to potential customers</strong> – mailing reaches people actually interested in the event</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>1500 PLN</strong> – the cost includes mentioning your brand in mailing to a database of approx. 10,000 visitors</p>
+                <p><strong>Shipping date to be agreed</strong> – we will adjust the shipping to your needs</p>
+                <br>
+                <p><strong>The number of campaigns is limited!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">1500 '. ( self::lang_pl() ? 'zł netto' : 'PLN net' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Naklejka podłogowa -->
+<div class="pwe-store__featured-service pwe-store__service" id="naklejka-podlogowa">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Naklejka podłogowa">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'NAKLEJKA PODŁOGOWA' : 'FLOOR STICKER' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'NAKLEJKA PODŁOGOWA' : 'FLOOR STICKER' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Przyciągnij uwagę odwiedzających targi dzięki strategicznie rozmieszczonym naklejkom podłogowym!</strong></p>
+                <p class="pwe-store__featured-description">Zainwestuj w <strong>skuteczną i nietypową formę reklamy</strong>, która bezpośrednio przyciąga wzrok odwiedzających – <strong>naklejki podłogowe umieszczone w strategicznych ciągach komunikacyjnych</strong>. To doskonały sposób na <strong>prowadzenie ruchu do Twojego stoiska</strong> i wyróżnienie marki na tle konkurencji.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Wyklejenie w głównych ciągach komunikacyjnych</strong> – naklejki umieszczone tam, gdzie przemieszcza się najwięcej uczestników</li>
+                        <li><strong>Optymalny rozmiar</strong> – format 0,5m x 0,5m zapewnia dobrą widoczność i czytelność komunikatu</li>
+                        <li><strong>Trwała i estetyczna ekspozycja</strong> – naklejki są odporne na ścieranie i intensywne użytkowanie</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Reklama w ruchliwych miejscach</strong> – skuteczna ekspozycja w najbardziej uczęszczanych strefach targów</li>
+                        <li><strong>Kierowanie ruchu na stoisko</strong> – naklejki mogą pełnić rolę drogowskazów wskazujących kierunek do Twojej przestrzeni wystawienniczej</li>
+                        <li><strong>Nowoczesna i nietypowa forma promocji</strong> – reklama podłogowa przyciąga uwagę bardziej niż tradycyjne bannery</li>
+                        <li><strong>Stała widoczność przez cały czas trwania targów</strong> – Twoja marka będzie obecna w strategicznych miejscach przez całą imprezę</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>400 zł / szt.</strong> – koszt obejmuje produkcje oraz wyklejenie naklejki podłogowej o wymiarach 0,5m x 0,5m w ciągach komunikacyjnych</p>
+                <br>
+                <p><strong>Liczba miejsc ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Capture the attention of trade fair visitors with strategically placed floor stickers!</strong></p>
+                <p class="pwe-store__featured-description">Invest in an <strong>effective and unusual form of advertising</strong> that directly attracts the attention of visitors – <strong>floor stickers placed in strategic passageways</strong>. It`s a great way to <strong>drive traffic to your stand</strong> and make your brand stand out from the competition.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Placement in main communication routes</strong> - stickers placed where most participants move</li>
+                        <li><strong>Optimal size</strong> - 0.5m x 0.5m format ensures good visibility and readability of the message</li>
+                        <li><strong>Durable and aesthetic display</strong> - stickers are resistant to abrasion and intensive use</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Advertising in busy places</strong> - effective exposure in the most frequented zones fairs</li>
+                        <li><strong>Directing traffic to your stand</strong> – stickers can act as signposts indicating the direction to your exhibition space</li>
+                        <li><strong>A modern and unusual form of promotion</strong> – floor advertising attracts more attention than traditional banners</li>
+                        <li><strong>Constant visibility throughout the fair</strong> – your brand will be present in strategic places throughout the event</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>400 PLN / pc.</strong> – the cost includes production and sticking a 0.5m x 0.5m floor sticker in traffic routes</p>
+                <br>
+                <p><strong>Limited number of places!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">400 '. ( self::lang_pl() ? 'zł / szt.' : 'PLN / pc.' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Komunikat w radiowęźle -->
+<div class="pwe-store__featured-service pwe-store__service" id="komunikat-w-radiowezle">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Naklejka podłogowa">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'KOMUNIKAT W RADIOWĘŹLE' : 'ANNOUNCEMENT ON THE RADIO CENTER' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'KOMUNIKAT W RADIOWĘŹLE' : 'ANNOUNCEMENT ON THE RADIO CENTER' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Dotrzyj do uczestników targów dzięki komunikatowi w radiowęźle!</strong></p>
+                <p class="pwe-store__featured-description">Wykorzystaj <strong>ogłoszenia w radiowęźle targowym</strong>, aby skutecznie <strong>przekazać swoją ofertę i przyciągnąć uczestników do swojego stoiska</strong>. Krótkie komunikaty reklamowe nadawane co godzinę zapewnią Twojej marce <strong>maksymalną ekspozycję</strong> i dotarcie do szerokiego grona odwiedzających.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Komunikaty nadawane co godzinę</strong> – Twoja wiadomość zostanie odtworzona w regularnych odstępach czasu przez cały dzień targowy</li>
+                        <li><strong>Zasięg na całym terenie targów</strong> – ogłoszenia są emitowane w systemie nagłośnieniowym, docierając do uczestników w każdej hali</li>
+                        <li><strong>Treść dostosowana do Twoich potrzeb</strong> – możliwość nadania informacji promocyjnej, zaproszenia na stoisko lub ogłoszenia o specjalnej ofercie</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Bezpośrednia i skuteczna komunikacja</strong> – Twoja wiadomość dotrze do wszystkich uczestników targów</li>
+                        <li><strong>Zwiększenie ruchu na stoisku</strong> – skuteczny sposób na zaproszenie odwiedzających do zapoznania się z Twoją ofertą</li>
+                        <li><strong>Niski koszt, duży zasięg</strong> – promocja słyszalna w całym obiekcie targowym</li>
+                        <li><strong>Wzrost rozpoznawalności marki</strong> – regularnie nadawane komunikaty sprawią, że Twoja firma zostanie łatwiej zapamiętana</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>500 zł / dzień targowy</strong> – koszt obejmuje nadawanie krótkiego komunikatu reklamowego co godzinę</p>
+                <br>
+                <p><strong>Liczba miejsc ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Reach trade fair attendees with a message on the radio station!</strong></p>
+                <p class="pwe-store__featured-description">Use <strong>trade fair radio station announcements</strong> to effectively <strong>communicate your offer and attract attendees to your stand</strong>. Short advertising messages broadcast every hour will provide your brand with <strong>maximum exposure</strong> and reach a wide range of visitors.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Hourly announcements</strong> – your message will be played at regular intervals throughout the fair day</li>
+                        <li><strong>Reach throughout the fairgrounds</strong> – announcements are broadcast on the PA system, reaching participants in every hall</li>
+                        <li><strong>Content tailored to your needs</strong> – the ability to broadcast promotional information, invite to a stand or announce a special offer</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Direct and effective communication</strong> – your message will reach all trade fair participants</li>
+                        <li><strong>Increased traffic at the stand</strong> – an effective way to invite visitors to familiarize themselves with your offer</li>
+                        <li><strong>Low cost, wide reach</strong> – promotion heard throughout the trade fair facility</li>
+                        <li><strong>Increased brand recognition</strong> – regularly broadcasted messages will make your company easier to remember</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>500 PLN / trade fair day</strong> – the cost includes broadcasting a short advertising message every hour</p>
+                <br>
+                <p><strong>Limited number of places!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">500 '. ( self::lang_pl() ? 'zł / dzień targowy' : 'PLN / market day' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Baner na barierkach -->
+<div class="pwe-store__featured-service pwe-store__service" id="baner-na-barierkach">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Baner na barierkach">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'BANER NA BARIERKACH' : 'BANNERS ON RAILS' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'BANER NA BARIERKACH' : 'BANNERS ON RAILS' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Wyróżnij swoją markę dzięki banerowi reklamowemu na barierkach!</strong></p>
+                <p class="pwe-store__featured-description">Zwiększ widoczność swojej firmy i skutecznie dotrzyj do uczestników targów dzięki <strong>banerowi reklamowemu o wymiarach 1m x 2m</strong>, umieszczonemu na barierkach w kluczowych strefach targowych. To efektywna i przystępna cenowo forma promocji, która pozwoli Ci <strong>przyciągnąć uwagę odwiedzających</strong> i wyróżnić się na tle konkurencji</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Strategiczne lokalizacje</strong> – baner umieszczony na barierkach w miejscach o wysokim natężeniu ruchu</li>
+                        <li><strong>Optymalne wymiary</strong> – 1m x 2m to idealny rozmiar zapewniający dobrą widoczność i czytelność przekazu</li>
+                        <li><strong>Kompleksowa obsługa</strong> – cena obejmuje wydruk, montaż, wynajem powierzchni i demontaż</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Maksymalna ekspozycja marki</strong> – Twoja reklama będzie widoczna przez cały okres targów</li>
+                        <li><strong>Reklama w kluczowych miejscach</strong> – barierki znajdują się w strefach o intensywnym ruchu pieszym</li>
+                        <li><strong>Wysoka jakość wykonania</strong> – trwały materiał i profesjonalny montaż zapewniają estetyczny wygląd</li>
+                        <li><strong>Bezobsługowa promocja</strong> – my zajmujemy się wszystkim, od produkcji po montaż i demontaż</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>600 zł / szt.</strong> – koszt obejmuje wydruk, montaż, wynajem powierzchni i demontaż</p>
+                <br>
+                <p><strong>Liczba miejsc ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Make your brand stand out with a banner ad on the barriers!</strong></p>
+                <p class="pwe-store__featured-description">Increase your company`s visibility and effectively reach trade fair attendees with a <strong>1m x 2m advertising banner</strong> placed on the barriers in key trade fair zones. This is an effective and affordable form of promotion that will allow you to <strong>attract the attention of visitors</strong> and stand out from the competition</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Strategic locations</strong> - a banner placed on barriers in high-traffic areas</li>
+                        <li><strong>Optimal dimensions</strong> - 1m x 2m is the ideal size to ensure good visibility and readability of the message</li>
+                        <li><strong>Comprehensive service</strong> - the price includes printing, assembly, space rental and dismantling</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Maximum brand exposure</strong> - your the advertisement will be visible throughout the fair</li>
+                        <li><strong>Advertisement in key places</strong> - barriers are located in areas with intensive pedestrian traffic</li>
+                        <li><strong>High quality workmanship</strong> - durable material and professional assembly ensure aesthetic appearance</li>
+                        <li><strong>Maintenance-free promotion</strong> - we take care of everything, from production to assembly and disassembly</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>PLN 600 / pc.</strong> - the cost includes printing, assembly, space rental and disassembly</p>
+                <br>
+                <p><strong>Limited number of places!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">600 '. ( self::lang_pl() ? 'zł / szt.' : 'PLN / pc.' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flagobaner na terenie hali -->
+<div class="pwe-store__featured-service pwe-store__service" id="flagobaner">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Naklejka podłogowa">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'FLAGOBANER NA TERENIE HALI' : 'FLAG BANNER IN THE HALL' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'FLAGOBANER NA TERENIE HALI' : 'FLAG BANNER IN THE HALL' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Zwiększ widoczność swojej marki dzięki flagobanerowi na terenie hali!</strong></p>
+                <p class="pwe-store__featured-description">Wyróżnij swoją firmę i dotrzyj do tysięcy uczestników targów dzięki <strong>flagobanerowi podwieszonemu wewnątrz hali</strong>, który zapewni <strong>maksymalną ekspozycję Twojej marki przez cały czas trwania wydarzenia</strong>. To efektowna i skuteczna forma reklamy, która <strong>przyciągnie uwagę odwiedzających już z daleka</strong>.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Strategiczna lokalizacja</strong> – flagobaner podwieszony w hali, widoczny dla wszystkich uczestników targów</li>
+                        <li><strong>Duży rozmiar i dwustronna ekspozycja</strong> – 7m długości, złożone na pół (dwustronny po 3,5m x 1m szerokości)</li>
+                        <li><strong>Długotrwała promocja</strong> – reklama widoczna od pierwszego dnia targów, aż do ich zakończenia</li>
+                        <li><strong>Kompleksowa obsługa</strong> – cena obejmuje druk, montaż i demontaż</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Maksymalna ekspozycja marki</strong> – reklama umieszczona w górnej przestrzeni hali, widoczna z daleka</li>
+                        <li><strong>Stała obecność Twojej marki na targach</strong> – flagobaner będzie eksponowany przez cały okres trwania targów</li>
+                        <li><strong>Profesjonalny i prestiżowy wygląd</strong> – efektowna i estetyczna forma reklamy przyciągająca uwagę odwiedzających</li>
+                        <li><strong>Bezobsługowa promocja</strong> – my zajmujemy się wszystkim, od druku po montaż i demontaż</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>1200 zł / szt.</strong> – koszt obejmuje druk, montaż, ekspozycję i demontaż flagobanera</p>
+                <br>
+                <p><strong>Liczba miejsc ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Increase your brand visibility with a flag banner inside the hall!</strong></p>
+                <p class="pwe-store__featured-description">Distinguish your company and reach thousands of trade show attendees with a <strong>flag banner suspended inside the hall</strong>, which will provide <strong>maximum exposure of your brand throughout the event</strong>. This is an effective and efficient form of advertising that will <strong>attract the attention of visitors from afar</strong>.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Strategic location</strong> – a flag banner suspended in the hall, visible to all fair participants</li>
+                        <li><strong>Large size and double-sided display</strong> – 7m long, folded in half (double-sided 3.5m x 1m wide)</li>
+                        <li><strong>Long-term promotion</strong> – advertising visible from the first day of the fair until its end</li>
+                        <li><strong>Comprehensive service</strong> – the price includes printing, assembly and disassembly</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Maximum brand exposure</strong> – advertising placed in the upper space of the hall, visible from afar</li>
+                        <li><strong>Constant presence of your brand at the fair</strong> – the flag banner will be displayed throughout the duration of the fair</li>
+                        <li><strong>Professional and prestigious appearance</strong> – an effective and aesthetic form of advertising that attracts the attention of visitors</li>
+                        <li><strong>Service-free promotion</strong> – we take care of everything, from printing to assembly and disassembly</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>1200 PLN / pc.</strong> – the cost includes printing, assembly, display and disassembly of the flag banner</p>
+                <br>
+                <p><strong>Number of seats limited!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">1200 '. ( self::lang_pl() ? 'zł / szt.' : 'PLN / pc.' ) .'</span>
+                <div class="pwe-store__featured-buttons">
+                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flaga na maszcie -->
+<div class="pwe-store__featured-service pwe-store__service" id="flaga-na-maszcie">
+    <div class="pwe-store__featured-content">
+        <div class="pwe-store__featured-image">
+            <img src="/wp-content/plugins/PWElements/media/store/social-media/post-promocyjny.webp" alt="Naklejka podłogowa">
+        </div>
+        <div class="pwe-store__featured-details">
+            <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'FLAGA NA MASZCIE' : 'FLAG ON A MAST' ) .'</h3>
+            <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'FLAGA NA MASZCIE' : 'FLAG ON A MAST' ) .'</span>
+            <div class="pwe-store__featured-text">
+            '. ( self::lang_pl() ? '
+                <p class="pwe-store__featured-description"><strong>Zwiększ widoczność swojej marki dzięki fladze reklamowej przy drodze dojazdowej do PTAK WARSAW EXPO!</strong></p>
+                <p class="pwe-store__featured-description">Przyciągnij uwagę tysięcy uczestników targów już na etapie ich przyjazdu! <strong>Flaga reklamowa zawieszona wzdłuż drogi dojazdowej do obiektu</strong> to doskonała forma promocji, która <strong>zapewnia długotrwałą ekspozycję i maksymalną widoczność Twojej marki</strong>.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">JAK TO DZIAŁA?</p>
+                    <ul>
+                        <li><strong>Strategiczne umiejscowienie</strong> – flaga zawieszona wzdłuż głównej drogi prowadzącej do obiektu targowego</li>
+                        <li><strong>Imponujące wymiary</strong> – 0,96m x 4,16m zapewnia doskonałą widoczność z daleka</li>
+                        <li><strong>Stała ekspozycja przez cały okres targów</strong> – reklama widoczna od pierwszego do ostatniego dnia wydarzenia</li>
+                        <li><strong>Kompleksowa obsługa</strong> – cena obejmuje druk, montaż oraz demontaż po zakończeniu targów</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">CO ZYSKUJESZ?</p>
+                    <ul>
+                        <li><strong>Maksymalna ekspozycja marki</strong> – Twoja reklama będzie widoczna dla wszystkich uczestników przyjeżdżających na targi</li>
+                        <li><strong>Profesjonalna i efektowna prezentacja</strong> – flagi umieszczone wzdłuż drogi dojazdowej budują prestiż Twojej marki</li>
+                        <li><strong>Długotrwała promocja</strong> – reklama eksponowana przez cały czas trwania targów</li>
+                        <li><strong>Bezobsługowa promocja</strong> – my zajmujemy się wszystkim, od druku po montaż i demontaż</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>CENA I DOSTĘPNOŚĆ:</strong></p>
+                <p><strong>1000 zł / szt.</strong> – koszt obejmuje druk, montaż, ekspozycję i demontaż flagi reklamowej</p>
+                <br>
+                <p><strong>Liczba miejsc ograniczona!</strong></p>
+            ':'
+                <p class="pwe-store__featured-description"><strong>Increase your brand visibility with an advertising flag on the access road to PTAK WARSAW EXPO!</strong></p>
+                <p class="pwe-store__featured-description">Attract the attention of thousands of trade fair participants already at the stage of their arrival! <strong>An advertising flag hung along the access road to the facility</strong> is an excellent form of promotion that <strong>ensures long-term exposure and maximum visibility of your brand</strong>.</p>
+                <div class="pwe-store__featured-info">
+                    <p class="pwe-store__featured-title">HOW DOES IT WORK?</p>
+                    <ul>
+                        <li><strong>Strategic location</strong> – a flag hung along the main road leading to the fair facility</li>
+                        <li><strong>Impressive dimensions</strong> – 0.96m x 4.16m ensures excellent visibility from a distance</li>
+                        <li><strong>Permanent exposure throughout the fair</strong> – advertising visible from the first to the last day of the event</li>
+                        <li><strong>Comprehensive service</strong> – the price includes printing, assembly and dismantling after the fair</li>
+                    </ul>
+                    <p class="pwe-store__featured-title">WHAT DO YOU GAIN?</p>
+                    <ul>
+                        <li><strong>Maximum brand exposure</strong> – your ad will be visible to all participants arriving at the fair</li>
+                        <li><strong>Professional and effective presentation</strong> – flags placed along the access road build the prestige of your brand</li>
+                        <li><strong>Long-term promotion</strong> – ad displayed throughout the duration of the fair</li>
+                        <li><strong>Maintenance-free promotion</strong> – we take care of everything, from printing to assembly and disassembly</li>
+                    </ul>
+                </div>
+                <p class="pwe-store__featured-title"><strong>PRICE AND AVAILABILITY:</strong></p>
+                <p><strong>1000 PLN / pc.</strong> – the cost includes printing, assembly, display and disassembly of the advertising flag</p>
+                <br>
+                <p><strong>Limited number of places!</strong></p>
+            ' ) .' 
+            </div>
+            <div class="pwe-store__featured-footer">
+                <span class="pwe-store__featured-pwe-store__price">1200 '. ( self::lang_pl() ? 'zł / szt.' : 'PLN / pc.' ) .'</span>
                 <div class="pwe-store__featured-buttons">
                     <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
                     <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>

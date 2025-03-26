@@ -83,6 +83,7 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_partners_items' => '',
             'pwe_header_partners_title_color' => '',
             'pwe_header_partners_background_color' => '',
+            'pwe_header_other_partners' => '',
         ), $atts ));
 
         // Replace strings
