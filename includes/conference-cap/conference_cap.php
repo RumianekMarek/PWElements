@@ -265,10 +265,10 @@ class PWEConferenceCap {
                         $tile = '<img src="' . $conf_img . '" alt="' . esc_attr($conf_slug) . '" id="nav_' . esc_attr($conf_slug) . '" class="conference_cap__conf-slug-img">';
                         
                         // Jeśli slug należy do specjalnych, dodajemy do specjalnych, w przeciwnym razie do normalnych
-                        if (strpos($conf_slug, 'medal-ceremony') !== false) {
-                            $specialTiles['medal-ceremony'][] = $tile;
-                        } elseif (strpos($conf_slug, 'panel-trendow') !== false) {
-                            $specialTiles['panel-trendow'][] = $tile;
+                        if (strpos($conf_slug, 'medal') !== false) {
+                            $specialTiles['medal'][] = $tile;
+                        } elseif (strpos($conf_slug, 'panel') !== false) {
+                            $specialTiles['panel'][] = $tile;
                         } else {
                             $normalTiles[] = $tile;
                         }
@@ -293,14 +293,14 @@ class PWEConferenceCap {
                 }
 
                 if (!empty($specialTiles)) {
-                    // 3. Na końcu kafelki specjalne – w kolejności: "medal-ceremony" i "panel-trendow"
-                    if (!empty($specialTiles['medal-ceremony'])) {
-                        foreach ($specialTiles['medal-ceremony'] as $tile) {
+                    // 3. Na końcu kafelki specjalne – w kolejności: "medal" i "panel"
+                    if (!empty($specialTiles['medal'])) {
+                        foreach ($specialTiles['medal'] as $tile) {
                             $output .= $tile;
                         }
                     }
-                    if (!empty($specialTiles['panel-trendow'])) {
-                        foreach ($specialTiles['panel-trendow'] as $tile) {
+                    if (!empty($specialTiles['panel'])) {
+                        foreach ($specialTiles['panel'] as $tile) {
                             $output .= $tile;
                         }
                     }
@@ -356,10 +356,10 @@ class PWEConferenceCap {
                     }
             
                     // **Kontener dla danej konferencji**
-                    $output .= '<div class="conference_cap__conf-slug" id="conf_' . esc_attr($conf_slug) . '">';
+                    $output .= '<div id="conf_' . esc_attr($conf_slug) . '" class="conference_cap__conf-slug">';
                         // **Nagłówek konferencji**
                         $output .= '<div class="conference_cap__conf-slug-header">';
-                            if (!empty($conf_img) == (get_class($mode_class) !== 'PWEConferenceCapMedalCeremony')) {
+                            if (!empty($conf_img) && (get_class($mode_class) !== 'PWEConferenceCapMedalCeremony')) {
                                 $output .= '
                                 <img src="' . $conf_img . '" alt="' . esc_attr($conf_name) . '" class="conference_cap__conf-slug-image">
                                 <div class="conference_cap__after-header-html">' . ($inf_conf['after_header_' . $conf_slug] ?? '') . '</div>';
@@ -397,7 +397,6 @@ class PWEConferenceCap {
                                             '#conference-cap',
                                             $opinions_dots_display = 'true',
                                             $opinions_arrows_display = false,
-                                            5
                                         );
 
                                         $output .= '
@@ -438,15 +437,16 @@ class PWEConferenceCap {
                             }
                         $output .= '</div>'; // Zamknięcie nagłówka
                 
-
+                        
                         if (get_class($mode_class) !== 'PWEConferenceCapMedalCeremony') {
                             // **Zakładki dni**
                             $output .= '<div class="conference_cap__conf-slug-navigation-days">';
-                                foreach ($conferences as $confData) {
+                            foreach ($conferences as $confData) {
+                                    $dayCounter = 1;
                                     foreach ($confData as $day => $sessions) {
-                                        $short_day = str_replace(array('.', '/'), '-', substr($day, -10)); // Pobranie ostatnich 10 znaków i zamiana '.' na '-'
+                                        $short_day = 'day-' . $dayCounter++;
                                         $day = str_replace(';;', '<br>', wp_kses_post($day));
-                                        $output .= '<button class="conference_cap__conf-slug-navigation-day" id="tab_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '">' . $day . '</button>';
+                                        $output .= '<button id="tab_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-navigation-day">' . $day . '</button>';
                                     }
                                 }
                             $output .= '</div>'; // Zamknięcie kontenera zakładek dni
@@ -455,12 +455,13 @@ class PWEConferenceCap {
                             // **Treść dla poszczególnych dni**
                             $output .= '<div class="conference_cap__conf-slug-contents">';
                                 foreach ($conferences as $confData) {
+                                    $dayCounter = 1;
                                     foreach ($confData as $day => $sessions) {
-                                        $short_day = str_replace(array('.', '/'), '-', substr($day, -10)); // Pobranie ostatnich 10 znaków i zamiana '.' na '-'
+                                        $short_day = 'day-' . $dayCounter++;
                                         $output .= '
-                                        <div class="conference_cap__conf-slug-content" id="content_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '">
+                                        <div id="content_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-content">
                                         <div class="conference_cap__before-day-html">' . ($inf_conf['before_day_' . esc_attr($conf_slug) . '_' . esc_attr($short_day)] ?? '') . '</div>
-                                            '. $mode_class::output($atts, $sessions, $conf_function, $speakersDataMapping, $day, $conf_slug, $panel, $conf_location) .'
+                                            '. $mode_class::output($atts, $sessions, $conf_function, $speakersDataMapping, $short_day, $conf_slug, $panel, $conf_location) .'
                                         <div class="conference_cap__after-day-html">' . ($inf_conf['after_day_' . esc_attr($conf_slug) . '_' . esc_attr($short_day)] ?? '') . '</div>
                                         </div>'; // Zamknięcie kontenera treści dnia
                                     }

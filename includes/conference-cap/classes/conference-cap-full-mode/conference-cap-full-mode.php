@@ -10,7 +10,7 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
         parent::__construct();
     }
 
-    public static function output($atts, $sessions, $conf_function, &$speakersDataMapping, $tab_index, $conf_slug_index){
+    public static function output($atts, $sessions, $conf_function, &$speakersDataMapping, $short_day, $conf_slug_index){
 
 
         extract(shortcode_atts(array(
@@ -19,6 +19,22 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
             'conference_cap_html' => '',
             'conference_cap_conference_mode' => '',
         ), $atts));
+
+        $has_any_speaker_info = false;
+
+        foreach ($sessions as $session) {
+            foreach ($session as $key => $value) {
+                if (strpos($key, 'legent-') === 0 && is_array($value)) {
+                    if (
+                        (!empty($value['url']) && $value['url'] !== '') ||
+                        (!empty($value['desc']) && $value['desc'] !== '')
+                    ) {
+                        $has_any_speaker_info = true;
+                        break 2; // Wystarczy jeden przypadek – przerywamy sprawdzanie
+                    }
+                }
+            }
+        }
         
         $content .= '<div class="conference_cap__lecture-container">';
         
@@ -28,7 +44,7 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
                 }
                 
                 $lecture_counter++;
-                $lectureId = $conf_slug_index . '-' . $tab_index . '-' . 'lecture-' . $lecture_counter;
+                $lectureId = $conf_slug_index . '_' . $short_day . '_' . 'pre-' . $lecture_counter;
                 $time  = isset($session['time']) ? $session['time'] : '';
                 $title = isset($session['title']) ? $session['title'] : '';
                 $desc  = isset($session['desc']) ? $session['desc'] : '';
@@ -41,8 +57,9 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
                     }
                 }
 
-                $content .= '<div id="' . esc_attr($lectureId) . '" class="conference_cap__lecture-box">
-                    <div class="conference_cap__lecture-speaker">';
+                $content .= '<div id="' . esc_attr($lectureId) . '" class="conference_cap__lecture-box">';
+                if ($has_any_speaker_info) {
+                    $content .= '<div class="conference_cap__lecture-speaker">';
                         $speakers_bios = [];
 
                         if (!empty($speakers)) {
@@ -85,9 +102,11 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
 
                         }
                     
-                    $content .= '</div>
+                    $content .= '</div>';
+                }
 
-                    <div class="conference_cap__lecture-box-info">
+                     $content .= '
+                     <div class="conference_cap__lecture-box-info">
                         <h4 class="conference_cap__lecture-time">' . esc_html($time) . '</h4>';
 
                         $speaker_names = array_map(function ($speaker) {

@@ -62,7 +62,7 @@ class PWEConferenceCapSimpleMode extends PWEConferenceCap{
                             }, $speakers);
 
                             if (!empty($speaker_names) && implode('', $speaker_names) !== 'brak') {
-                                $content .= '<h5 class="conference_cap_simple_mode__lecture-name">' . esc_html(implode(', ', $speaker_names)) . '</h5>';
+                                $content .= '<h5 class="conference_cap_simple_mode__lecture-name">' . (implode('<br>', $speaker_names)) . '</h5>';
                             }
                         
                         $content .= '</div>
