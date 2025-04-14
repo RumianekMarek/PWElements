@@ -17,6 +17,7 @@ class PWESliderScripts {
 
             include_once plugin_dir_path(__DIR__) . 'pwefunctions.php';
             $fair_colors = PWECommonFunctions::findPalletColorsStatic();
+            $accessibility = ($id == 'posts') ? 'accessibility: false,' : '';
 
             $accent_color = ($fair_colors['Accent']) ? $fair_colors['Accent'] : '';
             foreach($fair_colors as $color_key => $color_value){
@@ -201,7 +202,7 @@ class PWESliderScripts {
                 return  elementWidth < 400 ? 1 :
                         elementWidth < 600 ? 2 :
                         elementWidth < 900 ? 3 :
-                        elementWidth < 1100 ? 4 : 
+                        elementWidth < 1100 ? 4 :
                         slidesToShowSetting;
                 ';
             } else if ($id == 'other-events') { // other-events.php <-------------------------------------------------------------<
@@ -269,6 +270,7 @@ class PWESliderScripts {
                             speed: 600,
                             dots: dotsEnabled,
                             cssEase: "linear",
+                            '. $accessibility .'
                             swipeToSlide: true,
                             '. $center_mode .'
                             '. $center_padding .'

@@ -72,7 +72,7 @@ $output .= '
         }
     </style>';
 
-    if (count($pwe_header_partners_items) > 3) {
+    if (count($pwe_header_partners_items) > 2) {
         $output .= '
         <style>
             .pwe-header-partners-container {
@@ -134,6 +134,45 @@ $output .= '
                 $pwe_header_other_partner_title = $item["pwe_header_partners_other_title"];
                 $pwe_header_other_partner_logo_ids = $item["pwe_header_partners_other_logotypes"];
                 $pwe_header_other_partner_logo_ids = explode(',', $pwe_header_other_partner_logo_ids);
+        
+                if (count($pwe_header_other_partner_logo_ids) > 2) {
+                    $output .= '
+                    <style>
+                        .pwe-header-partners-container {
+                            max-width: 280px;
+                        }
+                        .pwe-header-partners__items {
+                            flex-wrap: wrap;
+                            flex-direction: row;
+                            gap: 8px;
+                        }
+                        .pwe-header-partners__item {
+                            max-width: 120px;
+                        }
+                        @media(max-width: 1200px) {
+                            .pwe-header-partners-container {
+                                max-width: 240px;
+                            }
+                            .pwe-header-partners__items {
+                                flex-wrap: wrap;
+                                flex-direction: row;
+                                gap: 8px;
+                            }
+                            .pwe-header-partners__item {
+                                max-width: 100px;
+                            }
+                        }
+                        @media(max-width: 1100px) {
+                            .pwe-header-partners-container {
+                                max-width: 280px;
+                            }
+                            .pwe-header-partners__item {
+                                max-width: 120px;
+                            }
+                        }
+                    </style>';
+                }
+
                 $output .= '
                 <div class="pwe-header-partners-container">
                     <div class="pwe-header-partners__title">
