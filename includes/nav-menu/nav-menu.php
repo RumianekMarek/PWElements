@@ -3,7 +3,7 @@
 class pweNavMenu extends PWECommonFunctions {
 
     public function __construct() {
-
+        
         $pwe_menu_options = get_option('pwe_menu_options', []);
 		if (isset($pwe_menu_options['pwe_menu_active']) && $pwe_menu_options['pwe_menu_active']) {
             // Hook actions
@@ -11,7 +11,7 @@ class pweNavMenu extends PWECommonFunctions {
             add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
 
             // Registering a function
-            add_action('wp_head', array($this, 'pwe_nav_menu'), 5);
+            add_action('wp_head', array($this, 'pwe_nav_menu'), 5);   
         }
     }
 
@@ -106,7 +106,6 @@ class pweNavMenu extends PWECommonFunctions {
                     </div>
                     
                     <div class="pwe-menu__burger">
-                        <input class="pwe-menu__burger-checkbox" type="checkbox">
                         <span></span>
                     </div>
                 </div>

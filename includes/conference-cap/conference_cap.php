@@ -281,6 +281,12 @@ class PWEConferenceCap {
                 }
                 // 2. Manualne konferencje (dane pobrane z VC)
                 if (!empty($manual_conferences)) {
+                    $output .= '
+                    <style>
+                        .post-body .konferencja {
+                            display: none;
+                        }
+                    </style>';
                     $no_conference = false;
 
                     foreach ($manual_conferences as $manual_conf) {
@@ -406,7 +412,7 @@ class PWEConferenceCap {
                                             // Konwersja ścieżki systemowej na URL
                                             $relative_path = str_replace(ABSPATH, '', $logo_file);
                                             $logo_url = site_url($relative_path);
-                                            $output .= '<img src="' . esc_url($logo_url) . '" alt="Logo" class="conference_patroni_logo">';
+                                            $output .= '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="Logo" class="conference_patroni_logo">';
                                         }
                                         $output .= '</div>';
                                     }

@@ -274,18 +274,20 @@ class PWELogotypes extends PWECommonFunctions {
 
             try {
                 $json = @file_get_contents($canUrl);
-                if ($json === false) {
+                if (current_user_can('administrator') && $json === false) {
                     throw new Exception('Nie można pobrać danych JSON.');
                 }
         
                 $data = json_decode($json, true);
-                if ($data === null) {
+                if (current_user_can('administrator') && $data === null) {
                     throw new Exception('Błąd dekodowania danych JSON.');
                 }
         
                 $basic_exhibitors = reset($data)['Wystawcy'];
             } catch (Exception $e) {
-                echo '<script>console.error("Błąd w exhibitors_catalog_checker: ' . addslashes($e->getMessage()) . '")</script>';
+                if (current_user_can('administrator')) {
+                    echo '<script>console.error("Błąd w exhibitors_catalog_checker: ' . addslashes($e->getMessage()) . '")</script>';
+                }
                 $basic_exhibitors = [];
             }
             $logotypes_array = array();

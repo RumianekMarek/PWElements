@@ -115,7 +115,7 @@
   transform: scale(1.08);
 }
 
-.conference_cap__conf-slug, .konferencja {
+.conference_cap__conf-slug {
   display: none;
 }
 

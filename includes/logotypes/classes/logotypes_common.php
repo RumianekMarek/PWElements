@@ -345,13 +345,13 @@ class PWElementAdditionalLogotypes {
 
                 @media(max-width:620px){
                     .pwelement_'. $el_id .' .pwe-logo-item-container {
-                    '. ($logotypes_items_shadow !== 'none' ? 'max-width: 22% !important;' : '') .'
-                    '. ($logotypes_items_shadow !== 'none' ? 'min-width: 22% !important;' : '') .'
-                    '. ($logotypes_items_shadow !== 'none' ? 'padding: 5px !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'max-width: 22% !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'min-width: 22% !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'padding: 5px !important;' : '') .'
                     }
                     .pwelement_'. $el_id .' .pwe-logo-item-container p {
-                    '. ($logotypes_items_shadow !== 'none' ? 'font-size: 9px !important;' : '') .'
-                    '. ($logotypes_items_shadow !== 'none' ? 'font-weight: 600 !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'font-size: 9px !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'font-weight: 600 !important;' : '') .'
                     }
                 }
             </style>';
@@ -789,10 +789,14 @@ class PWElementAdditionalLogotypes {
                         "caption_translations" => $translations
                     );
 
+
                     // Output logotypes
                     if(!$logotypes_slider_3_row){
                         if (count($updated_images_url) > 0) {
                             foreach ($updated_images_url as $url) {
+
+                                $alt_text = (!empty($url["folder_name"]) && !preg_match('/\d{2}/', $url["folder_name"])) ? $url["folder_name"] : "gallery element";
+
                                 if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
                                     if (get_locale() == 'pl_PL') {
                                         if (strpos($url["img"], 'expoplanner.com') !== false) {
@@ -832,7 +836,7 @@ class PWElementAdditionalLogotypes {
                                         $output .= '
                                         <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
                                             <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
-                                                <img data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                <img alt="'. $alt_text .'" data-no-lazy="1" src="' . $url["img"] . '"/>
                                                 '. $logo_caption_text .'
                                             </div>
                                         </a>';
@@ -840,7 +844,7 @@ class PWElementAdditionalLogotypes {
                                         $output .= '
                                         <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
                                             <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                                <img data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                <img alt="'. $alt_text .'" data-no-lazy="1" src="' . $url["img"] . '"/>
                                                 '. $logo_caption_text .'
                                             </div>
                                         </div>';
@@ -862,6 +866,8 @@ class PWElementAdditionalLogotypes {
                                 $output .= '<div class="'. $element_unique_id .'-logotypes-slider logotypes-slider" id="'. $slider_id .'" data-direction="'. $direction .'">';
 
                                 foreach ($logos_group as $url) {
+
+
                                     // Obsługa tłumaczeń i napisów
                                     if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
                                         if (get_locale() == 'pl_PL') {
@@ -901,7 +907,7 @@ class PWElementAdditionalLogotypes {
                                             $output .= '
                                             <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
                                                 <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
-                                                    <img data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                    <img   data-no-lazy="1" src="' . $url["img"] . '" />
                                                     '. $logo_caption_text .'
                                                 </div>
                                             </a>';
@@ -909,7 +915,7 @@ class PWElementAdditionalLogotypes {
                                             $output .= '
                                             <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
                                                 <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                                    <img data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                    <img data-no-lazy="1" src="' . $url["img"] . '"  />
                                                     '. $logo_caption_text .'
                                                 </div>
                                             </div>';
@@ -1005,6 +1011,7 @@ class PWElementAdditionalLogotypes {
                                         sliders.css({ "opacity": "1" });
                                     }, 500);
                                 });
+
                             </script>';
                     }
                 }
