@@ -13,7 +13,7 @@ function pwe_register_general_settings() {
 
     add_settings_field(
         'pwe_dp_shortcodes_unactive',
-        'Unactive shortcodes in exhibitors code system',
+        'Deactivating get data to shortcodes',
         'pwe_dp_shortcodes_unactive_callback',
         'pwe-general-settings',
         'pwe_general_main_section'

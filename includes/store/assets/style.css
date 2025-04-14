@@ -64,6 +64,7 @@
     border-radius: 18px;
 }
 .pwe-store__main-section-text {
+    display: none;
     padding: 36px 0;
 }
 .pwe-store__main-section-text p {
@@ -220,6 +221,7 @@
 .pwe-store__category-text p {
     font-size: 18px;
     font-weight: 600;
+    margin: 0;
 }
 .pwe-store__category-items {
     display: flex;
@@ -229,14 +231,16 @@
 .pwe-store__category-item {
     padding: 18px;
     background: #fff;
+    border: 2px solid #fff;
     border-radius: 14px;
     cursor: pointer;
     transition: .3s ease;
 }
 .pwe-store__category-item:not(.active):hover {
-    background: #FAEEB5;
+    border: 2px solid var(--gold-color);
 }
 .pwe-store__category-item.active {
+    border: 2px solid var(--gold-color);
     background: var(--gold-color);
 }
 .pwe-store__category-item p {
@@ -295,9 +299,8 @@
     flex: 1;
     height: fit-content;
     border-radius: 18px;
-    transition: .3s ease;
 }
-.pwe-store__featured-image img {
+.pwe-store__featured-image > img {
     width: 100%;
     height: auto;
     display: block;
@@ -308,6 +311,22 @@
     top: 0;
     z-index: 1;
 }
+
+
+.pwe-store__featured-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 32%);
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+}
+.pwe-store__featured-gallery img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+
+
 .pwe-store__featured-details {
     flex: 1;
     display: flex;
@@ -385,11 +404,15 @@
 .pwe-store__buy-button:hover {
     background-color: var(--gold-color-hover);
 }
-.pwe-store__sold-out .pwe-store__buy-button {
+.pwe-store__featured-service.sold-out .pwe-store__buy-button,
+.pwe-store__service-card.sold-out .pwe-store__buy-button {
     background: #999;
     pointer-events: none;
     opacity: 0.5;
     cursor: not-allowed;
+}
+.pwe-store__featured-service.sold-out .pwe-store__contact-button {
+    display: none;
 }
 .pwe-store__redirect-button {
     display: flex;
@@ -407,6 +430,7 @@
     transition: background-color 0.3s ease;
 }
 .pwe-store__services-cards {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 24px;
@@ -452,12 +476,16 @@
     margin: 0;
     color: #1a1a1a;
 }
+.pwe-store__service-card .pwe-store__service-description,
 .pwe-store__service-card p,
 .pwe-store__service-card ul {
     font-size: 14px;
     line-height: 1.4;
     color: #666;
-    margin-bottom: 18px;
+    margin: 0;
+}
+.pwe-store__service-card .pwe-store__service-description {
+    margin: 18px 0;
 }
 .pwe-store__service-card ul {
     display: flex;
@@ -637,23 +665,23 @@
 
 
 
-.pwe-store__sold-out .pwe-store__service-image {
+.pwe-store__service-card.sold-out .pwe-store__service-image {
     position: relative;
 }
-.pwe-store__sold-out .pwe-store__featured-image:before,
-.pwe-store__sold-out .pwe-store__service-image:before {
+.pwe-store__featured-service.sold-out .pwe-store__featured-image:before,
+.pwe-store__service-card.sold-out .pwe-store__service-image:before {
     position: absolute;
     top: 14px;
     right: 14px;
     background: black;
+    padding: 8px; 
     color: white;
-    padding: 8px;
     font-weight: 700;
     border-radius: 30px;
     z-index: 2;
 }
-.pwe-store__sold-out .pwe-store__featured-image:after,
-.pwe-store__sold-out .pwe-store__service-image:after {
+.pwe-store__featured-service.sold-out .pwe-store__featured-image:after,
+.pwe-store__service-card.sold-out .pwe-store__service-image:after {
     content: "";
     position: absolute;
     top: 0;
@@ -663,23 +691,24 @@
     background: #6e6e6e8f;
     z-index: 1;
 }
-.pwe-store__sold-out .pwe-store__featured-image:after {
+.pwe-store__featured-service.sold-out .pwe-store__featured-image:after {
     border-radius: 18px;
 }
-.pwe-store__sold-out .pwe-store__service-image:after {
+.pwe-store__service-card.sold-out .pwe-store__service-image:after {
     border-radius: 8px 8px 0 0;
 }
-.pwe-store__limit .pwe-store__featured-image:before,
-.pwe-store__limit .pwe-store__service-image:before {
+.pwe-store__featured-service.status .pwe-store__featured-image:before,
+.pwe-store__service-card.status .pwe-store__service-image:before {
     position: absolute;
     top: 14px;
     right: 14px;
     background: var(--gold-color);
     color: white;
-    padding: 8px;
+    padding: 8px; 
     font-weight: 700;
     border-radius: 30px;
     z-index: 2;
+    text-transform: uppercase;
 }
 
 
@@ -723,4 +752,29 @@
     color: white !important;
     font-size: 24px;
     text-align: center;
+}
+
+
+
+
+.pwe-store__service-header {
+    background: #EDE4D5;
+    padding: 18px;
+}
+.pwe-store__service-products {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 18px;
+}
+.pwe-store__product {
+    display: flex;
+    flex-direction: column;
+    background: #F4F1F1;
+    padding: 8px;
+    font-weight: 600;
+}
+.pwe-store__product span {
+    color: #747474;
+    padding-bottom: 4px; 
 }

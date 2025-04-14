@@ -9,7 +9,7 @@ function pwe_elements_page() {
         'pwe-elements',
         'pwe_elements_render',
         'dashicons-layout',
-        8
+        3
     );
 
     // Submenu for "General Settings"
