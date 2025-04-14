@@ -1049,30 +1049,39 @@ class PWElementTwoCols extends PWElements {
         if ($pwe_two_cols_show_exhibitors || $pwe_two_cols_show_mediapatrons) {
           $output .= '
           <script>
-          document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 let container = document.getElementById("logotypes-container");
                 let placeholders = container.querySelectorAll(".logo-placeholder");
                 let logos = JSON.parse(container.getAttribute("data-logos"));
 
-                if (logos.length >= 9) {
-                    let randomIndexes = new Set();
+                let logosToShow = [];
 
-                    // Wylosowanie 9 unikalnych indeksów
+                if (logos.length >= 9) {
+                    // Losujemy 9 unikalnych logotypów
+                    let randomIndexes = new Set();
                     while (randomIndexes.size < 9) {
                         let randomIndex = Math.floor(Math.random() * logos.length);
                         randomIndexes.add(randomIndex);
                     }
+                    logosToShow = Array.from(randomIndexes).map(index => logos[index]);
+                } else {
+                    // Jeśli mniej niż 9, po prostu je wyświetlamy
+                    logosToShow = logos;
+                }
 
-                    let randomLogos = Array.from(randomIndexes).map(index => logos[index]);
-
-                    setTimeout(() => {
-                        placeholders.forEach((img, i) => {
-                            img.src = randomLogos[i];
+                // Wyświetlamy logotypy – tylko tyle, ile jest dostępnych
+                setTimeout(() => {
+                    placeholders.forEach((img, i) => {
+                        if (logosToShow[i]) {
+                            img.src = logosToShow[i];
                             img.style.opacity = "1";
                             img.style.visibility = "visible";
-                        });
-                    }, 10);
-                }
+                        } else {
+                            // Ukryj nieużywane miejsca
+                            img.style.display = "none";
+                        }
+                    });
+                }, 10);
             });
           </script>';
         }

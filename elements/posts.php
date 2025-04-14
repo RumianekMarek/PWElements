@@ -258,6 +258,7 @@ class PWElementPosts extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-post-title {
                     padding-top: 18px;
                     margin: 0;
+                    font-size: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-posts-title h4 {
                     margin: 0 auto 18px;
@@ -365,6 +366,7 @@ class PWElementPosts extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-title {
                     font-weight: 600;
+                    font-size: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail {
                     position: relative;
@@ -408,6 +410,9 @@ class PWElementPosts extends PWElements {
                     width: 100%;
                     height: 50%;
                     z-index: 2;
+                }
+                .pwelement_'. self::$rnd_id .' .pwe-post-title {
+                    font-size: 18px;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-post-title,
                 .pwelement_'. self::$rnd_id .' .pwe-post-excerpt {
@@ -467,7 +472,7 @@ class PWElementPosts extends PWElements {
                     <div class="pwe-posts-title main-heading-text">
                         <h4 class="pwe-uppercase"><span>' . $posts_title . '</span></h4>
                     </div>
-                    <div class="pwe-posts pwe-slides">';
+                    <div class="pwe-posts pwe-slides" role="group" aria-roledescription="carousel" aria-live="polite">';
 
                     $all_categories = get_categories(array('hide_empty' => true));
 
@@ -521,7 +526,7 @@ class PWElementPosts extends PWElements {
                                         <div class="pwe-post-thumbnail">
                                             <div class="image-container" style="background-image:url('. $image .');"></div>
                                         </div>
-                                        <h5 class="pwe-post-title">'. $title .'</h5>';
+                                        <h4 class="pwe-post-title">'. $title .'</h4>';
                                 $output .= '</a>';
                             }
                         endwhile;
@@ -549,7 +554,7 @@ class PWElementPosts extends PWElements {
                     }
                 } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode" || $posts_modes == "posts_full_newest_slider_mode") {
 
-                    $output .= '<div class="pwe-posts pwe-slides">';
+                    $output .= '<div class="pwe-posts pwe-slides" role="group" aria-roledescription="carousel" aria-live="polite">';
 
                     if ($posts_modes == "posts_full_mode") {
                         $posts_count = ($posts_count == "") ? 18 : $posts_count;
@@ -664,7 +669,7 @@ class PWElementPosts extends PWElements {
                                         <div class="image-container" style="background-image:url('. $image .');"></div>
                                         <p class="pwe-post-date">'. $formatted_date .'</p>
                                     </div>
-                                    <h5 class="pwe-post-title">'. $title .'</h5>
+                                    <h4 class="pwe-post-title">'. $title .'</h4>
                                     <p class="pwe-post-excerpt">'. $excerpt .'</p>
                                     <button class="pwe-post-btn">' . self::languageChecker('CZYTAJ WIĘCEJ', 'READ MORE') . '</button>
                                 </a>';

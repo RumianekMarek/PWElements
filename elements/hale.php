@@ -142,10 +142,8 @@ class PWElementHale extends PWElements {
         $days_to_event = (($trade_fair_end_timestamp - $current_day_timestamp) / (60 * 60 * 24));
         $days_after_event = ($current_day_timestamp - $trade_fair_end_timestamp) / (60 * 60 * 24);
 
-        $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 60;
+        $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 63;
         $less_1_day_after = ($trade_fair_start_timestamp != false || !empty($trade_fair_end)) && $days_after_event > 0 && $days_after_event < 1;
-
-        // (!empty($all_halls) && ($less_2_month_before || $less_1_day_after) || $hall_show === true ) {
 
         if ((!empty($all_halls) && ($less_2_month_before || $less_1_day_after)) || $hall_show ) {
             $output = '

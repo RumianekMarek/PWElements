@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementSingleImage
@@ -52,10 +52,10 @@ class PWElementSingleImage extends PWElements {
                   'element' => 'pwe_element',
                   'value' => 'PWElementSingleImage',
                 ),
-            ), 
+            ),
         );
         return $element_output;
-    }    
+    }
 
     public static function output($atts) {
 
@@ -63,12 +63,16 @@ class PWElementSingleImage extends PWElements {
             'single_image_media' => '',
             'single_image_src' => '',
             'single_image_style' => '',
-        ), $atts )); 
+        ), $atts ));
 
-        $single_image_media = wp_get_attachment_url($single_image_media); 
+        $attachment_id = $single_image_media;
 
-        
-        
+        $single_image_media = wp_get_attachment_url($single_image_media);
+
+        $alt_text = get_post_meta($attachment_id, '_wp_attachment_image_alt', true);
+
+        $alt_text = !empty($alt_text) ? $alt_text : 'single image';
+
         if (!empty($single_image_src)) {
             $image_src = $single_image_src;
         } else if (!empty($single_image_media)) {
@@ -86,7 +90,7 @@ class PWElementSingleImage extends PWElements {
         </style>
 
         <div id="pweSingleImage" class="pwe-single-image">
-            '. ((!empty($image_src)) ? '<img src="'. $image_src .'" style="'. $single_image_style .'"/>' : '') .' 
+            '. ((!empty($image_src)) ? '<img src="'. $image_src .'" style="'. $single_image_style .'" alt="'. $alt_text .'"/>' : '') .'
         </div>';
 
 

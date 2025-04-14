@@ -148,7 +148,7 @@ function register_dynamic_shortcodes() {
     function handle_fair_shortcode($atts, $field) {
         $atts = shortcode_atts(['domain' => null], $atts);
         $fair_data = get_fair_data($atts['domain']);
-        return esc_html($fair_data[$field] ?? 'Brak danych');
+        return esc_html($fair_data[$field] ?? '');
     }
 
     // Registering shortcodes in the loop

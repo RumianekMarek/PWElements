@@ -64,7 +64,11 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             session_start();
         }
 
-        if (empty($_SESSION['pwe_reg_entry']['entry_id']) && ($reg_form_update_entries === "true")) {
+        if (
+            empty($_SESSION['pwe_reg_entry']['entry_id']) &&
+            ($reg_form_update_entries === "true") &&
+            (!is_user_logged_in() || !current_user_can('administrator'))
+        ) {
             header("Location: /rejestracja");
             exit();
         }
