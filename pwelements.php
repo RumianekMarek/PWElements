@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.5.7
+ * Version: 2.5.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -44,8 +44,8 @@ class PWElementsPlugin {
 
         // $this -> resendTicket();
 
-         // List of JavaScript files to exclude
-         $excluded_js_files = [
+        // List of JavaScript files to exclude
+        $excluded_js_files = [
             '/wp-content/plugins/PWElements/elements/js/exclusions.js',
             '/wp-content/plugins/PWElements/assets/three-js/three.min.js',
             '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
@@ -61,6 +61,17 @@ class PWElementsPlugin {
         add_filter('rocket_exclude_defer_js', function ($defer_files) use ($excluded_js_files) {
             return array_merge((array) $defer_files, $excluded_js_files);
         }, 10, 1);
+
+        add_filter( 'the_content', array($this, 'add_date_to_post') );
+    }
+
+    public function add_date_to_post( $content ) {
+        if ( is_single() && in_the_loop() && is_main_query() ) {
+            $data_publikacji = get_the_date( 'j F Y' );
+            $label = ( get_locale() === 'pl_PL' ) ? 'Data publikacji: ' : 'Date of publication: ';
+            $content .= '<div class="pwe-post-date" style="font-style: italic; margin-top: 10px;">'. $label . esc_html( $data_publikacji ) . '</div>';
+        }
+        return $content;
     }
 
     public function pwe_enqueue_styles() {
@@ -87,6 +98,9 @@ class PWElementsPlugin {
 
         // Helpers functions
         require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
+
+        // Shortcodes from CAP
+        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
 
         // Variables of styles
         require_once plugin_dir_path(__FILE__) . 'pwe-style-var.php';
@@ -134,8 +148,10 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
         $this->PWEConferenceCap = new PWEConferenceCap();
 
-        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
-
+        if ($_SERVER['HTTP_HOST'] === 'warsawexpo.eu' || $_SERVER['HTTP_HOST'] === 'rfl.warsawexpo.eu') {
+            require_once plugin_dir_path(__FILE__) . 'includes/calendar/calendar.php';
+            $this->PWECalendar = new PWECalendar();
+        }
 
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
