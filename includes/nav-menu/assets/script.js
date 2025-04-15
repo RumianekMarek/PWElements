@@ -7,13 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const pweNavMenu = document.querySelector('#pweMenu');
     const bodyHome = document.querySelector("body.home");
     const pweNavMenuHome = document.querySelector("body.home #pweMenu");
-    const burgerCheckbox = pweNavMenu.querySelector('.pwe-menu__burger-checkbox');
+    const burgerButton = pweNavMenu.querySelector('.pwe-menu__burger');
     const menuContainer = pweNavMenu.querySelector('.pwe-menu__container');
 
     const mainContainer = document.querySelector('.main-container');
 
     const uncodePageHeader = document.querySelector("#page-header");
     const pweCustomHeader = document.querySelector("#pweHeader");
+
+    if (menuContainer) {
+        menuContainer.style.transition = '.3s'
+    }
 
     if (pweNavMenu && mainContainer) {
         if (!(uncodePageHeader && pweCustomHeader)) {
@@ -88,35 +92,33 @@ document.addEventListener("DOMContentLoaded", function () {
             window.addEventListener("scroll", function () {
                 if (window.scrollY > pweNavMenu.offsetHeight) {
                     pweNavMenuHome.style.background = accent_color;
+                    pweNavMenuHome.classList.add('color');
+
                 } else {
                     pweNavMenuHome.style.background = "transparent";
+                    pweNavMenuHome.classList.remove('color');
                 }
             });
+        } else {
+            pweNavMenu.classList.add('color');
         }
-    }
+    } 
     
-    // Click outside the menu container
-    if (burgerCheckbox && menuContainer) {
-        document.addEventListener("click", function (e) {
-            if (burgerCheckbox.checked && !menuContainer.contains(e.target) && e.target !== burgerCheckbox) {
-                burgerCheckbox.checked = false;
-                pweNavMenu.classList.remove("burger-menu");
-
-                // Close all open submenus
-                const openSubmenus = document.querySelectorAll('.pwe-menu__submenu.visible');
-                openSubmenus.forEach(submenu => {
-                    closeSubmenu(submenu);
-                });
-            }
+    if (burgerButton && pweNavMenu) {
+        // Listening for click on burger menu
+        burgerButton.addEventListener("click", function() {
+            pweNavMenu.classList.toggle("burger-menu");
+            
+            // If the menu is open, close all submenus
+            const openSubmenus = document.querySelectorAll('.pwe-menu__submenu.visible');
+            openSubmenus.forEach(submenu => {
+                closeSubmenu(submenu);
+            });
         });
-    }
 
-    // Overlay menu (active-unactive)
-    if (burgerCheckbox && pweNavMenu) {
-        burgerCheckbox.addEventListener("change", function () {
-            if (this.checked) {
-                pweNavMenu.classList.add("burger-menu");
-            } else {
+        // Click outside the menu - close burger menu
+        document.addEventListener("click", function (e) {
+            if (pweNavMenu.classList.contains("burger-menu") && !menuContainer.contains(e.target) && !burgerButton.contains(e.target)) {
                 pweNavMenu.classList.remove("burger-menu");
 
                 // Close all open submenus

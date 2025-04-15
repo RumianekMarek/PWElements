@@ -87,6 +87,17 @@ class PWElementStepTwo extends PWElements {
                     'value' => 'PWElementStepTwo',
                 ),
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('No forms', 'pwe_header'),
+                'param_name' => 'step2_no_forms',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementStepTwo',
+                ),
+            ),
         );
         return $element_output;
     }
@@ -100,6 +111,7 @@ class PWElementStepTwo extends PWElements {
             'reg_form_name_step2' => '',
             'step2_overlay_color' => '',
             'step2_overlay_range' => '',
+            'step2_no_forms'      => '',
         ), $atts ));
 
         if (session_status() == PHP_SESSION_NONE) {
@@ -350,21 +362,49 @@ class PWElementStepTwo extends PWElements {
                                     Do you want to become a <span class="text-accent-color">exhibitor</span> of [trade_fair_name_eng] ?
                                 EN
                             )
-                        .'</h3>
-                        <div class="pwe-gravity-form">
-                            [gravityform id="'. $reg_form_name_step2 .'" title="false" description="false" ajax="false"]
-                        </div>
-                        <div class="pwe-submitting-buttons">
-                            <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">'.
-                                self::languageChecker(
-                                    <<<PL
-                                        Tak, jestem zainteresowany
-                                    PL,
-                                    <<<EN
-                                        Yes, I am interested
-                                    EN
-                                )
-                            .'</button>';
+                        .'</h3>';
+                        if(!$step2_no_forms){
+                            $output .= '
+                                <div class="pwe-gravity-form">
+                                    [gravityform id="'. $reg_form_name_step2 .'" title="false" description="false" ajax="false"]
+                                </div>
+
+                                <div class="pwe-submitting-buttons">
+                                    <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                Tak, jestem zainteresowany
+                                            PL,
+                                            <<<EN
+                                                Yes, I am interested
+                                            EN
+                                        )
+                                    .'</button>';
+                        } else {
+                            $output .= '<div class="pwe-submitting-buttons">
+                                    <a href="'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                /potwierdzenie-rejestracji-wystawcy/
+                                            PL,
+                                            <<<EN
+                                                /en/exhibitor-registration-confirmation/
+                                            EN
+                                        )
+                                        .'">
+                                        <button type="submit" class="btn exhibitor-yes" name="exhibitor-yes">'.
+                                        self::languageChecker(
+                                            <<<PL
+                                                Tak, jestem zainteresowany
+                                            PL,
+                                            <<<EN
+                                                Yes, I am interested
+                                            EN
+                                        )
+                                        .'</button>
+                                    </a>';
+                        }
+
 
                             $trade_fair_date = do_shortcode('[trade_fair_enddata]');
 

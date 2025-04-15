@@ -10,13 +10,14 @@ class PWESliderScripts {
         /**
          * Prepares and returns the scripts for the slider.
          */
-        public static function sliderScripts($id = '', $pwe_element = '.pwelement', $dots_display = false, $arrows_display = false, $slides_to_show = 5, $options = null) {
+        public static function sliderScripts($id = '', $pwe_element = '.pwelement', $dots_display = false, $arrows_display = false, $slides_to_show = 5, $options = null, $slides_to_show_1 = 5, $slides_to_show_2 = 3, $slides_to_show_3 = 2) {
             wp_enqueue_style('slick-slider-css', plugins_url('../assets/slick-slider/slick.css', __FILE__));
             wp_enqueue_style('slick-slider-theme-css', plugins_url('../assets/slick-slider/slick-theme.css', __FILE__));
             wp_enqueue_script('slick-slider-js', plugins_url('../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
 
             include_once plugin_dir_path(__DIR__) . 'pwefunctions.php';
             $fair_colors = PWECommonFunctions::findPalletColorsStatic();
+            $accessibility = ($id == 'posts') ? 'accessibility: false,' : '';
 
             $accent_color = ($fair_colors['Accent']) ? $fair_colors['Accent'] : '';
             foreach($fair_colors as $color_key => $color_value){
@@ -142,11 +143,14 @@ class PWESliderScripts {
 
             }
 
+            $center_mode = "";
+            $center_padding = "";
+
             if ($id == 'logotypes') { // logotypes_common.php <-------------------------------------------------------------<
                 $get_initial_slides_to_show = '
-                return  elementWidth < 400 ? 2 :
-                        elementWidth < 600 ? 3 :
-                        elementWidth < 960 ? 5 :
+                return  elementWidth < 400 ? '. $slides_to_show_3 .' :
+                        elementWidth < 600 ? '. $slides_to_show_2 .' :
+                        elementWidth < 960 ? '. $slides_to_show_1 .':
                         slidesToShowSetting;
                 ';
             } else if ($id == 'opinions') { // opinions.php <-------------------------------------------------------------<
@@ -157,6 +161,19 @@ class PWESliderScripts {
                         elementWidth < 1400 ? 4 :
                         slidesToShowSetting;
                 ';
+            } else if ($id == 'opinions-preset-4') { // opinions.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 600 ? 1 :
+                        elementWidth < 960 ? 1 :
+                        elementWidth < 1100 ? 1 :
+                        elementWidth < 1400 ? 1 :
+                        slidesToShowSetting;
+                ';
+
+                $center_mode = 'centerMode: true,';
+                $center_padding = 'centerPadding: slickSlider.width() < 960 ? "0px" : "100px"';
+
+
             } else if ($id == 'posts') { // posts.php <-------------------------------------------------------------<
                 $get_initial_slides_to_show = '
                 return  elementWidth < 400 ? 1 :
@@ -185,7 +202,7 @@ class PWESliderScripts {
                 return  elementWidth < 400 ? 1 :
                         elementWidth < 600 ? 2 :
                         elementWidth < 900 ? 3 :
-                        elementWidth < 1100 ? 4 : 
+                        elementWidth < 1100 ? 4 :
                         slidesToShowSetting;
                 ';
             } else if ($id == 'other-events') { // other-events.php <-------------------------------------------------------------<
@@ -207,6 +224,14 @@ class PWESliderScripts {
                 $get_initial_slides_to_show = '
                 return  elementWidth < '. $options[0]["breakpoint-mobile"] .' ? '. $options[0]["count-visible-thumbs-mobile"] .' :
                         elementWidth < '. $options[0]["breakpoint-tablet"] .' ? '. $options[0]["count-visible-thumbs-tablet"] .' :
+                        slidesToShowSetting;
+                ';
+            } else if ($id == 'capconf') { // conference_cap.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 2 :
+                        elementWidth < 600 ? 3 :
+                        elementWidth < 1200 ? 5 :
+                        elementWidth > 1200 ? 7 :
                         slidesToShowSetting;
                 ';
             }
@@ -245,7 +270,10 @@ class PWESliderScripts {
                             speed: 600,
                             dots: dotsEnabled,
                             cssEase: "linear",
+                            '. $accessibility .'
                             swipeToSlide: true,
+                            '. $center_mode .'
+                            '. $center_padding .'
                         });
 
                         // Hide arrows if arrows are disabled

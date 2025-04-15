@@ -12,8 +12,24 @@ class PWElementStepTwoExhibitor extends PWElements {
      */
     public function __construct() {
         parent::__construct();
+        add_filter('gform_pre_render', array($this, 'hideFieldsBasedOnAdminLabel'));
     }
-
+    /**
+     * Ukrywa pola w formularzu na podstawie etykiety admina.
+     *
+     * @param array $form Formularz Gravity Forms
+     * @return array Zaktualizowany formularz
+     */
+    public function hideFieldsBasedOnAdminLabel($form) {
+        if ($_SESSION["pwe_reg_entry"]["email"]) {
+            foreach ($form['fields'] as &$field) {
+                if (in_array($field->adminLabel, ['mail', 'number'])) {
+                    $field->visibility = 'hidden';
+                }
+            }
+        }
+        return $form;
+    }
     // /**
     //  * Static method to initialize Visual Composer elements.
     //  * Returns an array of parameters for the Visual Composer element.
@@ -90,27 +106,44 @@ class PWElementStepTwoExhibitor extends PWElements {
         /* Update text tranform */
         $lang = get_locale();
 
+        $userSessionEmail = $_SESSION["pwe_reg_entry"]["email"]  ?? null;
+        $userSessionPhone = $_SESSION["pwe_reg_entry"]["phone"] ?? null;
+        // var_dump($_SESSION);
 
         $directUrl = $_SESSION['pwe_exhibitor_entry']['current_url'];
-        if($directUrl =="/en/step2/" || $directUrl =="/krok2/"){
-            $form_to_update = $registration_form_step2_exhibitor_www2;
-        } else {
+
+        if ($directUrl == "/zostan-wystawca/" || $directUrl == "/en/become-an-exhibitor/") {
             $form_to_update = $registration_form_step2_exhibitor;
+        } elseif (strpos($registration_form_step2_exhibitor, "Potwierdzenie rejestracji wystawcy") !== false) {
+            $form_to_update = $registration_form_step2_exhibitor;
+        } else {
+            $form_to_update = $registration_form_step2_exhibitor_www2;
         }
+
         $translations = [
             'pl' => [
                 'name' => 'Imię i Nazwisko',
                 'area' => 'Wybierz powierzchnię wystawienniczą',
                 'company' => 'Firma',
                 'confirm_text' => 'Dziękujemy za uzupełnienie danych. Do usłyszenia już wkrótce. Zespół Ptak Warsaw Expo',
-                'error' => 'Wszystkie pola są wymagane!',
+                'error' => 'Oznaczona pola są wymagane!',
+                'tax' => 'NIP',
+                'company_desc' => 'Dodatkowe informacje o firmie',
+                'consent' => '* pola oznaczone gwiazdką są obowiązkowe',
+                'from' => 'od',
+                'to' => 'do',
             ],
             'en' => [
                 'name' => 'Name',
                 'area' => 'Select exhibition area',
                 'company' => 'Company',
                 'confirm_text' => 'Thank you for completing the data. We look forward to hearing from you soon. Ptak Warsaw Expo Team',
-                'error' => 'All fields are required!',
+                'error' => 'Marked fields are required!',
+                'tax' => 'TAX ID',
+                'company_desc' => 'Additional information about the company',
+                'consent' => '* fields marked with an asterisk are required',
+                'from' => 'from',
+                'to' => 'to',
             ]
         ];
 
@@ -157,7 +190,8 @@ class PWElementStepTwoExhibitor extends PWElements {
                 .pwelement_'. self::$rnd_id .' .form .gform_fields {
                     display: flex;
                     flex-direction: column;
-                    gap: 18px;
+                    // gap: 18px;
+                    padding:0 !important;
                 }
                 .pwelement_'. self::$rnd_id .' .form form label{
                     text-align: left;
@@ -167,7 +201,8 @@ class PWElementStepTwoExhibitor extends PWElements {
                     color: black;
                 }
                 .pwelement_'. self::$rnd_id .' .form form :is(input:not([type="checkbox"]), textarea) {
-                    margin-bottom: 18px;
+                    margin-top: 4px !important;
+                    margin-bottom:0px !important;
                     width: 100%;
                     border-radius: 10px;
                     box-shadow: none !important;
@@ -177,7 +212,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     border-color: black !important;
                 }
                 .pwelement_'. self::$rnd_id .' form .gfield_required_asterisk{
-                    display: none !important;
+                    // display: none !important;
                 }
                 .pwelement_'. self::$rnd_id .' .gform_required_legend {
                     display: none !important;
@@ -191,13 +226,23 @@ class PWElementStepTwoExhibitor extends PWElements {
                     padding: 0;
                     margin: 0;
                 }
+                .pwelement_'. self::$rnd_id .' .form form {
+                    margin-top:0 !important;
+                }
+                .pwelement_'. self::$rnd_id .' .gform_legacy_markup_wrapper {
+                    margin-bottom:0;
+                    margin-top:0;
+                }
+                .pwelement_'. self::$rnd_id .'  .gform_legacy_markup_wrapper .gform_footer {
+                    padding: 0 !important;
+                }
                 .pwelement_'. self::$rnd_id .' input[type=submit] {
                     background-color: '. $btn_color .' !important;
                     border: 2px solid '. $btn_color .' !important;
                     color: '. $btn_text_color .';
                     border-radius: 10px !important;
                     font-size: 1em;
-                    margin: 18px auto 0;
+                    margin: 0 auto 0;
                     align-self: center;
                     box-shadow: none !important;
                     font-size: 12px;
@@ -242,6 +287,9 @@ class PWElementStepTwoExhibitor extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' #pweForm:has(.gform_confirmation_wrapper) .display-before-submit {
                     display: none;
+                }
+                .pwelement_'. self::$rnd_id .' .display-before-submit {
+                    margin-bottom:10px;
                 }
                 .pwelement_'. self::$rnd_id .' .display-after-submit{
                     display: none;
@@ -294,18 +342,132 @@ class PWElementStepTwoExhibitor extends PWElements {
                     font-size: 14px !important;
                     font-weight: 700;
                 }
-
-                /* Range container */
-
-                .pwelement_'. self::$rnd_id .' .range_container {
-                    margin-top:9px;
-                    background: white;
-                    border: 1px solid black;
-                    border-radius: 10px;
-                    padding: 10px 15px !important;
+                .pwelement_'. self::$rnd_id .'  .gform_wrapper  .gfield_consent_label {
+                    font-size: 12px !important;
                 }
-                .pwelement_'. self::$rnd_id .' .range_container input {
-                    margin: 0px !important;
+                .pwelement_'. self::$rnd_id .' .gform_legacy_markup_wrapper ul li.gfield {
+                    margin-top:5px !important;
+
+                }
+                .pwelement_'. self::$rnd_id .' .gform_wrapper .ginput_container_consent  :is(label, legend) {
+                    font-weight: 500;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-wrapper {
+                    margin-top:9px;
+                    position: relative;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-wrapper h4 {
+                    font-size: 16px;
+                    font-weight: 700;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-inputs {
+                    position: relative;
+                    width: 100%;
+                    height: 50px;
+                }
+                .pwelement_'. self::$rnd_id .' input[type=tel] {
+                    margin-bottom: 18px;
+                    margin-top: 9px !important;
+                }
+                .pwelement_'. self::$rnd_id .' .form form .input-range-container input[type="range"] {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    width: 100%;
+                    outline: none;
+                    position: absolute;
+                    padding: 0 !important;
+                    margin: auto;
+                    top: 0;
+                    bottom: 0;
+                    background-color: transparent;
+                    pointer-events: none;
+                    border:0px !important;
+                    margin-bottom:18px !important;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-track {
+                    width: 100%;
+                    height: 5px;
+                    position: absolute;
+                    margin: auto;
+                    top: -13px;
+                    bottom: 0;
+                    border-radius: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-webkit-slider-runnable-track {
+                    color: '. self::$main2_color .';
+                    -webkit-appearance: none;
+                    height: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-moz-range-track {
+                    -moz-appearance: none;
+                    height: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-ms-track {
+                    appearance: none;
+                    height: 5px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    height: 1.7em;
+                    width: 1.7em;
+                    background-color: '. self::$main2_color .';
+                    cursor: pointer;
+                    margin-top: -9px;
+                    pointer-events: auto;
+                    border-radius: 50%;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-moz-range-progress {
+                    background-color: '. self::$main2_color .';
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-moz-range-thumb {
+                    -webkit-appearance: none;
+                    height: 1.7em;
+                    width: 1.7em;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    background-color: '. self::$main2_color .';
+                    pointer-events: auto;
+                    border: none;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]::-ms-thumb {
+                    appearance: none;
+                    height: 1.7em;
+                    width: 1.7em;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    background-color: '. self::$main2_color .';
+                    pointer-events: auto;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container input[type="range"]:active::-webkit-slider-thumb {
+                    background-color: #ffffff;
+                    border: 1px solid '. self::$main2_color .';
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-values {
+                    display: flex;
+                    gap: 12px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-container .input-range-values .input-container {
+                    position: relative;
+                    display: inline-block;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-values input {
+                    width: 100px !important;
+                    padding-right: 35px !important;
+                    height: 43px;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-values .unit-label {
+                    position: absolute;
+                    top: 20px;
+                    right: 8px;
+                    font-weight: 600;
+                    pointer-events: none;
+                }
+                .pwelement_'. self::$rnd_id .' .input-range-value-label {
+                    display: flex;
+                    align-items: center;
+                    font-weight: 600;
+                    margin: 9px 0px 0px 0px
                 }
                 .pwelement_'.self::$rnd_id.' .error-border {
                     border: 2px solid red !important;
@@ -318,7 +480,10 @@ class PWElementStepTwoExhibitor extends PWElements {
                     background: white;
                     font-weight: 600;
                 }
-
+                .pwelement_'. self::$rnd_id .' textarea {
+                    padding: 9px 8px !important;
+                    height: 45px  !important;
+                }
                 @media (min-width:650px) and (max-width:1080px){
                     .pwelement_'. self::$rnd_id .' .form-right {
                         display:none;
@@ -374,38 +539,46 @@ class PWElementStepTwoExhibitor extends PWElements {
                         )
                     .'</div>';
 
-                    if(!$registration_form_step2_exhibitor_update_entries){
-                        $output .= '[gravityform id="'. $registration_form_step2_exhibitor .'" title="false" description="false" ajax="false"]';
-                    } else {
+                    if(($directUrl == "/zostan-wystawca/" || $directUrl == "/en/become-an-exhibitor/") && (strpos($registration_form_step2_exhibitor, "Potwierdzenie rejestracji wystawcy") === false)){
                         $output .= '
                         <div class="gf_browser_chrome gform_wrapper gravity-theme gform-theme--no-framework">
                             <form id="addressUpdateForm">
                                 <div class="gform-body gform_body">
                                     <div class="gform_fields">
                                         <div class="gfield gfield--width-full">
-                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['name'] . '</label>
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['name'] . ' *</label>
                                             <input type="text" id="name" placeholder="' . $t['name'] . '" required/>
                                         </div>
-                                        <div class="gfield gfield--width-full">
-                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['area'] . ' <strong>(<span id="areaValue">125</span>m<sup>2</sup>)</strong></label>
-                                            <div class="range_container">
-                                                <input type="range" id="areaSlider" min="10" max="250" value="125" step="1">
-                                            </div>
-                                            <input type="text" id="area" name="area" hidden required/>
+                                        <div style="margin-top:18px;" class="gfield gfield--width-full">
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['tax'] . ' *</label>
+                                            <input type="text" id="nip" placeholder="' . $t['tax'] . '" />
                                         </div>
-                                        <div class="gfield gfield--width-full">
-                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['company'] . '</label>
-                                            <input type="text" id="company" placeholder="' . $t['company'] . '" required/>
+                                        <div style="margin-top:18px;" class="gfield gfield--width-full">
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['company_desc'] . '</label>
+                                            <input type="text" id="company" placeholder="' . $t['company_desc'] . '" required/>
                                         </div>
-                                        <div id="statusMessage" class="status-message"></div>
+                                        <div style="display:none !important;" class="input-area" >
+                                            <label style="padding:0;" class="gfield_label gform-field-label">' . $t['area'] . '</label>
+                                            <input type="text" id="area" placeholder="' . $t['area'] . '" required/>
+
+                                        </div>
+                                        <div style="margin-top:18px;" id="statusMessage" class="status-message"></div>
                                     </div>
                                 </div>
+                                <p style="font-weight: 500; margin-top: 5px; font-size: 12px;">'. $t['consent'] .'</p>
                             </form>
                         </div>';
+                    } else {
+                        $output .= '[gravityform id="'. $form_to_update .'" title="false" description="false" ajax="false"]';
                     }
-
+                    if($directUrl =="/zostan-wystawca/" || $directUrl =="/en/become-an-exhibitor/"){
+                        $output .= '
+                        <input style="margin-top:20px;" type="submit" id="pweConfirmation" class="display-before-submit" value="'. $confirmation_button_text .'" onclick="updateGravityForm()">';
+                    } else {
+                        $output .= '
+                        <input type="submit" id="pweConfirmation" class="display-before-submit" value="'. $confirmation_button_text .'">';
+                    }
                     $output .= '
-                    <input type="submit" id="pweConfirmation" class="display-before-submit" value="'. $confirmation_button_text .'" onclick="updateGravityForm()">
                     <div class="pwe-submitting-buttons display-after-submit">
                         <a href="'.
                         self::languageChecker(
@@ -447,56 +620,16 @@ class PWElementStepTwoExhibitor extends PWElements {
                 </div>
             </div>
         ';
+        $output .= '
 
-        if(!$registration_form_step2_exhibitor_update_entries){
+        ';
+        if (($directUrl == "/zostan-wystawca/" || $directUrl == "/en/become-an-exhibitor/") && (strpos($registration_form_step2_exhibitor, "Potwierdzenie rejestracji wystawcy") === false)){
             $output .= '
             <script>
-                jQuery(document).ready(function($){
-                    let userArea = localStorage.getItem("user_area");
-                    if (userArea && userArea.trim() !== "") {
-                        $(".con-area").hide();
-                    }
+                const formEmail = document.querySelector(".input-area");
 
-                    $(".pwelement_'. self::$rnd_id .' #pweConfirmation").on("click", function() {
-                        let userEmail = localStorage.getItem("user_email");
-                        let userTel = localStorage.getItem("user_tel");
-                        let userDirection = localStorage.getItem("user_direction");
-
-                        if (userEmail) {
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(localStorage.getItem("user_email"));
-                        }
-                        if (userTel) {
-                            $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(localStorage.getItem("user_tel"));
-                        }
-                        if (userArea) {
-                            $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);
-                        }
-
-                        $(".pwelement_'. self::$rnd_id .' .gfield--type-consent").find("input").click();
-                        $(".pwelement_'. self::$rnd_id .' form").submit();
-                    });
-                });
-            </script>';
-        } else {
-            $output .= '
-            <script>
-
-                document.addEventListener("DOMContentLoaded", function() {
-                    let slider = document.getElementById("areaSlider");
-                    let areaValue = document.getElementById("areaValue");
-                    let hiddenInput = document.getElementById("area");
-
-                    function updateLabel() {
-                        let value = slider.value;
-                        areaValue.textContent = value;
-                        hiddenInput.value = value;
-                    }
-
-                    slider.addEventListener("input", updateLabel);
-                    updateLabel();
-                });
                 function updateGravityForm() {
-                    const fields = ["name", "area", "company"];
+                    const fields = ["name", "area", "nip"];
                     let hasError = false;
                     let firstErrorField = null;
 
@@ -523,17 +656,18 @@ class PWElementStepTwoExhibitor extends PWElements {
                     const name = document.getElementById("name").value.trim();
                     const area = document.getElementById("area").value.trim();
                     const company = document.getElementById("company").value.trim();
+                    const nip = document.getElementById("nip").value.trim();
                     const statusMessage = document.getElementById("statusMessage");
                     const formName = "'.$form_to_update.'";
                     const direction = "exhibitor";
 
-                    if (!name || !area || !company) {
+                    if (!name || !area || !nip) {
                         statusMessage.innerText = "' . $t['error'] . '";
                         statusMessage.classList.add("error");
                         return;
                     }
 
-                    const formData = { name, area, company, formName, direction };
+                    const formData = { name, area, company, nip, formName,  direction };
 
                     fetch("'.$file_url.'", {
                         method: "POST",
@@ -546,7 +680,7 @@ class PWElementStepTwoExhibitor extends PWElements {
                     .then(response => response.json())
                     .then(data => {
                         if (data.message === "Dane zaktualizowane" || data.message === "Data has been updated!") {
-                            document.getElementById("addressUpdateForm").classList.add("hidden"); // Ukrycie formularza
+                            document.getElementById("addressUpdateForm").classList.add("hidden");
 
                             const confirmationWrapper = document.createElement("div");
                             confirmationWrapper.classList.add("gform_confirmation_wrapper");
@@ -572,8 +706,178 @@ class PWElementStepTwoExhibitor extends PWElements {
                     });
                 }
             </script>';
+        } else {
+            $output .= '
+            <script>
+                const form = document.querySelector(".pwelement_'. self::$rnd_id .' form");
+                const formEmail = form.querySelector(".input-area");
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    let gformFields = document.querySelector(".gform_fields");
+                    if (gformFields) {
+                        let newParagraph = document.createElement("p");
+                        newParagraph.style.fontWeight = "500";
+                        newParagraph.style.marginTop = "5px";
+                        newParagraph.style.fontSize = "12px";
+                        newParagraph.innerHTML = "'. $t['consent'] .'";
+
+                        gformFields.appendChild(newParagraph);
+                    }
+
+
+                    jQuery(document).ready(function($){
+                        const buttonSubmit = document.querySelector(".pwelement_'. self::$rnd_id .' .gform_footer input[type=submit]");
+                        let userArea = localStorage.getItem("user_area");
+                        if (userArea && userArea.trim() !== "") {
+                            $(".con-area").hide();
+                        }
+
+                        $(".pwelement_'. self::$rnd_id .' #pweConfirmation").on("click", function() {
+                            let userEmail = "'. $userSessionEmail .'" || localStorage.getItem("user_email");
+                            let userTel = "'. $userSessionPhone .'" || localStorage.getItem("user_tel");
+                            let userDirection = localStorage.getItem("user_direction");
+
+                            if (userEmail) {
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);
+                            }
+                            if (userTel) {
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_phone").find("input").val(userTel);
+                            }
+                            if (userArea) {
+                                $(".pwelement_'. self::$rnd_id .' .input-area").find("input").val(userArea);
+                            }
+
+                            buttonSubmit.click();
+                        });
+
+
+                    });
+                });
+
+            </script>';
+
         }
 
+        if(strpos($registration_form_step2_exhibitor, "Potwierdzenie rejestracji wystawcy") === false){
+        $output .= '
+            <script>
+                const sliderContainer = document.createElement("div");
+                sliderContainer.className = "input-range-container";
+                sliderContainer.innerHTML = `
+                    <div class="input-range-wrapper">
+                        <p style="font-size:14px; font-weight:700; margin-top:18px;">'.
+                            self::languageChecker(
+                                <<<PL
+                                Wybierz powierzchnię wystawienniczą
+                                PL,
+                                <<<EN
+                                Choose an exhibition space
+                                EN
+                            )
+                        .'</p>
+                        <div class="input-range-inputs">
+                            <div class="input-range-track"></div>
+                            <input type="range" min="16" max="100" value="16"  id="inputRange1" oninput="slideOne()">
+                            <input type="range" min="16" max="100" value="36" id="inputRange2" oninput="slideTwo()">
+                        </div>
+                        <div class="input-range-values">
+                            <span class="input-range-value-label">'.$t['from'].'</span>
+                            <div class="input-container">
+                                <input type="number" min="0" max="999" value="16" id="inputRangeValue1" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
+                                <span class="unit-label">m²</span>
+                            </div>
+                            <span class="input-range-value-label">'.$t['to'].'</span>
+                            <div class="input-container">
+                                <input type="number" min="0" max="999" value="36" id="inputRangeValue2" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3)">
+                                <span class="unit-label">m²</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+
+                formEmail.insertAdjacentElement("afterend", sliderContainer);
+
+                function updateArea() {
+                    areaInput.value = minValue.value + " - " + maxValue.value + " m²";
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    slideOne();
+                    slideTwo();
+                    fillColor();
+                });
+
+                let sliderOne = document.getElementById("inputRange1");
+                let sliderTwo = document.getElementById("inputRange2");
+                let displayValOne = document.getElementById("inputRangeValue1");
+                let displayValTwo = document.getElementById("inputRangeValue2");
+                let minGap = 1;
+                let sliderTrack = document.querySelector(".input-range-track");
+                let sliderMaxValue = parseInt(sliderOne.max);
+                let sliderMinValue = parseInt(sliderOne.min);
+
+                function slideOne() {
+                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) < minGap) {
+                        sliderOne.value = parseInt(sliderTwo.value) - minGap;
+                    }
+                    displayValOne.value = sliderOne.value;
+                    fillColor();
+                    updateArea();
+                }
+
+                function slideTwo() {
+                    if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) < minGap) {
+                        sliderTwo.value = parseInt(sliderOne.value) + minGap;
+                    }
+                    displayValTwo.value = sliderTwo.value;
+                    fillColor();
+                    updateArea();
+                }
+
+                function fillColor() {
+                    let percent1 = ((sliderOne.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
+                    let percent2 = ((sliderTwo.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
+                    sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}%, #007bff ${percent1}%, #007bff ${percent2}%, #dadae5 ${percent2}%)`;
+                }
+
+                function updateArea() {
+                    const areaContainer = document.getElementsByClassName("input-area")[0];
+                    areaContainer.style = "display:none !important;";
+                    if (areaContainer) {
+                        const areaInput = areaContainer.getElementsByTagName("input")[0];
+                        if (areaInput) {
+                            areaInput.value = displayValOne.value + " - " + displayValTwo.value + " m²";
+                        }
+                    }
+                }
+
+                displayValOne.addEventListener("input", function () {
+                    let val = parseInt(displayValOne.value);
+                    if (val < sliderMinValue) val = sliderMinValue;
+                    if (val > parseInt(sliderTwo.value) - minGap) val = parseInt(sliderTwo.value) - minGap;
+                    sliderOne.value = val;
+                    slideOne();
+                });
+
+                displayValTwo.addEventListener("input", function () {
+                    let val = parseInt(displayValTwo.value);
+                    if (val > sliderMaxValue) val = sliderMaxValue;
+                    if (val < parseInt(sliderOne.value) + minGap) val = parseInt(sliderOne.value) + minGap;
+                    sliderTwo.value = val;
+                    slideTwo();
+                });
+
+                function preventTyping(event) {
+                    if (event.key !== "ArrowUp" && event.key !== "ArrowDown" && event.key !== "Tab") {
+                        event.preventDefault();
+                    }
+                }
+
+                displayValOne.addEventListener("keydown", preventTyping);
+                displayValTwo.addEventListener("keydown", preventTyping);
+
+            </script>';}
         return $output;
     }
 }

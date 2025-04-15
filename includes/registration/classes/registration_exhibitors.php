@@ -4,7 +4,7 @@
  * Class PWERegistrationExhibitors
  * Extends PWEProfile class and defines a custom Visual Composer element.
  */
-class PWERegistrationExhibitors extends PWEProfile {
+class PWERegistrationExhibitors extends PWERegistration {
 
     /**
      * Constructor method.

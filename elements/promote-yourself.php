@@ -227,64 +227,21 @@ class PWElementPromot extends PWElements {
 
             <div id="promoteYourself" >
                 <div class="pwe-content-promote-item pwe-promote-top-container column-reverse pwe-align-left">
-                    <div class="pwe-image-container">
-                        <div class="promote-img-contener" style="display: flex; gap: 20px;">
-                            <div style="margin: 0 18px;" class="pwe-image-container download-uslug">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-marketingowych.webp">
-                                    <div class="download-hover">
-                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-marketingowych.pdf">
-                                            <i class="fa fa-inbox2"></i>Pobierz
-                                        </a>
-                                    </div> 
-                                    PL,
-                                    <<<EN
-                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-marketingowych-en.webp">
-                                    <div class="download-hover">
-                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-marketingowych-EN.pdf">
-                                            <i class="fa fa-inbox2"></i>Download
-                                        </a>
-                                    </div>
-                                    EN
-                                ).'</div>
-                                <div style="margin: 0 18px;" class="pwe-image-container download-social">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-social-media.webp">
-                                    <div class="download-hover">
-                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-social-media.pdf">
-                                            <i class="fa fa-inbox2"></i>Pobierz
-                                        </a>
-                                    </div>
-                                    PL,
-                                    <<<EN
-                                    <img class="" src="/wp-content/plugins/custom-element/media/Katalog-uslug-social-media-en.webp">
-                                    <div class="download-hover">
-                                        <a style="color: white;" target="_blank" href="https://warsawexpo.eu/docs/Katalog-uslug-social-media-EN.pdf">
-                                            <i class="fa fa-inbox2"></i>Download
-                                        </a>
-                                    </div>
-                                    EN
-                                ).'
-                                </div>
-                            </div>
-                        </div>
                     <div class="pwe-promote-text-block">'.
-                            self::languageChecker(
-                                <<<PL
-                                    <h3>Wypromuj się na [trade_fair_name]!</h3>
-                                    <p>Drogi Wystawco!</p>
-                                    <p>[trade_fair_desc] – to niepowtarzalna okazja do wypromowania Twojej firmy! Chcesz by Twoje stoisko odwiedziło jak najwięcej osób? Pomożemy Ci sprawić, że Twoi klienci dowiedzą się, że jesteś częścią [trade_fair_name]!</p>
-                                    <p>Poniżej KROK po KROKU wyjaśniamy jak sprawić, by o Twojej obecności na Targach dowiedzieli się Twoi klienci!</p>
-                                PL,
-                                <<<EN
-                                    <h3>Promote yourself at the [trade_fair_name_eng]!</h3>
-                                    <p>Dear Exhibitor!</p>
-                                    <p>[trade_fair_desc_eng] - is a unique opportunity to promote your company! You want your stand to visit how the most people? We will help you make your clients know that you are part of [trade_fair_name_eng].</p>
-                                    <p>Below we explain STEP by STEP how to make your presence at the Fair known to your pweers!</p>
-                                EN
-                            )
+                        self::languageChecker(
+                            <<<PL
+                                <h3>Wypromuj się na [trade_fair_name]!</h3>
+                                <p>Drogi Wystawco!</p>
+                                <p>[trade_fair_desc] – to niepowtarzalna okazja do wypromowania Twojej firmy! Chcesz by Twoje stoisko odwiedziło jak najwięcej osób? Pomożemy Ci sprawić, że Twoi klienci dowiedzą się, że jesteś częścią [trade_fair_name]!</p>
+                                <p>Poniżej KROK po KROKU wyjaśniamy jak sprawić, by o Twojej obecności na Targach dowiedzieli się Twoi klienci!</p>
+                            PL,
+                            <<<EN
+                                <h3>Promote yourself at the [trade_fair_name_eng]!</h3>
+                                <p>Dear Exhibitor!</p>
+                                <p>[trade_fair_desc_eng] - is a unique opportunity to promote your company! You want your stand to visit how the most people? We will help you make your clients know that you are part of [trade_fair_name_eng].</p>
+                                <p>Below we explain STEP by STEP how to make your presence at the Fair known to your pweers!</p>
+                            EN
+                        )
                     .'</div>
                 </div>
 

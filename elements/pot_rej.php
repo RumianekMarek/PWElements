@@ -55,11 +55,23 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
      * Returns the HTML output as a string.
      */
     public static function output($atts, $content = ''){
-
         extract( shortcode_atts( array(
             'reg_form_name_pr' => '',
             'reg_form_update_entries' => '',
         ), $atts ));
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (
+            empty($_SESSION['pwe_reg_entry']['entry_id']) &&
+            ($reg_form_update_entries === "true") &&
+            (!is_user_logged_in() || !current_user_can('administrator'))
+        ) {
+            header("Location: /rejestracja");
+            exit();
+        }
 
         $file_url = plugins_url('elements/fetch.php', dirname(__FILE__));
 
@@ -142,7 +154,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             'pl' => [
                 'name' => 'Imię i Nazwisko',
                 'street' => 'Ulica',
-                'house' => 'Numer budynku/mieszkania',
+                'house' => 'Numer budynku',
                 'post' => 'Kod pocztowy',
                 'city' => 'Miasto',
                 'button' => 'Aktualizuj dane',
@@ -153,7 +165,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             'en' => [
                 'name' => 'Full Name',
                 'street' => 'Street',
-                'house' => 'Building/Apartment Number',
+                'house' => 'Building',
                 'post' => 'Postal Code',
                 'city' => 'City',
                 'button' => 'Update Data',
@@ -626,9 +638,15 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                                 <label class="gfield_label gform-field-label">' . $t['street'] . '</label>
                                                 <input type="text" id="street" placeholder="' . $t['street'] . '" required />
                                             </div>
-                                            <div class="gfield gfield--width-full">
-                                                <label class="gfield_label gform-field-label">' . $t['house'] . '</label>
-                                                <input type="text" id="house" placeholder="' . $t['house'] . '" required />
+                                            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+                                                <div style="flex:1;"  class="gfield gfield--width-full">
+                                                    <label class="gfield_label gform-field-label">' . $t['house'] . '</label>
+                                                    <input type="text" id="house" placeholder="' . $t['house'] . '" required />
+                                                </div>
+                                                <div style="flex:1;"  class="gfield gfield--width-full">
+                                                    <label class="gfield_label gform-field-label">Numer lokalu</label>
+                                                    <input type="text" id="local" placeholder="Numer lokalu" required />
+                                                </div>
                                             </div>
                                             <div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
                                                 <div style="flex:1;" class="gfield gfield--width-half">
@@ -890,32 +908,93 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 </script>';
             } else {
                 $output .= '
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD10_XMpLZxzQT_65E58g0yTq7GQBXUks4&libraries=places"></script>
                 <script>
-                console.log(document.getElementById("xForm").getElementsByClassName("display-after-subbmit")[0]);
+                    function initAutocomplete() {
+                        const streetInput = document.getElementById("street");
+                        const autocomplete = new google.maps.places.Autocomplete(streetInput, {
+                            types: ["address"],
+                            componentRestrictions: { country: "PL" }
+                        });
+
+                        autocomplete.addListener("place_changed", function () {
+                            const place = autocomplete.getPlace();
+                            if (!place.address_components) {
+                                return;
+                            }
+
+                            let street = "";
+                            let house = "";
+                            let city = "";
+                            let postCode = "";
+
+                            place.address_components.forEach(component => {
+                                if (component.types.includes("route")) {
+                                    street = component.long_name;
+                                } else if (component.types.includes("street_number")) {
+                                    house = component.long_name;
+                                } else if (component.types.includes("postal_code")) {
+                                    postCode = component.long_name;
+                                } else if (component.types.includes("locality")) {
+                                    city = component.long_name;
+                                }
+                            });
+
+                            document.getElementById("street").value = street;
+                            document.getElementById("house").value = house;
+                            document.getElementById("city").value = city;
+                            if (postCode.includes("-")) {
+                                const [post1, post2] = postCode.split("-");
+                                document.getElementById("post1").value = post1;
+                                document.getElementById("post2").value = post2;
+                            }
+                        });
+                    }
+
+                    document.addEventListener("DOMContentLoaded", initAutocomplete);
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const streetInput = document.getElementById("street");
+
+                        // Nasłuchujemy zmiany atrybutów
+                        const observer = new MutationObserver(mutations => {
+                            mutations.forEach(mutation => {
+                                if (mutation.attributeName === "disabled" && streetInput.hasAttribute("disabled")) {
+                                    streetInput.removeAttribute("disabled");
+                                }
+                            });
+                        });
+
+                        // Uruchamiamy MutationObserver na `#street`, obserwujemy zmiany atrybutów
+                        observer.observe(streetInput, { attributes: true });
+
+                        // Dodatkowo: usunięcie `disabled`, jeśli użytkownik kliknie w pole
+                        streetInput.addEventListener("focus", function () {
+                            if (this.hasAttribute("disabled")) {
+                                this.removeAttribute("disabled");
+                            }
+                        });
+                    });
+
                     function updateGravityForm() {
                         const fields = ["name", "street", "house", "city", "post1", "post2"];
                         let hasError = false;
                         let firstErrorField = null;
 
-                        // Resetowanie błędów
                         document.getElementById("statusMessage").innerText = "";
                         document.getElementById("statusMessage").classList.remove("error");
 
-                        // Sprawdzanie czy pola są puste
                         fields.forEach(id => {
                             const field = document.getElementById(id);
                             if (!field.value.trim()) {
                                 field.classList.add("error-border");
-                                if (!firstErrorField) {
-                                    firstErrorField = field;
-                                }
+                                if (!firstErrorField) firstErrorField = field;
                                 hasError = true;
                             } else {
                                 field.classList.remove("error-border");
                             }
                         });
 
-                        // Jeśli są puste pola, pokazujemy błąd i nie idziemy dalej
                         if (hasError) {
                             document.getElementById("statusMessage").innerText = "Wszystkie pola są wymagane!";
                             document.getElementById("statusMessage").classList.add("error");
@@ -923,7 +1002,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             return;
                         }
 
-                        // Pobranie kodu pocztowego i sprawdzenie formatu
                         const post1 = document.getElementById("post1");
                         const post2 = document.getElementById("post2");
                         const postCode = `${post1.value.trim()}-${post2.value.trim()}`;
@@ -932,20 +1010,17 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         if (!postPattern.test(postCode)) {
                             post1.classList.add("error-border");
                             post2.classList.add("error-border");
-                            document.getElementById("statusMessage").innerText = "Niepoprawny format kodu pocztowego (wymagany XX-XXX).";
+                            document.getElementById("statusMessage").innerText = "Niepoprawny format kodu pocztowego (XX-XXX).";
                             document.getElementById("statusMessage").classList.add("error");
                             post1.focus();
                             return;
-                        } else {
-                            post1.classList.remove("error-border");
-                            post2.classList.remove("error-border");
                         }
 
-                        // Jeśli wszystko OK, wysyłamy dane
                         const formData = {
                             name: document.getElementById("name").value.trim(),
                             street: document.getElementById("street").value.trim(),
                             house: document.getElementById("house").value.trim(),
+                            local: document.getElementById("local").value.trim(),
                             post: postCode,
                             city: document.getElementById("city").value.trim(),
                             formName: "'.$form_name.'",
@@ -964,15 +1039,13 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                         .then(data => {
                             if (data.message === "Dane zaktualizowane" || data.message === "Data has been updated!") {
                                 document.getElementById("addressUpdateForm").classList.add("hidden");
-
                                 const confirmationWrapper = document.createElement("div");
                                 confirmationWrapper.classList.add("gform_confirmation_wrapper");
                                 confirmationWrapper.style.textAlign = "center";
                                 confirmationWrapper.innerText = "'.$t['confirm_text'].'";
-
                                 document.getElementById("xForm").getElementsByClassName("form-3")[0].prepend(confirmationWrapper);
                             } else {
-                                document.getElementById("statusMessage").innerText = "Wystąpił błąd: " + data.message;
+                                document.getElementById("statusMessage").innerText = "Błąd: " + data.message;
                                 document.getElementById("statusMessage").classList.add("error");
                             }
                         })
@@ -982,23 +1055,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             document.getElementById("statusMessage").classList.add("error");
                         });
                     }
-
-                    // Ograniczenie pól post1 i post2 do cyfr oraz automatyczne przechodzenie do kolejnego pola
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const post1 = document.getElementById("post1");
-                        const post2 = document.getElementById("post2");
-
-                        post1.addEventListener("input", function() {
-                            this.value = this.value.replace(/\D/g, ""); // Usuwa nie-cyfry
-                            if (this.value.length === 2) {
-                                post2.focus();
-                            }
-                        });
-
-                        post2.addEventListener("input", function() {
-                            this.value = this.value.replace(/\D/g, ""); // Usuwa nie-cyfry
-                        });
-                    });
                 </script>';
             }
 

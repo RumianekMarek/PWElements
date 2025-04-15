@@ -31,6 +31,7 @@ class PWElementOpinions extends PWElements {
                     'Preset 1' => 'preset_1',
                     'Preset 2' => 'preset_2',
                     'Preset 3' => 'preset_3',
+                    'Preset 4' => 'preset_4',
                 ),
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -412,6 +413,127 @@ class PWElementOpinions extends PWElements {
                         color: white !important;
                     }
                 </style>';
+            } else if ($opinions_preset == 'preset_4') {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
+                        display: flex !important;
+                        box-shadow: 0 0 12px -6px black;
+                        padding: 0;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-left {
+                        width: 40%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-img {
+                        height: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-img img{
+                        object-fit: cover;
+                        height: 100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-right {
+                        width: 60%;
+                        padding: 36px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        gap: 24px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-info-container {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-container {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc {
+                        font-size: 12px !important;
+                         margin: 0;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-name {
+                        font-size: 12px;
+                        margin: 0;
+                        color: var(--accent-color);
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-info-container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        max-width: 200px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-name {
+                        font-size: 12px;
+                        margin: 0;
+                        text-align: right;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
+                        max-width: 100px;
+                        margin-left: auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
+                        position: relative;
+                        padding: 18px;
+                        margin: auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
+                        font-size: 14px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-see-more {
+                        text-align: right;
+                    }
+                    .pwelement_'. self::$rnd_id .' .quote {
+                        position: absolute;
+                        width: 30px;
+                        height: 30px;
+                        fill: var(--accent-color);
+                        filter: drop-shadow(0px 0px 1px black);
+                    }
+                    .pwelement_'. self::$rnd_id .' .quote-right {
+                        right: -2%;
+                        top: -12px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .quote-left {
+                        left: -2%;
+                        bottom: -12px;
+                    }
+                    @media(max-width:600px){
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
+                            flex-direction: column;
+                            padding-top: 40px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-left {
+                            width: 100%;
+                        } 
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-right {
+                            width: 100%;
+                            padding: 18px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-img img{
+                            width: 100%;
+                            max-width: 160px;
+                            margin: -80px auto 0;
+                            box-shadow: 0px 0px 10px -4px black;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-info-container {
+                            flex-direction: column;
+                            align-items: center;
+                            max-width: 100%;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-name,
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc,
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-name {
+                            text-align: center;
+                            width: 100%;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo {
+                            margin: 10px auto;
+                        }
+                        .pwelement_'. self::$rnd_id .' .slick-list {
+                            overflow: visible;
+                        }
+                    }
+                </style>';
             }
 
             $default_opinions = [
@@ -450,7 +572,7 @@ class PWElementOpinions extends PWElements {
                     'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
                     'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
                     'opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
-                    'opinions_name' => 'Piotr Fiejkiewicz',
+                    'opinions_name' => 'Piotr Flejszar',
                     'opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
                     'opinions_text' => self::languageChecker(
                         'PTAK Warsaw Expo jest największym centrum wystawienniczym, z jakim współpracujemy. Firma inwestuje w rozwój infrastruktury, co zwiększa jakość organizowanych wydarzeń.',
@@ -618,6 +740,36 @@ class PWElementOpinions extends PWElements {
                                 }
                             $output .= '
                             </div>';
+                        } else if ($opinions_preset == 'preset_4') {
+                            $output .= '
+                            <div class="pwe-opinions__item">
+                                <div class="pwe-opinions__item-left">
+                                    <div class="pwe-opinions__item-person-img">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                    </div>
+                                </div>
+                                <div class="pwe-opinions__item-right">
+                                    <div class="pwe-opinions__item-info-container">
+                                        <div class="pwe-opinions__item-person-info-container">
+                                            <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                            <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                        </div>
+                                            <div class="pwe-opinions__item-company-info-container">
+                                            <div class="pwe-opinions__item-company_logo">
+                                                <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                            </div>
+                                            ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
+                                        </div>
+                                    </div>
+                                    <div class="pwe-opinions__item-opinion">
+                                        <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
+                                        <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
+                                        (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
+                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                        <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
+                                    </div>
+                                </div>
+                            </div>';
                         }
                     }
 
@@ -633,7 +785,15 @@ class PWElementOpinions extends PWElements {
             $opinions_arrows_display = 'true';
 
             include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
-            $output .= PWESliderScripts::sliderScripts('opinions', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show);
+
+            if ($opinions_preset == 'preset_4') {
+                $opinions_options[] = array(
+                    "center_mode" => $center_mode = true,
+                );
+                $output .= PWESliderScripts::sliderScripts('opinions-preset-4', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show = 1, $opinions_options);
+            } else {
+                $output .= PWESliderScripts::sliderScripts('opinions', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show);
+            }
 
             $output .= '
             <script>

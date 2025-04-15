@@ -698,6 +698,26 @@ function initVCMapHeader() {
                     ),
                     array(
                         'type' => 'param_group',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Other partners/patrons', 'pwe_header'),
+                        'param_name' => 'pwe_header_other_partners',
+                        'params' => array(
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Logotypes Title', 'pwe_header'),
+                                'param_name' => 'pwe_header_partners_other_title',
+                                'save_always' => true
+                            ),
+                            array(
+                                'type' => 'attach_images',
+                                'heading' => __('Logotypes', 'pwe_header'),
+                                'param_name' => 'pwe_header_partners_other_logotypes',
+                                'save_always' => true
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'param_group',
                         'group' => 'Replace Strings',
                         'param_name' => 'pwe_replace',
                         'params' => array(

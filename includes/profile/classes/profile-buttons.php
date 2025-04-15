@@ -14,50 +14,58 @@ class PWEProfileButtons extends PWEProfile {
         parent::__construct();
     }
 
-    public static function getImagesFromDirectory($basePath, $limit = 10) {
+    public static function getImagesFromDirectory($basePath, $limit = 10, $order = false) {
         $allImages = [];
 
-        // Pobranie pełnej ścieżki katalogu
         $baseDir = ABSPATH . $basePath;
 
         if (is_dir($baseDir)) {
-            $subfolders = scandir($baseDir);
+            $files = scandir($baseDir);
 
-            foreach ($subfolders as $subfolder) {
-                // Pomijamy "." i ".."
-                if ($subfolder === '.' || $subfolder === '..') {
+            foreach ($files as $file) {
+                $filePath = $baseDir . '/' . $file;
+
+                if ($file === '.' || $file === '..') {
                     continue;
                 }
 
-                $folderPath = $baseDir . '/' . $subfolder;
+                if (is_file($filePath) && preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
+                    $allImages[] = $basePath . '/' . $file;
+                }
+            }
 
-                // Sprawdzamy, czy to folder
-                if (is_dir($folderPath)) {
-                    $files = scandir($folderPath);
+            if (count($allImages) < $limit) {
+                foreach ($files as $subfolder) {
+                    $folderPath = $baseDir . '/' . $subfolder;
 
-                    foreach ($files as $file) {
-                        // Filtrujemy tylko pliki graficzne
-                        if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
-                            $allImages[] = $basePath . '/' . $subfolder . '/' . $file;
+                    if (is_dir($folderPath) && $subfolder !== '.' && $subfolder !== '..') {
+                        $subFiles = scandir($folderPath);
+
+                        foreach ($subFiles as $subFile) {
+                            if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $subFile)) {
+                                $allImages[] = $basePath . '/' . $subfolder . '/' . $subFile;
+                            }
                         }
                     }
                 }
             }
         }
-
-        // Losowanie obrazów
+        
         if (count($allImages) > $limit) {
-            $randomKeys = array_rand($allImages, $limit);
-            $allImages = array_map(function($key) use ($allImages) {
-                return $allImages[$key];
-            }, (array) $randomKeys);
+            if($order){
+                $allImages = array_slice($allImages, 0 , $limit);
+            } else {
+                $randomKeys = array_rand($allImages, $limit);
+                $allImages = array_map(function($key) use ($allImages) {
+                    return $allImages[$key];
+                }, (array) $randomKeys);
+                shuffle($allImages);
+            }
         }
-
-        // Przetasowanie obrazów dla różnej kolejności
-        shuffle($allImages);
 
         return $allImages;
     }
+
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.

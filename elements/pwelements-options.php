@@ -588,10 +588,12 @@ class PWElements {
      */
     public function findFormsGF(){
         $pwe_forms_array = array();
-        if (method_exists('GFAPI', 'get_forms')) {
-            $pwe_forms = GFAPI::get_forms();
-            foreach ($pwe_forms as $form) {
-                $pwe_forms_array[$form['id']] = $form['title'];
+        if (is_admin()) {
+            if (method_exists('GFAPI', 'get_forms')) {
+                $pwe_forms = GFAPI::get_forms();
+                foreach ($pwe_forms as $form) {
+                    $pwe_forms_array[$form['id']] = $form['title'];
+                }
             }
         }
         return $pwe_forms_array;

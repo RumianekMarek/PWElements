@@ -9,7 +9,7 @@ class PWEPostsSlider {
 
         /**
          * Creates the DOM structure for the slider.
-         * 
+         *
          * @param int $id_rnd - Random ID for the slider element.
          * @param array $media_url - Array of media URLs.
          * @param int $min_image - Minimum image index.
@@ -19,7 +19,7 @@ class PWEPostsSlider {
         private static function createDOM($id_rnd, $media_url, $min_image, $max_image, $full_mode) {
 
                 $accent_color = do_shortcode('[trade_fair_accent]');
-                
+
                 $output = '
                 <style>
                         #PWEPostsSlider-'.$id_rnd.' {
@@ -79,7 +79,7 @@ class PWEPostsSlider {
                 <div id="PWEPostsSlider-'. $id_rnd .'" class="pwe-posts-slider">
                         <div class="slides">';
                         $load_more = get_locale() == 'pl_PL' ? 'CZYTAJ WIĘCEJ' : 'READ MORE';
-                        
+
                         for ($i = $min_image; $i < ($max_image); $i++) {
                                 if($i<0){
                                         $imgNumber = count($media_url) + $i;
@@ -99,9 +99,9 @@ class PWEPostsSlider {
                                         <a class="pwe-post" href="'. $imageUrl .'">
                                                 <div class="pwe-post-thumbnail">
                                                         <div class="image-container" style="'. $imageStyles .'"></div>
-                                                </div> 
+                                                </div>
                                                 <h5 class="pwe-post-title">'. $imageTitle .'</h5>
-                                        </a>';  
+                                        </a>';
                                 } else {
                                         $imageUrl = $media_url[$imgNumber]['link'];
                                         $imageSrc = $media_url[$imgNumber]['img'];
@@ -146,9 +146,9 @@ class PWEPostsSlider {
                                 }
                                 .pwe-posts .dot.active {
                                         background-color: '. $accent_color .';
-                                }   
+                                }
                         </style>
-                        
+
                         <div class="dots-container">
                                 <span class="dot active"></span>
                                 <span class="dot"></span>
@@ -161,7 +161,7 @@ class PWEPostsSlider {
 
         /**
          * Generates the necessary JavaScript for the slider functionality.
-         * 
+         *
          * @param int $id_rnd - Random ID for the slider element.
          * @param array $media_url - Array of media URLs.
          * @param int $min_image - Minimum image index.
@@ -174,7 +174,7 @@ class PWEPostsSlider {
 
                 $output = '
                 <script>
-                        jQuery(function ($) {                         
+                        jQuery(function ($) {
                                 const slider = document.querySelector("#PWEPostsSlider-'.$id_rnd.'");
                                 const slides = document.querySelector("#PWEPostsSlider-'.$id_rnd.' .slides");
                                 const images = document.querySelectorAll("#PWEPostsSlider-'.$id_rnd.' .slides .pwe-post");
@@ -186,7 +186,7 @@ class PWEPostsSlider {
 
                                 let isMouseOver = false;
                                 let isDragging = false;
-                                
+
                                 let imagesMulti = "";
                                 const slidesWidth = slider.clientWidth;';
 
@@ -202,7 +202,7 @@ class PWEPostsSlider {
                                                 imagesMulti = 4;
                                         } else {
                                                 imagesMulti = 4;
-                                        }'; 
+                                        }';
                                 } else {
                                         $output .= '
                                         if (slidesWidth < 400) {
@@ -213,9 +213,9 @@ class PWEPostsSlider {
                                                 imagesMulti = 3;
                                         } else {
                                                 imagesMulti = 3;
-                                        }'; 
+                                        }';
                                 }
-                            
+
                                 $output .= '
                                 if(imagesMulti >=  '. $media_url_count .'){
                                         $("#PWEPostsSlider-'. $id_rnd .' .slides").each(function(){
@@ -226,11 +226,11 @@ class PWEPostsSlider {
                                         });';
 
                                         if ($full_mode != 'true'){
-                                                $output .= 'const imageWidth = Math.floor((slidesWidth - imagesMulti * 10) / imagesMulti);'; 
+                                                $output .= 'const imageWidth = Math.floor((slidesWidth - imagesMulti * 10) / imagesMulti);';
                                         } else {
-                                                $output .= 'const imageWidth = Math.floor(((slidesWidth - imagesMulti * 10) / imagesMulti) - 10);'; 
+                                                $output .= 'const imageWidth = Math.floor(((slidesWidth - imagesMulti * 10) / imagesMulti) - 10);';
                                         }
-                                
+
                                         $output .= '
                                         images.forEach((image) => {
                                                 image.style.minWidth = imageWidth + "px";
@@ -239,11 +239,11 @@ class PWEPostsSlider {
                                 } else {';
 
                                         if ($full_mode != 'true'){
-                                                $output .= 'const imageWidth = Math.floor((slidesWidth - imagesMulti * 10) / imagesMulti);'; 
+                                                $output .= 'const imageWidth = Math.floor((slidesWidth - imagesMulti * 10) / imagesMulti);';
                                         } else {
-                                                $output .= 'const imageWidth = Math.floor(((slidesWidth - imagesMulti * 10) / imagesMulti) - 10);'; 
+                                                $output .= 'const imageWidth = Math.floor(((slidesWidth - imagesMulti * 10) / imagesMulti) - 10);';
                                         }
-                                
+
                                         $output .= '
                                         images.forEach((image) => {
                                                 image.style.minWidth = imageWidth + "px";
@@ -251,13 +251,13 @@ class PWEPostsSlider {
                                         });';
 
                                         if ($full_mode != 'true'){
-                                                $output .= 'const slidesTransform = (imageWidth + 18) * '. $min_image_adjusted .';'; 
+                                                $output .= 'const slidesTransform = (imageWidth + 18) * '. $min_image_adjusted .';';
                                         } else {
-                                                $output .= 'const slidesTransform = (imageWidth + 18) * '. $min_image_adjusted .';'; 
+                                                $output .= 'const slidesTransform = (imageWidth + 18) * '. $min_image_adjusted .';';
                                         }
-                                
+
                                         $output .= '
-                                        slides.style.transform = `translateX(-${slidesTransform}px)`; 
+                                        slides.style.transform = `translateX(-${slidesTransform}px)`;
 
                                         if (dotsContainer) {
                                                 dotsContainer.style.display = "block";
@@ -287,12 +287,12 @@ class PWEPostsSlider {
                                                 }, '. ($slide_speed / 2) .');
 
                                                 updateCurrentSlide(1);
-                                        }                       
+                                        }
 
                                         slider.addEventListener("mousemove", function() {
                                                 isMouseOver = true;
                                         });
-                                        
+
                                         slider.addEventListener("mouseleave", function() {
                                                 isMouseOver = false;
                                         });
@@ -382,14 +382,14 @@ class PWEPostsSlider {
 
                                         slider.addEventListener("touchmove", (e) => {
                                                 if (!isDown) return;
-                                        
+
                                                 if (!e.cancelable) return; // Dodajemy ten warunek, aby uniknąć błędu
-                                        
+
                                                 const x = e.touches[0].pageX - slider.offsetLeft;
                                                 const y = e.touches[0].pageY;
                                                 const walk = (x - startX);
                                                 const verticalDiff = Math.abs(y - startY);
-                                        
+
                                                 if (Math.abs(walk) > verticalDiff) { // Tylko jeśli ruch poziomy jest większy niż pionowy
                                                         e.preventDefault();
                                                         const transformWalk = slidesTransform - walk;
@@ -397,7 +397,7 @@ class PWEPostsSlider {
                                                         slideMove = (walk / imageWidth);
                                                 }
                                         });
-                                        
+
                                         const resetSlider = (slideWalk) => {
                                                 const slidesMove = Math.abs(Math.round(slideWalk));
                                                 for(i = 0; i < slidesMove; i++){
@@ -406,8 +406,8 @@ class PWEPostsSlider {
                                                                 if (lastSlide) {
                                                                         lastSlide.classList.add("last-slide");
                                                                         slides.insertBefore(lastSlide, slides.firstChild);
-                                                                        lastSlide.classList.remove("last-slide");   
-                                                                        
+                                                                        lastSlide.classList.remove("last-slide");
+
                                                                         updateCurrentSlide(-1);
                                                                 }
                                                         } else {
@@ -417,51 +417,51 @@ class PWEPostsSlider {
                                                                         slides.appendChild(firstSlide);
                                                                         firstSlide.classList.remove("first-slide");
 
-                                                                        updateCurrentSlide(1);     
+                                                                        updateCurrentSlide(1);
                                                                 }
                                                         }
                                                 }
                                                 slides.style.transform = `translateX(-${slidesTransform}px)`;
                                         }
                                         setInterval(function() {
-                                                if(!isMouseOver) { 
+                                                if(!isMouseOver) {
                                                         nextSlide()
                                                 }
                                         }, '.$slide_speed.');
                                 }
-                        });                 
-                </script>'; 
+                        });
+                </script>';
                 return $output;
         }
 
         /**
          * Prepares and returns the HTML output for the slider.
-         * 
+         *
          * @param array $media_url - Array of media URLs or structures containing URLs and additional data.
          * @param int $slide_speed - Speed of the slide transition.
          * @return string The HTML output for the slider.
          */
         public static function sliderOutput($media_url, $slide_speed = 3000, $full_mode = "") {
-                /*Random "id" if there is more than one element on page*/  
+                /*Random "id" if there is more than one element on page*/
                 $id_rnd = rand(10000, 99999);
 
                 $output = '';
-                
-                /*Counting min elements for the gallery slider*/   
+
+                /*Counting min elements for the gallery slider*/
                 if(count($media_url) > 10){
                         $max_image = floor(count($media_url) * 1.5);
                         $min_image = floor(-count($media_url) / 2);
                 } else {
-                        $max_image = count($media_url) * 2; 
+                        $max_image = count($media_url) * 2;
                         $min_image = -count($media_url);
                 }
-                
+
                 $output .= self::createDOM($id_rnd, $media_url, $min_image, $max_image, $full_mode);
-                
+
                 $output .= self::generateScript($id_rnd, $media_url, $min_image, 3000, $full_mode);
-                
+
                 return $output;
         }
-} 
+}
 
 ?>

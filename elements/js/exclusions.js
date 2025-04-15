@@ -3,92 +3,92 @@ const accent_color = data_js.accent_color;
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Header button <--------------------------------------------------------------------------<
-    const mobileMenuButton = document.querySelector('.mobile-menu-button');
-    const htmlLang = document.documentElement.lang;
+    // // Header button <--------------------------------------------------------------------------<
+    // const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    // const htmlLang = document.documentElement.lang;
 
-    if (mobileMenuButton) {
-        const pweForm = document.querySelector('#pweForm');
-        const registerPage = htmlLang === 'pl-PL' ? '/rejestracja/' : '/en/registration/';
-        const hrefValue = pweForm ? '#pweForm' : registerPage;
-        const textValue = htmlLang === 'pl-PL' ? 'WEŹ UDZIAŁ' : 'TAKE A PART';
-        const participateButton = '<a href="' + hrefValue + '" class="participate-button" style="background-color:' + data_js['main2_color'] + ';">' + textValue + '</a>';
+    // if (mobileMenuButton) {
+    //     const pweForm = document.querySelector('#pweForm');
+    //     const registerPage = htmlLang === 'pl-PL' ? '/rejestracja/' : '/en/registration/';
+    //     const hrefValue = pweForm ? '#pweForm' : registerPage;
+    //     const textValue = htmlLang === 'pl-PL' ? 'WEŹ UDZIAŁ' : 'TAKE A PART';
+    //     const participateButton = '<a href="' + hrefValue + '" class="participate-button" style="background-color:' + data_js['main2_color'] + ';">' + textValue + '</a>';
 
-        mobileMenuButton.insertAdjacentHTML('beforebegin', participateButton);
+    //     mobileMenuButton.insertAdjacentHTML('beforebegin', participateButton);
 
-        document.querySelector('.participate-button').addEventListener('click', function (event) {
-            if (pweForm) {
-                event.preventDefault();
-                pweForm.scrollIntoView({ behavior: 'smooth' });
-                history.replaceState(null, '', window.location.pathname);
-            }
-        });
-    }
+    //     document.querySelector('.participate-button').addEventListener('click', function (event) {
+    //         if (pweForm) {
+    //             event.preventDefault();
+    //             pweForm.scrollIntoView({ behavior: 'smooth' });
+    //             history.replaceState(null, '', window.location.pathname);
+    //         }
+    //     });
+    // }
 
 
-    // Links for menu logotype <---------------------------------------------------------------------< 
-    // Configuration for domains
-    const domainSettings = {
-        'wiretechpoland.com': { leftWidth: '20%', rightWidth: '80%' },
-        'labelingtechpoland.com': { leftWidth: '15%', rightWidth: '85%' },
-        // ...add more
-    };
+    // // Links for menu logotype <---------------------------------------------------------------------< 
+    // // Configuration for domains
+    // const domainSettings = {
+    //     'wiretechpoland.com': { leftWidth: '20%', rightWidth: '80%' },
+    //     'labelingtechpoland.com': { leftWidth: '15%', rightWidth: '85%' },
+    //     // ...add more
+    // };
 
-    const currentDomain = window.location.hostname;
-    const settings = domainSettings[currentDomain] || { leftWidth: '65px', rightWidth: 'calc(100% - 65px)' };
+    // const currentDomain = window.location.hostname;
+    // const settings = domainSettings[currentDomain] || { leftWidth: '65px', rightWidth: 'calc(100% - 65px)' };
 
-    const commonStyles = {
-        position: 'absolute',
-        top: '0',
-        height: '100%',
-        zIndex: '10'
-    };
+    // const commonStyles = {
+    //     position: 'absolute',
+    //     top: '0',
+    //     height: '100%',
+    //     zIndex: '10'
+    // };
 
-    // Function to add links to the logo
-    function addLinksToLogo(logoElement) {
-        if (!logoElement) return;
+    // // Function to add links to the logo
+    // function addLinksToLogo(logoElement) {
+    //     if (!logoElement) return;
 
-        const existingLink = logoElement.querySelector('a');
-        if (existingLink) {
-            // Move all children of the <a> element to the parent (e.g., #main-logo or #mobile-logo)
-            while (existingLink.firstChild) {
-                logoElement.insertBefore(existingLink.firstChild, existingLink);
-            }
-            // Remove the empty <a> element
-            existingLink.remove();
-        }
+    //     const existingLink = logoElement.querySelector('a');
+    //     if (existingLink) {
+    //         // Move all children of the <a> element to the parent (e.g., #main-logo or #mobile-logo)
+    //         while (existingLink.firstChild) {
+    //             logoElement.insertBefore(existingLink.firstChild, existingLink);
+    //         }
+    //         // Remove the empty <a> element
+    //         existingLink.remove();
+    //     }
 
-        // Create new links
-        const leftLink = document.createElement('a');
-        const rightLink = document.createElement('a');
+    //     // Create new links
+    //     const leftLink = document.createElement('a');
+    //     const rightLink = document.createElement('a');
 
-        const pwePageLink = htmlLang === 'pl-PL' ? 'https://warsawexpo.eu/' : 'https://warsawexpo.eu/en/';
-        const mainPageLink = htmlLang === 'pl-PL' ? '/' : '/en/';
+    //     const pwePageLink = htmlLang === 'pl-PL' ? 'https://warsawexpo.eu/' : 'https://warsawexpo.eu/en/';
+    //     const mainPageLink = htmlLang === 'pl-PL' ? '/' : '/en/';
 
-        // Style for the left link
-        Object.assign(leftLink.style, commonStyles);
-        leftLink.style.width = settings.leftWidth;
-        leftLink.style.left = '0';
-        leftLink.href = (window.innerWidth < 960 && logoElement.offsetWidth > 200) ? mainPageLink : pwePageLink;
-        leftLink.target = '_blank';
+    //     // Style for the left link
+    //     Object.assign(leftLink.style, commonStyles);
+    //     leftLink.style.width = settings.leftWidth;
+    //     leftLink.style.left = '0';
+    //     leftLink.href = (window.innerWidth < 960 && logoElement.offsetWidth > 200) ? mainPageLink : pwePageLink;
+    //     leftLink.target = '_blank';
 
-        // Style for the right link
-        Object.assign(rightLink.style, commonStyles);
-        rightLink.style.width = settings.rightWidth;
-        rightLink.style.right = '0';
-        rightLink.href = mainPageLink;
+    //     // Style for the right link
+    //     Object.assign(rightLink.style, commonStyles);
+    //     rightLink.style.width = settings.rightWidth;
+    //     rightLink.style.right = '0';
+    //     rightLink.href = mainPageLink;
 
-        // Append the links to the logo
-        logoElement.appendChild(leftLink);
-        logoElement.appendChild(rightLink);
-    }
+    //     // Append the links to the logo
+    //     logoElement.appendChild(leftLink);
+    //     logoElement.appendChild(rightLink);
+    // }
 
-    // Select the logos and add links to them
-    const mainLogo = document.querySelector('.logo-image.main-logo');
-    const mobileLogo = document.querySelector('.logo-image.mobile-logo');
+    // // Select the logos and add links to them
+    // const mainLogo = document.querySelector('.logo-image.main-logo');
+    // const mobileLogo = document.querySelector('.logo-image.mobile-logo');
 
-    addLinksToLogo(mainLogo);
-    addLinksToLogo(mobileLogo);
+    // addLinksToLogo(mainLogo);
+    // addLinksToLogo(mobileLogo);
 
 
 

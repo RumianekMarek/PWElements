@@ -3,6 +3,8 @@ const map_dynamic_3d = data_js.map_dynamic_3d;
 const map_dynamic_preset = data_js.map_dynamic_preset;
 const map_color = data_js.map_color;
 const hex_color = map_color != '' ? map_color : accent_color;
+const map_water_color = data_js.map_water_color;
+const hex_color_water = map_water_color !== '' ? map_water_color : "#" + accent_color.slice(1).replace(/../g, c => (~~(parseInt(c,16)*0.6)).toString(16).padStart(2,"0"));
 
 function animateCount(element) {
     const targetValue = parseInt(element.getAttribute("data-count"), 10);
@@ -168,17 +170,13 @@ if (map_type === 'PWEMap3D' || map_dynamic_3d || map_dynamic_preset === 'preset_
         // Change model color to blue while preserving materials
         model.traverse((node) => {
             if (node.isMesh) {
-                // Preserve shadow settings and change color at the same time
-                node.material = new THREE.MeshStandardMaterial({
-                    color: hex_color,   // Kolor modelu
-                    metalness: node.material.metalness,  // Preserving metallicity
-                    roughness: node.material.roughness,  // Preserving roughness
-                    emissive: node.material.emissive,  // Emission behavior
-                    opacity: node.material.opacity,    // Preserving transparency
-                    transparent: node.material.transparent // Preserving transparency
-                });
-
-                // Shadow behavior
+                if (!Array.isArray(node.material)) {
+                    if (node.material.name === "swiat") {
+                        node.material.color.set(hex_color); // np. zielony
+                    } else if (node.material.name === "Material") {
+                        node.material.color.set(hex_color_water); // np. niebieski
+                    }
+                }
                 node.castShadow = true;
                 node.receiveShadow = true;
             }

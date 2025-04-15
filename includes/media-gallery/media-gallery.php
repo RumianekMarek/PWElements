@@ -797,7 +797,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                                     data-swipe="false">';
 
                                     foreach ($media_gallery_array as $image_url) {
-                                        $output .= '<img src="' . $image_url . '" alt="galery image">';
+                                        $output .= '<img data-no-lazy="1" src="' . $image_url . '" alt="galery image">';
                                     }
                                 
                                     $output .= '

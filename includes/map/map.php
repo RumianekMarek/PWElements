@@ -94,6 +94,21 @@ class PWEMap extends PWECommonFunctions {
                             ),
                         ),
                         array(
+                            'type' => 'colorpicker',
+                            'heading' => __('Model water color', 'pwe_map'),
+                            'param_name' => 'map_water_color',
+                            'description' => __('Write or select color of water model', 'pwe_map'),
+                            'param_holder_class' => 'backend-area-one-fourth-width',
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'map_type',
+                                'value' => array(
+                                    'PWEMapDynamic',
+                                    'PWEMap3D'
+                                ),
+                            ),
+                        ),
+                        array(
                             'type' => 'textfield',
                             'heading' => __('Overlay color', 'pwe_map'),
                             'param_name' => 'map_overlay',
@@ -298,13 +313,14 @@ class PWEMap extends PWECommonFunctions {
     /** 
      * Adding Scripts
      */
-    public function addingScripts($map_type, $map_dynamic_3d, $map_dynamic_preset, $map_color) {
+    public function addingScripts($map_type, $map_dynamic_3d, $map_dynamic_preset, $map_color, $map_water_color) {
     
         $data_js_array = array(
             'map_type' => $map_type,
             'map_dynamic_3d' => $map_dynamic_3d,
             'map_dynamic_preset' => $map_dynamic_preset,
             'map_color' => $map_color,
+            'map_water_color' => $map_water_color,
             'accent_color' => self::$accent_color,
         );
 
@@ -344,6 +360,7 @@ class PWEMap extends PWECommonFunctions {
             'map_dynamic_preset' => '',
             'map_dynamic_3d' => '',
             'map_color' => '',
+            'map_water_color' => '',
             'map_overlay' => '',
             'map_image' => '',
             'map_custom_title' => '',
@@ -386,7 +403,7 @@ class PWEMap extends PWECommonFunctions {
             echo '<script>console.log("File with class ' . $map_type .' does not exist")</script>';
         }
 
-        $this->addingScripts($map_type, $map_dynamic_3d, $map_dynamic_preset, $map_color);
+        $this->addingScripts($map_type, $map_dynamic_3d, $map_dynamic_preset, $map_color, $map_water_color);
 
         $output = do_shortcode($output);
 

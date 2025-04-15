@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.5.1.2
+ * Version: 2.5.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -44,8 +44,8 @@ class PWElementsPlugin {
 
         // $this -> resendTicket();
 
-         // List of JavaScript files to exclude
-         $excluded_js_files = [
+        // List of JavaScript files to exclude
+        $excluded_js_files = [
             '/wp-content/plugins/PWElements/elements/js/exclusions.js',
             '/wp-content/plugins/PWElements/assets/three-js/three.min.js',
             '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
@@ -61,6 +61,17 @@ class PWElementsPlugin {
         add_filter('rocket_exclude_defer_js', function ($defer_files) use ($excluded_js_files) {
             return array_merge((array) $defer_files, $excluded_js_files);
         }, 10, 1);
+
+        add_filter( 'the_content', array($this, 'add_date_to_post') );
+    }
+
+    public function add_date_to_post( $content ) {
+        if ( is_single() && in_the_loop() && is_main_query() ) {
+            $data_publikacji = get_the_date( 'j F Y' );
+            $label = ( get_locale() === 'pl_PL' ) ? 'Data publikacji: ' : 'Date of publication: ';
+            $content .= '<div class="pwe-post-date" style="font-style: italic; margin-top: 10px;">'. $label . esc_html( $data_publikacji ) . '</div>';
+        }
+        return $content;
     }
 
     public function pwe_enqueue_styles() {
@@ -88,6 +99,9 @@ class PWElementsPlugin {
         // Helpers functions
         require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
 
+        // Shortcodes from CAP
+        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
+
         // Variables of styles
         require_once plugin_dir_path(__FILE__) . 'pwe-style-var.php';
         $this->PWEStyleVar = new PWEStyleVar();
@@ -100,9 +114,6 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'gf-upps/area-numbers/area_numbers_gf.php';
         $this->GFAreaNumbersField = new GFAreaNumbersField();
-
-        // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
-        // $this->PWEQRActive = new PWEQRActive();
 
         require_once plugin_dir_path(__FILE__) . 'includes/katalog-wystawcow/main-katalog-wystawcow.php';
         $this->PWECatalog = new PWECatalog();
@@ -137,7 +148,13 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
         $this->PWEConferenceCap = new PWEConferenceCap();
 
-        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
+        if ($_SERVER['HTTP_HOST'] === 'warsawexpo.eu' || $_SERVER['HTTP_HOST'] === 'rfl.warsawexpo.eu') {
+            require_once plugin_dir_path(__FILE__) . 'includes/calendar/calendar.php';
+            $this->PWECalendar = new PWECalendar();
+        }
+
+        // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
+        // $this->PWEQRActive = new PWEQRActive();
     }
     
     // Czyszczenie pamięci wp_rocket
@@ -197,16 +214,18 @@ class CAPDatabase {
         $cap_db = null;
         
         // Set connection data depending on the server
-        if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
-            $database_host = 'localhost';
-            $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
-            $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
-            $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-        } else {
-            $database_host = 'localhost';
-            $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
-            $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
-            $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+        if (isset($_SERVER['SERVER_ADDR'])) {
+            if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
+            } else {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
+                $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
+                $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+            }
         }
 
         // Check if there is complete data for connection

@@ -62,6 +62,10 @@ class PWECommonFunctions {
                     "name_en" => $fair->fair_name_en ?? "",
                     "desc_pl" => $fair->fair_desc_pl ?? "",
                     "desc_en" => $fair->fair_desc_en ?? "",
+                    "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
+                    "short_desc_en" => $fair->fair_short_desc_en ?? "",
+                    "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
+                    "full_desc_en" => $fair->fair_full_desc_en ?? "",
                     "visitors" => $fair->fair_visitors ?? "",
                     "exhibitors" => $fair->fair_exhibitors ?? "",
                     "countries" => $fair->fair_countries ?? "",
@@ -73,8 +77,9 @@ class PWECommonFunctions {
                     "instagram" => $fair->fair_instagram ?? "",
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->badge ?? "",
-                    "catalog" => $fair->fair_kw ?? ""
+                    "badge" => $fair->fair_badge ?? "",
+                    "catalog" => $fair->fair_kw ?? "",
+                    "shop" => $fair->fair_shop ?? ""
                 ];
             }
         } else {
@@ -260,15 +265,17 @@ class PWECommonFunctions {
      */
     public function findFormsGF($mode = ''){
         $pwe_forms_array = array();
-        if (method_exists('GFAPI', 'get_forms')) {
-            $pwe_forms = GFAPI::get_forms();
-            if($mode == 'id'){
-                foreach ($pwe_forms as $form) {
-                    $pwe_forms_array[$form['title']] = $form['id'];
-                }
-            } else {
-                foreach ($pwe_forms as $form) {
-                    $pwe_forms_array[$form['id']] = $form['title'];
+        if (is_admin()) {
+            if (method_exists('GFAPI', 'get_forms')) {
+                $pwe_forms = GFAPI::get_forms();
+                if($mode == 'id'){
+                    foreach ($pwe_forms as $form) {
+                        $pwe_forms_array[$form['title']] = $form['id'];
+                    }
+                } else {
+                    foreach ($pwe_forms as $form) {
+                        $pwe_forms_array[$form['id']] = $form['title'];
+                    }
                 }
             }
         }

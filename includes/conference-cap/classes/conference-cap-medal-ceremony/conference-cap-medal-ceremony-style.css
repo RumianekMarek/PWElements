@@ -1,53 +1,50 @@
-.conference_cap_simple_mode__lecture-box{
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  gap: 18px;
-  width: 100% !important;
-  padding: 10px;
-  margin: 0;
-  border-radius: 5px;
-  min-height: 70px;
-}
-
-.conference_cap_simple_mode__lecture-box:nth-of-type(2n) {
-  background-color: #E5E4E2 !important;
-}
-
-.conference_cap_simple_mode__lecture-time-container{
-  min-width: 140px;
-}
-
-.conference_cap_simple_mode__lecture-time{
-  margin: 0;
-}
-
-.conference_cap_simple_mode__lecture-box-info{
+.conference_cap_medal_ceremony__main-container {
   display: flex;
   flex-direction: column;
+  gap: 36px;
 }
 
-.conference_cap_simple_mode__lecture-name{
-  font-weight: 500;
-  padding-top: 8px;
-  margin: 0;
-  color: var(--accent-color) !important;
+.conference_cap_medal_ceremony__title, 
+.conference_cap_medal_ceremony__date, 
+.conference_cap_medal_ceremony__location {
+  background: #eaeaea;
+  border-radius: 16px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 0 12px -6px black;
 }
 
-.conference_cap_simple_mode__lecture-title{
+.conference_cap_medal_ceremony__ceremony-container{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 36px;
+}
+
+.conference_cap_medal_ceremony__title h2{
   margin: 0;
+  text-align: center;
+}
+
+.conference_cap_medal_ceremony__ceremony-container h4 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.conference_cap_medal_ceremony__ceremony-container span {
+  font-size: 20px;
+  text-align: center;
+  line-height: 1.75;
 }
 
 @media (max-width: 600px) {
-
-  .conference_cap_simple_mode__lecture-box {
-    flex-direction: column;
+  .conference_cap_medal_ceremony__ceremony-container {
+    grid-template-columns: repeat(1, 1fr);
   }
 
-  .conference_cap_simple_mode__lecture-container {
-    display: flex;
-    gap: 24px;
-    flex-direction: column;
-  }
-
+  .conference_cap_medal_ceremony__title h2 {
+    font-size: 24px;
+}
 }

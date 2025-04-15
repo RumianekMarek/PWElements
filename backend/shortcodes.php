@@ -21,7 +21,7 @@ function get_fair_data($specific_domain = null) {
     
                 $domain = $fair->fair_domain;
     
-                $fairs_data["fairs"][$domain] = [
+                $fairs_data["fairs"][$domain] = [ 
                     "domain" => $domain,
                     "date_start" => $fair->fair_date_start ?? "",
                     "date_start_hour" => $fair->fair_date_start_hour ?? "",
@@ -32,6 +32,10 @@ function get_fair_data($specific_domain = null) {
                     "name_en" => $fair->fair_name_en ?? "",
                     "desc_pl" => $fair->fair_desc_pl ?? "",
                     "desc_en" => $fair->fair_desc_en ?? "",
+                    "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
+                    "short_desc_en" => $fair->fair_short_desc_en ?? "",
+                    "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
+                    "full_desc_en" => $fair->fair_full_desc_en ?? "",
                     "visitors" => $fair->fair_visitors ?? "",
                     "exhibitors" => $fair->fair_exhibitors ?? "",
                     "countries" => $fair->fair_countries ?? "",
@@ -43,8 +47,9 @@ function get_fair_data($specific_domain = null) {
                     "instagram" => $fair->fair_instagram ?? "",
                     "linkedin" => $fair->fair_linkedin ?? "",
                     "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->badge ?? "",
-                    "catalog" => $fair->fair_kw ?? ""
+                    "badge" => $fair->fair_badge ?? "",
+                    "catalog" => $fair->fair_kw ?? "",
+                    "shop" => $fair->fair_shop ?? ""
                 ];
             }
         } else {
@@ -111,10 +116,14 @@ function get_fair_data($specific_domain = null) {
 function register_dynamic_shortcodes() {
     // List of shortcodes and their corresponding fields
     $shortcodes = [
-        'pwe_name_pl' => 'name_pl',
+        'pwe_name_pl' => 'name_pl', 
         'pwe_name_en' => 'name_en',
         'pwe_desc_pl' => 'desc_pl',
         'pwe_desc_en' => 'desc_en',
+        'pwe_short_desc_pl' => 'short_desc_pl',
+        'pwe_short_desc_en' => 'short_desc_en',
+        'pwe_full_desc_pl' => 'full_desc_pl',
+        'pwe_full_desc_en' => 'full_desc_en',
         'pwe_date_start' => 'date_start',
         'pwe_date_start_hour' => 'date_start_hour',
         'pwe_date_end' => 'date_end',
@@ -127,11 +136,11 @@ function register_dynamic_shortcodes() {
         'pwe_hall' => 'hall',
         'pwe_color_accent' => 'color_accent',
         'pwe_color_main2' => 'color_main2',
+        'pwe_badge' => 'badge',
         'pwe_facebook' => 'facebook',
         'pwe_instagram' => 'instagram',
         'pwe_linkedin' => 'linkedin',
         'pwe_youtube' => 'youtube',
-        'pwe_badge' => 'badge',
         'pwe_catalog' => 'catalog'
     ];
 
@@ -139,7 +148,7 @@ function register_dynamic_shortcodes() {
     function handle_fair_shortcode($atts, $field) {
         $atts = shortcode_atts(['domain' => null], $atts);
         $fair_data = get_fair_data($atts['domain']);
-        return esc_html($fair_data[$field] ?? 'Brak danych');
+        return esc_html($fair_data[$field] ?? '');
     }
 
     // Registering shortcodes in the loop

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white');
 $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
@@ -123,7 +123,7 @@ $output .= '
                         <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
                         <div id="pweBtnRegistration" class="pwe-btn-container header-button">
                             <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" '.
-                                self::languageChecker('alt="link do rejestracji">Weź udział</span>', 'alt="link to registration">Take a part</span>')
+                                self::languageChecker('alt="link do rejestracji">Weź udział</span>', 'alt="link to registration">Take part</span>')
                             .'</a>
                         </div>
                     </div>';
@@ -143,5 +143,5 @@ $output .= '
         </div>
     </div>
 </div>';
-        
+
 return $output;

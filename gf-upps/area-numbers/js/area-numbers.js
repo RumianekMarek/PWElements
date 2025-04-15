@@ -25,6 +25,14 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
             main_pattern = createPattern();
             newValue = title.split('+');
 
+            if (window.location.hostname === "warsawexpo.eu") {
+                const phoneNewVal = $(phone_id).val();
+
+                if (phoneNewVal.startsWith('+') || phoneNewVal.length > 4) {
+                    $(phone_id).attr('value', phoneNewVal);
+                }
+            }
+
             if (!$(phone_id).val().startsWith('+') || $(phone_id).val().length > 4 || paste === true) {
                 $(phone_id).val('+' + newValue[1] + ' ');
             }
@@ -60,6 +68,14 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         });
 
         const succesCountryIp = (countryCode) => {
+
+            if (window.location.hostname === "warsawexpo.eu") {
+                if ($(phone_id).val().startsWith('+') && $(phone_id).val().length > 4) {
+                    $(phone_id).prop('disabled', false);
+                    return;
+                }
+            }
+
             let options = {
                 initialCountry: countryCode,
                 utilsScript: "https://" + domain + "/wp-content/plugins/PWElements/gf-upps/area-numbers/js/utils.js",
@@ -109,9 +125,11 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         }
 
         $(phone_id).on('input', function () {
-            if (!$(this).val().startsWith('+')) {
-                const targetUL = document.querySelector('.iti__selected-flag');
-                updatePhone($(targetUL).attr('title'), $(this).val());
+            if (window.location.hostname !== "warsawexpo.eu") {
+                if (!$(this).val().startsWith('+')) {
+                    const targetUL = document.querySelector('.iti__selected-flag');
+                    updatePhone($(targetUL).attr('title'), $(this).val());
+                }
             }
         });
 
@@ -140,7 +158,9 @@ jQuery(document).bind("gform_post_render", function (event, form_id) {
         });
 
         $('form').has(phone_id).find('.gform_button').on('click', function (event) {
-            errorPhoneCheck(event);
+            if (window.location.hostname !== "warsawexpo.eu") {
+                errorPhoneCheck(event);
+            }
         });
 
         // $('form').on('keypress', phone_id, function (event) {

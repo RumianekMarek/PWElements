@@ -38,6 +38,34 @@ class PWElementAdditionalLogotypes {
                 'param_name' => 'slides_to_show',
                 'description' => __('Default 7', 'pwe_logotypes'),
                 'save_always' => true,
+                'param_holder_class' => 'backend-area-one-fourth-width',
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'Aditional options',
+                'heading' => __('Number of logotypes in slider breakpoint 960', 'pwe_logotypes'),
+                'param_name' => 'slides_to_show_960',
+                'description' => __('Default 5', 'pwe_logotypes'),
+                'save_always' => true,
+                'param_holder_class' => 'backend-area-one-fourth-width',
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'Aditional options',
+                'heading' => __('Number of logotypes in slider breakpoint 600', 'pwe_logotypes'),
+                'param_name' => 'slides_to_show_600',
+                'description' => __('Default 3', 'pwe_logotypes'),
+                'save_always' => true,
+                'param_holder_class' => 'backend-area-one-fourth-width',
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'Aditional options',
+                'heading' => __('Number of logotypes in slider breakpoint 400', 'pwe_logotypes'),
+                'param_name' => 'slides_to_show_400',
+                'description' => __('Default 2', 'pwe_logotypes'),
+                'save_always' => true,
+                'param_holder_class' => 'backend-area-one-fourth-width',
             ),
             array(
                 'type' => 'checkbox',
@@ -72,6 +100,16 @@ class PWElementAdditionalLogotypes {
                 'heading' => __('Slider desktop', 'pwe_logotypes'),
                 'param_name' => 'logotypes_slider_desktop',
                 'description' => __('Check if you want to display in slider on desktop.', 'pwe_logotypes'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_logotypes') => 'true',),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'Aditional options',
+                'heading' => __('3 lines', 'pwe_logotypes'),
+                'param_name' => 'logotypes_slider_3_row',
+                'description' => __('Check if you want to display 3 row slider.', 'pwe_logotypes'),
                 'admin_label' => true,
                 'save_always' => true,
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
@@ -188,6 +226,10 @@ class PWElementAdditionalLogotypes {
             'pwe_header_logotypes' => '',
             'conf_logotypes_catalog' => '',
             'slides_to_show' => '',
+            'slides_to_show_960' => '',
+            'slides_to_show_600' => '',
+            'slides_to_show_400' => '',
+            'logotypes_slider_3_row' => '',
         ), $atts ));
 
         if ($logotypes_position_title == ''){
@@ -201,8 +243,27 @@ class PWElementAdditionalLogotypes {
             $logotypes_default_width = $mobile == 1 ? '80px' : '140px';
             $logotypes_min_width_logo = !empty($logotypes_min_width_logo) ? $logotypes_min_width_logo : $logotypes_default_width;
             $slides_to_show = !empty($slides_to_show) ? $slides_to_show : 7;
+            $slides_to_show_960 = !empty($slides_to_show_960) ? $slides_to_show_960 : 5;
+            $slides_to_show_600 = !empty($slides_to_show_600) ? $slides_to_show_600 : 3;
+            $slides_to_show_400 = !empty($slides_to_show_400) ? $slides_to_show_400 : 2;
             $logotypes_items_shadow = $logotypes_items_shadow == true ? '2px 2px 12px #cccccc' : 'none';
             $slider_class = ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) ? 'pwe-slides' : '';
+
+            $output .= '
+            <style>';
+            if ($mobile != 1 && ($logotypes_slider_desktop != true) || $mobile == 1 && ($logotypes_grid_mobile == true)){
+                $output .= '
+                .pwelement_'. $el_id .'.pwe_logotypes .pwe-logo-item-container {
+                    '. ($logotypes_items_shadow !== 'none' ? 'min-width: 200px;' : '') .'
+                }
+                @media(max-width:920px){
+                    .pwelement_'. $el_id .' .pwe-logo-item-container {
+                        '. ($logotypes_items_shadow !== 'none' ? 'min-width: 135px;' : '') .'
+                    }
+                }';
+            }
+            $output .= '
+            </style>';
 
             $output .= '
             <style>
@@ -217,9 +278,8 @@ class PWElementAdditionalLogotypes {
                     padding: 5px;
                     '. ($logotypes_items_shadow !== 'none' ? 'padding: 10px 0;' : '') .'
                     background-color: white !important;
-                    '. ($logotypes_items_shadow !== 'none' ? 'min-width: 200px;' : '') .'
                 }
-                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container {
+                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container, .pwelement_'. $el_id .' .pwe-logo-item-container  {
                     margin: 5px;
                 }
                 .pwelement_'. $el_id .' .pwe-logo-item {
@@ -283,20 +343,15 @@ class PWElementAdditionalLogotypes {
                     margin: 5px;
                 }
 
-                @media(max-width:920px){
-                    .pwelement_'. $el_id .' .pwe-logo-item-container {
-                        '. ($logotypes_items_shadow !== 'none' ? 'min-width: 135px;' : '') .'
-                    }
-                }
                 @media(max-width:620px){
                     .pwelement_'. $el_id .' .pwe-logo-item-container {
-                    '. ($logotypes_items_shadow !== 'none' ? 'max-width: 22% !important;' : '') .'
-                    '. ($logotypes_items_shadow !== 'none' ? 'min-width: 22% !important;' : '') .'
-                    '. ($logotypes_items_shadow !== 'none' ? 'padding: 5px !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'max-width: 22% !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'min-width: 22% !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'padding: 5px !important;' : '') .'
                     }
                     .pwelement_'. $el_id .' .pwe-logo-item-container p {
-                    '. ($logotypes_items_shadow !== 'none' ? 'font-size: 9px !important;' : '') .'
-                    '. ($logotypes_items_shadow !== 'none' ? 'font-weight: 600 !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'font-size: 9px !important;' : '') .'
+                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'font-weight: 600 !important;' : '') .'
                     }
                 }
             </style>';
@@ -552,7 +607,44 @@ class PWElementAdditionalLogotypes {
             if (count($files) > 0) {
 
                 if($logotypes_display_random1){
+                    // Randomise files
                     shuffle($files);
+                } else {
+                    usort($files, function($a, $b) {
+                        $fileA = basename($a);
+                        $fileB = basename($b);
+
+                        // Trying to extract the number from the beginning of the file name
+                        preg_match('/^(\d+)/', $fileA, $matchA);
+                        preg_match('/^(\d+)/', $fileB, $matchB);
+
+                        // Check if the file contains a number
+                        $hasNumA = !empty($matchA);
+                        $hasNumB = !empty($matchB);
+
+                        // If one of the files has a number and the other one doesn't, the file with the number takes precedence
+                        if ($hasNumA && !$hasNumB) {
+                            return -1;
+                        }
+                        if (!$hasNumA && $hasNumB) {
+                            return 1;
+                        }
+
+                        // If both files have a number - sort numerically, and if the numbers are equal, sort alphabetically
+                        if ($hasNumA && $hasNumB) {
+                            $numA = (int)$matchA[1];
+                            $numB = (int)$matchB[1];
+
+                            if ($numA === $numB) {
+                                return strcasecmp($fileA, $fileB);
+                            }
+                            return $numA <=> $numB;
+                        }
+
+                        // If none of the files contain a number - sort alphabetically
+                        return strcasecmp($fileA, $fileB);
+                    });
+
                 }
 
                 // Calculate width for header logotypes
@@ -697,64 +789,171 @@ class PWElementAdditionalLogotypes {
                         "caption_translations" => $translations
                     );
 
-                    // Output logotypes
-                    if (count($updated_images_url) > 0) {
-                        foreach ($updated_images_url as $url) {
 
-                            if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
-                                if (get_locale() == 'pl_PL') {
-                                    if (strpos($url["img"], 'expoplanner.com') !== false) {
-                                        $logo_caption_text = '<p>Wystawca</p>';
-                                    } else {
-                                        // Split folder_name into words and add <br> after the first word
-                                        $logotypes_caption_words = explode(" ", $url["folder_name"]);
-                                        if (count($logotypes_caption_words) > 1) {
-                                            $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
+                    // Output logotypes
+                    if(!$logotypes_slider_3_row){
+                        if (count($updated_images_url) > 0) {
+                            foreach ($updated_images_url as $url) {
+
+                                $alt_text = (!empty($url["folder_name"]) && !preg_match('/\d{2}/', $url["folder_name"])) ? $url["folder_name"] : "gallery element";
+
+                                if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
+                                    if (get_locale() == 'pl_PL') {
+                                        if (strpos($url["img"], 'expoplanner.com') !== false) {
+                                            $logo_caption_text = '<p>Wystawca</p>';
                                         } else {
-                                            $logo_caption_text = '<p>' . $url["folder_name"] . '</p>'; // When folder_name is one word
+                                            // Split folder_name into words and add <br> after the first word
+                                            $logotypes_caption_words = explode(" ", $url["folder_name"]);
+                                            if (count($logotypes_caption_words) > 1) {
+                                                $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
+                                            } else {
+                                                $logo_caption_text = '<p>' . $url["folder_name"] . '</p>'; // When folder_name is one word
+                                            }
+                                        }
+                                    } else {
+                                        if (strpos($url["img"], 'expoplanner.com') !== false) {
+                                            $logo_caption_text = '<p>Exhibitor</p>';
+                                        } else {
+                                            if (array_key_exists($url["folder_name"], $translations)) {
+                                                $logo_caption_text = '<p>'. $translations[$url["folder_name"]] .'</p>';
+                                            } else {
+                                                $logo_caption_text = '<p>'. $url["folder_name"] .'</p>';
+                                            }
                                         }
                                     }
                                 } else {
-                                    if (strpos($url["img"], 'expoplanner.com') !== false) {
-                                        $logo_caption_text = '<p>Exhibitor</p>';
-                                    } else {
-                                        if (array_key_exists($url["folder_name"], $translations)) {
-                                            $logo_caption_text = '<p>'. $translations[$url["folder_name"]] .'</p>';
-                                        } else {
-                                            $logo_caption_text = '<p>'. $url["folder_name"] .'</p>';
-                                        }
-                                    }
+                                    $logo_caption_text = '<p>'. $logotypes_name .'</p>';
                                 }
-                            } else {
-                                $logo_caption_text = '<p>'. $logotypes_name .'</p>';
-                            }
 
-                            if (isset($header_logotypes_items_width) && $header_logotypes_items_width != '') {
-                                $logotypes_items_width = 'min-width:'. $header_logotypes_items_width .';';
-                            } else {
-                                $logotypes_items_width = '';
-                            }
-                            $target_blank = (strpos($url["site"], 'http') !== false) ? 'target="_blank"' : '';
-                            if (!empty($image)) {
-                                if (!empty($url["site"])) {
-                                    $output .= '
-                                    <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
-                                        <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
-                                            <img data-no-lazy="1" src="' . $url["img"] . '"/>
-                                            '. $logo_caption_text .'
-                                        </div>
-                                    </a>';
-                                } else  {
-                                    $output .= '
-                                    <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
-                                        <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                            <img data-no-lazy="1" src="' . $url["img"] . '"/>
-                                            '. $logo_caption_text .'
-                                        </div>
-                                    </div>';
+                                if (isset($header_logotypes_items_width) && $header_logotypes_items_width != '') {
+                                    $logotypes_items_width = 'min-width:'. $header_logotypes_items_width .';';
+                                } else {
+                                    $logotypes_items_width = '';
+                                }
+                                $target_blank = (strpos($url["site"], 'http') !== false) ? 'target="_blank"' : '';
+                                if (!empty($image)) {
+                                    if (!empty($url["site"])) {
+                                        $output .= '
+                                        <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
+                                            <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
+                                                <img alt="'. $alt_text .'" data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                '. $logo_caption_text .'
+                                            </div>
+                                        </a>';
+                                    } else  {
+                                        $output .= '
+                                        <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
+                                            <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
+                                                <img alt="'. $alt_text .'" data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                '. $logo_caption_text .'
+                                            </div>
+                                        </div>';
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        if (count($updated_images_url) > 0) {
+                            $logos_count = count($updated_images_url);
+                            $logos_chunked = array_chunk($updated_images_url, ceil($logos_count / 3));
+
+                            $output .= '<div class="logotypes-slider-wrapper">';
+
+                            foreach ($logos_chunked as $index => $logos_group) {
+                                $slider_id = $element_unique_id . "-slider-" . ($index + 1);
+                                $direction = ($index == 1) ? 'rtl' : 'ltr'; // Drugi slider w lewo, reszta w prawo
+
+                                $output .= '<div class="'. $element_unique_id .'-logotypes-slider logotypes-slider" id="'. $slider_id .'" data-direction="'. $direction .'">';
+
+                                foreach ($logos_group as $url) {
+
+
+                                    // Obsługa tłumaczeń i napisów
+                                    if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
+                                        if (get_locale() == 'pl_PL') {
+                                            if (strpos($url["img"], 'expoplanner.com') !== false) {
+                                                $logo_caption_text = '<p>Wystawca</p>';
+                                            } else {
+                                                $logotypes_caption_words = explode(" ", $url["folder_name"]);
+                                                if (count($logotypes_caption_words) > 1) {
+                                                    $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
+                                                } else {
+                                                    $logo_caption_text = '<p>' . $url["folder_name"] . '</p>';
+                                                }
+                                            }
+                                        } else {
+                                            if (strpos($url["img"], 'expoplanner.com') !== false) {
+                                                $logo_caption_text = '<p>Exhibitor</p>';
+                                            } else {
+                                                if (array_key_exists($url["folder_name"], $translations)) {
+                                                    $logo_caption_text = '<p>'. $translations[$url["folder_name"]] .'</p>';
+                                                } else {
+                                                    $logo_caption_text = '<p>'. $url["folder_name"] .'</p>';
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        $logo_caption_text = '<p>'. $logotypes_name .'</p>';
+                                    }
+
+                                    $logotypes_items_width = isset($header_logotypes_items_width) && $header_logotypes_items_width != ''
+                                        ? 'min-width:'. $header_logotypes_items_width .';'
+                                        : '';
+
+                                    $target_blank = (strpos($url["site"], 'http') !== false) ? 'target="_blank"' : '';
+
+                                    if (!empty($image)) {
+                                        if (!empty($url["site"])) {
+                                            $output .= '
+                                            <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
+                                                <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
+                                                    <img   data-no-lazy="1" src="' . $url["img"] . '" />
+                                                    '. $logo_caption_text .'
+                                                </div>
+                                            </a>';
+                                        } else  {
+                                            $output .= '
+                                            <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
+                                                <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
+                                                    <img data-no-lazy="1" src="' . $url["img"] . '"  />
+                                                    '. $logo_caption_text .'
+                                                </div>
+                                            </div>';
+                                        }
+                                    }
+                                }
+                                $output .= '</div>';
+                            }
+                            $output .= '</div>';
+
+                        }
+                        $output .= '
+                        <style>
+                            .'.$element_unique_id.'-logotypes-slider {
+                                display: flex !important;
+                                flex-wrap: nowrap;
+                                justify-content: center;
+                                align-items: center;
+                                overflow: hidden;
+                                width: 100%;
+                                position: relative;
+
+                                opacity: 0;
+
+                            }
+
+                            .'.$element_unique_id.'-logotypes-slider .slick-slide {
+                                display: flex !important;
+                                justify-content: center;
+                                align-items: center;
+                                gap:10px;
+                                '. ($logotypes_items_shadow !== 'none' ? 'min-width:auto !important;' : '') .'
+                                '. ($logotypes_items_shadow !== 'none' ? 'margin:5px !important;' : '') .'
+                            }
+                            .'.$element_unique_id.'-logotypes-slider[data-direction="rtl"] .slick-track {
+                                float: right;
+                            }
+                        </style>';
                     }
 
                     $output .= '
@@ -764,9 +963,57 @@ class PWElementAdditionalLogotypes {
                 if ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) {
 
                     $opinions_dots_display = $logotypes_dots_off != true ? 'true' : '';
-
                     include_once plugin_dir_path(dirname(dirname(__DIR__))) . 'scripts/slider.php';
-                    $output .= PWESliderScripts::sliderScripts('logotypes', '#'. $element_unique_id, $opinions_dots_display, $opinions_arrows_display = false, $slides_to_show);
+
+                    if(!$logotypes_slider_3_row){
+                        $output .= PWESliderScripts::sliderScripts('logotypes', '#'. $element_unique_id, $opinions_dots_display, $opinions_arrows_display = false, $slides_to_show, $options = null, $slides_to_show_960, $slides_to_show_600, $slides_to_show_400);
+                    } else {
+                        $slides_to_show = !empty($slides_to_show) ? $slides_to_show : 7;
+                        wp_enqueue_style('slick-slider-css', plugins_url('../../../assets/slick-slider/slick.css', __FILE__));
+                        wp_enqueue_style('slick-slider-theme-css', plugins_url('../../../assets/slick-slider/slick-theme.css', __FILE__));
+                        wp_enqueue_script('slick-slider-js', plugins_url('../../../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
+                        $output .= '
+                            <script>
+                                jQuery(document).ready(function ($) {
+                                    setTimeout(function () {
+                                        let sliders = $(".logotypes-slider");
+
+                                        sliders.each(function (index) {
+                                            let isRTL = $(this).data("direction") === "rtl";
+
+                                            $(this).slick({
+                                                slidesToShow: ' . $slides_to_show . ',
+                                                slidesToScroll: 1,
+                                                autoplay: true,
+                                                autoplaySpeed: 2000,
+                                                arrows: false,
+                                                dots: false,
+                                                infinite: true,
+                                                speed: 1000,
+                                                rtl: isRTL,
+                                                asNavFor: ".logotypes-slider",
+                                                responsive: [
+                                                    {
+                                                        breakpoint: 1024,
+                                                        settings: {
+                                                            slidesToShow: 5
+                                                        }
+                                                    },
+                                                    {
+                                                        breakpoint: 768,
+                                                        settings: {
+                                                            slidesToShow: 3
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                        });
+                                        sliders.css({ "opacity": "1" });
+                                    }, 500);
+                                });
+
+                            </script>';
+                    }
                 }
 
             }

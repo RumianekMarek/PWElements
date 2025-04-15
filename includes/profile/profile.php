@@ -10,14 +10,12 @@ class PWEProfile extends PWECommonFunctions {
     public static $fair_colors;
     public static $accent_color;
     public static $main2_color;
-    public static $fair_forms;
 
     /**
      * Constructor method for initializing the plugin.
      */
     public function __construct() {
         self::$rnd_id = rand(10000, 99999);
-        self::$fair_forms = $this->findFormsGF();
         self::$fair_colors = $this->findPalletColors();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
 
@@ -44,6 +42,7 @@ class PWEProfile extends PWECommonFunctions {
         require_once plugin_dir_path(__FILE__) . 'classes/profile-three-cols.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-buttons.php';
         require_once plugin_dir_path(__FILE__) . 'classes/profile-cards.php';
+        require_once plugin_dir_path(__FILE__) . 'classes/profile-expanding.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -69,6 +68,7 @@ class PWEProfile extends PWECommonFunctions {
                                 'Three columns' => 'PWEProfileThreeCols',
                                 'Buttons' => 'PWEProfileButtons',
                                 'Cards' => 'PWEProfileCards',
+                                'Expanding' => 'PWEProfileExpanding',
                             ),
                             'std' => 'PWEProfileAllInOne',
                         ),
@@ -146,6 +146,7 @@ class PWEProfile extends PWECommonFunctions {
                         ...PWEProfileThreeCols::initElements(),
                         ...PWEProfileButtons::initElements(),
                         ...PWEProfileCards::initElements(),
+                        ...PWEProfileExpanding::initElements(),
                     ),
                 ),
             ));
@@ -167,6 +168,7 @@ class PWEProfile extends PWECommonFunctions {
             'PWEProfileThreeCols' => 'classes/profile-three-cols.php',
             'PWEProfileButtons'   => 'classes/profile-buttons.php',
             'PWEProfileCards'     => 'classes/profile-cards.php',
+            'PWEProfileExpanding'     => 'classes/profile-expanding.php',
         );
     }
 
@@ -177,7 +179,7 @@ class PWEProfile extends PWECommonFunctions {
      * @param array @atts options
      */
     public function PWEProfileOutput($atts, $content = null) {
-
+        
         extract( shortcode_atts( array(
             'profile_type' => '',
         ), $atts ));
@@ -217,6 +219,9 @@ class PWEProfile extends PWECommonFunctions {
         } else if ($profile_type == 'PWEProfileCards') {
             $profile_el_id = 'PWEProfileCards';
             $profile_el_class = 'profile-cards';
+        } else if ($profile_type == 'PWEProfileExpanding') {
+            $profile_el_id = 'PWEProfileExpanding';
+            $profile_el_class = 'profile-expanding';
         } else {
             $profile_el_id = 'ProfileSingle'. self::$rnd_id;
             $profile_el_class = 'profile-single-'. self::$rnd_id;

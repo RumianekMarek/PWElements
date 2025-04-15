@@ -236,7 +236,6 @@ body.home .pwe-menu {
         opacity: .95;
         box-shadow: 0 0 20px rgba(0,0,0,.7);
         transform: translateX(-105%);
-        transition: .3s;
     }
     .pwe-menu.burger-menu .pwe-menu__container {
         transform: translateX(0);

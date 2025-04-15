@@ -84,17 +84,21 @@ class PWElementConfirmationVip extends PWElements {
             .wpb_column:has(#pweConfVip) {
                 max-width: 100%;
             }
-            .pwe-conf-vip {
-            }
             .pwe-conf-vip__wrapper {
             }
             .pwe-conf-vip__columns {
                 display: flex;
-                min-height: 75vh;
+                min-height: 80vh;
             }
             .pwe-conf-vip__column {
                 width: 50%;
                 display: flex;
+            }
+            .pwe-conf-vip__column.bg {
+                background-image: url(/doc/background.webp);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
             }
             .pwe-conf-vip__column-content {
                 display: flex;
@@ -129,6 +133,9 @@ class PWElementConfirmationVip extends PWElements {
                 color: white;
                 padding: 8px 18px;
                 border-radius: 10px;
+            }
+            .pwe-conf-vip__column-content-btn-container a:hover {
+                color: #999 !important;
             }
             .pwe-conf-vip__column-content-edition {
                 max-width: 360px;
@@ -235,12 +242,12 @@ class PWElementConfirmationVip extends PWElements {
                 <div class="pwe-conf-vip__columns">
                     <div class="pwe-conf-vip__column">
                         <div class="pwe-conf-vip__column-content">
-                            <h2>Dziękjemy za aktywację zaproszenia VIP</h2>
-                            <p>Na państwa mail wysłaliśmy potwierdzenie wraz z kodem QR upoważniającym do wejścia na targi</p>
+                            <h2>'. self::languageChecker('Dziękujemy za aktywację zaproszenia VIP', 'Thank you for activating your VIP invitation') .'</h2>
+                            <p>'. self::languageChecker('Na państwa mail wysłaliśmy potwierdzenie wraz z kodem QR upoważniającym do wejścia na targi', 'We have sent a confirmation to your email along with a QR code authorizing entry to the fair.') .'</p>
                             <div class="pwe-conf-vip__column-content-btn-container">'. self::languageChecker('<a href="/">Strona główna</a>', '<a href="/en/">Home page</a>') .'</div>
                         </div>
                     </div>
-                    <div class="pwe-conf-vip__column" style="background-image: url(/doc/background.webp);">
+                    <div class="pwe-conf-vip__column bg">
                         <div class="pwe-conf-vip__column-content">
                             <img class="pwe-conf-vip__column-content-logo" src="'. self::languageChecker('/doc/logo.webp', '/doc/logo-en.webp') .'">';
                             if (!empty($trade_fair_edition_shortcode)) {
@@ -258,7 +265,7 @@ class PWElementConfirmationVip extends PWElements {
                         </div>
                         <div class="pwe-conf-vip__footer-column">
                             <p>INFO@WARSAWEXPO.EU</p>
-                            <p>ŚLEDŹ NAS NA <a href="[trade_fair_facebook]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a></p>
+                            <p>'. self::languageChecker('ŚLEDŹ NAS NA', 'FOLLOW US ON') .' <a href="[trade_fair_facebook]" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a></p>
                         </div>
                     </div>
                 </div>
@@ -266,12 +273,69 @@ class PWElementConfirmationVip extends PWElements {
             <div class="pwe-conf-vip__form">
                 [gravityform id="'. $conf_vip_form .'" title="false" description="false" ajax="false"]               
             </div>
-        </div>
+        </div>';
+
+        if (class_exists('GFAPI')) {
+            $all_forms = GFAPI::get_forms();
+            
+            foreach($all_forms as $single_form) {
+                if (stripos($single_form['title'], 'potencjalny wystawca') !== false) {
+                    foreach($single_form['fields'] as $single_field){
+
+                        $label = strtolower($single_field['label']);
+
+                        switch (true) {
+
+                            case (stripos($label, 'nazwisk') !== false || stripos($label, 'imie') !== false || stripos($label, 'imię') !== false || stripos($label, 'imiĘ') !== false || stripos($label, 'name') !== false) && stripos($label, 'id') === false:
+                                $input_name = $label;
+                                continue 2;
+
+                            case stripos($label, 'mail') !== false && stripos($label, 'id') === false:
+                                $input_email = $label;
+                                continue 2;
+
+                            case (stripos($label, 'tel') !== false || stripos($label, 'phone') !== false) && stripos($label, 'id') === false:
+                                $input_phone = $label;
+                                continue 2;
+
+                            case stripos($label, 'firma') !== false || stripos($label, 'company') !== false:
+                                $input_company = $label;
+                                continue 2;
+                            
+                            case stripos($label, 'kanał') !== false || stripos($label, 'kanal') !== false:
+                                $input_channel = $label;
+                                continue 2;
+
+                            case stripos($label, 'badge') !== false:
+                                $input_badge = $label;
+                                continue 2;
+                            
+                            case stripos($label, 'id') !== false && stripos($label, 'name') === false && stripos($label, 'mail') === false && stripos($label, 'phone') === false:
+                                $input_id = $label;
+                                continue 2;
+                            
+                            case stripos($label, 'idname') !== false:
+                                $input_idname = $label;
+                                continue 2;
+
+                            case stripos($label, 'idemail') !== false:
+                                $input_idemail = $label;
+                                continue 2;
+
+                            case stripos($label, 'idphone') !== false:
+                                $input_idphone = $label;
+                                continue 2;  
+                        }
+                    }
+                }  
+            }
+        }
         
+        $output .= '
         <script>
-            jQuery(document).ready(function() {
-                var url_string = window.location.href;
-                var url = new URL(url_string);
+            document.addEventListener("DOMContentLoaded", function () {
+                var urlString = window.location.href;
+                var url = new URL(urlString);
 
                 var getname = url.searchParams.get("getname");
                 var getphone = url.searchParams.get("getphone");
@@ -283,24 +347,64 @@ class PWElementConfirmationVip extends PWElements {
                 var kanal = url.searchParams.get("kanal");
 
                 let idmail = [];
+                if (getid) idmail = getid.split(",");
+
+                let inputName, inputEmail, inputPhone, inputCompany, inputChannel, inputBadge, inputID, inputIDname, inputIDemail, inputIDphone;
+
+                var fields = document.querySelectorAll("#pweConfVip .gfield");
+                fields.forEach(function(field) {
+                    var label = field.querySelector("label");
+                    if (label) {
+                        const labelText = label.textContent.toLowerCase().trim();
+                        
+                        inputName = (labelText && "'. $input_name .'" && labelText.includes("'. $input_name .'") && !labelText.includes("id")) ? field.querySelector("input") : inputName;
+                        inputEmail = (labelText && "'. $input_email .'" && labelText.includes("'. $input_email .'") && !labelText.includes("id")) ? field.querySelector("input") : inputEmail;
+                        inputPhone = (labelText && "'. $input_phone .'" && labelText.includes("'. $input_phone .'") && !labelText.includes("id")) ? field.querySelector("input") : inputPhone;
+                        inputCompany = (labelText && "'. $input_company .'" && labelText.includes("'. $input_company .'")) ? field.querySelector("input") : inputCompany;
+                        inputChannel = (labelText && "'. $input_channel .'" && labelText.includes("'. $input_channel .'")) ? field.querySelector("input") : inputChannel;
+                        inputBadge = (labelText && "'. $input_badge .'" && labelText.includes("'. $input_badge .'")) ? field.querySelector("input") : inputBadge;
+
+                        if (labelText && "'. $input_id .'" && labelText.includes("'. $input_id .'") && 
+                            !labelText.includes("name") && 
+                            !labelText.includes("email") && 
+                            !labelText.includes("phone")) {
+                            inputID = field.querySelector("input");
+                        }
+
+                        inputIDname = (labelText && "'. $input_idname .'" && labelText.includes("'. $input_idname .'")) ? field.querySelector("input") : inputIDname;
+                        inputIDemail = (labelText && "'. $input_idemail .'" && labelText.includes("'. $input_idemail .'")) ? field.querySelector("input") : inputIDemail;
+                        inputIDphone = (labelText && "'. $input_idphone .'" && labelText.includes("'. $input_idphone .'")) ? field.querySelector("input") : inputIDphone;
+                    }
+                });
+
+                const inputVipName = inputName || document.querySelector("#input_'. $form_id .'_1");
+                const inputVipPhone = inputPhone || document.querySelector("#input_'. $form_id .'_5");
+                const inputVipEmail = inputEmail || document.querySelector("#input_'. $form_id .'_4");
+                const inputVipBadge = inputBadge || document.querySelector("#input_'. $form_id .'_10");
+                const inputVipCompany = inputCompany || document.querySelector("#input_'. $form_id .'_11");
+                const inputVipChannel = inputChannel || document.querySelector("#input_'. $form_id .'_18");
+                const inputVipID = inputID || document.querySelector("#input_'. $form_id .'_9");
+                const inputVipIDname = inputIDname || document.querySelector("#input_'. $form_id .'_17");
+                const inputVipIDemail = inputIDemail || document.querySelector("#input_'. $form_id .'_13");
+                const inputVipIDphone = inputIDphone || document.querySelector("#input_'. $form_id .'_15");
+
+                if (inputVipName) inputVipName.value = getname;
+                if (inputVipEmail) inputVipEmail.value = getemail;
+                if (inputVipPhone) inputVipPhone.value = getphone;
+                if (inputVipCompany) inputVipCompany.value = firma;
+                if (inputVipChannel) inputVipChannel.value = kanal;
+                if (inputVipBadge) inputVipBadge.value = badge;
+                if (inputVipID) inputVipID.value = getid;
+                if (inputVipIDname && idmail.length > 1) inputVipIDname.value = idmail[1];
+                if (inputVipIDemail && idmail.length > 2) inputVipIDemail.value = idmail[2];
+                if (inputVipIDphone && idmail.length > 3) inputVipIDphone.value = idmail[3];
+
                 if (getid) {
-                    idmail = getid.split(",");
-                }
-
-                document.getElementById("input_'. $form_id .'_1").value = getname;
-                document.getElementById("input_'. $form_id .'_5").value = getphone;
-                document.getElementById("input_'. $form_id .'_4").value = getemail;
-                document.getElementById("input_'. $form_id .'_9").value = getid;
-                document.getElementById("input_'. $form_id .'_10").value = badge;
-                document.getElementById("input_'. $form_id .'_11").value = firma;
-                document.getElementById("input_'. $form_id .'_13").value = idmail[2];
-                document.getElementById("input_'. $form_id .'_15").value = idmail[3]
-                document.getElementById("input_'. $form_id .'_17").value = idmail[1];
-                document.getElementById("input_'. $form_id .'_18").value = kanal;
-
-                if(getid) {
-                    setTimeout(function(){
-                        jQuery("#gform_'. $form_id .'").trigger("submit",[true]);
+                    setTimeout(function() {
+                        var form = document.getElementById("gform_'. $form_id .'");
+                        if (form) {
+                            form.submit();
+                        } else console.log("Formularz został wysłany");
                     }, 200);
                 }
             });
@@ -309,3 +413,4 @@ class PWElementConfirmationVip extends PWElements {
         return $output;
     }
 }
+
