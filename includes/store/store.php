@@ -387,7 +387,7 @@ class PWEStore extends PWECommonFunctions {
             }
         }
 
-        // $categories[] = !empty($pwe_store_packages_data) ? "packages" : "";
+        $categories[] = !empty($pwe_store_packages_data) ? "packages" : "";
 
         $fairs_json = PWECommonFunctions::json_fairs();
         $store_options = [];
@@ -401,9 +401,9 @@ class PWEStore extends PWECommonFunctions {
         // Get current domain
         $current_domain = do_shortcode('[trade_fair_domainadress]');
 
-        // echo '<pre>';
-        // var_dump($pwe_store_packages_data);
-        // echo '</pre>';
+        echo '<pre>';
+        var_dump($pwe_store_packages_data);
+        echo '</pre>';
 
         $output = '
         <div id="pweStore" class="pwe-store">
@@ -799,74 +799,73 @@ class PWEStore extends PWECommonFunctions {
                             }
                         }   
 
-                        // if ($category === 'packages') {
+                        if ($category === 'packages') {
+                            $output .= '
 
-                        // }
-                        // $output .= '
+                                <div class="pwe-store__services-cards-header">
+                                    <h4>PAKIETY USŁUG MARKETINGOWYCH</h4>
+                                </div>
 
-                        //     <div class="pwe-store__services-cards-header">
-                        //         <h4>PAKIETY USŁUG MARKETINGOWYCH</h4>
-                        //     </div>
+                                <div class="pwe-store__services-cards" category="marketing">
 
-                        //     <div class="pwe-store__services-cards" category="marketing">
+                                    <!-- Pakiet STANDARD -->
+                                    <div class="pwe-store__service-card pwe-store__service">
+                                        <a href="#" data-featured="marketing-package-standard">
+                                            <div class="pwe-store__service-header">
+                                                <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
+                                            </div>
+                                            <div class="pwe-store__service-content">
+                                                <div class="pwe-store__service-products">
+                                                    <div class="pwe-store__product">Komunikat w radiowęźle</div>
+                                                    <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
+                                                    <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
+                                                </div>
+                                                <div class="pwe-store__service-footer">
+                                                    <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="pwe-store__btn-container">
+                                            <a href="#" class="pwe-store__more-button" data-featured="marketing-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
+                                            <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                                        </div>
+                                    </div>
 
-                        //         <!-- Pakiet STANDARD -->
-                        //         <div class="pwe-store__service-card pwe-store__service">
-                        //             <a href="#" data-featured="marketing-package-standard">
-                        //                 <div class="pwe-store__service-header">
-                        //                     <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
-                        //                 </div>
-                        //                 <div class="pwe-store__service-content">
-                        //                     <div class="pwe-store__service-products">
-                        //                         <div class="pwe-store__product">Komunikat w radiowęźle</div>
-                        //                         <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
-                        //                         <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
-                        //                     </div>
-                        //                     <div class="pwe-store__service-footer">
-                        //                         <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
-                        //                     </div>
-                        //                 </div>
-                        //             </a>
-                        //             <div class="pwe-store__btn-container">
-                        //                 <a href="#" class="pwe-store__more-button" data-featured="marketing-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
-                        //                 <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
-                        //             </div>
-                        //         </div>
+                                </div>
 
-                        //     </div>
+                                <div class="pwe-store__services-cards-header">
+                                    <h4>PAKIETY USŁUG SOCIAL MEDIA</h4>
+                                </div>
 
-                        //     <div class="pwe-store__services-cards-header">
-                        //         <h4>PAKIETY USŁUG SOCIAL MEDIA</h4>
-                        //     </div>
+                                <div class="pwe-store__services-cards" category="social">
 
-                        //     <div class="pwe-store__services-cards" category="social">
+                                    <!-- Pakiet STANDARD -->
+                                    <div class="pwe-store__service-card pwe-store__service">
+                                        <a href="#" data-featured="social-package-standard">
+                                            <div class="pwe-store__service-header">
+                                                <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
+                                            </div>
+                                            <div class="pwe-store__service-content">
+                                                <div class="pwe-store__service-products">
+                                                    <div class="pwe-store__product">Komunikat w radiowęźle</div>
+                                                    <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
+                                                    <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
+                                                </div>
+                                                <div class="pwe-store__service-footer">
+                                                    <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="pwe-store__btn-container">
+                                            <a href="#" class="pwe-store__more-button" data-featured="social-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
+                                            <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                                        </div>
+                                    </div>
 
-                        //         <!-- Pakiet STANDARD -->
-                        //         <div class="pwe-store__service-card pwe-store__service">
-                        //             <a href="#" data-featured="social-package-standard">
-                        //                 <div class="pwe-store__service-header">
-                        //                     <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
-                        //                 </div>
-                        //                 <div class="pwe-store__service-content">
-                        //                     <div class="pwe-store__service-products">
-                        //                         <div class="pwe-store__product">Komunikat w radiowęźle</div>
-                        //                         <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
-                        //                         <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
-                        //                     </div>
-                        //                     <div class="pwe-store__service-footer">
-                        //                         <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
-                        //                     </div>
-                        //                 </div>
-                        //             </a>
-                        //             <div class="pwe-store__btn-container">
-                        //                 <a href="#" class="pwe-store__more-button" data-featured="social-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
-                        //                 <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
-                        //             </div>
-                        //         </div>
+                                </div>
 
-                        //     </div>
-
-                        // ';
+                            ';
+                        }
 
                         $output .= '
                         </div>
