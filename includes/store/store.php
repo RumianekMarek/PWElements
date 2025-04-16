@@ -303,6 +303,31 @@ class PWEStore extends PWECommonFunctions {
         return $results;
     } 
 
+    public function getDatabaseDataStorePackages() {
+        // Database connection
+        $cap_db = self::connectToDatabase();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM shop_packs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
     public function getDatabaseMetaData() {
         // Database connection
         $cap_db = self::connectToDatabase();
@@ -330,13 +355,13 @@ class PWEStore extends PWECommonFunctions {
 
     public function ceilPrice($price) {
         if ($price >= 1000) {
-            return ceil($price / 100) * 100;
+            return round($price, -2);
         } else if ($price < 1000 && $price >= 100) {
-            return ceil($price / 10) * 10;
-        } else if ($price >= 50 && $price <= 100) {
-            return ceil($price / 10) * 10;
+            return round($price, -1);
+        } else if ($price >= 50 && $price < 100) {
+            return round($price, -1);
         } else {
-            return ceil($price);
+            return round($price);
         }
     }
     
@@ -348,7 +373,8 @@ class PWEStore extends PWECommonFunctions {
     public function PWEStoreOutput() {  
 
         $pwe_store_data = self::getDatabaseDataStore(); 
-        $pwe_meta_data = self::getDatabaseMetaData();
+        $pwe_store_packages_data = self::getDatabaseDataStorePackages();
+        $pwe_meta_data = self::getDatabaseMetaData();   
 
         $categories = [];
 
@@ -360,6 +386,8 @@ class PWEStore extends PWECommonFunctions {
                 $categories[] = $category;
             }
         }
+
+        // $categories[] = !empty($pwe_store_packages_data) ? "packages" : "";
 
         $fairs_json = PWECommonFunctions::json_fairs();
         $store_options = [];
@@ -374,7 +402,7 @@ class PWEStore extends PWECommonFunctions {
         $current_domain = do_shortcode('[trade_fair_domainadress]');
 
         // echo '<pre>';
-        // var_dump($pwe_store_data);
+        // var_dump($pwe_store_packages_data);
         // echo '</pre>';
 
         $output = '
@@ -611,7 +639,9 @@ class PWEStore extends PWECommonFunctions {
                                     </div>
                                 </div>';
                             }
-                        }   
+                        }  
+                        
+                        
 
                     $output .= '
                     </div>'; 
@@ -628,12 +658,14 @@ class PWEStore extends PWECommonFunctions {
                             $output .= '
                             <div id="'. $category .'" class="pwe-store__category-item">
                                 <p class="pwe-uppercase">'. 
-                                    (self::lang_pl() ? 'USŁUGI '. 
+                                    (self::lang_pl() ? 
+                                    ($category !== 'packages' ? 'USŁUGI ' : ''). 
                                     str_replace(
                                         array("marketing", "packages"), 
                                         array("marketingowe", "pakiety"), 
                                         str_replace("-", " ", $category)
-                                    ) : str_replace("-", " ", $category) .' SERVICES') .'
+                                    ) : 
+                                    str_replace("-", " ", $category) . ($category !== 'packages' ? ' SERVICES' : '')) .'
                                 </p>
                             </div>';
                         }
@@ -767,6 +799,75 @@ class PWEStore extends PWECommonFunctions {
                             }
                         }   
 
+                        // if ($category === 'packages') {
+
+                        // }
+                        // $output .= '
+
+                        //     <div class="pwe-store__services-cards-header">
+                        //         <h4>PAKIETY USŁUG MARKETINGOWYCH</h4>
+                        //     </div>
+
+                        //     <div class="pwe-store__services-cards" category="marketing">
+
+                        //         <!-- Pakiet STANDARD -->
+                        //         <div class="pwe-store__service-card pwe-store__service">
+                        //             <a href="#" data-featured="marketing-package-standard">
+                        //                 <div class="pwe-store__service-header">
+                        //                     <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
+                        //                 </div>
+                        //                 <div class="pwe-store__service-content">
+                        //                     <div class="pwe-store__service-products">
+                        //                         <div class="pwe-store__product">Komunikat w radiowęźle</div>
+                        //                         <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
+                        //                         <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
+                        //                     </div>
+                        //                     <div class="pwe-store__service-footer">
+                        //                         <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
+                        //                     </div>
+                        //                 </div>
+                        //             </a>
+                        //             <div class="pwe-store__btn-container">
+                        //                 <a href="#" class="pwe-store__more-button" data-featured="marketing-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
+                        //                 <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                        //             </div>
+                        //         </div>
+
+                        //     </div>
+
+                        //     <div class="pwe-store__services-cards-header">
+                        //         <h4>PAKIETY USŁUG SOCIAL MEDIA</h4>
+                        //     </div>
+
+                        //     <div class="pwe-store__services-cards" category="social">
+
+                        //         <!-- Pakiet STANDARD -->
+                        //         <div class="pwe-store__service-card pwe-store__service">
+                        //             <a href="#" data-featured="social-package-standard">
+                        //                 <div class="pwe-store__service-header">
+                        //                     <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
+                        //                 </div>
+                        //                 <div class="pwe-store__service-content">
+                        //                     <div class="pwe-store__service-products">
+                        //                         <div class="pwe-store__product">Komunikat w radiowęźle</div>
+                        //                         <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
+                        //                         <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
+                        //                     </div>
+                        //                     <div class="pwe-store__service-footer">
+                        //                         <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
+                        //                     </div>
+                        //                 </div>
+                        //             </a>
+                        //             <div class="pwe-store__btn-container">
+                        //                 <a href="#" class="pwe-store__more-button" data-featured="social-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
+                        //                 <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                        //             </div>
+                        //         </div>
+
+                        //     </div>
+
+                        // ';
+
                         $output .= '
                         </div>
                     </div>';
@@ -862,3 +963,139 @@ class PWEStore extends PWECommonFunctions {
         return $output;
     }  
 }
+
+
+
+// <div id="packagesSectionHide" category="packages" class="pwe-store__packages-section-hide pwe-store__section-hide">
+//                     <div class="pwe-store__category-header">
+//                         <div class="pwe-store__category-header-arrow">
+//                             <div class="pwe-store__category-header-arrow-el">
+//                                 <span></span>
+//                             </div>
+//                         </div>
+//                         <div class="pwe-store__category-header-title">
+//                             <p>PAKIETY</p>
+//                         </div>
+//                     </div>
+
+//                     <!-- Pakiet standard -->
+//                     <div class="pwe-store__featured-service pwe-store__service" id="marketing-package-standard">
+//                         <div class="pwe-store__featured-content">
+//                             <div class="pwe-store__featured-image">
+//                                 <!-- Spersonalizowane Smyczki -->
+//                                 <div class="pwe-store__service-card pwe-store__service">
+//                                     <a href="#" data-featured="smycze">
+//                                         <div class="pwe-store__service-image">
+//                                             <img src="/wp-content/plugins/PWElements/media/store/smycze-z-logotypem.webp" alt="Smycze z logotypem">
+//                                         </div>
+//                                         <div class="pwe-store__service-content">
+//                                             '. ( self::lang_pl() ? '
+//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">SPERSONALIZOWANE SMYCZKI Z TWOIM LOGO</h4>
+//                                             <h4 class="pwe-store__service-name">SPERSONALIZOWANE SMYCZKI Z TWOIM LOGO</h4>
+//                                             <p>Dystrybucja smyczy z logotypem Twojej firmy wśród uczestników Targów</p>
+//                                             ':'
+//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">PERSONALIZED LANYARDS WITH YOUR LOGO</h4>
+//                                             <h4 class="pwe-store__service-name">PERSONALIZED LANYARDS WITH YOUR LOGO</h4>
+//                                             <p>Distribution of lanyards with your company logo among Fair participants</p>
+//                                             ' ) .'
+                                            
+//                                             <div class="pwe-store__service-footer">
+//                                                 <div class="pwe-store__price">5500,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
+//                                             </div>
+
+//                                             <div class="pwe-store__btn-container">
+//                                                 <span class="pwe-store__more-button" data-featured="smycze">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</span>
+//                                             </div>
+//                                         </div>
+//                                     </a>
+//                                 </div>
+
+//                                 <!-- Logotyp na Identyfikatorach -->
+//                                 <div class="pwe-store__service-card pwe-store__service">
+//                                     <a href="#" data-featured="logotyp">
+//                                         <div class="pwe-store__service-image">
+//                                             <img src="/wp-content/plugins/PWElements/media/store/logotyp-na-identyfikatorach.webp" alt="Logotyp na identyfikatorach">
+//                                         </div>
+//                                         <div class="pwe-store__service-content">
+//                                             '. ( self::lang_pl() ? '
+//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">LOGOTYP TWOJEJ FIRMY NA IDENTYFIKATORACH UCZESTNIKÓW</h4>
+//                                             <h4 class="pwe-store__service-name">LOGOTYP TWOJEJ FIRMY NA IDENTYFIKATORACH UCZESTNIKÓW</h4>
+//                                             <p>Logo Twojej Firmy na identyfikatorach wszystkich uczestników Targów</p>
+//                                             ':'
+//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">YOUR COMPANY LOGO ON PARTICIPANTS` ID BADGES</h4>
+//                                             <h4 class="pwe-store__service-name">YOUR COMPANY LOGO ON PARTICIPANTS` ID BADGES</h4>
+//                                             <p>Your Company Logo on ID BADGES of all Fair participants</p>
+//                                             ' ) .'
+                                            
+//                                             <div class="pwe-store__service-footer">
+//                                                 <div class="pwe-store__price">6500,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>                    
+//                                             </div>
+
+//                                             <div class="pwe-store__btn-container">
+//                                                 <span class="pwe-store__more-button" data-featured="logotyp">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</span>
+//                                             </div>
+//                                         </div>
+//                                     </a>
+//                                 </div>
+
+//                                 <!-- Sponsor Planu Targowego -->
+//                                 <div class="pwe-store__service-card pwe-store__service">
+//                                     <a href="#" data-featured="sponsor-planu">
+//                                         <div class="pwe-store__service-image">
+//                                             <img src="/wp-content/plugins/PWElements/media/store/sponsor-planu-targowego.webp" alt="Sponsor Planu Targowego">
+//                                         </div>
+//                                         <div class="pwe-store__service-content">
+//                                             '. ( self::lang_pl() ? '
+//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">SPONSOR PLANU TARGOWEGO</h4>
+//                                             <h4 class="pwe-store__service-name">SPONSOR PLANU TARGOWEGO</h4>
+//                                             <p>Reklama Twojej firmy w drukowanym Planie Targowym</p>
+//                                             ':'
+//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">TRADE FAIR PLAN SPONSOR</h4>
+//                                             <h4 class="pwe-store__service-name">TRADE FAIR PLAN SPONSOR</h4>
+//                                             <p>Advertise your company in the printed Trade Plan</p>
+//                                             ' ) .'
+                                        
+//                                             <div class="pwe-store__service-footer">
+//                                                 <div class="pwe-store__price">5000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div> 
+//                                             </div>
+
+//                                             <div class="pwe-store__btn-container">
+//                                                 <span class="pwe-store__more-button" data-featured="sponsor-planu">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</span>
+//                                             </div>
+//                                         </div>
+//                                     </a>
+//                                 </div>
+//                             </div>
+//                             <div class="pwe-store__featured-details">
+//                                 <div class="pwe-store__featured-text">
+//                                     <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'PAKIET STANDARD' : 'STANDARD PACKAGE' ) .'</h3>
+//                                     <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD' : 'STANDARD PACKAGE' ) .'</span>
+//                                     '. ( self::lang_pl() ? '
+//                                         <p class="pwe-store__featured-description">Zostań <strong>Partnerem Strefy VIP</strong> podczas targów organizowanych w Ptak Warsaw Expo i zyskaj wyjątkową <strong>możliwość zaprezentowania swojej marki w ekskluzywnej przestrzeni</strong>.</p>                     
+//                                     ':'
+//                                         <p class="pwe-store__featured-description">Become a <strong>VIP Zone Partner</strong> during the fair organized at Ptak Warsaw Expo and gain a unique <strong>opportunity to present your brand in an exclusive space</strong>.</p>
+//                                     ' ) .' 
+//                                 </div>
+//                                 <div class="pwe-store__featured-footer">
+//                                     <span class="pwe-store__featured-pwe-store__price">'. ( self::lang_pl() ? '15 000,00zł' : '15 000,00zł' ) .'</span>
+//                                     <div class="pwe-store__featured-buttons">
+//                                         <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+//                                         <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     </div> 
+//                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
