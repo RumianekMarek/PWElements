@@ -80,8 +80,8 @@ if (!empty($api_media["doc"])) {
         }
     }  
 }
-$main_logo = !empty(get_post_meta($post_id, 'logo_image', true)) ? get_post_meta($post_id, 'logo_image', true) : $main_logo;
-$header_bg = !empty(get_post_meta($post_id, 'header_image', true)) ? get_post_meta($post_id, 'header_image', true) : $header_bg;
+$main_logo = !empty(get_post_meta($post_id, '_logo_image', true)) ? get_post_meta($post_id, '_logo_image', true) : $main_logo;
+$header_bg = !empty(get_post_meta($post_id, '_header_image', true)) ? get_post_meta($post_id, '_header_image', true) : $header_bg;
 
 // Get localize
 $locale = get_locale();
@@ -173,7 +173,6 @@ if (substr($site_url, -4) === '/en/') {
     $site_url = substr($site_url, 0, -4) . '/';
 }
 
-global $fairs_data;
 
 // [pwe_desc_pl]
 $shortcode_desc_pl = get_pwe_shortcode("pwe_desc_pl", $domain);
@@ -502,6 +501,7 @@ $output .= '
     .single-event__partners-logotypes {
         width: 100%;
         overflow: hidden;
+        display: flex;
     }
     .single-event__partners-logo {
         margin: 10px;

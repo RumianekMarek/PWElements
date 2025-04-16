@@ -170,7 +170,7 @@ class PWECalendar extends PWECommonFunctions {
                     display:flex;
                     flex-wrap: wrap;
                     justify-content: space-evenly;
-                    gap: 10px;
+                    gap: 24px;
                     margin-top: 36px;
                 }
                 .pwe-calendar_item {

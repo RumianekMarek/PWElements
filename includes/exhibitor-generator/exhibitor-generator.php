@@ -9,7 +9,7 @@
  */
 
 class PWEExhibitorGenerator{
-    
+
     public static $exhibitor_logo_url;
     public static $exhibitor_name;
     public static $exhibitor_desc;
@@ -46,12 +46,12 @@ class PWEExhibitorGenerator{
     /**
      * Initialize VC Map PWEExhibitorGenerator.
      */
-    public function initVCMapPWEExhibitorGenerator() { 
+    public function initVCMapPWEExhibitorGenerator() {
 
         require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-visitor-generator.php';
         require_once plugin_dir_path(__FILE__) . 'classes/exhibitor-worker-generator.php';
         require_once plugin_dir_path(__FILE__) . 'classes/mass-vip-sender.php';
-      
+
         if (class_exists('Vc_Manager')) {
             vc_map(array(
                 'name' => __( 'PWE Exhibitor Generator', 'pwe_exhibitor_generator'),
@@ -59,7 +59,7 @@ class PWEExhibitorGenerator{
                 'category' => __( 'PWE Elements', 'pwe_exhibitor_generator'),
                 'admin_enqueue_css' => plugin_dir_url(dirname(__DIR__)) . 'backend/backendstyle.css',
                 'class' => 'costam',
-                'params' => array( 
+                'params' => array(
                     array(
                         'type' => 'dropdown',
                         'group' => 'PWE Element',
@@ -189,7 +189,7 @@ class PWEExhibitorGenerator{
     /**
      * Enqueues scripts for the exhibitor generator.
      *
-     * Loads the JS file from the `assets` folder and localizes data for backend communication, 
+     * Loads the JS file from the `assets` folder and localizes data for backend communication,
      * such as the secret key and language strings.
      *
      * @param array $atts Shortcode attributes.
@@ -200,13 +200,14 @@ class PWEExhibitorGenerator{
             'send_file' => plugins_url('assets/mass_vip.php', __FILE__ ),
             'secret' =>  hash_hmac('sha256', $_SERVER["HTTP_HOST"], AUTH_KEY),
             'lang' => get_locale(),
+            'custom_form' => $atts['generator_form_id'],
         ];
-        
+
         $js_file = plugins_url('assets/exhibitor-generator-script.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/exhibitor-generator-script.js');
         wp_enqueue_script('pwe-exhibitor-generator-js', $js_file, array('jquery'), $js_version, true);
         wp_localize_script( 'exclusions-js', 'send_data', $send_data );
-    }  
+    }
 
     /**
      * Hides Gravity Form fields based on their label.
@@ -241,7 +242,7 @@ class PWEExhibitorGenerator{
      */
     public static function catalog_data($exhibitor_id) {
         $katalog_id = do_shortcode('[trade_fair_catalog]');
-        
+
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
@@ -255,7 +256,7 @@ class PWEExhibitorGenerator{
             return  $exhibitor;
         };
         return null;
-    }   
+    }
 
     /**
      * Output method for pwe_exhibitor_generator shortcode.
@@ -265,14 +266,14 @@ class PWEExhibitorGenerator{
      * @return string
      */
     public function PWEExhibitorGeneratorOutput($atts) {
-        
+
         extract( shortcode_atts( array(
             'exhibitor_generator_mode' => '',
         ), $atts ));
 
         if ($this->findClassElements()[$exhibitor_generator_mode]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$exhibitor_generator_mode];
-            
+
             // Check which generator mode is in use (guest or staff).
             // Based on the mode, load the appropriate class to generate the output.
             if (class_exists($exhibitor_generator_mode)) {
@@ -287,8 +288,8 @@ class PWEExhibitorGenerator{
             // Log if class file doesn't exist
             echo '<script>console.log("File with class ' . $exhibitor_generator_mode .' does not exist")</script>';
         }
-        
-        // Chengind shortcode in output 
+
+        // Chengind shortcode in output
         $output = do_shortcode($output);
 
         // Finding with generator it is
@@ -317,7 +318,7 @@ class PWEExhibitorGenerator{
 
             </div>
         </div>';
-        
+
         // Adding mass generator to display
         $output_html .= PWEMassVipSender::output($atts);
 

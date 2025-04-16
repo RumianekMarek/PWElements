@@ -28,34 +28,35 @@
                 $all_not_valid = array();
                 $all_entrys_id = array();
                 $full_form = '';
+                $custom_form = $_POST['formId'];
 
                 // Find "rejestracja gości wystawców" form ID with chosen language,
-                foreach($all_forms as $form){
-                    if(strpos(strtolower($form['title']), ('rejestracja gości wystawców ' . $lang)) !== false){
-                        $form_id = $form['id'];
-                        $all_fields = $form['fields'];
-                        $full_form = $form;
-                        foreach($all_fields as $field){
-                            if(strpos(strtolower($field['label']), 'name') !== false || strpos(strtolower($field['label']), 'nazwisko') !== false){
-                                $fields['name'] = $field['id'];
-                            } elseif(strpos(strtolower($field['label']), 'e-mail') !== false){
-                                $fields['email'] = $field['id'];
-                            } elseif(strpos(strtolower($field['label']), 'firma') !== false || strpos(strtolower($field['label']), 'company') !== false){
-                                $fields['company'] = $field['id'];
-                            } elseif(strpos(strtolower($field['label']), 'telefon') !== false || strpos(strtolower($field['label']), 'phone') !== false){
-                                $fields['phone'] = $field['id'];
-                            } elseif( $field['adminLabel'] == 'exhibitors_name'){
-                                $fields['exhibitors_name'] = $field['id'];
-                            } elseif( $field['adminLabel'] == 'exhibitor_logo'){
-                                $fields['exhibitor_logo'] = $field['id'];
-                            } elseif( $field['adminLabel'] == 'exhibitor_desc'){
-                                $fields['exhibitor_desc'] = $field['id'];
-                            }
-                        }
-                        break;
+                $custom_form = $_POST['formId'];
+                $form_id = $custom_form;
+
+                $full_form = GFAPI::get_form($form_id);
+                $all_fields = $full_form['fields'];
+
+                $fields = [];
+                foreach($all_fields as $field){
+                    if(strpos(strtolower($field['label']), 'name') !== false || strpos(strtolower($field['label']), 'nazwisko') !== false){
+                        $fields['name'] = $field['id'];
+                    } elseif(strpos(strtolower($field['label']), 'e-mail') !== false){
+                        $fields['email'] = $field['id'];
+                    } elseif(strpos(strtolower($field['label']), 'firma') !== false || strpos(strtolower($field['label']), 'company') !== false){
+                        $fields['company'] = $field['id'];
+                    } elseif(strpos(strtolower($field['label']), 'telefon') !== false || strpos(strtolower($field['label']), 'phone') !== false){
+                        $fields['phone'] = $field['id'];
+                    } elseif($field['adminLabel'] == 'exhibitors_name'){
+                        $fields['exhibitors_name'] = $field['id'];
+                    } elseif($field['adminLabel'] == 'exhibitor_logo'){
+                        $fields['exhibitor_logo'] = $field['id'];
+                    } elseif($field['adminLabel'] == 'exhibitor_desc'){
+                        $fields['exhibitor_desc'] = $field['id'];
                     }
                 }
-                
+
+
                 // Process entry data.
                 foreach($data as $val){
                     $phoneVal =  $val['phone'] ?? '';
@@ -72,8 +73,8 @@
                         $entry[$fields['exhibitors_name']] = $_POST['company'];
                     };
 
-                    $entry[$fields['exhibitor_logo']] = !empty($_POST['exhibitor_logo']) ? 
-                        $_POST['exhibitor_logo'] : 
+                    $entry[$fields['exhibitor_logo']] = !empty($_POST['exhibitor_logo']) ?
+                        $_POST['exhibitor_logo'] :
                         'https:// ' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
 
                     // Add entry to form.
@@ -135,7 +136,7 @@
                         )
                     );
                 }
-                
+
                 $response = 'true';
             }
         }
