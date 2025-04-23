@@ -31,8 +31,8 @@ function create_event_post_type() {
             'menu_name' => 'PWE Events'
         ),
         'public' => true,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'fairs-calendar'),
+        'has_archive' => false,
+        'rewrite' => array('slug' => 'kalendarz-targowy'),
         'supports' => array('title', 'custom-fields'),
         'show_in_rest' => true,  // Gutenberg Support
         'menu_icon' => 'dashicons-calendar',
@@ -992,31 +992,27 @@ function load_admin_styles($hook) {
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
-// Funkcja dodająca edytor treści
+// Function to add content editor at the bottom of the form
 function move_content_editor_to_bottom() {
-    // Sprawdzamy, czy jesteśmy na stronie edytowania postu lub wydarzenia
-    if (get_post_type() != 'post' && get_post_type() != 'event') {
+    if (get_post_type() != 'event') {
         return;
     }
-    // Dodajemy edytor treści po wszystkich metaboxach
+    // Adding content editor after all metaboxes
     add_action('edit_form_after_editor', 'add_content_editor_to_bottom');
 }
 add_action('do_meta_boxes', 'move_content_editor_to_bottom');
 
-// Funkcja do dodania edytora treści na dole formularza
+// Function adding content editor
 function add_content_editor_to_bottom() {
-    // Sprawdzamy, czy mamy dostęp do globalnych zmiennych postu
     global $post;
     
-    // Sprawdzamy, czy typ postu jest odpowiedni
-    if ($post->post_type == 'post' || $post->post_type == 'event') {
-        // Dodajemy edytor treści po wszystkich innych metaboxach
+    if ($post->post_type == 'event') {
         wp_editor( 
             $post->post_content, 
             'content', 
             array(
                 'textarea_name' => 'content', 
-                'editor_height' => 200 // Możesz dostosować wysokość edytora
+                'editor_height' => 200
             ) 
         );
     }

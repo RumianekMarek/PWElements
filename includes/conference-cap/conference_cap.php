@@ -166,6 +166,12 @@ class PWEConferenceCap {
             'conference_cap_conference_mode' => '',
         ), $atts));
 
+        $lang = 'PL';
+        if (strpos($_SERVER['REQUEST_URI'], '/en/') !== false) {
+            $lang = 'EN';
+        }
+
+
         $database_data = $conf_function::getDatabaseDataConferences();
 
         $conference_cap_html = vc_param_group_parse_atts( $conference_cap_html );
@@ -235,31 +241,43 @@ class PWEConferenceCap {
                         if (empty($conference->conf_data)) {
                             continue;
                         }
-                
-                        $confData = json_decode($conference->conf_data, true);
-                        if (!is_array($confData)) {
+
+                        $fullConfData = json_decode($conference->conf_data, true);
+                        $fullConfData = PWEConferenceCapFunctions::copySpeakerImgByStructure($fullConfData);
+                        if (!is_array($fullConfData) || !isset($fullConfData[$lang])) {
                             continue;
                         }
-                
+
+                        $confData = $fullConfData[$lang];
+
                         $conf_slug = $conference->conf_slug;
                         if (!isset($conf_slugs[$conf_slug])) {
                             $conf_slugs[$conf_slug] = [];
                         }
                         $conf_slugs[$conf_slug][] = $confData;
                     }
-                
+
                     foreach ($conf_slugs as $conf_slug => $conferences) {
-                        // Pobieramy obraz konferencji
                         $conf_img = '';
                         foreach ($database_data as $conf) {
                             if ($conf->conf_slug === $conf_slug) {
-                                $conf_img = !empty($conf->conf_img) ? esc_url($conf->conf_img) : '';
+                                $lang_key = strtolower($lang);
+                                $img_field = 'conf_img_' . $lang_key;
+                    
+                                if (!empty($conf->$img_field)) {
+                                    $conf_img = esc_url($conf->$img_field);
+                                } elseif (!empty($conf->conf_img_pl)) {
+                                    // fallback na PL, jeśli brak EN
+                                    $conf_img = esc_url($conf->conf_img_pl);
+                                }
+                    
                                 break;
                             }
                         }
                         if (empty($conf_img)) {
                             continue;
                         }
+                    
                         
                         // Tworzymy HTML kafelka
                         $tile = '<img src="' . $conf_img . '" alt="' . esc_attr($conf_slug) . '" id="nav_' . esc_attr($conf_slug) . '" class="conference_cap__conf-slug-img">';
@@ -329,9 +347,16 @@ class PWEConferenceCap {
                     $conf_location = '';
                     foreach ($database_data as $conf) {
                         if ($conf->conf_slug === $conf_slug) {
-                            $conf_img = !empty($conf->conf_img) ? esc_url($conf->conf_img) : '';
-                            $conf_name = !empty($conf->conf_name) ? esc_html($conf->conf_name) : '';
-                            $conf_location = !empty($conf->conf_location) ? str_replace(';;' , '<br>' , esc_html($conf->conf_location)) : '';
+                            $lang_key = strtolower($lang);
+                            $img_field = 'conf_img_' . $lang_key;
+                            $conf_img = !empty($conf->$img_field) ? esc_url($conf->$img_field) : (!empty($conf->conf_img_pl) ? esc_url($conf->conf_img_pl) : '');
+                            if ($lang === 'EN') {
+                                $conf_name = !empty($conf->conf_name_en) ? str_replace(';;', '<br>', esc_html($conf->conf_name_en)) : '';
+                                $conf_location = !empty($conf->conf_location_en) ? str_replace(';;', '<br>', esc_html($conf->conf_location_en)) : '';
+                            } else {
+                                $conf_name = !empty($conf->conf_name_pl) ? str_replace(';;', '<br>', esc_html($conf->conf_name_pl)) : '';
+                                $conf_location = !empty($conf->conf_location_pl) ? str_replace(';;', '<br>', esc_html($conf->conf_location_pl)) : '';
+                            }                            
                             $conf_style = !empty($conf->conf_style) ? $conf->conf_style : 'PWEConferenceCapFullMode';
                             break;
                         }
@@ -370,54 +395,37 @@ class PWEConferenceCap {
                                 <img src="' . $conf_img . '" alt="' . esc_attr($conf_name) . '" class="conference_cap__conf-slug-image">
                                 <div class="conference_cap__after-header-html">' . ($inf_conf['after_header_' . $conf_slug] ?? '') . '</div>';
 
-                                // Ustalenie bazowego sluga (bez końcówki -pl lub -en)
-                                $base_slug = preg_replace('/(-pl|-en)$/', '', $conf_slug);
+                                $patroni_dir_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/patrons';
 
-                                // Generujemy wszystkie możliwe warianty: oryginalny, bazowy, bazowy z -pl oraz bazowy z -en
-                                $variants = array_unique([
-                                    $conf_slug,
-                                    $base_slug,
-                                    $base_slug . '-pl',
-                                    $base_slug . '-en'
-                                ]);
-
-                                // Szukamy katalogu 'patroni' odpowiadającego jednemu z wariantów
-                                $patroni_dir = '';
-                                foreach ($variants as $slug) {
-                                    $dir = ABSPATH . 'doc/konferencje/' . $slug . '/patroni';
-                                    if (is_dir($dir)) {
-                                        $patroni_dir = $dir;
-                                        break;
-                                    }
-                                }
-
-                                if (is_dir($patroni_dir)) {
-                                    // Wyszukiwanie plików graficznych: jpg, jpeg, png, gif, webp (w przykładzie tylko webp)
-                                    $logo_files = glob($patroni_dir . '/*.{webp}', GLOB_BRACE);
+                                if (!empty($conf->conf_patrons_img)) {
+                                    $logo_files = explode(',', $conf->conf_patrons_img);
                                     if (!empty($logo_files)) {
-
-                                        // Dodanie slidera
                                         include_once plugin_dir_path(__FILE__) . '/../../scripts/slider.php';
                                         $output .= PWESliderScripts::sliderScripts(
                                             'capconf',
-                                            '#conference-cap',
+                                            '#conf_' . esc_attr($conf_slug),
                                             $opinions_dots_display = 'true',
                                             $opinions_arrows_display = false,
+                                            $slides_to_show = 7
                                         );
-
+                                
                                         $output .= '
-                                        <h2 class="conference_cap__conf-logotypes-title">'. PWECommonFunctions::languageChecker('Patroni Konferencji', 'Conference Patrons') .'</h2>
+                                        <h2 class="conference_cap__conf-logotypes-title">' . 
+                                            PWECommonFunctions::languageChecker(
+                                                $conf->conf_patrons_pl ?? 'Patroni Konferencji',
+                                                $conf->conf_patrons_en ?? 'Conference Patrons'
+                                            ) . 
+                                        '</h2>
                                         <div class="conference_patroni_logos pwe-slides">';
+                                
                                         foreach ($logo_files as $logo_file) {
-                                            // Konwersja ścieżki systemowej na URL
-                                            $relative_path = str_replace(ABSPATH, '', $logo_file);
-                                            $logo_url = site_url($relative_path);
-                                            $output .= '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="Logo" class="conference_patroni_logo">';
+                                            $logo_url = $patroni_dir_url . '/' . trim($logo_file);
+                                            $output .= '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="Patron Logo" class="conference_patroni_logo">';
                                         }
+                                
                                         $output .= '</div>';
                                     }
                                 }
-
                                 
                                 $output .= '
                                 <div class="conference_cap__after-patrons-html">' . ($inf_conf['after_patrons_' . $conf_slug] ?? '') . '</div>
@@ -441,6 +449,21 @@ class PWEConferenceCap {
                                         </div>
                                 </div>';
                             }
+                            foreach ($conferences as $confDataSet) {
+                                if (!empty($confDataSet['main-desc'])) {
+                                    $allowed_tags = wp_kses_allowed_html('post');
+                                    foreach (['span', 'strong', 'p', 'em', 'u'] as $tag) {
+                                        $allowed_tags[$tag]['style'] = true;
+                                    }
+                            
+                                    $main_desc_clean = html_entity_decode(stripslashes($confDataSet['main-desc']));
+                                    $main_desc_clean = PWEConferenceCapFunctions::pwe_convert_rgb_to_hex($main_desc_clean);
+                            
+                                    $output .= `<div class='conference_cap__conf-main-desc'>` . wp_kses($main_desc_clean, $allowed_tags) . `</div>`;
+                                }
+                                break; 
+                            }                            
+                            
                         $output .= '</div>'; // Zamknięcie nagłówka
                 
                         
@@ -448,8 +471,11 @@ class PWEConferenceCap {
                             // **Zakładki dni**
                             $output .= '<div class="conference_cap__conf-slug-navigation-days">';
                             foreach ($conferences as $confData) {
-                                    $dayCounter = 1;
-                                    foreach ($confData as $day => $sessions) {
+                                $dayCounter = 1;
+                                foreach ($confData as $day => $sessions) {
+                                        if ($day === 'main-desc') {
+                                            continue; // pomijamy main-desc w pętli dni
+                                        }
                                         $short_day = 'day-' . $dayCounter++;
                                         $day = str_replace(';;', '<br>', wp_kses_post($day));
                                         $output .= '<button id="tab_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-navigation-day">' . $day . '</button>';
@@ -463,6 +489,9 @@ class PWEConferenceCap {
                                 foreach ($conferences as $confData) {
                                     $dayCounter = 1;
                                     foreach ($confData as $day => $sessions) {
+                                        if ($day === 'main-desc') {
+                                            continue;
+                                        }
                                         $short_day = 'day-' . $dayCounter++;
                                         $output .= '
                                         <div id="content_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-content">

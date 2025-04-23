@@ -59,17 +59,12 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
 
 
         $domena = $_SERVER['HTTP_HOST'];
-        $lang = 'pl'; 
 
-        if (strpos($_SERVER['REQUEST_URI'], '/en/') !== false) {
-            $lang = 'en';
-        }
-
+        // Pobieramy dane bez względu na język
         $results = $cap_db->get_results(
             $cap_db->prepare(
-                "SELECT * FROM conferences WHERE conf_site_link LIKE %s AND RIGHT(conf_slug, 2) = %s",
-                '%' . $domena . '%',
-                $lang
+                "SELECT * FROM conferences WHERE conf_site_link LIKE %s",
+                '%' . $domena . '%'
             )
         );
     
@@ -80,7 +75,29 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
+        foreach ($results as &$row) {
+            if (!empty($row->conf_data)) {
+                $decoded = html_entity_decode($row->conf_data);
+        
+                // Czyścimy WSZYSTKIE wystąpienia font-family z atrybutów style (w tym wieloliniowe!)
+                $decoded = preg_replace_callback('/style="([^"]+)"/is', function ($match) {
+                    $style = $match[1];
+                    $style = preg_replace('/font-family\s*:\s*[^;"]+("[^"]+"[, ]*)*[^;"]*;?/i', '', $style);
+                    $style = trim(preg_replace('/\s*;\s*/', '; ', $style), '; ');
+                    return $style ? 'style="' . $style . '"' : '';
+                }, $decoded);
+        
+                // Sprawdzamy poprawność JSON
+                $test = json_decode($decoded, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $row->conf_data = $decoded;
+                } else {
+                    error_log("❌ Błąd JSON w conf_data: " . json_last_error_msg());
+                }
+            }
+        }
+            
         return $results;
     }    
 
@@ -198,4 +215,62 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
     
         return $speaker_html;
     }
+
+    public static function pwe_convert_rgb_to_hex($content) {
+        return preg_replace_callback('/rgb\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i', function ($matches) {
+            // Zabezpieczenie: ogranicz zakres wartości
+            $r = max(0, min(255, (int)$matches[1]));
+            $g = max(0, min(255, (int)$matches[2]));
+            $b = max(0, min(255, (int)$matches[3]));
+            return sprintf("#%02x%02x%02x", $r, $g, $b);
+        }, $content);
+    }
+
+    public static function copySpeakerImgByStructure(array $json): array {
+        if (!isset($json['PL'], $json['EN'])) {
+            return $json;
+        }
+
+        /* -------- 1.   iteracja po dniach wg pozycji -------- */
+        $plDayKeys = array_keys($json['PL']);
+        $enDayKeys = array_keys($json['EN']);
+        $maxDays   = min(count($plDayKeys), count($enDayKeys));
+
+        for ($d = 0; $d < $maxDays; $d++) {
+
+            $plSessions = $json['PL'][$plDayKeys[$d]];
+            $enSessions = &$json['EN'][$enDayKeys[$d]];
+
+            /* -------- 2.   iteracja po prelekcjach (tylko 'pre‑X') -------- */
+            foreach ($plSessions as $preKey => $plPre) {
+
+                if (strpos($preKey, 'pre-') !== 0 || !is_array($plPre)) {
+                    continue;
+                }
+                if (!isset($enSessions[$preKey]) || !is_array($enSessions[$preKey])) {
+                    continue;
+                }
+
+                $enPre = &$enSessions[$preKey];
+
+                /* -------- 3.   legent‑Y – kopiuj url gdy w EN pusto -------- */
+                foreach ($plPre as $fieldKey => $plField) {
+                    if (strpos($fieldKey, 'legent-') !== 0 || !is_array($plField)) {
+                        continue;
+                    }
+
+                    if (!isset($enPre[$fieldKey]) || !is_array($enPre[$fieldKey])) {
+                        continue;
+                    }
+
+                    if (empty($enPre[$fieldKey]['url']) && !empty($plField['url'])) {
+                        $enPre[$fieldKey]['url'] = $plField['url'];
+                    }
+                }
+            }
+        }
+
+        return $json;
+    }
+
   }

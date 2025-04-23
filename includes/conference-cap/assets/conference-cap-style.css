@@ -137,6 +137,17 @@
   line-height: 1.5;
   background: #eee;
   cursor: pointer;
+  min-width: 15%;;
+  font-weight: 500;
+}
+
+.conference_cap__conf-slug-navigation-day.active-day {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+
+.conference_cap__conf-slug-navigation-day:hover {
+  background-color: lightgray;
 }
 
 .conference_cap__conf-slug-content {

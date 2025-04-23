@@ -78,7 +78,6 @@ jQuery(document).ready(function($){
             const targetContainer = $(targetSelector).first();
             
             if (!targetContainer.length) {
-                console.log("Brak elementu dla slug: " + slug);
                 return;
             }
             
@@ -105,9 +104,7 @@ jQuery(document).ready(function($){
             const selectedConfSlug = parts[1];
             const selectedDay = parts[2];
             const targetId = `content_${selectedConfSlug}_${selectedDay}`;
-            
-            console.log("Przełączam na:", targetId);
-            
+                        
             // Znalezienie najbliższego kontenera konferencji, który może mieć klasę .conference_cap__conf-slug lub .konferencja
             const currentConf = $(this).closest(".conference_cap__conf-slug, .konferencja");
             
@@ -123,10 +120,7 @@ jQuery(document).ready(function($){
             const targetContent = $(`#${targetId}`);
             if (targetContent.length) {
                 targetContent.addClass("active-content");
-                console.log("Dodano active-content do:", targetId);
-            } else {
-                console.log("Błąd: Nie znaleziono elementu o ID:", targetId);
-            }
+            } 
         });
         
         // Opcjonalnie: ustawienie domyślnego stanu, np. automatyczne kliknięcie pierwszego obrazka
