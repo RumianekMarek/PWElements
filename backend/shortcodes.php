@@ -12,6 +12,7 @@ function get_fair_data($specific_domain = null) {
 
         // Check if data is already in global variable
         if (!empty($pwe_fairs) && is_array($pwe_fairs)) {
+            global $fairs_data;
             $fairs_data = ["fairs" => []];
 
             foreach ($pwe_fairs as $fair) {
@@ -67,6 +68,7 @@ function get_fair_data($specific_domain = null) {
                 return null;
             }
 
+            global $fairs_data;
             // Decoding JSON data
             $fairs_data = json_decode($json_data, true);
 
