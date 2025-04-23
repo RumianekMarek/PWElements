@@ -556,6 +556,47 @@ class PWElementAdditionalLogotypes {
                         }
                     }
 
+                    if($logotypes_display_random1){
+                        // Randomise files
+                        shuffle($files);
+                    } else {
+                        usort($files, function($a, $b) {
+                            $fileA = basename($a);
+                            $fileB = basename($b);
+    
+                            // Trying to extract the number from the beginning of the file name
+                            preg_match('/^(\d+)/', $fileA, $matchA);
+                            preg_match('/^(\d+)/', $fileB, $matchB);
+    
+                            // Check if the file contains a number
+                            $hasNumA = !empty($matchA);
+                            $hasNumB = !empty($matchB);
+    
+                            // If one of the files has a number and the other one doesn't, the file with the number takes precedence
+                            if ($hasNumA && !$hasNumB) {
+                                return -1;
+                            }
+                            if (!$hasNumA && $hasNumB) {
+                                return 1;
+                            }
+    
+                            // If both files have a number - sort numerically, and if the numbers are equal, sort alphabetically
+                            if ($hasNumA && $hasNumB) {
+                                $numA = (int)$matchA[1];
+                                $numB = (int)$matchB[1];
+    
+                                if ($numA === $numB) {
+                                    return strcasecmp($fileA, $fileB);
+                                }
+                                return $numA <=> $numB;
+                            }
+    
+                            // If none of the files contain a number - sort alphabetically
+                            return strcasecmp($fileA, $fileB);
+                        });
+    
+                    }
+
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
                     if (in_array('catalog', $logotypes_catalogs)) {
                         foreach ($exhibitors_catalog as $catalog_img) {
@@ -606,47 +647,6 @@ class PWElementAdditionalLogotypes {
 
             if (count($files) > 0) {
 
-                if($logotypes_display_random1){
-                    // Randomise files
-                    shuffle($files);
-                } else {
-                    usort($files, function($a, $b) {
-                        $fileA = basename($a);
-                        $fileB = basename($b);
-
-                        // Trying to extract the number from the beginning of the file name
-                        preg_match('/^(\d+)/', $fileA, $matchA);
-                        preg_match('/^(\d+)/', $fileB, $matchB);
-
-                        // Check if the file contains a number
-                        $hasNumA = !empty($matchA);
-                        $hasNumB = !empty($matchB);
-
-                        // If one of the files has a number and the other one doesn't, the file with the number takes precedence
-                        if ($hasNumA && !$hasNumB) {
-                            return -1;
-                        }
-                        if (!$hasNumA && $hasNumB) {
-                            return 1;
-                        }
-
-                        // If both files have a number - sort numerically, and if the numbers are equal, sort alphabetically
-                        if ($hasNumA && $hasNumB) {
-                            $numA = (int)$matchA[1];
-                            $numB = (int)$matchB[1];
-
-                            if ($numA === $numB) {
-                                return strcasecmp($fileA, $fileB);
-                            }
-                            return $numA <=> $numB;
-                        }
-
-                        // If none of the files contain a number - sort alphabetically
-                        return strcasecmp($fileA, $fileB);
-                    });
-
-                }
-
                 // Calculate width for header logotypes
                 if (isset($header_logotypes_width) && $header_logotypes_width . '%' !== '%') {
                     if ($header_logotypes_width >= 70 && $header_logotypes_width < 100) {
@@ -689,6 +689,9 @@ class PWElementAdditionalLogotypes {
                     // Search all files and generate their URL paths
                     foreach ($files as $index => $file) {
                         $short_path = '';
+
+                        // Removing double "//"
+                        $file = preg_replace('#(?<!https:)//+#', '/', $file);
 
                         // Deciding on the path structure depending on the directory
                         if ($logotypes_catalog == "partnerzy obiektu" || $logotypes_catalog == "wspierają nas") {

@@ -31,158 +31,27 @@ class PWEStore extends PWECommonFunctions {
     }
 
     public function fairs_array() { 
+        $pwe_groups_data = self::getDatabaseDataGroups(); 
 
-        $edition_1 = [
-            "mr.glasstec.pl",
-            "worldofbuildexpo.com", 
-            "futureenergyweekpoland.com", 
-            "industrialbuildingexpo.pl", 
-            "filtratecexpo.com", 
-            "chemtecpoland.com", 
-            "lasertechnicapoland.com", 
-            "coldtechpoland.com", 
-            "warsawoptiexpo.com", 
-            "funeralexpo.pl", 
-            "coffeeeuropeexpo.com", 
-            "pharmacyexpopoland.com", 
-            "warsawwindowexpo.com", 
-            "glasstechpoland.com", 
-            "valvespumpsexpo.com", 
-            "hairbarberweekpoland.com", 
-            "concreteexpo.pl", 
-            "automechanicawarsaw.com", 
-            "fastechexpo.com", 
-            "aiindustryexpo.com", 
-            "medivisionforum.com", 
-            "warsawprokitchen.com", 
-            "aluminiumtechexpo.com", 
-            "medinnovationsexpo.com", 
-            "emobilityexpo.pl", 
-            "worldofhydrogenexpo.com", 
-            "warsawtoys.com", 
-            "biopowerexpo.com", 
-            "agrofarmaexpo.com", 
-            "veterinaryexpopoland.com", 
-            "isoltexexpo.com", 
-            "polandsustainabilityexpo.com", 
-            "solidsexpopoland.com", 
-            "forestechexpopoland.com", 
-            "lightexpo.pl", 
-            "warsawclimatech.com", 
-            "decarbonisationexpo.com", 
-            "globalfoodexpo.pl", 
-            "photonicsexpo.pl", 
-            "waterexpopoland.com", 
-            "warsawplastexpo.com", 
-            "grindtechexpo.com", 
-            "safetyrescueexpo.com", 
-            "cybersecurityexpo.pl", 
-            "pneumaticswarsaw.com", 
-            "labotec.pl", 
-            "coiltechexpo.com", 
-            "autotuningshow.com", 
-            "biurotexexpo.com", 
-            "cosmopharmpack.com", 
-            "huntingexpo.pl", 
-            "warsawfleetexpo.com", 
-            "warsawshopexpo.com", 
-            "hotelequipmentexpo.com", 
-            "bakerytechpoland.com", 
-            "postdeliverylogisticsexpo.com", 
-            "warsawgardentech.com", 
-            "warsawspawellnessexpo.com", 
-            "electroinstalexpo.com", 
-            "wiretechpoland.com", 
-            "tubetechnicpoland.com", 
-            "bathceramicsexpo.com", 
-            "warsawbusexpo.eu", 
-            "centralnetargirolnicze.com"
-        ];
-        
-        $edition_2 = [
-            "esteticaexpo.com", 
-            "automaticaexpo.com", 
-            "batteryforumpoland.com", 
-            "floorexpo.pl", 
-            "door-tec.pl", 
-            "furnitechexpo.pl", 
-            "furniturecontractexpo.com", 
-            "electronics-show.com", 
-            "forumbhp.com", 
-            "weldexpopoland.com", 
-            "warsawprinttech.com", 
-            "heatingtechexpo.com", 
-            "recyclingexpo.pl", 
-            "warsawsweettech.com", 
-            "wodkantech.com", 
-            "polandcoatings.com", 
-            "gastroquickservice.com", 
-            "warsawconstructionexpo.com", 
-            "warsawtoolsshow.com", 
-            "targirehabilitacja.pl", 
-            "boattechnica.com", 
-            "automotive-expo.eu", 
-            "packagingpoland.pl", 
-            "labelingtechpoland.com", 
-            "warsawmedicalexpo.com", 
-            "warsawsecurityexpo.com", 
-            "foodtechexpo.pl", 
-            "facadeexpo.pl", 
-            "roofexpo.pl", 
-            "poultrypoland.com", 
-            "bioagropolska.com", 
-            "fruitpolandexpo.com", 
-            "warsawmetaltech.pl", 
-            "maintenancepoland.com", 
-            "controldrivespoland.com", 
-            "intralogisticapoland.com", 
-            "roboticswarsaw.com", 
-            "compositepoland.com", 
-            "smarthomeexpo.pl", 
-            "warsawstone.com", 
-            "woodwarsawexpo.com", 
-            "beerwarsawexpo.com", 
-            "winewarsawexpo.com", 
-            "cleantechexpo.pl", 
-            "buildoutdoorexpo.com", 
-            "bioexpo.pl"
-        ];
-        
-        $edition_3 = [
-            "warsawpack.pl", 
-            "mttsl.pl", 
-            "warsawfoodexpo.pl", 
-            "dentalmedicashow.pl", 
-            "beautydays.pl", 
-            "boatshow.pl", 
-            "warsawhome.eu", 
-            "warsawhomefurniture.com", 
-            "warsawhomekitchen.com", 
-            "warsawhomelight.com", 
-            "warsawhometextile.com", 
-            "warsawhomebathroom.com", 
-            "warsawbuild.eu", 
-            "industryweek.pl", 
-            "solarenergyexpo.com", 
-            "remadays.com", 
-            "franczyzaexpo.pl", 
-            "etradeshow.pl", 
-            "warsawgardenexpo.com", 
-            "warsawgiftshow.com", 
-            "eurogastro.com.pl", 
-            "worldhotel.pl", 
-            "warsawhvacexpo.com"
-        ];
-        
-        $edition_b2c = [
-            "campercaravanshow.com", 
-            "motorcycleshow.pl", 
-            "animalsdays.eu", 
-            "oldtimerwarsaw.com", 
-            "fiwe.pl", 
-            "ttwarsaw.pl", 
-            "warsawmotorshow.com"
-        ];
+        $edition_1 = [];
+        $edition_2 = [];
+        $edition_3 = [];
+        $edition_b2c = [];
+
+        foreach ($pwe_groups_data as $group) {
+            if ($group->fair_group == "gr1") {
+                $edition_1[] = $group->fair_domain;
+            }
+            if ($group->fair_group == "gr2") {
+                $edition_2[] = $group->fair_domain;
+            }
+            if ($group->fair_group == "gr3") {
+                $edition_3[] = $group->fair_domain;
+            }
+            if ($group->fair_group == "b2c") {
+                $edition_b2c[] = $group->fair_domain;
+            }
+        }
         
         $editions = [
             "1"   => $edition_1,
@@ -222,7 +91,8 @@ class PWEStore extends PWECommonFunctions {
      */
     public function addingScripts(){
         $store_js_array = array(
-            'trade_fair_name' => self::languageChecker(do_shortcode('[trade_fair_name]'), do_shortcode('[trade_fair_name_eng]'))
+            'trade_fair_name' => self::languageChecker(do_shortcode('[trade_fair_name]'), do_shortcode('[trade_fair_name_eng]')),
+            'trade_fair_groups' => self::getDatabaseDataGroups()
         );
 
         $js_file = plugins_url('assets/script.js', __FILE__);
@@ -277,6 +147,31 @@ class PWEStore extends PWECommonFunctions {
     
         return $cap_db;
     }
+
+    public function getDatabaseDataGroups() {
+        // Database connection
+        $cap_db = self::connectToDatabase();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT fair_domain, fair_group FROM fairs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
     
     public function getDatabaseDataStore() {
         // Database connection
@@ -353,7 +248,76 @@ class PWEStore extends PWECommonFunctions {
         return $results;
     } 
 
-    public function ceilPrice($price) {
+    public function price($product, $store_options, $pwe_meta_data, $category, $current_domain, $num_only = false) {
+        if ($category == $product->prod_category && (self::lang_pl() ? !empty($product->prod_title_short_pl) : !empty($product->prod_title_short_en))) {
+            foreach ($store_options as $domain_options) {
+                if ($domain_options['domain'] === $current_domain) {
+                    if (!empty($domain_options['options'])) {
+                        $options = json_decode($domain_options['options'], true);
+            
+                        if (isset($options['products'])) {
+                            foreach ($options['products'] as $key => $option) {
+                                if ($product->prod_slug == $key) {
+                                    // Prices
+                                    $new_price_pl = $option['prod_price_pl'] ? $option['prod_price_pl'] : "";
+                                    $new_price_en = $option['prod_price_en'] ? $option['prod_price_en'] : "";
+            
+                                    // Prices descriptions
+                                    $new_price_desc_pl = $option['prod_price_desc_pl'] ? $option['prod_price_desc_pl'] : "";
+                                    $new_price_desc_en = $option['prod_price_desc_en'] ? $option['prod_price_desc_en'] : "";
+                                }
+                            }
+                        }
+
+                        if (isset($options['options']['margin'])) {
+                            $price_margin = ($options['options']['margin']);
+                        }
+                    }
+        
+                    break;
+                }
+            }
+            
+            $updated_price_pl = !empty($new_price_pl) ? $new_price_pl : $product->prod_price_pl;
+            if (!empty($new_price_en)) {
+                $updated_price_en = $new_price_en;
+            } elseif (!empty($new_price_pl)) {
+                $updated_price_en = $new_price_pl / $pwe_meta_data[0]->meta_data;
+            } elseif (!empty($product->prod_price_en)) {
+                $updated_price_en = $product->prod_price_en;
+            } else {
+                $updated_price_en = $product->prod_price_pl / $pwe_meta_data[0]->meta_data;
+            }
+            $updated_price_en = self::roundPrice($updated_price_en);
+
+            $updated_price_desc_pl = !empty($new_price_desc_pl) ? $new_price_desc_pl : $product->prod_price_desc_pl;
+            $updated_price_desc_en = !empty($new_price_desc_en) ? $new_price_desc_en : $product->prod_price_desc_en;
+
+            $final_price_desc = self::lang_pl() ? $updated_price_desc_pl : $updated_price_desc_en;
+
+            if ($price_margin) {
+                $updated_price_pl = $updated_price_pl + ($updated_price_pl * ($price_margin / 100));
+                $updated_price_en = $updated_price_en + ($updated_price_en * ($price_margin / 100));
+
+                $updated_price_pl = self::roundPrice($updated_price_pl);
+                $updated_price_en = self::roundPrice($updated_price_en);
+            }
+
+            if (!empty($updated_price_pl)) {
+                $eur_price = $updated_price_pl / $pwe_meta_data[0]->meta_data;
+                $eur_price = self::roundPrice($eur_price);
+
+                $final_price = number_format((self::lang_pl() ? $updated_price_pl : (!empty($updated_price_en) ? $updated_price_en : $eur_price)), 0, ',', ' ') . ( self::lang_pl() ? ' zł ' : ' € ' );
+            }
+            
+            $product_price = $final_price . ($num_only == true ? '' : $final_price_desc);
+            $product_price = $num_only == true ? preg_replace('/[^0-9\.]/', '', $product_price) : $product_price;
+            
+            return $product_price;
+        }
+    }
+
+    public function roundPrice($price) {
         if ($price >= 1000) {
             return round($price, -2);
         } else if ($price < 1000 && $price >= 100) {
@@ -371,13 +335,11 @@ class PWEStore extends PWECommonFunctions {
      * @return string
      */ 
     public function PWEStoreOutput() {  
-
         $pwe_store_data = self::getDatabaseDataStore(); 
         $pwe_store_packages_data = self::getDatabaseDataStorePackages();
         $pwe_meta_data = self::getDatabaseMetaData();   
 
         $categories = [];
-
         foreach ($pwe_store_data as $item) {
             $category = $item->prod_category;
 
@@ -387,7 +349,15 @@ class PWEStore extends PWECommonFunctions {
             }
         }
 
-        $categories[] = !empty($pwe_store_packages_data) ? "packages" : "";
+        $packages_categories = [];
+        foreach ($pwe_store_packages_data as $item) {
+            $packages_category = $item->packs_category;
+
+            // Add the category to the array if it's not there yet
+            if (!in_array($packages_category, $packages_categories)) {
+                $packages_categories[] = $packages_category;
+            }
+        }
 
         $fairs_json = PWECommonFunctions::json_fairs();
         $store_options = [];
@@ -401,700 +371,55 @@ class PWEStore extends PWECommonFunctions {
         // Get current domain
         $current_domain = do_shortcode('[trade_fair_domainadress]');
 
-        echo '<pre>';
-        var_dump($pwe_store_packages_data);
-        echo '</pre>';
-
         $output = '
-        <div id="pweStore" class="pwe-store">
+        <div id="pweStore" class="pwe-store">';
             
-            <div class="pwe-store__main-section">
-                <div class="pwe-store__main-section-header">
-                    <img src="/wp-content/plugins/PWElements/media/store/'. (self::lang_pl() ? 'header_store_pl.webp' : 'header_store_en.webp') .'" alt="Header">
-                </div>
-                
-                <span class="pwe-store__anchor"></span>';
+            require_once plugin_dir_path(__FILE__) . 'parts/store_header.php';
 
-                $category_header_info = [
-                    [
-                        'category' => 'premium',
-                        'title' => self::lang_pl() 
-                            ? 'ZWIĘKSZ SWÓJ POTENCJAŁ NA TARGACH: USŁUGI PREMIUM!' 
-                            : 'INCREASE YOUR POTENTIAL AT TRADE FAIRS: PREMIUM SERVICES!',
-                        'description' => self::lang_pl() 
-                            ? 'Skorzystaj z wysokiej jakości rozwiązań, aby wyróżnić się wśród wystawców i przyciągnąć uwagę odwiedzających.' 
-                            : 'Take advantage of high-quality solutions to stand out among exhibitors and attract the attention of visitors.',
-                        'max_width' => '700px'
-                    ],
-                    [
-                        'category' => 'marketing',
-                        'title' => self::lang_pl() 
-                            ? 'ZWIĘKSZ SWOJĄ WIDOCZNOŚĆ NA TARGACH: USŁUGI MARKETINGOWE!' 
-                            : 'INCREASE YOUR VISIBILITY AT TRADE FAIRS: MARKETING SERVICES!',
-                        'description' => self::lang_pl() 
-                            ? 'Skorzystaj z profesjonalnych strategii marketingowych, aby dotrzeć do większej liczby klientów, zwiększyć rozpoznawalność swojej marki i maksymalnie wykorzystać potencjał targów.' 
-                            : 'Use professional marketing strategies to reach more customers, increase your brand recognition and maximize the potential of trade fairs.',
-                        'max_width' => '1200px'
-                    ],
-                    [
-                        'category' => 'social-media',
-                        'title' => self::lang_pl() 
-                            ? 'ZWIĘKSZ SWOJĄ WIDOCZNOŚĆ ONLINE: USŁUGI SOCIAL MEDIA!' 
-                            : 'INCREASE YOUR ONLINE VISIBILITY: SOCIAL MEDIA SERVICES!',
-                        'description' => self::lang_pl() 
-                            ? 'Wykorzystaj potencjał mediów społecznościowych, aby dotrzeć do większej liczby klientów, budować zaangażowanie i skutecznie promować swoją obecność na targach.' 
-                            : 'Use the potential of social media to reach more customers, build engagement and effectively promote your presence at trade shows.',
-                        'max_width' => '1200px'
-                    ],
-                    [
-                        'category' => 'packages',
-                        'title' => self::lang_pl() 
-                            ? 'MAKSYMALIZUJ SWOJE MOŻLIWOŚCI: PAKIETY PROMOCYJNE!' 
-                            : 'MAXIMIZE YOUR POSSIBILITIES: PROMOTIONAL PACKAGES!',
-                        'description' => self::lang_pl() 
-                            ? 'Wybierz kompleksowe pakiety usług, które pomogą Ci skutecznie wyróżnić się na targach, zwiększyć zasięg i przyciągnąć więcej klientów.' 
-                            : 'Choose comprehensive service packages that will help you effectively stand out at trade fairs, increase your reach and attract more customers.',
-                        'max_width' => '1000px'
-                    ]
-                ];                                
+            require_once plugin_dir_path(__FILE__) . 'parts/store_product_details.php';
 
-                // Category map
-                $category_map = [];
-                foreach ($category_header_info as $item) {
-                    $category_map[$item['category']] = $item;
-                }
+            require_once plugin_dir_path(__FILE__) . 'parts/store_cat_filter.php';
 
-                // Generate category header
-                foreach ($categories as $category) {
-                    if (isset($category_map[$category])) {
-                        $item_info = $category_map[$category];
-                        $output .= '
-                        <div class="pwe-store__main-section-text '. $category .'">
-                            <h1>'. $item_info["title"] .'</h1>
-                            <p style="max-width: '. $item_info["max_width"] .';">'. $item_info["description"] .'</p>
-                        </div>';
-                    }
-                }
+            require_once plugin_dir_path(__FILE__) . 'parts/store_product_card.php';
 
-            $output .= '
-            </div> 
+            require_once plugin_dir_path(__FILE__) . 'parts/store_fairs.php';
 
-            <div class="pwe-store__hide-sections pwe-store__desc">';
-
-                foreach ($categories as $category) {
-                    $output .= '
-                    <!-- Desc section <------------------------------------------------------------------------------------------>
-                    <div id="'. str_replace("-", "", $category) .'SectionHide" category="'. $category .'" class="pwe-store__'. $category .'-section-hide pwe-store__section-hide">
-        
-                        <div class="pwe-store__category-header">
-                            <div class="pwe-store__category-header-arrow">
-                                <div class="pwe-store__category-header-arrow-el">
-                                    <span></span>
-                                </div>
-                            </div>
-                            <div class="pwe-store__category-header-title">
-                                <p class="pwe-uppercase">'. 
-                                    (self::lang_pl() ? 'USŁUGI '. 
-                                    str_replace(
-                                        array("marketing", "packages"), 
-                                        array("marketingowe", "pakiety"), 
-                                        str_replace("-", " ", $category)
-                                    ) : str_replace("-", " ", $category) .' SERVICES') .'
-                                </p>
-                            </div>
-                        </div>';
-
-                        foreach ($pwe_store_data as $product) {
-                            $status = null;
-                            if ($category == $product->prod_category && (self::lang_pl() ? !empty($product->prod_title_short_pl) : !empty($product->prod_title_short_en))) {
-                                foreach ($store_options as $domain_options) {
-                                    if ($domain_options['domain'] === $current_domain) {
-                                        if (!empty($domain_options['options'])) {
-                                            $options = json_decode($domain_options['options'], true);
-                                
-                                            if (isset($options['products'])) {
-                                                foreach ($options['products'] as $key => $option) {
-                                                    if ($product->prod_slug == $key) {
-                                                        $sold_out = $option['sold_out'] ? "sold-out" : "";
-                                                        $status_text = (self::lang_pl() ? $option['prod_image_text_pl'] : $option['prod_image_text_en']) 
-                                                                       ? (self::lang_pl() ? $option['prod_image_text_pl'] : $option['prod_image_text_en']) 
-                                                                       : "";
-                                                        $status = !empty($status_text) ? "status" : "";
-                                
-                                                        // Prices
-                                                        $new_price_pl = $option['prod_price_pl'] ? $option['prod_price_pl'] : "";
-                                                        $new_price_en = $option['prod_price_en'] ? $option['prod_price_en'] : "";
-                                
-                                                        // Prices descriptions
-                                                        $new_price_desc_pl = $option['prod_price_desc_pl'] ? $option['prod_price_desc_pl'] : "";
-                                                        $new_price_desc_en = $option['prod_price_desc_en'] ? $option['prod_price_desc_en'] : "";
-                                                    }
-                                                }
-                                            }
-
-                                            if (isset($options['options']['margin'])) {
-                                                $price_margin = ($options['options']['margin']);
-                                            }
-                                        }
-                            
-                                        break;
-                                    }
-                                }
-                                
-                                $updated_price_pl = !empty($new_price_pl) ? $new_price_pl : $product->prod_price_pl;
-                                if (!empty($new_price_en)) {
-                                    $updated_price_en = $new_price_en;
-                                } elseif (!empty($new_price_pl)) {
-                                    $updated_price_en = $new_price_pl / $pwe_meta_data[0]->meta_data;
-                                } elseif (!empty($product->prod_price_en)) {
-                                    $updated_price_en = $product->prod_price_en;
-                                } else {
-                                    $updated_price_en = $product->prod_price_pl / $pwe_meta_data[0]->meta_data;
-                                }
-                                $updated_price_en = self::ceilPrice($updated_price_en);
-
-                                $updated_price_desc_pl = !empty($new_price_desc_pl) ? $new_price_desc_pl : $product->prod_price_desc_pl;
-                                $updated_price_desc_en = !empty($new_price_desc_en) ? $new_price_desc_en : $product->prod_price_desc_en;
-
-                                if ($price_margin) {
-                                    $updated_price_pl = $updated_price_pl + ($updated_price_pl * ($price_margin / 100));
-                                    $updated_price_en = $updated_price_en + ($updated_price_en * ($price_margin / 100));
-
-                                    $updated_price_pl = self::ceilPrice($updated_price_pl);
-                                    $updated_price_en = self::ceilPrice($updated_price_en);
-                                }
-
-                                if ($sold_out) {
-                                    $output .= '
-                                    <style>
-                                        .pwe-store__featured-service-'. $product->prod_slug .'.sold-out .pwe-store__featured-image:before {
-                                            content: "'. (self::lang_pl() ? 'WYPRZEDANE' : 'SOLD OUT') .'";
-                                        }
-                                    </style>';
-                                } else if (!empty($status)) {
-                                    $output .= '
-                                    <style>
-                                        .pwe-store__featured-service-'. $product->prod_slug .'.status .pwe-store__featured-image:before {
-                                            content: "'. $status_text .'"; 
-                                        }
-                                    </style>';
-                                } else if (!empty($product->prod_image_text_pl) && !empty($product->prod_image_text_en)) {
-                                    $status = "status";
-                                    $output .= '
-                                    <style>
-                                        .pwe-store__featured-service-'. $product->prod_slug .'.status .pwe-store__featured-image:before {
-                                            content: "'. (self::lang_pl() ? $product->prod_image_text_pl : $product->prod_image_text_en) .'";
-                                        }
-                                    </style>';
-                                }
-
-                                $output .= '
-                                <!-- Desc item -->
-                                <div class="pwe-store__featured-service pwe-store__featured-service-'. $product->prod_slug .' pwe-store__service '. $sold_out . ' ' . $status .'" id="'. $product->prod_slug .'">
-                                    <div class="pwe-store__featured-content">
-                                        <div class="pwe-store__featured-image">
-                                            <img  
-                                                class="pwe-store__featured-single-image"
-                                                src="https://cap.warsawexpo.eu/public/uploads/shop/'. ( self::lang_pl() ? $product->prod_image_pl : (!empty($product->prod_image_en) ? $product->prod_image_en : $product->prod_image_pl)) .'" 
-                                                alt="'. ( self::lang_pl() ? $product->prod_title_short_pl : $product->prod_title_short_en ) .'"
-                                            >';
-                                            if (!empty($product->prod_image_gallery)) {
-                                                $output .= '
-                                                <div class="pwe-store__featured-gallery">';
-                                                    $gallery_urls = explode(',', $product->prod_image_gallery);
-
-                                                    foreach ($gallery_urls as $url) {
-                                                        $output .= '<img src="https://cap.warsawexpo.eu/public/uploads/shop/' . $product->prod_slug . '/gallery/' . $url . '" alt="Gallery image" width="200" height="300">';
-                                                    }
-                                                $output .= '
-                                                </div>';
-                                            }
-                                        $output .= '
-                                        </div>
-                                        
-                                        <div class="pwe-store__featured-details">
-                                            <div class="pwe-store__featured-text-content">
-                                                <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? (!empty($product->prod_title_full_pl) ? $product->prod_title_full_pl : $product->prod_title_short_pl) : (!empty($product->prod_title_full_en) ? $product->prod_title_full_en : $product->prod_title_short_en) ) .'</h3>
-                                                <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? $product->prod_title_short_pl : $product->prod_title_short_en ) .'</span>
-                                                <div class="pwe-store__featured-text">
-                                                    '. ( self::lang_pl() ? $product->prod_desc_full_pl : $product->prod_desc_full_en ) .' 
-                                                </div>
-                                            </div>
-                                            <div class="pwe-store__featured-footer">
-                                                <span class="pwe-store__featured-pwe-store__price">';
-                                                    if (!empty($updated_price_pl)) {
-                                                        $eur_price = $updated_price_pl / $pwe_meta_data[0]->meta_data;
-                                                        $eur_price = self::ceilPrice($eur_price);
-                        
-                                                        $output .= number_format((self::lang_pl() ? $updated_price_pl : (!empty($updated_price_en) ? $updated_price_en : $eur_price)), 0, ',', ' ') . ( self::lang_pl() ? ' zł ' : ' € ' );
-                                                    } 
-                                                    $output .= (self::lang_pl() ? $updated_price_desc_pl : $updated_price_desc_en) .'
-                                                </span>
-                                                <div class="pwe-store__featured-buttons">
-                                                    <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
-                                                    <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>';
-                            }
-                        }  
-                        
-                        
-
-                    $output .= '
-                    </div>'; 
-                }                 
-
-            $output .= '
-            </div>
-
-            <div class="pwe-store__category">
-                <div class="pwe-store__category-wrapper">
-                    <div class="pwe-store__category-text"><p>'. (self::lang_pl() ? 'FILTRUJ:' : 'FILTER:') .'</p></div>
-                    <div class="pwe-store__category-items">';
-                        foreach ($categories as $category) {
-                            $output .= '
-                            <div id="'. $category .'" class="pwe-store__category-item">
-                                <p class="pwe-uppercase">'. 
-                                    (self::lang_pl() ? 
-                                    ($category !== 'packages' ? 'USŁUGI ' : ''). 
-                                    str_replace(
-                                        array("marketing", "packages"), 
-                                        array("marketingowe", "pakiety"), 
-                                        str_replace("-", " ", $category)
-                                    ) : 
-                                    str_replace("-", " ", $category) . ($category !== 'packages' ? ' SERVICES' : '')) .'
-                                </p>
-                            </div>';
-                        }
-                        $output .= '
-                    </div>
-                </div>
-            </div>
-
-            <div class="pwe-store__sections pwe-store__cards">';
-
-                foreach ($categories as $category) {
-                    $output .= '
-                    <!-- Card section <------------------------------------------------------------------------------------------>
-                    <div id="'. str_replace("-", "", $category) .'Section" category="'. $category .'" class="pwe-store__'. $category .'-section pwe-store__section"> 
-                        <div class="pwe-store__services-cards">';
-
-                        foreach ($pwe_store_data as $product) {
-                            $status = null;
-                            if ($category == $product->prod_category && (self::lang_pl() ? !empty($product->prod_title_short_pl) : !empty($product->prod_title_short_en))) {
-                                foreach ($store_options as $domain_options) {
-                                    if ($domain_options['domain'] === $current_domain) {
-                                        if (!empty($domain_options['options'])) {
-                                            $options = json_decode($domain_options['options'], true);
-                                            
-                                            if (isset($options['products'])) {
-                                                foreach ($options['products'] as $key => $option) {
-                                                    if ($product->prod_slug == $key) {
-                                                        $sold_out = $option['sold_out'] ? "sold-out" : "";
-                                                        $status_text = (self::lang_pl() ? $option['prod_image_text_pl'] : $option['prod_image_text_en']) 
-                                                                       ? (self::lang_pl() ? $option['prod_image_text_pl'] : $option['prod_image_text_en']) 
-                                                                       : "";
-                                                        $status = !empty($status_text) ? "status" : "";
-                                
-                                                        // Prices
-                                                        $new_price_pl = $option['prod_price_pl'] ? $option['prod_price_pl'] : "";
-                                                        $new_price_en = $option['prod_price_en'] ? $option['prod_price_en'] : "";
-                                
-                                                        // Prices descriptions
-                                                        $new_price_desc_pl = $option['prod_price_desc_pl'] ? $option['prod_price_desc_pl'] : "";
-                                                        $new_price_desc_en = $option['prod_price_desc_en'] ? $option['prod_price_desc_en'] : "";
-                                                    }
-                                                }
-                                            }
-
-                                            if (isset($options['options']['margin'])) {
-                                                $price_margin = ($options['options']['margin']);
-                                            }
-                                        }
-                            
-                                        break;
-                                    }
-                                }
-                                
-                                $updated_price_pl = !empty($new_price_pl) ? $new_price_pl : $product->prod_price_pl;
-                                if (!empty($new_price_en)) {
-                                    $updated_price_en = $new_price_en;
-                                } elseif (!empty($new_price_pl)) {
-                                    $updated_price_en = $new_price_pl / $pwe_meta_data[0]->meta_data;
-                                } elseif (!empty($product->prod_price_en)) {
-                                    $updated_price_en = $product->prod_price_en;
-                                } else {
-                                    $updated_price_en = $product->prod_price_pl / $pwe_meta_data[0]->meta_data;
-                                }
-                                $updated_price_en = self::ceilPrice($updated_price_en);
-
-                                $updated_price_desc_pl = !empty($new_price_desc_pl) ? $new_price_desc_pl : $product->prod_price_desc_pl;
-                                $updated_price_desc_en = !empty($new_price_desc_en) ? $new_price_desc_en : $product->prod_price_desc_en;
-
-                                if ($price_margin) {
-                                    $updated_price_pl = $updated_price_pl + ($updated_price_pl * ($price_margin / 100));
-                                    $updated_price_en = $updated_price_en + ($updated_price_en * ($price_margin / 100));
-
-                                    $updated_price_pl = self::ceilPrice($updated_price_pl);
-                                    $updated_price_en = self::ceilPrice($updated_price_en);
-                                }
-
-                                if ($sold_out) {
-                                    $output .= '
-                                    <style>
-                                        .pwe-store__service-card-'. $product->prod_slug .'.sold-out .pwe-store__service-image:before {
-                                            content: "'. (self::lang_pl() ? 'WYPRZEDANE' : 'SOLD OUT') .'";
-                                        }
-                                    </style>';
-                                } else if (!empty($status)) {
-                                    $output .= '
-                                    <style>
-                                        .pwe-store__service-card-'. $product->prod_slug .'.status .pwe-store__service-image:before {
-                                            content: "'. $status_text .'";
-                                        }
-                                    </style>';
-                                } else if (!empty($product->prod_image_text_pl) && !empty($product->prod_image_text_en)) {
-                                    $status = "status";
-                                    $output .= '
-                                    <style>
-                                        .pwe-store__service-card-'. $product->prod_slug .'.status .pwe-store__service-image:before {
-                                            content: "'. (self::lang_pl() ? $product->prod_image_text_pl : $product->prod_image_text_en) .'";
-                                        }
-                                    </style>';
-                                }
-                                $output .= '
-                                <!-- Card item -->
-                                <div class="pwe-store__service-card pwe-store__service-card-'. $product->prod_slug .' pwe-store__service '. $sold_out . ' ' . $status .'">
-                                    <a class="pwe-store__service-card-wrapper" href="#" data-featured="'. $product->prod_slug .'">
-                                        <div class="pwe-store__service-image">
-                                            <img
-                                                src="https://cap.warsawexpo.eu/public/uploads/shop/'. ( self::lang_pl() ? $product->prod_image_pl : (!empty($product->prod_image_en) ? $product->prod_image_en : $product->prod_image_pl)) .'" 
-                                                alt="'. ( self::lang_pl() ? $product->prod_title_short_pl : $product->prod_title_short_en ) .'"
-                                            >
-                                        </div>
-                                        <div class="pwe-store__service-content">
-                                            <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? $product->prod_title_short_pl : $product->prod_title_short_en ) .'</h4>
-                                            <div class="pwe-store__service-description">'. ( self::lang_pl() ? $product->prod_desc_short_pl : $product->prod_desc_short_en ) .'</div>
-                                            <div class="pwe-store__service-footer">
-                                                <div class="pwe-store__price">';
-                                                    if (!empty($updated_price_pl)) {
-                                                        $eur_price = $updated_price_pl / $pwe_meta_data[0]->meta_data;
-                                                        $eur_price = self::ceilPrice($eur_price);
-
-                                                        $output .= number_format((self::lang_pl() ? $updated_price_pl : (!empty($updated_price_en) ? $updated_price_en : $eur_price)), 0, ',', ' ') . ( self::lang_pl() ? ' zł ' : ' € ' );
-                                                    } 
-                                                    $output .= (self::lang_pl() ? $updated_price_desc_pl : $updated_price_desc_en) .'
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="pwe-store__btn-container">
-                                        <a href="#" class="pwe-store__more-button" data-featured="'. $product->prod_slug .'">'. (self::lang_pl() ? 'WIĘCEJ' : 'MORE') .'</a>
-                                        <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. (self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW') .'</a>
-                                    </div>
-                                </div>';
-                            }
-                        }   
-
-                        if ($category === 'packages') {
-                            $output .= '
-
-                                <div class="pwe-store__services-cards-header">
-                                    <h4>PAKIETY USŁUG MARKETINGOWYCH</h4>
-                                </div>
-
-                                <div class="pwe-store__services-cards" category="marketing">
-
-                                    <!-- Pakiet STANDARD -->
-                                    <div class="pwe-store__service-card pwe-store__service">
-                                        <a href="#" data-featured="marketing-package-standard">
-                                            <div class="pwe-store__service-header">
-                                                <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
-                                            </div>
-                                            <div class="pwe-store__service-content">
-                                                <div class="pwe-store__service-products">
-                                                    <div class="pwe-store__product">Komunikat w radiowęźle</div>
-                                                    <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
-                                                    <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
-                                                </div>
-                                                <div class="pwe-store__service-footer">
-                                                    <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <div class="pwe-store__btn-container">
-                                            <a href="#" class="pwe-store__more-button" data-featured="marketing-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
-                                            <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="pwe-store__services-cards-header">
-                                    <h4>PAKIETY USŁUG SOCIAL MEDIA</h4>
-                                </div>
-
-                                <div class="pwe-store__services-cards" category="social">
-
-                                    <!-- Pakiet STANDARD -->
-                                    <div class="pwe-store__service-card pwe-store__service">
-                                        <a href="#" data-featured="social-package-standard">
-                                            <div class="pwe-store__service-header">
-                                                <h4 class="pwe-store__service-name pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD': 'STANDARD PACKAGE' ) .'</h4>   
-                                            </div>
-                                            <div class="pwe-store__service-content">
-                                                <div class="pwe-store__service-products">
-                                                    <div class="pwe-store__product">Komunikat w radiowęźle</div>
-                                                    <div class="pwe-store__product"><span>1 szt</span>Naklejki podłogowe</div>
-                                                    <div class="pwe-store__product">Dostęp do skanera wystawcy</div>
-                                                </div>
-                                                <div class="pwe-store__service-footer">
-                                                    <div class="pwe-store__price">7000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <div class="pwe-store__btn-container">
-                                            <a href="#" class="pwe-store__more-button" data-featured="social-package-standard">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</a>
-                                            <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            ';
-                        }
-
-                        $output .= '
-                        </div>
-                    </div>';
-                }
-
-            $output .= '
-            </div>';
-
-            if ($current_domain === "warsawexpo.eu" || $current_domain === "rfl.warsawexpo.eu") {
-                $output .= '
-                <div class="pwe-store__fairs">
-                    <div class="pwe-store__fairs-arrow-back"><span>WRÓĆ</span></div>
-                    <div class="pwe-store__fairs-search">
-                        <h4>Wyszukaj wydarzenie albo wybierz z listy</h4>
-                        <input class="pwe-store__fairs-search-input" type="text">
-                    </div>
-                    <div class="pwe-store__fairs-items">';
-                    $all_editions = self::fairs_array();
-                    if (!empty($all_editions)) {
-
-                        $all_fairs = array_merge($all_editions['edition_1'], $all_editions['edition_2'], $all_editions['edition_3'], $all_editions['edition_b2c']);
-
-                        // Sorting the array based on date
-                        usort($all_fairs, function ($a, $b) {
-                            // If date is missing in one of the elements, this element goes to the end of the array
-                            if (empty($a['date']) && !empty($b['date'])) {
-                                return 1;
-                            }
-                            if (!empty($a['date']) && empty($b['date'])) {
-                                return -1;
-                            }
-                    
-                            // If both dates exist, we compare them
-                            $dateA = isset($a['date']) ? str_replace('/', '-', $a['date']) : '';
-                            $dateB = isset($b['date']) ? str_replace('/', '-', $b['date']) : '';
-                            
-                            // Convert date to timestamp
-                            $timestampA = strtotime($dateA);
-                            $timestampB = strtotime($dateB);
-                    
-                            return $timestampA - $timestampB;
-                        });
-        
-                        foreach ($all_fairs as $fair) {
-                            if (isset($fair['domain'], $fair['name'], $fair['desc'], $fair['date'], $fair['edition']) && 
-                                !empty($fair['domain']) && $fair['domain'] !== "" && 
-                                !empty($fair['name']) && $fair['name'] !== "" && 
-                                !empty($fair['desc']) && $fair['desc'] !== "" && 
-                                !empty($fair['date']) && $fair['date'] !== "" && 
-                                !empty($fair['edition']) && $fair['edition'] !== "") {
-                            
-                                $output .= '
-                                <div 
-                                    class="pwe-store__fairs-item" 
-                                    id="'. preg_replace('/\.[^.]*$/', '', $fair['domain']) .'" 
-                                    data-name="'. $fair['name'] .'" 
-                                    data-tooltip="'. $fair['desc'] .'" 
-                                    data-date="'. $fair['date'] .'" 
-                                    data-edition="'. $fair['edition'] .'" 
-                                    data-domain="'. $fair['domain'] .'" 
-                                    style="background-image: url(&quot;https://'. $fair['domain'] .'/doc/kafelek.jpg&quot;);">
-                                </div>';
-                            } else {
-                                if (current_user_can('administrator')) {
-                                    echo '<script>console.log("Brak danych dla: '. $fair['domain'] .'")</script>';
-                                }
-                            }
-                        }
-                        
-                    } else { $output .= '<p style="position: absolute; left: 50%; transform: translate(-50%, 0); text-align: center;">Przepraszamy, lista targów jest tymczasowo niedostępna. =(</p>'; }
-                    $output .= '
-                    </div>
-                </div>';
-            }
         $output .= '
+        </div>
+        
+        <!-- Modal -->
+        <div id="pweStoreModal" class="pwe-store__modal" style="display: none;">
+            <div class="pwe-store__modal-content">
+                <span class="pwe-store__modal-close-btn">&times;</span>
+                <div class="pwe-store__modal-content-placeholder">
+                    <!-- Tutaj dynamicznie wstawimy selectItem -->
+                </div>
+            </div>
         </div>';
 
-        // $pwe_store_data_json_encode = json_encode($pwe_store_data);
-        // $pwe_store_data_options_json_encode = json_encode($store_options);
-        // $output .= '
-        // <script>
-        //     document.addEventListener("DOMContentLoaded", function () {
-        //         const storeData = ' . $pwe_store_data_json_encode . ';
-        //         const storeDataOptions = ' . $pwe_store_data_options_json_encode . ';
-                
-        //         console.log(storeData);
-        //         console.log(storeDataOptions);
-        //     });
-        // </script>';
+        // if (current_user_can( "administrator" )) {
+        //     $pwe_groups_data_json_encode = json_encode($pwe_groups_data);
+        //     $pwe_store_data_json_encode = json_encode($pwe_store_data);
+        //     $pwe_store_data_options_json_encode = json_encode($store_options);
+        //     $pwe_store_packages_data_json_encode = json_encode($pwe_store_packages_data);
+        //     $output .= '
+        //     <script>
+        //         document.addEventListener("DOMContentLoaded", function () {
+        //             const pweGroups = ' . $pwe_groups_data_json_encode . ';
+        //             const storeData = ' . $pwe_store_data_json_encode . ';
+        //             const storeDataOptions = ' . $pwe_store_data_options_json_encode . ';
+        //             const storePackagesData = ' . $pwe_store_packages_data_json_encode . ';
+                    
+        //             console.log(pweGroups);
+        //             console.log(storeData);
+        //             console.log(storeDataOptions);
+        //             console.log(storePackagesData);
+        //         });
+        //     </script>';
+        // }
 
         $output = do_shortcode($output);  
         
         return $output;
     }  
 }
-
-
-
-// <div id="packagesSectionHide" category="packages" class="pwe-store__packages-section-hide pwe-store__section-hide">
-//                     <div class="pwe-store__category-header">
-//                         <div class="pwe-store__category-header-arrow">
-//                             <div class="pwe-store__category-header-arrow-el">
-//                                 <span></span>
-//                             </div>
-//                         </div>
-//                         <div class="pwe-store__category-header-title">
-//                             <p>PAKIETY</p>
-//                         </div>
-//                     </div>
-
-//                     <!-- Pakiet standard -->
-//                     <div class="pwe-store__featured-service pwe-store__service" id="marketing-package-standard">
-//                         <div class="pwe-store__featured-content">
-//                             <div class="pwe-store__featured-image">
-//                                 <!-- Spersonalizowane Smyczki -->
-//                                 <div class="pwe-store__service-card pwe-store__service">
-//                                     <a href="#" data-featured="smycze">
-//                                         <div class="pwe-store__service-image">
-//                                             <img src="/wp-content/plugins/PWElements/media/store/smycze-z-logotypem.webp" alt="Smycze z logotypem">
-//                                         </div>
-//                                         <div class="pwe-store__service-content">
-//                                             '. ( self::lang_pl() ? '
-//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">SPERSONALIZOWANE SMYCZKI Z TWOIM LOGO</h4>
-//                                             <h4 class="pwe-store__service-name">SPERSONALIZOWANE SMYCZKI Z TWOIM LOGO</h4>
-//                                             <p>Dystrybucja smyczy z logotypem Twojej firmy wśród uczestników Targów</p>
-//                                             ':'
-//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">PERSONALIZED LANYARDS WITH YOUR LOGO</h4>
-//                                             <h4 class="pwe-store__service-name">PERSONALIZED LANYARDS WITH YOUR LOGO</h4>
-//                                             <p>Distribution of lanyards with your company logo among Fair participants</p>
-//                                             ' ) .'
-                                            
-//                                             <div class="pwe-store__service-footer">
-//                                                 <div class="pwe-store__price">5500,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>
-//                                             </div>
-
-//                                             <div class="pwe-store__btn-container">
-//                                                 <span class="pwe-store__more-button" data-featured="smycze">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</span>
-//                                             </div>
-//                                         </div>
-//                                     </a>
-//                                 </div>
-
-//                                 <!-- Logotyp na Identyfikatorach -->
-//                                 <div class="pwe-store__service-card pwe-store__service">
-//                                     <a href="#" data-featured="logotyp">
-//                                         <div class="pwe-store__service-image">
-//                                             <img src="/wp-content/plugins/PWElements/media/store/logotyp-na-identyfikatorach.webp" alt="Logotyp na identyfikatorach">
-//                                         </div>
-//                                         <div class="pwe-store__service-content">
-//                                             '. ( self::lang_pl() ? '
-//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">LOGOTYP TWOJEJ FIRMY NA IDENTYFIKATORACH UCZESTNIKÓW</h4>
-//                                             <h4 class="pwe-store__service-name">LOGOTYP TWOJEJ FIRMY NA IDENTYFIKATORACH UCZESTNIKÓW</h4>
-//                                             <p>Logo Twojej Firmy na identyfikatorach wszystkich uczestników Targów</p>
-//                                             ':'
-//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">YOUR COMPANY LOGO ON PARTICIPANTS` ID BADGES</h4>
-//                                             <h4 class="pwe-store__service-name">YOUR COMPANY LOGO ON PARTICIPANTS` ID BADGES</h4>
-//                                             <p>Your Company Logo on ID BADGES of all Fair participants</p>
-//                                             ' ) .'
-                                            
-//                                             <div class="pwe-store__service-footer">
-//                                                 <div class="pwe-store__price">6500,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div>                    
-//                                             </div>
-
-//                                             <div class="pwe-store__btn-container">
-//                                                 <span class="pwe-store__more-button" data-featured="logotyp">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</span>
-//                                             </div>
-//                                         </div>
-//                                     </a>
-//                                 </div>
-
-//                                 <!-- Sponsor Planu Targowego -->
-//                                 <div class="pwe-store__service-card pwe-store__service">
-//                                     <a href="#" data-featured="sponsor-planu">
-//                                         <div class="pwe-store__service-image">
-//                                             <img src="/wp-content/plugins/PWElements/media/store/sponsor-planu-targowego.webp" alt="Sponsor Planu Targowego">
-//                                         </div>
-//                                         <div class="pwe-store__service-content">
-//                                             '. ( self::lang_pl() ? '
-//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">SPONSOR PLANU TARGOWEGO</h4>
-//                                             <h4 class="pwe-store__service-name">SPONSOR PLANU TARGOWEGO</h4>
-//                                             <p>Reklama Twojej firmy w drukowanym Planie Targowym</p>
-//                                             ':'
-//                                             <h4 class="pwe-store__service-name pwe-store__service-name-mailing">TRADE FAIR PLAN SPONSOR</h4>
-//                                             <h4 class="pwe-store__service-name">TRADE FAIR PLAN SPONSOR</h4>
-//                                             <p>Advertise your company in the printed Trade Plan</p>
-//                                             ' ) .'
-                                        
-//                                             <div class="pwe-store__service-footer">
-//                                                 <div class="pwe-store__price">5000,00 zł '. ( self::lang_pl() ? 'netto' : 'net' ) .'</div> 
-//                                             </div>
-
-//                                             <div class="pwe-store__btn-container">
-//                                                 <span class="pwe-store__more-button" data-featured="sponsor-planu">'. ( self::lang_pl() ? 'WIĘCEJ' : 'MORE' ) .'</span>
-//                                             </div>
-//                                         </div>
-//                                     </a>
-//                                 </div>
-//                             </div>
-//                             <div class="pwe-store__featured-details">
-//                                 <div class="pwe-store__featured-text">
-//                                     <h3 class="pwe-store__service-name">'. ( self::lang_pl() ? 'PAKIET STANDARD' : 'STANDARD PACKAGE' ) .'</h3>
-//                                     <span class="pwe-store__service-name-mailing">'. ( self::lang_pl() ? 'PAKIET STANDARD' : 'STANDARD PACKAGE' ) .'</span>
-//                                     '. ( self::lang_pl() ? '
-//                                         <p class="pwe-store__featured-description">Zostań <strong>Partnerem Strefy VIP</strong> podczas targów organizowanych w Ptak Warsaw Expo i zyskaj wyjątkową <strong>możliwość zaprezentowania swojej marki w ekskluzywnej przestrzeni</strong>.</p>                     
-//                                     ':'
-//                                         <p class="pwe-store__featured-description">Become a <strong>VIP Zone Partner</strong> during the fair organized at Ptak Warsaw Expo and gain a unique <strong>opportunity to present your brand in an exclusive space</strong>.</p>
-//                                     ' ) .' 
-//                                 </div>
-//                                 <div class="pwe-store__featured-footer">
-//                                     <span class="pwe-store__featured-pwe-store__price">'. ( self::lang_pl() ? '15 000,00zł' : '15 000,00zł' ) .'</span>
-//                                     <div class="pwe-store__featured-buttons">
-//                                         <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
-//                                         <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div> 
-//                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
