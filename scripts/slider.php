@@ -230,8 +230,7 @@ class PWESliderScripts {
                 $get_initial_slides_to_show = '
                 return  elementWidth < 400 ? 2 :
                         elementWidth < 600 ? 3 :
-                        elementWidth < 1200 ? 5 :
-                        elementWidth > 1200 ? 7 :
+                        elementWidth < 1100 ? 5 :
                         slidesToShowSetting;
                 ';
             }
