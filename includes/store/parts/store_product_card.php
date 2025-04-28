@@ -163,10 +163,23 @@ $output .= '
         </div>';
     }
 
+
+
     if (empty($categories)) {
         $output .= '
         <div style="margin-top: 36px; text-align: center; font-size: 24px; font-weight: 600;">'. 
             (self::lang_pl() ? "Przepraszamy, produkty tymczasowo niedostępne" : "Sorry, products temporarily unavailable") .'
+        </div>';
+    } else {
+        $output .= '
+        <div style="margin-top: 36px; font-size: 14px; background: white; border-radius: 8px; box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); padding: 18px;">'. 
+            (self::lang_pl() ? 
+            '<p style="margin: 0; font-size: 14px;">Powyższa wycena usług stanowi wycenę orientacyjną. Ostateczna cena realizacji usługi zostanie ustalona indywidualnie po kontakcie ze strony przedstawiciela PTAK Warsaw Expo, który nastąpi po wypełnieniu formularza zgłoszeniowego. Wypełnienie formularza nie zobowiązuje do zakupu usługi.</p>
+            <p style="font-size: 14px;">Powyższe nie stanowi oferty w rozumieniu Kodeksu cywilnego. Wskazane ceny orientacyjne są cenami netto, do których należy doliczyć obowiązujący podatek VAT.</p>' 
+            : 
+            '<p style="margin: 0; font-size: 14px;">The above price list for services is an approximate price. The final price for the service will be determined individually after contact with a representative of PTAK Warsaw Expo, which will take place after filling out the application form. Filling out the form does not oblige you to purchase the service.</p>
+            <p style="font-size: 14px;">The above does not constitute an offer within the meaning of the Civil Code. The indicated approximate prices are net prices, to which the applicable VAT should be added.</p>'
+            ) .'
         </div>';
     }
 

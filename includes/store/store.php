@@ -398,7 +398,17 @@ class PWEStore extends PWECommonFunctions {
         </div>';
 
         // if (current_user_can( "administrator" )) {
-        //     $pwe_groups_data_json_encode = json_encode($pwe_groups_data);
+        //     $pwe_groups_data = self::getDatabaseDataGroups(); 
+
+        //     $edition_1 = [];
+
+        //     foreach ($pwe_groups_data as $group) {
+        //         if ($group->fair_group == "gr3") {
+        //             $edition_1[] = $group->fair_domain;
+        //         }
+        //     }
+
+        //     $pwe_groups_data_json_encode = json_encode($edition_1);
         //     $pwe_store_data_json_encode = json_encode($pwe_store_data);
         //     $pwe_store_data_options_json_encode = json_encode($store_options);
         //     $pwe_store_packages_data_json_encode = json_encode($pwe_store_packages_data);
