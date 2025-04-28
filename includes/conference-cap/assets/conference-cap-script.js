@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
         $(speakers).each(function(index, speaker) {
             modalContent += `<div class="modal-speaker">
                 ${ speaker.url ? `<img src="${speaker.url}" alt="${speaker.name}">` : "" }
-                <h2>${speaker.name}</h2>
+                <h2>${speaker.name_html}</h2>
                 <p>${speaker.bio}</p>
             </div>`;
             if(index < speakers.length - 1) {

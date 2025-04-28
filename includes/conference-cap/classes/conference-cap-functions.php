@@ -273,4 +273,31 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
         return $json;
     }
 
+    protected static function debugConferencesConsole( array $database_data ) {
+
+        if ( ! is_user_logged_in() || ! current_user_can( 'administrator' ) ) {
+            return;
+        }
+    
+        $debug = array_map(
+            static function ( $conf ) {
+                return array(
+                    'slug'       => $conf->conf_slug,
+                    'updated'    => $conf->updated ?? null,
+                    'updated_at' => $conf->updated_at ?? null,
+                );
+            },
+            $database_data
+        );
+    
+        wp_register_script( 'pwe-conference-cap-debug', '' );
+        wp_add_inline_script(
+            'pwe-conference-cap-debug',
+            'console.groupCollapsed("PWEConferenceCap – recent changes");' .
+            'console.table(' . wp_json_encode( $debug ) . ');' .
+            'console.groupEnd();'
+        );
+        wp_enqueue_script( 'pwe-conference-cap-debug' );
+    }
+
   }

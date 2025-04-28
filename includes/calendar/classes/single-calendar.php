@@ -1470,15 +1470,15 @@ while (have_posts()):
 
 endwhile;
 
-$output .= '
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const url = new URL(window.location);
-        const domain = "'. $domain .'";
-        url.searchParams.set("domain", domain);
-        window.history.pushState({}, "", url);
-    });
-</script>';
+// $output .= '
+// <script>
+//     document.addEventListener("DOMContentLoaded", function() {
+//         const url = new URL(window.location);
+//         const domain = "'. $domain .'";
+//         url.searchParams.set("domain", domain);
+//         window.history.pushState({}, "", url);
+//     });
+// </script>';
 
 echo do_shortcode($output);
 

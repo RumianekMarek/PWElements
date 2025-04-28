@@ -1,11 +1,8 @@
-.conference_patroni_logos{
-  padding: 18px;
-}
-
 .conference_patroni_logo {
   object-fit: contain;
   aspect-ratio: 3 / 2;
-  padding: 6px 12px;
+  padding: 5px;
+  margin: 5px;
 }
 
 .row-parent:has(#conference-cap) {
@@ -42,6 +39,11 @@
 
 .conference_cap__conf-slugs-container .active-slug {
   padding: 36px;
+}
+
+.conference_cap__conf-slug-image {
+  width: 100%;
+  height: auto;
 }
 
 /* ------------------ Default Header ------------------ */
@@ -161,7 +163,7 @@
 .conference_cap__conf-slug-content.active-content {
   opacity: 1;
   transform: translateY(0);
-  transition-delay: 0.5s;
+  transition-delay: 0.3s;
   z-index: 10;
   position: relative;
 }
@@ -218,7 +220,7 @@
 }
 .custom-modal-content h2 {
   margin: 10px 0 10px;
-  font-size: 1.5em;
+  font-size: 1.4em !important;
 }
 .custom-modal-content p {
   margin: 0;

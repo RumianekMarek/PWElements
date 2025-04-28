@@ -31,7 +31,7 @@
   background: white;
   border: 2px solid gray;
   aspect-ratio: 1 / 1;
-  object-fit: cover;
+  object-fit: contain;
 }
 .conference_cap__lecture-speaker-btn {
   margin: 10px auto !important;
@@ -49,6 +49,9 @@
   background-color: color-mix(in srgb, var(--accent-color), black 20%);
   border: 1px solid color-mix(in srgb, var(--accent-color), black 20%);
 }   
+.conference_cap__lecture-name-subline {
+  color: var(--accent-color);
+}
 
 @media (max-width: 600px) {
 
@@ -58,7 +61,7 @@
     align-items: center;
   }
 
-  .conference_cap__lecture-desc p {
+  .conference_cap__lecture-desc, .conference_cap__lecture-desc p {
     text-align: left;
   }
 
