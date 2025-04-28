@@ -549,14 +549,14 @@ class PWElementOpinions extends PWElements {
                     )
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jakub-Tyczkowski.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/rekpol-logo.webp',
-                    'opinions_company' => 'Rekopol Organizacja Odzysku Opakowań',
-                    'opinions_name' => 'Jakub Tyczkowski',
-                    'opinions_desc' => self::languageChecker('Prezes Rekopol', 'President of Rekopol'),
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jerzy_Romanski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/ofmisp-logo.webp',
+                    'opinions_company' => 'Ogólnopolska Federacja Małych i Średnich Przedsiębiorców',
+                    'opinions_name' => 'Jerzy Romański',
+                    'opinions_desc' => self::languageChecker('Wiceprezes', 'Vice President'),
                     'opinions_text' => self::languageChecker(
-                        'Rekopol Organizacja Odzysku Opakowań współpracuje z Ptak Warsaw Expo od samego początku. Nasze projekty cechuje zaangażowanie, dobra organizacja konferencji oraz świetna komunikacja.',
-                        'Rekopol Packaging Recovery Organization has been cooperating with Ptak Warsaw Expo from the very beginning. Our projects are characterized by commitment, good conference organization, and excellent communication.')
+                        'Zbudowanie przyjaznej więzi pomiędzy organizatorem targów, firmą wystawiającą się i organizacjami wspierającymi jest kluczowe, by uniknąć błędów i w pełni wykorzystać potencjał wydarzenia.',
+                        'Building a friendly relationship between the trade fair organizer, the exhibiting company, and supporting organizations is key to avoiding mistakes and fully utilizing the potential of the event.')
                 ],
                 [
                     'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Krzysztof-Niczyporczuk.webp',
@@ -579,16 +579,37 @@ class PWElementOpinions extends PWElements {
                         'PTAK Warsaw Expo is the largest exhibition center we work with. The company invests in infrastructure development, which enhances the quality of organized events.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Janusz-Poulakowski.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/evoluma-logo.webp',
-                    'opinions_company' => 'Klaster Obróbki Metali',
-                    'opinions_name' => 'Janusz Poulakowski',
-                    'opinions_desc' => self::languageChecker('Dyrektor Operacyjny', 'Operational Director'),
+                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Pawel_Babski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/kit-logo.webp',
+                    'opinions_company' => self::languageChecker('Krajowa Izba Targowa','National Chamber of Trade Fairs'),
+                    'opinions_name' => 'Paweł Babski',
+                    'opinions_desc' => self::languageChecker('Prezes', 'President'),
                     'opinions_text' => self::languageChecker(
-                        'Klaster Obróbki Metali współpracuje z Ptak Warsaw Expo od samego początku. Cenimy profesjonalizm, innowacyjność oraz stabilność współpracy z Ptak Warsaw Expo.',
-                        'The Metalworking Cluster has been cooperating with Ptak Warsaw Expo from the very beginning. We value professionalism, innovation, and stability in our cooperation with Ptak Warsaw Expo.')
+                        'Nic nie zastąpi spotkania z producentem, wystawcą. Możliwość obserwowania i wpływania na kierunek, w którym rozwija się branża jest możliwa dzięki takim spotkaniom. Premierowe edycje targów dają właśnie taką możliwość.',
+                        'Nothing can replace a meeting with a manufacturer, an exhibitor. The possibility of observing and influencing the direction in which the industry is developing is possible thanks to such meetings. Premiere editions of trade fairs offer exactly that opportunity.')
                 ]
             ];
+
+            $edition = do_shortcode('[trade_fair_edition]');
+                if (strpos(strtolower($edition) , "premier") !== false) {
+                    $premiere_edition_opinions = [
+                        [
+                            'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Marlena-Wronkowska.webp',
+                            'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/wprost-logo.webp',
+                            'opinions_company' => 'Wprost',
+                            'opinions_name' => 'Marlena Wronkowska',
+                            'opinions_desc' => self::languageChecker('Dyrektor Projektów Biznesowych', 'Director of Business Projects'),
+                            'opinions_text' => self::languageChecker(
+                                'Tygodnik „Wprost” z uznaniem odnosi się do premierowych wydarzeń targowych organizowanych w 2025 roku przez Ptak Warsaw Expo. Nowe inicjatywy, takie jak Clean Tech Expo, Composite Poland czy Wire Tech Poland, nie tylko wzbogacają kalendarz targowy, ale również odpowiadają na aktualne potrzeby poszczególnych branż, oferując platformę do prezentacji innowacyjnych rozwiązań i nawiązywania wartościowych kontaktów biznesowych.​ Ptak Warsaw Expo, poprzez organizację tych premierowych wydarzeń, potwierdza swoją pozycję jako lidera wśród centrów targowych w Europie Środkowo-Wschodniej, oferując platformę sprzyjającą rozwojowi innowacji i współpracy międzybranżowej.',
+                                'The weekly magazine Wprost expresses appreciation for the premiere trade fair events organized in 2025 by Ptak Warsaw Expo. New initiatives such as Clean Tech Expo, Composite Poland, and Wire Tech Poland not only enrich the trade fair calendar but also respond to the current needs of specific industries by providing a platform for showcasing innovative solutions and fostering valuable business connections. By organizing these premiere events, Ptak Warsaw Expo reaffirms its position as a leader among trade fair centers in Central and Eastern Europe, offering an environment conducive to innovation and cross-industry collaboration.'
+                            )
+                        ]
+                    ];
+
+                    $default_opinions = array_merge($default_opinions, $premiere_edition_opinions);
+
+                    $max_opinions = 5 + count($premiere_edition_opinions);
+                }
 
             $output .= '
             <div id="pweOpinions"class="pwe-opinions">
@@ -598,7 +619,9 @@ class PWElementOpinions extends PWElements {
                 <div class="pwe-opinions__wrapper">
                     <div class="pwe-opinions__items pwe-slides">';
 
-                    $max_opinions = 5; // Maximum number of reviews displayed together
+                    if (empty($max_opinions)) {
+                        $max_opinions = 5; // Maximum number of reviews displayed together
+                    }
                     $user_opinions = [];
 
                     // Analyze user feedback and collect non-empty
