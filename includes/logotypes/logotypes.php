@@ -274,12 +274,12 @@ class PWELogotypes extends PWECommonFunctions {
 
             try {
                 $json = @file_get_contents($canUrl);
-                if (current_user_can('administrator') && $json === false) {
+                if ($json === false) {
                     throw new Exception('Nie można pobrać danych JSON.');
                 }
         
                 $data = json_decode($json, true);
-                if (current_user_can('administrator') && $data === null) {
+                if ($data === null) {
                     throw new Exception('Błąd dekodowania danych JSON.');
                 }
         

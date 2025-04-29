@@ -1048,7 +1048,7 @@ class PWElementTwoCols extends PWElements {
         };
         if ($pwe_two_cols_show_exhibitors || $pwe_two_cols_show_mediapatrons) {
           $output .= '
-          <script>
+            <script>
             document.addEventListener("DOMContentLoaded", function () {
                 let container = document.getElementById("logotypes-container");
                 let placeholders = container.querySelectorAll(".logo-placeholder");
@@ -1057,7 +1057,6 @@ class PWElementTwoCols extends PWElements {
                 let logosToShow = [];
 
                 if (logos.length >= 9) {
-                    // Losujemy 9 unikalnych logotypów
                     let randomIndexes = new Set();
                     while (randomIndexes.size < 9) {
                         let randomIndex = Math.floor(Math.random() * logos.length);
@@ -1065,11 +1064,9 @@ class PWElementTwoCols extends PWElements {
                     }
                     logosToShow = Array.from(randomIndexes).map(index => logos[index]);
                 } else {
-                    // Jeśli mniej niż 9, po prostu je wyświetlamy
                     logosToShow = logos;
                 }
 
-                // Wyświetlamy logotypy – tylko tyle, ile jest dostępnych
                 setTimeout(() => {
                     placeholders.forEach((img, i) => {
                         if (logosToShow[i]) {
@@ -1077,13 +1074,12 @@ class PWElementTwoCols extends PWElements {
                             img.style.opacity = "1";
                             img.style.visibility = "visible";
                         } else {
-                            // Ukryj nieużywane miejsca
                             img.style.display = "none";
                         }
                     });
                 }, 10);
             });
-          </script>';
+            </script>';
         }
       $output .= '
        </div></div>

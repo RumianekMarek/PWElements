@@ -1,153 +1,31 @@
 const tradeFairName = store_js.trade_fair_name;
+const trade_fair_groups = store_js.trade_fair_groups;
+
+let edition_1 = [];
+let edition_2 = [];
+let edition_3 = [];
+let edition_b2c = [];
+
+trade_fair_groups.forEach(group => {
+    if (group.fair_group === "gr1") {
+        edition_1.push(group.fair_domain);
+    }
+    if (group.fair_group === "gr2") {
+        edition_2.push(group.fair_domain);
+    }
+    if (group.fair_group === "gr3") {
+        edition_3.push(group.fair_domain);
+    }
+    if (group.fair_group === "b2c") {
+        edition_b2c.push(group.fair_domain);
+    }
+});
+
 const fairs_array = {
-    edition_1: [
-        "mr.glasstec.pl",
-        "worldofbuildexpo.com", 
-        "futureenergyweekpoland.com", 
-        "industrialbuildingexpo.pl", 
-        "filtratecexpo.com", 
-        "chemtecpoland.com", 
-        "lasertechnicapoland.com", 
-        "coldtechpoland.com", 
-        "warsawoptiexpo.com", 
-        "funeralexpo.pl", 
-        "coffeeeuropeexpo.com", 
-        "pharmacyexpopoland.com", 
-        "warsawwindowexpo.com", 
-        "glasstechpoland.com", 
-        "valvespumpsexpo.com", 
-        "hairbarberweekpoland.com", 
-        "concreteexpo.pl", 
-        "automechanicawarsaw.com", 
-        "fastechexpo.com", 
-        "aiindustryexpo.com", 
-        "medivisionforum.com", 
-        "warsawprokitchen.com", 
-        "aluminiumtechexpo.com", 
-        "medinnovationsexpo.com", 
-        "emobilityexpo.pl", 
-        "worldofhydrogenexpo.com", 
-        "warsawtoys.com", 
-        "biopowerexpo.com", 
-        "agrofarmaexpo.com", 
-        "veterinaryexpopoland.com", 
-        "isoltexexpo.com", 
-        "polandsustainabilityexpo.com", 
-        "solidsexpopoland.com", 
-        "forestechexpopoland.com", 
-        "lightexpo.pl", 
-        "warsawclimatech.com", 
-        "decarbonisationexpo.com", 
-        "globalfoodexpo.pl", 
-        "photonicsexpo.pl", 
-        "waterexpopoland.com", 
-        "warsawplastexpo.com", 
-        "grindtechexpo.com", 
-        "safetyrescueexpo.com", 
-        "cybersecurityexpo.pl", 
-        "pneumaticswarsaw.com", 
-        "labotec.pl", 
-        "coiltechexpo.com", 
-        "autotuningshow.com", 
-        "biurotexexpo.com", 
-        "cosmopharmpack.com", 
-        "huntingexpo.pl", 
-        "warsawfleetexpo.com", 
-        "warsawshopexpo.com", 
-        "hotelequipmentexpo.com", 
-        "bakerytechpoland.com", 
-        "postdeliverylogisticsexpo.com", 
-        "warsawgardentech.com", 
-        "warsawspawellnessexpo.com", 
-        "electroinstalexpo.com", 
-        "wiretechpoland.com", 
-        "tubetechnicpoland.com", 
-        "bathceramicsexpo.com", 
-        "warsawbusexpo.eu", 
-        "centralnetargirolnicze.com"
-    ],
-    edition_2: [
-        "esteticaexpo.com", 
-        "automaticaexpo.com", 
-        "batteryforumpoland.com", 
-        "floorexpo.pl", 
-        "door-tec.pl", 
-        "furnitechexpo.pl", 
-        "furniturecontractexpo.com", 
-        "electronics-show.com", 
-        "forumbhp.com", 
-        "weldexpopoland.com", 
-        "warsawprinttech.com", 
-        "heatingtechexpo.com", 
-        "recyclingexpo.pl", 
-        "warsawsweettech.com", 
-        "wodkantech.com", 
-        "polandcoatings.com", 
-        "gastroquickservice.com", 
-        "warsawconstructionexpo.com", 
-        "warsawtoolsshow.com", 
-        "targirehabilitacja.pl", 
-        "boattechnica.com", 
-        "automotive-expo.eu", 
-        "packagingpoland.pl", 
-        "labelingtechpoland.com", 
-        "warsawmedicalexpo.com", 
-        "warsawsecurityexpo.com", 
-        "foodtechexpo.pl", 
-        "facadeexpo.pl", 
-        "roofexpo.pl", 
-        "poultrypoland.com", 
-        "bioagropolska.com", 
-        "fruitpolandexpo.com", 
-        "warsawmetaltech.pl", 
-        "maintenancepoland.com", 
-        "controldrivespoland.com", 
-        "intralogisticapoland.com", 
-        "roboticswarsaw.com", 
-        "compositepoland.com", 
-        "smarthomeexpo.pl", 
-        "warsawstone.com", 
-        "woodwarsawexpo.com", 
-        "beerwarsawexpo.com", 
-        "winewarsawexpo.com", 
-        "cleantechexpo.pl", 
-        "buildoutdoorexpo.com", 
-        "bioexpo.pl"
-    ],
-    edition_3: [
-        "warsawpack.pl", 
-        "mttsl.pl", 
-        "warsawfoodexpo.pl", 
-        "dentalmedicashow.pl", 
-        "beautydays.pl", 
-        "boatshow.pl", 
-        "warsawhome.eu", 
-        "warsawhomefurniture.com", 
-        "warsawhomekitchen.com", 
-        "warsawhomelight.com", 
-        "warsawhometextile.com", 
-        "warsawhomebathroom.com", 
-        "warsawbuild.eu", 
-        "industryweek.pl", 
-        "solarenergyexpo.com", 
-        "remadays.com", 
-        "franczyzaexpo.pl", 
-        "etradeshow.pl", 
-        "warsawgardenexpo.com", 
-        "warsawgiftshow.com", 
-        "eurogastro.com.pl", 
-        "worldhotel.pl", 
-        "warsawhvacexpo.com"
-    ],
-    edition_b2c: [
-        "campercaravanshow.com", 
-        "motorcycleshow.pl", 
-        "animalsdays.eu", 
-        "oldtimerwarsaw.com", 
-        "fiwe.pl", 
-        "ttwarsaw.pl", 
-        "warsawmotorshow.com"
-    ]
+    edition_1,
+    edition_2,
+    edition_3,
+    edition_b2c
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -334,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             editionNumber = "b2c";
         } else {
             editionNumber = "other";
-        }
+        } 
         
         // Redirect page to warsawexpo.eu with parameters for contact form
         const redirectButtons = document.querySelectorAll(".pwe-store__redirect-button");
@@ -434,6 +312,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     const redirectUrl = `${baseUrl}?service=${encodeURIComponent(serviceName)}&domain=${encodeURIComponent(currentDomain)}&pwevent=${encodeURIComponent(tradeFairName)}&edition=${encodeURIComponent(editionNumber)}`;
                     // Open new window
                     window.open(redirectUrl, "_blank");
+
+                    // Reload page without params
+                    window.location.replace(window.location.origin + window.location.pathname);
                 }
                 
             });
@@ -446,74 +327,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Clicking on the category buttons
         sortingButtons.forEach(button => {
-            button.addEventListener("click", function() {
-                // Get ID of button
-                const buttonId = this.id;
+            if (!button.classList.contains("dropdown")) {
+                button.addEventListener("click", function() {
+                    // Get ID of button
+                    const buttonId = this.id;
 
-                // Update category parameter
-                currentUrl.search = '';
-                currentUrl.searchParams.set('category', buttonId);
-                window.history.pushState({}, '', currentUrl.toString());
+                    // Update category parameter
+                    currentUrl.search = '';
+                    currentUrl.searchParams.set('category', buttonId);
+                    window.history.pushState({}, '', currentUrl.toString());
 
-                // Removing the 'active' class from all buttons
-                sortingButtons.forEach(b => b.classList.remove('active'));
+                    // Removing the 'active' class from all buttons
+                    sortingButtons.forEach(b => b.classList.remove('active'));
 
-                // Adding 'active' class to clicked button
-                this.classList.add('active');
+                    // Adding 'active' class to clicked button
+                    this.classList.add('active');
 
-                const cardsContainers = document.querySelectorAll('.pwe-store__section');
+                    const cardsContainers = document.querySelectorAll('.pwe-store__section');
 
-                // Removing the 'active' class from all elements
-                cardsContainers.forEach(e => e.classList.remove('active'));
+                    // Removing the 'active' class from all elements
+                    cardsContainers.forEach(e => e.classList.remove('active'));
 
-                // Iterate through all elements and check their IDs
-                cardsContainers.forEach(element => {
-                    const category = element.getAttribute('category');
-            
-                    // If the 'category' attribute is the same as the button ID, we add the 'active' class
-                    if (category === buttonId) {
-                        element.classList.add('active');
-                    }
-                });
-
-                mainSectionsText.forEach(item => {
-                    // If the element ID contains the button ID, add the 'active' class
-                    if (item.className.includes(buttonId)) {
-                        item.style.display = "block";
-                    } else {
-                        item.style.display = "none";
-                    }
-                });
-
-                const hideElements = document.querySelectorAll('.pwe-store__section-hide');
-                // Remove the 'active' class from all elements
-                hideElements.forEach(e => e.style.display = "none");
-                // Iterate over all elements and check their IDs
-                hideElements.forEach(element => {
-                    // If the element ID contains the button ID, add the 'active' class
-                    if (element.id.includes(buttonId)) {
-                        element.style.display = "block";
-                    }
-                });
-
-                const featuredService = document.querySelectorAll(".pwe-store__featured-service");
-                featuredService.forEach(service => {
-                    service.classList.remove('active');
-                });
-
-                const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
-                // Show the main section and hide the category header
-                hideCategoryHeader(mainSection, categoryHeaders);
-
-                const categoriesSection = document.querySelector(".pwe-store__anchor");
-                const elementTop = categoriesSection.getBoundingClientRect().top + window.scrollY;
-
-                window.scrollTo({
-                    top: elementTop - 72,
-                    behavior: "smooth"
-                });
+                    // Iterate through all elements and check their IDs
+                    cardsContainers.forEach(element => {
+                        const category = element.getAttribute('category');
                 
-            });
+                        // If the 'category' attribute is the same as the button ID, we add the 'active' class
+                        if (category === buttonId) {
+                            element.classList.add('active');
+                        }
+                    });
+
+                    mainSectionsText.forEach(item => {
+                        // Split the className by spaces and check if the exact class is present
+                        const classes = item.className.split(' ');
+                        
+                        // Only display the item if the buttonId matches exactly one of the classes
+                        if (classes.indexOf(buttonId) !== -1 && classes.length > 1) {
+                            item.style.display = "block";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    });
+
+                    const hideElements = document.querySelectorAll('.pwe-store__section-hide');
+                    // Remove the 'active' class from all elements
+                    hideElements.forEach(e => e.style.display = "none");
+                    // Iterate over all elements and check their IDs
+                    hideElements.forEach(element => {
+                        // If the element ID contains the button ID, add the 'active' class
+                        if (element.id.includes(buttonId)) {
+                            element.style.display = "block";
+                        }
+                    });
+
+                    const featuredService = document.querySelectorAll(".pwe-store__featured-service");
+                    featuredService.forEach(service => {
+                        service.classList.remove('active');
+                    });
+
+                    const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
+                    // Show the main section and hide the category header
+                    hideCategoryHeader(mainSection, categoryHeaders);
+
+                    const categoriesSection = document.querySelector(".pwe-store__anchor");
+                    const elementTop = categoriesSection.getBoundingClientRect().top + window.scrollY;
+
+                    window.scrollTo({
+                        top: elementTop - 72,
+                        behavior: "smooth"
+                    });
+                    
+                });
+            }
         });
 
         // If the button is not active and the URL does not contain category
@@ -538,7 +424,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-
         // If the URL has a category, set the active button and show the correct category
         if (categoryParam) {
             sortingButtons.forEach(btn => {
@@ -546,11 +431,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (btn.id === categoryParam) {
                     btn.classList.add("active");
                     const currentCardsContainer = document.querySelector(`.pwe-store__section[category="${categoryParam}"]`)
-                    currentCardsContainer.classList.add("active");
+                    if (currentCardsContainer) {
+                        currentCardsContainer.classList.add("active");
+                    }
 
                     mainSectionsText.forEach(item => {
-                        // Jeśli ID elementu zawiera ID przycisku, dodajemy klasę 'active'
-                        if (item.className.includes(categoryParam)) {
+                        // Split the className by spaces and check if the exact class is present
+                        const classes = item.className.split(' ');
+                        
+                        // Only display the item if the buttonId matches exactly one of the classes
+                        if (classes.indexOf(btn.id) !== -1 && classes.length > 1) {
                             item.style.display = "block";
                         } else {
                             item.style.display = "none";
@@ -727,6 +617,60 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Create modal
+        const packageCards = document.querySelectorAll(".pwe-store__packages-section-hide .pwe-store__service-card");
+        packageCards?.forEach(card => {
+            card.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                const cardAttribute = card.getAttribute("data-featured");
+                const selectItem = document.querySelector(`#${cardAttribute}`);
+
+                if (selectItem) {
+                    // Placing the selected element in the modal
+                    const modalContent = document.querySelector(".pwe-store__modal-content-placeholder");
+                    modalContent.innerHTML = "";
+                    const clonedItem = selectItem.cloneNode(true);
+                    modalContent.appendChild(clonedItem);
+
+                    const modal = document.querySelector("#pweStoreModal");
+                    modal.style.display = "flex";
+
+                    clonedItem.id = cardAttribute + "-modal";
+                    clonedItem.classList.add("pwe-store__featured-service-modal");
+                    clonedItem.style.display = "flex";
+                    clonedItem.style.position = "relative";
+
+                    document.querySelector("body").style.setProperty('overflow', 'hidden', 'important');
+                }
+            });
+        });
+
+        const modalContent = document.querySelector(".pwe-store__modal-content");
+        const closeBtn = document.querySelector(".pwe-store__modal-close-btn");
+
+        modalContent.addEventListener("scroll", function() {
+            const scrollTop = modalContent.scrollTop;
+            const offset = 0;
+
+            closeBtn.style.top = `${scrollTop + offset}px`;
+        });
+
+        // Closing modal
+        const modal = document.getElementById("pweStoreModal");
+
+        closeBtn.addEventListener("click", function () {
+            modal.style.display = "none";
+            document.querySelector("body").style.removeProperty('overflow');
+        });
+
+        // Close the modal by clicking outside it
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                document.querySelector("body").style.removeProperty('overflow');
+            }
+        });
 
     }
 

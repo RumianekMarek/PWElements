@@ -4,8 +4,8 @@ class PWECalendar extends PWECommonFunctions {
 
     public function __construct() {
         // Hook actions
-        add_action('wp_enqueue_scripts', array($this, 'adding_styles'));
-        add_action('wp_enqueue_scripts', array($this, 'adding_scripts'));
+        // add_action('wp_enqueue_scripts', array($this, 'adding_styles'));
+        // add_action('wp_enqueue_scripts', array($this, 'adding_scripts'));
         
         add_action('init', array($this, 'init_vc_map_pwe_calendar'));
         add_action('wp_ajax_load_more_calendar', [$this, 'load_more_calendar']);
@@ -74,23 +74,23 @@ class PWECalendar extends PWECommonFunctions {
         }
     }
 
-        /**
-     * Adding Styles
-     */
-    public function adding_styles(){
-        $css_file = plugins_url('assets/style.css', __FILE__);
-        $css_version = filemtime(plugin_dir_path(__FILE__) . 'assets/style.css');
-        wp_enqueue_style('pwe-calendar-css', $css_file, array(), $css_version);
-    }
+    //     /**
+    //  * Adding Styles
+    //  */
+    // public function adding_styles(){
+    //     $css_file = plugins_url('assets/style.css', __FILE__);
+    //     $css_version = filemtime(plugin_dir_path(__FILE__) . 'assets/style.css');
+    //     wp_enqueue_style('pwe-calendar-css', $css_file, array(), $css_version);
+    // }
 
-    /**
-     * Adding Scripts
-     */
-    public function adding_scripts(){
-        $js_file = plugins_url('assets/script.js', __FILE__);
-        $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/script.js');
-        wp_enqueue_script('pwe-calendar-js', $js_file, array('jquery'), $js_version, true);
-    }
+    // /**
+    //  * Adding Scripts
+    //  */
+    // public function adding_scripts(){
+    //     $js_file = plugins_url('assets/script.js', __FILE__);
+    //     $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/script.js');
+    //     wp_enqueue_script('pwe-calendar-js', $js_file, array('jquery'), $js_version, true);
+    // }
 
     public static function get_pwe_shortcode($shortcode, $domain) {
         return shortcode_exists($shortcode) ? do_shortcode('[' . $shortcode . ' domain="' . $domain . '"]') : "";
@@ -167,18 +167,17 @@ class PWECalendar extends PWECommonFunctions {
             $output = '
             <style>
                 .pwe-calendar_wrapper {
-                    display:flex;
-                    flex-wrap: wrap;
-                    justify-content: space-evenly;
-                    gap: 10px;
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 24px;
                     margin-top: 36px;
                 }
                 .pwe-calendar_item {
-                    width: 20%;
                     background-color: #e9e9e9;
                     text-align: -webkit-center;
                     border-radius: 30px;
-                    min-width: 230px;
                     box-shadow: unset;
                     transition: .3s ease;
                 }
@@ -316,16 +315,33 @@ class PWECalendar extends PWECommonFunctions {
                 @media (min-width: 960px){
                     .row-parent:has(.pwe-calendar_item){
                         max-width: unset !important;
+                    } 
+                }
+                @media (max-width: 1200px){
+                    .pwe-calendar_wrapper {
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 18px;
+                    }
+                }
+                @media (max-width: 960px){
+                    .pwe-calendar_short-name h4 {
+                        font-size: 14px;
+                    }
+                    .pwe-calendar_item:hover {
+                        transform: scale(1.02);
+                    }
+                }
+                @media (max-width: 768px) {
+                    .pwe-calendar_wrapper {
+                        grid-template-columns: repeat(2, 1fr);
                     }
                 }
                 @media (max-width: 569px) {
                     .main-container .row-parent:has(.pwe-calendar_item) {
                         padding: 10px;
                     }
-                    .pwe-calendar_item {
-                        width: unset !important;
-                        min-width: 150px !important;
-                        max-width: 48% !important;
+                    .pwe-calendar_wrapper {
+                        gap: 10px;
                     }
                     .pwe-calendar_short-name h4 {
                         font-size: 12px;
@@ -423,33 +439,33 @@ class PWECalendar extends PWECommonFunctions {
             }
 
             if ($pwe_calendar_hide_filter != true) {
-            $output .= '
+                $output .= '
                 <style>
-                    .pwe-calendar_filter {
+                    .pwe-calendar__filter {
                         display: flex;
                         position: relative;
                         flex-wrap: wrap;
                         max-width: 1200px;
                         margin: 0 auto;
                     }
-                    .pwe-calendar_filter div {
+                    .pwe-calendar__filter div {
                         width: 50%;
                         padding: 0 5px;
                     }
-                    .dont_show {
+                    .dont-show {
                         display: none;
                     }
-                    .pwe-calendar_categories-dropdown {
+                    .pwe-calendar__categories-dropdown {
                         width: 100%;
                     }
-                    .pwe-calendar_filter input {
+                    .pwe-calendar__filter input {
                         margin-top: 0 !important;
                     }
-                    .pwe-calendar_filter input::placeholder {
+                    .pwe-calendar__filter input::placeholder {
                         color: white;
                     }
-                    .pwe-calendar_categories-dropdown,
-                    .pwe-calendar_filter input {
+                    .pwe-calendar__categories-dropdown,
+                    .pwe-calendar__filter input {
                         background: #1d1f24;
                         font-size: 18px;
                         width: 100%;
@@ -462,14 +478,14 @@ class PWECalendar extends PWECommonFunctions {
                         border-radius: 0.5em;
                         cursor: pointer;
                     }
-                    .pwe-calendar_categories-dropdown-arrow {
+                    .pwe-calendar__categories-dropdown-arrow {
                         border-left: 5px solid transparent;
                         border-right: 5px solid transparent;
                         border-top: 6px solid #fff;
                         transition: transform ease-in-out 0.3s;
                     }
 
-                    .pwe-calendar_categories-dropdown-content {
+                    .pwe-calendar__categories-dropdown-content {
                         margin: 5px 0px 0px 0px;
                         display: flex;
                         flex-direction: column;
@@ -486,7 +502,7 @@ class PWECalendar extends PWECommonFunctions {
                         opacity: 0;
                         border-radius: 8px;
                     }
-                    .pwe-calendar_categories-dropdown-content li {
+                    .pwe-calendar__categories-dropdown-content li {
                         cursor: pointer;
                         padding: 0px 0px 0px 0px;
                         color: white;
@@ -504,20 +520,20 @@ class PWECalendar extends PWECommonFunctions {
                         transition: 0.4s;
                         transition-delay: calc(30ms * 9);
                     }
-                    .pwe-calendar_categories-dropdown-content.menu-open li {
+                    .pwe-calendar__categories-dropdown-content.menu-open li {
                         left: 0;
                     }
-                    .pwe-calendar_categories-dropdown-content.menu-open {
+                    .pwe-calendar__categories-dropdown-content.menu-open {
                         visibility: visible;
                         opacity: 1;
                     }
-                    .pwe-calendar_categories-dropdown-arrow.arrow-rotate {
+                    .pwe-calendar__categories-dropdown-arrow.arrow-rotate {
                         transform: rotate(180deg);
                     }
-                    .pwe-calendar_categories-dropdown-content li:hover {
+                    .pwe-calendar__categories-dropdown-content li:hover {
                         background: #1d1f24;
                     }
-                    .pwe-calendar_categories-dropdown-content li a {
+                    .pwe-calendar__categories-dropdown-content li a {
                         display: block;
                         padding: 0.7em 0.5em;
                         color: #fff;
@@ -525,35 +541,35 @@ class PWECalendar extends PWECommonFunctions {
                         text-decoration: none;
                     }
                     @media (max-width:800px) {
-                        .pwe-calendar_categories-dropdown-content {
+                        .pwe-calendar__categories-dropdown-content {
                             max-height: 2000px;
                             width: 100%;
                         }
-                        .pwe-calendar_categories-dropdown-content li {
+                        .pwe-calendar__categories-dropdown-content li {
                             transition-delay: 0.2s;
                             transition-delay: calc(20ms * var(--delay));
                         }
-                        .pwe-calendar_filter div {
+                        .pwe-calendar__filter div {
                             width: 100%;
                             padding: 0;
                             margin: 5px 0;
                         }
                     }
-                    .pwe-calendar_categories-dropdown-content .wszystkie {
+                    .pwe-calendar__categories-dropdown-content .wszystkie {
                         background-color: #594334;
                         font-size: 21px;
                     }
                 </style>
 
-                <div class="pwe-calendar_filter">
-                    <div class="pwe-calendar_categories-dropdown dropdown">
-                        <button id="dropdownBtn" class="pwe-calendar_categories-dropdown dropdown-btn" aria-label="menu button" aria-haspopup="menu" aria-expanded="false" aria-controls="dropdown-menu">
+                <div class="pwe-calendar__filter">
+                    <div class="pwe-calendar__categories-dropdown dropdown">
+                        <button id="dropdownBtn" class="pwe-calendar__categories-dropdown dropdown-btn" aria-label="menu button" aria-haspopup="menu" aria-expanded="false" aria-controls="dropdown-menu">
                             <span>'. ($lang_pl ? "Wybierz kategorie" : "Select categories") .'</span>
-                            <span class="pwe-calendar_categories-dropdown-arrow arrow"></span>
+                            <span class="pwe-calendar__categories-dropdown-arrow arrow"></span>
                         </button>
-                        <ul class="pwe-calendar_categories-dropdown-content dropdown-content" role="menu" id="dropdown-menu"></ul>
+                        <ul class="pwe-calendar__categories-dropdown-content dropdown-content" role="menu" id="dropdown-menu"></ul>
                     </div>
-                    <div class="pwe-calendar_search">
+                    <div class="pwe-calendar__search">
                         <input type="text" id="searchInput" placeholder="'. ($lang_pl ? "Szukaj" : "Search") .'" />
                     </div>
                 </div>';
@@ -674,26 +690,31 @@ class PWECalendar extends PWECommonFunctions {
                     const przemysl = dropdownMenu?.querySelector(".przemysl");
                     if (przemysl) przemysl.innerText = "PRZEMYSŁ";
 
+                    const b2c = dropdownMenu?.querySelector(".b2c");
+                    if (b2c) b2c.style.display = "none";
+
+                    const b2cEN = dropdownMenu?.querySelector(".b2c-en");
+                    if (b2cEN) b2cEN.style.display = "none";
 
                     // Handling clicking on a category
                     dropdownMenu?.querySelectorAll("li").forEach(li => {
                         li.addEventListener("click", function (event) {
-                        const selected = event.target.className;
-                        allEvents.forEach(eventItem => {
-                            const categories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
-                            const editionText = eventItem.querySelector(".pwe-calendar_edition p")?.innerText.toLowerCase() || "";
-                            const isPremier = editionText.includes("premierowa edycja");
+                            const selected = event.target.className;
+                            allEvents.forEach(eventItem => {
+                                const categories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
+                                const editionText = eventItem.querySelector(".pwe-calendar_edition p")?.innerText.toLowerCase() || "";
+                                const isPremier = editionText.includes("premierowa edycja");
 
-                            let show = selected === "wszystkie"
-                            || categories.includes(selected)
-                            || (selected === "premierowe-edycje" && isPremier)
-                            || (selected === "inne" && categories.length === 0);
+                                let show = selected === "wszystkie"
+                                || categories.includes(selected)
+                                || (selected === "premierowe-edycje" && isPremier)
+                                || (selected === "inne" && categories.length === 0);
 
-                            eventItem.classList.toggle("dont_show", !show);
-                        });
+                                eventItem.classList.toggle("dont-show", !show);
+                            });
 
-                        dropdownBtn.innerHTML = `<span>${event.target.innerText}</span><span class="arrow"></span>`;
-                        dropdownBtn.click(); // Closing dropdown
+                            dropdownBtn.innerHTML = `<span>${event.target.innerText}</span><span class="arrow"></span>`;
+                            dropdownBtn.click(); // Closing dropdown
                         });
                     });
 
@@ -708,7 +729,7 @@ class PWECalendar extends PWECommonFunctions {
                                 || fairName.includes(query)
                                 || shortName.includes(query);
 
-                            eventItem.classList.toggle("dont_show", !match);
+                            eventItem.classList.toggle("dont-show", !match);
                         });
                     });
                 });

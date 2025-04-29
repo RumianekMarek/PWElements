@@ -90,6 +90,12 @@
     .pwe-store__main-section-header {
         height: 250px;
     }
+    .pwe-store__main-section-text {
+        padding: 36px 0 0;
+    }
+    .pwe-store__main-section-text p {
+        display: none;
+    }
 }
 
 .pwe-store__category-header {
@@ -202,6 +208,21 @@
         font-size: 26px;
     }
 }
+@media (max-width: 500px) {
+    .pwe-store__category-header {
+        gap: 10px;
+    }
+    .pwe-store__category-header-arrow {
+        width: 70px;
+        height: 70px;
+    }
+    .pwe-store__category-header-title {
+        height: 70px;
+    }
+    .pwe-store__category-header-title p {
+        font-size: 18px;
+    }
+}
 
 
 
@@ -247,6 +268,74 @@
     margin: 0;
     font-size: 18px;
     font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pwe-store__category-item.dropdown {
+    position: relative;
+    min-width: 180px;
+    display: flex;
+    justify-content: center;
+}
+.pwe-store__category-item.dropdown:has(.active) {
+    background: var(--gold-color);
+}
+.pwe-store__category-item.dropdown .arrow {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transform: rotate(-90deg);
+    transition: .3s ease;
+    margin-left: 8px;
+}
+.pwe-store__category-item.dropdown:hover .arrow {
+    transform: rotate(90deg);
+}
+.pwe-store__category-item.dropdown .packages-submenu {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 !important;
+    transition: .3s ease;
+    border-radius: 14px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    z-index: 3;
+}
+.pwe-store__category-item.dropdown:hover .packages-submenu {
+    visibility: visible;
+    opacity: 1;
+}
+.pwe-store__category-item.dropdown li {
+    text-decoration: none;
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    font-weight: 600;
+    text-align: center;
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: .3s ease;
+}
+.pwe-store__category-item.dropdown li:not(.active):hover {
+    border: 2px solid var(--gold-color);
+}
+.pwe-store__category-item.dropdown li.active {
+    border: 2px solid var(--gold-color);
+    background: var(--gold-color);
 }
 @media (max-width: 768px) {
     .pwe-store__category-wrapper {
@@ -269,6 +358,7 @@
 .pwe-store__featured-service {
     display: none;
     margin-top: 36px;
+    z-index: 2;
 }
 .pwe-store__featured-service.active {
     display: block;
@@ -365,10 +455,40 @@
     gap: 16px;
     align-items: flex-start;
 }
-.pwe-store__featured-pwe-store__price {
+.pwe-store__featured-price {
     font-size: 24px;
     padding: 18px 0;
     font-weight: bold;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.pwe-store__featured-price-info {
+   font-size: 14px; 
+}
+.pwe-store__featured-price-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.pwe-store__featured-price-wrapper p {
+    margin: 0;
+}
+.pwe-store__featured-price-wrapper .pwe-store__discount-price {
+    font-size: 20px;
+    padding-bottom: 18px;
+}
+.pwe-store__featured-price-wrapper .pwe-store__regular-price {
+    font-size: 14px;
+}
+.pwe-store__featured-price-wrapper .pwe-store__saving-price {
+    font-size: 14px;
+}
+.pwe-store__regular-price.unactive {
+    text-decoration: line-through;
+    color: #777;
+    font-size: 14px;
+    display: flex;
+    align-items: flex-end;
 }
 .pwe-store__featured-buttons {
     display: flex;
@@ -508,6 +628,9 @@
     font-size: 18px;
     font-weight: bold;
     color: #1a1a1a;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 .pwe-store__btn-container {
     display: flex;
@@ -717,13 +840,28 @@
     flex-direction: column;
     gap: 36px;
 }
+.pwe-store__packages-section-hide .pwe-store__service-card {
+    cursor: pointer;
+}
+.pwe-store__packages-section-hide .pwe-store__featured-mobile-image {
+    display: none;
+    margin-bottom: 18px;
+}
+.pwe-store__packages-section-hide .pwe-store__featured-mobile-image img {
+    aspect-ratio: 21 / 9;
+    border-radius: 18px;
+    object-fit: cover;
+}
 .pwe-store__packages-section-hide .pwe-store__featured-image {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
-.pwe-store__packages-section-hide .pwe-store__service-card > a {
-    flex-direction: row !important;
+.pwe-store__packages-section-hide .pwe-store__featured-content {
+    flex-direction: row;
+}
+.pwe-store__packages-section-hide .pwe-store__service-card-wrapper {
+    display: flex;
 }
 .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-image {
     width: 50%;
@@ -733,6 +871,7 @@
     border-radius: 0;
 }
 .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-content {
+    justify-content: space-between;
     width: 50%;
 }
 .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__btn-container {
@@ -752,6 +891,54 @@
     color: white !important;
     font-size: 24px;
     text-align: center;
+}
+@media (max-width: 960px) {
+    .pwe-store__packages-section-hide .pwe-store__service-card-wrapper {
+        flex-direction: column !important;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-image {
+        width: 100%;
+    }
+   
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-content {
+        width: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .pwe-store__packages-section-hide .pwe-store__featured-mobile-image {
+        display: block;
+    }
+    .pwe-store__packages-section-hide .pwe-store__featured-content {
+        flex-direction: column-reverse;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-description {
+        display: none;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card-wrapper {
+        flex-direction: row !important;
+        height: 150px;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-image {
+        width: 50%;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-content {
+        justify-content: space-between;
+        width: 50%;
+    }
+}
+@media (max-width: 500px) {
+    .pwe-store__packages-section-hide .pwe-store__service-card-wrapper {
+        height: 120px;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-name {
+        font-size: 14px !important;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-image {
+        width: 30%;
+    }
+    .pwe-store__packages-section-hide .pwe-store__service-card .pwe-store__service-content {
+        width: 70%;
+    }
 }
 
 
@@ -777,4 +964,68 @@
 .pwe-store__product span {
     color: #747474;
     padding-bottom: 4px; 
+}
+
+
+
+
+.pwe-store__modal {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+.pwe-store__modal-content {
+    position: relative;
+    background-color: #fff;
+    border-radius: 18px;
+    max-width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+.pwe-store__modal-close-btn {
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    font-size: 70px;
+    cursor: pointer;
+    color: black;
+    z-index: 3;
+    transition: .2s ease;
+}
+.pwe-store__modal .pwe-store__featured-service-modal {
+    margin: 0;
+}
+.pwe-store__modal .pwe-store__featured-content {
+    box-shadow: inherit;
+}
+.pwe-store__modal .pwe-store__featured-buttons {
+    display: none;
+}
+/* Styling the scroll bar */
+.pwe-store__modal-content::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0);
+}
+/* Styling the scroll bar handle */
+.pwe-store__modal-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 3px solid rgba(0, 0, 0, 0);
+}
+/* Styling the scroll bar track */
+.pwe-store__modal-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+}
+/* Scrollbar buttons */
+.pwe-store__modal-content::-webkit-scrollbar-button {
+    display: none; /* Ukrycie przycisków na pasku przewijania */
 }

@@ -1,6 +1,6 @@
 // Function showing mass vip invitation send
-// Handles the display of a modal window upon clicking a button. 
-// The modal allows users to interact with file upload fields 
+// Handles the display of a modal window upon clicking a button.
+// The modal allows users to interact with file upload fields
 // and other elements while hiding the page footer during its active state.
 jQuery(document).ready(function($){
     // Base varibales
@@ -14,7 +14,9 @@ jQuery(document).ready(function($){
     const closeBtn = modal.find(".btn-close");
     const pageLang = (send_data['lang'] == "pl_PL") ? 'pl' : 'en';
     const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
+    const formId = send_data['custom_form'];
 
+    console.log(formId);
     // Button "Wysyłka Zbiorcze" functionality
     // Show odal and hide footer
     $(".tabela-masowa").on("click",function(){
@@ -27,7 +29,7 @@ jQuery(document).ready(function($){
         modal.hide();
         $("footer").show();
     });
-        
+
     // Remove error message for company name input
     $("#mass-table, .company").on("click", function(){
         if($(this).next().hasClass("company-error")){
@@ -75,7 +77,7 @@ jQuery(document).ready(function($){
         $(".modal__element").find('.inner').addClass("blocked");
 
         const reader = new FileReader();
-        
+
         // Function to decode file to (CSV format) text variable.
         reader.onload = function(e) {
             // If file size is over 1.2MB stop function and display error message.
@@ -98,12 +100,12 @@ jQuery(document).ready(function($){
             } else {
                 fileContent = e.target.result;
             }
-            
+
             // Cleaning file from "\r",
             // This will eliminate carriage return for better handeling.
             fileContent = fileContent.replace(/\r/g, "");
-                               
-            // Splits file to arrey by "\n" thats only on end of the row. 
+
+            // Splits file to arrey by "\n" thats only on end of the row.
             fileArray = fileContent.split(/\n(?=(?:[^"]|"[^"]*")*$)/);
 
             // Spliting every fileArray elements to columns arrays.
@@ -111,7 +113,7 @@ jQuery(document).ready(function($){
                 if (element.trim() !== "" && !/^[,\s"]+$/.test(element)){
                     let newElement = element.split(/,(?=(?:[^"]|"[^"]*")*$)/);
 
-                    newElement = newElement.map(function(elem){ 
+                    newElement = newElement.map(function(elem){
                         elem = elem.replace(/\\\\/g, ``);
                         elem = elem.replace(/\\"/g, ``);
                         return elem;
@@ -150,7 +152,7 @@ jQuery(document).ready(function($){
                     $(this).append("<option value=''>Chose</option>");
                 });
             }
-            
+
             fileLabel.forEach(function(element) {
                 $(".selectoret").each(function(){
                     if(element != ""){
@@ -166,12 +168,12 @@ jQuery(document).ready(function($){
                 const chosenID = fileLabel.findIndex(label => label == chosenLabel );
                 let chosenErrors = -1;
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
                 for (let i = 1; i < filteredArray.length; i++){
                     const rowArray = filteredArray[i];
 
                     if (chosenErrors > 5){
-                        if (!$(".file-selector").next(".email-error").length) { 
+                        if (!$(".file-selector").next(".email-error").length) {
                             if(pageLang == "pl"){
                                 $(".file-selector").has("#email-column").after("<p class='email-error error-color'>W wybranej kolumnie znajduje się więcej niż 5 błędnych maili proszę o poprawienie przed kontynuacją.");
                             } else {
@@ -206,7 +208,7 @@ jQuery(document).ready(function($){
     // Check if all file data is prceded corectli,
     // Send file data for procesing to mass-vip.php.
     $(".wyslij").on("click",function(){
-        if(!emailTrue){                 
+        if(!emailTrue){
             return;
         }
         let company_name = "";
@@ -262,7 +264,7 @@ jQuery(document).ready(function($){
         // Check if phone column is chosen.
         if (phone_field &&  $("#phone-column").length > 0 && $("#phone-column").val() != ""){
             phoneColumn = $("#phone-column").val();
-        } 
+        }
         // else if($(".name-column-error").length == 0 ){
         //     if(pageLang == "pl"){
         //         $(".file-selector").has("#name-column").after("<p class='name-column-error error-color'>Wybierz kolumne z danymi</p>");
@@ -270,7 +272,7 @@ jQuery(document).ready(function($){
         //         $(".file-selector").has("#name-column").after("<p class='name-column-error error-color'>Names required</p>");
         //     }
         // }
-        
+
         // Check if any of needed variables is not empty.
         if(company_name == "" || emailColumn == "" || nameColumn == "" || fileTrue === false){
             return;
@@ -303,9 +305,9 @@ jQuery(document).ready(function($){
         }, []);
 
         console.log(tableCont);
-        
 
-        // Sending data via POST for procesing to mass-vip.php 
+
+        // Sending data via POST for procesing to mass-vip.php
         // Check if tableCont is populated, has less then 5000 elements and there is less then 5 email errors
         if (tableCont.length > 0 && tableCont.length < 5000 && emailErrors < 5){
             $(".modal__element .inner").prepend("<div id=spinner class=spinner></div>");
@@ -318,9 +320,10 @@ jQuery(document).ready(function($){
                 exhibitor_name: $('#mass_exhibitor_badge').prop("checked"),
                 exhibitor_logo: $('#exhibitor_logo_img').prop("src") ?? '',
                 exhibitor_desc: $('.exhibitor_desc input').val() ?? '',
-                data: tableCont
-            
-            // Process response 
+                data: tableCont,
+                formId:formId,
+
+            // Process response
             }, function(response) {
                 resdata = JSON.parse(response);
                 $(".modal__element .inner").children().each(function(){
@@ -331,7 +334,7 @@ jQuery(document).ready(function($){
                     $(".modal__element .inner").append("<p style='color:green; font-weight: 600; width: 90%;'>Dziękujemy za skorzystanie z generatora zaproszeń. Państwa goście wkrótce otrzymają zaproszenia VIP.</p>");
                 } else {
                     $(".modal__element .inner").append("<p style='color:red; font-weight: 600; width: 90%;'>Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo</p>");
-                }                
+                }
             $("#spinner").remove();
                 tableCont.splice(0, tableCont.length);
                 $("#dataContainer").empty();
@@ -362,7 +365,7 @@ jQuery(document).ready(function($){
 //         });
 //     });
 // });
-            
+
 // if (document.querySelector("html").lang === "pl") {
 //     const companyNameInput = document.querySelector(".pwe-exhibitor-worker-generator input[placeholder='FIRMA ZAPRASZAJĄCA']");
 //     const companyEmailInput = document.querySelector(".pwe-exhibitor-worker-generator input[placeholder='E-MAIL OSOBY ZAPRASZANEJ']");

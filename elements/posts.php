@@ -683,7 +683,7 @@ class PWElementPosts extends PWElements {
                     $output .= '</div>';
 
                     if ($posts_modes == "posts_full_newest_slider_mode") {
-                        $posts_to_show = (!empty($posts_to_show)) ? $posts_to_show : 4;
+                        $posts_to_show = (!empty($posts_to_show)) ? $posts_to_show : 3;
 
                         include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
                         $output .= PWESliderScripts::sliderScripts('posts', '.pwelement_'. self::$rnd_id, $posts_dots_display = 'true', $posts_arrows_display = false, $posts_to_show);

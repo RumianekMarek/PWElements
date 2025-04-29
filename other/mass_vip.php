@@ -7,7 +7,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     if( $_POST['token'] ==  $hash){
         $new_url = str_replace('private_html','public_html',$_SERVER["DOCUMENT_ROOT"]) .'/wp-load.php';
-           
+
         if (file_exists($new_url)) {
             require_once($new_url);
             if (class_exists('GFAPI')) {
@@ -20,10 +20,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $all_not_valid = array();
                 $all_entrys_id = array();
                 $full_form = '';
-                
+                $custom_form ='';
+                $custom_form = $_POST['formId'];
+
+
                 foreach($all_forms as $form){
-                    if(strpos(strtolower($form['title']), ('rejestracja gości wystawców ' . $lang)) !== false){
-                        $form_id = $form['id'];
+                    // if(strpos(strtolower($form['title']), ('rejestracja gości wystawców ' . $lang)) !== false){
+                        $form_id = $custom_form;
                         $all_fields = $form['fields'];
                         $full_form = $form;
 
@@ -35,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                             } elseif(strpos(strtolower($field['label']), 'firma') !== false || strpos(strtolower($field['label']), 'company') !== false){
                                 $fields['company'] = $field['id'];
                             }
-                        }
+                        // }
                         break;
                     }
                 }

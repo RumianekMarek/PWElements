@@ -31,8 +31,8 @@ function create_event_post_type() {
             'menu_name' => 'PWE Events'
         ),
         'public' => true,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'fairs-calendar'),
+        'has_archive' => false,
+        'rewrite' => array('slug' => 'kalendarz-targowy'),
         'supports' => array('title', 'custom-fields'),
         'show_in_rest' => true,  // Gutenberg Support
         'menu_icon' => 'dashicons-calendar',
@@ -205,11 +205,11 @@ function event_links_callback($post) {
         $category_string = implode(', ', $category_names);
     }
 
-    $exhibitor_registration_link = !empty($website) ? $web_page_link . ($lang === "pl" ? 'zostan-wystawca/' : 'become-an-exhibitor/') : '';
+    $exhibitor_registration_link = !empty($website) ? $web_page_link . ($lang === "pl" ? 'zostan-wystawca/' : 'en/become-an-exhibitor/') : '';
     if (strpos(strtolower($category_string), 'b2c') !== false) {
-        $buy_ticket_link = !empty($website) ? $web_page_link . ($lang === "pl" ? 'kup-bilet/' : 'buy-ticket/') : '';
+        $buy_ticket_link = !empty($website) ? $web_page_link . ($lang === "pl" ? 'kup-bilet/' : 'en/buy-ticket/') : '';
     } else {
-        $visitor_registration_link = !empty($website) ? $web_page_link . ($lang === "pl" ? 'rejestracja/' : 'registration/') : '';
+        $visitor_registration_link = !empty($website) ? $web_page_link . ($lang === "pl" ? 'rejestracja/' : 'en/registration/') : '';
     }
     
     $visitor_registration_link = !empty(get_post_meta($post->ID, 'visitor_registration_link', true)) ? get_post_meta($post->ID, 'visitor_registration_link', true) : $visitor_registration_link;
@@ -227,28 +227,29 @@ function event_links_callback($post) {
     <div class="pwe-calendar-inputs-container">
         <div class="pwe-calendar-input one-third-width">
             <label for="visitor_registration_link">Visitor Registration Link: </label>
-            <input type="text" id="visitor_registration_link" name="visitor_registration_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? 'rejestracja/' : 'registration/') .'" value="'. $visitor_registration_link .'" />
+            <input type="text" id="visitor_registration_link" name="visitor_registration_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? 'rejestracja/' : 'en/registration/') .'" value="'. $visitor_registration_link .'" />
         </div>
         <div class="pwe-calendar-input one-third-width">
             <label for="exhibitor_registration_link">Exhibitor Registration Link: </label>
-            <input type="text" id="exhibitor_registration_link" name="exhibitor_registration_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? 'zostan-wystawca/' : 'become-an-exhibitor/') .'" value="'. $exhibitor_registration_link .'" />
+            <input type="text" id="exhibitor_registration_link" name="exhibitor_registration_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? 'zostan-wystawca/' : 'en/become-an-exhibitor/') .'" value="'. $exhibitor_registration_link .'" />
         </div>
         <div class="pwe-calendar-input one-third-width">
             <label for="buy_ticket_link">Buy Ticket Link: </label>
-            <input type="text" id="buy_ticket_link" name="buy_ticket_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? 'kup-bilet/' : 'buy-ticket/') .'" value="'. $buy_ticket_link .'" />
+            <input type="text" id="buy_ticket_link" name="buy_ticket_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? 'kup-bilet/' : 'en/buy-ticket/') .'" value="'. $buy_ticket_link .'" />
         </div>
     </div>';
 }
-
+ 
 function event_desc_callback($post) {
     wp_nonce_field('save_event_desc', 'event_desc_nonce');
+    $lang = ICL_LANGUAGE_CODE;
     $website = get_post_meta($post->ID, 'web_page_link', true);
     if (!empty($website)) {
         $host = parse_url($website, PHP_URL_HOST);
         $domain = preg_replace('/^www\./', '', $host);
     
-        $event_desc = !empty(get_post_meta($post->ID, 'desc', true)) ? get_post_meta($post->ID, 'desc', true) : do_shortcode('[pwe_desc_pl domain="' . $domain . '"]');
-        $event_short_desc = !empty(get_post_meta($post->ID, 'short_desc', true)) ? get_post_meta($post->ID, 'short_desc', true) : do_shortcode('[pwe_short_desc_pl domain="' . $domain . '"]');
+        $event_desc = !empty(get_post_meta($post->ID, 'desc', true)) ? get_post_meta($post->ID, 'desc', true) : do_shortcode('[pwe_desc_'. ($lang === "pl" ? 'pl' : 'en') .' domain="' . $domain . '"]');
+        $event_short_desc = !empty(get_post_meta($post->ID, 'short_desc', true)) ? get_post_meta($post->ID, 'short_desc', true) : do_shortcode('[pwe_short_desc_'. ($lang === "pl" ? 'pl' : 'en') .' domain="' . $domain . '"]');
     }
     echo '
     <div class="pwe-calendar-inputs-container">
@@ -362,10 +363,10 @@ function event_statistics_callback($post) {
 function event_organizer_callback($post) {
     wp_nonce_field('save_event_organizer', 'event_organizer_nonce');
 
-    $organizer_website = !empty($organizer_website) ? get_post_meta($post->ID, 'organizer_website', true) : "https://warsawexpo.eu/";
-    $organizer_email = !empty($organizer_email) ? get_post_meta($post->ID, 'organizer_email', true) : "info@warsawexpo.eu";
-    $organizer_phone = !empty($organizer_phone) ? get_post_meta($post->ID, 'organizer_phone', true) : "+48 518 739 124";
-    $organizer_name = !empty($organizer_name) ? get_post_meta($post->ID, 'organizer_name', true) : "Ptak Warsaw Expo";
+    $organizer_website = !empty(get_post_meta($post->ID, 'organizer_website', true)) ? get_post_meta($post->ID, 'organizer_website', true) : "https://warsawexpo.eu/";
+    $organizer_email = !empty(get_post_meta($post->ID, 'organizer_email', true)) ? get_post_meta($post->ID, 'organizer_email', true) : "info@warsawexpo.eu";
+    $organizer_phone = !empty(get_post_meta($post->ID, 'organizer_phone', true)) ? get_post_meta($post->ID, 'organizer_phone', true) : "+48 518 739 124";
+    $organizer_name = !empty(get_post_meta($post->ID, 'organizer_name', true)) ? get_post_meta($post->ID, 'organizer_name', true) : "Ptak Warsaw Expo";
 
     echo '
     <div class="pwe-calendar-inputs-container">
@@ -991,31 +992,27 @@ function load_admin_styles($hook) {
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
-// Funkcja dodająca edytor treści
+// Function to add content editor at the bottom of the form
 function move_content_editor_to_bottom() {
-    // Sprawdzamy, czy jesteśmy na stronie edytowania postu lub wydarzenia
-    if (get_post_type() != 'post' && get_post_type() != 'event') {
+    if (get_post_type() != 'event') {
         return;
     }
-    // Dodajemy edytor treści po wszystkich metaboxach
+    // Adding content editor after all metaboxes
     add_action('edit_form_after_editor', 'add_content_editor_to_bottom');
 }
 add_action('do_meta_boxes', 'move_content_editor_to_bottom');
 
-// Funkcja do dodania edytora treści na dole formularza
+// Function adding content editor
 function add_content_editor_to_bottom() {
-    // Sprawdzamy, czy mamy dostęp do globalnych zmiennych postu
     global $post;
     
-    // Sprawdzamy, czy typ postu jest odpowiedni
-    if ($post->post_type == 'post' || $post->post_type == 'event') {
-        // Dodajemy edytor treści po wszystkich innych metaboxach
+    if ($post->post_type == 'event') {
         wp_editor( 
             $post->post_content, 
             'content', 
             array(
                 'textarea_name' => 'content', 
-                'editor_height' => 200 // Możesz dostosować wysokość edytora
+                'editor_height' => 200
             ) 
         );
     }

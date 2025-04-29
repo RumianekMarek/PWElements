@@ -43,6 +43,25 @@ class PWEConferenceCap {
                 'class' => 'costam',
                 'params' => array( 
                     array(
+                        'type' => 'textfield',
+                        'group' => 'PWE Element',
+                        'heading' => __('Display Slug', 'pwe_conference_cap'),
+                        'param_name' => 'conference_cap_conference_display_slug',
+                        'description' => __('Specify conference slug to display '),
+                        'save_always' => true,
+                        'admin_label' => true,
+                        'edit_field_class' => 'vc_col-sm-12 no-vc-param-name',
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'PWE Element',
+                        'heading' => __('Arichive', 'pwe_conference_cap'),
+                        'param_name' => 'conference_cap_conference_arichive',
+                        'description' => __('Type [ year ] of the conference to display or type [ all ] to display everything except the current one.', 'pwe_conference_cap'),
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
                         'type' => 'dropdown',
                         'group' => 'PWE Element',
                         'heading' => __('Select conference mode', 'pwe_conference_cap'),
@@ -123,6 +142,14 @@ class PWEConferenceCap {
                                 'save_always' => true,
                                 'admin_label' => true,
                             ),
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Conference url', 'pwe_conference_cap'),
+                                'param_name' => 'manual_conf_url',
+                                'description' => __('Enter the conference url (https opens in new window, / opens in same ).', 'pwe_conference_cap'),
+                                'save_always' => true,
+                                'admin_label' => true,
+                            ),
                         ),
                     ),
                     
@@ -166,7 +193,14 @@ class PWEConferenceCap {
             'conference_cap_conference_mode' => '',
         ), $atts));
 
+        $lang = 'PL';
+        if (strpos($_SERVER['REQUEST_URI'], '/en/') !== false) {
+            $lang = 'EN';
+        }
+
+
         $database_data = $conf_function::getDatabaseDataConferences();
+        // PWEConferenceCapFunctions::debugConferencesConsole( $database_data ); // checking recent changes 
 
         $conference_cap_html = vc_param_group_parse_atts( $conference_cap_html );
 
@@ -205,13 +239,31 @@ class PWEConferenceCap {
             $manual_conferences = vc_param_group_parse_atts($atts['manual_conferences']);
         }
 
+        $new_manual_conferences = [];
+        $manual_slugs_to_hide = [];
+
+        if (!empty($manual_conferences)) {
+            foreach ($manual_conferences as $manual_conf) {
+                $slug = $manual_conf['manual_conf_id'] ?? '';
+                $url  = $manual_conf['manual_conf_url'] ?? '';
+
+                if (!empty($slug)) {
+                    if (!empty($url)) {
+                        $manual_slugs_to_hide[] = $slug;
+                        $new_manual_conferences[] = $manual_conf;
+                    }
+                }
+            }
+        }
+
+        $manual_conferences = $new_manual_conferences;
         
         // Tablica na zapis danych prelegentów (bio) – identyfikator lecture-box => dane
         $speakersDataMapping = array();
 
         $output = '';
         
-        // echo '<pre>';
+        // echo '<pre  style="width: 1200px;">';
         // var_dump($database_data);
         // echo '</pre>';
 
@@ -220,6 +272,7 @@ class PWEConferenceCap {
         $normalTiles = [];
         $specialTiles = [];
 
+        $cap_database = true;
         // **Górna nawigacja konferencji (tylko obrazki z ID)**
         $output .= '<div id="conference-cap" class="conference_cap__main-container">';
 
@@ -228,38 +281,95 @@ class PWEConferenceCap {
 
                 if (!empty($database_data)) {
                     $no_conference = false;
-                    $conf_slugs = [];
-                
-                    // Grupowanie konferencji według `conf_slug`
-                    foreach ($database_data as $conference) {
-                        if (empty($conference->conf_data)) {
-                            continue;
+                    $byYear = [];
+                    foreach ($database_data as $conf) {
+
+                        if (preg_match('/(20\d{2})(?!\d)/', $conf->conf_slug, $m)) {
+                            $year = (int) $m[1];
+                    
+                            $fullConfData = json_decode($conf->conf_data, true);
+                            if ($fullConfData === null) {
+                                // echo '<script>console.warn("'.$conf->conf_slug.' - conf_data = null")</script>';
+                                $byYear[$year][$conf->conf_slug][] = [];
+                                continue;
+                            }
+                            $confData = PWEConferenceCapFunctions::copySpeakerImgByStructure($fullConfData)[$lang] ?? [];
+                    
+                            $byYear[$year][$conf->conf_slug][] = $confData;
                         }
-                
-                        $confData = json_decode($conference->conf_data, true);
-                        if (!is_array($confData)) {
-                            continue;
-                        }
-                
-                        $conf_slug = $conference->conf_slug;
-                        if (!isset($conf_slugs[$conf_slug])) {
-                            $conf_slugs[$conf_slug] = [];
-                        }
-                        $conf_slugs[$conf_slug][] = $confData;
                     }
-                
+                    
+
+                    $currentYear  = (int) date('Y', strtotime(do_shortcode('[trade_fair_enddata]')));
+                    $previousYear = $currentYear - 1;
+
+                    $archiveYear = trim($atts['conference_cap_conference_arichive'] ?? '');
+                    if ($archiveYear !== '' && $archiveYear !== 'all') {
+                        $yearToShow = (int) $archiveYear;
+                    } else {
+                        $yearToShow = isset($byYear[$currentYear])
+                            ? $currentYear
+                            : $previousYear;
+                    }
+
+                    $conf_slugs = $byYear[$yearToShow] ?? [];
+
+                    if (($atts['conference_cap_conference_arichive'] ?? '') === 'all') {
+                        $conf_slugs = [];
+                        foreach ($byYear as $year => $slugs) {
+                            if ( $year === $currentYear ) {
+                                continue;
+                            }
+                            $conf_slugs += $slugs;
+                        }
+                    }
+
+                    // Jeśli nie znaleziono nic dla aktualnego roku i nie ustawiono archiveYear – pokazujemy poprzedni rok
+                    if (empty($conf_slugs) && (empty($archiveYear) || $archiveYear === null)) {
+                        $conf_slugs = $previousYearConfs;
+                    }
+
+                    // Przetwarzanie 'conference_cap_conference_display_slug'
+                    $display_slugs_raw = $atts['conference_cap_conference_display_slug'] ?? '';
+                    if (!empty($display_slugs_raw)) {
+                        $display_slugs = array_map('trim', explode(',', $display_slugs_raw));
+                        $filtered_conf_slugs = [];
+                        foreach ($display_slugs as $slug) {
+                            if (isset($conf_slugs[$slug])) {
+                                $filtered_conf_slugs[$slug] = $conf_slugs[$slug];
+                            }
+                        }
+                        $conf_slugs = $filtered_conf_slugs;
+                    }
+
+                    // Usuwamy z bazy konferencje które mają slug taki sam jak manualne z URL
+                    foreach ($manual_slugs_to_hide as $slug_to_hide) {
+                        if (isset($conf_slugs[$slug_to_hide])) {
+                            unset($conf_slugs[$slug_to_hide]);
+                        }
+                    }
+
                     foreach ($conf_slugs as $conf_slug => $conferences) {
-                        // Pobieramy obraz konferencji
                         $conf_img = '';
                         foreach ($database_data as $conf) {
                             if ($conf->conf_slug === $conf_slug) {
-                                $conf_img = !empty($conf->conf_img) ? esc_url($conf->conf_img) : '';
+                                $lang_key = strtolower($lang);
+                                $img_field = 'conf_img_' . $lang_key;
+                    
+                                if (!empty($conf->$img_field)) {
+                                    $conf_img = esc_url($conf->$img_field);
+                                } elseif (!empty($conf->conf_img_pl)) {
+                                    // fallback na PL, jeśli brak EN
+                                    $conf_img = esc_url($conf->conf_img_pl);
+                                }
+                    
                                 break;
                             }
                         }
                         if (empty($conf_img)) {
                             continue;
                         }
+                    
                         
                         // Tworzymy HTML kafelka
                         $tile = '<img src="' . $conf_img . '" alt="' . esc_attr($conf_slug) . '" id="nav_' . esc_attr($conf_slug) . '" class="conference_cap__conf-slug-img">';
@@ -278,9 +388,15 @@ class PWEConferenceCap {
                     foreach ($normalTiles as $tile) {
                         $output .= $tile;
                     }
+                } else {
+                    $cap_database = false;
                 }
                 // 2. Manualne konferencje (dane pobrane z VC)
-                if (!empty($manual_conferences)) {
+                $has_valid_manual_conf = !empty(array_filter($manual_conferences, function($conf) {
+                    return !empty($conf['manual_conf_img']) && !empty($conf['manual_conf_id']);
+                }));
+                
+                if ($has_valid_manual_conf) {
                     $output .= '
                     <style>
                         .post-body .konferencja {
@@ -288,15 +404,32 @@ class PWEConferenceCap {
                         }
                     </style>';
                     $no_conference = false;
-
+                
                     foreach ($manual_conferences as $manual_conf) {
                         $manual_img = !empty($manual_conf['manual_conf_img']) ? wp_get_attachment_url($manual_conf['manual_conf_img']) : '';
-                        $manual_id  = !empty($manual_conf['manual_conf_id']) ? $manual_conf['manual_conf_id'] : '';
-                        if (!empty($manual_img) && !empty($manual_id)) {
-                            $output .= '<img src="' . esc_url($manual_img) . '" alt="' . esc_attr($manual_id) . '" id="nav_' . esc_attr($manual_id) . '" class="conference_cap__conf-slug-img manual-conference">';
+                        $manual_slug = $manual_conf['manual_conf_id'] ?? '';
+                        $manual_url  = $manual_conf['manual_conf_url'] ?? '';
+                    
+                        if (!empty($manual_img) && !empty($manual_slug)) {
+                            $link_start = '';
+                            $link_end = '';
+                    
+                            if (!empty($manual_url)) {
+                                if (strpos($manual_url, 'https://') === 0 || strpos($manual_url, 'http://') === 0) {
+                                    $link_start = '<a href="' . esc_url($manual_url) . '" target="_blank">';
+                                    $link_end = '</a>';
+                                } elseif (strpos($manual_url, '/') === 0) {
+                                    $link_start = '<a href="' . esc_url($manual_url) . '">';
+                                    $link_end = '</a>';
+                                }
+                            }
+                    
+                            $output .= $link_start .
+                                '<img src="' . esc_url($manual_img) . '" alt="' . esc_attr($manual_slug) . '" id="nav_' . esc_attr($manual_slug) . '" class="conference_cap__conf-slug-img manual-conference">' .
+                                $link_end;
                         }
-                    }
-                }
+                    }                    
+                }                
 
                 if (!empty($specialTiles)) {
                     // 3. Na końcu kafelki specjalne – w kolejności: "medal" i "panel"
@@ -320,6 +453,7 @@ class PWEConferenceCap {
             $output .= '</div>'; // Zamknięcie `conf-tabs`
 
             // **Główna struktura HTML**
+            if ($cap_database) {
             $output .= '<div class="conference_cap__conf-slugs-container">';
 
                 foreach ($conf_slugs as $conf_slug => $conferences) {
@@ -329,9 +463,16 @@ class PWEConferenceCap {
                     $conf_location = '';
                     foreach ($database_data as $conf) {
                         if ($conf->conf_slug === $conf_slug) {
-                            $conf_img = !empty($conf->conf_img) ? esc_url($conf->conf_img) : '';
-                            $conf_name = !empty($conf->conf_name) ? esc_html($conf->conf_name) : '';
-                            $conf_location = !empty($conf->conf_location) ? str_replace(';;' , '<br>' , esc_html($conf->conf_location)) : '';
+                            $lang_key = strtolower($lang);
+                            $img_field = 'conf_img_' . $lang_key;
+                            $conf_img = !empty($conf->$img_field) ? esc_url($conf->$img_field) : (!empty($conf->conf_img_pl) ? esc_url($conf->conf_img_pl) : '');
+                            if ($lang === 'EN') {
+                                $conf_name = !empty($conf->conf_name_en) ? str_replace(';;', '<br>', esc_html($conf->conf_name_en)) : '';
+                                $conf_location = !empty($conf->conf_location_en) ? str_replace(';;', '<br>', esc_html($conf->conf_location_en)) : '';
+                            } else {
+                                $conf_name = !empty($conf->conf_name_pl) ? str_replace(';;', '<br>', esc_html($conf->conf_name_pl)) : '';
+                                $conf_location = !empty($conf->conf_location_pl) ? str_replace(';;', '<br>', esc_html($conf->conf_location_pl)) : '';
+                            }                            
                             $conf_style = !empty($conf->conf_style) ? $conf->conf_style : 'PWEConferenceCapFullMode';
                             break;
                         }
@@ -370,54 +511,37 @@ class PWEConferenceCap {
                                 <img src="' . $conf_img . '" alt="' . esc_attr($conf_name) . '" class="conference_cap__conf-slug-image">
                                 <div class="conference_cap__after-header-html">' . ($inf_conf['after_header_' . $conf_slug] ?? '') . '</div>';
 
-                                // Ustalenie bazowego sluga (bez końcówki -pl lub -en)
-                                $base_slug = preg_replace('/(-pl|-en)$/', '', $conf_slug);
+                                $patroni_dir_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/patrons';
 
-                                // Generujemy wszystkie możliwe warianty: oryginalny, bazowy, bazowy z -pl oraz bazowy z -en
-                                $variants = array_unique([
-                                    $conf_slug,
-                                    $base_slug,
-                                    $base_slug . '-pl',
-                                    $base_slug . '-en'
-                                ]);
-
-                                // Szukamy katalogu 'patroni' odpowiadającego jednemu z wariantów
-                                $patroni_dir = '';
-                                foreach ($variants as $slug) {
-                                    $dir = ABSPATH . 'doc/konferencje/' . $slug . '/patroni';
-                                    if (is_dir($dir)) {
-                                        $patroni_dir = $dir;
-                                        break;
-                                    }
-                                }
-
-                                if (is_dir($patroni_dir)) {
-                                    // Wyszukiwanie plików graficznych: jpg, jpeg, png, gif, webp (w przykładzie tylko webp)
-                                    $logo_files = glob($patroni_dir . '/*.{webp}', GLOB_BRACE);
+                                if (!empty($conf->conf_patrons_img)) {
+                                    $logo_files = explode(',', $conf->conf_patrons_img);
                                     if (!empty($logo_files)) {
-
-                                        // Dodanie slidera
                                         include_once plugin_dir_path(__FILE__) . '/../../scripts/slider.php';
                                         $output .= PWESliderScripts::sliderScripts(
                                             'capconf',
-                                            '#conference-cap',
+                                            '#conf_' . esc_attr($conf_slug),
                                             $opinions_dots_display = 'true',
                                             $opinions_arrows_display = false,
+                                            $slides_to_show = 7
                                         );
-
+                                
                                         $output .= '
-                                        <h2 class="conference_cap__conf-logotypes-title">'. PWECommonFunctions::languageChecker('Patroni Konferencji', 'Conference Patrons') .'</h2>
+                                        <h2 class="conference_cap__conf-logotypes-title">' . 
+                                            PWECommonFunctions::languageChecker(
+                                                $conf->conf_patrons_pl ?? 'Patroni Konferencji',
+                                                $conf->conf_patrons_en ?? 'Conference Patrons'
+                                            ) . 
+                                        '</h2>
                                         <div class="conference_patroni_logos pwe-slides">';
+                                
                                         foreach ($logo_files as $logo_file) {
-                                            // Konwersja ścieżki systemowej na URL
-                                            $relative_path = str_replace(ABSPATH, '', $logo_file);
-                                            $logo_url = site_url($relative_path);
-                                            $output .= '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="Logo" class="conference_patroni_logo">';
+                                            $logo_url = $patroni_dir_url . '/' . trim($logo_file);
+                                            $output .= '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="Patron Logo" class="conference_patroni_logo">';
                                         }
+                                
                                         $output .= '</div>';
                                     }
                                 }
-
                                 
                                 $output .= '
                                 <div class="conference_cap__after-patrons-html">' . ($inf_conf['after_patrons_' . $conf_slug] ?? '') . '</div>
@@ -428,6 +552,9 @@ class PWEConferenceCap {
                             }else if(get_class($mode_class) == 'PWEConferenceCapMedalCeremony'){
                                 foreach ($conferences as $confData) {
                                     foreach ($confData as $day => $sessions) {
+                                        if ( $day === 'main-desc' ) {
+                                            continue;
+                                        }
                                         $day = str_replace(';;', '<br>', wp_kses_post($day));
                                         $output .= $mode_class::output($atts, $sessions, $conf_function, $conf_name, $day, $conf_slug, $conf_location);
                                         break 2;
@@ -441,6 +568,21 @@ class PWEConferenceCap {
                                         </div>
                                 </div>';
                             }
+                            foreach ($conferences as $confDataSet) {
+                                if (!empty($confDataSet['main-desc'])) {
+                                    $allowed_tags = wp_kses_allowed_html('post');
+                                    foreach (['span', 'strong', 'p', 'em', 'u'] as $tag) {
+                                        $allowed_tags[$tag]['style'] = true;
+                                    }
+                            
+                                    $main_desc_clean = html_entity_decode(stripslashes($confDataSet['main-desc']));
+                                    $main_desc_clean = PWEConferenceCapFunctions::pwe_convert_rgb_to_hex($main_desc_clean);
+                            
+                                    $output .= `<div class='conference_cap__conf-main-desc'>` . wp_kses($main_desc_clean, $allowed_tags) . `</div>`;
+                                }
+                                break; 
+                            }                            
+                            
                         $output .= '</div>'; // Zamknięcie nagłówka
                 
                         
@@ -448,8 +590,11 @@ class PWEConferenceCap {
                             // **Zakładki dni**
                             $output .= '<div class="conference_cap__conf-slug-navigation-days">';
                             foreach ($conferences as $confData) {
-                                    $dayCounter = 1;
-                                    foreach ($confData as $day => $sessions) {
+                                $dayCounter = 1;
+                                foreach ($confData as $day => $sessions) {
+                                        if ($day === 'main-desc') {
+                                            continue; // pomijamy main-desc w pętli dni
+                                        }
                                         $short_day = 'day-' . $dayCounter++;
                                         $day = str_replace(';;', '<br>', wp_kses_post($day));
                                         $output .= '<button id="tab_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-navigation-day">' . $day . '</button>';
@@ -463,6 +608,9 @@ class PWEConferenceCap {
                                 foreach ($conferences as $confData) {
                                     $dayCounter = 1;
                                     foreach ($confData as $day => $sessions) {
+                                        if ($day === 'main-desc') {
+                                            continue;
+                                        }
                                         $short_day = 'day-' . $dayCounter++;
                                         $output .= '
                                         <div id="content_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-content">
@@ -483,6 +631,7 @@ class PWEConferenceCap {
                 }
 
             $output .= '</div>'; // Zamknięcie `conf-tabs`
+            }
 
         $output .= '</div>';
 
