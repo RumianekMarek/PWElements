@@ -234,10 +234,16 @@ class PWEConferenceCap {
         
 
 
-        $manual_conferences = array();
-        if (isset($atts['manual_conferences']) && !empty($atts['manual_conferences'])) {
+        // Wczytanie i przygotowanie manualnych konferencji
+        $manual_conferences = [];
+        if (!empty($atts['manual_conferences'])) {
             $manual_conferences = vc_param_group_parse_atts($atts['manual_conferences']);
         }
+
+        // Poprawna obsługa manualnych konferencji (żeby nie zostały nadpisane błędnie)
+        $has_valid_manual_conf = !empty(array_filter($manual_conferences, function($conf) {
+            return !empty($conf['manual_conf_img']) && !empty($conf['manual_conf_id']);
+        }));
 
         $new_manual_conferences = [];
         $manual_slugs_to_hide = [];
@@ -251,12 +257,16 @@ class PWEConferenceCap {
                     if (!empty($url)) {
                         $manual_slugs_to_hide[] = $slug;
                         $new_manual_conferences[] = $manual_conf;
+                    } else {
+                        $new_manual_conferences[] = $manual_conf;
                     }
                 }
             }
         }
 
+        // Na tym etapie `$manual_conferences` jest poprawne i nie zostanie później błędnie nadpisane
         $manual_conferences = $new_manual_conferences;
+
         
         // Tablica na zapis danych prelegentów (bio) – identyfikator lecture-box => dane
         $speakersDataMapping = array();
@@ -280,7 +290,6 @@ class PWEConferenceCap {
             $output .= '<div class="conference_cap__conf-slug-navigation">';
 
                 if (!empty($database_data)) {
-                    $no_conference = false;
                     $byYear = [];
                     foreach ($database_data as $conf) {
 
@@ -342,7 +351,40 @@ class PWEConferenceCap {
                         $conf_slugs = $filtered_conf_slugs;
                     }
 
-                    // Usuwamy z bazy konferencje które mają slug taki sam jak manualne z URL
+                    // 2. Manualne konferencje (dane pobrane z VC)
+                    $has_valid_manual_conf = !empty(array_filter($manual_conferences, function($conf) {
+                        return !empty($conf['manual_conf_img']) && !empty($conf['manual_conf_id']);
+                    }));
+
+                        // TERAZ dopiero przygotowujemy manuale oraz slugi do ukrycia
+                    $new_manual_conferences = [];
+                    $manual_slugs_to_hide = [];
+
+                    if (!empty($manual_conferences)) {
+                        foreach ($manual_conferences as $manual_conf) {
+                            $slug = $manual_conf['manual_conf_id'] ?? '';
+                            $url  = $manual_conf['manual_conf_url'] ?? '';
+
+                            if (!empty($slug)) {
+                                if (!empty($url)) {
+                                    // Manual ma URL → wygrywa manual
+                                    $manual_slugs_to_hide[] = $slug;
+                                    $new_manual_conferences[] = $manual_conf;
+                                } else {
+                                    // Manual nie ma URL
+                                    if (isset($conf_slugs[$slug])) {
+                                        // Slug istnieje w bazie → POMIJAMY manual
+                                        continue;
+                                    } else {
+                                        // Slug nie istnieje w bazie → dodajemy manual
+                                        $new_manual_conferences[] = $manual_conf;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Teraz USUWAMY z bazy konferencje, które mają taki sam slug jak manuale z URL
                     foreach ($manual_slugs_to_hide as $slug_to_hide) {
                         if (isset($conf_slugs[$slug_to_hide])) {
                             unset($conf_slugs[$slug_to_hide]);
@@ -391,10 +433,8 @@ class PWEConferenceCap {
                 } else {
                     $cap_database = false;
                 }
-                // 2. Manualne konferencje (dane pobrane z VC)
-                $has_valid_manual_conf = !empty(array_filter($manual_conferences, function($conf) {
-                    return !empty($conf['manual_conf_img']) && !empty($conf['manual_conf_id']);
-                }));
+
+                $manual_conferences = $new_manual_conferences;
                 
                 if ($has_valid_manual_conf) {
                     $output .= '
@@ -403,7 +443,6 @@ class PWEConferenceCap {
                             display: none;
                         }
                     </style>';
-                    $no_conference = false;
                 
                     foreach ($manual_conferences as $manual_conf) {
                         $manual_img = !empty($manual_conf['manual_conf_img']) ? wp_get_attachment_url($manual_conf['manual_conf_img']) : '';
@@ -445,6 +484,12 @@ class PWEConferenceCap {
                     }
                 } 
 
+                if (empty($normalTiles) && empty($specialTiles) && empty($manual_conferences)) {
+                    $no_conference = true;
+                } else {
+                    $no_conference = false;
+                }                
+
                 if($no_conference) {
                     $output .= '
                     <h2 class="conference_cap__conf-slug-title">'. PWECommonFunctions::languageChecker('Harmonogram zostanie udostępniony wkrótce', 'The schedule will be made available soon') .'</h2>';
@@ -453,7 +498,7 @@ class PWEConferenceCap {
             $output .= '</div>'; // Zamknięcie `conf-tabs`
 
             // **Główna struktura HTML**
-            if ($cap_database) {
+            if ($cap_database || !empty($manual_conferences)) {
             $output .= '<div class="conference_cap__conf-slugs-container">';
 
                 foreach ($conf_slugs as $conf_slug => $conferences) {
