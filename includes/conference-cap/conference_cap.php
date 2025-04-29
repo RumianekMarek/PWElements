@@ -239,13 +239,24 @@ class PWEConferenceCap {
             $manual_conferences = vc_param_group_parse_atts($atts['manual_conferences']);
         }
 
+        $new_manual_conferences = [];
         $manual_slugs_to_hide = [];
-        foreach ($manual_conferences as $manual_conf) {
-            if (!empty($manual_conf['manual_conf_id']) && !empty($manual_conf['manual_conf_url'])) {
-                $manual_slugs_to_hide[] = $manual_conf['manual_conf_id'];
+
+        if (!empty($manual_conferences)) {
+            foreach ($manual_conferences as $manual_conf) {
+                $slug = $manual_conf['manual_conf_id'] ?? '';
+                $url  = $manual_conf['manual_conf_url'] ?? '';
+
+                if (!empty($slug)) {
+                    if (!empty($url)) {
+                        $manual_slugs_to_hide[] = $slug;
+                        $new_manual_conferences[] = $manual_conf;
+                    }
+                }
             }
         }
 
+        $manual_conferences = $new_manual_conferences;
         
         // Tablica na zapis danych prelegentów (bio) – identyfikator lecture-box => dane
         $speakersDataMapping = array();

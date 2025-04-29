@@ -71,31 +71,35 @@ jQuery(document).ready(function($){
         
         // Przełączanie konferencji po kliknięciu obrazka
         confImages.on("click", function () {
-            // Pobierz slug usuwając "nav_" z id obrazka
+            const parentLink = $(this).closest('a');
+        
             const slug = this.id.replace("nav_", "");
-            // Ustal selektor celu: szukamy elementu z id "conf_{slug}" lub, jeśli nie istnieje, elementu z id równym slug
             const targetSelector = `#conf_${slug}, #${slug}`;
             const targetContainer = $(targetSelector).first();
             
-            if (!targetContainer.length) {
-                return;
-            }
-            
-            // Usunięcie klasy active-slug z wszystkich kontenerów i obrazków oraz ukrycie kontenerów
+            if (!targetContainer.length) return;
+        
             confTabs.removeClass("active-slug").hide();
             confImages.removeClass("active-slug");
-            
-            // Ustawienie aktywnego kontenera i wyświetlenie go
+        
             targetContainer.addClass("active-slug").show();
-            // Dodanie klasy active-slug do klikniętego obrazka
             $(this).addClass("active-slug");
-            
-            // Automatyczne kliknięcie pierwszego dnia, jeśli taki przycisk istnieje wewnątrz targetContainer
+        
             const firstDayButton = targetContainer.find(".conference_cap__conf-slug-navigation-day").first();
             if (firstDayButton.length) {
                 firstDayButton.click();
             }
+        
+            if (parentLink.length === 0) {
+                const containerMasthead = document.querySelector('.pwe-menu');
+                if (containerMasthead) {
+                    targetContainer.get(0).style.scrollMarginTop = containerMasthead.offsetHeight + "px";
+                }
+                targetContainer.get(0).scrollIntoView({ behavior: "smooth" });
+            }
+        
         });
+        
         
         // Przełączanie dni w wybranej konferencji
         tabs.on("click", function () {
@@ -127,6 +131,16 @@ jQuery(document).ready(function($){
         // if (confImages.length > 0) {
         //     confImages.first().click();
         // }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const confSlug = urlParams.get('konferencja');
+
+        if (confSlug) {
+            const targetImage = $(`#nav_${confSlug}`);
+            if (targetImage.length) {
+                targetImage.click(); 
+            }
+        }
     }
     
 
