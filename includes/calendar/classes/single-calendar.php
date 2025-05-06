@@ -167,7 +167,7 @@ if (($date_object && $date_object->format('Y') == 2050) || (strtotime($end_date 
 $title = the_title('', '', false);
 $title = str_replace(' ', '-', $title);
 
-$organizer = (strpos(strtolower(get_post_meta($post_id, 'organizer_name', true)), 'ptak') !== false) ? 'ptak' : get_post_meta($post_id, 'organizer_name', true);
+$organizer = (strpos(strtolower(get_post_meta($post_id, 'organizer_name', true)), 'warsaw') !== false) ? 'warsaw' : get_post_meta($post_id, 'organizer_name', true);
 
 if (substr($site_url, -4) === '/en/') {
     $site_url = substr($site_url, 0, -4) . '/';
@@ -1078,7 +1078,7 @@ while (have_posts()):
                 </div>'; 
 
                 // Tiles section
-                if ($organizer == "ptak") {
+                if ($organizer === "warsaw") {
                     $output .= '
                     <div class="single-event__container-tiles">
                         <div class="single-event__tiles-left-container single-event__tiles-item single-event__tiles-hover">
@@ -1271,17 +1271,24 @@ while (have_posts()):
                 <div class="single-event__container-footer" itemprop="location" itemscope itemtype="https://schema.org/Place">
                     <div class="single-event__footer-ptak-logo">
                         <meta itemprop="name" content="Ptak Warsaw Expo">
-                        <meta itemprop="telephone" content="'. get_post_meta($post_id, 'organizer_phone', true) .'">
-                        <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">
+                        <meta itemprop="telephone" content="'. get_post_meta($post_id, 'organizer_phone', true) .'">';
+                        if ($organizer === "warsaw") {
+                            $output .= '
+                            <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
+                        }  else if (strpos(mb_strtolower($organizer), "łódź") !== false) {
+                            $output .= '
+                            <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
+                        }
+                    $output .= '
                     </div>
                     <div class="single-event__footer-content">
                         <div class="single-event__footer-ptak-adress" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
                             <div>';
-                            if ($organizer == "ptak") {
+                            if ($organizer === "warsaw") {
                                 $output .= '
                                 <p><span itemprop="streetAddress">Al. Katowicka 62</span></p>
                                 <p><span itemprop="postalCode">05-830</span><span itemprop="addressLocality"> Nadarzyn, '. ($lang_pl ? "Polska" : "Poland") .'</span></p>';
-                            } else if ($organizer == "Trends Expo") {
+                            } else if (strpos(mb_strtolower($organizer), "łódź") !== false) {
                                 $output .= '
                                 <p><span itemprop="streetAddress">ul. Tuszyńska 72/74</span></p>
                                 <p><span itemprop="postalCode">95-030</span><span itemprop="addressLocality"> Rzgów k. Łodzi, '. ($lang_pl ? "Polska" : "Poland") .'</span></p>';

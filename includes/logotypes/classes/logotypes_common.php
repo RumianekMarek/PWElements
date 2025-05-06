@@ -251,7 +251,7 @@ class PWElementAdditionalLogotypes {
 
             $output .= '
             <style>';
-            if ($mobile != 1 && ($logotypes_slider_desktop != true) || $mobile == 1 && ($logotypes_grid_mobile == true)){
+            if ($mobile != 1 && ($logotypes_slider_desktop != true) || $mobile == 1 && ($logotypes_grid_mobile == true) && $logotypes_layout !== "grid"){
                 $output .= '
                 .pwelement_'. $el_id .'.pwe_logotypes .pwe-logo-item-container {
                     '. ($logotypes_items_shadow !== 'none' ? 'min-width: 200px;' : '') .'
@@ -275,11 +275,11 @@ class PWElementAdditionalLogotypes {
                     '. ($logotypes_items_shadow !== 'none' ? 'background-color: white;' : '') .'
                     border-radius: 10px;
                     overflow: hidden;
-                    padding: 5px;
-                    '. ($logotypes_items_shadow !== 'none' ? 'padding: 10px 0;' : '') .'
+                    '. ($logotypes_items_shadow !== 'none' ? 'padding: 10px;' : 'padding: 5px;') .'
                     background-color: white !important;
                 }
-                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container, .pwelement_'. $el_id .' .pwe-logo-item-container  {
+                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container, 
+                .pwelement_'. $el_id .' .pwe-logo-item-container {
                     margin: 5px;
                 }
                 .pwelement_'. $el_id .' .pwe-logo-item {
@@ -342,18 +342,6 @@ class PWElementAdditionalLogotypes {
                     line-height: 1.1 !important;
                     margin: 5px;
                 }
-
-                @media(max-width:620px){
-                    .pwelement_'. $el_id .' .pwe-logo-item-container {
-                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'max-width: 22% !important;' : '') .'
-                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'min-width: 22% !important;' : '') .'
-                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'padding: 5px !important;' : '') .'
-                    }
-                    .pwelement_'. $el_id .' .pwe-logo-item-container p {
-                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'font-size: 9px !important;' : '') .'
-                    '. ((empty($slider_class) && $logotypes_items_shadow !== 'none') ? 'font-weight: 600 !important;' : '') .'
-                    }
-                }
             </style>';
 
             if ($slider_class !== 'pwe-slides') {
@@ -373,6 +361,30 @@ class PWElementAdditionalLogotypes {
                         min-height: 90px;
                     }
                     </style>';
+
+                    if (empty($slider_class) && $logotypes_items_shadow !== 'none') {
+                        $output .= '
+                        <style>
+                            @media(max-width:620px) {
+                                .pwelement_'. $el_id .' .pwe-logo-item-container {
+                                    max-width: 27% !important;
+                                    min-width: 27% !important;
+                                    padding: 5px !important;
+                                }
+                                .pwelement_'. $el_id .' .pwe-logo-item-container p {
+                                    font-size: 9px !important;
+                                    font-weight: 600 !important;
+                                }
+                            }
+                            @media(max-width:350px) {
+                                .pwelement_'. $el_id .' .pwe-logo-item-container {
+                                    max-width: 25% !important;
+                                    min-width: 25% !important;
+                                }
+                            }
+                        </style>';
+                    }
+
                 } else {
                     $output .= '
                     <style>
@@ -394,8 +406,11 @@ class PWElementAdditionalLogotypes {
 
                     @media(max-width: 550px) {
                         .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
-                            grid-template-columns: repeat(4, 1fr);
+                            grid-template-columns: repeat(3, 1fr);
                             gap: 10px !important;
+                        }
+                        .pwelement_'. $el_id .' .pwe-logo-item-container {
+                            padding: 5px !important;
                         }
                     }
                     @media(max-width: 450px) {
@@ -556,47 +571,6 @@ class PWElementAdditionalLogotypes {
                         }
                     }
 
-                    if($logotypes_display_random1){
-                        // Randomise files
-                        shuffle($files);
-                    } else {
-                        usort($files, function($a, $b) {
-                            $fileA = basename($a);
-                            $fileB = basename($b);
-    
-                            // Trying to extract the number from the beginning of the file name
-                            preg_match('/^(\d+)/', $fileA, $matchA);
-                            preg_match('/^(\d+)/', $fileB, $matchB);
-    
-                            // Check if the file contains a number
-                            $hasNumA = !empty($matchA);
-                            $hasNumB = !empty($matchB);
-    
-                            // If one of the files has a number and the other one doesn't, the file with the number takes precedence
-                            if ($hasNumA && !$hasNumB) {
-                                return -1;
-                            }
-                            if (!$hasNumA && $hasNumB) {
-                                return 1;
-                            }
-    
-                            // If both files have a number - sort numerically, and if the numbers are equal, sort alphabetically
-                            if ($hasNumA && $hasNumB) {
-                                $numA = (int)$matchA[1];
-                                $numB = (int)$matchB[1];
-    
-                                if ($numA === $numB) {
-                                    return strcasecmp($fileA, $fileB);
-                                }
-                                return $numA <=> $numB;
-                            }
-    
-                            // If none of the files contain a number - sort alphabetically
-                            return strcasecmp($fileA, $fileB);
-                        });
-    
-                    }
-
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
                     if (in_array('catalog', $logotypes_catalogs)) {
                         foreach ($exhibitors_catalog as $catalog_img) {
@@ -646,6 +620,69 @@ class PWElementAdditionalLogotypes {
             });
 
             if (count($files) > 0) {
+
+                $files = array_map(function($file) {
+                    // Check if the path is local
+                    if (strpos($file, 'https://') !== 0 && strpos($file, 'http://') !== 0) {
+                        // Replace double slashes with one only if path is local
+                        return preg_replace('/\/+/', '/', $file);
+                    }
+                    return $file;
+                }, $files);
+
+                if($logotypes_display_random1){
+                    // Randomise files
+                    shuffle($files);
+                } else {
+                    // Separation files
+                    $links = [];
+                    $localFiles = [];
+
+                    // Keeping order
+                    foreach ($files as $file) {
+                        if (strpos($file, 'https://www2.pwe-expoplanner.com') === 0) {
+                            $links[] = $file; 
+                        } else {
+                            $localFiles[] = $file;
+                        }
+                    }
+
+                    // Sorting local files
+                    usort($localFiles, function($a, $b) {
+                        $fileA = basename($a);
+                        $fileB = basename($b);
+
+                        preg_match('/^(\d+)/', $fileA, $matchA);
+                        preg_match('/^(\d+)/', $fileB, $matchB);
+
+                        $hasNumA = !empty($matchA);
+                        $hasNumB = !empty($matchB);
+
+                        if ($hasNumA && !$hasNumB) {
+                            return -1;
+                        }
+                        if (!$hasNumA && $hasNumB) {
+                            return 1;
+                        }
+
+                        if ($hasNumA && $hasNumB) {
+                            $numA = (int)$matchA[1];
+                            $numB = (int)$matchB[1];
+
+                            if ($numA === $numB) {
+                                return strcasecmp($fileA, $fileB);
+                            }
+                            return $numA <=> $numB;
+                        }
+
+                        return strcasecmp($fileA, $fileB);
+                    });
+
+                    // Merging
+                    $files = array_merge($links, $localFiles);
+
+                    
+                }
 
                 // Calculate width for header logotypes
                 if (isset($header_logotypes_width) && $header_logotypes_width . '%' !== '%') {
