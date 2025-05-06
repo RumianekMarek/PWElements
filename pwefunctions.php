@@ -11,6 +11,234 @@ class PWECommonFunctions {
     }
 
     /**
+     * Connecting to CAP database
+     */
+    public static function connect_database() {
+        // Initialize connection variables
+        $cap_db = null;
+        
+        // Set connection data depending on the server
+        if (isset($_SERVER['SERVER_ADDR'])) {
+            if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
+            } else {
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
+                $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
+                $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+            }
+        }
+
+        // Check if there is complete data for connection
+        if ($database_user && $database_password && $database_name && $database_host) {
+            try {
+                $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+            } catch (Exception $e) {
+                return false;
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
+                }
+            }
+        } else {
+            return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Check for connection errors
+        if (!$cap_db->dbh || mysqli_connect_errno()) {
+            return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
+            }
+        }
+    
+        return $cap_db;
+    }
+
+    /**
+     * Get data from CAP databases 
+     */
+    public static function get_database_fairs_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM fairs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }    
+
+    public static function get_database_store_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM shop");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }
+
+    public static function get_database_store_packages_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM shop_packs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_meta_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM meta_data");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_groups_contacts_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database 
+        $results = $cap_db->get_results("SELECT * FROM groups");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }
+
+    public static function get_database_groups_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT fair_domain, fair_group FROM fairs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_logotypes_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM logos");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    /**
      * Colors (accent or main2)
      */
     public static function pwe_color($color) {
