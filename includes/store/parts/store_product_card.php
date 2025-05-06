@@ -77,7 +77,7 @@ $output .= '
                             </a>
                             <div class="pwe-store__btn-container">
                                 <a href="#" class="pwe-store__more-button" data-featured="'. $product->prod_slug .'">'. (self::lang_pl() ? 'WIĘCEJ' : 'MORE') .'</a>
-                                <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. (self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW') .'</a>
+                                <a href="#" class="pwe-store__reservation-button pwe-store__form-modal-open">'. (self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW') .'</a>
                             </div>
                         </div>';
                     }
@@ -135,9 +135,9 @@ $output .= '
                                             if ($package->packs_discount != null) {
                                                 $discount = $total_price * ($package->packs_discount / 100);
                                                 $discount_price = $total_price - $discount;
-                                                $discount_price = number_format(self::roundPrice($discount_price), 0, ',', ' ');
+                                                $discount_price = number_format(self::round_price($discount_price), 0, ',', ' ');
                                             }
-                                            $total_price = number_format(self::roundPrice($total_price), 0, ',', ' ');        
+                                            $total_price = number_format(self::round_price($total_price), 0, ',', ' ');        
     
                                             if (!empty($discount_price)) {
                                                 $output .= '<stan class="pwe-store__discount-price">'. $discount_price . (self::lang_pl() ? " zł netto" : " € net") .'</stan>';
@@ -150,7 +150,7 @@ $output .= '
                             </a>
                             <div class="pwe-store__btn-container">
                                 <a href="#" class="pwe-store__more-button" data-featured="'. $package->packs_slug .'">'. (self::lang_pl() ? 'WIĘCEJ' : 'MORE') .'</a>
-                                <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. (self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW') .'</a>
+                                <a href="#" class="pwe-store__reservation-button pwe-store__form-modal-open">'. (self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW') .'</a>
                             </div>
                         </div>';
                     }

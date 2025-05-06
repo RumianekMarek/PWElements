@@ -31,7 +31,7 @@ class PWEStore extends PWECommonFunctions {
     }
 
     public function fairs_array() { 
-        $pwe_groups_data = self::getDatabaseDataGroups(); 
+        $pwe_groups_data = self::get_database_groups_data(); 
 
         $edition_1 = [];
         $edition_2 = [];
@@ -77,22 +77,26 @@ class PWEStore extends PWECommonFunctions {
         return $formatted_editions;
     }
 
-    /**
-     * Adding Styles
-     */
     public function addingStyles(){
         $css_file = plugins_url('assets/style.css', __FILE__);
         $css_version = filemtime(plugin_dir_path(__FILE__) . 'assets/style.css');
         wp_enqueue_style('pwe-store-css', $css_file, array(), $css_version);
     }
 
-    /**
-     * Adding Scripts
-     */
     public function addingScripts(){
+        $pwe_groups_data = self::get_database_groups_data(); 
+
+        foreach ($pwe_groups_data as $group) {
+            if ($group->fair_domain == $_SERVER['HTTP_HOST']) {
+                $current_group = $group->fair_group;
+            }
+        }
+
         $store_js_array = array(
             'trade_fair_name' => self::languageChecker(do_shortcode('[trade_fair_name]'), do_shortcode('[trade_fair_name_eng]')),
-            'trade_fair_groups' => self::getDatabaseDataGroups()
+            'trade_fair_groups' => $pwe_groups_data,
+            'api_key' => password_hash(PWE_API_KEY_4, PASSWORD_DEFAULT),
+            'current_group' => $current_group
         );
 
         $js_file = plugins_url('assets/script.js', __FILE__);
@@ -100,153 +104,6 @@ class PWEStore extends PWECommonFunctions {
         wp_enqueue_script('pwe-store-js', $js_file, array('jquery'), $js_version, true);
         wp_localize_script( 'pwe-store-js', 'store_js', $store_js_array );
     }
-
-    public function connectToDatabase() {
-        // Initialize connection variables
-        $cap_db = null;
-        
-        // Set connection data depending on the server
-        if (isset($_SERVER['SERVER_ADDR'])) {
-            if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
-                $database_host = 'localhost';
-                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
-                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
-                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-            } else {
-                $database_host = 'localhost';
-                $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
-                $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
-                $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
-            }
-        }
-
-        // Check if there is complete data for connection
-        if ($database_user && $database_password && $database_name && $database_host) {
-            try {
-                $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
-            } catch (Exception $e) {
-                return false;
-                if (current_user_can("administrator") && !is_admin()) {
-                    echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
-                }
-            }
-        } else {
-            return false;
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
-            }
-        }
-    
-        // Check for connection errors
-        if (!$cap_db->dbh || mysqli_connect_errno()) {
-            return false;
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
-            }
-        }
-    
-        return $cap_db;
-    }
-
-    public function getDatabaseDataGroups() {
-        // Database connection
-        $cap_db = self::connectToDatabase();
-        // If connection failed, return empty array
-        if (!$cap_db) {
-            return [];
-            if (current_user_can('administrator') && !is_admin()) {
-                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
-            }
-        }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT fair_domain, fair_group FROM fairs");
-    
-        // SQL error checking
-        if ($cap_db->last_error) {
-            return [];
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
-            }
-        }
-    
-        return $results;
-    } 
-    
-    public function getDatabaseDataStore() {
-        // Database connection
-        $cap_db = self::connectToDatabase();
-        // If connection failed, return empty array
-        if (!$cap_db) {
-            return [];
-            if (current_user_can('administrator') && !is_admin()) {
-                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
-            }
-        }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM shop");
-    
-        // SQL error checking
-        if ($cap_db->last_error) {
-            return [];
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
-            }
-        }
-    
-        return $results;
-    } 
-
-    public function getDatabaseDataStorePackages() {
-        // Database connection
-        $cap_db = self::connectToDatabase();
-        // If connection failed, return empty array
-        if (!$cap_db) {
-            return [];
-            if (current_user_can('administrator') && !is_admin()) {
-                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
-            }
-        }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM shop_packs");
-    
-        // SQL error checking
-        if ($cap_db->last_error) {
-            return [];
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
-            }
-        }
-    
-        return $results;
-    } 
-
-    public function getDatabaseMetaData() {
-        // Database connection
-        $cap_db = self::connectToDatabase();
-        // If connection failed, return empty array
-        if (!$cap_db) {
-            return [];
-            if (current_user_can('administrator') && !is_admin()) {
-                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
-            }
-        }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM meta_data");
-    
-        // SQL error checking
-        if ($cap_db->last_error) {
-            return [];
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
-            }
-        }
-    
-        return $results;
-    } 
 
     public function price($product, $store_options, $pwe_meta_data, $category, $current_domain, $num_only = false) {
         if ($category == $product->prod_category && (self::lang_pl() ? !empty($product->prod_title_short_pl) : !empty($product->prod_title_short_en))) {
@@ -288,7 +145,7 @@ class PWEStore extends PWECommonFunctions {
             } else {
                 $updated_price_en = $product->prod_price_pl / $pwe_meta_data[0]->meta_data;
             }
-            $updated_price_en = self::roundPrice($updated_price_en);
+            $updated_price_en = self::round_price($updated_price_en);
 
             $updated_price_desc_pl = !empty($new_price_desc_pl) ? $new_price_desc_pl : $product->prod_price_desc_pl;
             $updated_price_desc_en = !empty($new_price_desc_en) ? $new_price_desc_en : $product->prod_price_desc_en;
@@ -299,13 +156,13 @@ class PWEStore extends PWECommonFunctions {
                 $updated_price_pl = $updated_price_pl + ($updated_price_pl * ($price_margin / 100));
                 $updated_price_en = $updated_price_en + ($updated_price_en * ($price_margin / 100));
 
-                $updated_price_pl = self::roundPrice($updated_price_pl);
-                $updated_price_en = self::roundPrice($updated_price_en);
+                $updated_price_pl = self::round_price($updated_price_pl);
+                $updated_price_en = self::round_price($updated_price_en);
             }
 
             if (!empty($updated_price_pl)) {
                 $eur_price = $updated_price_pl / $pwe_meta_data[0]->meta_data;
-                $eur_price = self::roundPrice($eur_price);
+                $eur_price = self::round_price($eur_price);
 
                 $final_price = number_format((self::lang_pl() ? $updated_price_pl : (!empty($updated_price_en) ? $updated_price_en : $eur_price)), 0, ',', ' ') . ( self::lang_pl() ? ' zł ' : ' € ' );
             }
@@ -317,7 +174,7 @@ class PWEStore extends PWECommonFunctions {
         }
     }
 
-    public function roundPrice($price) {
+    public function round_price($price) {
         if ($price >= 1000) {
             return round($price, -2);
         } else if ($price < 1000 && $price >= 100) {
@@ -329,15 +186,10 @@ class PWEStore extends PWECommonFunctions {
         }
     }
     
-    /**
-     * Output method for PWEStore shortcode.
-     *
-     * @return string
-     */ 
     public function PWEStoreOutput() {  
-        $pwe_store_data = self::getDatabaseDataStore(); 
-        $pwe_store_packages_data = self::getDatabaseDataStorePackages();
-        $pwe_meta_data = self::getDatabaseMetaData();   
+        $pwe_store_data = self::get_database_store_data(); 
+        $pwe_store_packages_data = self::get_database_store_packages_data();
+        $pwe_meta_data = self::get_database_meta_data();   
 
         $categories = [];
         foreach ($pwe_store_data as $item) {
@@ -359,7 +211,7 @@ class PWEStore extends PWECommonFunctions {
             }
         }
 
-        $fairs_json = PWECommonFunctions::json_fairs();
+        $fairs_json = self::json_fairs();
         $store_options = [];
         foreach ($fairs_json as $fair) {
             $store_options[] = array(
@@ -372,7 +224,7 @@ class PWEStore extends PWECommonFunctions {
         $current_domain = do_shortcode('[trade_fair_domainadress]');
 
         $output = '
-        <div id="pweStore" class="pwe-store">';
+        <div id="pweStore" class="pwe-store '. explode('.', $current_domain)[0] .'">';
             
             require_once plugin_dir_path(__FILE__) . 'parts/store_header.php';
 
@@ -385,30 +237,22 @@ class PWEStore extends PWECommonFunctions {
             require_once plugin_dir_path(__FILE__) . 'parts/store_fairs.php';
 
         $output .= '
-        </div>
-        
-        <!-- Modal -->
-        <div id="pweStoreModal" class="pwe-store__modal" style="display: none;">
-            <div class="pwe-store__modal-content">
-                <span class="pwe-store__modal-close-btn">&times;</span>
-                <div class="pwe-store__modal-content-placeholder">
-                    <!-- Tutaj dynamicznie wstawimy selectItem -->
-                </div>
-            </div>
         </div>';
 
-        // if (current_user_can( "administrator" )) {
-        //     $pwe_groups_data = self::getDatabaseDataGroups(); 
+        require_once plugin_dir_path(__FILE__) . 'parts/store_modals.php';
 
-        //     $edition_1 = [];
+        // if (current_user_can( "administrator" )) {
+        //     $pwe_groups_data = self::get_database_groups_data(); 
+        //     $pwe_groups_data_contact = self::get_database_groups_contacts_data(); 
 
         //     foreach ($pwe_groups_data as $group) {
-        //         if ($group->fair_group == "gr3") {
-        //             $edition_1[] = $group->fair_domain;
+        //         if ($group->fair_domain == $current_domain) {
+        //             $current_group = $group->fair_group;
         //         }
         //     }
 
-        //     $pwe_groups_data_json_encode = json_encode($edition_1);
+        //     $pwe_groups_data_json_encode = json_encode($pwe_groups_data);
+        //     $pwe_groups_data_contact_json_encode = json_encode($pwe_groups_data_contact);
         //     $pwe_store_data_json_encode = json_encode($pwe_store_data);
         //     $pwe_store_data_options_json_encode = json_encode($store_options);
         //     $pwe_store_packages_data_json_encode = json_encode($pwe_store_packages_data);
@@ -416,11 +260,14 @@ class PWEStore extends PWECommonFunctions {
         //     <script>
         //         document.addEventListener("DOMContentLoaded", function () {
         //             const pweGroups = ' . $pwe_groups_data_json_encode . ';
+        //             const pweGroupsContact = ' . $pwe_groups_data_contact_json_encode . ';
         //             const storeData = ' . $pwe_store_data_json_encode . ';
         //             const storeDataOptions = ' . $pwe_store_data_options_json_encode . ';
         //             const storePackagesData = ' . $pwe_store_packages_data_json_encode . ';
                     
+        //             console.log("'. $current_group .'");
         //             console.log(pweGroups);
+        //             console.log(pweGroupsContact);
         //             console.log(storeData);
         //             console.log(storeDataOptions);
         //             console.log(storePackagesData);

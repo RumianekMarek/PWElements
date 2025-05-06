@@ -1,6 +1,6 @@
 <?php
 
-if ($current_domain === "warsawexpo.eu" || $current_domain === "rfl.warsawexpo.eu") {
+if ($current_domain === "warsawexpo.eu") {
     $output .= '
     <div class="pwe-store__fairs">
         <div class="pwe-store__fairs-arrow-back"><span>WRÓĆ</span></div>
@@ -52,7 +52,8 @@ if ($current_domain === "warsawexpo.eu" || $current_domain === "rfl.warsawexpo.e
                         data-date="'. $fair['date'] .'" 
                         data-edition="'. $fair['edition'] .'" 
                         data-domain="'. $fair['domain'] .'" 
-                        style="background-image: url(&quot;https://'. $fair['domain'] .'/doc/kafelek.jpg&quot;);">
+                        style="background-image: url(&quot;https://'. $fair['domain'] .'/doc/kafelek.jpg&quot;);"
+                    >
                     </div>';
                 } else {
                     if (current_user_can('administrator')) {

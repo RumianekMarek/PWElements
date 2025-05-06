@@ -108,8 +108,8 @@ $output .= '
                                     <span class="pwe-store__featured-price">'. self::price($product, $store_options, $pwe_meta_data, $category, $current_domain) .'</span>
                                     <span class="pwe-store__featured-price-info">'. ( self::lang_pl() ? '* Do ceny netto należy doliczyć podatek VAT 23%.' : '* VAT 23% should be added to the net price.' ) .'</span>
                                     <div class="pwe-store__featured-buttons">
-                                        <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
-                                        <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                                        <a href="#" class="pwe-store__contact-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                                        <a href="#" class="pwe-store__reservation-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
                                     </div>
                                 </div>
                             </div>
@@ -229,10 +229,10 @@ $output .= '
                                         if ($package->packs_discount != null) {
                                             $discount = $total_price * ($package->packs_discount / 100);
                                             $discount_price = $total_price - $discount;
-                                            $saving_price = self::roundPrice($total_price) - self::roundPrice($discount_price);
-                                            $discount_price = number_format(self::roundPrice($discount_price), 0, ',', ' ');  
+                                            $saving_price = self::round_price($total_price) - self::round_price($discount_price);
+                                            $discount_price = number_format(self::round_price($discount_price), 0, ',', ' ');  
                                         }
-                                        $total_price = number_format(self::roundPrice($total_price), 0, ',', ' ');        
+                                        $total_price = number_format(self::round_price($total_price), 0, ',', ' ');        
 
                                         if (!empty($discount_price)) {
                                             $output .= '
@@ -256,8 +256,8 @@ $output .= '
                                     </div>
                                     <span class="pwe-store__featured-price-info">'. ( self::lang_pl() ? '* Do ceny netto należy doliczyć podatek VAT 23%.' : '* VAT 23% should be added to the net price.' ) .'</span>
                                     <div class="pwe-store__featured-buttons">
-                                        <a href="#" class="pwe-store__contact-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
-                                        <a href="#" class="pwe-store__buy-button pwe-store__redirect-button" target="_blank">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                                        <a href="#" class="pwe-store__contact-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                                        <a href="#" class="pwe-store__reservation-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
                                     </div>
                                 </div>
                             </div>

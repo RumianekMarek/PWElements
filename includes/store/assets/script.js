@@ -1,32 +1,102 @@
-const tradeFairName = store_js.trade_fair_name;
-const trade_fair_groups = store_js.trade_fair_groups;
+const apiKey = store_js.api_key;
+const currentGroup = store_js.current_group;
+// const tradeFairName = store_js.trade_fair_name;
+// const trade_fair_groups = store_js.trade_fair_groups;
 
-let edition_1 = [];
-let edition_2 = [];
-let edition_3 = [];
-let edition_b2c = [];
+// let edition_1 = [];
+// let edition_2 = [];
+// let edition_3 = [];
+// let edition_b2c = [];
 
-trade_fair_groups.forEach(group => {
-    if (group.fair_group === "gr1") {
-        edition_1.push(group.fair_domain);
-    }
-    if (group.fair_group === "gr2") {
-        edition_2.push(group.fair_domain);
-    }
-    if (group.fair_group === "gr3") {
-        edition_3.push(group.fair_domain);
-    }
-    if (group.fair_group === "b2c") {
-        edition_b2c.push(group.fair_domain);
-    }
-});
+// trade_fair_groups.forEach(group => {
+//     if (group.fair_group === "gr1") {
+//         edition_1.push(group.fair_domain);
+//     }
+//     if (group.fair_group === "gr2") {
+//         edition_2.push(group.fair_domain);
+//     }
+//     if (group.fair_group === "gr3") {
+//         edition_3.push(group.fair_domain);
+//     }
+//     if (group.fair_group === "b2c") {
+//         edition_b2c.push(group.fair_domain);
+//     }
+// });
 
-const fairs_array = {
-    edition_1,
-    edition_2,
-    edition_3,
-    edition_b2c
-};
+// const fairs_array = {
+//     edition_1,
+//     edition_2,
+//     edition_3,
+//     edition_b2c
+// };
+
+// Scroll to top of page
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+function showFeaturedService(featuredId) {
+    // Hide all pwe-store__featured-service sections
+    const featuredServices = document.querySelectorAll('.pwe-store__featured-service');
+    featuredServices.forEach(service => service.classList.remove("active"));
+
+    // Show the appropriate section
+    const featuredService = document.getElementById(featuredId);
+    if (featuredService) {
+        featuredService.classList.add("active");
+    }
+}
+
+// Hide the main section and show the category header
+function showCategoryHeader(mainSection, categoryHeaders, categoryHeadersActive) {
+    // Hide main section
+    mainSection.style.display = "none";
+    categoryHeaders.forEach(header => {
+        if (header) {
+            // Show the category header
+            header.style.display = "none";
+        }
+    });
+    categoryHeadersActive.forEach(headerActive => {
+        if (headerActive) {
+            // Show the category header
+            headerActive.style.display = "flex";
+        }
+    });
+}
+
+// Show the main section and hide the category header
+function hideCategoryHeader(mainSection, categoryHeaders) {
+    // Show main section
+    mainSection.style.display = "block";
+    categoryHeaders.forEach(header => {
+        if (header) {
+            // Hide the category header
+            header.style.display = "none";
+        }
+    });
+}
+
+// Function to remove query parameters from URL
+function removeURLParams() {
+    // Get the current URL
+    const url = new URL(window.location.href);
+    const category = url.searchParams.get('category');
+
+    // Clear all parameters
+    url.search = '';
+
+    // If the category existed, add it back
+    if (category) {
+        url.searchParams.set('category', category);
+    }
+
+    // Update url in history without reload
+    window.history.replaceState({}, '', url.toString());
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const pweStore = document.querySelector(".pwe-store");
@@ -115,210 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Scroll to top of page
             scrollToTop();
         }
-
-        // Scroll to top of page
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
-
-        function showFeaturedService(featuredId) {
-            // Hide all pwe-store__featured-service sections
-            const featuredServices = document.querySelectorAll('.pwe-store__featured-service');
-            featuredServices.forEach(service => service.classList.remove("active"));
-
-            // Show the appropriate section
-            const featuredService = document.getElementById(featuredId);
-            if (featuredService) {
-                featuredService.classList.add("active");
-            }
-        }
-
-        // Hide the main section and show the category header
-        function showCategoryHeader(mainSection, categoryHeaders, categoryHeadersActive) {
-            // Hide main section
-            mainSection.style.display = "none";
-            categoryHeaders.forEach(header => {
-                if (header) {
-                    // Show the category header
-                    header.style.display = "none";
-                }
-            });
-            categoryHeadersActive.forEach(headerActive => {
-                if (headerActive) {
-                    // Show the category header
-                    headerActive.style.display = "flex";
-                }
-            });
-        }
-
-        // Show the main section and hide the category header
-        function hideCategoryHeader(mainSection, categoryHeaders) {
-            // Show main section
-            mainSection.style.display = "block";
-            categoryHeaders.forEach(header => {
-                if (header) {
-                    // Hide the category header
-                    header.style.display = "none";
-                }
-            });
-        }
-
-        // Function to remove query parameters from URL
-        function removeURLParams() {
-            // Get the current URL
-            const url = new URL(window.location.href);
-            const category = url.searchParams.get('category');
-
-            // Clear all parameters
-            url.search = '';
-
-            // If the category existed, add it back
-            if (category) {
-                url.searchParams.set('category', category);
-            }
-
-            // Update url in history without reload
-            window.history.replaceState({}, '', url.toString());
-        }
-
-        let parent = document.querySelector('.pwe-store__featured-image')?.parentElement;
-        while (parent) {
-            const computedStyle = getComputedStyle(parent);
-            const hasOverflow = computedStyle.overflow;
-            const hasOverflowX = computedStyle.overflowX;
-            const hasOverflowY = computedStyle.overflowY;
-
-            if (hasOverflow !== 'visible' || hasOverflowX !== 'visible' || hasOverflowY !== 'visible') {
-                parent.style.overflow = 'unset';
-            }
-
-            parent = parent.parentElement; 
-        }
-
-        // Get domain address
-        const currentDomain = window.location.hostname;
-
-        let editionNumber = "";
-        if (fairs_array.edition_1.includes(currentDomain)) {
-            editionNumber = "1";
-        } else if (fairs_array.edition_2.includes(currentDomain)) {
-            editionNumber = "2";
-        } else if (fairs_array.edition_3.includes(currentDomain)) {
-            editionNumber = "3";
-        } else if (fairs_array.edition_b2c.includes(currentDomain)) {
-            editionNumber = "b2c";
-        } else {
-            editionNumber = "other";
-        } 
-        
-        // Redirect page to warsawexpo.eu with parameters for contact form
-        const redirectButtons = document.querySelectorAll(".pwe-store__redirect-button");
-        redirectButtons.forEach(button => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-
-                // Get name of service
-                const serviceName = this.closest(".pwe-store__service").querySelector(".pwe-store__service-name-mailing").textContent.trim();
-                // Get domain 
-                const currentDomain = window.location.hostname;
-                
-                // Get the page language
-                const htmlLang = document.documentElement.lang;
-                const baseUrl = (htmlLang === "pl-PL") 
-                    ? "https://warsawexpo.eu/sklep-uslugi-premium/" 
-                    : "https://warsawexpo.eu/en/shop-premium-services/";
-                
-                if (currentDomain === "warsawexpo.eu" || currentDomain === "rfl.warsawexpo.eu") {  
-
-                    if (pweStore) {
-                        // Hide pwe-store
-                        Array.from(pweStore.children).forEach(child => {
-                            child.style.display = "none";
-                        });
-                    }
-
-                    const fairsContainer = document.querySelector(".pwe-store__fairs");
-                    fairsContainer.style.display = "flex";
-                    setTimeout(() => {
-                        fairsContainer.style.opacity = "1";
-                    }, "500");
-
-                    // Return to shop
-                    document.querySelector(".pwe-store__fairs-arrow-back").addEventListener("click", function () {
-                        // Hide pwe-store
-                        Array.from(pweStore.children).forEach(child => {
-                            child.style.display = "block";
-                        });
-                
-                        const categoryHeaders = document.querySelectorAll('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
-                        // Show the main section and hide the category header
-                        hideCategoryHeader(mainSection, categoryHeaders);
-                
-                        const featuredService = document.querySelectorAll(".pwe-store__featured-service");
-                        featuredService.forEach(service => {
-                            service.classList.remove('active');
-                        });
-                        
-                        fairsContainer.style.opacity = "0";
-                        fairsContainer.style.display = "none";
-                
-                        removeURLParams();
-                    });
-                    
-                    // Listen for event in search box
-                    const searchInput = document.querySelector(".pwe-store__fairs-search-input");
-                    searchInput.addEventListener("input", function () {
-                        const searchTerm = searchInput.value.toLowerCase();
-
-                        const allTiles = document.querySelectorAll(".pwe-store__fairs-item");
-                        allTiles.forEach(item => {
-                            const name = item.getAttribute("data-name").toLowerCase();
-                            const tooltip = item.getAttribute("data-tooltip").toLowerCase();
-
-                            // If the search text is in the name or description, show the element
-                            if (name.includes(searchTerm) || tooltip.includes(searchTerm)) {
-                                item.style.display = "block";
-                            } else {
-                                item.style.display = "none";
-                            }
-                        });
-                    });
-
-                    const allTiles = document.querySelectorAll(".pwe-store__fairs-item");
-                    allTiles.forEach(item => {
-                        item.addEventListener("click", function () {
-                            const selectedDomain = this.getAttribute("data-domain");
-                            const selectedEdition = this.getAttribute("data-edition");
-                            const selectedName = this.getAttribute("data-name");
-
-                            const redirectUrl = `${baseUrl}?service=${encodeURIComponent(serviceName)}&domain=${encodeURIComponent(selectedDomain)}&pwevent=${encodeURIComponent(selectedName)}&edition=${encodeURIComponent(selectedEdition)}`;
-                            
-                            // Open in new blank
-                            window.open(redirectUrl, "_blank");
-                            
-
-                            // Reload page without params
-                            window.location.replace(window.location.origin + window.location.pathname);
-                        });
-                    });
-
-                    // Scroll to top of page
-                    scrollToTop();
-
-                } else {
-                    const redirectUrl = `${baseUrl}?service=${encodeURIComponent(serviceName)}&domain=${encodeURIComponent(currentDomain)}&pwevent=${encodeURIComponent(tradeFairName)}&edition=${encodeURIComponent(editionNumber)}`;
-                    // Open new window
-                    window.open(redirectUrl, "_blank");
-
-                    // Reload page without params
-                    window.location.replace(window.location.origin + window.location.pathname);
-                }
-                
-            });
-        });
 
         const sortingButtons = document.querySelectorAll(".pwe-store__category-item"); 
         const currentUrl = new URL(window.location.href);
@@ -671,7 +537,199 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelector("body").style.removeProperty('overflow');
             }
         });
-
     }
-
 });
+
+// Handling a click on the reservation button
+jQuery(document).ready(function ($) {
+    const pweStore = $(".pwe-store");
+    const mainSection = $('.pwe-store__main-section');
+    const htmlLang = document.documentElement.lang.split('-')[0];
+    const contactFormModal = $("#pweStoreFormModal");
+    let currentDomain = window.location.hostname;
+    let sluger = "";
+    let domain = "";
+
+    $(".pwe-store__form-modal-open").each(function () {
+        $(this).on("click", function () {
+    
+            if (currentDomain === "warsawexpo.eu") {
+    
+                if (pweStore) {
+                    // Hide all children pweStore
+                    $(pweStore).children().css("display", "none");
+                }
+    
+                const fairsContainer = $(".pwe-store__fairs");
+                fairsContainer.css("display", "flex");
+    
+                setTimeout(() => {
+                    fairsContainer.css("opacity", "1");
+                }, 500);
+    
+                // Back to the shop
+                $(".pwe-store__fairs-arrow-back").off("click").on("click", function () {
+                    $(pweStore).children().css("display", "block");
+    
+                    const categoryHeaders = $('.pwe-store__section-hide:has(.pwe-store__featured-service) .pwe-store__category-header');
+                    // Show main section
+                    mainSection.css("display", "block");
+                    categoryHeaders.forEach(header => {
+                        if (header) {
+                            // Hide the category header
+                            header.css("display", "none");
+                        }
+                    });
+    
+                    $(".pwe-store__featured-service").removeClass("active");
+    
+                    fairsContainer.css("opacity", "0");
+                    fairsContainer.css("display", "none");
+    
+                    removeURLParams();
+                });
+    
+                // Search engine
+                const searchInput = $(".pwe-store__fairs-search-input");
+                searchInput.off("input").on("input", function () {
+                    const searchTerm = $(this).val().toLowerCase();
+    
+                    $(".pwe-store__fairs-item").each(function () {
+                        const $item = $(this);
+                        const name = $item.data("name").toLowerCase();
+                        const tooltip = $item.data("tooltip").toLowerCase();
+    
+                        if (name.includes(searchTerm) || tooltip.includes(searchTerm)) {
+                            $item.css("display", "block");
+                        } else {
+                            $item.css("display", "none");
+                        }
+                    });
+                });
+    
+                // Handling clicking on an item
+                $(".pwe-store__fairs-item").off("click").on("click", function () {
+                    domain = $(this).data("domain");
+
+                    contactFormModal.show();
+                });
+
+                sluger = $(this).closest(".pwe-store__service").data("slug");
+    
+                scrollToTop();
+                removeURLParams();
+            } else {
+                contactFormModal.show();
+                domain = window.location.hostname;
+                sluger = $(this).closest(".pwe-store__service").data("slug");
+    
+                removeURLParams();
+            }
+        });
+    });
+    
+    contactFormModal.find(".pwe-store__form-modal-close").on("click", function () {
+        contactFormModal.hide();
+    });
+
+    $(window).on("click", function (e) {
+        if ($(e.target).is(contactFormModal)) {
+            contactFormModal.hide();
+        }
+    });
+
+    $(".show-consent").on("click", function () {
+        $(this).closest(".pwe-store__form-modal-form").find(".pwe-store__form-modal-consent-desc").toggle(400);
+    });
+
+    $(".pwe-store__form-modal-submit").click(function () {
+        const $submitBtn = $(this);
+    
+        // Get data from form
+        const email = $(".pwe-store__form-modal-input_email").val().trim();
+        const phone = $(".pwe-store__form-modal-input_tel").val().trim();
+        const consent = $(".pwe-store__form-modal-consent-checkbox").is(":checked");
+    
+        // Validation – are all fields filled in?
+        if (!email || !phone || !consent) {
+            alert(htmlLang === "pl"
+                ? "Proszę wypełnić wszystkie pola i zaznaczyć zgodę."
+                : "Please fill in all fields and accept the consent.");
+            return;
+        }
+    
+        // Block the button while submitting the form
+        $submitBtn.prop("disabled", true).text(
+            htmlLang === "pl" ? "Wysyłanie..." : "Sending..."
+        );
+    
+        const productName = $('.pwe-store__service[data-slug="' + sluger + '"]')
+            .first()
+            .find('.pwe-store__service-name-mailing')
+            .text()
+            .trim();
+    
+        $.post("https://warsawexpo.eu/wp-content/themes/uncode-child/store/store-contact.php", {
+            password: apiKey,
+            email: email,
+            phone: phone,
+            consent: consent,
+            domain: domain,
+            product: productName,
+            slug: sluger,
+            lang: htmlLang,
+            group: currentGroup
+        }, function (response) {
+            // console.log(response);
+            if (response) {
+                $submitBtn.remove();
+                $(".pwe-store__form-modal-form").html(
+                    htmlLang === "pl"
+                        ? "<p>Dziękujemy za wypełnienie formularza kontaktowego. Skontaktujemy się z Państwem wkrótce.</p>"
+                        : "<p>Thank you for completing the contact form. We will get in touch with you shortly.</p>"
+                ).append(
+                    $("<div>").addClass("pwe-store__form-modal-progress-bar").css({
+                        width: "100%",
+                        height: "5px",
+                        backgroundColor: "#4caf50",
+                        marginTop: "10px",
+                        transition: "width 10s linear"
+                    })
+                ).append(
+                    $("<button>").addClass("pwe-store__form-modal-close-btn")
+                        .text(htmlLang === "pl" ? "Zamknij" : "Close")
+                        .on("click", function () {
+                            contactFormModal.hide();
+                        })
+                );
+    
+                setTimeout(function () {
+                    $(".pwe-store__form-modal-progress-bar").css("width", "0%");
+                }, 100);
+    
+                setTimeout(function () {
+                    contactFormModal.hide();
+                }, 10000);
+            } else {
+                // If an error occurred - unlock the button
+                $submitBtn.prop("disabled", false).text(
+                    htmlLang === "pl" ? "Wyślij" : "Submit"
+                );
+                alert(htmlLang === "pl"
+                    ? "Wystąpił błąd. Spróbuj ponownie."
+                    : "An error occurred. Please try again.");
+            }
+        }).fail(function () {
+            $submitBtn.prop("disabled", false).text(
+                htmlLang === "pl" ? "Wyślij" : "Submit"
+            );
+            alert(htmlLang === "pl"
+                ? "Błąd połączenia z serwerem."
+                : "Connection error.");
+        });
+    });
+    
+});
+
+
+

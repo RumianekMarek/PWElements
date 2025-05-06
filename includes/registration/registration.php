@@ -93,7 +93,7 @@ public function initVCMapPWERegistration() {
     require_once plugin_dir_path(__FILE__) . 'classes/registration_visitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_exhibitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_potential_exhibitors.php';
-
+    require_once plugin_dir_path(__FILE__) . 'classes/registration_ticket.php';
     // Check if Visual Composer is available
     if (class_exists('Vc_Manager')) {
         vc_map( array(
@@ -114,6 +114,7 @@ public function initVCMapPWERegistration() {
                             'Visitors' => 'PWERegistrationVisitors',
                             'Exhibitors' => 'PWERegistrationExhibitors',
                             'Potential exhibitors' => 'PWERegistrationPotentialExhibitors',
+                            'Ticket' => 'PWERegistrationTicket',
                         ),
                         'std' => 'PWERegistrationVisitors',
                     ),
@@ -197,6 +198,18 @@ public function initVCMapPWERegistration() {
                             ),
                         ),
                     ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Ticket link', 'pwe_registration'),
+                        'param_name' => 'ticket_link',
+                        'description' => __('Enter the link for the ticket.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-fourth-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'registration_type',
+                            'value' => array('PWERegistrationTicket'),
+                        ),
+                    ),
                 ),
             ),
         ));
@@ -232,6 +245,7 @@ public function initVCMapPWERegistration() {
             'PWERegistrationVisitors'               => 'classes/registration_visitors.php',
             'PWERegistrationExhibitors'             => 'classes/registration_exhibitors.php',
             'PWERegistrationPotentialExhibitors'    => 'classes/registration_potential_exhibitors.php',
+            'PWERegistrationTicket'                 => 'classes/registration_ticket.php',
         );
     }
 

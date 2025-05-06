@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $output = '';
 
@@ -151,7 +151,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
                 margin: 0;
             }
             #pweRegistration .gform_fields {
-                padding: 0 !important; 
+                padding: 0 !important;
             }
             #pweRegistration .gform_legacy_markup_wrapper ul.gform_fields li.gfield {
                 padding-right: 0;
@@ -356,7 +356,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
                 box-shadow: none !important;
             }
             #pweForm .gform_fields {
-                padding: 0 !important; 
+                padding: 0 !important;
             }
             #pweForm .iti--allow-dropdown {
                 margin-top: 18px;
@@ -498,7 +498,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
                     width: 100%;
                 }
             }
-            
+
         </style>';
 
         if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE)) {
@@ -598,7 +598,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
 } else if ($registration_type == 'PWERegistrationPotentialExhibitors') {
     $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
     $darker_btn_color = self::adjustBrightness($btn_color, -20);
-    
+
     $output = '
     <style>
         @media (min-width: 959px) {
@@ -800,4 +800,168 @@ if ($registration_type == 'PWERegistrationVisitors') {
             background: #555; /* Zmiana koloru rączki podczas najechania */
         }
     </style>';
+} else if ($registration_type == 'PWERegistrationTicket') {
+    $background_color = self::$accent_color;
+
+    $output = '
+    <style>
+        .row-container:has(#pweRegistrationTicket) {
+            background-image: url(/doc/background.webp);
+            background-repea: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+        #pweRegistrationTicket {
+            background: rgba(247, 247, 247, 1);
+            border-radius:18px;
+        }
+        #pweRegistrationTicket, #pweRegistrationTicket .ticket-card__price {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #pweRegistrationTicket, #pweRegistrationTicket .registration-ticket-container, #pweRegistrationTicket .ticket-card__price, #pweRegistrationTicket .ticket-card__details_button, #pweRegistrationTicket .gform_footer {
+            display:flex;
+            justify-content:center;
+        }
+
+        #pweRegistrationTicket .registration-ticket-container, #pweRegistrationTicket .ticket-card {
+            max-width:90%;
+            margin:0 auto 25px;
+            gap:30px;
+        }
+        #pweRegistrationTicket .registration-ticket__option {
+            background: rgba(255, 255, 255, 1);
+            border-radius: 18px;
+        }
+        #pweRegistrationTicket .registration-ticket__title {
+            font-size:36px;
+            margin-bottom: 36px;
+        }
+        #pweRegistrationTicket .ticket-card__label {
+            background: '. $background_color .';
+            color: rgba(255, 255, 255, 1);
+            border-radius: 18px 18px 0 0;
+            font-size:18px;
+            padding: 14px 0px;
+        }
+        #pweRegistrationTicket .registration-ticket__title, #pweRegistrationTicket .ticket-card__label, #pweRegistrationTicket .ticket-card__name, #pweRegistrationTicket .ticket-card__price-value, #pweRegistrationTicket .ticket-card__details-title {
+            font-weight: 700;
+            text-align: center;
+        }
+        #pweRegistrationTicket .ticket-card__name {
+            font-size: 32px;
+            padding: 20px 0 10px;
+            border-bottom: 4px solid black;
+        }
+        #pweRegistrationTicket .registration-ticket__option--standard {
+            flex: 0.6;
+            -webkit-box-shadow: 0px 0px 26px 0px rgba(24, 13, 35, 1);
+            -moz-box-shadow: 0px 0px 26px 0px rgba(24, 13, 35, 1);
+            box-shadow: 0px 0px 26px 0px rgba(24, 13, 35, 1);
+        }
+        #pweRegistrationTicket .registration-ticket__option--business {
+            flex: 0.4;
+            margin-top: 50px;
+            position: relative;
+        }
+        #pweRegistrationTicket .registration-ticket__option--standard .ticket-card__name {
+            border-bottom: 4px solid '. $background_color .';
+        }
+        #pweRegistrationTicket  .registration-ticket__option--business img {
+            position: absolute;
+            top: -62px;
+            right: -35px;
+            width: 90px;
+            height: 90px;
+        }
+        #pweRegistrationTicket .ticket-card__price-value {
+            font-size: 32px;
+        }
+        #pweRegistrationTicket .ticket-card__note {
+            margin-top:0px;
+        }
+        #pweRegistrationTicket .ticket-card__details-title {
+            color:black;
+            font-size:18px;
+            text-align: left;
+        }
+        #pweRegistrationTicket .ticket-card__benefits {
+            list-style: disc;
+            padding-left: 18px;
+            margin: 15px 0 25px;
+        }
+        #pweRegistrationTicket .ticket-card__benefits::marker  {
+            margin-right:2px !important;
+        }
+        #pweRegistrationTicket input {
+            border-radius:18px;
+        }
+        #pweRegistrationTicket .ticket-card__cta, #pweRegistrationTicket input[type="submit"] {
+            background-color: '. $btn_color .' !important;
+            border: 2px solid '. $btn_color .' !important;
+            border-radius: 35px !important;
+            font-size: 1em;
+            color: white;
+            align-self: center;
+            transform: scale(1) !important;
+            padding: 13px 31px;
+            font-weight: 600 !important;
+            text-transform: none;
+            min-width: 250px;
+            text-align: center;
+            margin:0 !important;
+        }
+        #pweRegistrationTicket  .registration-ticket__option--business .ticket-card__cta {
+            background-color: black !important;
+            border: 2px solid black !important;
+        }
+        #pweRegistrationTicket .ticket-card__cta:hover, #pweRegistrationTicket input[type="submit"]:hover {
+            background-color: '. $darker_btn_color .'!important;
+            border: 2px solid '. $darker_btn_color .'!important;
+            color: white;
+        }
+        #pweRegistrationTicket .gfield .iti.iti--allow-dropdown input {
+            border: 1px solid #eaeaea;
+        }
+        #pweRegistrationTicket .gfield .iti.iti--allow-dropdown input::focus {
+            border: 1px solid '. $btn_color .';
+        }
+
+        @media(max-width:1100px){
+            #pweRegistrationTicket .registration-ticket__option--standard, #pweRegistrationTicket .registration-ticket__option--business {
+                flex:1;
+            }
+        }
+        @media(max-width:960px){
+            .row-container:has(.gform_wrapper, .pwe-container-grupy) .wpb_column, .row-container:has(#pweRegistrationTicket) {
+                max-width: 100% !important;
+            }
+        }
+        @media(max-width:800px){
+            #pweRegistrationTicket .ticket-card__name {
+                font-size: 25px;
+            }
+        }
+        @media(max-width:650px){
+            #pweRegistrationTicket .registration-ticket-container {
+                flex-wrap:wrap;
+            }
+            #pweRegistrationTicket .registration-ticket__option {
+                min-width: 100%;
+            }
+        }
+    </style>'
+    ;
+
+    if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE)) {
+        $output .= '
+        <style>
+            @media (max-width: 960px) {
+                .row-container:has(#pweRegistrationTicket) {
+                    background-image: url(/doc/header_mobile.webp);
+                }
+            }
+        </style>';
+    }
 }
