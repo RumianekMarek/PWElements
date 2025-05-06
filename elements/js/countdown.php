@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 /**
  * Class PWECoutdown for display coutdown timer
- * 
+ *
  */
 class PWECountdown {
 
@@ -14,7 +14,7 @@ class PWECountdown {
 
     /**
      * Static method for counting down time
-     * 
+     *
      * @param array $timer for countdown data
      * @param string $target_id script target countdown id
      */
@@ -48,7 +48,7 @@ class PWECountdown {
                         function pluralizePolish(count, singular, plural, pluralGenitive) {
                             if (count === 1 || (count % 10 === 1 && count % 100 !== 11)) {
                                 return `${count} ${singular}`;
-                            } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) { 
+                            } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
                                 return `${count} ${plural}`;
                             } else {
                                 return `${count} ${pluralGenitive}`;
@@ -60,7 +60,7 @@ class PWECountdown {
                         }
 
                         function updateCountdown(elementId) {
-                            intervals[elementId] = setInterval(function() { 
+                            intervals[elementId] = setInterval(function() {
                                 if(timer[j] != null){
                                     const rightNow = new Date();
                                     const endTime = new Date(timer[j]["countdown_end"]);
@@ -77,7 +77,7 @@ class PWECountdown {
                                         endMessage = pluralizePolish(days, "dzień", "dni", "dni") + " " +
                                                     pluralizePolish(hours, "godzina", "godziny", "godzin") + " " +
                                                     pluralizePolish(minutes, "minuta", "minuty", "minut") ' . $timer_seconds . ';
-                                                    
+
                                     } else {
                                         endMessage = pluralizeEnglish(days, "day") + " " +
                                                     pluralizeEnglish(hours, "hour") + " " +
@@ -129,7 +129,7 @@ class PWECountdown {
                                                 customBtn.href = "/zostan-wystawca/";
                                             }
                                         }
-                                    }                                    
+                                    }
                                 }
                             }
                         }
@@ -156,7 +156,7 @@ class PWECountdown {
 
     /**
      * Static method to generate the HTML output for the PWE Countdown.
-     * 
+     *
      * @param array $countdown for countdown data
      * @param string $timer_id script target countdown id
      */

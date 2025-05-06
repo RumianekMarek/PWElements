@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementMainCountdown
@@ -17,7 +17,7 @@ class PWElementMainCountdown extends PWElements {
         self::$countdown_rnd_id = rand(10000, 99999);
         parent::__construct();
 
-        require_once plugin_dir_path(__FILE__) . 'js/countdown.php'; 
+        require_once plugin_dir_path(__FILE__) . 'js/countdown.php';
     }
 
     /**
@@ -80,7 +80,7 @@ class PWElementMainCountdown extends PWElements {
                         'param_holder_class' => 'backend-textfield',
                         'save_always' => true,
                         'admin_label' => true
-                    ), 
+                    ),
                     array(
                         'type' => 'textfield',
                         'heading' => __('Placeholder text', 'pwelement'),
@@ -166,19 +166,19 @@ class PWElementMainCountdown extends PWElements {
         );
 
         return $element_output;
-    } 
+    }
 
-    
+
     /**
      * Static private method to remove from JS out of date timer variables.
-     *      * 
+     *      *
      * @param array @right_date array off only new timers
      */
-    private static function getRightData($count) { 
+    private static function getRightData($count) {
         foreach ($count as $key => $value) {
             $start_date = !empty($value["countdown_start"]) ? new DateTime($value["countdown_start"]) : self::$today_date;
             $end_date = new DateTime($value["countdown_end"]);
-        
+
             if ($start_date > self::$today_date || $end_date < self::$today_date) {
                 unset($count[$key]);
             } else {
@@ -187,12 +187,12 @@ class PWElementMainCountdown extends PWElements {
         }
         return array_values($count);
     }
-    
+
 
     /**
      * Set up default stats.
      * Returns array for timer display on main site.
-     * 
+     *
      * @return array @main_timer options
      */
     public static function main_timer() {
@@ -265,7 +265,7 @@ class PWElementMainCountdown extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -325,21 +325,21 @@ class PWElementMainCountdown extends PWElements {
             // Checking if the date is in the range
             if ($date_start && $date_end) {
                 if (($date_start >= $trade_fair_start_date_timestamp && $date_start <= $trade_fair_end_date_timestamp) ||
-                    ($date_end >= $trade_fair_start_date_timestamp && $date_end <= $trade_fair_end_date_timestamp)) {  
+                    ($date_end >= $trade_fair_start_date_timestamp && $date_end <= $trade_fair_end_date_timestamp)) {
                     $fair_items_json[] = [
                         "domain" => $fair["domain"],
                         "halls" => $fair["hall"],
                         "color" => $fair["color_accent"]
                     ];
                 } else {
-                    if ($fair["domain"] === $current_domain) { 
-                        if (!$error_displayed) { 
+                    if ($fair["domain"] === $current_domain) {
+                        if (!$error_displayed) {
                             $output .= '<script>console.error("Shortcode dates and JSON dates do not match. Shortcode dates - ('. $trade_fair_start_date .' - '. $trade_fair_end_date .')JSON dates - ('. $fair['date_start'] .' - '. $fair['date_end'] .')");</script>';
-                        } 
+                        }
                     }
                 }
             }
-        } 
+        }
 
         $all_halls = '';
 
@@ -354,7 +354,7 @@ class PWElementMainCountdown extends PWElements {
                     "domain" => $item['domain']
                 ];
             }
-            
+
             if ($item['domain'] === $current_domain) {
                 foreach ($halls as $hall) {
                     $json_data_active[] = [
@@ -366,7 +366,7 @@ class PWElementMainCountdown extends PWElements {
                     if (!str_contains($all_halls, $clean_hall)) {
                         $all_halls .= $clean_hall . ', ';
                     }
-                }  
+                }
             }
         }
 
@@ -374,8 +374,8 @@ class PWElementMainCountdown extends PWElements {
         $all_halls = rtrim($all_halls, ', ');
 
         // Using the plural or singular form of a word
-        $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1) 
-            ? self::languageChecker('Hale', 'Halls') 
+        $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1)
+            ? self::languageChecker('Hale', 'Halls')
             : self::languageChecker('Hala', 'Hall');
 
 
@@ -416,14 +416,14 @@ class PWElementMainCountdown extends PWElements {
         $all_entries = implode(', ', array_unique($matching_entries));
 
         // Using the plural or singular form of a word
-        $entries_word = (count(array_filter(array_map('trim', explode(',', $all_entries)))) > 1) 
-            ? self::languageChecker('Wejścia', 'Entrances') 
+        $entries_word = (count(array_filter(array_map('trim', explode(',', $all_entries)))) > 1)
+            ? self::languageChecker('Wejścia', 'Entrances')
             : self::languageChecker('Wejście', 'Entrance');
 
         $diff_timestamp = ($trade_fair_start_date_timestamp - $current_timestamp);
         $time_to_end_timestamp = ($trade_fair_end_date_timestamp - $current_timestamp);
 
-        if ((($trade_fair_start_date_timestamp != false && $trade_fair_end_date_timestamp != false) && !empty($trade_fair_start_date)) && 
+        if ((($trade_fair_start_date_timestamp != false && $trade_fair_end_date_timestamp != false) && !empty($trade_fair_start_date)) &&
             $diff_timestamp < (7 * 60 * 60) && $time_to_end_timestamp > 0 && $custom_timer != true) {
 
             $output .= '
@@ -513,7 +513,7 @@ class PWElementMainCountdown extends PWElements {
                 </div>
                 <p class="opening-hours__adress">Al. Katowicka 62, 05-830 Nadarzyn</p>
             </div>
-            
+
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     document.querySelector(".row-container:has(.pwelement_'. self::$rnd_id .')").classList.add("sticky-element");
@@ -527,17 +527,17 @@ class PWElementMainCountdown extends PWElements {
                     $main_value["countdown_end"] = do_shortcode('[trade_fair_datetotimer]');
                 }
                 foreach($main_value as $id => $key){
-                    $countdown[$main_id][$id] = do_shortcode($key);  
+                    $countdown[$main_id][$id] = do_shortcode($key);
                 }
             }
-            
+
             $text_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'white') . '!important';
             $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
             $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color) . '!important';
             $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
             $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
-            
+
             if(($custom_timer)){
                 $right_countdown = self::getRightData($countdown);
             } else {
@@ -558,17 +558,17 @@ class PWElementMainCountdown extends PWElements {
             } else {
                 $countdown_font_size = (isset($right_countdown[0]['countdown_font_size']) && !empty($right_countdown[0]['countdown_font_size'])) ? $right_countdown[0]['countdown_font_size'] : '16px';
             }
-            
+
             $countdown_font_size = str_replace("px", "", $countdown_font_size);
-            
+
             $ending_date = new DateTime($right_countdown[0]['countdown_end']);
-            
+
             $date_dif = self::$today_date->diff($ending_date);
 
             $flex_direction = ($countdown_column == true) ? 'flex-direction: column;' : '';
 
             if ($atts['turn_off_timer_bg'] == true) {
-                $output .= 
+                $output .=
                 '<style>
                     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
                         background: inherit;
@@ -576,7 +576,7 @@ class PWElementMainCountdown extends PWElements {
                         padding: 0 !important;
                     }';
             } else {
-                $output .= 
+                $output .=
                 '<style>
                     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
                         background: ' . $countdown_bg . ';
@@ -587,7 +587,7 @@ class PWElementMainCountdown extends PWElements {
             if (count($right_countdown)){
                 $output .= '
                     .row-parent:has(.pwelement_' . self::$rnd_id . ') {
-                        background: ' . $countdown_bg . '; 
+                        background: ' . $countdown_bg . ';
                         max-width: ' . $countdown_width . ';
                         padding: 0 !important;
                     }
@@ -600,7 +600,7 @@ class PWElementMainCountdown extends PWElements {
                         color: '. $btn_text_color .';
                         background-color: '. $btn_color .';
                         border: 1px solid '. $btn_color .';
-                        margin: 9px 18px; 
+                        margin: 9px 18px;
                         transform: scale(1) !important;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-btn:hover {
@@ -613,7 +613,7 @@ class PWElementMainCountdown extends PWElements {
                         text-transform: uppercase;
                         margin: 9px auto;
                     }
-                    .pwelement_'. self::$rnd_id .' .countdown-container {                    
+                    .pwelement_'. self::$rnd_id .' .countdown-container {
                         display: flex;
                         justify-content: space-evenly;
                         flex-wrap: wrap;
@@ -641,7 +641,7 @@ class PWElementMainCountdown extends PWElements {
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-countdown-timer {
                             min-width: 100%;
-                        }  
+                        }
                         .pwelement_'. self::$rnd_id .' #main-timer p {
                             margin: 0 auto;
                         }
@@ -654,19 +654,19 @@ class PWElementMainCountdown extends PWElements {
                     }';
 
                 $output .= '</style>';
-                    
+
                 $output .='<div id="main-timer" class="countdown-container" data-show-register-bar="'. $atts['show_register_bar'] .'">';
 
                 $turn_off_countdown_text = isset($right_countdown[0]['turn_off_countdown_text']) ? $right_countdown[0]['turn_off_countdown_text'] : '';
 
-                if ($turn_off_countdown_text != true && $right_countdown[0]['countdown_text'] != '') {    
+                if ($turn_off_countdown_text != true && $right_countdown[0]['countdown_text'] != '') {
                     $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
                 };
                 if (get_locale() == "pl_PL") {
                     $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
                                 ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
                                 if(!$mobile){
-                                    $output .= $date_dif->s . ' sekund 
+                                    $output .= $date_dif->s . ' sekund
                                             </p>';
                                 } else {
                                     $output .= '</p>';
@@ -686,9 +686,9 @@ class PWElementMainCountdown extends PWElements {
                     $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
                 };
                 $output .='</div>';
-            
+
                 PWECountdown::output($right_countdown, self::$countdown_rnd_id);
-                
+
             } else {
                 $output .= '</style>';
             }

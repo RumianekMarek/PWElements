@@ -39,189 +39,39 @@ class PWElementContact extends PWElements {
     * 
     * @return string @output 
     */
-    public static function output($atts) {
-        $all_images = self::findAllImages('/doc/galeria/zdjecia_wys_odw', 2);
-        
+    public static function output($atts) {        
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
-        $edition_1 = [
-            "mr.glasstec.pl",
-            "worldofbuildexpo.com", 
-            "futureenergyweekpoland.com", 
-            "industrialbuildingexpo.pl", 
-            "filtratecexpo.com", 
-            "chemtecpoland.com", 
-            "lasertechnicapoland.com", 
-            "coldtechpoland.com", 
-            "warsawoptiexpo.com", 
-            "funeralexpo.pl", 
-            "coffeeeuropeexpo.com", 
-            "pharmacyexpopoland.com", 
-            "warsawwindowexpo.com", 
-            "glasstechpoland.com", 
-            "valvespumpsexpo.com", 
-            "hairbarberweekpoland.com", 
-            "concreteexpo.pl", 
-            "automechanicawarsaw.com", 
-            "fastechexpo.com", 
-            "aiindustryexpo.com", 
-            "medivisionforum.com", 
-            "warsawprokitchen.com", 
-            "aluminiumtechexpo.com", 
-            "medinnovationsexpo.com", 
-            "emobilityexpo.pl", 
-            "worldofhydrogenexpo.com", 
-            "warsawtoys.com", 
-            "biopowerexpo.com", 
-            "agrofarmaexpo.com", 
-            "veterinaryexpopoland.com", 
-            "isoltexexpo.com", 
-            "polandsustainabilityexpo.com", 
-            "solidsexpopoland.com", 
-            "forestechexpopoland.com", 
-            "lightexpo.pl", 
-            "warsawclimatech.com", 
-            "decarbonisationexpo.com", 
-            "globalfoodexpo.pl", 
-            "photonicsexpo.pl", 
-            "waterexpopoland.com", 
-            "warsawplastexpo.com", 
-            "grindtechexpo.com", 
-            "safetyrescueexpo.com", 
-            "cybersecurityexpo.pl", 
-            "pneumaticswarsaw.com", 
-            "labotec.pl", 
-            "coiltechexpo.com", 
-            "autotuningshow.com", 
-            "biurotexexpo.com", 
-            "cosmopharmpack.com", 
-            "huntingexpo.pl", 
-            "warsawfleetexpo.com", 
-            "warsawshopexpo.com", 
-            "hotelequipmentexpo.com", 
-            "bakerytechpoland.com", 
-            "postdeliverylogisticsexpo.com", 
-            "warsawgardentech.com", 
-            "warsawspawellnessexpo.com", 
-            "electroinstalexpo.com", 
-            "wiretechpoland.com", 
-            "tubetechnicpoland.com", 
-            "bathceramicsexpo.com", 
-            "warsawbusexpo.eu", 
-            "centralnetargirolnicze.com"
-        ];
-        
-        $edition_2 = [
-            "esteticaexpo.com", 
-            "automaticaexpo.com", 
-            "batteryforumpoland.com", 
-            "floorexpo.pl", 
-            "door-tec.pl", 
-            "furnitechexpo.pl", 
-            "furniturecontractexpo.com", 
-            "electronics-show.com", 
-            "forumbhp.com", 
-            "weldexpopoland.com", 
-            "warsawprinttech.com", 
-            "heatingtechexpo.com", 
-            "recyclingexpo.pl", 
-            "warsawsweettech.com", 
-            "wodkantech.com", 
-            "polandcoatings.com", 
-            "gastroquickservice.com", 
-            "warsawconstructionexpo.com", 
-            "warsawtoolsshow.com", 
-            "targirehabilitacja.pl", 
-            "boattechnica.com", 
-            "automotive-expo.eu", 
-            "packagingpoland.pl", 
-            "labelingtechpoland.com", 
-            "warsawmedicalexpo.com", 
-            "warsawsecurityexpo.com", 
-            "foodtechexpo.pl", 
-            "facadeexpo.pl", 
-            "roofexpo.pl", 
-            "poultrypoland.com", 
-            "bioagropolska.com", 
-            "fruitpolandexpo.com", 
-            "warsawmetaltech.pl", 
-            "maintenancepoland.com", 
-            "controldrivespoland.com", 
-            "intralogisticapoland.com", 
-            "roboticswarsaw.com", 
-            "compositepoland.com", 
-            "smarthomeexpo.pl", 
-            "warsawstone.com", 
-            "woodwarsawexpo.com", 
-            "beerwarsawexpo.com", 
-            "winewarsawexpo.com", 
-            "cleantechexpo.pl", 
-            "buildoutdoorexpo.com", 
-            "bioexpo.pl"
-        ];
-        
-        $edition_3 = [
-            "warsawpack.pl", 
-            "mttsl.pl", 
-            "warsawfoodexpo.pl", 
-            "dentalmedicashow.pl", 
-            "beautydays.pl", 
-            "boatshow.pl", 
-            "warsawhome.eu", 
-            "warsawhomefurniture.com", 
-            "warsawhomekitchen.com", 
-            "warsawhomelight.com", 
-            "warsawhometextile.com", 
-            "warsawhomebathroom.com", 
-            "warsawbuild.eu", 
-            "industryweek.pl", 
-            "solarenergyexpo.com", 
-            "remadays.com", 
-            "franczyzaexpo.pl", 
-            "etradeshow.pl", 
-            "warsawgardenexpo.com", 
-            "warsawgiftshow.com", 
-            "eurogastro.com.pl", 
-            "worldhotel.pl", 
-            "warsawhvacexpo.com"
-        ];
-        
-        $edition_b2c = [
-            "campercaravanshow.com", 
-            "motorcycleshow.pl", 
-            "animalsdays.eu", 
-            "oldtimerwarsaw.com", 
-            "fiwe.pl", 
-            "ttwarsaw.pl", 
-            "warsawmotorshow.com"
-        ];        
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data(); 
+        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data(); 
 
         // Get domain address
-        $current_url = $_SERVER['HTTP_HOST'];
+        $current_domain = $_SERVER['HTTP_HOST'];
 
-        // Check which edition the current domain belongs to
-        if (in_array($current_url, $edition_1)) {
-            $edition_number = "edition_1";
-            $service_mail = "biuro.podawcze1";
-            $media_mail = "media1";
-        } else if (in_array($current_url, $edition_2)) {
-            $edition_number = "edition_2";
-            $service_mail = "biuro.podawcze2";
-            $media_mail = "media2";
-            $contact_name = strtolower($edition_2[$current_url]);
-        } else if (in_array($current_url, $edition_3)) {
-            $edition_number = "edition_3";
-            $service_mail = "biuro.podawcze3";
-            $media_mail = "media3";
-        } else {
-            $edition_number = "edition_b2c";
-            $service_mail = "biuro.podawcze3";
-            $media_mail = "media3";
-        }
-
-        $output = '';
-
-        $output .= '
+        foreach ($pwe_groups_data as $group) {
+            if ($current_domain == $group->fair_domain) {
+                $current_group = $group->fair_group;
+                foreach ($pwe_groups_contacts_data as $group_contact) {
+                    if ($group->fair_group == $group_contact->groups_name) {
+                        if ($group_contact->groups_slug == "biuro-ob") {
+                            $service_contact_data = json_decode($group_contact->groups_data);
+                            $service_email = trim($service_contact_data->email);
+                            $service_phone = trim($service_contact_data->tel);
+                        }
+                        if ($group_contact->groups_slug == "ob-tech-wyst") {
+                            $consultant_contact_data = json_decode($group_contact->groups_data);
+                            $consultant_email = trim($consultant_contact_data->email);
+                        }
+                        if ($group_contact->groups_slug == "ob-marketing-media") {
+                            $marketing_contact_data = json_decode($group_contact->groups_data);
+                            $marketing_email = trim($marketing_contact_data->email);
+                        }
+                    } 
+                }
+            }
+        }   
+        
+        $output = '
         <style>
             .pwelement_'. self::$rnd_id .' .pwe-container-contact {
                 padding: 36px;
@@ -309,9 +159,9 @@ class PWElementContact extends PWElements {
                     <div class="uncode_text_column">
                         <p>
                             <b>'. self::languageChecker('Biuro obsługi', 'Customer Service Office') .'</b>
-                            <a href="tel:+48518739124">+48 518 739 124</a>
-                            <a href="mailto:'. $service_mail .'@warsawexpo.eu">
-                                <span>'. $service_mail .'</span><span>@warsawexpo.eu</span>
+                            <a href="tel:'. $service_phone .'">'. $service_phone .'</a>
+                            <a href="mailto:'. str_replace("@warsawexpo.eu", "", $service_email) .'@warsawexpo.eu">
+                                <span>'. str_replace("@warsawexpo.eu", "", $service_email) .'</span><span>@warsawexpo.eu</span>
                             </a>
                         </p>
                     </div>
@@ -322,8 +172,8 @@ class PWElementContact extends PWElements {
                     <div class="uncode_text_column">
                         <p>
                             <b>'.self::languageChecker('Obsługa techniczna wystawców<br>', 'Technical support for exhibitors<br>').'</b>
-                            <a href="mailto:konsultanttechniczny@warsawexpo.eu">
-                                <span>konsultanttechniczny</span><span>@warsawexpo.eu</span>
+                            <a href="mailto:'. str_replace("@warsawexpo.eu", "", $consultant_email) .'@warsawexpo.eu">
+                                <span>'. str_replace("@warsawexpo.eu", "", $consultant_email) .'</span><span>@warsawexpo.eu</span>
                             </a>
                         </p>
                     </div>
@@ -342,14 +192,14 @@ class PWElementContact extends PWElements {
                     <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                         <p>
                             <b>'. self::languageChecker('Obsługa marketingowa i media', 'Marketing and media services').'</b>
-                            <a href="mailto:'. $media_mail .'@warsawexpo.eu">
-                                <span>'. $media_mail .'</span><span>@warsawexpo.eu</span>
+                            <a href="mailto:'. str_replace("@warsawexpo.eu", "", $marketing_email) .'@warsawexpo.eu">
+                                <span>'. str_replace("@warsawexpo.eu", "", $marketing_email) .'</span><span>@warsawexpo.eu</span>
                             </a>
                         </p>
                     </div>
                 </div>';
 
-                if (in_array($current_url, $edition_1)) {
+                if ($current_group == "gr1") {
                     $output .= '
                     <div class="pwe-contact-icon-item">
                         <img src="/wp-content/plugins/PWElements/media/Person.jpg" alt="grafika osoby">

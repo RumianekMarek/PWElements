@@ -357,7 +357,7 @@ class PWElementNumbers extends PWElements {
                         <div class="pwe-numbers__container-numbers">
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" />
-                                <h3>120+</h3>
+                                <h3>140+</h3>
                                 <p>'. self::languageChecker('Targów B2B<br>rocznie', 'B2B fairs<br>per year') .'</p>
                             </div>
                             <div>
