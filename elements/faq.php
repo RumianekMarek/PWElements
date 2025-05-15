@@ -86,11 +86,11 @@ class PWElementFaq extends PWElements {
                             self::languageChecker(
                                 <<<PL
                                     <div class="pytanie half-block-padding">Gdzie odbywają się targi?</div>
-                                    <div class="odpowiedz half-block-padding">Targi odbywają się w <a style="text-decoration:underline;" href="//warsawexpo.eu" target="_blank">Ptak Warsaw Expo</a>, Al. Katowicka 62, 05-830 Nadarzyn</div>
+                                    <div class="odpowiedz half-block-padding">Targi odbywają się w <a style="text-decoration:underline;" href="//warsawexpo.eu" target="_blank">Ptak Warsaw Expo</a> – największym centrum targowym w Polsce. Al. Katowicka 62, 05-830 Nadarzyn/Warszawa</div>
                                 PL,
                                 <<<EN
                                     <div class="pytanie half-block-padding">Where are the fairs held?</div>
-                                    <div class="odpowiedz half-block-padding">The fair takes place at <a style=" text-decoration:underline;" href="//warsawexpo.eu/en/" target="_blank"> Ptak Warsaw Expo </a>, Al. Katowicka 62, 05-830 Nadarzyn, 114D Wolica*</div>
+                                    <div class="odpowiedz half-block-padding">The fair takes place in <a style=" text-decoration:underline;" href="//warsawexpo.eu/en/" target="_blank"> Ptak Warsaw Expo </a> - the largest trade tarde fair center in Poland. Al Katowicka 62, 05-830 Nadarzyn/Warsaw</div>
                                 EN
                             )
                             .'</div>

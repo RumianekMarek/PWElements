@@ -5,8 +5,8 @@ function get_fair_data($specific_domain = null) {
     static $cached_data = null;
 
     if ($cached_data === null) {
-        // Get data from global variable from pwelements.php
-        global $pwe_fairs;
+        // Get data from pwefunctions.php
+        $pwe_fairs = PWECommonFunctions::get_database_fairs_data();
 
         static $console_logged = false;
 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementNumbers
@@ -28,13 +28,14 @@ class PWElementNumbers extends PWElements {
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'pwe_element',
-                    'value' => 'PWElementNumbers', 
+                    'value' => 'PWElementNumbers',
                 ),
                 'value' => array(
                     'Simple mode' => 'simple_mode',
                     'Footer mode' => 'footer_mode',
+                    'Footer new mode' => 'footer_new_mode',
                 ),
-                
+
             ),
             array(
                 'type' => 'checkbox',
@@ -61,7 +62,7 @@ class PWElementNumbers extends PWElements {
                     'value' => array(''),
                     'callback' => "hideEmptyElem",
                 ),
-            ), 
+            ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
@@ -74,7 +75,7 @@ class PWElementNumbers extends PWElements {
                     'element' => 'pwe_numbers_mode',
                     'value' => 'simple_mode',
                 ),
-            ), 
+            ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
@@ -140,12 +141,12 @@ class PWElementNumbers extends PWElements {
                     'element' => 'pwe_numbers_mode',
                     'value' => 'simple_mode',
                 ),
-            ), 
+            ),
         );
         return $element_output;
-    }    
+    }
 
-    public static function output($atts) {  
+    public static function output($atts) {
         $pwe_number_color_icons_hidden = isset($atts['pwe_number_color_icons_hidden']) ? $atts['pwe_number_color_icons_hidden'] : null;
         $pwe_number_color_icons = self::findColor($pwe_number_color_icons_hidden, $atts['pwe_number_color_icons'], self::$accent_color);
 
@@ -158,8 +159,8 @@ class PWElementNumbers extends PWElements {
             'pwe_number_second' => '',
             'pwe_custom_title_third' => '',
             'pwe_number_third' => '',
-        ), $atts )); 
-        
+        ), $atts ));
+
         if ($pwe_numbers_mode == "simple_mode") {
 
             if (get_locale() == "pl_PL") {
@@ -171,7 +172,7 @@ class PWElementNumbers extends PWElements {
                 $pwe_custom_title_second = (empty($pwe_custom_title_second)) ? 'speakers' : $pwe_custom_title_second;
                 $pwe_custom_title_third = (empty($pwe_custom_title_third)) ? 'participants' : $pwe_custom_title_third;
             }
-            
+
             $output = '
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-numbers-row {
@@ -207,11 +208,11 @@ class PWElementNumbers extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-numbers-item {
                         width: 100%;
-                    }  
+                    }
                     .pwelement_'. self::$rnd_id .' .pwe-numbers-item-heading h3 {
                         font-size: 20px;
                     }
-                } 
+                }
             </style>
 
             <div id="pweNumbers"class="pwe-container-numbers">
@@ -260,8 +261,8 @@ class PWElementNumbers extends PWElements {
                     gap:30px;
                 }
                 .pwe-numbers__title {
-                    margin: 0 auto; 
-                    font-size: 24px !important; 
+                    margin: 0 auto;
+                    font-size: 24px !important;
                     text-align: center;
                     text-transform: uppercase;
                 }
@@ -370,6 +371,271 @@ class PWElementNumbers extends PWElements {
                     <div class="pwe-numbers__img"></div>
                 </div>
             </div>';
+        } else if ($pwe_numbers_mode =='footer_new_mode'){
+            $output = '
+            <style>
+                .pwelement_'. self::$rnd_id .' .footer__top {
+                    display:flex;
+                    gap: 30px;
+                    margin: 15px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__logos {
+                    display:flex;
+                    flex-direction:column;
+                    flex: 0.3;
+                    border: 2px solid #0000000F;
+                    border-radius: 18px;
+                    justify-content: space-around;
+                    padding: 25px 0;
+                    position: relative;
+                    background-color:white !important;
+                }
+                .pwelement_'. self::$rnd_id .' .icon-info {
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    width: 25px;
+                    cursor: pointer;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__info {
+                    flex:0.7;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: top center;
+                    border-radius: 16px;
+                    aspect-ratio: auto;
+                    min-height: 1px;
+                    width: 100%;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .pwelement_'. self::$rnd_id .' .footer__info-bg {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                }
+
+                .pwelement_'. self::$rnd_id .' .footer__info-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    color: white;
+                    padding: 2rem;
+                    background: rgba(0, 0, 0, 0.3); /* półprzezroczyste przyciemnienie, opcjonalnie */
+                    display: flex;
+                    gap: 1rem;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    border-radius:18px;
+                }
+
+                .pwelement_'. self::$rnd_id .' .footer__info-title {
+                    font-size: 1.8rem;
+                    margin: 0;
+                    color:white !important;
+                    font-weight:700;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__info-description {
+                    font-weight: 500;
+                    margin-top: 5px;
+                    font-size: 18px;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__calendar-link {
+                    font-weight: bold;
+                    text-decoration: underline;
+                    cursor: pointer;
+                    background-color: white;
+                    color: black;
+                    text-decoration: none;
+                    padding: 12px 15px;
+                    border-radius: 18px;
+                    margin-bottom: 12px;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__stats {
+                    display:flex;
+                    justify-content: space-between;
+                    margin: 25px 0;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__stat {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 180px;
+                    text-align: center;
+                    min-height: 147px;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__stat-value {
+                    margin-top: 10px;
+                    font-weight: 700;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__stat-description {
+                    margin-top: 0px;
+                    font-size: 14px;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__stat img {
+                    background-color: #E7D3A24F;
+                    border-radius: 100%;
+                    padding: 4px 6px 6px 6px;
+                    width: 55px;
+                }
+                .pwelement_'. self::$rnd_id .' .ufi-info-text {
+                    display: none;
+                    padding: 0 15px ;
+                    margin-top: 0px;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__logos.hide-images img.footer__logo {
+                    display: none;
+                }
+                .pwelement_'. self::$rnd_id .'  .icon-close {
+                    position:absolute;
+                    width: 35px;
+                    height: 35px;
+                    top: 2px;
+                    right: 2px;
+                    cursor: pointer;
+                    margin-left: 10px;
+                }
+                .pwelement_'. self::$rnd_id .' .footer__logos.show-text .ufi-info-text {
+                    display: block;
+                }
+                .pwelement_'. self::$rnd_id .' .ufi-info-text p {
+                  font-size:13px;
+                  line-height:1.5;
+                }
+                .pwelement_'. self::$rnd_id .' .icon-info,
+                .pwelement_'. self::$rnd_id .' .icon-close {
+                    transition: opacity 0.3s ease;
+                }
+
+                .pwelement_'. self::$rnd_id .' .footer__logos.show-text .icon-info {
+                    display: none;
+                }
+
+                .pwelement_'. self::$rnd_id .' .footer__logos:not(.show-text) .icon-close {
+                    display: none;
+                }
+                                .pwe-footer-bg,
+                .pwe-footer-images-bg {
+                    display: none;
+                }
+                @media(max-width:620px){
+                    .pwelement_'. self::$rnd_id .' .footer__logos img {
+                        max-width: 300px;
+                        margin: 0 auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .footer__top {
+                        flex-direction: column;
+                    }
+                    .pwelement_'. self::$rnd_id .' .footer__info-overlay {
+                        flex-direction: column;
+                        justify-content: end;
+                        align-items: center;
+                        padding-bottom: 0px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .footer__stats {
+                        margin: 25px 0;
+                        flex-wrap: wrap;
+                        align-items: center;
+
+                    }
+
+                }
+                @media(max-width:420px){
+                    .pwelement_'. self::$rnd_id .' .footer__stat {
+                        width: 140px;
+                    }
+                }
+
+            </style>
+            <div id="newFooter" class=".pwelement_'. self::$rnd_id .'">
+                <h2 class="footer__headline">'. self::languageChecker('Ptak Warsaw Expo - łączymy świat biznesu', 'Ptak Warsaw Expo - we connect the world of business') .'</h2>
+
+                <div class="footer__top">
+
+                    <div class="footer__logos">
+                        <img class="icon-info" src="/wp-content/plugins/PWElements/media/numbers-el/info-icon.webp"/>
+                        <img src="/wp-content/plugins/PWElements/media/numbers-el/certifed.webp" alt="Certifed" class="footer__logo" />
+                        <img src="/wp-content/plugins/PWElements/media/numbers-el/ufi.webp" alt="Ufi" class="footer__logo" />
+                    </div>
+
+                    <div class="footer__info">
+                    <img src="/wp-content/plugins/PWElements/media/stolica.webp" alt="Stolica" class="footer__info-bg" />
+
+                    <div class="footer__info-overlay">
+                        <div class="footer__info-item">
+                        <h2 class="footer__info-title">'. self::languageChecker('Stolica targów', 'The capital of trade fairss') .'</h2>
+                        <p class="footer__info-description">'. self::languageChecker('Targi / Konferencje / Eventy', 'Fairs / Conferences / Events') .'</p>
+                        </div>
+                        <a href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'">
+                            <div class="footer__calendar-link">'. self::languageChecker('Kalendarz targowy', 'Trade show calendar') .'</div>
+                        </a>
+                    </div>
+                    </div>
+
+                </div>
+
+                <div class="footer__stats">
+                    <div class="footer__stat">
+                        <img src="/wp-content/plugins/PWElements/media/numbers-el/exhibitors.webp" alt="Ikona wystawców" class="footer__stat-icon" />
+                        <h2 class="footer__stat-value">20000</h2>
+                        <p class="footer__stat-description">'. self::languageChecker('Wystawców rocznie', 'Exhibitors per year') .'</p>
+                    </div>
+                    <div class="footer__stat">
+                        <img src="/wp-content/plugins/PWElements/media/numbers-el/visitors.webp" alt="Ikona odwiedzających" class="footer__stat-icon" />
+                        <h2 class="footer__stat-value">2mln+</h2>
+                        <p class="footer__stat-description">'. self::languageChecker('Odwiedzających rocznie', 'Visitors per year') .'</p>
+                    </div>
+                    <div class="footer__stat">
+                        <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" alt="Ikona targów" class="footer__stat-icon" />
+                        <h2 class="footer__stat-value">140+</h2>
+                        <p class="footer__stat-description">'. self::languageChecker('Targów B2B rocznie', 'B2B fairs per year') .'</p>
+                    </div>
+                    <div class="footer__stat">
+                        <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" alt="Ikona powierzchni" class="footer__stat-icon" />
+                        <h2 class="footer__stat-value">153k</h2>
+                        <p class="footer__stat-description">'. self::languageChecker('Powierzchni wystawienniczej m²', 'Exhibition space m²') .'</p>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const footer = document.querySelector(".footer__logos");
+                const infoIcon = footer.querySelector(".icon-info");
+
+                // Tworzymy X (zamknięcie), jeśli jeszcze nie istnieje
+                let closeIcon = footer.querySelector(".icon-close");
+                if (!closeIcon) {
+                    closeIcon = document.createElement("img");
+                    closeIcon.src = "/wp-content/plugins/PWElements/media/numbers-el/close-icon.svg"; // <- podmień na swoją ikonę X
+                    closeIcon.alt = "Zamknij";
+                    closeIcon.className = "icon-close";
+                    footer.insertBefore(closeIcon, infoIcon.nextSibling);
+                }
+
+                // Tworzymy blok tekstowy, jeśli jeszcze nie istnieje
+                let infoText = footer.querySelector(".ufi-info-text");
+                if (!infoText) {
+                    infoText = document.createElement("div");
+                    infoText.className = "ufi-info-text";
+                    infoText.innerHTML = `
+                    <p>'. self::languageChecker('<strong>Certyfikat UFI Member</strong> to oficjalne potwierdzenie, że firma <strong>PTAK WARSAW EXPO SP. z o.o.</strong> jest członkiem UFI – The Global Association of the Exhibition Industry (Światowego Stowarzyszenia Przemysłu Targowego). UFI (Union des Foires Internationales) to międzynarodowa organizacja branżowa, która zrzesza kluczowych graczy globalnego rynku targów i wystaw, w tym m.in: organizatorów targów i wystaw, zarządców centrów wystawienniczych.', '<strong>UFI Member Certificate</strong> is an official confirmation that <strong>PTAK WARSAW EXPO SP. z o.o.</strong> is a member of UFI – The Global Association of the Exhibition Industry. UFI (Union des Foires Internationales) is an international industry organization that brings together key players in the global trade fair and exhibition market, including: trade fair and exhibition organizers, exhibition center managers.') .'</p>
+                    `;
+                    footer.appendChild(infoText);
+                }
+
+                // Kliknięcie w ikonę info
+                infoIcon.addEventListener("click", () => {
+                    footer.classList.add("hide-images", "show-text");
+                });
+
+                // Kliknięcie w ikonę X (zamknięcie)
+                closeIcon.addEventListener("click", () => {
+                    footer.classList.remove("hide-images", "show-text");
+                });
+            </script>
+            ';
         }
 
         return $output;

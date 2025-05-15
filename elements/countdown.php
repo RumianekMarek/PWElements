@@ -163,6 +163,18 @@ class PWElementMainCountdown extends PWElements {
                 'save_always' => true,
                 'admin_label' => true
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Change day to d etc.', 'pwelement'),
+                'param_name' => 'show_short_name_data',
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMainCountdown',
+                ),
+                'save_always' => true,
+                'admin_label' => true
+            ),
         );
 
         return $element_output;
@@ -273,7 +285,10 @@ class PWElementMainCountdown extends PWElements {
             'custom_timer' => '',
             'turn_off_timer_bg' => '',
             'countdowns' => '',
+            'show_short_name_data' => '',
         ), $atts ));
+
+        $show_short = isset($atts['show_short_name_data']) && $atts['show_short_name_data'] === 'true';
 
         $output = '';
 
@@ -652,7 +667,11 @@ class PWElementMainCountdown extends PWElements {
                             padding-top: 0 !important;
                         }
                     }';
-
+                if($show_short_name_data){
+                    $output .= '.pwelement_'. self::$rnd_id .' .pwe-timer-text {
+                        text-transform: none;
+                    }';
+                }
                 $output .= '</style>';
 
                 $output .='<div id="main-timer" class="countdown-container" data-show-register-bar="'. $atts['show_register_bar'] .'">';
@@ -662,32 +681,44 @@ class PWElementMainCountdown extends PWElements {
                 if ($turn_off_countdown_text != true && $right_countdown[0]['countdown_text'] != '') {
                     $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
                 };
-                if (get_locale() == "pl_PL") {
-                    $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                                ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
-                                if(!$mobile){
-                                    $output .= $date_dif->s . ' sekund
-                                            </p>';
-                                } else {
-                                    $output .= '</p>';
-                                }
+                if(!$show_short_name_data){
+                    if (get_locale() == "pl_PL") {
+                        $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                                    ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
+                                    if(!$mobile){
+                                        $output .= $date_dif->s . ' sekund
+                                                </p>';
+                                    } else {
+                                        $output .= '</p>';
+                                    }
+                    } else {
+                        $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                                    ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
+                                    if(!$mobile){
+                                        $output .= $date_dif->s . ' seconds
+                                                </p>';
+                                    } else {
+                                        $output .= '</p>';
+                                    }
+                    }
                 } else {
                     $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                                ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
-                                if(!$mobile){
-                                    $output .= $date_dif->s . ' seconds
-                                            </p>';
-                                } else {
-                                    $output .= '</p>';
-                                }
+                                    ' . $date_dif->days . ' d ' . $date_dif->h . ' h ' . $date_dif->i . ' min ';
+                                    if(!$mobile){
+                                        $output .= $date_dif->s . ' s
+                                                </p>';
+                                    } else {
+                                        $output .= '</p>';
+                                    }
                 }
+
                 $turn_off_countdown_button = isset($right_countdown[0]['turn_off_countdown_button']) ? $right_countdown[0]['turn_off_countdown_button'] : '';
                 if ($turn_off_countdown_button != true && $right_countdown[0]['countdown_btn_text'] != '') {
                     $output .='<a id="timer-button-' . self::$countdown_rnd_id . '" class="timer-button pwe-btn btn" href="' . $right_countdown[0]['countdown_btn_url'] . '">' . $right_countdown[0]['countdown_btn_text'] . '</a>';
                 };
                 $output .='</div>';
 
-                PWECountdown::output($right_countdown, self::$countdown_rnd_id);
+                PWECountdown::output($right_countdown, self::$countdown_rnd_id, array('show_short_name_data' => $show_short,));
 
             } else {
                 $output .= '</style>';

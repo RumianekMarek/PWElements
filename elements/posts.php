@@ -31,6 +31,8 @@ class PWElementPosts extends PWElements {
                     'Full mode' => 'posts_full_mode',
                     'Full mode newest (top 6)' => 'posts_full_newest_mode',
                     'Full mode newest slider' => 'posts_full_newest_slider_mode',
+                    'Simple mode with more button' => 'posts_simple_with_button_more',
+                    'Syncing Slider' => 'posts_syncing_slider_mode',
                 ),
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -103,10 +105,10 @@ class PWElementPosts extends PWElements {
                 'heading' => __('Hide posts button', 'pwelement'),
                 'param_name' => 'posts_btn',
                 'save_always' => true,
-                'value' => array(__('True', 'pwelement') => 'true',),
+                'value' => array(__('True', 'pwelement') => 'true'),
                 'dependency' => array(
-                  'element' => 'posts_modes',
-                  'value' => 'posts_slider_mode',
+                    'element' => 'posts_modes',
+                    'value' => array('posts_slider_mode', 'posts_simple_with_button_more'),
                 ),
             ),
             array(
@@ -162,6 +164,290 @@ class PWElementPosts extends PWElements {
         return $element_output;
     }
 
+
+    public static function outputSliderSyncing($atts, $posts_data = array(), $posts_title = '') {
+
+        wp_enqueue_style('slick-slider-css', plugins_url('../assets/slick-slider/slick.css', __FILE__));
+        wp_enqueue_style('slick-slider-theme-css', plugins_url('../assets/slick-slider/slick-theme.css', __FILE__));
+        wp_enqueue_script('slick-slider-js', plugins_url('../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
+
+        $output ='
+            <style>
+            .posts_slider_syncing__container {
+                display: flex;
+                gap: 18px;
+            }
+
+            .posts_slider_syncing__title {
+                margin: 24px auto;
+            }
+
+            .slider_syncing__main {
+                width: 50%;
+                z-index: 1;
+                background-color: white;
+            }
+
+            .slider_syncing__nav {
+                width: 75%;
+                left: -27%;
+            }
+
+            #PostsSliderSyncing  .slider_syncing__item {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                border-radius: 18px;
+                margin: 12px;
+                box-sizing: border-box;
+                box-shadow: -2px 4px 8px #0000001c;
+                overflow: hidden;
+            }
+
+            .slider_syncing__nav .slider_syncing__item {
+                margin: 0 18px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                box-sizing: border-box;
+                margin: 12px;
+            }
+
+            #PostsSliderSyncing .slider_syncing__main .slick-slide img {
+                height: 100%;
+                max-height: 240px;
+                width: 100%;
+                object-fit: cover;
+            }
+
+            #PostsSliderSyncing .slider_syncing__nav .slick-slide img {
+                height: 100%;
+                max-height: 240px;
+                width: 100%;
+                object-fit: cover;
+            }
+
+            #PostsSliderSyncing .slider_syncing__item_info_container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 0 20px 20px;
+            }
+
+            #PostsSliderSyncing .slider_syncing__item_date {
+                background-color: #F8F8F8;
+                padding: 4px 12px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                margin: 0;
+            }
+
+            #PostsSliderSyncing .slider_syncing__item_title {
+                font-size: 20px;
+                margin: 0;
+            }
+
+            #PostsSliderSyncing .slider_syncing__description {
+                margin: 0;
+            }
+
+            #PostsSliderSyncing .slider_syncing__read_more {
+                margin: auto 20px 20px;
+                padding: 8px 18px;
+                width: 180px;
+                border-radius: 36px;
+                background-color: #F3F3F3;
+                color: var(--accent-color) !important;
+                font-weight: 600;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+            }
+
+            #PostsSliderSyncing .slider_syncing__read_more:hover {
+                background-color: #D9D9D9;
+            }
+
+            #PostsSliderSyncing .slider_syncing__read_more svg {
+                width: 28px;
+                margin-left: 6px;
+                transition: 0.3s all;
+            }
+
+            #PostsSliderSyncing .slider_syncing__read_more:hover svg {
+                margin-left: 24px;
+            }
+
+            .row.limit-width.row-parent:has(#PostsSliderSyncing) {
+                padding: 18px;
+            }
+
+            @media(max-width:960px) {
+            .slider_syncing__nav {
+                left: -40%;
+                }
+            }
+            @media(max-width:760px) {
+                .slider_syncing__nav {
+                    left: 0;
+                    width: 50%;
+                }
+            }
+             @media(max-width:600px) {
+                .slider_syncing__main {
+                    width: 100%;
+                }
+                #PostsSliderSyncing .slider_syncing__main .slick-slide img {
+                    max-height: 160px;
+                }
+                .slider_syncing__nav {
+                    display: none !important;
+                }
+                #PostsSliderSyncing .slider_syncing__description {
+                    font-size: 14px;
+                }
+            }
+            </style>
+
+            <div id="PostsSliderSyncing" class="posts_slider_syncing__main_container">
+                    <h2 class="posts_slider_syncing__title">' . $posts_title . '</h2>
+                    <div class="posts_slider_syncing__container">';
+                        $output .= '<div class="slider_syncing slider_syncing__main">';
+                            foreach ($posts_data as $post) {
+                                $output .= '<div class="slider_syncing__item">';
+                                    if (!empty($post['image'])) {
+                                        $output .= '<img src="' . esc_url($post['image']) . '" alt="' . esc_attr($post['title']) . '">';
+                                    }
+                                    $output .= '<div class="slider_syncing__item_info_container">';
+                                        $output .= '<p class="slider_syncing__item_date">data ' . esc_html($post['date']) . '</p>';
+                                        $output .= '<h2 class="slider_syncing__item_title">' . esc_html($post['title']) . '</h2>';
+                                        if (!empty($post['description'])) {
+                                            $output .= '<p class="slider_syncing__description">' . esc_html($post['description']) . '...</p>';
+                                            }
+                                        $output .= '</div>';
+                                        $output .= '<a href="' . esc_url($post['link']) . '" class="slider_syncing__read_more">' . self::languageChecker('Więcej', 'More') . '
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M18 12L13 7M18 12L13 17" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                        </a>
+                                </div>';
+                            }
+                        $output .= '</div>';
+
+                        $output .= '<div class="slider_syncing slider_syncing__nav">';
+                            foreach ($posts_data as $index => $post) {
+                                $output .= '<div class="slider_syncing__item">';
+                                        if (!empty($post['image'])) {
+                                            $output .= '<img src="' . esc_url($post['image']) . '" alt="' . esc_attr($post['title']) . '">';
+                                        }
+                                        $output .= '<div class="slider_syncing__item_info_container">';
+                                            $output .= '<p class="slider_syncing__item_date">data ' . esc_html($post['date']) . '</p>';
+                                            $output .= '<h2 class="slider_syncing__item_title">' . esc_html(mb_strimwidth($post['title'], 0, 50, '...')) . '</h2>';
+                                        $output .= '</div>';
+                                        $output .= '<a href="' . esc_url($post['link']) . '" class="slider_syncing__read_more">Więcej
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M18 12L13 7M18 12L13 17" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                        </a>
+                                    </div>';
+                            }
+                        $output .= '</div>
+                    </div>
+            </div>
+        <script>
+            jQuery(document).ready(function($) {
+                const rootSingle = $(".slider_syncing__main");
+                const rootNav = $(".slider_syncing__nav");
+
+                function setGlobalMaxHeight() {
+                    let maxHeight = 0;
+
+                    $(".slider_syncing__item").each(function () {
+                        $(this).css("height", "auto");
+                        const h = $(this).outerHeight();
+                        if (h > maxHeight) maxHeight = h;
+                    });
+
+                    $(".slider_syncing__item").height(maxHeight);
+                    $(".slick-slide").height("auto"); // reset
+                    $(".slider_syncing__main .slick-slide, .slider_syncing__nav .slick-slide").height(maxHeight);
+                }
+
+                rootSingle.on("init", function () {
+                    setTimeout(setGlobalMaxHeight, 150);
+                }).slick({
+                    slide: ".slider_syncing__item",
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    arrows: false,
+                    fade: true,
+                    autoplay: true,
+                    autoplaySpeed: 5000,
+                    adaptiveHeight: false,
+                    infinite: true,
+                    useTransform: true,
+                    cssEase: "cubic-bezier(0.77, 0, 0.18, 1)",
+                });
+
+                rootNav.on("init", function () {
+                    $(this).find(".slick-slide.slick-current").addClass("is-active");
+                    setTimeout(setGlobalMaxHeight, 150);
+                }).slick({
+                    slide: ".slider_syncing__item",
+                    slidesToShow: 3,
+                    speed: 400,
+                    slidesToScroll: 1,
+                    dots: false,
+                    autoplay: true,
+                    autoplaySpeed: 5000,
+                    arrows: false,
+                    focusOnSelect: false,
+                    infinite: true,
+                    responsive: [
+                        {
+                        breakpoint: 960,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                        },
+                        {
+                        breakpoint: 760,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                        }
+                    ]
+                });
+
+                // Wstrzymaj oba slidery, gdy myszka jest nad którymkolwiek
+                $("#PostsSliderSyncing").on("mouseenter", function () {
+                    rootSingle.slick("slickPause");
+                    rootNav.slick("slickPause");
+                }).on("mouseleave", function () {
+                    rootSingle.slick("slickPlay");
+                    rootNav.slick("slickPlay");
+                });
+
+                rootSingle.on("afterChange", function (event, slick, currentSlide) {
+                    rootNav.slick("slickGoTo", currentSlide);
+                    rootNav.find(".slick-slide.is-active").removeClass("is-active");
+                    rootNav.find(`.slick-slide[data-slick-index="${currentSlide}"]`).addClass("is-active");
+                });
+
+                rootNav.on("click", ".slick-slide", function (event) {
+                    event.preventDefault();
+                    var goToSingleSlide = $(this).data("slick-index");
+                    rootSingle.slick("slickGoTo", goToSingleSlide);
+                });
+
+                $(window).on("resize", function () {
+                    setTimeout(setGlobalMaxHeight, 200);
+                });
+            });
+        </script>
+        ';
+
+        return $output;
+    }
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -189,6 +475,7 @@ class PWElementPosts extends PWElements {
             'posts_all' => '',
             'posts_full_width' => '',
             'posts_box_model' => '',
+            ''
         ), $atts ));
 
 
@@ -206,7 +493,7 @@ class PWElementPosts extends PWElements {
             $posts_text = "See all";
         }
 
-        if ($posts_modes == "posts_slider_mode") {
+        if ($posts_modes == "posts_slider_mode" || $posts_modes == "posts_simple_with_button_more") {
             $posts_ratio = ($posts_ratio == "") ? "1/1" : $posts_ratio;
         } else {
             $posts_ratio = ($posts_ratio == "") ? "21/9" : $posts_ratio;
@@ -237,7 +524,7 @@ class PWElementPosts extends PWElements {
             }
         </style>';
 
-        if ($posts_modes == "posts_slider_mode") {
+        if ($posts_modes == "posts_slider_mode" || $posts_modes == "posts_simple_with_button_more") {
             $output .= '
             <style>
                 .row-parent:has(.pwelement_'.self::$rnd_id.' .pwe-container-posts) {
@@ -324,7 +611,90 @@ class PWElementPosts extends PWElements {
                     }
                 </style>';
             }
+            if($posts_modes == "posts_simple_with_button_more"){
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .slick-track {
+                        align-items: stretch !important;
+                        display:flex !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail .image-container {
+                        border-radius: 36px 36px 0 0;
+                        aspect-ratio: 16 / 9;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post .description  {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        height: 100%;
+                        padding:10px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post .description p {
+                        color: '. $darker_btn_color .';
+                        font-weight:700;
+                        display: flex;
+                        justify-content: right;
+                        align-items: center;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post  .description img {
+                        background-color: '. $darker_btn_color .';
+                    }
+                    .pwelement_'. self::$rnd_id .' .slider-range {
+                        width: 100%;
+                        margin-top: 16px;
+                        height: 10px;
+                        border-radius: 5px;
+                        background: black;
+                        appearance: none;
+                        -webkit-appearance: none;
+                        overflow: hidden;
+                        cursor: pointer;
+                        transition: background 0.3s ease;
+                    }
+                    .pwelement_'. self::$rnd_id .' .slick-dots {
+                        visibility: hidden;
+                    }
+                    .pwelement_'. self::$rnd_id .' .slider-range::-webkit-slider-thumb {
+                        appearance: none;
+                        -webkit-appearance: none;
+                        height: 0; /* lub 1px jeśli musisz */
+                        width: 0;
+                        background: transparent;
+                        box-shadow: none;
+                    }
+                    .pwelement_'. self::$rnd_id .' .slider-range::-moz-range-thumb {
+                        height: 0;
+                        width: 0;
+                        background: transparent;
+                        border: none;
+                    }
 
+                    .pwelement_'. self::$rnd_id .' .slider-range::-ms-thumb {
+                        height: 0;
+                        width: 0;
+                        background: transparent;
+                        border: none;
+                    }
+                    .pwelement_'. self::$rnd_id .' .slider-range::-webkit-slider-thumb:hover {
+                        background: black;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post {
+                        display:flex !important;
+                        flex-direction:column;
+                        border-radius: 36px 36px 0 0;
+                        -webkit-box-shadow: -2px 2px 4px 0px rgba(0, 0, 0, 0.17);
+                        -moz-box-shadow: -2px 2px 4px 0px rgba(0, 0, 0, 0.17);
+                        box-shadow: -2px 2px 4px 0px rgba(0, 0, 0, 0.17);
+                        transition: .3s ease;
+                        background-color:white !important;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post:hover {
+                        -webkit-box-shadow: -2px 2px 8px 0px rgba(0, 0, 0, 0.34);
+                        -moz-box-shadow: -2px 2px 8px 0px rgba(0, 0, 0, 0.34);
+                        box-shadow: -2px 2px 8px 0px rgba(0, 0, 0, 0.34);
+                    }
+                </style>';
+            }
         } else {
             if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode") {
                 $output .= '
@@ -464,7 +834,7 @@ class PWElementPosts extends PWElements {
 
             <div class="pwe-posts-wrapper">';
 
-                if ($posts_modes == "posts_slider_mode") {
+                if ($posts_modes == "posts_slider_mode" || $posts_modes == "posts_simple_with_button_more") {
 
                     $posts_count = ($posts_count == "") ? 5 : $posts_count;
 
@@ -525,8 +895,19 @@ class PWElementPosts extends PWElements {
                                 <a class="pwe-post" href="'. $link .'">
                                         <div class="pwe-post-thumbnail">
                                             <div class="image-container" style="background-image:url('. $image .');"></div>
-                                        </div>
-                                        <h4 class="pwe-post-title">'. $title .'</h4>';
+                                        </div>';
+                                        if($posts_modes == "posts_simple_with_button_more"){
+                                            $output .= '
+                                            <div class="description">
+                                                <h4 class="pwe-post-title">'. $title .'</h4>
+                                                <p>Więcej <span style="font-size:30px; margin-left:10px;"><img src="/wp-content/plugins/PWElements/media/arrow_forward_color.webp"</span></p>
+                                            </div>
+                                            ';
+                                        } else {
+                                            $output .= '<h4 class="pwe-post-title">'. $title .'</h4>';
+                                        }
+
+
                                 $output .= '</a>';
                             }
                         endwhile;
@@ -542,8 +923,45 @@ class PWElementPosts extends PWElements {
                     $posts_to_show = (!empty($posts_to_show)) ? $posts_to_show : 3;
 
                     include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
-                    $output .= PWESliderScripts::sliderScripts('posts', '.pwelement_'. self::$rnd_id, $posts_dots_display = 'true', $posts_arrows_display = false, $posts_to_show);
 
+                    $output .= PWESliderScripts::sliderScripts('posts', '.pwelement_'. self::$rnd_id, $posts_dots_display = 'true', $posts_arrows_display = false, $posts_to_show);
+                    if($posts_modes == "posts_simple_with_button_more"){
+                        $slider_id = 'pwelement_' . self::$rnd_id . ' .pwe-slides';
+                        $output .= '
+                        <input type="range" class="slider-range" min="0" step="1">
+                        <script>
+                        jQuery(document).ready(function ($) {
+                            const $slider = $(".'.$slider_id.'");
+                            const $range = $(".slider-range");
+
+                            $slider.on("init", function (event, slick) {
+                                $range.attr("max", slick.slideCount - 1);
+                                $range.val(slick.currentSlide);
+                            });
+                            function updateSliderBackground($el) {
+                                const val = ($el.val() - $el.attr("min")) / ($el.attr("max") - $el.attr("min"));
+                                const percent = val * 100;
+                                $el.css("background", `linear-gradient(to right, black 0%, black ${percent}%, #ccc ${percent}%, #ccc 100%)`);
+                            }
+                            $slider.on("init", function (event, slick) {
+                                $range.attr("max", slick.slideCount - 1);
+                                $range.val(slick.currentSlide);
+                                updateSliderBackground($range); // 👈 tu
+                            });
+
+                            $range.on("input", function () {
+                                const slideIndex = parseInt($(this).val(), 10);
+                                $slider.slick("slickGoTo", slideIndex);
+                                updateSliderBackground($range); // 👈 tu
+                            });
+
+                            $slider.on("afterChange", function (event, slick, currentSlide) {
+                                $range.val(currentSlide);
+                                updateSliderBackground($range); // 👈 tu
+                            });
+                        });
+                        </script>';
+                    }
                     if ($posts_btn !== "true") {
                         $output .= '
                         <div class="pwe-btn-container" style="padding-top: 18px;">
@@ -552,7 +970,7 @@ class PWElementPosts extends PWElements {
                             </span>
                         </div>';
                     }
-                } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode" || $posts_modes == "posts_full_newest_slider_mode") {
+                } else if ($posts_modes == "posts_full_mode" || $posts_modes == "posts_full_newest_mode" || $posts_modes == "posts_full_newest_slider_mode" ) {
 
                     $output .= '<div class="pwe-posts pwe-slides" role="group" aria-roledescription="carousel" aria-live="polite">';
 
@@ -751,6 +1169,52 @@ class PWElementPosts extends PWElements {
                 }
             });
         </script>';
+
+        if ($posts_modes == 'posts_syncing_slider_mode') {
+            $max_posts = !empty($posts_count) ? intval($posts_count) : 10;
+
+            $args = array(
+                'posts_per_page' => $max_posts,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'post_status'    => 'publish',
+            );
+
+            if (!empty($posts_category) && term_exists($posts_category, 'category')) {
+                $args['category_name'] = $posts_category;
+            }
+
+            $query = new WP_Query($args);
+            $posts_data = array();
+
+            if ($query->have_posts()) {
+                while ($query->have_posts()) : $query->the_post();
+                    $content = get_the_content();
+                    $description = '';
+
+                    if (preg_match('/<p[^>]*>(.*?)<\/p>/i', $content, $matches)) {
+                        $desc_text = strip_tags($matches[1]);
+                        $description = mb_substr($desc_text, 0, 140);
+                    }
+
+                    $posts_data[] = array(
+                        'title' => get_the_title(),
+                        'link'  => get_permalink(),
+                        'image' => has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '',
+                        'description' => $description,
+                        'date' => get_the_date('d.m.Y'),
+                    );
+                endwhile;
+                wp_reset_postdata();
+            }
+
+            if (count($posts_data) >= 4) {
+                return self::outputSliderSyncing($atts, $posts_data, $posts_title);
+            } else {
+                $atts['posts_modes'] = 'posts_slider_mode';
+                return self::output($atts); 
+            }
+        }
 
         return $output;
 

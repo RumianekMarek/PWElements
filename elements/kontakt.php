@@ -69,7 +69,9 @@ class PWElementContact extends PWElements {
                     } 
                 }
             }
-        }   
+        }  
+        
+        $service_email = !empty($service_email) ? $service_email : "sponsoring3@warsawexpo.eu";
         
         $output = '
         <style>
@@ -106,6 +108,9 @@ class PWElementContact extends PWElements {
             .pwelement_'. self::$rnd_id .' .pwe-container-contact .main-pwe-heading-text {
                 padding-top: 0;
                 text-transform: uppercase;
+            }
+            #pweContact .gform_confirmation_message span {
+                color: white !important;
             }
 
             @media (max-width:860px){
@@ -218,7 +223,16 @@ class PWElementContact extends PWElements {
                 $output .= '
             </div>
 
-        </div>';         
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const emailAdminInput = document.querySelector(".email-admin-input input");
+                if (emailAdminInput) {
+                    emailAdminInput.value = "'. str_replace(" ", "", $service_email) .'";
+                }
+            });
+        </script>';         
 
     return $output;
     }
