@@ -24,11 +24,16 @@ class PWECommonFunctions {
                 $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
                 $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
                 $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-            } else {
+            } else if ($_SERVER['SERVER_ADDR'] === '94.152.206.93') {
                 $database_host = 'localhost';
                 $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
                 $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
                 $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+            } else {
+                $database_host = 'dedyk180.cyber-folks.pl';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
             }
         }
 
@@ -58,10 +63,10 @@ class PWECommonFunctions {
         }
     
         return $cap_db;
-    }
+    } 
 
     /**
-     * Get data from CAP databases 
+     * Get data from CAP databases  
      */
     public static function get_database_fairs_data() {
         // Database connection
@@ -218,14 +223,60 @@ class PWECommonFunctions {
         $cap_db = self::connect_database();
         // If connection failed, return empty array
         if (!$cap_db) {
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+            return [];
+        }
+    
+        // Get current domain
+        $current_domain = $_SERVER['HTTP_HOST'];
+    
+        // SQL query to fetch logos with the matching fair_id and fair_domain
+        $query = "
+            SELECT logos.*, 
+                meta_data.meta_data AS meta_data 
+            FROM logos
+            INNER JOIN fairs ON logos.fair_id = fairs.id
+            LEFT JOIN meta_data ON meta_data.slug = 'patrons' 
+                                AND JSON_UNQUOTE(JSON_EXTRACT(meta_data.meta_data, '$.slug')) = logos.logos_type
+            WHERE fairs.fair_domain = %s
+        ";
+    
+        // Retrieve data from the database
+        $results = $cap_db->get_results($cap_db->prepare($query, $current_domain));
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: ' . addslashes($cap_db->last_error) . '")</script>';
+            }
+            return [];
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_conferences_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
             return [];
             if (current_user_can('administrator') && !is_admin()) {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM logos");
+
+        $domain = $_SERVER['HTTP_HOST'];
+
+        // Pobieramy dane bez względu na język
+        $results = $cap_db->get_results(
+            $cap_db->prepare(
+                "SELECT * FROM conferences WHERE conf_site_link LIKE %s",
+                '%' . $domain . '%'
+            )
+        );
     
         // SQL error checking
         if ($cap_db->last_error) {
@@ -234,9 +285,33 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
+        foreach ($results as &$row) {
+            if (!empty($row->conf_data)) {
+                $decoded = html_entity_decode($row->conf_data);
+        
+                // Czyścimy WSZYSTKIE wystąpienia font-family z atrybutów style (w tym wieloliniowe!)
+                $decoded = preg_replace_callback('/style="([^"]+)"/is', function ($match) {
+                    $style = $match[1];
+                    $style = preg_replace('/font-family\s*:\s*[^;"]+("[^"]+"[, ]*)*[^;"]*;?/i', '', $style);
+                    $style = trim(preg_replace('/\s*;\s*/', '; ', $style), '; ');
+                    return $style ? 'style="' . $style . '"' : '';
+                }, $decoded);
+        
+                // Sprawdzamy poprawność JSON
+                $test = json_decode($decoded, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $row->conf_data = $decoded;
+                } else {
+                    error_log("❌ Błąd JSON w conf_data: " . json_last_error_msg());
+                }
+            }
+        }
+            
         return $results;
-    } 
+    }
+    
+    
 
     /**
      * Colors (accent or main2)
