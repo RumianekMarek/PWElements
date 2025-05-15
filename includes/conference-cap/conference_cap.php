@@ -198,8 +198,7 @@ class PWEConferenceCap {
             $lang = 'EN';
         }
 
-
-        $database_data = $conf_function::getDatabaseDataConferences();
+        $database_data = PWECommonFunctions::get_database_conferences_data();
         // PWEConferenceCapFunctions::debugConferencesConsole( $database_data ); // checking recent changes 
 
         $conference_cap_html = vc_param_group_parse_atts( $conference_cap_html );

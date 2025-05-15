@@ -383,15 +383,18 @@ class PWECalendar extends PWECommonFunctions {
                     $domain = '';
                 }
 
+                $current_time = strtotime("now");
+                
                 $pwe_db_date_start = do_shortcode('[pwe_date_start domain="' . $domain . '"]');
                 $pwe_db_date_end = do_shortcode('[pwe_date_end domain="' . $domain . '"]');
                 $pwe_db_date_start_available = $shortcodes_active && !empty($pwe_db_date_start) && $pwe_db_date_start !== "";
                 $pwe_db_date_end_available = $shortcodes_active && !empty($pwe_db_date_end) && $pwe_db_date_end !== "";
 
                 $start_date = $pwe_db_date_start_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_start))) : get_post_meta($post_id, 'fair_date_start', true);
-                $start_date = empty($start_date) ? "28-01-2050" : $start_date;
                 $end_date = $pwe_db_date_end_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_end))) : get_post_meta($post_id, 'fair_date_end', true);
-                $end_date = empty($end_date) ? "30-01-2050" : $end_date;
+                
+                $start_date = (empty($start_date) || (!empty($end_date) && strtotime($end_date) < $current_time)) ? "28-01-2050" : $start_date;
+                $end_date = (empty($end_date) || (!empty($end_date) && strtotime($end_date) < $current_time)) ? "30-01-2050" : $end_date;
 
                 $shortcode_edition = self::get_pwe_shortcode("pwe_edition", $domain);
                 $shortcode_edition_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_edition);

@@ -155,6 +155,16 @@ class PWElementAdditionalLogotypes {
                 'value' => array(__('True', 'pwe_logotypes') => 'true',),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'Aditional options',
+                'heading' => __('Arrows', 'pwe_logotypes'),
+                'param_name' => 'logotypes_display_arrows',
+                'description' => __('Check if you want to display arrows.', 'pwe_logotypes'),
+                'admin_label' => true,
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_logotypes') => 'true',),
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'Links',
                 'heading' => __('Add link', 'pwe_logotypes'),
@@ -230,6 +240,7 @@ class PWElementAdditionalLogotypes {
             'slides_to_show_600' => '',
             'slides_to_show_400' => '',
             'logotypes_slider_3_row' => '',
+            'logotypes_display_arrows' => '',
         ), $atts ));
 
         if ($logotypes_position_title == ''){
@@ -465,7 +476,7 @@ class PWElementAdditionalLogotypes {
                         $header_logotypes_media_urls[] = $url;
                     }
                 }
-            }
+            } 
 
             $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
             $domain = $_SERVER['HTTP_HOST'];
@@ -514,10 +525,9 @@ class PWElementAdditionalLogotypes {
                     // Remove whitespace for each element
                     $logotypes_catalogs = array_map('trim', $logotypes_catalogs);
 
-
                     // If "catalog" doesn't exist, add it at the beginning
-                    if (!in_array('catalog', $logotypes_catalogs)) {
-                        array_unshift($logotypes_catalogs, 'catalog');
+                    if (!in_array('wystawcy', $logotypes_catalogs)) {
+                        array_unshift($logotypes_catalogs, 'wystawcy');
                     }
 
                     $exhibitors_catalog = [];
@@ -560,7 +570,7 @@ class PWElementAdditionalLogotypes {
                         }
 
                         $full_path = $_SERVER['DOCUMENT_ROOT'] . '/doc/' . $catalog;
-
+                
                         // Check if it's a file
                         if (is_file($full_path)) {
                             // Adding a direct file to the image list
@@ -572,7 +582,7 @@ class PWElementAdditionalLogotypes {
                     }
 
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
-                    if (in_array('catalog', $logotypes_catalogs)) {
+                    if (in_array('wystawcy', $logotypes_catalogs)) {
                         foreach ($exhibitors_catalog as $catalog_img) {
                             $files[] = $catalog_img;
                         }
@@ -604,33 +614,104 @@ class PWElementAdditionalLogotypes {
                 }
             }
 
-            // Sorting - moving files from “Partner Targów” to the end of the array
-            usort($files, function ($a, $b) {
-                $a = str_replace('//', '/', $a);
-                $b = str_replace('//', '/', $b);
+            if (count($files) > 0) {
+                foreach ($files as &$file) {
+                    $file = [
+                        $file,
+                        basename(dirname($file)),  // Użycie $file, nie $image
+                        ""
+                    ];
+                }
+                unset($file);
+            }
 
-                $a_is_partner = strpos($a, 'Logotypy/Rotator 2/Partner Targów') !== false;
-                $b_is_partner = strpos($b, 'Logotypy/Rotator 2/Partner Targów') !== false;
+            $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data();
+            if (!empty($cap_logotypes_data)) {
 
-                if ($a_is_partner === $b_is_partner) {
-                    return 0;
+                $saving_paths = function (&$files, $logo_data) {
+                    // Get desc_pl & desc_en from meta_data
+                    $meta = json_decode($logo_data->meta_data, true);
+                    $desc_pl = $meta["desc_pl"] ?? '';
+                    $desc_en = $meta["desc_en"] ?? '';
+
+                    $element = [
+                        'https://cap.warsawexpo.eu/public' . $logo_data->logos_url,
+                        $desc_pl,
+                        $desc_en
+                    ];
+
+                    // Adding logos_url to $files only if it is not already there
+                    if (!in_array($element, $files)) {
+                        $files[] = $element;
+                    }
+                };
+
+                if (strpos($logotypes_catalog, 'Rotator 2') !== false) {
+                    $files = [];
+
+                    foreach ($cap_logotypes_data as $logo_data) {
+                        if ($logo_data->logos_type === "partner-targow" || 
+                            $logo_data->logos_type === "patron-medialny" || 
+                            $logo_data->logos_type === "partner-strategiczny" || 
+                            $logo_data->logos_type === "partner-honorowy") {
+                            $saving_paths($files, $logo_data);
+                        }
+                    }
+
                 }
 
-                return $a_is_partner ? 1 : -1;
-            });
+                if (strpos($logotypes_catalog, 'Rotator Konferencji') !== false) {
+                    $files = [];
+
+                    foreach ($cap_logotypes_data as $logo_data) {
+                        if ($logo_data->logos_type === "patron-medialny" || 
+                            $logo_data->logos_type === "partner-merytoryczny") {
+                            $saving_paths($files, $logo_data);
+                        }
+                    }
+
+                }
+
+                foreach ($cap_logotypes_data as $logo_data) {
+                    if (strpos($logotypes_catalog, $logo_data->logos_type) !== false) {
+                        $saving_paths($files, $logo_data);
+                    }
+                }
+            }
 
             if (count($files) > 0) {
 
+                // Sorting - moving files from “Partner Targów” to the end of the array
+                usort($files, function ($a, $b) {
+                    // Użycie tylko pierwszego elementu (URL) do porównania
+                    $a_url = $a[0];
+                    $b_url = $b[0];
+
+                    // Naprawienie podwójnych slashes
+                    $a_url = str_replace('//', '/', $a_url);
+                    $b_url = str_replace('//', '/', $b_url);
+
+                    // Sprawdzenie, czy to "Partner Targów"
+                    $a_is_partner = strpos($a_url, 'Logotypy/Rotator 2/Partner Targów') !== false;
+                    $b_is_partner = strpos($b_url, 'Logotypy/Rotator 2/Partner Targów') !== false;
+
+                    if ($a_is_partner === $b_is_partner) {
+                        return 0;
+                    }
+
+                    return $a_is_partner ? 1 : -1;
+                });
+
                 $files = array_map(function($file) {
                     // Check if the path is local
-                    if (strpos($file, 'https://') !== 0 && strpos($file, 'http://') !== 0) {
+                    if (strpos($file[0], 'https://') !== 0 && strpos($file[0], 'http://') !== 0) {
                         // Replace double slashes with one only if path is local
-                        return preg_replace('/\/+/', '/', $file);
+                        $file[0] = preg_replace('/\/+/', '/', $file[0]);
                     }
                     return $file;
                 }, $files);
 
-                if($logotypes_display_random1){
+                if($logotypes_display_random1) {
                     // Randomise files
                     shuffle($files);
                 } else {
@@ -640,7 +721,7 @@ class PWElementAdditionalLogotypes {
 
                     // Keeping order
                     foreach ($files as $file) {
-                        if (strpos($file, 'https://www2.pwe-expoplanner.com') === 0) {
+                        if (strpos($file[0], 'https://www2.pwe-expoplanner.com') === 0) {
                             $links[] = $file; 
                         } else {
                             $localFiles[] = $file;
@@ -649,8 +730,8 @@ class PWElementAdditionalLogotypes {
 
                     // Sorting local files
                     usort($localFiles, function($a, $b) {
-                        $fileA = basename($a);
-                        $fileB = basename($b);
+                        $fileA = basename($a[0]);
+                        $fileB = basename($b[0]);
 
                         preg_match('/^(\d+)/', $fileA, $matchA);
                         preg_match('/^(\d+)/', $fileB, $matchB);
@@ -679,9 +760,7 @@ class PWElementAdditionalLogotypes {
                     });
 
                     // Merging
-                    $files = array_merge($links, $localFiles);
-
-                    
+                    $files = array_merge($links, $localFiles);  
                 }
 
                 // Calculate width for header logotypes
@@ -721,20 +800,27 @@ class PWElementAdditionalLogotypes {
                                                                 $output .= '">';
 
                     $images_url = array();
-                    $urls_custom = array();
+                    $updated_images_url = array();
+
+                    // Decoding logo data from JSON format
+                    $logotypes_files_urldecode = urldecode($logotypes_files);
+                    $logotypes_files_json = json_decode($logotypes_files_urldecode, true);
 
                     // Search all files and generate their URL paths
                     foreach ($files as $index => $file) {
+                        $url = $file[0]; // Używamy tylko pierwszego elementu
+                        $desc_pl = $file[1];
+                        $desc_en = $file[2];
                         $short_path = '';
 
                         // Removing double "//"
-                        $file = preg_replace('#(?<!https:)//+#', '/', $file);
+                        $url = preg_replace('#(?<!https:)//+#', '/', $url);
 
                         // Deciding on the path structure depending on the directory
                         if ($logotypes_catalog == "partnerzy obiektu" || $logotypes_catalog == "wspierają nas") {
-                            $short_path = substr($file, strpos($file, '/wp-content/'));
+                            $short_path = substr($url, strpos($url, '/wp-content/'));
                         } else {
-                            $short_path = substr($file, strpos($file, '/doc/'));
+                            $short_path = substr($url, strpos($url, '/doc/'));
                         }
 
                         // Build the full path to the image
@@ -744,21 +830,9 @@ class PWElementAdditionalLogotypes {
                             $full_path = $server_url . $short_path;
                         }
 
-                        // Add the generated path to the URL list
+                        // Dodajemy do $images_url tylko URL
                         $images_url[] = $full_path;
-                    }
 
-                    // Decoding logo data from JSON format
-                    $logotypes_files_urldecode = urldecode($logotypes_files);
-                    $logotypes_files_json = json_decode($logotypes_files_urldecode, true);
-
-                    // Encoding the data back to JSON
-                    $logotypes_files_json_encode = json_encode($logotypes_files_json);
-
-                    $updated_images_url = array();
-
-                    // Processing each image and assign it the appropriate link, class and style
-                    foreach ($images_url as $image) {
                         // Reset variable for each image
                         $site = '';
                         $class = '';
@@ -767,7 +841,7 @@ class PWElementAdditionalLogotypes {
 
                         // Search for the corresponding logo and set the properties
                         foreach ($logotypes_files_json as $logotype) {
-                            if (strpos($image, $logotype["logotype_filename"]) !== false) {
+                            if (strpos($full_path, $logotype["logotype_filename"]) !== false) {
                                 $site = $logotype["logotype_link"];
                                 $class = ($logotype["logotype_color"] === "true") ? 'pwe-logo-original' : '';
                                 $style = ($logotype["logotype_style"] === "") ? '' : $logotype["logotype_style"];
@@ -781,18 +855,18 @@ class PWElementAdditionalLogotypes {
                             $site = "https://" . $site;
                         }
 
-                        // Extract folder name from the path
-                        $folder_name = basename(dirname($image));
+                        // Używamy $desc_pl jako folder_name jeśli jest dostępne, inaczej wyciągamy z URL
+                        $folder_name = PWECommonFunctions::lang_pl() ? (!empty($desc_pl) ? $desc_pl : basename(dirname($url))) : (!empty($desc_en) ? $desc_en : basename(dirname($url)));
 
-                        //Build the final data structure for the image
+                        // Build the final data structure for the image
                         $updated_images_url[] = array(
-                            "img"   => $image,
+                            "img"   => $full_path,
                             "site"  => $site,
                             "class" => $class,
                             "style" => $style,
                             "target_blank" => $target_blank,
                             "folder_name" => $folder_name,
-                            "logotypes_name" => $logotypes_name
+                            "logotypes_name" => !empty($logotypes_name) ? $logotypes_name : ($logotypes_caption_on == true ? (PWECommonFunctions::lang_pl() ? $desc_pl : $desc_en) : "")
                         );
                     }
 
@@ -829,63 +903,60 @@ class PWElementAdditionalLogotypes {
                         "caption_translations" => $translations
                     );
 
-
                     // Output logotypes
-                    if(!$logotypes_slider_3_row){
+                    if (!$logotypes_slider_3_row) {
                         if (count($updated_images_url) > 0) {
                             foreach ($updated_images_url as $url) {
-
+                                // Ustalanie tekstu alternatywnego (alt)
                                 $alt_text = (!empty($url["folder_name"]) && !preg_match('/\d{2}/', $url["folder_name"])) ? $url["folder_name"] : "gallery element";
 
+                                // Ustalanie napisu (caption) dla logotypów
                                 if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
                                     if (get_locale() == 'pl_PL') {
+                                        // Polskie tłumaczenia
                                         if (strpos($url["img"], 'expoplanner.com') !== false) {
                                             $logo_caption_text = '<p>Wystawca</p>';
                                         } else {
-                                            // Split folder_name into words and add <br> after the first word
-                                            $logotypes_caption_words = explode(" ", $url["folder_name"]);
-                                            if (count($logotypes_caption_words) > 1) {
-                                                $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
-                                            } else {
-                                                $logo_caption_text = '<p>' . $url["folder_name"] . '</p>'; // When folder_name is one word
-                                            }
+                                            $logo_caption_text = '<p>' . str_replace(' ', '<br>', $url["folder_name"]) . '</p>';
                                         }
                                     } else {
+                                        // Angielskie tłumaczenia
                                         if (strpos($url["img"], 'expoplanner.com') !== false) {
                                             $logo_caption_text = '<p>Exhibitor</p>';
                                         } else {
-                                            if (array_key_exists($url["folder_name"], $translations)) {
-                                                $logo_caption_text = '<p>'. $translations[$url["folder_name"]] .'</p>';
-                                            } else {
-                                                $logo_caption_text = '<p>'. $url["folder_name"] .'</p>';
-                                            }
+                                            $logo_caption_text = array_key_exists($url["folder_name"], $translations) 
+                                                ? '<p>' . $translations[$url["folder_name"]] . '</p>'
+                                                : '<p>' . $url["folder_name"] . '</p>';
                                         }
                                     }
                                 } else {
-                                    $logo_caption_text = '<p>'. $logotypes_name .'</p>';
+                                    $logo_caption_text = '<p>' . $url["logotypes_name"] . '</p>';
                                 }
 
-                                if (isset($header_logotypes_items_width) && $header_logotypes_items_width != '') {
-                                    $logotypes_items_width = 'min-width:'. $header_logotypes_items_width .';';
-                                } else {
-                                    $logotypes_items_width = '';
-                                }
+                                // Ustalanie szerokości elementów logotypów
+                                $logotypes_items_width = isset($header_logotypes_items_width) && $header_logotypes_items_width != ''
+                                    ? 'min-width:' . $header_logotypes_items_width . ';'
+                                    : '';
+
+                                // Ustalanie otwierania w nowej karcie
                                 $target_blank = (strpos($url["site"], 'http') !== false) ? 'target="_blank"' : '';
-                                if (!empty($image)) {
+
+                                // Renderowanie logotypów
+                                if (!empty($url["img"])) {
                                     if (!empty($url["site"])) {
                                         $output .= '
-                                        <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
-                                            <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
-                                                <img alt="'. $alt_text .'" data-no-lazy="1" src="' . $url["img"] . '"/>
-                                                '. $logo_caption_text .'
+                                        <a class="pwe-logo-item-container" ' . $target_blank . ' href="' . $url["site"] . '" style="' . $logotypes_items_custom_style . '">
+                                            <div class="pwe-logo-item ' . $url["class"] . '" style="' . $url["style"] . ' ' . $logotypes_items_width . ' ' . $logotypes_items_custom_style . '">
+                                                <img alt="' . $alt_text . '" data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                ' . $logo_caption_text . '
                                             </div>
                                         </a>';
-                                    } else  {
+                                    } else {
                                         $output .= '
-                                        <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
-                                            <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                                <img alt="'. $alt_text .'" data-no-lazy="1" src="' . $url["img"] . '"/>
-                                                '. $logo_caption_text .'
+                                        <div class="pwe-logo-item-container" style="' . $logotypes_items_custom_style . '">
+                                            <div class="pwe-logo-item ' . $url["class"] . '" style="' . $url["style"] . ' ' . $logotypes_items_width . '">
+                                                <img alt="' . $alt_text . '" data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                ' . $logo_caption_text . '
                                             </div>
                                         </div>';
                                     }
@@ -893,6 +964,7 @@ class PWElementAdditionalLogotypes {
                             }
                         }
                     } else {
+                        // Obsługa trybu slidera 3-rzędowego
                         if (count($updated_images_url) > 0) {
                             $logos_count = count($updated_images_url);
                             $logos_chunked = array_chunk($updated_images_url, ceil($logos_count / 3));
@@ -901,62 +973,48 @@ class PWElementAdditionalLogotypes {
 
                             foreach ($logos_chunked as $index => $logos_group) {
                                 $slider_id = $element_unique_id . "-slider-" . ($index + 1);
-                                $direction = ($index == 1) ? 'rtl' : 'ltr'; // Drugi slider w lewo, reszta w prawo
+                                $direction = ($index == 1) ? 'rtl' : 'ltr';
 
                                 $output .= '<div class="'. $element_unique_id .'-logotypes-slider logotypes-slider" id="'. $slider_id .'" data-direction="'. $direction .'">';
 
                                 foreach ($logos_group as $url) {
-
-
-                                    // Obsługa tłumaczeń i napisów
+                                    // Ustalanie napisu (caption) dla logotypów
                                     if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
                                         if (get_locale() == 'pl_PL') {
-                                            if (strpos($url["img"], 'expoplanner.com') !== false) {
-                                                $logo_caption_text = '<p>Wystawca</p>';
-                                            } else {
-                                                $logotypes_caption_words = explode(" ", $url["folder_name"]);
-                                                if (count($logotypes_caption_words) > 1) {
-                                                    $logo_caption_text = '<p>' . $logotypes_caption_words[0] . '<br>' . implode(" ", array_slice($logotypes_caption_words, 1)) . '</p>';
-                                                } else {
-                                                    $logo_caption_text = '<p>' . $url["folder_name"] . '</p>';
-                                                }
-                                            }
+                                            $logo_caption_text = (strpos($url["img"], 'expoplanner.com') !== false)
+                                                ? '<p>Wystawca</p>'
+                                                : '<p>' . str_replace(' ', '<br>', $url["folder_name"]) . '</p>';
                                         } else {
-                                            if (strpos($url["img"], 'expoplanner.com') !== false) {
-                                                $logo_caption_text = '<p>Exhibitor</p>';
-                                            } else {
-                                                if (array_key_exists($url["folder_name"], $translations)) {
-                                                    $logo_caption_text = '<p>'. $translations[$url["folder_name"]] .'</p>';
-                                                } else {
-                                                    $logo_caption_text = '<p>'. $url["folder_name"] .'</p>';
-                                                }
-                                            }
+                                            $logo_caption_text = array_key_exists($url["folder_name"], $translations) 
+                                                ? '<p>' . $translations[$url["folder_name"]] . '</p>'
+                                                : '<p>' . $url["folder_name"] . '</p>';
                                         }
                                     } else {
-                                        $logo_caption_text = '<p>'. $logotypes_name .'</p>';
+                                        $logo_caption_text = '<p>' . $url["logotypes_name"] . '</p>';
                                     }
 
+                                    // Ustalanie szerokości elementów logotypów
                                     $logotypes_items_width = isset($header_logotypes_items_width) && $header_logotypes_items_width != ''
-                                        ? 'min-width:'. $header_logotypes_items_width .';'
+                                        ? 'min-width:' . $header_logotypes_items_width . ';'
                                         : '';
 
                                     $target_blank = (strpos($url["site"], 'http') !== false) ? 'target="_blank"' : '';
 
-                                    if (!empty($image)) {
+                                    if (!empty($url["img"])) {
                                         if (!empty($url["site"])) {
                                             $output .= '
-                                            <a class="pwe-logo-item-container" '. $target_blank .' href="'. $url["site"] .'" style="'. $logotypes_items_custom_style .'">
-                                                <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .' '. $logotypes_items_custom_style .'">
-                                                    <img   data-no-lazy="1" src="' . $url["img"] . '" />
-                                                    '. $logo_caption_text .'
+                                            <a class="pwe-logo-item-container" ' . $target_blank . ' href="' . $url["site"] . '" style="' . $logotypes_items_custom_style . '">
+                                                <div class="pwe-logo-item ' . $url["class"] . '" style="' . $url["style"] . ' ' . $logotypes_items_width . ' ' . $logotypes_items_custom_style . '">
+                                                    <img data-no-lazy="1" src="' . $url["img"] . '" />
+                                                    ' . $logo_caption_text . '
                                                 </div>
                                             </a>';
-                                        } else  {
+                                        } else {
                                             $output .= '
-                                            <div class="pwe-logo-item-container" style="'. $logotypes_items_custom_style .'">
-                                                <div class="pwe-logo-item '. $url["class"] .'" style="'. $url["style"] .' '. $logotypes_items_width .'">
-                                                    <img data-no-lazy="1" src="' . $url["img"] . '"  />
-                                                    '. $logo_caption_text .'
+                                            <div class="pwe-logo-item-container" style="' . $logotypes_items_custom_style . '">
+                                                <div class="pwe-logo-item ' . $url["class"] . '" style="' . $url["style"] . ' ' . $logotypes_items_width . '">
+                                                    <img data-no-lazy="1" src="' . $url["img"] . '" />
+                                                    ' . $logo_caption_text . '
                                                 </div>
                                             </div>';
                                         }
@@ -965,8 +1023,8 @@ class PWElementAdditionalLogotypes {
                                 $output .= '</div>';
                             }
                             $output .= '</div>';
-
                         }
+
                         $output .= '
                         <style>
                             .'.$element_unique_id.'-logotypes-slider {
@@ -997,16 +1055,24 @@ class PWElementAdditionalLogotypes {
                     }
 
                     $output .= '
-                    </div>
+                    </div>';
+
+                    if ($logotypes_display_arrows) {
+                        $output .= '
+                        <span class="pwe-logotypes__arrow pwe-logotypes__arrow-prev pwe-arrow pwe-arrow-prev">‹</span>
+                        <span class="pwe-logotypes__arrow pwe-logotypes__arrow-next pwe-arrow pwe-arrow-next">›</span>';
+                    }
+
+                $output .= '    
                 </div>';
 
                 if ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) {
 
-                    $opinions_dots_display = $logotypes_dots_off != true ? 'true' : '';
+                    $logotypes_dots_display = $logotypes_dots_off != true ? 'true' : '';
                     include_once plugin_dir_path(dirname(dirname(__DIR__))) . 'scripts/slider.php';
 
                     if(!$logotypes_slider_3_row){
-                        $output .= PWESliderScripts::sliderScripts('logotypes', '#'. $element_unique_id, $opinions_dots_display, $opinions_arrows_display = false, $slides_to_show, $options = null, $slides_to_show_960, $slides_to_show_600, $slides_to_show_400);
+                        $output .= PWESliderScripts::sliderScripts('logotypes', '#'. $element_unique_id, $logotypes_dots_display, $logotypes_display_arrows, $slides_to_show, $options = null, $slides_to_show_960, $slides_to_show_600, $slides_to_show_400);
                     } else {
                         $slides_to_show = !empty($slides_to_show) ? $slides_to_show : 7;
                         wp_enqueue_style('slick-slider-css', plugins_url('../../../assets/slick-slider/slick.css', __FILE__));
@@ -1058,6 +1124,45 @@ class PWElementAdditionalLogotypes {
 
             }
         }
+
+        $get_database_fairs_data_encode = json_encode(PWECommonFunctions::get_database_fairs_data());
+        $get_database_logotypes_data_encode = json_encode(PWECommonFunctions::get_database_logotypes_data());
+        $get_database_meta_data_encode = json_encode(PWECommonFunctions::get_database_meta_data());
+        
+        $output .= '
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const get_database_fairs_data = ' . $get_database_fairs_data_encode . ';
+                const get_database_logotypes_data = ' . $get_database_logotypes_data_encode . ';
+                const get_database_meta_data = ' . $get_database_meta_data_encode . ';
+                
+                // console.log(get_database_logotypes_data);
+
+                // Funkcja do sprawdzania statusu obrazu
+                function checkImage(url, callback) {
+                    const img = new Image();
+                    img.onload = () => callback(true);
+                    img.onerror = () => callback(false);
+                    img.src = url;
+                }
+
+                document.querySelectorAll(".pwe-logo-item img").forEach(img => {
+                    const url = img.getAttribute("src");
+
+                    // Check if the image exists
+                    checkImage(url, exists => {
+                        if (!exists) {
+                            // Delete the entire image container
+                            const container = img.closest(".pwe-logo-item-container");
+                            if (container) {
+                                container.remove();
+                            }
+                        }
+                    });
+                });
+
+            });
+        </script>';
 
         return $output;
     }
