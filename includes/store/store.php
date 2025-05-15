@@ -93,8 +93,6 @@ class PWEStore extends PWECommonFunctions {
         }
 
         $store_js_array = array(
-            'trade_fair_name' => self::languageChecker(do_shortcode('[trade_fair_name]'), do_shortcode('[trade_fair_name_eng]')),
-            'trade_fair_groups' => $pwe_groups_data,
             'api_key' => password_hash(PWE_API_KEY_4, PASSWORD_DEFAULT),
             'current_group' => $current_group
         );
@@ -245,9 +243,10 @@ class PWEStore extends PWECommonFunctions {
         //     $pwe_groups_data = self::get_database_groups_data(); 
         //     $pwe_groups_data_contact = self::get_database_groups_contacts_data(); 
 
+        //     $domains = [];
         //     foreach ($pwe_groups_data as $group) {
-        //         if ($group->fair_domain == $current_domain) {
-        //             $current_group = $group->fair_group;
+        //         if ($group->fair_group == "gr2") {
+        //             $domains[] = $group->fair_domain;
         //         }
         //     }
 
@@ -265,7 +264,6 @@ class PWEStore extends PWECommonFunctions {
         //             const storeDataOptions = ' . $pwe_store_data_options_json_encode . ';
         //             const storePackagesData = ' . $pwe_store_packages_data_json_encode . ';
                     
-        //             console.log("'. $current_group .'");
         //             console.log(pweGroups);
         //             console.log(pweGroupsContact);
         //             console.log(storeData);

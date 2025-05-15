@@ -881,6 +881,27 @@ if ($registration_type == 'PWERegistrationVisitors') {
         #pweRegistrationTicket .ticket-card__note {
             margin-top:0px;
         }
+        #pweRegistrationTicket .registration-ticket__option--business .ticket-card__price .ticket-card__note {
+            color: '. $background_color .';
+            font-weight: 700;
+            font-size: 18px !important;
+            max-width: 90%;
+            text-align: center;
+            line-height: 1.2;
+        }
+        #pweRegistrationTicket .registration-ticket__option--business  .exhibitor-catalog {
+            background-color: '. $background_color .';
+            border-radius: 18px;
+            color: white !important;
+            padding: 5px 10px;
+            font-weight: 500;
+            font-size: 12px;
+            margin-top: 7px;
+            transition: .3s ease;
+        }
+        #pweRegistrationTicket .registration-ticket__option--business  .exhibitor-catalog:hover {
+            opacity: .9;
+        }
         #pweRegistrationTicket .ticket-card__details-title {
             color:black;
             font-size:18px;

@@ -104,11 +104,12 @@ class PWERegistrationTicket extends PWERegistration {
 
                 <div class="registration-ticket__option registration-ticket__option--business">
                   <img src="/wp-content/plugins/PWElements/media/fast-track.webp">
-                  <div class="ticket-card__name">'. self::languageChecker('Biznes priority pass', 'Business Priority Pass') .'</div>
+                  <div class="ticket-card__name">'. self::languageChecker('Business Priority Pass', 'Business Priority Pass') .'</div>
                   <div class="ticket-card">
                     <div class="ticket-card__price">
                       <h2 class="ticket-card__price-value">249 PLN</h2>
                       <p class="ticket-card__note">'. self::languageChecker('lub poproś o zaproszenie wystawcę', 'or request an invitation from an exhibitor') .'</p>
+                      <a class="exhibitor-catalog" href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'">'. self::languageChecker('katalog wystawców', 'exhibitor catalog') .'</a>
                     </div>
 
                     <div class="ticket-card__details">
@@ -116,7 +117,7 @@ class PWERegistrationTicket extends PWERegistration {
                       <ul class="ticket-card__benefits">
                         <li>'. self::languageChecker('<strong>fast track</strong> - szybkie wejście na targi dedykowaną bramką przez 3 dni', '<strong>fast track access</strong> – skip the line and enter the trade fair through a dedicated priority gate for all 3 days') .'</li>
                         <li>'. self::languageChecker('<strong>imienny pakiet</strong> - targowy przesyłany kurierem przed wydarzeniem', '<strong>Personalized trade fair package</strong> - delivered by courier to your address before the event') .'</li>
-                        <li>'. self::languageChecker('<strong>Welcome pack</strong> - przygotowany specjalnie przez wystawców', '<strong>Welcome pack</strong> - a special set of materials and gifts prepared by exhibitors') .'</li>
+                        <li>'. self::languageChecker('<strong>welcome pack</strong> - przygotowany specjalnie przez wystawców', '<strong>welcome pack</strong> - a special set of materials and gifts prepared by exhibitors') .'</li>
                         <li>'. self::languageChecker('obsługa concierge', 'Concierge service') .'</li>
                         <li>'. self::languageChecker('możliwość udziału w konferencjach i  warsztatach', 'Access to conferences and workshops') .'</li>
                         <li>'. self::languageChecker('darmowy parking', 'Free parking') .'</li>

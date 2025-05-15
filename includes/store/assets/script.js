@@ -1,34 +1,5 @@
 const apiKey = store_js.api_key;
 const currentGroup = store_js.current_group;
-// const tradeFairName = store_js.trade_fair_name;
-// const trade_fair_groups = store_js.trade_fair_groups;
-
-// let edition_1 = [];
-// let edition_2 = [];
-// let edition_3 = [];
-// let edition_b2c = [];
-
-// trade_fair_groups.forEach(group => {
-//     if (group.fair_group === "gr1") {
-//         edition_1.push(group.fair_domain);
-//     }
-//     if (group.fair_group === "gr2") {
-//         edition_2.push(group.fair_domain);
-//     }
-//     if (group.fair_group === "gr3") {
-//         edition_3.push(group.fair_domain);
-//     }
-//     if (group.fair_group === "b2c") {
-//         edition_b2c.push(group.fair_domain);
-//     }
-// });
-
-// const fairs_array = {
-//     edition_1,
-//     edition_2,
-//     edition_3,
-//     edition_b2c
-// };
 
 // Scroll to top of page
 function scrollToTop() {
