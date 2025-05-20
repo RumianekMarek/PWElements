@@ -22,36 +22,7 @@ function get_fair_data($specific_domain = null) {
     
                 $domain = $fair->fair_domain;
     
-                $fairs_data["fairs"][$domain] = [ 
-                    "domain" => $domain,
-                    "date_start" => $fair->fair_date_start ?? "",
-                    "date_start_hour" => $fair->fair_date_start_hour ?? "",
-                    "date_end" => $fair->fair_date_end ?? "",
-                    "date_end_hour" => $fair->fair_date_end_hour ?? "",
-                    "edition" => $fair->fair_edition ?? "",
-                    "name_pl" => $fair->fair_name_pl ?? "",
-                    "name_en" => $fair->fair_name_en ?? "",
-                    "desc_pl" => $fair->fair_desc_pl ?? "",
-                    "desc_en" => $fair->fair_desc_en ?? "",
-                    "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
-                    "short_desc_en" => $fair->fair_short_desc_en ?? "",
-                    "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
-                    "full_desc_en" => $fair->fair_full_desc_en ?? "",
-                    "visitors" => $fair->fair_visitors ?? "",
-                    "exhibitors" => $fair->fair_exhibitors ?? "",
-                    "countries" => $fair->fair_countries ?? "",
-                    "area" => $fair->fair_area ?? "",
-                    "color_accent" => $fair->fair_color_accent ?? "",
-                    "color_main2" => $fair->fair_color_main2 ?? "",
-                    "hall" => $fair->fair_hall ?? "",
-                    "facebook" => $fair->fair_facebook ?? "",
-                    "instagram" => $fair->fair_instagram ?? "",
-                    "linkedin" => $fair->fair_linkedin ?? "",
-                    "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->fair_badge ?? "",
-                    "catalog" => $fair->fair_kw ?? "",
-                    "shop" => $fair->fair_shop ?? ""
-                ];
+                $fairs_data["fairs"][$domain] = PWECommonFunctions::generate_fair_data($fair);
             }
         } else {
             // URL to JSON file
@@ -113,7 +84,6 @@ function get_fair_data($specific_domain = null) {
     // Return data or null if domain does not exist in data
     return $current_domain && isset($cached_data[$current_domain]) ? $cached_data[$current_domain] : null;
 }
-
 
 function register_dynamic_shortcodes() {
     // List of shortcodes and their corresponding fields

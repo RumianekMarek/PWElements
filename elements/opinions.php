@@ -645,6 +645,11 @@ class PWElementOpinions extends PWElements {
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-opinions__item-top {
                             width: 100%;
+                            flex-direction: column;
+                            padding: 12px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-container {
+                            flex-direction: column;
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-opinions__item-bottom {
                             width: 100%;
@@ -653,7 +658,6 @@ class PWElementOpinions extends PWElements {
                         .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-container img{
                             width: 100%;
                             max-width: 160px;
-                            margin: -80px auto 0;
                             box-shadow: 0px 0px 10px -4px black;
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-opinions__item-info-container {
@@ -672,6 +676,9 @@ class PWElementOpinions extends PWElements {
                         }
                         .pwelement_'. self::$rnd_id .' .slick-list {
                             overflow: visible;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
+                            max-width: 120px;
                         }
                     }
                 </style>';

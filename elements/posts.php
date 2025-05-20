@@ -637,9 +637,32 @@ class PWElementPosts extends PWElements {
                         align-items: center;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-post  .description img {
-                        background-color: '. $darker_btn_color .';
+                        // background-color: '. $darker_btn_color .';
                     }
-                    .pwelement_'. self::$rnd_id .' .slider-range {
+                    .pwelement_'. self::$rnd_id .' .arrow-wrapper {
+                        position: relative;
+                        display: inline-block;
+                    }
+                    .pwelement_'. self::$rnd_id .' .arrow-wrapper::before {
+                        content: "";
+                        position: absolute;
+                        width: 90%;
+                        height: 90%;
+                        top: 5%;
+                        left: 5%;
+                        background: '. $darker_btn_color .';
+                        z-index: 0;
+                    }
+
+                    .pwelement_'. self::$rnd_id .' .arrow-wrapper img {
+                        display: block;
+                        z-index: 1;
+                        width: 100%;
+                        height: auto;
+                        z-index: 1000;
+                        position: sticky;
+                    }
+                    .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
                         width: 100%;
                         margin-top: 16px;
                         height: 10px;
@@ -654,7 +677,7 @@ class PWElementPosts extends PWElements {
                     .pwelement_'. self::$rnd_id .' .slick-dots {
                         visibility: hidden;
                     }
-                    .pwelement_'. self::$rnd_id .' .slider-range::-webkit-slider-thumb {
+                    .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-webkit-slider-thumb {
                         appearance: none;
                         -webkit-appearance: none;
                         height: 0; /* lub 1px jeśli musisz */
@@ -662,20 +685,20 @@ class PWElementPosts extends PWElements {
                         background: transparent;
                         box-shadow: none;
                     }
-                    .pwelement_'. self::$rnd_id .' .slider-range::-moz-range-thumb {
+                    .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-moz-range-thumb {
                         height: 0;
                         width: 0;
                         background: transparent;
                         border: none;
                     }
 
-                    .pwelement_'. self::$rnd_id .' .slider-range::-ms-thumb {
+                    .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-ms-thumb {
                         height: 0;
                         width: 0;
                         background: transparent;
                         border: none;
                     }
-                    .pwelement_'. self::$rnd_id .' .slider-range::-webkit-slider-thumb:hover {
+                    .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-webkit-slider-thumb:hover {
                         background: black;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-post {
@@ -900,7 +923,11 @@ class PWElementPosts extends PWElements {
                                             $output .= '
                                             <div class="description">
                                                 <h4 class="pwe-post-title">'. $title .'</h4>
-                                                <p>Więcej <span style="font-size:30px; margin-left:10px;"><img src="/wp-content/plugins/PWElements/media/arrow_forward_color.webp"</span></p>
+                                                <p>Więcej
+                                                    <span class="arrow-wrapper" style="font-size:30px; margin-left:10px; line-height: 0;">
+                                                        <img style="display:block; margin: 0px; padding:0;width:24px; height:24px;" src="/wp-content/plugins/PWElements/media/arrow_forward_color.webp"/>
+                                                    </span>
+                                                </p>
                                             </div>
                                             ';
                                         } else {
@@ -928,11 +955,11 @@ class PWElementPosts extends PWElements {
                     if($posts_modes == "posts_simple_with_button_more"){
                         $slider_id = 'pwelement_' . self::$rnd_id . ' .pwe-slides';
                         $output .= '
-                        <input type="range" class="slider-range" min="0" step="1">
+                        <input type="range" class="slider-range_' . self::$rnd_id . '" min="0" step="1">
                         <script>
                         jQuery(document).ready(function ($) {
                             const $slider = $(".'.$slider_id.'");
-                            const $range = $(".slider-range");
+                            const $range = $(".slider-range_' . self::$rnd_id . '");
 
                             $slider.on("init", function (event, slick) {
                                 $range.attr("max", slick.slideCount - 1);
@@ -946,18 +973,18 @@ class PWElementPosts extends PWElements {
                             $slider.on("init", function (event, slick) {
                                 $range.attr("max", slick.slideCount - 1);
                                 $range.val(slick.currentSlide);
-                                updateSliderBackground($range); // 👈 tu
+                                updateSliderBackground($range);
                             });
 
                             $range.on("input", function () {
                                 const slideIndex = parseInt($(this).val(), 10);
                                 $slider.slick("slickGoTo", slideIndex);
-                                updateSliderBackground($range); // 👈 tu
+                                updateSliderBackground($range);
                             });
 
                             $slider.on("afterChange", function (event, slick, currentSlide) {
                                 $range.val(currentSlide);
-                                updateSliderBackground($range); // 👈 tu
+                                updateSliderBackground($range);
                             });
                         });
                         </script>';
@@ -1212,7 +1239,7 @@ class PWElementPosts extends PWElements {
                 return self::outputSliderSyncing($atts, $posts_data, $posts_title);
             } else {
                 $atts['posts_modes'] = 'posts_slider_mode';
-                return self::output($atts); 
+                return self::output($atts);
             }
         }
 
