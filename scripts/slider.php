@@ -196,7 +196,7 @@ class PWESliderScripts {
                 ';
             } else if ($id == 'posts') { // posts.php <-------------------------------------------------------------<
                 $get_initial_slides_to_show = '
-                return  elementWidth < 400 ? 1 :
+                return  elementWidth < 500 ? 1 :
                         elementWidth < 700 ? 2 :
                         elementWidth < 900 ? 3 :
                         slidesToShowSetting;

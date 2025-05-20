@@ -10,31 +10,48 @@ class PWECommonFunctions {
         return $id_rnd;
     }
 
+    private static function resolveServerAddrFallback() {
+        $host = php_uname('n');
+        return match ($host) {
+            'dedyk180.cyber-folks.pl' => '94.152.207.180',
+            'dedyk93.cyber-folks.pl'  => '94.152.206.93',
+            'dedyk239.cyber-folks.pl' => '91.225.28.47',
+            default => '94.152.207.180',
+        };
+    }
+
     /**
      * Connecting to CAP database
      */
     public static function connect_database() {
         // Initialize connection variables
         $cap_db = null;
+
+        if (!isset($_SERVER['SERVER_ADDR'])) {
+            $_SERVER['SERVER_ADDR'] = self::resolveServerAddrFallback();
+        }
         
         // Set connection data depending on the server
-        if (isset($_SERVER['SERVER_ADDR'])) {
-            if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
+        switch ($_SERVER['SERVER_ADDR']) {
+            case '94.152.207.180':
                 $database_host = 'localhost';
                 $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
                 $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
                 $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-            } else if ($_SERVER['SERVER_ADDR'] === '94.152.206.93') {
+                break;
+
+            case '94.152.206.93':
                 $database_host = 'localhost';
                 $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
                 $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
                 $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
-            } else {
+                break;
+
+            default:
                 $database_host = 'dedyk180.cyber-folks.pl';
                 $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
                 $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
                 $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-            }
         }
 
         // Check if there is complete data for connection
@@ -338,11 +355,46 @@ class PWECommonFunctions {
         return $result_color;
     }
 
+    public static function generate_fair_data($fair) {
+        return [
+            "domain" => $fair->fair_domain,
+            "date_start" => $fair->fair_date_start ?? "",
+            "date_start_hour" => $fair->fair_date_start_hour ?? "",
+            "date_end" => $fair->fair_date_end ?? "",
+            "date_end_hour" => $fair->fair_date_end_hour ?? "",
+            "edition" => $fair->fair_edition ?? "",
+            "name_pl" => $fair->fair_name_pl ?? "",
+            "name_en" => $fair->fair_name_en ?? "",
+            "desc_pl" => $fair->fair_desc_pl ?? "",
+            "desc_en" => $fair->fair_desc_en ?? "",
+            "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
+            "short_desc_en" => $fair->fair_short_desc_en ?? "",
+            "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
+            "full_desc_en" => $fair->fair_full_desc_en ?? "",
+            "visitors" => $fair->fair_visitors ?? "",
+            "exhibitors" => $fair->fair_exhibitors ?? "",
+            "countries" => $fair->fair_countries ?? "",
+            "area" => $fair->fair_area ?? "",
+            "color_accent" => $fair->fair_color_accent ?? "",
+            "color_main2" => $fair->fair_color_main2 ?? "",
+            "hall" => $fair->fair_hall ?? "",
+            "facebook" => $fair->fair_facebook ?? "",
+            "instagram" => $fair->fair_instagram ?? "",
+            "linkedin" => $fair->fair_linkedin ?? "",
+            "youtube" => $fair->fair_youtube ?? "",
+            "badge" => $fair->fair_badge ?? "",
+            "catalog" => $fair->fair_kw ?? "",
+            "shop" => $fair->fair_shop ?? ""
+        ];
+    }
+
     /**
      * JSON all trade fairs
      */
     public static function json_fairs() {
-        global $pwe_fairs;
+        $pwe_fairs = self::get_database_fairs_data();
+
+        static $console_logged = false;
 
         if (!empty($pwe_fairs)) {
             $fairs_data = ["fairs" => []];
@@ -354,41 +406,20 @@ class PWECommonFunctions {
     
                 $domain = $fair->fair_domain;
     
-                $fairs_data["fairs"][$domain] = [
-                    "domain" => $domain,
-                    "date_start" => $fair->fair_date_start ?? "",
-                    "date_start_hour" => $fair->fair_date_start_hour ?? "",
-                    "date_end" => $fair->fair_date_end ?? "",
-                    "date_end_hour" => $fair->fair_date_end_hour ?? "",
-                    "edition" => $fair->fair_edition ?? "",
-                    "name_pl" => $fair->fair_name_pl ?? "",
-                    "name_en" => $fair->fair_name_en ?? "",
-                    "desc_pl" => $fair->fair_desc_pl ?? "",
-                    "desc_en" => $fair->fair_desc_en ?? "",
-                    "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
-                    "short_desc_en" => $fair->fair_short_desc_en ?? "",
-                    "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
-                    "full_desc_en" => $fair->fair_full_desc_en ?? "",
-                    "visitors" => $fair->fair_visitors ?? "",
-                    "exhibitors" => $fair->fair_exhibitors ?? "",
-                    "countries" => $fair->fair_countries ?? "",
-                    "area" => $fair->fair_area ?? "",
-                    "color_accent" => $fair->fair_color_accent ?? "",
-                    "color_main2" => $fair->fair_color_main2 ?? "",
-                    "hall" => $fair->fair_hall ?? "",
-                    "facebook" => $fair->fair_facebook ?? "",
-                    "instagram" => $fair->fair_instagram ?? "",
-                    "linkedin" => $fair->fair_linkedin ?? "",
-                    "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->fair_badge ?? "",
-                    "catalog" => $fair->fair_kw ?? "",
-                    "shop" => $fair->fair_shop ?? ""
-                ];
+                $fairs_data["fairs"][$domain] = self::generate_fair_data($fair);
             }
         } else {
             $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
             $json_data = @file_get_contents($json_file);
             $fairs_data = json_decode($json_data, true);
+
+            if (!$console_logged) {
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Dane CAP są pobrane z pliku backupowego!!!")</script>';
+                }
+                $console_logged = true;
+            }
+
         }
 
         return $fairs_data['fairs'];  
