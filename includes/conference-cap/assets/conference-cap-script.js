@@ -1,4 +1,5 @@
-window.speakersData = speakersData.data || {};
+window.speakersDataData = speakersData.data || {};
+window.oneConfMode = speakersData.oneConfMode || false;
 jQuery(document).ready(function($){
 
     $(".conference_cap__lecture-speaker-btn").each(function() {
@@ -74,6 +75,11 @@ jQuery(document).ready(function($){
             const parentLink = $(this).closest('a');
         
             const slug = this.id.replace("nav_", "");
+
+            const url = new URL(window.location.href);
+            url.searchParams.set("konferencja", slug);
+            window.history.replaceState({}, "", url);
+
             const targetSelector = `#conf_${slug}, #${slug}`;
             const targetContainer = $(targetSelector).first();
             
@@ -141,6 +147,23 @@ jQuery(document).ready(function($){
                 targetImage.click(); 
             }
         }
+
+        const allConfs = $(".conference_cap__conf-slug");
+        // Jeśli tryb jednej konferencji jest włączony
+        if (speakersData.oneConfMode) {
+            const allConfs = $(".conference_cap__conf-slug");
+
+            if (allConfs.length > 0) {
+                const firstConf = allConfs.first();
+                firstConf.addClass("active-slug").show();
+
+                const firstDayBtn = firstConf.find(".conference_cap__conf-slug-navigation-day").first();
+                if (firstDayBtn.length) {
+                    firstDayBtn.trigger("click");
+                } 
+            } 
+        }
+
     }
     
 
