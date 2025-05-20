@@ -191,6 +191,7 @@ class PWEConferenceCap {
         extract(shortcode_atts(array(
             'conference_cap_html' => '',
             'conference_cap_conference_mode' => '',
+            'conference_cap_conference_arichive' =>'',
         ), $atts));
 
         $lang = 'PL';
@@ -305,8 +306,7 @@ class PWEConferenceCap {
                     
                             $byYear[$year][$conf->conf_slug][] = $confData;
                         }
-                    }
-                    
+                    } 
 
                     $currentYear  = (int) date('Y', strtotime(do_shortcode('[trade_fair_enddata]')));
                     $previousYear = $currentYear - 1;
@@ -333,9 +333,10 @@ class PWEConferenceCap {
                     }
 
                     // Jeśli nie znaleziono nic dla aktualnego roku i nie ustawiono archiveYear – pokazujemy poprzedni rok
-                    if (empty($conf_slugs) && (empty($archiveYear) || $archiveYear === null)) {
-                        $conf_slugs = $previousYearConfs;
-                    }
+                    // if (empty($conf_slugs) && (empty($archiveYear) || $archiveYear === null)) {
+                    //     $conf_slugs = $previousYearConfs;
+                    //     var_dump($previousYearConfs);
+                    // }
 
                     // Przetwarzanie 'conference_cap_conference_display_slug'
                     $display_slugs_raw = $atts['conference_cap_conference_display_slug'] ?? '';
@@ -349,6 +350,7 @@ class PWEConferenceCap {
                         }
                         $conf_slugs = $filtered_conf_slugs;
                     }
+
 
                     // 2. Manualne konferencje (dane pobrane z VC)
                     $has_valid_manual_conf = !empty(array_filter($manual_conferences, function($conf) {
@@ -383,12 +385,14 @@ class PWEConferenceCap {
                         }
                     }
 
+
                     // Teraz USUWAMY z bazy konferencje, które mają taki sam slug jak manuale z URL
                     foreach ($manual_slugs_to_hide as $slug_to_hide) {
                         if (isset($conf_slugs[$slug_to_hide])) {
                             unset($conf_slugs[$slug_to_hide]);
                         }
                     }
+
 
                     foreach ($conf_slugs as $conf_slug => $conferences) {
                         $conf_img = '';
@@ -406,6 +410,7 @@ class PWEConferenceCap {
                     
                                 break;
                             }
+
                         }
                         if (empty($conf_img)) {
                             continue;

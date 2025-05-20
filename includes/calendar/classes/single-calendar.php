@@ -42,6 +42,8 @@ $host = parse_url($site_url, PHP_URL_HOST);
 $domain = preg_replace('/^www\./', '', $host);
 
 $lang_pl = get_locale() == "pl_PL";
+$lang_en = get_locale() == "en-US";
+$lang_de = get_locale() == "de-DE";
 
 $api_url = 'https://'. $domain .'/wp-content/plugins/custom-element/other/pwe_api.php';
 $secretKey = defined('PWE_API_KEY_1') ? PWE_API_KEY_1 : '';
