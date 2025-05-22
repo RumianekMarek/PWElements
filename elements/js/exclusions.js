@@ -152,6 +152,17 @@ document.addEventListener('DOMContentLoaded', function () {
         changeBackground();
     }
 
+
+
+    let postParagraphs = document.querySelectorAll('.post-template-default p');
+    postParagraphs.forEach(function(paragraph) {
+        if (paragraph.innerHTML.includes("Obserwuj nas w Wiadomościach Google")) {
+            paragraph.innerHTML = "Dziękujemy, że przeczytałaś/eś nasz artykuł do końca.";
+        } else if (paragraph.innerHTML.includes("Follow us on Google News")) {
+            paragraph.innerHTML = "Thank you for reading our article to the end.";
+        }
+    });
+
 });
 
 // // Funkcja do ustawiania cookie

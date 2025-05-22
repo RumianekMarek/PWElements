@@ -371,7 +371,7 @@ class PWElementMedals extends PWElements {
             <div id="pweMedals" class="pwe-medals">
                 <div class="pwe-medals__wrapper">
                     <div class="pwe-medals__heading">
-                        <h4>'. self::languageChecker('Zdobądź prestiżową nagrodę w ptak warsaw expo!', 'Win a prestigious award at ptak warsaw expo!') .'</h4>
+                        <h4>'. self::languageChecker('Zdobądź prestiżową nagrodę w Ptak Warsaw Expo!', 'Win a prestigious award at Ptak Warsaw Expo!') .'</h4>
                     </div>
                     <div class="pwe-medals__text">'.
                         self::languageChecker(
