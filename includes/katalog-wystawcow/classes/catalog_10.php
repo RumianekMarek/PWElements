@@ -10,10 +10,10 @@ class PWECatalog10 extends PWECatalog {
     }
 
     public static function output($atts, $identification) {
-        
+
         $pwecatalog_display_random = true;
         $file_changer = isset($atts['file_changer']) ? $atts['file_changer'] : null;
-        
+
         $exhibitors = CatalogFunctions::logosChecker($identification, $atts['format'], $pwecatalog_display_random, $file_changer);
         if ($exhibitors === null) {
             return;
@@ -43,10 +43,10 @@ class PWECatalog10 extends PWECatalog {
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
         } else {
-            $source_utm = ''; 
+            $source_utm = '';
         }
 
-        if(count($exhibitors) >= 12 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false)){
+        if(count($exhibitors) >= 12 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) || strpos($source_utm, 'utm_source=platyna') !== false){
 
             $output .= '
             <style>
@@ -70,7 +70,7 @@ class PWECatalog10 extends PWECatalog {
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                }     
+                }
                 .img-container-top10 {
                     max-width: 430px;
                 }
@@ -105,7 +105,7 @@ class PWECatalog10 extends PWECatalog {
                         padding: 0;
                         margin: 0;
                     }
-                } 
+                }
                 @media (max-width: 960px) {
                     .wpb_column:has(#top10) {
                         width: 100% !important;
@@ -118,11 +118,11 @@ class PWECatalog10 extends PWECatalog {
                     .top10-text {
                         max-width: 500px;
                     }
-                }  
+                }
             </style>';
             $output .= '
             <div class="top10-text-container">
-                <p class="top10-text">'. 
+                <p class="top10-text">'.
                     PWECommonFunctions::languageChecker(
                         <<<PL
                             Po wypełnieniu formularza zostaniesz przekierowany do kroku 2, gdzie otrzymasz dodatkowe informacje dotyczące uczestnictwa w targach.
@@ -137,7 +137,7 @@ class PWECatalog10 extends PWECatalog {
 
         $output .= '
         <div id="top10" class="custom-catalog main-heading-text">
-    
+
             <h2 class="catalog-custom-title" style="width: fit-content;">'. CatalogFunctions::checkTitle($atts['katalog_year'], $atts['format']) .'</h2>
             <div class="img-container-top10 pwe-container-logotypes">';
                 $logotypes_limit = 12;
@@ -147,7 +147,7 @@ class PWECatalog10 extends PWECatalog {
                     foreach($exhibitors as $exhibitor){
                         if ($logotypes_count >= $logotypes_limit) {
                             break;
-                        }    
+                        }
 
                         $slider_array[] = array(
                             'img' => $exhibitor['URL_logo_wystawcy'],
@@ -155,33 +155,33 @@ class PWECatalog10 extends PWECatalog {
                         );
 
                         $logotypes_count++;
-                    }      
+                    }
                     $images_options = array();
                     $images_options[] = array(
                         "element_id" => self::$rnd_id,
-                        "logotypes_dots_off" => $atts["slider_dots_off"]  
-                    );                           
+                        "logotypes_dots_off" => $atts["slider_dots_off"]
+                    );
                     require_once plugin_dir_path(dirname(dirname(dirname( __FILE__ )))) . 'scripts/logotypes-slider.php';
                     $output .= PWELogotypesSlider::sliderOutput($slider_array, 3000, $images_options);
 
-                } else { 
+                } else {
                     foreach ($exhibitors as $exhibitor){
                         if ($logotypes_count >= $logotypes_limit) {
                             break;
-                        } 
+                        }
 
                         $exhibitorsUrl = "https://" . preg_replace('/^(https?:\/\/(www\.)?|(www\.)?)/', '', $exhibitor['www']);
                         $output .= '
                         <a target="_blank" href="'. $exhibitorsUrl .'">
                             <div class="cat-img" style="background-image: url(' . $exhibitor['URL_logo_wystawcy'] . ');"></div>
                         </a>';
-                        
+
                         $logotypes_count++;
                     }
                 }
             $output .= '
-            </div> 
-              
+            </div>
+
         </div>';
 
         return $output;

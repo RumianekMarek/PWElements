@@ -31,11 +31,15 @@ class PWEMapDynamic extends PWEMap {
             'map_image' => '',
             'map_custom_title' => '',
             'map_year' => '',
+            'map_custom_current_edition' => '',
             'map_number_visitors' => '',
+            'map_number_abroad_visitors' => '',
             'map_number_exhibitors' => '',
             'map_exhibition_space' => '',
             'map_year_previous' => '',
+            'map_custom_previous_edition' => '',
             'map_number_visitors_previous' => '',
+            'map_number_abroad_visitors_previous' => '',
             'map_number_exhibitors_previous' => '',
             'map_exhibition_space_previous' => '',
             'map_number_countries' => '',
@@ -50,18 +54,35 @@ class PWEMapDynamic extends PWEMap {
 
         $map_more_logotypes = (isset($atts['map_more_logotypes'])) ? explode(';', $atts['map_more_logotypes']) : '';
 
-        if (!empty($map_number_visitors_previous) || !empty($map_number_exhibitors_previous) || !empty($map_exhibition_space_previous)) {
+        if (!empty($map_number_visitors_previous)) {
             $max_visitors = max($map_number_visitors, $map_number_visitors_previous);
             $map_number_visitors_percentage = ($map_number_visitors / $max_visitors) * 100;
             $map_number_visitors_previous_percentage = ($map_number_visitors_previous / $max_visitors) * 100;
-            
+
+            $map_number_visitors_increase = round(100 - $map_number_visitors_previous_percentage);
+        }
+
+        if (!empty($map_number_exhibitors_previous)) {            
             $max_exhibitors = max($map_number_exhibitors, $map_number_exhibitors_previous);
             $map_number_exhibitors_percentage = ($map_number_exhibitors / $max_exhibitors) * 100;
             $map_number_exhibitors_previous_percentage = ($map_number_exhibitors_previous / $max_exhibitors) * 100;
-            
+
+            $map_number_exhibitors_increase = round(100 - $map_number_exhibitors_previous_percentage);
+        }
+
+        if (!empty($map_exhibition_space_previous)) {
             $max_exhibition_space = max($map_exhibition_space, $map_exhibition_space_previous);
             $map_exhibition_space_percentage = ($map_exhibition_space / $max_exhibition_space) * 100;
             $map_exhibition_space_previous_percentage = ($map_exhibition_space_previous / $max_exhibition_space) * 100;
+
+            $map_exhibition_space_increase = round(100 - $map_exhibition_space_previous_percentage);
+        }
+
+        $map_custom_edition = $map_custom_current_edition;
+        if (!empty($map_dynamic_preset) && $map_dynamic_preset === 'preset_3') {
+            if (!empty($map_year_previous) && !empty($map_custom_previous_edition)) {
+                $map_custom_edition = $map_custom_previous_edition;
+            }
         }
 
         // CSS <----------------------------------------------------------------------------------------------<
@@ -71,6 +92,8 @@ class PWEMapDynamic extends PWEMap {
             require_once plugin_dir_path(__FILE__) . 'presets/map_dynamic_preset_1.php';
         } else if ($map_dynamic_preset === 'preset_2') {
             require_once plugin_dir_path(__FILE__) . 'presets/map_dynamic_preset_2.php';
+        } else if ($map_dynamic_preset === 'preset_3') {
+            require_once plugin_dir_path(__FILE__) . 'presets/map_dynamic_preset_3.php';
         }
 
         return $output;

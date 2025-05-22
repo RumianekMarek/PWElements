@@ -289,7 +289,7 @@ class PWElementAdditionalLogotypes {
                     '. ($logotypes_items_shadow !== 'none' ? 'padding: 10px;' : 'padding: 5px;') .'
                     background-color: white !important;
                 }
-                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container, 
+                .pwelement_'. $el_id .' .pwe-header-logotypes .pwe-logo-item-container,
                 .pwelement_'. $el_id .' .pwe-logo-item-container {
                     margin: 5px;
                 }
@@ -476,7 +476,7 @@ class PWElementAdditionalLogotypes {
                         $header_logotypes_media_urls[] = $url;
                     }
                 }
-            } 
+            }
 
             $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
             $domain = $_SERVER['HTTP_HOST'];
@@ -501,6 +501,15 @@ class PWElementAdditionalLogotypes {
                 $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/partnerzy-obiektu/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
             } else if ($logotypes_catalog == "wspierają nas") {
                 $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/wspieraja-nas/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
+
+                $output .= '
+                    <style>
+                        .pwelement_'. $el_id .' .pwe-logotypes-gallery-wrapper {
+                            max-width: 900px;
+                            margin: 0 auto;
+                        }
+                    </style>';
+
             } else if (($logotypes_catalog == "" && $logotypes_media == "") && $header_logotypes_media_urls !== "") {
                 $files = $header_logotypes_media_urls;
             } else {
@@ -570,7 +579,7 @@ class PWElementAdditionalLogotypes {
                         }
 
                         $full_path = $_SERVER['DOCUMENT_ROOT'] . '/doc/' . $catalog;
-                
+
                         // Check if it's a file
                         if (is_file($full_path)) {
                             // Adding a direct file to the image list
@@ -618,7 +627,7 @@ class PWElementAdditionalLogotypes {
                 foreach ($files as &$file) {
                     $file = [
                         $file,
-                        basename(dirname($file)),  // Użycie $file, nie $image
+                        basename(dirname($file)),
                         ""
                     ];
                 }
@@ -650,10 +659,12 @@ class PWElementAdditionalLogotypes {
                     $files = [];
 
                     foreach ($cap_logotypes_data as $logo_data) {
-                        if ($logo_data->logos_type === "partner-targow" || 
-                            $logo_data->logos_type === "patron-medialny" || 
-                            $logo_data->logos_type === "partner-strategiczny" || 
-                            $logo_data->logos_type === "partner-honorowy") {
+                        if ($logo_data->logos_type === "partner-targow" ||
+                            $logo_data->logos_type === "patron-medialny" ||
+                            $logo_data->logos_type === "partner-strategiczny" ||
+                            $logo_data->logos_type === "partner-honorowy" ||
+                            $logo_data->logos_type === "principal-partner" ||
+                            $logo_data->logos_type === "industry-media-partner") {
                             $saving_paths($files, $logo_data);
                         }
                     }
@@ -664,7 +675,7 @@ class PWElementAdditionalLogotypes {
                     $files = [];
 
                     foreach ($cap_logotypes_data as $logo_data) {
-                        if ($logo_data->logos_type === "patron-medialny" || 
+                        if ($logo_data->logos_type === "patron-medialny" ||
                             $logo_data->logos_type === "partner-merytoryczny") {
                             $saving_paths($files, $logo_data);
                         }
@@ -678,6 +689,8 @@ class PWElementAdditionalLogotypes {
                     }
                 }
             }
+
+            // var_dump($files);
 
             if (count($files) > 0) {
 
@@ -715,52 +728,54 @@ class PWElementAdditionalLogotypes {
                     // Randomise files
                     shuffle($files);
                 } else {
-                    // Separation files
-                    $links = [];
-                    $localFiles = [];
+                    if (empty($cap_logotypes_data)) {
+                        // Separation files
+                        $links = [];
+                        $localFiles = [];
 
-                    // Keeping order
-                    foreach ($files as $file) {
-                        if (strpos($file[0], 'https://www2.pwe-expoplanner.com') === 0) {
-                            $links[] = $file; 
-                        } else {
-                            $localFiles[] = $file;
-                        }
-                    }
-
-                    // Sorting local files
-                    usort($localFiles, function($a, $b) {
-                        $fileA = basename($a[0]);
-                        $fileB = basename($b[0]);
-
-                        preg_match('/^(\d+)/', $fileA, $matchA);
-                        preg_match('/^(\d+)/', $fileB, $matchB);
-
-                        $hasNumA = !empty($matchA);
-                        $hasNumB = !empty($matchB);
-
-                        if ($hasNumA && !$hasNumB) {
-                            return -1;
-                        }
-                        if (!$hasNumA && $hasNumB) {
-                            return 1;
-                        }
-
-                        if ($hasNumA && $hasNumB) {
-                            $numA = (int)$matchA[1];
-                            $numB = (int)$matchB[1];
-
-                            if ($numA === $numB) {
-                                return strcasecmp($fileA, $fileB);
+                        // Keeping order
+                        foreach ($files as $file) {
+                            if (strpos($file[0], 'https://www2.pwe-expoplanner.com') === 0) {
+                                $links[] = $file;
+                            } else {
+                                $localFiles[] = $file;
                             }
-                            return $numA <=> $numB;
                         }
 
-                        return strcasecmp($fileA, $fileB);
-                    });
+                        // Sorting local files
+                        usort($localFiles, function($a, $b) {
+                            $fileA = basename($a[0]);
+                            $fileB = basename($b[0]);
 
-                    // Merging
-                    $files = array_merge($links, $localFiles);  
+                            preg_match('/^(\d+)/', $fileA, $matchA);
+                            preg_match('/^(\d+)/', $fileB, $matchB);
+
+                            $hasNumA = !empty($matchA);
+                            $hasNumB = !empty($matchB);
+
+                            if ($hasNumA && !$hasNumB) {
+                                return -1;
+                            }
+                            if (!$hasNumA && $hasNumB) {
+                                return 1;
+                            }
+
+                            if ($hasNumA && $hasNumB) {
+                                $numA = (int)$matchA[1];
+                                $numB = (int)$matchB[1];
+
+                                if ($numA === $numB) {
+                                    return strcasecmp($fileA, $fileB);
+                                }
+                                return $numA <=> $numB;
+                            }
+
+                            return strcasecmp($fileA, $fileB);
+                        });
+
+                        // Merging
+                        $files = array_merge($links, $localFiles);
+                    }
                 }
 
                 // Calculate width for header logotypes
@@ -924,7 +939,7 @@ class PWElementAdditionalLogotypes {
                                         if (strpos($url["img"], 'expoplanner.com') !== false) {
                                             $logo_caption_text = '<p>Exhibitor</p>';
                                         } else {
-                                            $logo_caption_text = array_key_exists($url["folder_name"], $translations) 
+                                            $logo_caption_text = array_key_exists($url["folder_name"], $translations)
                                                 ? '<p>' . $translations[$url["folder_name"]] . '</p>'
                                                 : '<p>' . $url["folder_name"] . '</p>';
                                         }
@@ -967,7 +982,8 @@ class PWElementAdditionalLogotypes {
                         // Obsługa trybu slidera 3-rzędowego
                         if (count($updated_images_url) > 0) {
                             $logos_count = count($updated_images_url);
-                            $logos_chunked = array_chunk($updated_images_url, ceil($logos_count / 3));
+                            $rows = ($logos_count < 30) ? 2 : 3;
+                            $logos_chunked = array_chunk($updated_images_url, ceil($logos_count / $rows));
 
                             $output .= '<div class="logotypes-slider-wrapper">';
 
@@ -985,7 +1001,7 @@ class PWElementAdditionalLogotypes {
                                                 ? '<p>Wystawca</p>'
                                                 : '<p>' . str_replace(' ', '<br>', $url["folder_name"]) . '</p>';
                                         } else {
-                                            $logo_caption_text = array_key_exists($url["folder_name"], $translations) 
+                                            $logo_caption_text = array_key_exists($url["folder_name"], $translations)
                                                 ? '<p>' . $translations[$url["folder_name"]] . '</p>'
                                                 : '<p>' . $url["folder_name"] . '</p>';
                                         }
@@ -1063,7 +1079,7 @@ class PWElementAdditionalLogotypes {
                         <span class="pwe-logotypes__arrow pwe-logotypes__arrow-next pwe-arrow pwe-arrow-next">›</span>';
                     }
 
-                $output .= '    
+                $output .= '
                 </div>';
 
                 if ($mobile != 1 && ($logotypes_slider_desktop == true) || $mobile == 1 && ($logotypes_grid_mobile != true || (!empty($header_logotypes_media_urls) && $header_logotypes_slider_off != true))) {
@@ -1097,6 +1113,9 @@ class PWElementAdditionalLogotypes {
                                                 infinite: true,
                                                 speed: 1000,
                                                 rtl: isRTL,
+                                                draggable: false,
+                                                swipe: false,
+                                                touchMove: false,
                                                 asNavFor: ".logotypes-slider",
                                                 responsive: [
                                                     {
@@ -1128,14 +1147,14 @@ class PWElementAdditionalLogotypes {
         $get_database_fairs_data_encode = json_encode(PWECommonFunctions::get_database_fairs_data());
         $get_database_logotypes_data_encode = json_encode(PWECommonFunctions::get_database_logotypes_data());
         $get_database_meta_data_encode = json_encode(PWECommonFunctions::get_database_meta_data());
-        
+
         $output .= '
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const get_database_fairs_data = ' . $get_database_fairs_data_encode . ';
                 const get_database_logotypes_data = ' . $get_database_logotypes_data_encode . ';
                 const get_database_meta_data = ' . $get_database_meta_data_encode . ';
-                
+
                 // console.log(get_database_logotypes_data);
 
                 // Funkcja do sprawdzania statusu obrazu
