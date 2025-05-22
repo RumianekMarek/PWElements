@@ -12,12 +12,16 @@ class PWECommonFunctions {
 
     private static function resolveServerAddrFallback() {
         $host = php_uname('n');
-        return match ($host) {
-            'dedyk180.cyber-folks.pl' => '94.152.207.180',
-            'dedyk93.cyber-folks.pl'  => '94.152.206.93',
-            'dedyk239.cyber-folks.pl' => '91.225.28.47',
-            default => '94.152.207.180',
-        };
+            switch ($host) {
+            case 'dedyk180.cyber-folks.pl':
+                return '94.152.207.180';
+            case 'dedyk93.cyber-folks.pl':
+                return '94.152.206.93';
+            case 'dedyk239.cyber-folks.pl':
+                return '91.225.28.47';
+            default:
+                return '94.152.207.180';
+        }
     }
 
     /**
@@ -550,6 +554,15 @@ class PWECommonFunctions {
     }
 
     /**
+     * Checking if the location is PL
+     * 
+     * @return bool
+     */
+    public static function lang_pl() {
+        return get_locale() == 'pl_PL';
+    }
+
+    /**
      * Laguage check for text
      * 
      * @param string $pl text in Polish.
@@ -561,12 +574,25 @@ class PWECommonFunctions {
     }
 
     /**
-     * Checking if the location is PL
+     * Multi translation for text
      * 
-     * @return bool
+     * @param string [0] index - text in Polish.
+     * @param string [1] index - text in English.
+     * @param string [2] index - text in Germany.
+     * @return string 
      */
-    public static function lang_pl() {
-        return get_locale() == 'pl_PL';
+    public static function multi_translation(...$translations) {
+        $locale = get_locale();
+        
+        // Mapping languages ​​to appropriate indexes in the array
+        $languages = [
+            'pl_PL' => 0, // Polish
+            'en_US' => 1, // English
+            'de_DE' => 2, // German
+            // 'es_ES' => 3, // Spanish
+        ];
+        
+        return isset($languages[$locale]) ? $translations[$languages[$locale]] : $translations[1];;
     }
 
      /**
