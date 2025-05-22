@@ -69,7 +69,7 @@ class PWERegistrationVisitors extends PWERegistration {
             $source_utm = '';
         }
 
-        if (strpos($source_utm, 'utm_source=premium') !== false) {
+        if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
             $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
         } else {
             if (get_locale() == 'pl_PL') {
@@ -82,7 +82,7 @@ class PWERegistrationVisitors extends PWERegistration {
         // CSS <----------------------------------------------------------------------------------------------<
         require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 
-        if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
+        if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
             $output .= '
             <div id="pweRegistration" class="pwe-registration vip">
                 <div class="pwe-reg-column pwe-mockup-column">

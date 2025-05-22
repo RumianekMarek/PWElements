@@ -64,7 +64,7 @@ window.onload = function () {
     let utmCookie = getCookie("utm_params");
     let utmInput = document.querySelector(".utm-class input");
 
-    if (utmCookie && (utmCookie.includes("utm_source=byli") || utmCookie.includes("utm_source=premium"))) {
+    if (utmCookie && (utmCookie.includes("utm_source=byli") || utmCookie.includes("utm_source=premium") || utmCookie.includes("utm_source=platyna"))) {
         deleteCookie("utm_params");
     }
 
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 inputFairId.value = emailId[2];
             });
         }
-        
+
         const confirmationMessage = document.querySelector(".gform_confirmation_message");
         const fairsSelectContainer = document.querySelector(".pwe-registration-fairs-select-container");
 

@@ -23,7 +23,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
                 border: 2px solid '. $darker_btn_vip_color .' !important;
             }
         </style>';
-    } else if (strpos($source_utm, 'utm_source=premium') !== false) {
+    } else if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
         $output .= '
         <style>
             #pweRegistration input[type="submit"] {
@@ -51,7 +51,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
         </style>';
     }
 
-    if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
+    if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
         $output .= '
         <style>
             .row-parent:has(#pweRegistration) .wpb_column {
