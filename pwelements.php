@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.6.6
+ * Version: 2.6.7
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -179,7 +179,10 @@ class PWElementsPlugin {
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
 
-        // Variables of styles
+        
+        require_once plugin_dir_path(__FILE__) . 'includes/reviews/reviews.php';
+        $this->PWEReviews = new PWEReviews();
+
         require_once plugin_dir_path(__FILE__) . 'other/test.php';
         $this->PWETest = new PWETest();
     }
