@@ -1017,10 +1017,10 @@ class PWElementOpinions extends PWElements {
                         let maxHeight = 0;
 
                         // Reset the heights before calculations
-                        $(".pwe-opinions__item").css("height", "auto");
+                        $(".pwelement_'. self::$rnd_id .' .pwe-opinions__item").css("height", "auto");
 
                         // Calculate the maximum height
-                        $(".pwe-opinions__item").each(function() {
+                        $(".pwelement_'. self::$rnd_id .' .pwe-opinions__item").each(function() {
                             const thisHeight = $(this).outerHeight();
                             if (thisHeight > maxHeight) {
                                 maxHeight = thisHeight;
@@ -1028,23 +1028,23 @@ class PWElementOpinions extends PWElements {
                         });
 
                         // Set the same height for all
-                        $(".pwe-opinions__item").css("minHeight", maxHeight);
+                        $(".pwelement_'. self::$rnd_id .' .pwe-opinions__item").css("minHeight", maxHeight);
                     }
 
                     // Call the function after loading the slider
-                    $(".pwe-opinions__items").on("init", function() {
+                    $(".pwelement_'. self::$rnd_id .' .pwe-opinions__items").on("init", function() {
                         setEqualHeight();
                     });
 
                     // Call the function when changing the slide
-                    $(".pwe-opinions__items").on("afterChange", function() {
+                    $(".pwelement_'. self::$rnd_id .' .pwe-opinions__items").on("afterChange", function() {
                         setEqualHeight();
                     });
 
                     // Call the function at the beginning
                     setEqualHeight();
 
-                    $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
+                    $(".pwelement_'. self::$rnd_id .' #pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
                 });
             </script>';
 
