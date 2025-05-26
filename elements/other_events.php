@@ -440,7 +440,7 @@ class PWElementOtherEvents extends PWElements {
 
 
                     if($other_show_strip){
-                        $event_count = count($other_events_items_json[0]);
+                        $event_count = count($other_events_items_json);
 
                         $slider_id = 'pwelement_' . self::$rnd_id . ' .pwe-slides';
                         $output .= '
@@ -519,7 +519,7 @@ class PWElementOtherEvents extends PWElements {
                                 background: black !important;
                             }
                             .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
-                                display:none !important;
+                                display:none;
                             }
 
 
@@ -540,7 +540,7 @@ class PWElementOtherEvents extends PWElements {
                                     }
                                 </style>
                             ';
-                        } else if($event_count>4){
+                        } else if($event_count>4 || $event_count===4){
                             $output .='
                             <style>
                                  @media(max-width:960px){

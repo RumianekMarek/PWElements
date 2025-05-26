@@ -550,10 +550,17 @@ class PWElementTwoCols extends PWElements {
                     $logo_data->logos_type === "partner-strategiczny" || 
                     $logo_data->logos_type === "partner-honorowy" ||
                     $logo_data->logos_type === "principal-partner" ||
-                    $logo_data->logos_type === "industry-media-partner") {
+                    $logo_data->logos_type === "industry-media-partner" ||
+                    $logo_data->logos_type === "partner-branzowy") {
                   $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
                 }
               }
+            }
+            $logotypes_catalogs_array = explode(',', $base_directory);
+            foreach ($cap_logotypes_data as $logo_data) {
+                if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
+                    $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
+                }
             }
           }
         }

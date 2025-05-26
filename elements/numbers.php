@@ -359,7 +359,7 @@ class PWElementNumbers extends PWElements {
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" />
                                 <h3>140+</h3>
-                                <p>'. self::languageChecker('Targów B2B<br>rocznie', 'B2B fairs<br>per year') .'</p>
+                                <p>'. self::languageChecker('Targów B2B<br>rocznie', 'B2B trade fairs <br>per year') .'</p>
                             </div>
                             <div>
                                 <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" />
@@ -566,8 +566,8 @@ class PWElementNumbers extends PWElements {
 
                     <div class="footer__info-overlay">
                         <div class="footer__info-item">
-                        <h2 class="footer__info-title">'. self::languageChecker('Stolica targów', 'The capital of trade fairss') .'</h2>
-                        <p class="footer__info-description">'. self::languageChecker('Targi / Konferencje / Eventy', 'Fairs / Conferences / Events') .'</p>
+                        <h2 class="footer__info-title">'. self::languageChecker('Stolica targów', 'The capital of trade fairs') .'</h2>
+                        <p class="footer__info-description">'. self::languageChecker('Targi / Konferencje / Eventy', 'Trade fairs / Conferences / Events') .'</p>
                         </div>
                         <a href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'">
                             <div class="footer__calendar-link">'. self::languageChecker('Kalendarz targowy', 'Trade show calendar') .'</div>
@@ -591,7 +591,7 @@ class PWElementNumbers extends PWElements {
                     <div class="footer__stat">
                         <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" alt="Ikona targów" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">140+</h2>
-                        <p class="footer__stat-description">'. self::languageChecker('Targów B2B rocznie', 'B2B fairs per year') .'</p>
+                        <p class="footer__stat-description">'. self::languageChecker('Targów B2B rocznie', 'B2B trade fairs <br>per year') .'</p>
                     </div>
                     <div class="footer__stat">
                         <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" alt="Ikona powierzchni" class="footer__stat-icon" />
