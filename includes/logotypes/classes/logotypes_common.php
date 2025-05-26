@@ -535,7 +535,7 @@ class PWElementAdditionalLogotypes {
                     $logotypes_catalogs = array_map('trim', $logotypes_catalogs);
 
                     // If "catalog" doesn't exist, add it at the beginning
-                    if (!in_array('wystawcy', $logotypes_catalogs)) {
+                    if ($logotypes_exhibitors_on == true && !in_array('wystawcy', $logotypes_catalogs)) {
                         array_unshift($logotypes_catalogs, 'wystawcy');
                     }
 
@@ -591,7 +591,7 @@ class PWElementAdditionalLogotypes {
                     }
 
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
-                    if (in_array('wystawcy', $logotypes_catalogs)) {
+                    if ($logotypes_exhibitors_on == true && in_array('wystawcy', $logotypes_catalogs)) {
                         foreach ($exhibitors_catalog as $catalog_img) {
                             $files[] = $catalog_img;
                         }
@@ -626,9 +626,10 @@ class PWElementAdditionalLogotypes {
             if (count($files) > 0) {
                 foreach ($files as &$file) {
                     $file = [
-                        $file,
-                        basename(dirname($file)),
-                        ""
+                        'url' => $file,
+                        'desc_pl' => basename(dirname($file)),
+                        'desc_en' => '',
+                        'link' => ''
                     ];
                 }
                 unset($file);
@@ -642,11 +643,13 @@ class PWElementAdditionalLogotypes {
                     $meta = json_decode($logo_data->meta_data, true);
                     $desc_pl = $meta["desc_pl"] ?? '';
                     $desc_en = $meta["desc_en"] ?? '';
+                    $link = $logo_data->logos_link;
 
                     $element = [
-                        'https://cap.warsawexpo.eu/public' . $logo_data->logos_url,
-                        $desc_pl,
-                        $desc_en
+                        'url' => 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url,
+                        'desc_pl' => $desc_pl,
+                        'desc_en' => $desc_en,
+                        'link' => $link
                     ];
 
                     // Adding logos_url to $files only if it is not already there
@@ -664,7 +667,8 @@ class PWElementAdditionalLogotypes {
                             $logo_data->logos_type === "partner-strategiczny" ||
                             $logo_data->logos_type === "partner-honorowy" ||
                             $logo_data->logos_type === "principal-partner" ||
-                            $logo_data->logos_type === "industry-media-partner") {
+                            $logo_data->logos_type === "industry-media-partner" ||
+                            $logo_data->logos_type === "partner-branzowy") {
                             $saving_paths($files, $logo_data);
                         }
                     }
@@ -683,22 +687,25 @@ class PWElementAdditionalLogotypes {
 
                 }
 
+                $logotypes_catalogs_array = explode(',', $logotypes_catalog);
                 foreach ($cap_logotypes_data as $logo_data) {
-                    if (strpos($logotypes_catalog, $logo_data->logos_type) !== false) {
+                    if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
                         $saving_paths($files, $logo_data);
                     }
                 }
             }
 
+            // echo '<pre>';
             // var_dump($files);
+            // echo '</pre>';
 
             if (count($files) > 0) {
 
                 // Sorting - moving files from “Partner Targów” to the end of the array
                 usort($files, function ($a, $b) {
                     // Użycie tylko pierwszego elementu (URL) do porównania
-                    $a_url = $a[0];
-                    $b_url = $b[0];
+                    $a_url = $a['url'];
+                    $b_url = $b['url'];
 
                     // Naprawienie podwójnych slashes
                     $a_url = str_replace('//', '/', $a_url);
@@ -717,9 +724,9 @@ class PWElementAdditionalLogotypes {
 
                 $files = array_map(function($file) {
                     // Check if the path is local
-                    if (strpos($file[0], 'https://') !== 0 && strpos($file[0], 'http://') !== 0) {
+                    if (strpos($file['url'], 'https://') !== 0 && strpos($file['url'], 'http://') !== 0) {
                         // Replace double slashes with one only if path is local
-                        $file[0] = preg_replace('/\/+/', '/', $file[0]);
+                        $file['url'] = preg_replace('/\/+/', '/', $file['url']);
                     }
                     return $file;
                 }, $files);
@@ -735,7 +742,7 @@ class PWElementAdditionalLogotypes {
 
                         // Keeping order
                         foreach ($files as $file) {
-                            if (strpos($file[0], 'https://www2.pwe-expoplanner.com') === 0) {
+                            if (strpos($file['url'], 'https://www2.pwe-expoplanner.com') === 0) {
                                 $links[] = $file;
                             } else {
                                 $localFiles[] = $file;
@@ -823,9 +830,10 @@ class PWElementAdditionalLogotypes {
 
                     // Search all files and generate their URL paths
                     foreach ($files as $index => $file) {
-                        $url = $file[0]; // Używamy tylko pierwszego elementu
-                        $desc_pl = $file[1];
-                        $desc_en = $file[2];
+                        $url = $file['url']; // Używamy tylko pierwszego elementu
+                        $desc_pl = $file['desc_pl'];
+                        $desc_en = $file['desc_en'];
+                        $link = $file['link'];
                         $short_path = '';
 
                         // Removing double "//"
@@ -860,9 +868,9 @@ class PWElementAdditionalLogotypes {
                                 $site = $logotype["logotype_link"];
                                 $class = ($logotype["logotype_color"] === "true") ? 'pwe-logo-original' : '';
                                 $style = ($logotype["logotype_style"] === "") ? '' : $logotype["logotype_style"];
-                                $target_blank = (strpos($site, 'http') !== false) ? 'target="_blank"' : '';
-                                break;
-                            }
+                                $target_blank = (strpos($site, 'http') !== false) ? 'target="_blank"' : '';       
+                                break;   
+                            }  
                         }
 
                         // Add the HTTPS protocol if it is not included in the link
@@ -876,7 +884,7 @@ class PWElementAdditionalLogotypes {
                         // Build the final data structure for the image
                         $updated_images_url[] = array(
                             "img"   => $full_path,
-                            "site"  => $site,
+                            "site"  => (!empty($link) && $link != null) ? $link : $site,
                             "class" => $class,
                             "style" => $style,
                             "target_blank" => $target_blank,
@@ -884,6 +892,10 @@ class PWElementAdditionalLogotypes {
                             "logotypes_name" => !empty($logotypes_name) ? $logotypes_name : ($logotypes_caption_on == true ? (PWECommonFunctions::lang_pl() ? $desc_pl : $desc_en) : "")
                         );
                     }
+
+                    // echo '<pre>';
+                    // var_dump($updated_images_url);
+                    // echo '</pre>';
 
                     // List of translations
                     $translations = array(
@@ -1051,11 +1063,14 @@ class PWElementAdditionalLogotypes {
                                 overflow: hidden;
                                 width: 100%;
                                 position: relative;
-
                                 opacity: 0;
-
+                                margin: 0 auto;
+                                padding: 0;
+                                overflow: hidden;
                             }
-
+                            .'.$element_unique_id.'-logotypes-slider .slick-list {
+                                margin-left: 9px !important;
+                            }
                             .'.$element_unique_id.'-logotypes-slider .slick-slide {
                                 display: flex !important;
                                 justify-content: center;
@@ -1067,6 +1082,7 @@ class PWElementAdditionalLogotypes {
                             .'.$element_unique_id.'-logotypes-slider[data-direction="rtl"] .slick-track {
                                 float: right;
                             }
+
                         </style>';
                     }
 
@@ -1100,23 +1116,28 @@ class PWElementAdditionalLogotypes {
                                     setTimeout(function () {
                                         let sliders = $(".logotypes-slider");
 
-                                        sliders.each(function (index) {
+                                        sliders.each(function () {
                                             let isRTL = $(this).data("direction") === "rtl";
+                                            let totalSlides = $(this).find(".pwe-logo-item-container").length;
+                                            let slidesToShow = ' . $slides_to_show . ';
+                                            let useInfinite = totalSlides > slidesToShow;
 
                                             $(this).slick({
-                                                slidesToShow: ' . $slides_to_show . ',
+                                                slidesToShow: slidesToShow,
                                                 slidesToScroll: 1,
                                                 autoplay: true,
                                                 autoplaySpeed: 2000,
                                                 arrows: false,
                                                 dots: false,
-                                                infinite: true,
+                                                infinite: useInfinite,
                                                 speed: 1000,
+                                                cssEase: "linear",
                                                 rtl: isRTL,
                                                 draggable: false,
                                                 swipe: false,
                                                 touchMove: false,
-                                                asNavFor: ".logotypes-slider",
+                                                pauseOnHover: false,
+                                                waitForAnimate: false,
                                                 responsive: [
                                                     {
                                                         breakpoint: 1024,
@@ -1133,10 +1154,10 @@ class PWElementAdditionalLogotypes {
                                                 ]
                                             });
                                         });
+
                                         sliders.css({ "opacity": "1" });
                                     }, 500);
                                 });
-
                             </script>';
                     }
                 }
@@ -1147,6 +1168,7 @@ class PWElementAdditionalLogotypes {
         $get_database_fairs_data_encode = json_encode(PWECommonFunctions::get_database_fairs_data());
         $get_database_logotypes_data_encode = json_encode(PWECommonFunctions::get_database_logotypes_data());
         $get_database_meta_data_encode = json_encode(PWECommonFunctions::get_database_meta_data());
+        $updated_images_url = json_encode($updated_images_url);
 
         $output .= '
         <script>
@@ -1154,8 +1176,15 @@ class PWElementAdditionalLogotypes {
                 const get_database_fairs_data = ' . $get_database_fairs_data_encode . ';
                 const get_database_logotypes_data = ' . $get_database_logotypes_data_encode . ';
                 const get_database_meta_data = ' . $get_database_meta_data_encode . ';
+                const updated_images_url = '. $updated_images_url .';
 
                 // console.log(get_database_logotypes_data);
+                
+                updated_images_url.forEach(logo => {
+                    if (logo.site !== "" && logo.site != null) {
+                        console.log("url:" + logo.img + " " + "link:" + logo.site);
+                    }
+                });
 
                 // Funkcja do sprawdzania statusu obrazu
                 function checkImage(url, callback) {

@@ -7,6 +7,7 @@ if (!empty($categories)) {
             <div class="pwe-store__category-text"><p>'. (self::lang_pl() ? 'FILTRUJ:' : 'FILTER:') .'</p></div>
             <div class="pwe-store__category-items">';
                 foreach ($categories as $category) {
+                    if ($category == "test") continue;
                     $output .= '
                     <div id="'. $category .'" class="pwe-store__category-item">
                         <p class="pwe-uppercase">'. 

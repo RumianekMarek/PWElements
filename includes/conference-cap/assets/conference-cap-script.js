@@ -1,4 +1,4 @@
-window.speakersDataData = speakersData.data || {};
+window.speakersData = speakersData.data || {};
 window.oneConfMode = speakersData.oneConfMode || false;
 jQuery(document).ready(function($){
 

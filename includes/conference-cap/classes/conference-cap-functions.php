@@ -141,10 +141,14 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
             $plSessions = $json['PL'][$plDayKeys[$d]];
             $enSessions = &$json['EN'][$enDayKeys[$d]];
 
+            if (!is_array($plSessions)) {
+                continue;
+            }
+
             /* -------- 2.   iteracja po prelekcjach (tylko 'pre‑X') -------- */
             foreach ($plSessions as $preKey => $plPre) {
 
-                if (strpos($preKey, 'pre-') !== 0 || !is_array($plPre)) {
+                if (!is_array($plPre) || strpos($preKey, 'pre-') !== 0) {
                     continue;
                 }
                 if (!isset($enSessions[$preKey]) || !is_array($enSessions[$preKey])) {
@@ -155,7 +159,7 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
 
                 /* -------- 3.   legent‑Y – kopiuj url gdy w EN pusto -------- */
                 foreach ($plPre as $fieldKey => $plField) {
-                    if (strpos($fieldKey, 'legent-') !== 0 || !is_array($plField)) {
+                    if (!is_array($plField) || strpos($fieldKey, 'legent-') !== 0) {
                         continue;
                     }
 

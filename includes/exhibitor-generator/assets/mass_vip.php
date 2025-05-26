@@ -1,6 +1,21 @@
 <?php
+
+function SendData($all_entrys, $all_entrys_index, $lang){
+    wp_remote_post(home_url('wp-content/plugins/custom-element/gf_integration/salesmanago_send_mass.php'), [
+        'body' => [
+            'secret' => hash_hmac('sha256', $_SERVER["HTTP_HOST"], PWE_API_KEY_5),
+            'element' => 'exhibitor_inv',
+            'entrys' => $all_entrys,
+            'index' => $all_entrys_index,
+            'lang' => $lang,
+        ],
+        'timeout' => 0.01,
+        'blocking' => false,
+    ]);
+}
+
 // Check if request method is POST.
-// if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     // Get wp-load.php location to import wordpress functions.
     $new_url = str_replace('private_html','public_html',$_SERVER["DOCUMENT_ROOT"]) .'/wp-load.php';
@@ -14,7 +29,7 @@
         $response = "false";
 
         //Chek token sended.
-        // if( $_POST['token'] ==  $hash){
+        if( $_POST['token'] ==  $hash){
 
             // Check if gravity forms class GFAPI is loded,
             if (class_exists('GFAPI')) {
@@ -25,6 +40,7 @@
                 $lang = $_POST['lang'];
                 $fields = array();
                 $all_entrys = array();
+                $all_entrys_index = 0;
                 $all_not_valid = array();
                 $all_entrys_id = array();
                 $full_form = '';
@@ -56,7 +72,6 @@
                     }
                 }
 
-
                 // Process entry data.
                 foreach($data as $val){
                     $phoneVal =  $val['phone'] ?? '';
@@ -82,11 +97,20 @@
 
                     // Add entry ID to entry_id ARRAY.
                     if(filter_var(trim($val['email']), FILTER_VALIDATE_EMAIL)){
+                        if(count($all_entrys) > 500){
+                            // SendData($all_entrys, $all_entrys_index, $lang);
+                            $all_entrys = array();
+                            $all_entrys_index++;
+                        }
+                        $all_entrys[] = $val;
                         $all_entrys_id[] = $entry_id;
                     } else {
                         $all_not_valid[] = $entry_id;
                     }
                 }
+                // if(count($all_entrys) > 0){
+                //     SendData($all_entrys, $all_entrys_index, $lang);
+                // }
             }
 
             // Check if any valid entry was added,
@@ -143,14 +167,14 @@
 
         // Send response back to exhibitors generator page
         echo json_decode($response);
-//     } else {
+    } else {
 
-//         // Wrong token send back 401 - Acces Denied
-//         echo json_decode('error code 401');
-//         exit;
-//     }
-// } else {
-//     // Wrong request method send back 401 - Acces Denied
-//     echo json_decode('error code 401');
-//     exit;
-// }
+        // Wrong token send back 401 - Acces Denied
+        echo json_decode('error code 401');
+        exit;
+    }
+} else {
+    // Wrong request method send back 401 - Acces Denied
+    echo json_decode('error code 401');
+    exit;
+}
