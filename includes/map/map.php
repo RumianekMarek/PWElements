@@ -72,6 +72,7 @@ class PWEMap extends PWECommonFunctions {
                             'value' => array(
                                 'Preset 1' => 'preset_1',
                                 'Preset 2' => 'preset_2',
+                                'Preset 3' => 'preset_3',
                             ),
                             'dependency' => array(
                                 'element' => 'map_type',
@@ -189,6 +190,28 @@ class PWEMap extends PWECommonFunctions {
                         ),
                         array(
                             'type' => 'textfield',
+                            'heading' => __('Current edition', 'pwe_map'),
+                            'param_name' => 'map_custom_current_edition',
+                            'param_holder_class' => 'backend-area-half-width',
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'map_dynamic_preset',
+                                'value' => 'preset_3',
+                            ),
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'heading' => __('Previous edition', 'pwe_map'),
+                            'param_name' => 'map_custom_previous_edition',
+                            'param_holder_class' => 'backend-area-half-width',
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'map_dynamic_preset',
+                                'value' => 'preset_3',
+                            ),
+                        ),
+                        array(
+                            'type' => 'textfield',
                             'heading' => __('Number of visitors (current period)', 'pwe_map'),
                             'param_name' => 'map_number_visitors',
                             'param_holder_class' => 'backend-area-half-width',
@@ -207,6 +230,28 @@ class PWEMap extends PWECommonFunctions {
                             'dependency' => array(
                                 'element' => 'map_type',
                                 'value' => 'PWEMapDynamic',
+                            ),
+                        ),
+                        array(
+                            'type' => 'textfield',
+                            'heading' => __('Number of visitors (current period from abroad)', 'pwe_map'),
+                            'param_name' => 'map_number_abroad_visitors',
+                            'param_holder_class' => 'backend-area-half-width',
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'map_dynamic_preset',
+                                'value' => 'preset_3',
+                            ),
+                        ),
+                                                array(
+                            'type' => 'textfield',
+                            'heading' => __('Number of visitors (previous period from abroad)', 'pwe_map'),
+                            'param_name' => 'map_number_abroad_visitors_previous',
+                            'param_holder_class' => 'backend-area-half-width',
+                            'save_always' => true,
+                            'dependency' => array(
+                                'element' => 'map_dynamic_preset',
+                                'value' => 'preset_3',
                             ),
                         ),
                         array(
@@ -365,11 +410,15 @@ class PWEMap extends PWECommonFunctions {
             'map_image' => '',
             'map_custom_title' => '',
             'map_year' => '',
+            'map_custom_current_edition' => '',
             'map_number_visitors' => '',
+            'map_number_abroad_visitors' => '',
             'map_number_exhibitors' => '',
             'map_exhibition_space' => '',
             'map_year_previous' => '',
+            'map_custom_previous_edition' => '',
             'map_number_visitors_previous' => '',
+            'map_number_abroad_visitors' => '',
             'map_number_exhibitors_previous' => '',
             'map_exhibition_space_previous' => '',
             'map_number_countries' => '',

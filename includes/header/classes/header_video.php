@@ -227,6 +227,7 @@ $output .= '
             font-size: 56px;
             font-weight: 600;
             letter-spacing: 5px;
+            text-align: center;
         }
         .pwelement_'. $el_id .' .pwe-header-text h3 {
             border-radius: 8px;

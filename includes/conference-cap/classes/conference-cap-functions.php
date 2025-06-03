@@ -1,105 +1,5 @@
 <?php
-class PWEConferenceCapFunctions extends PWEConferenceCap{
-
-    private static function connectToDatabaseConferences() {
-        // Initialize connection variables
-        $cap_db = null;
-        
-        // Set connection data depending on the server
-        if ($_SERVER['SERVER_ADDR'] === '94.152.207.180') {
-            $database_host = 'localhost';
-            $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
-            $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
-            $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
-        } else {
-            $database_host = 'localhost';
-            $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
-            $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
-            $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
-        }
-
-        // Check if there is complete data for connection
-        if ($database_user && $database_password && $database_name && $database_host) {
-            try {
-                $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
-            } catch (Exception $e) {
-                return false;
-                if (current_user_can("administrator") && !is_admin()) {
-                    echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
-                }
-            }
-        } else {
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
-            }
-            return false;
-        }
-    
-        // Check for connection errors
-        if (!$cap_db->dbh || mysqli_connect_errno()) {
-            return false;
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
-            }
-        }
-    
-        return $cap_db;
-    }
-    
-    public static function getDatabaseDataConferences() {
-        // Database connection
-        $cap_db = self::connectToDatabaseConferences();
-        // If connection failed, return empty array
-        if (!$cap_db) {
-            return [];
-            if (current_user_can('administrator') && !is_admin()) {
-                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
-            }
-        }
-
-
-        $domena = $_SERVER['HTTP_HOST'];
-
-        // Pobieramy dane bez względu na język
-        $results = $cap_db->get_results(
-            $cap_db->prepare(
-                "SELECT * FROM conferences WHERE conf_site_link LIKE %s",
-                '%' . $domena . '%'
-            )
-        );
-    
-        // SQL error checking
-        if ($cap_db->last_error) {
-            return [];
-            if (current_user_can("administrator") && !is_admin()) {
-                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
-            }
-        }
-
-        foreach ($results as &$row) {
-            if (!empty($row->conf_data)) {
-                $decoded = html_entity_decode($row->conf_data);
-        
-                // Czyścimy WSZYSTKIE wystąpienia font-family z atrybutów style (w tym wieloliniowe!)
-                $decoded = preg_replace_callback('/style="([^"]+)"/is', function ($match) {
-                    $style = $match[1];
-                    $style = preg_replace('/font-family\s*:\s*[^;"]+("[^"]+"[, ]*)*[^;"]*;?/i', '', $style);
-                    $style = trim(preg_replace('/\s*;\s*/', '; ', $style), '; ');
-                    return $style ? 'style="' . $style . '"' : '';
-                }, $decoded);
-        
-                // Sprawdzamy poprawność JSON
-                $test = json_decode($decoded, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    $row->conf_data = $decoded;
-                } else {
-                    error_log("❌ Błąd JSON w conf_data: " . json_last_error_msg());
-                }
-            }
-        }
-            
-        return $results;
-    }    
+class PWEConferenceCapFunctions extends PWEConferenceCap{    
 
     public static function findConferenceMode($new_class) {
 
@@ -241,10 +141,14 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
             $plSessions = $json['PL'][$plDayKeys[$d]];
             $enSessions = &$json['EN'][$enDayKeys[$d]];
 
+            if (!is_array($plSessions)) {
+                continue;
+            }
+
             /* -------- 2.   iteracja po prelekcjach (tylko 'pre‑X') -------- */
             foreach ($plSessions as $preKey => $plPre) {
 
-                if (strpos($preKey, 'pre-') !== 0 || !is_array($plPre)) {
+                if (!is_array($plPre) || strpos($preKey, 'pre-') !== 0) {
                     continue;
                 }
                 if (!isset($enSessions[$preKey]) || !is_array($enSessions[$preKey])) {
@@ -255,7 +159,7 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
 
                 /* -------- 3.   legent‑Y – kopiuj url gdy w EN pusto -------- */
                 foreach ($plPre as $fieldKey => $plField) {
-                    if (strpos($fieldKey, 'legent-') !== 0 || !is_array($plField)) {
+                    if (!is_array($plField) || strpos($fieldKey, 'legent-') !== 0) {
                         continue;
                     }
 

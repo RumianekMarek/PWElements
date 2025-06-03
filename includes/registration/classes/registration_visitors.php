@@ -56,12 +56,13 @@ class PWERegistrationVisitors extends PWERegistration {
      *
      * @param array @atts options
      */
-    public static function output($atts, $registration_type, $registration_form_id) {
+    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket) {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
+        $ticket_link = !empty($atts['ticket_link']) ? $atts['ticket_link'] : '';
 
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
@@ -69,7 +70,7 @@ class PWERegistrationVisitors extends PWERegistration {
             $source_utm = '';
         }
 
-        if (strpos($source_utm, 'utm_source=premium') !== false) {
+        if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false ) {
             $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
         } else {
             if (get_locale() == 'pl_PL') {
@@ -82,7 +83,7 @@ class PWERegistrationVisitors extends PWERegistration {
         // CSS <----------------------------------------------------------------------------------------------<
         require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 
-        if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
+        if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
             $output .= '
             <div id="pweRegistration" class="pwe-registration vip">
                 <div class="pwe-reg-column pwe-mockup-column">
@@ -100,6 +101,115 @@ class PWERegistrationVisitors extends PWERegistration {
                     </div>
                 </div>
             </div>';
+            } else if($register_show_ticket === "true") {
+                $output .= '
+                    <div id="pweRegistrationTicket" class="registration-ticket">
+                      <h1 class="registration-ticket__title">'. self::languageChecker('Opcje biletów dla odwiedzających:', 'Ticket options for visitors:') .'</h1>
+                      <div class="registration-ticket-container">
+                        <div class="registration-ticket__option registration-ticket__option--standard">
+                          <div class="ticket-card__label">'. self::languageChecker('Najczęstszy wybór', 'Most common choice') .'</div>
+                          <div class="ticket-card__name">'. self::languageChecker('Bilet Branżowy', 'Trade Pass') .'</div>
+
+                          <div class="ticket-card">
+                            <div class="ticket-card__price">
+                              <h2 class="ticket-card__price-value">0 PLN</h2>
+                              <p class="ticket-card__note">'. self::languageChecker('* po krótkiej rejestracji', '* after a short registration') .'</p>
+                            </div>
+
+                            <div class="ticket-card__details">
+                              <p class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</p>
+                              <ul class="ticket-card__benefits">
+                                <li>'. self::languageChecker('<strong>wejścia na targi po rejestracji przez 3 dni</strong>', '<strong>access to the trade fair for all 3 days upon registration</strong>') .'</li>
+                                <li>'. self::languageChecker('<strong>możliwość udziału w konferencjach</strong> lub warsztatach na zasadzie “wolnego słuchacza”', '<strong>the chance to join conferences</strong> or workshops as a listener') .'</li>
+                                <li>'. self::languageChecker('darmowy parking', 'free parking') .'</li>
+                              </ul>
+                              <div class="pwe-registration-form">
+                                [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="registration-ticket__option registration-ticket__option--business">
+                          <img src="/wp-content/plugins/PWElements/media/fast-track.webp">
+                          <div class="ticket-card__name">'. self::languageChecker('Business Priority Pass', 'Business Priority Pass') .'</div>
+                          <div class="ticket-card">
+                            <div class="ticket-card__price">
+                              <h2 class="ticket-card__price-value">249 PLN</h2>
+                              <p class="ticket-card__note">'. self::languageChecker('lub poproś o zaproszenie wystawcę', 'or request an invitation from an exhibitor') .'</p>
+                              <a class="exhibitor-catalog" href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'">'. self::languageChecker('katalog wystawców', 'exhibitor catalog') .'</a>
+                            </div>
+
+                            <div class="ticket-card__details">
+                              <h2 class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</h2>
+                              <ul class="ticket-card__benefits">
+                                <li>'. self::languageChecker('<strong>fast track</strong> - szybkie wejście na targi dedykowaną bramką przez 3 dni', '<strong>fast track access</strong> – skip the line and enter the trade fair through a dedicated priority gate for all 3 days') .'</li>
+                                <li>'. self::languageChecker('<strong>imienny pakiet</strong> - targowy przesyłany kurierem przed wydarzeniem', '<strong>Personalized trade fair package</strong> - delivered by courier to your address before the event') .'</li>
+                                <li>'. self::languageChecker('<strong>welcome pack</strong> - przygotowany specjalnie przez wystawców', '<strong>welcome pack</strong> - a special set of materials and gifts prepared by exhibitors') .'</li>
+                                <li>'. self::languageChecker('obsługa concierge', 'Concierge service') .'</li>
+                                <li>'. self::languageChecker('możliwość udziału w konferencjach i  warsztatach', 'Access to conferences and workshops') .'</li>
+                                <li>'. self::languageChecker('darmowy parking', 'Free parking') .'</li>
+                              </ul>
+                              <div class="ticket-card__details_button">';
+                              if(empty($ticket_link)){
+                                $output .= '
+                                 <a href="#" class="ticket-card__cta" data-popup-trigger>
+                                  '. self::languageChecker('Kup bilet', 'Buy a ticket') .'
+                                </a>';
+                              } else {
+                                $output .= '
+                                <a href="'.$ticket_link.'" class="ticket-card__cta">
+                                    '. self::languageChecker('Kup bilet', 'Buy a ticket') .'
+                                </a>';
+                              }
+                              $output .= '
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    ';
+                    if(empty($ticket_link)){
+                        $output .= '
+                        <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const popupTrigger = document.querySelector("[data-popup-trigger]");
+                            const popup = document.getElementById("popup");
+                            const popupClose = document.getElementById("popupClose");
+
+                            popupTrigger.addEventListener("click", function(e) {
+                                e.preventDefault();
+                                popup.style.display = "flex";
+                            });
+
+                            popupClose.addEventListener("click", function() {
+                                popup.style.display = "none";
+                            });
+
+                            window.addEventListener("click", function(e) {
+                                if (e.target === popup) {
+                                popup.style.display = "none";
+                                }
+                            });
+                        });
+                        </script>
+
+                        ';
+                        $output.='<div class="popup" id="popup">
+                            <div class="popup__content">
+
+                                <div class="popup__content_text">
+                                    <p style="font-size:16px;">'. self::languageChecker('Poproś wybranego wystawcę o zaproszenie – to szybki i pewny sposób aby otrzymać Zaproszenie Priority Pass', 'Ask your chosen exhibitor for an invitation - it s a quick and sure way to get a Priority Pass invitation') .'</p>
+                                    <p class="text">'. self::languageChecker('Obecna pula biletów Business Priority Pass przeznaczona do sprzedaży została wyczerpana. Zachęcamy do bezpłatnej rejestracji i odbioru Biletu Branżowego', 'The current pool of Business Priority Pass tickets for sale has been exhausted. We encourage you to register and pick up your Business Pass for free') .'</p>
+                                    <a href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'" class="popup_katalog">'. self::languageChecker('Katalog wystawców', 'Exhibitor Catalog') .'</a>
+                                </div>
+                                <div class="popup__content_button">
+                                    <div id="popupClose">+</div>
+                                </div>
+                            </div>
+                        </div>';
+                    }
         } else {
             $output .= '
             <div id="pweRegistration" class="pwe-registration">

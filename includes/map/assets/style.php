@@ -966,6 +966,221 @@ if ($map_type === 'PWEMapDynamic') {
                 }
             }
         </style>';
+    } else if ($map_dynamic_preset == 'preset_3') {
+        $output .= '
+            <style>
+                .pwe-map__stats-number-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 40px;
+                    justify-content: space-between;
+                    align-items: stretch;
+                    margin: 36px 0;
+                }
+
+                .pwe-map__stats-number-container:before {
+                    content: "";
+                    position: absolute;
+                    top: -9%;
+                    left: -3%;
+                    width: 60%;
+                    height: 118%;
+                    background: #f7f7f7;
+                    z-index: 0;
+                    border-radius: 24px;
+                }
+
+                .pwe-map__stats-number-card {
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1 1 260px; /* minimalna szerokość 260px, ale może rosnąć */
+                    z-index: 1;
+                }
+
+                .pwe-map__title-section {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                    padding: 24px;
+                }
+
+                .pwe-map__title, 
+                .pwe-map__edition, 
+                .pwe-map__year {
+                    margin: 0;
+                }
+
+                .pwe-map__edition, 
+                .pwe-map__year {
+                    font-size: 20px
+                }
+
+                .pwe-map__stats-number-box {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    padding: 24px;
+                    border-radius: 20px;
+                    background-color: color-mix(in srgb, var(--accent-color), white 80%);
+                    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+                    align-items: flex-start;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .pwe-map__stats-number-card:first-of-type .pwe-map__stats-number-box {
+                    background: white;
+                }
+
+                .pwe-map__stats-number-box h2 {
+                margin: 0;
+                font-size: 32px;
+                font-weight: 800;
+                }
+                .pwe-map__stats-number-box-text p {
+                    margin: 0;
+                }
+
+                .pwe-map__button-link {
+                    padding: 12px 24px;
+                    min-width: 224px;
+                    background: var(--main2-color);
+                    color: white !important;
+                    font-size: 16px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    border-radius: 36px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
+
+                .pwe-map__button-link svg {
+                    fill: white;
+                    width: 24px;
+                    aspect-ratio: 1/1;
+                    margin-left: 2px;
+                    transition: 0.3s all;
+                }
+
+                .pwe-map__button-link:hover svg {
+                    margin-left: 6px;
+                }
+                    
+                .pwe-map__stats-number-card h2 {
+                    font-size: 32px;
+                    font-weight: 800;
+                    z-index: 1;
+                }
+
+                .pwe-map__stats-number-box-text p {
+                    position: relative;
+                    font-weight: 600;
+                    font-size: 18px;
+                    z-index: 1;
+                }
+
+                .pwe-map__divider {
+                    height: 4px;
+                    width: 100%;
+                    background: #0000001c;
+                    border: 0;
+                    border-radius: 36px;
+                    z-index: 1;
+                }
+
+                .pwe-map__stats-number-increase {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    background: #CEEED7;
+                    color: #09AB37 !important;
+                    font-weight: 600;
+                    padding: 2px 10px;
+                    border-radius: 36px;
+                    margin-top: 8px;
+                    z-index: 1;
+                }
+
+                .pwe-map__stats-number-increase p {
+                    margin: 0;
+                }
+
+                .pwe-map__stats-number-increase svg {
+                    fill: #09AB37;
+                    width : 24px;
+                    aspect-ratio: 1/1;
+                }
+
+                .pwe-map__logo-section {
+                    margin: 24px 12px;
+                }
+
+                .pwe-map__logo-section img {
+                filter: invert(50%) sepia(10%) saturate(2039%) hue-rotate(236deg) brightness(60%) contrast(90%);
+                }
+
+                .pwe-map__big-icon {
+                    position: absolute;
+                    opacity: 0.95;
+                    z-index: 0;
+                }
+
+                .pwe-map__icon-visitor {
+                    right: -18%;
+                    bottom: -57%;
+                    width: 70%;
+                    aspect-ratio: 1/1;
+                    max-width: 260px;
+                }
+
+                .pwe-map__icon-exhibitor {
+                    right: -12%;
+                    bottom: -12%;
+                    width: 70%;
+                    aspect-ratio: 1/1;
+                    max-width: 260px;
+                }
+
+                .pwe-map__icon-area {
+                    right: -18%;
+                    bottom: -30%;
+                    width: 70%;
+                    aspect-ratio: 1/1;
+                    max-width: 260px;
+                }
+
+                @media(max-width:600px) {
+                    .pwe-map__stats-number-container {
+                        margin: 16px 0;
+                    }
+                    .pwe-map__stats-number-container:before {
+                        width: 50%;
+                        top: -1%;
+                        height: 102%;
+                    }
+                    .pwe-map__stats-number-card:has(.pwe-map__logo-section) {
+                        flex-direction: column-reverse;
+                    }
+                    .pwe-map__big-icon {
+                        opacity: 0.75;
+                    }
+                    .pwe-map__icon-exhibitor, .pwe-map__icon-area {
+                        max-width: 200px;
+                    }
+                    .pwe-map__stats-number-card h2 {
+                        font-size: 28px;
+                    }
+                    .pwe-map__edition, .pwe-map__year {
+                        font-size: 18px;
+                    }
+                    .pwe-map__stats-number-box-text p {
+                        font-size: 16px;
+                    }
+                }
+            </style>';
     }
 } else if ($map_type === 'PWEMap3D') {
     $output = '

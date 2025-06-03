@@ -10,6 +10,337 @@ class PWECommonFunctions {
         return $id_rnd;
     }
 
+    private static function resolveServerAddrFallback() {
+        $host = php_uname('n');
+            switch ($host) {
+            case 'dedyk180.cyber-folks.pl':
+                return '94.152.207.180';
+            case 'dedyk93.cyber-folks.pl':
+                return '94.152.206.93';
+            case 'dedyk239.cyber-folks.pl':
+                return '91.225.28.47';
+            default:
+                return '94.152.207.180';
+        }
+    }
+
+    /**
+     * Connecting to CAP database
+     */
+    public static function connect_database() {
+        // Initialize connection variables
+        $cap_db = null;
+
+        if (!isset($_SERVER['SERVER_ADDR'])) {
+            $_SERVER['SERVER_ADDR'] = self::resolveServerAddrFallback();
+        }
+        
+        // Set connection data depending on the server
+        switch ($_SERVER['SERVER_ADDR']) {
+            case '94.152.207.180':
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
+                break;
+
+            case '94.152.206.93':
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_93') ? PWE_DB_NAME_93 : '';
+                $database_user = defined('PWE_DB_USER_93') ? PWE_DB_USER_93 : '';
+                $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
+                break;
+
+            default:
+                $database_host = 'dedyk180.cyber-folks.pl';
+                $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
+                $database_user = defined('PWE_DB_USER_180') ? PWE_DB_USER_180 : '';
+                $database_password = defined('PWE_DB_PASSWORD_180') ? PWE_DB_PASSWORD_180 : '';
+        }
+
+        // Check if there is complete data for connection
+        if ($database_user && $database_password && $database_name && $database_host) {
+            try {
+                $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+            } catch (Exception $e) {
+                return false;
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
+                }
+            }
+        } else {
+            return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Check for connection errors
+        if (!$cap_db->dbh || mysqli_connect_errno()) {
+            return false;
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
+            }
+        }
+    
+        return $cap_db;
+    } 
+
+    /**
+     * Get data from CAP databases  
+     */
+    public static function get_database_fairs_data($fair_domain = null) {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+        
+        if (!isset($fair_domain)){
+            // Retrieving all data from the database
+            $results = $cap_db->get_results("SELECT * FROM fairs");
+        } else {
+            // Retrieving fair data from the database
+            $results = $cap_db->get_results(
+                $cap_db->prepare("SELECT * FROM fairs WHERE fair_domain = %s", $fair_domain)
+            );
+        }
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }    
+
+    public static function get_database_store_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM shop");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }
+
+    public static function get_database_store_packages_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM shop_packs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_meta_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM meta_data");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_groups_contacts_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database 
+        $results = $cap_db->get_results("SELECT * FROM groups");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }
+
+    public static function get_database_groups_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+    
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT fair_domain, fair_group FROM fairs");
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_logotypes_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+            return [];
+        }
+    
+        // Get current domain
+        $current_domain = $_SERVER['HTTP_HOST'];
+    
+        // SQL query to fetch logos with the matching fair_id and fair_domain
+        $query = "
+            SELECT logos.*, 
+                meta_data.meta_data AS meta_data 
+            FROM logos
+            INNER JOIN fairs ON logos.fair_id = fairs.id
+            LEFT JOIN meta_data ON meta_data.slug = 'patrons' 
+                                AND JSON_UNQUOTE(JSON_EXTRACT(meta_data.meta_data, '$.slug')) = logos.logos_type
+            WHERE fairs.fair_domain = %s
+        ";
+    
+        // Retrieve data from the database
+        $results = $cap_db->get_results($cap_db->prepare($query, $current_domain));
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: ' . addslashes($cap_db->last_error) . '")</script>';
+            }
+            return [];
+        }
+    
+        return $results;
+    } 
+
+    public static function get_database_conferences_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+
+        $domain = $_SERVER['HTTP_HOST'];
+
+        // Pobieramy dane bez względu na język
+        $results = $cap_db->get_results(
+            $cap_db->prepare(
+                "SELECT * FROM conferences WHERE conf_site_link LIKE %s",
+                '%' . $domain . '%'
+            )
+        );
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+
+        foreach ($results as &$row) {
+            if (!empty($row->conf_data)) {
+                $decoded = html_entity_decode($row->conf_data);
+        
+                // Czyścimy WSZYSTKIE wystąpienia font-family z atrybutów style (w tym wieloliniowe!)
+                $decoded = preg_replace_callback('/style="([^"]+)"/is', function ($match) {
+                    $style = $match[1];
+                    $style = preg_replace('/font-family\s*:\s*[^;"]+("[^"]+"[, ]*)*[^;"]*;?/i', '', $style);
+                    $style = trim(preg_replace('/\s*;\s*/', '; ', $style), '; ');
+                    return $style ? 'style="' . $style . '"' : '';
+                }, $decoded);
+        
+                // Sprawdzamy poprawność JSON
+                $test = json_decode($decoded, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $row->conf_data = $decoded;
+                } else {
+                    error_log("❌ Błąd JSON w conf_data: " . json_last_error_msg());
+                }
+            }
+        }
+            
+        return $results;
+    }
+    
+    
+
     /**
      * Colors (accent or main2)
      */
@@ -35,11 +366,46 @@ class PWECommonFunctions {
         return $result_color;
     }
 
+    public static function generate_fair_data($fair) {
+        return [
+            "domain" => $fair->fair_domain,
+            "date_start" => $fair->fair_date_start ?? "",
+            "date_start_hour" => $fair->fair_date_start_hour ?? "",
+            "date_end" => $fair->fair_date_end ?? "",
+            "date_end_hour" => $fair->fair_date_end_hour ?? "",
+            "edition" => $fair->fair_edition ?? "",
+            "name_pl" => $fair->fair_name_pl ?? "",
+            "name_en" => $fair->fair_name_en ?? "",
+            "desc_pl" => $fair->fair_desc_pl ?? "",
+            "desc_en" => $fair->fair_desc_en ?? "",
+            "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
+            "short_desc_en" => $fair->fair_short_desc_en ?? "",
+            "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
+            "full_desc_en" => $fair->fair_full_desc_en ?? "",
+            "visitors" => $fair->fair_visitors ?? "",
+            "exhibitors" => $fair->fair_exhibitors ?? "",
+            "countries" => $fair->fair_countries ?? "",
+            "area" => $fair->fair_area ?? "",
+            "color_accent" => $fair->fair_color_accent ?? "",
+            "color_main2" => $fair->fair_color_main2 ?? "",
+            "hall" => $fair->fair_hall ?? "",
+            "facebook" => $fair->fair_facebook ?? "",
+            "instagram" => $fair->fair_instagram ?? "",
+            "linkedin" => $fair->fair_linkedin ?? "",
+            "youtube" => $fair->fair_youtube ?? "",
+            "badge" => $fair->fair_badge ?? "",
+            "catalog" => $fair->fair_kw ?? "",
+            "shop" => $fair->fair_shop ?? ""
+        ];
+    }
+
     /**
      * JSON all trade fairs
      */
     public static function json_fairs() {
-        global $pwe_fairs;
+        $pwe_fairs = self::get_database_fairs_data();
+
+        static $console_logged = false;
 
         if (!empty($pwe_fairs)) {
             $fairs_data = ["fairs" => []];
@@ -51,41 +417,20 @@ class PWECommonFunctions {
     
                 $domain = $fair->fair_domain;
     
-                $fairs_data["fairs"][$domain] = [
-                    "domain" => $domain,
-                    "date_start" => $fair->fair_date_start ?? "",
-                    "date_start_hour" => $fair->fair_date_start_hour ?? "",
-                    "date_end" => $fair->fair_date_end ?? "",
-                    "date_end_hour" => $fair->fair_date_end_hour ?? "",
-                    "edition" => $fair->fair_edition ?? "",
-                    "name_pl" => $fair->fair_name_pl ?? "",
-                    "name_en" => $fair->fair_name_en ?? "",
-                    "desc_pl" => $fair->fair_desc_pl ?? "",
-                    "desc_en" => $fair->fair_desc_en ?? "",
-                    "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
-                    "short_desc_en" => $fair->fair_short_desc_en ?? "",
-                    "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
-                    "full_desc_en" => $fair->fair_full_desc_en ?? "",
-                    "visitors" => $fair->fair_visitors ?? "",
-                    "exhibitors" => $fair->fair_exhibitors ?? "",
-                    "countries" => $fair->fair_countries ?? "",
-                    "area" => $fair->fair_area ?? "",
-                    "color_accent" => $fair->fair_color_accent ?? "",
-                    "color_main2" => $fair->fair_color_main2 ?? "",
-                    "hall" => $fair->fair_hall ?? "",
-                    "facebook" => $fair->fair_facebook ?? "",
-                    "instagram" => $fair->fair_instagram ?? "",
-                    "linkedin" => $fair->fair_linkedin ?? "",
-                    "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->fair_badge ?? "",
-                    "catalog" => $fair->fair_kw ?? "",
-                    "shop" => $fair->fair_shop ?? ""
-                ];
+                $fairs_data["fairs"][$domain] = self::generate_fair_data($fair);
             }
         } else {
             $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
             $json_data = @file_get_contents($json_file);
             $fairs_data = json_decode($json_data, true);
+
+            if (!$console_logged) {
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Dane CAP są pobrane z pliku backupowego!!!")</script>';
+                }
+                $console_logged = true;
+            }
+
         }
 
         return $fairs_data['fairs'];  
@@ -216,6 +561,15 @@ class PWECommonFunctions {
     }
 
     /**
+     * Checking if the location is PL
+     * 
+     * @return bool
+     */
+    public static function lang_pl() {
+        return get_locale() == 'pl_PL';
+    }
+
+    /**
      * Laguage check for text
      * 
      * @param string $pl text in Polish.
@@ -227,12 +581,25 @@ class PWECommonFunctions {
     }
 
     /**
-     * Checking if the location is PL
+     * Multi translation for text
      * 
-     * @return bool
+     * @param string [0] index - text in Polish.
+     * @param string [1] index - text in English.
+     * @param string [2] index - text in Germany.
+     * @return string 
      */
-    public static function lang_pl() {
-        return get_locale() == 'pl_PL';
+    public static function multi_translation(...$translations) {
+        $locale = get_locale();
+        
+        // Mapping languages ​​to appropriate indexes in the array
+        $languages = [
+            'pl_PL' => 0, // Polish
+            'en_US' => 1, // English
+            'de_DE' => 2, // German
+            // 'es_ES' => 3, // Spanish
+        ];
+        
+        return isset($languages[$locale]) ? $translations[$languages[$locale]] : $translations[1];;
     }
 
      /**

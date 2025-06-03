@@ -7,14 +7,23 @@ jQuery(document).ready(function($){
     let fileContent = "";
     let fileArray = "";
     let fileLabel = "";
+    const input_logo = '';
     let filteredArray = [];
     const tableCont = [];
+
     let emailTrue = true;
     const modal = $(".modal__element");
     const closeBtn = modal.find(".btn-close");
     const pageLang = (send_data['lang'] == "pl_PL") ? 'pl' : 'en';
-    const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
+    // const phone_field = send_data.phone_field ? send_data.phone_field : false ?? false;
+    const phone_field = false;
     const formId = send_data['custom_form'];
+    const group_tag = $('.exhibitor-generator').data('group');
+
+    console.log(group_tag);
+    $('.patron').val(group_tag);
+    $('.patron input').val(group_tag);
+    $('.gform_footer').append($('.tabela-masowa'));
 
     console.log(formId);
     // Button "Wysyłka Zbiorcze" functionality
@@ -24,13 +33,45 @@ jQuery(document).ready(function($){
         $("footer").hide();
     });
 
+    // $('.exhibitor-generator[data-group="gr1"]').find('.badge_name.gfield_visibility_visible').hide();
+    // if($('.exhibitor-generator[data-group="gr2"] .badge_name.gfield_visibility_visible').length > 0){
+    //     $('.mass_checkbox_label').show();
+    // }
+
     // "X" click will hide modal and show footer
     closeBtn.on("click", function () {
         modal.hide();
         $("footer").show();
     });
 
+    $("#exhibitors_selector__modal").on("change", function(){
+        $(".company-error").remove();
+        $(".select-error").remove();
+
+        switch($(this).val()){
+            case "Firma Zapraszająca":
+                $('.company').hide();
+                $(`.patron`).val(group_tag);
+                break;
+            case "Patron": 
+                $('.company').val("");
+                $('.company').show()
+                $(`.patron`).val("patron");
+                break;
+            default:
+                $('.company').hide();
+                $('.company').val($(this).val());
+                $(`.patron`).val(group_tag);
+        }
+    });
+
     // Remove error message for company name input
+    $("#mass-table, .company").on("click", function(){
+        if($(this).next().hasClass("company-error")){
+            $(this).next().remove();
+        }
+    });
+
     $("#mass-table, .company").on("click", function(){
         if($(this).next().hasClass("company-error")){
             $(this).next().remove();
@@ -133,18 +174,18 @@ jQuery(document).ready(function($){
             // Create drop downs for email, name and phone,
             // Populate the drop downs with file labels.
             if(pageLang == "pl"){
-                if(phone_field){
-                    $(".file-uloader").after("<div class='file-selector'><label>Kolumna z numerami telefonów</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
-                }
+                // if(phone_field){
+                //     $(".file-uloader").after("<div class='file-selector'><label>Kolumna z numerami telefonów</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
+                // }
                 $(".file-uloader").after("<div class='file-selector'><label>Kolumna z adresami e-mail</label><select type='select' id='email-column' name='email-column' class='selectoret'></select></div>");
                 $(".file-uloader").after("<div class='file-selector'><label>Kolumna z imionami i nazwiskami</label><select type='select' id='name-column' name='name-column' class='selectoret'></select></div>");
                 $(".selectoret").each(function(){
                     $(this).append("<option value=''>Wybierz</option>");
                 });
             } else {
-                if(phone_field){
-                    $(".file-uloader").after("<div class='file-selector'><label>Phone numbers column</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
-                }
+                // if(phone_field){
+                //     $(".file-uloader").after("<div class='file-selector'><label>Phone numbers column</label><select type='select' id='phone-column' name='phone-column' class='selectoret'></select></div>");
+                // }
                 $(".file-uloader").after("<div class='file-selector'><label>Email address column</label><select type='select' id='email-column' name='email-column' class='selectoret'></select></div>");
                 $(".file-uloader").after("<div class='file-selector'><label>Names column</label><select type='select' id='name-column' name='name-column' class='selectoret'></select></div>");
 
@@ -211,11 +252,13 @@ jQuery(document).ready(function($){
         if(!emailTrue){
             return;
         }
+
         let company_name = "";
         let emailColumn = "";
         let nameColumn = "";
         let phoneColumn = "";
         let fileTrue = false;
+        const fileInput = $('#exhibitor_logo')[0];
 
         // Check if file uploded correctly.
         if ($("#fileUpload").val() != ""){
@@ -225,6 +268,17 @@ jQuery(document).ready(function($){
                 $("#fileUpload").after("<p class='file-error error-color'>Proszę zamieścić plik</p>");
             } else {
                 $("#fileUpload").after("<p class='file-error error-color'>Please add an file</p>");
+            }
+        }
+
+        // Check if anything is selected.
+        if ($("#exhibitors_selector__modal").val() != "" && $("#exhibitors_selector__modal").val() != "Firma Zapraszająca (wybierz z listy)"){
+            company_select = $("#exhibitors_selector__modal").val();
+        } else if($(".select-error").length == 0 ){
+            if(pageLang == "pl"){
+                $("#exhibitors_selector__modal").after("<p class='select-error error-color'>Wybierz firmę</p>");
+            } else {
+                $("#exhibitors_selector__modal").after("<p class='select-error error-color'>Select Company Name</p>");
             }
         }
 
@@ -311,33 +365,45 @@ jQuery(document).ready(function($){
         // Check if tableCont is populated, has less then 5000 elements and there is less then 5 email errors
         if (tableCont.length > 0 && tableCont.length < 5000 && emailErrors < 5){
             $(".modal__element .inner").prepend("<div id=spinner class=spinner></div>");
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(tableCont));
+            formData.append('token', send_data['secret']);
+            formData.append('lang', pageLang);
+            formData.append('formId', formId);
+            formData.append('company', $(".company").val());
+            formData.append('exhibitor_name', $('#mass_exhibitor_badge').prop("checked") ? '1' : '0');
+            formData.append('exhibitor_logo', $('#exhibitor_logo_img').prop("src") ?? '');
+            formData.append('exhibitor_desc', $('.exhibitor_desc input').val() ?? '');
+            formData.append('patron', $('.patron').val() ?? '');
+            formData.append('exhibitor_stand', $('#exhibitor_stand').val() ?? '');
+
+            const fileInput = $('#exhibitor_logo')[0];
+            if (fileInput?.files.length > 0) {
+                formData.append('input_logo', fileInput.files[0]);
+            }
 
             // Send data via POST
-            $.post(send_data['send_file'], {
-                token: send_data['secret'],
-                lang: pageLang,
-                company: $(".company").val(),
-                exhibitor_name: $('#mass_exhibitor_badge').prop("checked"),
-                exhibitor_logo: $('#exhibitor_logo_img').prop("src") ?? '',
-                exhibitor_desc: $('.exhibitor_desc input').val() ?? '',
-                data: tableCont,
-                formId:formId,
-
-            // Process response
-            }, function(response) {
-                resdata = JSON.parse(response);
-                $(".modal__element .inner").children().each(function(){
-                    $(this).not('.btn-close').remove();
-                })
+            $.ajax({
+                url: send_data['send_file'],
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    const resdata = JSON.parse(response);
+                    $(".modal__element .inner").children().each(function () {
+                        $(this).not('.btn-close').remove();
+                    });
                 console.log(resdata);
-                if (resdata == 1){
+                if (resdata == 'true'){
                     $(".modal__element .inner").append("<p style='color:green; font-weight: 600; width: 90%;'>Dziękujemy za skorzystanie z generatora zaproszeń. Państwa goście wkrótce otrzymają zaproszenia VIP.</p>");
                 } else {
                     $(".modal__element .inner").append("<p style='color:red; font-weight: 600; width: 90%;'>Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo</p>");
                 }
-            $("#spinner").remove();
+                $("#spinner").remove();
                 tableCont.splice(0, tableCont.length);
                 $("#dataContainer").empty();
+                }
             });
         } else {
             if(pageLang == "pl"){

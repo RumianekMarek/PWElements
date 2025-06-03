@@ -14,9 +14,38 @@ class PWElementMedals extends PWElements {
         parent::__construct();
     }
 
-    public static function output($atts) {
+        public static function initElements() {
+        $element_output = array(
+            array(
+                'type' => 'dropdown',
+                'group' => 'PWE Element',
+                'heading' => __('Presets', 'pwe_element'),
+                'param_name' => 'medals_preset',
+                'save_always' => true,
+                'std'       => 'default',
+                'value' => array( 
+                    'Default' => 'default',
+                    'Stacked version' => 'stacked',
+                ),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMedals',
+                ),
+            ),
+        );
+        return $element_output;
+    }
 
-        $darker_btn_color = self::adjustBrightness(self::$accent_color, -20);
+    public static function output($atts) {
+        $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
+        $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
+        $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
+
+        extract( shortcode_atts( array(
+            'medals_preset' => '',
+        ), $atts ));
+
+        $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $medals = [
             'innowacyjnosc' => [
@@ -163,78 +192,186 @@ class PWElementMedals extends PWElements {
                 </div>';
 
         } else {
-            $output = '
-            <style>
-                .pwe-medals__wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    box-shadow: 2px 2px 12px #cccccc;
-                    border-radius: 36px;
-                    padding: 36px;
-                    text-align: center;
-                    gap: 18px;
-                }
-                .pwe-medals__heading h4 {
-                    margin: 0 auto;
-                }
-                .pwe-medals__items {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 10px;
-                }
-                .pwe-medals__wrapper .pwe-medals__items {
-                    display: grid;
-                }
-                .pwe-medals__wrapper .pwe-medals__items_mobile {
-                    display: none;
-                }
-                .pwe-medals__wrapper .pwe-button-link {
-                    transform-origin: center !important;
-                }
-                @media(max-width: 650px) {
+            if ($medals_preset == 'default' || empty($medals_preset)) {
+                $output = '
+                <style>
                     .pwe-medals__wrapper {
-                        padding: 18px;
+                        display: flex;
+                        flex-direction: column;
+                        box-shadow: 2px 2px 12px #cccccc;
+                        border-radius: 36px;
+                        padding: 36px;
+                        text-align: center;
+                        gap: 18px;
                     }
-                    .pwe-medals__text p {
-                        line-height: 1.3;
-                        text-align: left;
+                    .pwe-medals__heading h4 {
+                        margin: 0 auto;
+                        text-transform: uppercase;
                     }
                     .pwe-medals__items {
-                        display: flex;
-                        flex-wrap: wrap;
-                        justify-content: center;
-                    }
-                    .pwe-medals__item {
-                        max-width: 100px;
-                    }
-                    .pwe-medals__item img {
-                        width: 100%;
-                    }
-                    .pwe-medals__wrapper .pwe-medals__items_mobile {
-                        display: block;
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 10px;
                     }
                     .pwe-medals__wrapper .pwe-medals__items {
+                        display: grid;
+                    }
+                    .pwe-medals__wrapper .pwe-medals__items_mobile {
                         display: none;
                     }
-                }
-                .pwe-medals .pwe-button-link {
-                    color: white;
-                    background-color: ' . self::$accent_color . ';
-                    border: 1px solid ' . self::$accent_color . ';
-                    border-radius: 10px;
-                    min-width: 240px;
-                }
-                .pwe-medals .pwe-button-link:hover {
-                    color: white !important;
-                    background-color: '. $darker_btn_color .'!important;
-                    border: 1px solid '. $darker_btn_color .'!important;
-                }
-            </style>
+                    .pwe-medals__wrapper .pwe-button-link {
+                        transform-origin: center !important;
+                    }
+                    @media(max-width: 650px) {
+                        .pwe-medals__wrapper {
+                            padding: 18px;
+                        }
+                        .pwe-medals__text p {
+                            line-height: 1.3;
+                            text-align: left;
+                        }
+                        .pwe-medals__items {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                        }
+                        .pwe-medals__item {
+                            max-width: 100px;
+                        }
+                        .pwe-medals__item img {
+                            width: 100%;
+                        }
+                        .pwe-medals__wrapper .pwe-medals__items_mobile {
+                            display: block;
+                        }
+                        .pwe-medals__wrapper .pwe-medals__items {
+                            display: none;
+                        }
+                    }
+                    .pwe-medals .pwe-button-link {
+                        color: white;
+                        background-color: ' . self::$accent_color . ';
+                        border: 1px solid ' . self::$accent_color . ';
+                        border-radius: 10px;
+                        min-width: 240px;
+                    }
+                    .pwe-medals .pwe-button-link:hover {
+                        color: white !important;
+                        background-color: '. $darker_btn_color .'!important;
+                        border: 1px solid '. $darker_btn_color .'!important;
+                    }
+                </style>';
+            } else if ($medals_preset == 'stacked') {
+                $output = '
+                <style>
+                    .pwe-medals__wrapper {
+                        display: flex;
+                        flex-direction: column;
+                        border-radius: 36px;
+                        padding: 36px;
+                        text-align: center;
+                        gap: 18px;
+                    }
+                    .pwe-medals__heading h4 {
+                        margin: 0 auto;
+                        font-weight: 800;
+                    }
+                    .pwe-medals__items {
+                        position: relative;
+                        height: 300px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .pwe-medals__wrapper .pwe-medals__items_mobile {
+                        display: none;
+                    }
+                    .pwe-medals__wrapper .pwe-button-link {
+                        transform-origin: center !important;
+                    }
+                    @media(min-width:650px) {
+                        .pwe-medals__heading:first-of-type h4 {
+                            font-size: 30px;
+                        }
+                        .pwe-medals__text p {
+                            max-width: 900px;
+                            margin: 18px auto 0;
+                        }
+                        .pwe-medals__item {
+                            position: absolute;
+                        }
+                        .pwe-medals__item:nth-child(1) {
+                            z-index: 4;
+                            left: 5%;
+                        }
+                        .pwe-medals__item:nth-child(2) {
+                            z-index: 3;
+                            left: 25%;
+                            filter: brightness(0.8);
+                        }
+                        .pwe-medals__item:nth-child(3) {
+                            z-index: 2;
+                            left: 45%;
+                            filter: brightness(0.7);
+                        }
+                        .pwe-medals__item:nth-child(4) {
+                            z-index: 1;
+                            left: 65%;
+                            filter: brightness(0.6);
+                        }
 
+                        .pwe-medals__item img {
+                            width: 25vw;
+                            max-width: 300px;
+                            height: auto;
+                        }
+                    }
+                    @media(max-width: 650px) {
+                        .pwe-medals__wrapper {
+                            padding: 18px;
+                        }
+                        .pwe-medals__text p {
+                            line-height: 1.3;
+                            text-align: left;
+                        }
+                        .pwe-medals__items {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                        }
+                        .pwe-medals__item {
+                            max-width: 100px;
+                        }
+                        .pwe-medals__item img {
+                            width: 100%;
+                        }
+                        .pwe-medals__wrapper .pwe-medals__items_mobile {
+                            display: block;
+                        }
+                        .pwe-medals__wrapper .pwe-medals__items {
+                            display: none;
+                        }
+                    }
+                    .pwe-medals .pwe-button-link {
+                        color: ' . $btn_text_color . ';
+                        background-color: ' . $btn_color . ';
+                        border: 1px solid ' . $btn_border . ';
+                        border-radius: 36px;
+                        min-width: 240px;
+                    }
+                    .pwe-medals .pwe-button-link:hover {
+                        color: white !important;
+                        background-color: '. $darker_btn_color .'!important;
+                        border: 1px solid '. $darker_btn_color .'!important;
+                    }
+                </style>';
+            }
+
+            $output .= '
             <div id="pweMedals" class="pwe-medals">
                 <div class="pwe-medals__wrapper">
                     <div class="pwe-medals__heading">
-                        <h4>'. self::languageChecker('ZDOBĄDŹ PRESTIŻOWĄ NAGRODĘ W PTAK WARSAW EXPO!', 'WIN A PRESTIGIOUS AWARD AT PTAK WARSAW EXPO!') .'</h4>
+                        <h4>'. self::languageChecker('Zdobądź prestiżową nagrodę w Ptak Warsaw Expo!', 'Win a prestigious award at Ptak Warsaw Expo!') .'</h4>
                     </div>
                     <div class="pwe-medals__text">'.
                         self::languageChecker(

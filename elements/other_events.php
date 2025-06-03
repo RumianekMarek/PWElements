@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementOtherEvents
@@ -12,15 +12,15 @@ class PWElementOtherEvents extends PWElements {
      */
     public function __construct() {
         parent::__construct();
-    }   
-    
+    }
+
 
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.
      */
     public static function initElements() {
-        $element_output = array( 
+        $element_output = array(
             array(
                 'type' => 'dropdown',
                 'group' => 'PWE Element',
@@ -50,8 +50,19 @@ class PWElementOtherEvents extends PWElements {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Show strip', 'pwe_element'),
+                'param_name' => 'other_show_strip',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOtherEvents',
+                ),
+            ),
+            array(
                 'type' => 'param_group',
-                'group' => 'PWE Element',  
+                'group' => 'PWE Element',
                 'param_name' => 'other_events_items',
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -78,12 +89,13 @@ class PWElementOtherEvents extends PWElements {
         return $element_output;
     }
 
-    public static function output($atts) {  
+    public static function output($atts) {
 
         extract( shortcode_atts( array(
             'other_events_preset' => '',
             'other_events_style' => '',
             'other_events_items' => '',
+            'other_show_strip' => '',
         ), $atts ));
 
         $other_events_items_urldecode = urldecode($other_events_items);
@@ -122,19 +134,19 @@ class PWElementOtherEvents extends PWElements {
                 // Getting start and end dates
                 $date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
                 $date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
-        
+
                 // Checking if the date is in the range
                 if ($date_start && $date_end) {
                     if ((($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
-                        ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) && 
-                        strpos($fair['domain'], $current_domain) === false) {  
+                        ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) &&
+                        strpos($fair['domain'], $current_domain) === false) {
                         $other_events_items_json[] = [
                             "other_events_domain" => $fair["domain"],
                             "other_events_text" => PWECommonFunctions::languageChecker($fair["desc_pl"], $fair["desc_en"])
                         ];
                     }
                 }
-            } 
+            }
         }
 
         if (!empty($other_events_items_json[0])) {
@@ -177,7 +189,7 @@ class PWElementOtherEvents extends PWElements {
                     display: flex;
                     flex-direction: column;
                     gap: 6px;
-                }    
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic-number {
                     font-weight: 700;
                 }
@@ -189,7 +201,7 @@ class PWElementOtherEvents extends PWElements {
                     line-height: 1.3;
                 }
             </style>';
-            
+
             if ($other_events_preset == 'preset_1') {
                 $slides_to_show = 2;
 
@@ -213,7 +225,7 @@ class PWElementOtherEvents extends PWElements {
                         display: flex;
                         flex-direction: column;
                         gap: 6px;
-                    }    
+                    }
                     .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic-number {
                         font-weight: 700;
                     }
@@ -253,7 +265,7 @@ class PWElementOtherEvents extends PWElements {
                         }
                     }
                 </style>';
-            }else if ($other_events_preset == 'preset_3') {
+            } else if ($other_events_preset == 'preset_3') {
                 $slides_to_show = 4;
 
                 $output .= '
@@ -342,6 +354,8 @@ class PWElementOtherEvents extends PWElements {
                 </style>';
             }
 
+
+
             $output .= '
             <div id="pweOtherEvents" class="pwe-other-events">
                 <div class="pwe-other-events__wrapper">
@@ -349,7 +363,7 @@ class PWElementOtherEvents extends PWElements {
                         <h4>'. PWECommonFunctions::languageChecker('Inne wydarzenia podczas targów', 'Other events during the fair') .'</h4>
                     </div>
                     <div class="pwe-other-events__items pwe-slides">';
-                    
+
                     // Generating HTML
                     foreach ($other_events_items_json as $other_events_item) {
                         $other_events_domain = $other_events_item["other_events_domain"];
@@ -412,26 +426,145 @@ class PWElementOtherEvents extends PWElements {
                             ';
                         }
                     }
-                    
+
                     $output .= '
                     </div>';
 
                     $other_events_options[] = array(
                         "other_events_preset" => $other_events_preset,
                     );
-                    
                     $other_events_arrows_display = 'false';
 
                     include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
                     $output .= PWESliderScripts::sliderScripts('other-events', '.pwelement_'. self::$rnd_id, $other_events_dots_display = 'true', $other_events_arrows_display, $slides_to_show, $other_events_options);
 
+
+                    if($other_show_strip){
+                        $event_count = count($other_events_items_json);
+
+                        $slider_id = 'pwelement_' . self::$rnd_id . ' .pwe-slides';
+                        $output .= '
+                        <input type="range" id="test" class="slider-range_' . self::$rnd_id . '" min="0" step="1">
+                        <script>
+                        jQuery(document).ready(function ($) {
+                            const $slider = $(".'.$slider_id.'");
+                            const $range = $(".slider-range_' . self::$rnd_id . '");
+
+                            $slider.on("init", function (event, slick) {
+                                $range.attr("max", slick.slideCount - 1);
+                                $range.val(slick.currentSlide);
+                            });
+                            function updateSliderBackground($el) {
+                                const val = ($el.val() - $el.attr("min")) / ($el.attr("max") - $el.attr("min"));
+                                const percent = val * 100;
+                                $el.css("background", `linear-gradient(to right, black 0%, black ${percent}%, #ccc ${percent}%, #ccc 100%)`);
+                            }
+                            $slider.on("init", function (event, slick) {
+                                $range.attr("max", slick.slideCount - 1);
+                                $range.val(slick.currentSlide);
+                                updateSliderBackground($range);
+                            });
+
+                            $range.on("input", function () {
+                                const slideIndex = parseInt($(this).val(), 10);
+                                $slider.slick("slickGoTo", slideIndex);
+                                updateSliderBackground($range);
+                            });
+
+                            $slider.on("afterChange", function (event, slick, currentSlide) {
+                                $range.val(currentSlide);
+                                updateSliderBackground($range);
+                            });
+                        });
+                        </script>
+                        <style>
+
+                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                width: 100%;
+                                margin-top: 16px;
+                                height: 10px;
+                                border-radius: 5px;
+                                background: black;
+                                appearance: none;
+                                -webkit-appearance: none;
+                                overflow: hidden;
+                                cursor: pointer;
+                                transition: background 0.3s ease;
+                            }
+                            .pwelement_'. self::$rnd_id .' .slick-dots {
+                                visibility: hidden;
+                            }
+                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-webkit-slider-thumb {
+                                appearance: none;
+                                -webkit-appearance: none;
+                                height: 0; /* lub 1px jeśli musisz */
+                                width: 0;
+                                background: transparent;
+                                box-shadow: none;
+                            }
+                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-moz-range-thumb {
+                                height: 0;
+                                width: 0;
+                                background: transparent;
+                                border: none;
+                            }
+
+                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-ms-thumb {
+                                height: 0;
+                                width: 0;
+                                background: transparent;
+                                border: none;
+                            }
+                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-webkit-slider-thumb:hover {
+                                background: black !important;
+                            }
+                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                display:none;
+                            }
+
+
+                        </style>';
+                        if ($event_count === 1 || $event_count === 2) {
+                            $output .='
+                                <style>
+                                     @media(max-width:470px){
+                                        .pwelement_'. self::$rnd_id .'  .pwe-other-events__items {
+                                            margin-bottom: 0 !important;
+                                        }
+                                        .pwelement_'. self::$rnd_id .'  .slick-dots {
+                                            display:none !important;
+                                        }
+                                        .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                            display:block !important;
+                                        }
+                                    }
+                                </style>
+                            ';
+                        } else if($event_count>4 || $event_count===4){
+                            $output .='
+                            <style>
+                                 @media(max-width:960px){
+                                    .pwelement_'. self::$rnd_id .'  .pwe-other-events__items {
+                                        margin-bottom: 0 !important;
+                                    }
+                                    .pwelement_'. self::$rnd_id .'  .slick-dots {
+                                        display:none !important;
+                                    }
+                                    .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                        display:block !important;
+                                    }
+                                }
+                            </style>
+                            ';
+                        }
+                    }
                     $output .= '
                 </div>
             </div>';
 
             $output .= '
             <script>
-                jQuery(function ($) {                  
+                jQuery(function ($) {
 
                     // Function to set equal height
                     function setEqualHeight() {
@@ -464,8 +597,8 @@ class PWElementOtherEvents extends PWElements {
 
                     // Call the function at the beginning
                     setEqualHeight();
-                });             
-            </script>'; 
+                });
+            </script>';
 
         } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
 

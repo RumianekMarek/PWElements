@@ -79,7 +79,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         $selected_form_id = '';
         //$selected_form = '';
 
-        if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false){
+        if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false && strpos($source_utm, 'utm_source_hs=premium') === false){
             $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
         } else if (strpos($source_utm, 'utm_source=premium') !== false) {
@@ -488,7 +488,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
 
             $output .= '
             <div id="xForm">';
-            if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
+            if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false && strpos($source_utm, 'utm_source_hs=premium') === false) {
                 $output .= '
                     <div class="form-3-left">
                         <div>'.
@@ -542,7 +542,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             }
             $output .= '
                 <div class="form-3">';
-                    if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
+                    if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false  && strpos($source_utm, 'utm_source_hs=premium') === false) {
                         $output .=
                             self::languageChecker(
                                 <<<PL
@@ -687,7 +687,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     ';
                     }
 
-                if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
+                if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false && strpos($source_utm, 'utm_source_hs=premium') === false) {
                     $output .= '
                         <div class="form-3-right form-3-right-visit">
                             <img src="/doc/badge-mockup.webp">

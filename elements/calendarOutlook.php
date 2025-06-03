@@ -45,22 +45,36 @@ class PWOutlookCalendarElement extends PWElements {
         $trade_start = do_shortcode("[trade_fair_datetotimer]");
         $trade_end = do_shortcode("[trade_fair_enddata]");
 
-        $linker = 'https://outlook.live.com/calendar/0/action/compose?body='.urlencode($trade_desc).'&enddt='.substr($trade_end,0,4).'-'.substr($trade_end,5,2).'-'.substr($trade_end,8,2).'T17%3A00%3A00%3A00&location='.urlencode('Aleja Katowicka 62, 05-830 Nadarzyn').'&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt='.substr($trade_start,0,4).'-'.substr($trade_start,5,2).'-'.substr($trade_start,8,2).'T10%3A00%3A00%3A00&subject='.urlencode($trade_name);
-        
-        $output = '<div id="calendar-outlook" class="pwe-container-calendar-add text-centered">
-                    <a class="outlook" alt="link do kalendarza outlook" href="' . $linker . '" target="_blank">
-                        <img src="/wp-content/plugins/PWElements/media/outlook.png" alt="ikonka outlook calendar"/>
-                        <p class="calendar-icon font-weight-700">'.
-                        self::languageChecker(
-                            <<<PL
-                            Kalendarz<br>Outlook
-                            PL,
-                            <<<EN
-                            Outlook<br>Calendar
-                            EN
-                        )
-                    .'</a>
-                </div>';
+        $data = 'BEGIN:VCALENDAR' . PHP_EOL .
+                'VERSION:2.0' . PHP_EOL .
+                'BEGIN:VEVENT' . PHP_EOL .
+                'DTSTART:' . substr($trade_start, 0, 4) . substr($trade_start, 5, 2) . substr($trade_start, 8, 2) . 'T' . substr($trade_start, 11, 2). '0000' . PHP_EOL .
+                'DTEND:' . substr($trade_end, 0, 4) . substr($trade_end, 5, 2) . substr($trade_end, 8, 2) . 'T' . substr($trade_end, 11, 2). '0000' . PHP_EOL .
+                'SUMMARY:' . $trade_name . PHP_EOL .
+                'DESCRIPTION:' . $trade_desc . PHP_EOL .
+                'LOCATION:Al. Katowicka 62, 05-830 Nadarzyn' . PHP_EOL .
+                'END:VEVENT' . PHP_EOL .
+                'END:VCALENDAR' . PHP_EOL;
+
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/Outlook.ics';
+        $fileSaved = file_put_contents($filePath, $data);
+
+        $output = '
+        <div id="calendar-outlook" class="pwe-container-calendar-add text-centered">
+            <a class="outlook" alt="link do kalendarza outlook" href="/wp-content/plugins/PWElements/media/Outlook.ics">
+                <img alt="ikonka outlook" src="/wp-content/plugins/PWElements/media/outlook.png"/>
+                <p class="calendar-icon font-weight-700">'.
+                self::languageChecker(
+                    <<<PL
+                    Kalendarz<br>Outlook
+                    PL,
+                    <<<EN
+                    Outlook<br>Calendar
+                    EN
+                )
+                .'</p>
+            </a>
+        </div>';
 
         return $output;
     }

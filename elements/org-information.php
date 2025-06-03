@@ -102,19 +102,12 @@ class PWElementOrgInfo extends PWElements {
                 <div class="pwe-org-info-header pwe-kv-bg" style="background-image: url(' . self::findBestFile("/doc/background") . ');">
                     <h1 class="orgInfo-header-text">
                         <span>'.
-                            self::languageChecker(
-                                <<<PL
-                                    Informacje organizacyjne dla Wystawców
-                                PL,
-                                <<<EN
-                                    Organizational information for Exhibitors
-                                EN
-                            )
+                            self::languageChecker('Informacje organizacyjne dla Wystawców', 'Organizational information for Exhibitors')
                         .'</span>
                     </h1>
                 </div>'.
                 self::languageChecker(
-                    <<<PL
+                    '
                         <div class="pwe-org-info-fixed-width single-block-padding">
                             <div class="pwe-org-info-content-item">
                                 <ol>
@@ -270,8 +263,8 @@ class PWElementOrgInfo extends PWElements {
                                 </ul>
                             </div>
                         </div>
-                    PL,
-                    <<<EN
+                    ',
+                    '
                         <div class="pwe-org-info-fixed-width single-block-padding">
                             <div class="pwe-org-info-content-item">
                                 <ol>
@@ -430,7 +423,7 @@ class PWElementOrgInfo extends PWElements {
                                 </ul>
                             </div>
                         </div>
-                    EN
+                    '
                 )
             ."</div>";
 

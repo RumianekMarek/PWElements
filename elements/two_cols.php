@@ -538,6 +538,31 @@ class PWElementTwoCols extends PWElements {
           $patronImages = PWEProfileButtons::getImagesFromDirectory($base_directory, $limit, $remove_randomize);
 
           $logotypy = array_slice($patronImages, 0, 10);
+
+          // Get logotypes from CAP database
+          $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data();
+          if (!empty($cap_logotypes_data)) {
+            if (strpos($base_directory, 'Rotator 2') !== false) {
+              $logotypy = [];
+              foreach ($cap_logotypes_data as $logo_data) {
+                if ($logo_data->logos_type === "partner-targow" || 
+                    $logo_data->logos_type === "patron-medialny" || 
+                    $logo_data->logos_type === "partner-strategiczny" || 
+                    $logo_data->logos_type === "partner-honorowy" ||
+                    $logo_data->logos_type === "principal-partner" ||
+                    $logo_data->logos_type === "industry-media-partner" ||
+                    $logo_data->logos_type === "partner-branzowy") {
+                  $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
+                }
+              }
+            }
+            $logotypes_catalogs_array = explode(',', $base_directory);
+            foreach ($cap_logotypes_data as $logo_data) {
+                if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
+                    $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
+                }
+            }
+          }
         }
 
         /* End Patroni */

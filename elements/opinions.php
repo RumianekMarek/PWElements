@@ -32,6 +32,7 @@ class PWElementOpinions extends PWElements {
                     'Preset 2' => 'preset_2',
                     'Preset 3' => 'preset_3',
                     'Preset 4' => 'preset_4',
+                    'Preset 5' => 'preset_5',
                 ),
                 'dependency' => array(
                     'element' => 'pwe_element',
@@ -43,6 +44,18 @@ class PWElementOpinions extends PWElements {
                 'group' => 'PWE Element',
                 'heading' => __('Display dots', 'pwe_display_info'),
                 'param_name' => 'opinions_dots_display',
+                'save_always' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOpinions',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Remove display more button', 'pwe_display_info'),
+                'param_name' => 'opinions_remove_display_more_button',
                 'save_always' => true,
                 'value' => array(__('True', 'pwe_display_info') => 'true',),
                 'dependency' => array(
@@ -139,6 +152,7 @@ class PWElementOpinions extends PWElements {
             'opinions_dots_display' => '',
             'opinions_limit_width' => '',
             'opinions_items' => '',
+            'opinions_remove_display_more_button' => '',
         ), $atts ));
 
         $opinions_items_urldecode = urldecode($opinions_items);
@@ -504,7 +518,7 @@ class PWElementOpinions extends PWElements {
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-opinions__item-left {
                             width: 100%;
-                        } 
+                        }
                         .pwelement_'. self::$rnd_id .' .pwe-opinions__item-right {
                             width: 100%;
                             padding: 18px;
@@ -534,20 +548,144 @@ class PWElementOpinions extends PWElements {
                         }
                     }
                 </style>';
+            }else if ($opinions_preset == 'preset_5') {
+                $output .= '
+                <style>
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
+                        display: flex !important;
+                        flex-direction: column;
+                        box-shadow: 0 0 12px -6px black;
+                        padding: 0;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-top {
+                        width: 100%;
+                        height: 30%;
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 24px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-container {
+                        display: flex;
+                        align-items: center;
+                        gap: 18px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-container img{
+                        object-fit: cover;
+                        width: 100px;
+                        border-radius: 50%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-bottom {
+                        width: 100%;
+                        height: 70%;
+                        padding: 24px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        gap: 24px;
+                    }
+
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-info-container {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-container {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc {
+                        font-size: 14px !important;
+                        font-weight: 500;
+                        margin: 0;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-name {
+                        font-size: 20px;
+                        font-weight: 700;
+                        margin: 0;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-info-container {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: flex-end;
+                        max-width: 200px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
+                        max-width: 100px;
+                        margin-left: auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
+                        position: relative;
+                        padding: 18px;
+                        margin: auto;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
+                        font-size: 14px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-see-more {
+                        text-align: right;
+                    }
+                    .pwelement_'. self::$rnd_id .' .quote {
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        fill: var(--accent-color);
+                    }
+                    .pwelement_'. self::$rnd_id .' .quote-right {
+                        right: -2%;
+                        top: -12px;
+                    }
+                    .pwelement_'. self::$rnd_id .' .quote-left {
+                        left: -2%;
+                        bottom: -12px;
+                    }
+                    @media(max-width:600px){
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item {
+                            flex-direction: column;
+                            padding-top: 40px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-top {
+                            width: 100%;
+                            flex-direction: column;
+                            padding: 12px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-container {
+                            flex-direction: column;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-bottom {
+                            width: 100%;
+                            padding: 18px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-container img{
+                            width: 100%;
+                            max-width: 160px;
+                            box-shadow: 0px 0px 10px -4px black;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-info-container {
+                            flex-direction: column;
+                            align-items: center;
+                            max-width: 100%;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-name,
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc,
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-name {
+                            text-align: center;
+                            width: 100%;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo {
+                            margin: 10px auto;
+                        }
+                        .pwelement_'. self::$rnd_id .' .slick-list {
+                            overflow: visible;
+                        }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company_logo img {
+                            max-width: 120px;
+                        }
+                    }
+                </style>';
             }
 
             $default_opinions = [
-                [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
-                    'opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
-                    'opinions_name' => 'dr Radosław Dziuba',
-                    'opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
-                    'opinions_text' => self::languageChecker(
-                        'Ptak Warsaw Expo to partner, z którym wymieniamy się wiedzą i doświadczeniem w dziedzinach związanych z działalnością obydwu instytucji. Centrum targowo-wystawienniczym Ptak Warsaw Expo pozwala na nawiązywanie kluczowych kontaktów biznesowych, budowanie relacji z klientami oraz poznanie nowych trendów.',
-                        'Ptak Warsaw Expo is a partner with whom we exchange knowledge and experience in areas related to the activities of both institutions. The Ptak Warsaw Expo exhibition center facilitates establishing key business contacts, building client relationships, and discovering new trends.'
-                    )
-                ],
+
                 [
                     'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jerzy_Romanski.webp',
                     'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/ofmisp-logo.webp',
@@ -609,6 +747,22 @@ class PWElementOpinions extends PWElements {
                     $default_opinions = array_merge($default_opinions, $premiere_edition_opinions);
 
                     $max_opinions = 5 + count($premiere_edition_opinions);
+                } else {
+                    $no_premiere_edition_opinions = [
+                        [
+                            'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
+                            'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
+                            'opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
+                            'opinions_name' => 'dr Radosław Dziuba',
+                            'opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
+                            'opinions_text' => self::languageChecker(
+                                'Ptak Warsaw Expo to partner, z którym wymieniamy się wiedzą i doświadczeniem w dziedzinach związanych z działalnością obydwu instytucji. Centrum targowo-wystawienniczym Ptak Warsaw Expo pozwala na nawiązywanie kluczowych kontaktów biznesowych, budowanie relacji z klientami oraz poznanie nowych trendów.',
+                                'Ptak Warsaw Expo is a partner with whom we exchange knowledge and experience in areas related to the activities of both institutions. The Ptak Warsaw Expo exhibition center facilitates establishing key business contacts, building client relationships, and discovering new trends.'
+                            )
+                        ]
+                    ];
+
+                    $default_opinions = array_merge($default_opinions, $no_premiere_edition_opinions);
                 }
 
             $output .= '
@@ -677,8 +831,13 @@ class PWElementOpinions extends PWElements {
 
                         // Splitting the text into 30 words and the rest
                         $words = explode(" ", $opinions_text);
-                        $short_text = implode(" ", array_slice($words, 0, 24));
-                        $remaining_text = implode(" ", array_slice($words, 24));
+                        if($opinions_remove_display_more_button){
+                            $short_text = $opinions_text;
+                        } else {
+                            $short_text = implode(" ", array_slice($words, 0, 24));
+                            $remaining_text = implode(" ", array_slice($words, 24));
+                        }
+
 
                         if ($opinions_preset == 'preset_1') {
                             $output .= '
@@ -793,6 +952,35 @@ class PWElementOpinions extends PWElements {
                                     </div>
                                 </div>
                             </div>';
+                        } else if ($opinions_preset == 'preset_5') {
+                            $output .= '
+                            <div class="pwe-opinions__item">
+                                <div class="pwe-opinions__item-top">
+                                    <div class="pwe-opinions__item-person-container">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                        <div class="pwe-opinions__item-person-info-container">
+                                        <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                        <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                        </div>
+                                    </div>
+                                    <div class="pwe-opinions__item-info-container">
+                                            <div class="pwe-opinions__item-company-info-container">
+                                            <div class="pwe-opinions__item-company_logo">
+                                                <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pwe-opinions__item-bottom">
+                                    <div class="pwe-opinions__item-opinion">
+                                        <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
+                                        <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
+                                        (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
+                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                        <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
+                                    </div>
+                                </div>
+                            </div>';
                         }
                     }
 
@@ -814,6 +1002,8 @@ class PWElementOpinions extends PWElements {
                     "center_mode" => $center_mode = true,
                 );
                 $output .= PWESliderScripts::sliderScripts('opinions-preset-4', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show = 1, $opinions_options);
+            } else if ($opinions_preset == 'preset_5') {
+                $output .= PWESliderScripts::sliderScripts('opinions-preset-5', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show = 2);
             } else {
                 $output .= PWESliderScripts::sliderScripts('opinions', '.pwelement_'. self::$rnd_id, $opinions_dots_display, $opinions_arrows_display, $slides_to_show);
             }
@@ -827,10 +1017,10 @@ class PWElementOpinions extends PWElements {
                         let maxHeight = 0;
 
                         // Reset the heights before calculations
-                        $(".pwe-opinions__item").css("height", "auto");
+                        $(".pwelement_'. self::$rnd_id .' .pwe-opinions__item").css("height", "auto");
 
                         // Calculate the maximum height
-                        $(".pwe-opinions__item").each(function() {
+                        $(".pwelement_'. self::$rnd_id .' .pwe-opinions__item").each(function() {
                             const thisHeight = $(this).outerHeight();
                             if (thisHeight > maxHeight) {
                                 maxHeight = thisHeight;
@@ -838,23 +1028,23 @@ class PWElementOpinions extends PWElements {
                         });
 
                         // Set the same height for all
-                        $(".pwe-opinions__item").css("minHeight", maxHeight);
+                        $(".pwelement_'. self::$rnd_id .' .pwe-opinions__item").css("minHeight", maxHeight);
                     }
 
                     // Call the function after loading the slider
-                    $(".pwe-opinions__items").on("init", function() {
+                    $(".pwelement_'. self::$rnd_id .' .pwe-opinions__items").on("init", function() {
                         setEqualHeight();
                     });
 
                     // Call the function when changing the slide
-                    $(".pwe-opinions__items").on("afterChange", function() {
+                    $(".pwelement_'. self::$rnd_id .' .pwe-opinions__items").on("afterChange", function() {
                         setEqualHeight();
                     });
 
                     // Call the function at the beginning
                     setEqualHeight();
 
-                    $("#pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
+                    $(".pwelement_'. self::$rnd_id .' #pweOpinions").css("visibility", "visible").animate({ opacity: 1 }, 500);
                 });
             </script>';
 

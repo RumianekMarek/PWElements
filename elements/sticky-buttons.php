@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementStickyButtons
@@ -302,6 +302,20 @@ class PWElementStickyButtons extends PWElements {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'Additional options',
+                'heading' => __('Show strip', 'pwelement'),
+                'param_name' => 'sticky_buttons_show_strip',
+                'param_holder_class' => 'backend-area-half-width',
+                'description' => __('Turn on to show strip', 'pwelement'),
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
+                'dependency' => array(
+                  'element' => 'pwe_element',
+                  'value' => 'PWElementStickyButtons',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'Additional options',
                 'heading' => __('Slides to show', 'pwelement'),
@@ -376,7 +390,7 @@ class PWElementStickyButtons extends PWElements {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -407,19 +421,20 @@ class PWElementStickyButtons extends PWElements {
             'sticky_buttons_limit_width' => '',
             'sticky_buttons_auto_slider' => '',
             'sticky_buttons_slides_to_show' => '',
-        ), $atts ));   
+            'sticky_buttons_show_strip' => '',
+        ), $atts ));
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
 
         // Turn on dropdown on mobile
         if ($mobile == 1 && $sticky_buttons_dropdown_mobile != true) {
             $sticky_buttons_dropdown = "true";
-        } 
-        
+        }
+
         $sticky_buttons_width = ($sticky_buttons_width == '') ? '170px' : $sticky_buttons_width;
         $sticky_full_width_buttons_width = ($sticky_full_width_buttons_width == '') ? '170px' : $sticky_full_width_buttons_width;
         $sticky_buttons_font_size_full_size = ($sticky_buttons_font_size_full_size == '') ? '16px' : $sticky_buttons_font_size_full_size;
-        $sticky_buttons_font_size = ($sticky_buttons_font_size == '') ? '12px' : $sticky_buttons_font_size; 
+        $sticky_buttons_font_size = ($sticky_buttons_font_size == '') ? '12px' : $sticky_buttons_font_size;
 
         $sticky_buttons_parameter = ($sticky_buttons_parameter == '') ? 'konferencja' : $sticky_buttons_parameter;
 
@@ -630,14 +645,14 @@ class PWElementStickyButtons extends PWElements {
                                     padding: 36px !important;
                                 }
                                 .pwelement_'. self::$rnd_id .' .custom-image-button-text {
-                                    position: static; 
+                                    position: static;
                                     transform: none;
                                     padding-top: 18px;
                                 }
                                 .pwelement_'. self::$rnd_id .' .custom-sticky-button-item div {
                                     text-transform: unset;
                                 }
-                                .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-full-size, 
+                                .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-full-size,
                                 .pwelement_'. self::$rnd_id .' .custom-sticky-buttons-cropped {
                                     padding: 18px 0;
                                 }
@@ -653,9 +668,9 @@ class PWElementStickyButtons extends PWElements {
             }
             if ($sticky_buttons_limit_width) {
                 $output .= '<style>
-                                .row-parent:has(.pwelement_'. self::$rnd_id .' .custom-container-sticky-buttons) { 
-                                    padding: 36px 36px 36px 36px; 
-                                    max-width: 1200px !important; 
+                                .row-parent:has(.pwelement_'. self::$rnd_id .' .custom-container-sticky-buttons) {
+                                    padding: 36px 36px 36px 36px;
+                                    max-width: 1200px !important;
                                 }
                             </style>';
             }
@@ -710,10 +725,10 @@ class PWElementStickyButtons extends PWElements {
                     <div class="sticky-buttons-title main-heading-text">
                         <h4 class="pwe-uppercase">'. $sticky_buttons_title .'</h4>
                     </div>';
-                }  
+                }
                 if ($sticky_buttons_full_size === "true") {
                     if ($sticky_buttons_info_text_show == true) {
-                        $output .= '<p class="sticky-buttons-info-top">'. 
+                        $output .= '<p class="sticky-buttons-info-top">'.
                         self::languageChecker(
                             <<<PL
                             Wybierz jeden z poniższych aby dowiedzieć się więcej.
@@ -733,13 +748,13 @@ class PWElementStickyButtons extends PWElements {
                                 #'. $section_id .' {
                                     opacity: 0;
                                 }
-                            </style>'; 
+                            </style>';
                         }
                     }
 
                     $output .= '
                     <div class="custom-sticky-buttons-full-size pwe-slides" style="background-color:'. $sticky_buttons_full_size_background .'!important;">';
-                    
+
                         if (is_array($sticky_buttons_json)) {
                             foreach ($sticky_buttons_json as $sticky_button) {
 
@@ -751,7 +766,7 @@ class PWElementStickyButtons extends PWElements {
                                 $image_full_size_url = wp_get_attachment_url($attachment_full_size_img_id);
                                 $full_size_buttons_urls[] = $image_full_size_url;
 
-                                $target_blank = (strpos($link, 'http') !== false) ? 'target="blank"' : '';    
+                                $target_blank = (strpos($link, 'http') !== false) ? 'target="blank"' : '';
 
                                 if (!empty($image_full_size_url)) {
                                     if (!empty($link)) {
@@ -780,7 +795,7 @@ class PWElementStickyButtons extends PWElements {
                         } else {
                             $output .= 'Invalid JSON data.';
                         }
-                    
+
                     $output .= '
                     </div>';
 
@@ -789,13 +804,146 @@ class PWElementStickyButtons extends PWElements {
 
                         include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
                         $output .= PWESliderScripts::sliderScripts('sticky-buttons', '.pwelement_'. self::$rnd_id, $sticky_buttons_dots_display = 'true', $sticky_buttons_arrows_display = false, $sticky_buttons_slides_to_show);
+
+                        if($sticky_buttons_show_strip){
+
+                            $event_count = count($sticky_buttons_json[0]);
+
+                            $slider_id = 'pwelement_' . self::$rnd_id . ' .pwe-slides';
+                            $output .= '
+                            <input type="range" id="test" class="slider-range_' . self::$rnd_id . '" min="0" step="1">
+                            <script>
+                            jQuery(document).ready(function ($) {
+                                const $slider = $(".'.$slider_id.'");
+                                const $range = $(".slider-range_' . self::$rnd_id . '");
+
+                                $slider.on("init", function (event, slick) {
+                                    $range.attr("max", slick.slideCount - 1);
+                                    $range.val(slick.currentSlide);
+                                });
+                                function updateSliderBackground($el) {
+                                    const val = ($el.val() - $el.attr("min")) / ($el.attr("max") - $el.attr("min"));
+                                    const percent = val * 100;
+                                    $el.css("background", `linear-gradient(to right, black 0%, black ${percent}%, #ccc ${percent}%, #ccc 100%)`);
+                                }
+                                $slider.on("init", function (event, slick) {
+                                    $range.attr("max", slick.slideCount - 1);
+                                    $range.val(slick.currentSlide);
+                                    updateSliderBackground($range);
+                                });
+
+                                $range.on("input", function () {
+                                    const slideIndex = parseInt($(this).val(), 10);
+                                    $slider.slick("slickGoTo", slideIndex);
+                                    updateSliderBackground($range);
+                                });
+
+                                $slider.on("afterChange", function (event, slick, currentSlide) {
+                                    $range.val(currentSlide);
+                                    updateSliderBackground($range);
+                                });
+                            });
+                            </script>
+                            <style>
+                                .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                    width: 100%;
+                                    margin-top: 16px;
+                                    height: 10px;
+                                    border-radius: 5px;
+                                    background: black;
+                                    appearance: none;
+                                    -webkit-appearance: none;
+                                    overflow: hidden;
+                                    cursor: pointer;
+                                    transition: background 0.3s ease;
+                                    display: none;
+                                }
+
+                                /* Ukrywamy kropki slicka, jeśli są */
+                                .pwelement_'. self::$rnd_id .' .slick-dots {
+                                    visibility: hidden;
+                                }
+
+                                /* KWADRATOWY THUMB DLA WEBKIT (Chrome, Safari) */
+                                .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-webkit-slider-thumb {
+                                    appearance: none;
+                                    -webkit-appearance: none;
+                                    height: 16px;
+                                    width: 16px;
+                                    background: black;
+                                    border: 2px solid black;
+                                    border-radius: 0; /* ← dzięki temu jest kwadratowy */
+                                    cursor: pointer;
+                                    transition: background 0.3s ease;
+                                }
+
+                                /* Dla Firefox (Moz) */
+                                .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-moz-range-thumb {
+                                    height: 16px;
+                                    width: 16px;
+                                    background:  black;
+                                    border: 2px solid black;
+                                    border-radius: 0;
+                                    cursor: pointer;
+                                }
+
+                                /* Dla IE/Edge */
+                                .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-ms-thumb {
+                                    height: 16px;
+                                    width: 16px;
+                                    background: white;
+                                    border: 2px solid black;
+                                    border-radius: 0;
+                                    cursor: pointer;
+                                }
+
+                                /* Efekt przy najechaniu */
+                                .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . '::-webkit-slider-thumb:hover {
+                                    background: black !important;
+                                    border-color: white;
+                                }
+                            </style>';
+                            if ($event_count === 1 || $event_count === 2) {
+                                $output .='
+                                    <style>
+                                         @media(max-width:470px){
+                                            .pwelement_'. self::$rnd_id .'  .pwe-other-events__items {
+                                                margin-bottom: 0 !important;
+                                            }
+                                            .pwelement_'. self::$rnd_id .'  .slick-dots {
+                                                display:none !important;
+                                            }
+                                            .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                                display:block !important;
+                                            }
+                                        }
+                                    </style>
+                                ';
+                            } else if($event_count>4){
+                                $output .='
+                                <style>
+                                     @media(max-width:960px){
+                                        .pwelement_'. self::$rnd_id .'  .pwe-other-events__items {
+                                            margin-bottom: 0 !important;
+                                        }
+                                        .pwelement_'. self::$rnd_id .'  .slick-dots {
+                                            display:none !important;
+                                        }
+                                        .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
+                                            display:block !important;
+                                        }
+                                    }
+                                </style>
+                                ';
+                            }
+                        }
                     }
                 }
-                
+
             $output .= '
                 <div class="sticky custom-sticky-buttons-cropped-container">
                     <div class="custom-sticky-head-container style-accent-bg" style="background-color:'. $sticky_buttons_cropped_background .'!important;">
-                        <h4 class="custom-sticky-head-text" style="color: white;">Wybierz kongres 
+                        <h4 class="custom-sticky-head-text" style="color: white;">Wybierz kongres
                             <i class="fa fa-chevron-down fa-1x fa-fw"></i>
                         </h4>
                     </div>
@@ -854,13 +1002,13 @@ class PWElementStickyButtons extends PWElements {
                                         $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">';
                                             $output .= '<div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div>';
                                         $output .= '</div>';
-                                    }   
+                                    }
                                 }
-                                
+
                             }
                         } else {
                             $output .= 'Invalid JSON data.';
-                        }  
+                        }
 
                         $output .= '</div>
                     </div>';
@@ -913,14 +1061,14 @@ class PWElementStickyButtons extends PWElements {
                     const setElementPosition = (element, position) => {
                         element.style.position = position;
                     };
-                    
+
                     const buttonsCroppedImage = ' . $buttons_cropped_image . ';
                     const buttonsCroppedColor = ' . $buttons_cropped_color . ';
                     const combinedArray = buttonsCroppedImage.concat(buttonsCroppedColor);
                     if (combinedArray.every(value => value === false || value === "")) {
                         hideElement(tilesCroppedContainer);
                     }
-                    
+
                     if (stickyButtonsDropdown !== "true") {
                         hideElement(stickyHeadContainer);
                         if (stickyButtonsFullSize === "true") { // dropdown on full size on
@@ -939,7 +1087,7 @@ class PWElementStickyButtons extends PWElements {
                             showElement(tilesFullSize);
                         } else { // dropdown off full size off
                             showElement(tilesCroppedContainer);
-                            
+
                         }
                     }
 
@@ -973,7 +1121,7 @@ class PWElementStickyButtons extends PWElements {
                             jumpsPrevent();
                         });
                     }
-                    
+
                     // Sticker function:
                     function stickerFn() {
                         const masthead = document.querySelector("#masthead");
@@ -1062,7 +1210,7 @@ class PWElementStickyButtons extends PWElements {
                                     hideSections[i].style.display = "none";
                                 }
                             }
-                            
+
                             button.addEventListener("click", function() {
                                 var targetId = button.id.replace("-btn", "");
 
@@ -1083,7 +1231,7 @@ class PWElementStickyButtons extends PWElements {
                                 hideSections.forEach(function(section) {
                                     section.style.display = "none";
                                 });
-                                
+
                                 // Wyświetlamy elementy
                                 var targetElement = document.getElementById(targetId);
                                 if (targetElement) {
@@ -1092,9 +1240,9 @@ class PWElementStickyButtons extends PWElements {
                                     // Scroll to the desired section
                                     if (stickyScroll !== "true") {
                                         // if (stickyButtonsFullSize == "true" && (stickyMiniUrlsImg == "" || (stickyMiniUrlsImg != "" && stickyMiniHide == "true"))) {
-                                            
+
                                         targetElement.style.scrollMarginTop = containerMasthead.offsetHeight + "px";
-                                            targetElement.scrollIntoView({ behavior: "smooth" }); 
+                                            targetElement.scrollIntoView({ behavior: "smooth" });
                                         // } else {
                                         //     pweElement.querySelectorAll(".custom-sticky-button-item").forEach(function(button) {
                                         //         const scrollTopValue = parseInt(customScrollTop);
@@ -1102,10 +1250,10 @@ class PWElementStickyButtons extends PWElements {
                                         //             window.scrollTo({ top: scrollTopValue, behavior: "smooth" });
                                         //         });
                                         //     });
-                                        // } 
+                                        // }
                                     }
                                 }
-                                
+
                                 if (button) {
                                     button.style.transform = "scale(1.1)";
                                 }
@@ -1116,10 +1264,10 @@ class PWElementStickyButtons extends PWElements {
                                     }
                                 });
                             });
-                            
+
                         });
                     }
-                    
+
                     if (stickyButtonsDropdown === "true") {
                         var congressMenuSlide = pweElement.querySelector(".custom-sticky-buttons-cropped-container");
 
@@ -1184,7 +1332,7 @@ class PWElementStickyButtons extends PWElements {
                             if (!menu.classList.contains("open")) {
                                 menu.classList.add("open");
                                 menu.style.maxHeight = "500px";
-                                menu.style.padding = "28px 18px"; 
+                                menu.style.padding = "28px 18px";
                                 event.target.querySelector("i").classList.remove("fa-chevron-down");
                                 event.target.querySelector("i").classList.add("fa-chevron-up");
                             }
@@ -1208,12 +1356,12 @@ class PWElementStickyButtons extends PWElements {
 
                     } else {
                         pweElement.querySelector(".custom-sticky-head-container").style.display = "none";
-                        
+
                     }
 
                     const stickySections = document.querySelectorAll(".sticky-section-'. $unique_id .'");
                     stickySections.forEach(function (section) {
-                        section.style.opacity = 1;  
+                        section.style.opacity = 1;
                     })
 
                 });
@@ -1235,7 +1383,7 @@ class PWElementStickyButtons extends PWElements {
                                     element.style.display = "block";
                                     element.classList.remove("hide-section-'. $unique_id .'");
                                     setTimeout(() => {
-                                        element.style.opacity = 1;  
+                                        element.style.opacity = 1;
                                     }, 100);
                                     if ("'. $sticky_buttons_scroll .'" !== "true") {
                                         // Scroll to the element with id from the anchor
@@ -1243,7 +1391,7 @@ class PWElementStickyButtons extends PWElements {
                                         element.scrollIntoView({ behavior: "smooth" });
                                     }
                                 } else {
-                                    element.style.display = "none"; 
+                                    element.style.display = "none";
                                 }
                             });
 

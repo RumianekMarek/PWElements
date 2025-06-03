@@ -279,6 +279,7 @@ class PWElements {
                         ...PWElementOtherEvents::initElements(),
                         ...PWElementTwoCols::initElements(),
                         ...PWElementHale::initElements(),
+                        ...PWElementMedals::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',

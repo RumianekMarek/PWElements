@@ -21,13 +21,15 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
         ), $atts));
 
         $has_any_speaker_info = false;
+        $lecture_counter = 0;
 
         foreach ($sessions as $session) {
             foreach ($session as $key => $value) {
                 if (strpos($key, 'legent-') === 0 && is_array($value)) {
                     if (
-                        (!empty($value['url']) && $value['url'] !== '') ||
-                        (!empty($value['desc']) && $value['desc'] !== '')
+                        (!empty($value['url'])) ||
+                        (!empty($value['desc'])) ||
+                        (!empty($value['name']))
                     ) {
                         $has_any_speaker_info = true;
                         break 2; // Wystarczy jeden przypadek – przerywamy sprawdzanie
@@ -36,7 +38,7 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
             }
         }
         
-        $content .= '<div class="conference_cap__lecture-container">';
+        $content = '<div class="conference_cap__lecture-container">';
         
             foreach ($sessions as $key => $session) {
                 if (strpos($key, 'pre-') !== 0) {

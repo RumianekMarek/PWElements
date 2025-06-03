@@ -5,8 +5,8 @@ function get_fair_data($specific_domain = null) {
     static $cached_data = null;
 
     if ($cached_data === null) {
-        // Get data from global variable from pwelements.php
-        global $pwe_fairs;
+        // Get data from pwefunctions.php
+        $pwe_fairs = PWECommonFunctions::get_database_fairs_data();
 
         static $console_logged = false;
 
@@ -22,36 +22,7 @@ function get_fair_data($specific_domain = null) {
     
                 $domain = $fair->fair_domain;
     
-                $fairs_data["fairs"][$domain] = [ 
-                    "domain" => $domain,
-                    "date_start" => $fair->fair_date_start ?? "",
-                    "date_start_hour" => $fair->fair_date_start_hour ?? "",
-                    "date_end" => $fair->fair_date_end ?? "",
-                    "date_end_hour" => $fair->fair_date_end_hour ?? "",
-                    "edition" => $fair->fair_edition ?? "",
-                    "name_pl" => $fair->fair_name_pl ?? "",
-                    "name_en" => $fair->fair_name_en ?? "",
-                    "desc_pl" => $fair->fair_desc_pl ?? "",
-                    "desc_en" => $fair->fair_desc_en ?? "",
-                    "short_desc_pl" => $fair->fair_short_desc_pl ?? "",
-                    "short_desc_en" => $fair->fair_short_desc_en ?? "",
-                    "full_desc_pl" => $fair->fair_full_desc_pl ?? "",
-                    "full_desc_en" => $fair->fair_full_desc_en ?? "",
-                    "visitors" => $fair->fair_visitors ?? "",
-                    "exhibitors" => $fair->fair_exhibitors ?? "",
-                    "countries" => $fair->fair_countries ?? "",
-                    "area" => $fair->fair_area ?? "",
-                    "color_accent" => $fair->fair_color_accent ?? "",
-                    "color_main2" => $fair->fair_color_main2 ?? "",
-                    "hall" => $fair->fair_hall ?? "",
-                    "facebook" => $fair->fair_facebook ?? "",
-                    "instagram" => $fair->fair_instagram ?? "",
-                    "linkedin" => $fair->fair_linkedin ?? "",
-                    "youtube" => $fair->fair_youtube ?? "",
-                    "badge" => $fair->fair_badge ?? "",
-                    "catalog" => $fair->fair_kw ?? "",
-                    "shop" => $fair->fair_shop ?? ""
-                ];
+                $fairs_data["fairs"][$domain] = PWECommonFunctions::generate_fair_data($fair);
             }
         } else {
             // URL to JSON file
@@ -114,7 +85,6 @@ function get_fair_data($specific_domain = null) {
     return $current_domain && isset($cached_data[$current_domain]) ? $cached_data[$current_domain] : null;
 }
 
-
 function register_dynamic_shortcodes() {
     // List of shortcodes and their corresponding fields
     $shortcodes = [
@@ -143,7 +113,7 @@ function register_dynamic_shortcodes() {
         'pwe_instagram' => 'instagram',
         'pwe_linkedin' => 'linkedin',
         'pwe_youtube' => 'youtube',
-        'pwe_catalog' => 'catalog'
+        'pwe_catalog' => 'catalog' 
     ];
 
     // Shortcode handling function
@@ -162,24 +132,3 @@ function register_dynamic_shortcodes() {
 }
 
 add_action('init', 'register_dynamic_shortcodes');
-
-// Shortcodes for Gravity forms
-add_filter('gform_replace_merge_tags', 'GF_dynamic_pwe_shortcodes', 10, 7);
-function GF_dynamic_pwe_shortcodes($text, $form, $entry, $url_encode, $esc_html, $nl2br, $format) {
-    // Pattern for detecting merge tags with optional `domain` parameter
-    $pattern = '/\{(pwe_[a-z_]+)(?:\s+domain="([^"]+)")?\}/';
-
-    $text = preg_replace_callback($pattern, function($matches) {
-        $shortcode = $matches[1]; // ex. "pwe_name_pl"
-        $domain = !empty($matches[2]) ? $matches[2] : null; // ex. "domain.com"
-
-        // Assembling a shortcode with an optional parameter
-        $shortcode_str = $domain ? "[{$shortcode} domain=\"{$domain}\"]" : "[{$shortcode}]";
-
-        return do_shortcode($shortcode_str);
-    }, $text);
-
-    return $text;
-}
-
-

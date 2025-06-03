@@ -72,13 +72,13 @@ class PWElementDonwload extends PWElements {
                     <p class="text-centered">'.
                     self::languageChecker(
                         <<<PL
-                        <a href="https://warsawexpo.eu/docs/Regulamin-targow-pwe-2022.pdf" target="_blank" rel="noopener noreferrer">Regulamin targów</a><br>
+                        <a href="https://warsawexpo.eu/docs/regulamin-targow-pl-2025.pdf" target="_blank" rel="noopener noreferrer">Regulamin targów</a><br>
                         <a href="https://warsawexpo.eu/docs/regulamin_obiektu.pdf" target="_blank" rel="noopener noreferrer">Regulamin obiektu</a><br>
                         <a href="https://warsawexpo.eu/docs/regulamin_zabudowy.pdf" target="_blank" rel="noopener noreferrer">Regulamin zabudowy</a><br>
                         <a href="https://warsawexpo.eu/docs/Regulamin na Voucher_2023.pdf" target="_blank" rel="noopener noreferrer">Regulamin Voucherów</a>
                         PL,
                         <<<EN
-                        <a href="https://warsawexpo.eu/docs/regulamin_targ%C3%B3w_2021_en.pdf" target="_blank" rel="noopener noreferrer">Fair regulations</a><br>
+                        <a href="https://warsawexpo.eu/docs/regulamin-targow-en-2025.pdf" target="_blank" rel="noopener noreferrer">Fair regulations</a><br>
                         <a href="https://warsawexpo.eu/docs/regulamin_obiektu_en.pdf" target="_blank" rel="noopener noreferrer">Facility regulations</a><br>
                         <a href="https://warsawexpo.eu/docs/building_regulations.pdf" target="_blank" rel="noopener noreferrer">Building regulations</a>
                         EN

@@ -93,7 +93,6 @@ public function initVCMapPWERegistration() {
     require_once plugin_dir_path(__FILE__) . 'classes/registration_visitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_exhibitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_potential_exhibitors.php';
-
     // Check if Visual Composer is available
     if (class_exists('Vc_Manager')) {
         vc_map( array(
@@ -114,6 +113,7 @@ public function initVCMapPWERegistration() {
                             'Visitors' => 'PWERegistrationVisitors',
                             'Exhibitors' => 'PWERegistrationExhibitors',
                             'Potential exhibitors' => 'PWERegistrationPotentialExhibitors',
+                            'Ticket' => 'PWERegistrationTicket',
                         ),
                         'std' => 'PWERegistrationVisitors',
                     ),
@@ -177,6 +177,14 @@ public function initVCMapPWERegistration() {
                         'save_always' => true
                     ),
                     array(
+                        'type' => 'checkbox',
+                        'heading' => __('Show ticket', 'pwe_registration'),
+                        'param_name' => 'register_show_ticket',
+                        'description' => __('Check if you want to show ticket.', 'pwe_registration'),
+                        'value' => '',
+                        'save_always' => true,
+                    ),
+                    array(
                         'type' => 'param_group',
                         'group' => 'Replace Strings',
                         'param_name' => 'pwe_replace',
@@ -195,6 +203,18 @@ public function initVCMapPWERegistration() {
                                 'save_always' => true,
                                 'admin_label' => true
                             ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Ticket link', 'pwe_registration'),
+                        'param_name' => 'ticket_link',
+                        'description' => __('Enter the link for the ticket.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-fourth-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'registration_type',
+                            'value' => array('PWERegistrationTicket'),
                         ),
                     ),
                 ),
@@ -247,6 +267,7 @@ public function initVCMapPWERegistration() {
             'registration_type' => '',
             'registration_form_id' => '',
             'pwe_replace' => '',
+            'register_show_ticket' => '',
         ), $atts ));
 
         // Replace strings
@@ -264,7 +285,7 @@ public function initVCMapPWERegistration() {
 
             if (class_exists($registration_type)) {
                 $output_class = new $registration_type;
-                $output = $output_class->output($atts, $registration_type, $registration_form_id);
+                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket);
             } else {
                 // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $registration_type .' does not exist")</script>';

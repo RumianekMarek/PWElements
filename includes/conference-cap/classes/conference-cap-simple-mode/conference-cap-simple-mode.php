@@ -19,9 +19,10 @@ class PWEConferenceCapSimpleMode extends PWEConferenceCap{
             'conference_cap_conference_mode' => '',
         ), $atts));
 
+        $lecture_counter = 0;
         
         
-        $content .= '<div class="conference_cap_simple_mode__lecture-container">';
+        $content = '<div class="conference_cap_simple_mode__lecture-container">';
         
             foreach ($sessions as $key => $session) {
                 if (strpos($key, 'pre-') !== 0) {

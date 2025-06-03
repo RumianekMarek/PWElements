@@ -143,6 +143,18 @@ class PWESliderScripts {
 
             }
 
+            if ($id == 'logotypes') {
+                $output .= '
+                <style>
+                    '. $pwe_element .' .pwe-arrow-prev {
+                        left: -26px;
+                    }
+                    '. $pwe_element .' .pwe-arrow-next {
+                        right: -26px;
+                    }
+                </style>';
+            }
+
             $center_mode = "";
             $center_padding = "";
 
@@ -174,9 +186,17 @@ class PWESliderScripts {
                 $center_padding = 'centerPadding: slickSlider.width() < 960 ? "0px" : "100px"';
 
 
+            } else if ($id == 'opinions-preset-5') { // opinions.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 600 ? 1 :
+                        elementWidth < 960 ? 2 :
+                        elementWidth < 1100 ? 2 :
+                        elementWidth < 1400 ? 2 :
+                        slidesToShowSetting;
+                ';
             } else if ($id == 'posts') { // posts.php <-------------------------------------------------------------<
                 $get_initial_slides_to_show = '
-                return  elementWidth < 400 ? 1 :
+                return  elementWidth < 500 ? 1 :
                         elementWidth < 700 ? 2 :
                         elementWidth < 900 ? 3 :
                         slidesToShowSetting;

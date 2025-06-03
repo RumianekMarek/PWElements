@@ -403,6 +403,102 @@ class PWElementFooter extends PWElements {
             </script>';
         }
 
+        if ($_SERVER['REQUEST_URI'] == '/' && get_locale() == "pl_PL") {
+            $output .= '
+            <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "ExhibitionEvent",
+                "name": "[trade_fair_name]",
+                "url": "https://[trade_fair_domainadress]",
+                "description": "[trade_fair_desc]",
+                "image": "https://[trade_fair_domainadress]/doc/kafelek.jpg",
+                "startDate": "[trade_fair_datetotimer]",
+                "endDate": "[trade_fair_enddata]",
+                "eventStatus": "https://schema.org/EventScheduled",
+                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                "isAccessibleForFree": true,
+                "organizer": {
+                    "@type": "Organization",
+                    "name": "Ptak Warsaw Expo",
+                    "url": "https://warsawexpo.eu",
+                    "sameAs": [
+                    "https://www.facebook.com/warsawexpo/",
+                    "https://www.instagram.com/ptak_warsaw_expo/",
+                    "https://www.linkedin.com/company/warsaw-expo/",
+                    "https://www.youtube.com/@ptakwarsawexpo2557"
+                    ]
+                },
+                "location": {		
+                    "@type": "Place",
+                    "name": "Ptak Warsaw Expo",
+                    "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Aleja Katowicka 62",
+                    "addressLocality": "Nadarzyn",
+                    "postalCode": "05-830",
+                    "addressCountry": "PL"
+                    }
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "name": "Rejestracja",
+                    "price": "0",
+                    "priceCurrency": "PLN",
+                    "url": "https://[trade_fair_domainadress]/rejestracja/",
+                    "availability": "https://schema.org/InStock"
+                }
+            }
+            </script>';
+        } else if ($_SERVER['REQUEST_URI'] == '/en/' && get_locale() == "en_US") {
+            $output .= '
+            <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "ExhibitionEvent",
+                "name": "[trade_fair_name_eng]",
+                "url": "https://[trade_fair_domainadress]/en/",
+                "description": "[trade_fair_desc_eng]",
+                "image": "https://[trade_fair_domainadress]/doc/kafelek.jpg",
+                "startDate": "[trade_fair_datetotimer]",
+                "endDate": "[trade_fair_enddata]",
+                "eventStatus": "https://schema.org/EventScheduled",
+                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                "isAccessibleForFree": true,
+                "organizer": {
+                    "@type": "Organization",
+                    "name": "Ptak Warsaw Expo",
+                    "url": "https://warsawexpo.eu",
+                    "sameAs": [
+                    "https://www.facebook.com/warsawexpo/",
+                    "https://www.instagram.com/ptak_warsaw_expo/",
+                    "https://www.linkedin.com/company/warsaw-expo/",
+                    "https://www.youtube.com/@ptakwarsawexpo2557"
+                    ]
+                },
+                "location": {		
+                    "@type": "Place",
+                    "name": "Ptak Warsaw Expo",
+                    "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Aleja Katowicka 62",
+                    "addressLocality": "Nadarzyn",
+                    "postalCode": "05-830",
+                    "addressCountry": "PL"
+                    }
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "name": "Registration",
+                    "price": "0",
+                    "priceCurrency": "PLN",
+                    "url": "https://[trade_fair_domainadress]/en/registration/",
+                    "availability": "https://schema.org/InStock"
+                }
+            }
+            </script>';
+        }
+
         return $output;
 
     }
