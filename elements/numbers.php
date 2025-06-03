@@ -569,7 +569,7 @@ class PWElementNumbers extends PWElements {
                         <h2 class="footer__info-title">'. self::languageChecker('Stolica targów', 'The capital of trade fairs') .'</h2>
                         <p class="footer__info-description">'. self::languageChecker('Targi / Konferencje / Eventy', 'Trade fairs / Conferences / Events') .'</p>
                         </div>
-                        <a href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'">
+                        <a href="'. self::languageChecker('https://warsawexpo.eu/kalendarz-targowy/', 'https://warsawexpo.eu/en/fair-calendar/') .'" target="_blank">
                             <div class="footer__calendar-link">'. self::languageChecker('Kalendarz targowy', 'Trade show calendar') .'</div>
                         </a>
                     </div>

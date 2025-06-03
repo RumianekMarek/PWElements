@@ -345,7 +345,7 @@ class PWElementPosts extends PWElements {
                                             $output .= '<p class="slider_syncing__item_date">data ' . esc_html($post['date']) . '</p>';
                                             $output .= '<h2 class="slider_syncing__item_title">' . esc_html(mb_strimwidth($post['title'], 0, 50, '...')) . '</h2>';
                                         $output .= '</div>';
-                                        $output .= '<a href="' . esc_url($post['link']) . '" class="slider_syncing__read_more">Więcej
+                                        $output .= '<a href="' . esc_url($post['link']) . '" class="slider_syncing__read_more">' . self::languageChecker('Więcej', 'More') . '
                                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 12H18M18 12L13 7M18 12L13 17" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                                         </a>
                                     </div>';
@@ -434,7 +434,7 @@ class PWElementPosts extends PWElements {
                 });
 
                 rootNav.on("click", ".slick-slide", function (event) {
-                    event.preventDefault();
+                    // event.preventDefault();
                     var goToSingleSlide = $(this).data("slick-index");
                     rootSingle.slick("slickGoTo", goToSingleSlide);
                 });
@@ -1216,19 +1216,40 @@ class PWElementPosts extends PWElements {
 
             if ($query->have_posts()) {
                 while ($query->have_posts()) : $query->the_post();
-                    $content = get_the_content();
-                    $description = '';
+                    $word_count = 10;
 
-                    if (preg_match('/<p[^>]*>(.*?)<\/p>/i', $content, $matches)) {
-                        $desc_text = strip_tags($matches[1]);
-                        $description = mb_substr($desc_text, 0, 140);
+                    // Get post content
+                    $post_content = get_post_field('post_content', $post_id);
+
+                    // Extract content inside [vc_column_text] shortcode
+                    preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches);
+                    $vc_content = isset($matches[1]) ? $matches[1] : '';
+
+                    // Remove HTML
+                    $vc_content = wp_strip_all_tags($vc_content);
+
+                    // Check if the content is not empty
+                    if (!empty($vc_content)) {
+                        // Split content into words
+                        $words = explode(' ', $vc_content);
+
+                        // Extract the first $word_count words
+                        $excerpt = array_slice($words, 0, $word_count);
+
+                        // Combine words into one string
+                        $excerpt = implode(' ', $excerpt);
+
+                        // Add an ellipsis at the end
+                        $excerpt .= '...';
+                    } else {
+                        $excerpt = '';
                     }
 
                     $posts_data[] = array(
                         'title' => get_the_title(),
                         'link'  => get_permalink(),
                         'image' => has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : '',
-                        'description' => $description,
+                        'description' => $excerpt,
                         'date' => get_the_date('d.m.Y'),
                     );
                 endwhile;

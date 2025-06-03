@@ -42,18 +42,18 @@ class PWAppleCalendarElement extends PWElements {
         );
 
         $trade_start = do_shortcode("[trade_fair_datetotimer]");
-        $trade_end = do_shortcode("[trade_fair_datetotimer]");
+        $trade_end = do_shortcode("[trade_fair_enddata]");
 
         $data = 'BEGIN:VCALENDAR' . PHP_EOL .
-            'VERSION:2.0' . PHP_EOL .
-            'BEGIN:VEVENT' . PHP_EOL .
-            'DTSTART:' . substr($trade_start, 0, 4) . substr($trade_start, 5, 2) . substr($trade_start, 8, 2) . 'T' . substr($trade_start, 11, 2). '0000' . PHP_EOL .
-            'DTEND:' . substr($trade_end, 0, 4) . substr($trade_end, 5, 2) . substr($trade_end, 8, 2) . 'T' . substr($trade_end, 11, 2). '0000' . PHP_EOL .
-            'SUMMARY:' . $trade_name . PHP_EOL .
-            'DESCRIPTION:' . $trade_desc . PHP_EOL .
-            'LOCATION:Al. Katowicka 62, 05-830 Nadarzyn' . PHP_EOL .
-            'END:VEVENT' . PHP_EOL .
-            'END:VCALENDAR' . PHP_EOL;
+                'VERSION:2.0' . PHP_EOL .
+                'BEGIN:VEVENT' . PHP_EOL .
+                'DTSTART:' . substr($trade_start, 0, 4) . substr($trade_start, 5, 2) . substr($trade_start, 8, 2) . 'T' . substr($trade_start, 11, 2). '0000' . PHP_EOL .
+                'DTEND:' . substr($trade_end, 0, 4) . substr($trade_end, 5, 2) . substr($trade_end, 8, 2) . 'T' . substr($trade_end, 11, 2). '0000' . PHP_EOL .
+                'SUMMARY:' . $trade_name . PHP_EOL .
+                'DESCRIPTION:' . $trade_desc . PHP_EOL .
+                'LOCATION:Al. Katowicka 62, 05-830 Nadarzyn' . PHP_EOL .
+                'END:VEVENT' . PHP_EOL .
+                'END:VCALENDAR' . PHP_EOL;
     
         $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/Iphone.ics';
         $fileSaved = file_put_contents($filePath, $data);
