@@ -24,7 +24,7 @@ function adjustBrightness($hex, $steps) {
     $g = hexdec(substr($hex, 2, 2));
     $b = hexdec(substr($hex, 4, 2));
 
-    // Shift RGB values
+    // Shift RGB values 
     $r = max(0, min(255, $r + $steps));
     $g = max(0, min(255, $g + $steps));
     $b = max(0, min(255, $b + $steps));
@@ -42,8 +42,6 @@ $host = parse_url($site_url, PHP_URL_HOST);
 $domain = preg_replace('/^www\./', '', $host);
 
 $lang_pl = get_locale() == "pl_PL";
-$lang_en = get_locale() == "en-US";
-$lang_de = get_locale() == "de-DE";
 
 $api_url = 'https://'. $domain .'/wp-content/plugins/custom-element/other/pwe_api.php';
 $secretKey = defined('PWE_API_KEY_1') ? PWE_API_KEY_1 : '';
@@ -84,6 +82,42 @@ if (!empty($api_media["doc"])) {
 }
 $main_logo = !empty(get_post_meta($post_id, '_logo_image', true)) ? get_post_meta($post_id, '_logo_image', true) : $main_logo;
 $header_bg = !empty(get_post_meta($post_id, '_header_image', true)) ? get_post_meta($post_id, '_header_image', true) : $header_bg;
+
+function multi_translation($key) {
+    $locale = get_locale();
+    $translations_file = __DIR__ . '/../assets/translations.json';
+
+    // JSON file with translation
+    $translations_data = json_decode(file_get_contents($translations_file), true);
+
+    // Is the language in translations
+    if (isset($translations_data[$locale])) {
+        $translations_map = $translations_data[$locale];
+    } else {
+        // By default use English translation if no translation for current language
+        $translations_map = $translations_data['en_US'];
+    }
+
+    // Return translation based on key
+    return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+}
+
+function get_translated_field($fair, $field_base_name) {
+    // Get the language in the format e.g. "de", "pl"
+    $locale = get_locale(); // ex. "de_DE"
+    $lang = strtolower(substr($locale, 0, 2)); // "de"
+
+    // Check if a specific translation exists (e.g. fair_name_{lang})
+    $field_with_lang = "{$field_base_name}_{$lang}";
+
+    if (!empty($fair[$field_with_lang])) {
+        return $fair[$field_with_lang];
+    }
+
+    // Fallback to English
+    $fallback = "{$field_base_name}_en";
+    return $fair[$fallback] ?? '';
+}
 
 // Get localize
 $locale = get_locale();
@@ -175,26 +209,17 @@ if (substr($site_url, -4) === '/en/') {
     $site_url = substr($site_url, 0, -4) . '/';
 }
 
+$translates = PWECommonFunctions::get_database_translations_data($domain);
 
-// [pwe_desc_pl]
+// [pwe_desc_{lang}]
 $shortcode_desc_pl = get_pwe_shortcode("pwe_desc_pl", $domain);
 $shortcode_desc_pl_available = check_available_pwe_shortcode($shortcodes_active, $shortcode_desc_pl);
-$desc_pl = $shortcode_desc_pl_available ? $shortcode_desc_pl : get_post_meta($post_id, 'desc', true);
+$fair_desc = $shortcode_desc_pl_available ? get_translated_field($translates[0], 'fair_desc') : get_post_meta($post_id, 'desc', true);
 
-// [pwe_desc_en]
-$shortcode_desc_en = get_pwe_shortcode("pwe_desc_en", $domain);
-$shortcode_desc_en_available = check_available_pwe_shortcode($shortcodes_active, $shortcode_desc_en);
-$desc_en = $shortcode_desc_en_available ? $shortcode_desc_en : get_post_meta($post_id, 'desc', true);
-
-// [pwe_full_desc_pl]
+// [pwe_full_desc_{lang}]
 $shortcode_full_desc_pl = get_pwe_shortcode("pwe_full_desc_pl", $domain);
 $shortcode_full_desc_pl_available = check_available_pwe_shortcode($shortcodes_active, $shortcode_full_desc_pl);
-$full_desc_pl = $shortcode_full_desc_pl_available ? $fairs_data['fairs'][$domain]['full_desc_pl'] : get_the_content();
-
-// [pwe_full_desc_en]
-$shortcode_full_desc_en = get_pwe_shortcode("pwe_full_desc_en", $domain);
-$shortcode_full_desc_en_available = check_available_pwe_shortcode($shortcodes_active, $shortcode_full_desc_en);
-$full_desc_en = $shortcode_full_desc_en_available ? $fairs_data['fairs'][$domain]['full_desc_en'] : get_the_content();
+$fair_full_desc = $shortcode_full_desc_pl_available ? get_translated_field($translates[0], 'fair_full_desc') : get_the_content();
 
 // [pwe_color_accent]
 $shortcode_accent_color = get_pwe_shortcode("pwe_color_accent", $domain);
@@ -232,9 +257,9 @@ $shortcode_edition_available = check_available_pwe_shortcode($shortcodes_active,
 
 if ($shortcode_edition_available) {
     if($shortcode_edition == '1'){
-        $edition .= ($lang_pl ? "Premierowa edycja" : "Premier edition");
+        $edition .= multi_translation("premier_edition");
     } else {
-        $edition .= $shortcode_edition . ($lang_pl ? ". edycja" : ". edition"); 
+        $edition .= $shortcode_edition . multi_translation("edition"); 
     }
 }
 
@@ -909,9 +934,9 @@ while (have_posts()):
                                         rel="noopener" 
                                         href="'. get_post_meta($post_id, 'buy_ticket_link', true) .'" 
                                         class="single-event__btn" 
-                                        data-title="'. ($lang_pl ? "Kup bilet" : "Buy ticket") .'" 
-                                        title="'. ($lang_pl ? "Kup bilet" : "Buy ticket") .'">
-                                        '. ($lang_pl ? "Kup bilet" : "Buy ticket") .'
+                                        data-title="'. multi_translation("buy_ticket") .'" 
+                                        title="'. multi_translation("buy_ticket") .'">
+                                        '. multi_translation("buy_ticket") .'
                                     </a>
                                 </span>';
                             } else if(!empty(get_post_meta($post_id, 'visitor_registration_link', true))) {
@@ -927,9 +952,9 @@ while (have_posts()):
                                         rel="noopener" 
                                         href="'. get_post_meta($post_id, 'visitor_registration_link', true) .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" 
                                         class="single-event__btn" 
-                                        data-title="'. ($lang_pl ? "Odbierz zaproszenie" : "Collect your invitation") .'" 
-                                        title="'. ($lang_pl ? "Odbierz zaproszenie" : "Collect your invitation") .'">
-                                        '. ($lang_pl ? "Odbierz zaproszenie" : "Collect your invitation") .'
+                                        data-title="'. multi_translation("collect_invitation") .'" 
+                                        title="'. multi_translation("collect_invitation") .'">
+                                        '. multi_translation("collect_invitation") .'
                                     </a>
                                 </span>';
                             }
@@ -941,9 +966,9 @@ while (have_posts()):
                                         rel="noopener" 
                                         href="'. get_post_meta($post_id, 'exhibitor_registration_link', true) .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" 
                                         class="single-event__btn single-event__btn-dark" 
-                                        data-title="'. ($lang_pl ? "Zostań wystawcą" : "Become an exhibitor") .'" 
-                                        title="'. ($lang_pl ? "Zostań wystawcą" : "Become an exhibitor") .'">
-                                        '. ($lang_pl ? "Zostań wystawcą" : "Become an exhibitor") .'
+                                        data-title="'. multi_translation("become_exhibitor") .'" 
+                                        title="'. multi_translation("become_exhibitor") .'">
+                                        '. multi_translation("become_exhibitor") .'
                                     </a>
                                 </span>';
                             }
@@ -959,7 +984,7 @@ while (have_posts()):
                         <time itemprop="startDate" datetime="'. $schame_date_start .'"></time>
                         <time itemprop="endDate" datetime="'. $schame_date_end .'"></time>
                         <h2 class="single-event__date color-accent">'. $fair_date .'</h2>
-                        <h1 class="single-event__main-title" itemprop="name" style="text-transform:uppercase;">'. ($lang_pl ? $desc_pl : $desc_en) .'</h1>';
+                        <h1 class="single-event__main-title" itemprop="name" style="text-transform:uppercase;">'. $fair_desc .'</h1>';
                         $output .= '
                         <div class="single-event__header-buttons mobile">';
                             if(!empty(get_post_meta($post_id, 'buy_ticket_link', true))) {
@@ -970,9 +995,9 @@ while (have_posts()):
                                         rel="noopener" 
                                         href="'. get_post_meta($post_id, 'buy_ticket_link', true) .'" 
                                         class="single-event__btn" 
-                                        data-title="'. ($lang_pl ? "Kup bilet" : "Buy ticket") .'" 
-                                        title="'. ($lang_pl ? "Kup bilet" : "Buy ticket") .'">
-                                        '. ($lang_pl ? "Kup bilet" : "Buy ticket") .'
+                                        data-title="'. multi_translation("buy_ticket") .'" 
+                                        title="'. multi_translation("buy_ticket") .'">
+                                        '. multi_translation("buy_ticket") .'
                                     </a>
                                 </span>';
                             } else if(!empty(get_post_meta($post_id, 'visitor_registration_link', true))) {
@@ -981,16 +1006,16 @@ while (have_posts()):
                                     itemprop="offers" 
                                     itemscope 
                                     itemtype="http://schema.org/Offer" 
-                                    class="single-event__btn-container">
+                                    class="single-event__btn-container"> 
                                     <a 
                                         itemprop="url" 
                                         target="_blank" 
                                         rel="noopener" 
                                         href="'. get_post_meta($post_id, 'visitor_registration_link', true) .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" 
                                         class="single-event__btn" 
-                                        data-title="'. ($lang_pl ? "Odbierz zaproszenie" : "Collect your invitation") .'" 
-                                        title="'. ($lang_pl ? "Odbierz zaproszenie" : "Collect your invitation") .'">
-                                        '. ($lang_pl ? "Odbierz zaproszenie" : "Collect your invitation") .'
+                                        data-title="'. multi_translation("collect_invitation") .'" 
+                                        title="'. multi_translation("collect_invitation") .'">
+                                        '. multi_translation("collect_invitation") .'
                                     </a>
                                 </span>';
                             }
@@ -1002,9 +1027,9 @@ while (have_posts()):
                                         rel="noopener" 
                                         href="'. get_post_meta($post_id, 'exhibitor_registration_link', true) .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" 
                                         class="single-event__btn single-event__btn-dark" 
-                                        data-title="'. ($lang_pl ? "Zostań wystawcą" : "Become an exhibitor") .'" 
-                                        title="'. ($lang_pl ? "Zostań wystawcą" : "Become an exhibitor") .'">
-                                        '. ($lang_pl ? "Zostań wystawcą" : "Become an exhibitor") .'
+                                        data-title="'. multi_translation("become_exhibitor") .'" 
+                                        title="'. multi_translation("become_exhibitor") .'">
+                                        '. multi_translation("become_exhibitor") .'
                                     </a>
                                 </span>';
                             }
@@ -1018,7 +1043,7 @@ while (have_posts()):
                     $output .= '
                     <div class="single-event__container-partners">
                         <div class="single-event__partners-title">
-                            <h4>'. ($lang_pl ? "Patroni i Partnerzy" : "Patrons and Partners") .'</h4>
+                            <h4>'. multi_translation("patrons_and_partners") .'</h4>
                         </div>
                         <div class="single-event__partners-logotypes single-event__logotypes-slider">';
                             foreach ($api_media["partnerzy"] as $logo) {
@@ -1036,7 +1061,7 @@ while (have_posts()):
                     $output .= '
                     <div class="single-event__container-partners">
                         <div class="single-event__partners-title">
-                            <h4>'. ($lang_pl ? "Patroni i Partnerzy" : "Patrons and Partners") .'</h4>
+                            <h4>'. multi_translation("patrons_and_partners") .'</h4>
                         </div>
                         <div class="single-event__partners-logotypes single-event__logotypes-slider">';
                             foreach ($seperated_logotypes as $logo) {
@@ -1058,7 +1083,7 @@ while (have_posts()):
                         <time itemprop="startDate" datetime="'. $schame_date_start .'"></time>
                         <time itemprop="endDate" datetime="'. $schame_date_end .'"></time>
                         <h2 class="single-event__date color-accent mobile-hidden">'. $fair_date .'</h2>
-                        <h1 class="single-event__main-title mobile-hidden" itemprop="name" style="text-transform:uppercase;">'. ($lang_pl ? $desc_pl : $desc_en) .'</h1>';
+                        <h1 class="single-event__main-title mobile-hidden" itemprop="name" style="text-transform:uppercase;">'. $fair_desc .'</h1>';
                         if(!empty(get_post_meta($post_id, 'web_page_link', true))) {
                             $output .= '
                             <span class="single-event__btn-container webpage">
@@ -1068,15 +1093,15 @@ while (have_posts()):
                                     itemprop="url" 
                                     href="'. get_post_meta($post_id, 'web_page_link', true) .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" 
                                     class="single-event__btn" 
-                                    data-title="'. ($lang_pl ? "Strona internetowa" : "Website") .'" 
-                                    title="'. ($lang_pl ? "Strona internetowa" : "Website") .'">
-                                    '. ($lang_pl ? "Strona internetowa" : "Website") .' <span class="btn-angle-right">&#8250;</span>
+                                    data-title="'. multi_translation("website") .'" 
+                                    title="'. multi_translation("website") .'">
+                                    '. multi_translation("website") .' <span class="btn-angle-right">&#8250;</span>
                                 </a>
                             </span>';
                         }
                     $output .= '
                     </div>
-                    <div class="single-event__desc-column description" itemprop="description">'.  ($lang_pl ? $full_desc_pl : $full_desc_en) .'</div>
+                    <div class="single-event__desc-column description" itemprop="description">'.  $fair_full_desc .'</div>
                 </div>'; 
 
                 // Tiles section
@@ -1085,7 +1110,7 @@ while (have_posts()):
                     <div class="single-event__container-tiles">
                         <div class="single-event__tiles-left-container single-event__tiles-item single-event__tiles-hover">
                             <a href="https://'. $domain . ($lang_pl ? "/" : "/en/") .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" target="_blank">
-                                <span class="single-event__caption">'. ($lang_pl ? "Poznaj targi" : "Discover the trade fair") .'</span>   
+                                <span class="single-event__caption">'. multi_translation("discover_trade_fair") .'</span>   
                             </a>
                         </div>
                         <div class="single-event__tiles-right-container">
@@ -1096,26 +1121,26 @@ while (have_posts()):
                                         $output .= '
                                         <div class="single-event__statistics-numbers visitors">
                                             <span class="single-event__statistics-number countup" data-count="'. $visitors_num .'">0</span>
-                                            <span class="single-event__statistics-name">'. ($lang_pl ? "ODWIEDZAJĄCYCH" : "VISITORS") .'</span>
+                                            <span class="single-event__statistics-name">'. multi_translation("visitors") .'</span>
                                         </div>';
                                     }
                                     if ($exhibitors_num !== "" && $exhibitors_num !== "0") {
                                         $output .= '
                                         <div class="single-event__statistics-numbers exhibitors">
                                             <span class="single-event__statistics-number countup" data-count="'. $exhibitors_num .'">0</span>
-                                            <span class="single-event__statistics-name">'. ($lang_pl ? "WYSTAWCÓW" : "EXHIBITORS") .'</span>
+                                            <span class="single-event__statistics-name">'. multi_translation("exhibitors") .'</span>
                                         </div>';
                                     }
                                     if ($countries_num !== "" && $countries_num !== "0") {
                                         $output .= '
                                         <div class="single-event__statistics-numbers countries">
                                             <span class="single-event__statistics-number countup" data-count="'. $countries_num .'"></span>
-                                            <span class="single-event__statistics-name">'. ($lang_pl ? "KRAJÓW" : "COUNTRIES") .'</span>
+                                            <span class="single-event__statistics-name">'. multi_translation("countries") .'</span>
                                         </div>';
                                     }
                                 $output .= '    
                                 </div>
-                                <span class="single-event__caption">'. ($shortcode_edition == '1' ? ($lang_pl ? "Estymacje" : "Estimates") : ($lang_pl ? "Statystyki" : "Statistics")) .'</span>  
+                                <span class="single-event__caption">'. ($shortcode_edition == '1' ? multi_translation("estimates") : multi_translation("statistics")) .'</span>  
                             </div>
 
                             <div class="single-event__tiles-right-bottom">';
@@ -1123,18 +1148,18 @@ while (have_posts()):
                                 if (!empty(get_post_meta($post_id, 'buy_ticket_link', true))) {
                                     $output .= '
                                     <div class="single-event__tiles-right-bottom-attractions single-event__tiles-item single-event__tiles-hover">
-                                        <a href="https://'. $domain . ($lang_pl ? "/atrakcje/" : "/en/attractions/") .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" target="_blank">
-                                            <span class="single-event__caption">'. ($lang_pl ? "Atrakcje" : "Attractions") .'</span>   
+                                        <a href="https://'. $domain . multi_translation("attractions_url") .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" target="_blank">
+                                            <span class="single-event__caption">'. multi_translation("attractions") .'</span>   
                                         </a>
                                     </div>';
                                 } else {
                                     $output .= '
                                     <div class="single-event__tiles-right-bottom-left single-event__conference single-event__tiles-item single-event__tiles-hover">
-                                        <a href="https://'. $domain . ($lang_pl ? "/wydarzenia/" : "/en/conferences/") .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" target="_blank">
+                                        <a href="https://'. $domain . multi_translation("conference_url") .'?utm_source=warsawexpo&utm_medium=kalendarz&utm_campaign=refferal" target="_blank">
                                             <div class="single-event__conference-logotype">
                                                 <img src="https://'. $domain .'/doc/kongres.webp"/ alt="Congress Logo">
                                             </div>
-                                            <span class="single-event__caption">'. ($lang_pl ? "Konferencja" : "Conference") .'</span>  
+                                            <span class="single-event__caption">'. multi_translation("conference") .'</span>  
                                         </a>
                                     </div>';
 
@@ -1216,7 +1241,7 @@ while (have_posts()):
                     $output .= '
                     <div class="single-event__container-events">
                         <div class="single-event__events-title">
-                            <h4>'. ($lang_pl ? "Najważniejsze Wydarzenia Branżowe w Europie" : "The Most Important Industry Events in Europe") .'</h4>
+                            <h4>'. multi_translation("most_important_industry_events_in_europe") .'</h4>
                         </div>
                         <div class="single-event__events-logotypes single-event__logotypes-slider">';
                             $non_warsaw = [];
@@ -1228,7 +1253,7 @@ while (have_posts()):
                                 $filename_events = basename($logo["path"], ".webp");
                                 
                                 // Check if name contains "warsaw" or "warsawa" (case-insensitive)
-                                if (stripos($filename_events, "warsaw") !== false || stripos($filename_events, "warsawa") !== false) {
+                                if (stripos($filename_events, "warsaw") !== false || stripos($filename_events, "warszawa") !== false) {
                                     $warsaw_logos[] = $logo;
                                 } else {
                                     $non_warsaw[] = $logo;
