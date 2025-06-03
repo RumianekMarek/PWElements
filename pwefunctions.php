@@ -89,7 +89,7 @@ class PWECommonFunctions {
     /**
      * Get data from CAP databases  
      */
-    public static function get_database_fairs_data() {
+    public static function get_database_fairs_data($fair_domain = null) {
         // Database connection
         $cap_db = self::connect_database();
         // If connection failed, return empty array
@@ -99,9 +99,16 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM fairs");
+        
+        if (!isset($fair_domain)){
+            // Retrieving all data from the database
+            $results = $cap_db->get_results("SELECT * FROM fairs");
+        } else {
+            // Retrieving fair data from the database
+            $results = $cap_db->get_results(
+                $cap_db->prepare("SELECT * FROM fairs WHERE fair_domain = %s", $fair_domain)
+            );
+        }
     
         // SQL error checking
         if ($cap_db->last_error) {

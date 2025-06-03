@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.6.8
+ * Version: 2.6.9
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -50,6 +50,7 @@ class PWElementsPlugin {
             '/wp-content/plugins/PWElements/assets/three-js/three.min.js',
             '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
             '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js',
+            '/wp-content/cache/min/1/npm/swiper@11/swiper-bundle.min.js',
         ];
 
         // Excluding JS files from delayed loading (delay JS)
