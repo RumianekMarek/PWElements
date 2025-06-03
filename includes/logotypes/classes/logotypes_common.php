@@ -685,7 +685,7 @@ class PWElementAdditionalLogotypes {
                         }
                     }
 
-                }
+                } 
 
                 $logotypes_catalogs_array = explode(',', $logotypes_catalog);
                 foreach ($cap_logotypes_data as $logo_data) {
@@ -695,32 +695,28 @@ class PWElementAdditionalLogotypes {
                 }
             }
 
-            // echo '<pre>';
-            // var_dump($files);
-            // echo '</pre>';
-
             if (count($files) > 0) {
 
                 // Sorting - moving files from “Partner Targów” to the end of the array
-                usort($files, function ($a, $b) {
-                    // Użycie tylko pierwszego elementu (URL) do porównania
-                    $a_url = $a['url'];
-                    $b_url = $b['url'];
+                // usort($files, function ($a, $b) {
+                //     // Użycie tylko pierwszego elementu (URL) do porównania
+                //     $a_url = $a['url'];
+                //     $b_url = $b['url'];
 
-                    // Naprawienie podwójnych slashes
-                    $a_url = str_replace('//', '/', $a_url);
-                    $b_url = str_replace('//', '/', $b_url);
+                //     // Naprawienie podwójnych slashes
+                //     $a_url = str_replace('//', '/', $a_url);
+                //     $b_url = str_replace('//', '/', $b_url);
 
-                    // Sprawdzenie, czy to "Partner Targów"
-                    $a_is_partner = strpos($a_url, 'Logotypy/Rotator 2/Partner Targów') !== false;
-                    $b_is_partner = strpos($b_url, 'Logotypy/Rotator 2/Partner Targów') !== false;
+                //     // Sprawdzenie, czy to "Partner Targów"
+                //     $a_is_partner = strpos($a_url, 'Logotypy/Rotator 2/Partner Targów') !== false;
+                //     $b_is_partner = strpos($b_url, 'Logotypy/Rotator 2/Partner Targów') !== false;
 
-                    if ($a_is_partner === $b_is_partner) {
-                        return 0;
-                    }
+                //     if ($a_is_partner === $b_is_partner) {
+                //         return 0;
+                //     }
 
-                    return $a_is_partner ? 1 : -1;
-                });
+                //     return $a_is_partner ? 1 : -1;
+                // });
 
                 $files = array_map(function($file) {
                     // Check if the path is local

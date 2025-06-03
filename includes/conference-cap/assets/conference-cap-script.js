@@ -1,7 +1,6 @@
-window.speakersData = speakersData.data || {};
-window.oneConfMode = speakersData.oneConfMode || false;
+window.speakersData = confCapData.data || {};
+window.oneConfMode = confCapData.oneConfMode || false;
 jQuery(document).ready(function($){
-
     $(".conference_cap__lecture-speaker-btn").each(function() {
         $(this).on("click", function(){
             const lectureId = $(this).closest(".conference_cap__lecture-box").attr("id");
@@ -98,10 +97,11 @@ jQuery(document).ready(function($){
         
             if (parentLink.length === 0) {
                 const containerMasthead = document.querySelector('.pwe-menu');
-                if (containerMasthead) {
-                    targetContainer.get(0).style.scrollMarginTop = containerMasthead.offsetHeight + "px";
-                }
-                targetContainer.get(0).scrollIntoView({ behavior: "smooth" });
+                const offset = containerMasthead ? containerMasthead.offsetHeight : 80;
+
+                const targetPosition = targetContainer.offset().top - offset;
+
+                $("html, body").animate({ scrollTop: targetPosition }, 400);
             }
         
         });
@@ -130,7 +130,7 @@ jQuery(document).ready(function($){
             const targetContent = $(`#${targetId}`);
             if (targetContent.length) {
                 targetContent.addClass("active-content");
-            } 
+            }
         });
         
         // Opcjonalnie: ustawienie domyślnego stanu, np. automatyczne kliknięcie pierwszego obrazka
@@ -142,15 +142,20 @@ jQuery(document).ready(function($){
         const confSlug = urlParams.get('konferencja');
 
         if (confSlug) {
-            const targetImage = $(`#nav_${confSlug}`);
-            if (targetImage.length) {
-                targetImage.click(); 
-            }
+            setTimeout(() => {
+                const targetImage = $(`#nav_${confSlug}`);
+                if (targetImage.length) {
+                    targetImage.trigger("click");
+                }
+            }, 300); 
+        } else if (confCapData.archive && !confCapData.oneConfMode) {
+            $(".conference_cap__conf-slug-img").first().trigger("click");
         }
 
         const allConfs = $(".conference_cap__conf-slug");
+
         // Jeśli tryb jednej konferencji jest włączony
-        if (speakersData.oneConfMode) {
+        if (confCapData.oneConfMode) {
             const allConfs = $(".conference_cap__conf-slug");
 
             if (allConfs.length > 0) {
@@ -165,6 +170,15 @@ jQuery(document).ready(function($){
         }
 
     }
+
+    $("[data-html-inject-id]").each(function () {
+        const targetId = $(this).data("html-inject-id");
+        const sourceElement = document.getElementById(targetId);
+        if (sourceElement) {
+            $(this).replaceWith(sourceElement);
+        }
+    });
+
     
 
     initializeConferenceNavigation();

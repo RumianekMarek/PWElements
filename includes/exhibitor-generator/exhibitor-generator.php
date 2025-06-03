@@ -102,6 +102,14 @@ class PWEExhibitorGenerator{
                     array(
                         'type' => 'checkbox',
                         'group' => 'PWE Element',
+                        'heading' => __('Dodatkowe powiadomienie dla patronów', 'pwelement'),
+                        'param_name' => 'generator_patron',
+                        'save_always' => true,
+                    ),
+
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'PWE Element',
                         'heading' => __('Połączeni z Katalogiem wystawców', 'pwelement'),
                         'param_name' => 'generator_catalog',
                         'save_always' => true,
@@ -240,14 +248,19 @@ class PWEExhibitorGenerator{
      * @param string $exhibitor_id The ID of the exhibitor.
      * @return array|null Returns the exhibitor's data as an associative array, or null if no data exists.
      */
-    public static function catalog_data($exhibitor_id) {
+    public static function catalog_data($exhibitor_id = null) {
         $katalog_id = do_shortcode('[trade_fair_catalog]');
-
+        
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
         $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id;
         $json = file_get_contents($canUrl);
+        if ($exhibitor_id === null){
+            $data_array = json_decode($json, true);
+            return  $data_array;
+        }
+
         if ($json !== null){
             $search_id = $exhibitor_id . '.00';
             $data_array = json_decode($json, true);
@@ -315,12 +328,8 @@ class PWEExhibitorGenerator{
                         EN
                     )
                 .'</h3>
-
             </div>
         </div>';
-
-        // Adding mass generator to display
-        $output_html .= PWEMassVipSender::output($atts);
 
         $this->addingScripts($atts);
 

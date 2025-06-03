@@ -70,6 +70,9 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
             'phone_field' => '',
         ), $atts ));
 
+        $catalog_array = self::catalog_data();
+        $all_exhibitors = reset($catalog_array)['Wystawcy'];
+
         $output = '';
 
         // Check if there is more space for email send, 
@@ -110,6 +113,7 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                         $output .='<img style="max-height: 70px;" src="' . self::$exhibitor_logo_url . '">';
                     }
                     $output .='
+                    <input type="text" class="patron" value="">
                     <input type="text" class="company" value="' . self::$exhibitor_name .'" placeholder="'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
@@ -120,8 +124,15 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                             EN
                         )
                     .'"></input>
-                    <label class="mass_checkbox_label">
-                        <input type="checkbox" id="mass_exhibitor_badge" name="mass_exhibitor_badge" class="mass_checkbox">
+                    <select id="exhibitors_selector__modal">';
+                        $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Firma Zapraszająca (wybierz z listy)</option>';
+                        foreach($all_exhibitors as $cat_id => $cat_value){
+                            $output .='<option class="cat-exhibitor" val="' . $cat_value['Nazwa_wystawcy'] . '">' . $cat_value['Nazwa_wystawcy'] . '</option>';
+                        }  
+                        $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Patron</option>'; 
+                    $output .='</select>
+                    <label class="mass_checkbox_label" style="display:none;">
+                        <input type="checkbox" id="mass_exhibitor_badge" name="mass_exhibitor_badge" class="mass_checkbox" >
                         Brak uwzględnienia nazwy firmy na identyfikatorze
                     </label>
                     <div class="file-uloader">

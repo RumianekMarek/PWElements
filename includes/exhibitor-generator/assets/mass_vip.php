@@ -14,6 +14,38 @@ function SendData($all_entrys, $all_entrys_index, $lang){
     ]);
 }
 
+function SaveUploadedFile($input_name = 'input_logo') {
+    if (!isset($_FILES[$input_name]) || $_FILES[$input_name]['error'] !== UPLOAD_ERR_OK) {
+        return false;
+    }
+
+    $upload_dir_info = wp_upload_dir();
+    $target_dir = $upload_dir_info['basedir'] . '/generator-wystawcow';
+
+    if (!file_exists($target_dir)) {
+        wp_mkdir_p($target_dir);
+    }
+
+    $original_name = basename($_FILES[$input_name]['name']);
+    $extension = pathinfo($original_name, PATHINFO_EXTENSION);
+    $name_only = pathinfo($original_name, PATHINFO_FILENAME);
+    $counter = 0;
+
+    do {
+        $filename = $counter === 0
+            ? $original_name
+            : $name_only . "($counter)." . $extension;
+        $target_file = $target_dir . '/' . $filename;
+        $counter++;
+    } while (file_exists($target_file));
+
+    if (move_uploaded_file($_FILES[$input_name]['tmp_name'], $target_file)) {
+        return $upload_dir_info['baseurl'] . '/generator-wystawcow/' . $filename;
+    }
+
+    return null;
+}
+
 // Check if request method is POST.
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
@@ -26,7 +58,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $domain = $_SERVER["HTTP_HOST"];
         $secret_key = AUTH_KEY;
         $hash = hash_hmac('sha256', $domain, $secret_key);
-        $response = "false";
+        $response = false;
 
         //Chek token sended.
         if( $_POST['token'] ==  $hash){
@@ -35,7 +67,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             if (class_exists('GFAPI')) {
                 // Initialize variables.
                 $data = '';
-                $data = $_POST['data'];
+                // $data = $_POST['data'];
+                $data = json_decode(stripslashes($_POST['data']), true);
                 $all_forms = GFAPI::get_forms();
                 $lang = $_POST['lang'];
                 $fields = array();
@@ -67,10 +100,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $fields['exhibitors_name'] = $field['id'];
                     } elseif($field['adminLabel'] == 'exhibitor_logo'){
                         $fields['exhibitor_logo'] = $field['id'];
+                    } elseif($field['adminLabel'] == 'input_logo'){
+                        $fields['input_logo'] = $field['id'];
                     } elseif($field['adminLabel'] == 'exhibitor_desc'){
                         $fields['exhibitor_desc'] = $field['id'];
+                    } elseif($field['adminLabel'] == 'exhibitor_stand'){
+                        $fields['exhibitor_stand'] = $field['id'];
+                    } elseif($field['adminLabel'] == 'patron'){
+                        $fields['patron'] = $field['id'];
                     }
-                }
+                }  
+
+                $input_exhibitors_logo = SaveUploadedFile();
 
                 // Process entry data.
                 foreach($data as $val){
@@ -80,17 +121,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $fields['name'] => $val['name'],
                         $fields['email'] => $val['email'],
                         $fields['company'] => $_POST['company'],
+                        $fields['exhibitors_name'] => ($_POST['exhibitor_name'] != '0') ? '' : $_POST['company'],
                         $fields['phone'] => $phoneVal,
                         $fields['exhibitor_desc'] => $_POST['exhibitor_desc'] ?? '',
+                        $fields['patron'] => $_POST['patron'] ?? '',
+                        $fields['exhibitor_stand'] => $_POST['exhibitor_stand'] ?? '',
+                        $fields['input_logo'] => $input_exhibitors_logo ?? 'https://' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png',
                     ];
-
-                    if(!empty($_POST['exhibitor_name']) && $_POST['exhibitor_name'] != 'true'){
-                        $entry[$fields['exhibitors_name']] = $_POST['company'];
-                    };
 
                     $entry[$fields['exhibitor_logo']] = !empty($_POST['exhibitor_logo']) ?
                         $_POST['exhibitor_logo'] :
-                        'https:// ' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
+                        'https://' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
 
                     // Add entry to form.
                     $entry_id = GFAPI::add_entry($entry);
@@ -108,9 +149,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $all_not_valid[] = $entry_id;
                     }
                 }
-                // if(count($all_entrys) > 0){
-                //     SendData($all_entrys, $all_entrys_index, $lang);
-                // }
+
+                if(count($all_entrys) > 0){
+                    SendData($all_entrys, $all_entrys_index, $lang);
+                }
             }
 
             // Check if any valid entry was added,
@@ -166,15 +208,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         }
 
         // Send response back to exhibitors generator page
-        echo json_decode($response);
+        echo json_encode($response);
     } else {
 
         // Wrong token send back 401 - Acces Denied
-        echo json_decode('error code 401');
+        echo 'error code 401';
         exit;
     }
 } else {
     // Wrong request method send back 401 - Acces Denied
-    echo json_decode('error code 401');
+    echo 'error code 401';
     exit;
 }

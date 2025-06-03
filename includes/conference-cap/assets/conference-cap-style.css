@@ -1,3 +1,7 @@
+.conference_cap__main-container {
+  overflow: hidden;
+}
+
 .conference_patroni_logo {
   object-fit: contain;
   aspect-ratio: 3 / 2;

@@ -1023,7 +1023,7 @@ if ($map_type === 'PWEMapDynamic') {
                     justify-content: flex-start;
                     padding: 24px;
                     border-radius: 20px;
-                    background-color: color-mix(in srgb, var(--accent-color), white 60%);
+                    background-color: color-mix(in srgb, var(--accent-color), white 80%);
                     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
                     align-items: flex-start;
                     position: relative;

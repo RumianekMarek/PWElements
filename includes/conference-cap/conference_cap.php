@@ -89,7 +89,7 @@ class PWEConferenceCap {
                     ),
                     array(
                         'type' => 'param_group',
-                        'group' => 'PWE Element',
+                        'group' => 'Custom Html',
                         'heading' => __('Custom Html', 'pwe_conference_cap'),
                         'param_name' => 'conference_cap_html',
                         'dependency' => array(
@@ -124,6 +124,13 @@ class PWEConferenceCap {
                                 'type' => 'textfield',
                                 'heading' => __('Conference day', 'pwe_conference_cap'),
                                 'param_name' => 'conference_cap_html_day',
+                                'save_always' => true,
+                            ),
+                            array(
+                                'type' => 'textfield',
+                                'heading' => __('Element ID', 'pwe_conference_cap'),
+                                'param_name' => 'conference_cap_html_element_id',
+                                'description' => __('Enter the ID of an existing item on the page to be moved.', 'pwe_conference_cap'),
                                 'save_always' => true,
                             ),
                             array(
@@ -181,16 +188,17 @@ class PWEConferenceCap {
         /**
      * Adding Scripts
      */
-    public static function addingScripts($atts , $speakersDataMapping, $one_conf_mode = false) {
+    public static function addingScripts($atts , $speakersDataMapping, $one_conf_mode = false, $archive = '') {
         $data = array(
             'data'   => $speakersDataMapping,
             'oneConfMode' => $one_conf_mode,
+            'archive' => $archive,
         );
 
         $js_file = plugins_url('assets/conference-cap-script.js', __FILE__);
         $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/conference-cap-script.js');
         wp_enqueue_script('pwe-conference-cap-js', $js_file, array('jquery'), $js_version, true);
-        wp_localize_script('pwe-conference-cap-js', 'speakersData', $data);
+        wp_localize_script('pwe-conference-cap-js', 'confCapData', $data);
         
     }
     
@@ -240,10 +248,21 @@ class PWEConferenceCap {
                 }
                 
                 // Jeśli klucz już istnieje, dołączamy nową zawartość
-                if (isset($global_inf_conf[$target_conf_slug][$key])) {
-                    $global_inf_conf[$target_conf_slug][$key] .= '<br>' . PWECommonFunctions::decode_clean_content($conf_cap_html['conference_cap_html_code']);
-                } else {
-                    $global_inf_conf[$target_conf_slug][$key] = PWECommonFunctions::decode_clean_content($conf_cap_html['conference_cap_html_code']);
+                $html_content = '';
+
+                if (!empty($conf_cap_html['conference_cap_html_code'])) {
+                    $html_content = PWECommonFunctions::decode_clean_content($conf_cap_html['conference_cap_html_code']);
+                } elseif (!empty($conf_cap_html['conference_cap_html_element_id'])) {
+                    $element_id = esc_attr(trim($conf_cap_html['conference_cap_html_element_id']));
+                    $html_content = '<div data-html-inject-id="' . $element_id . '"></div>';
+                }
+
+                if (!empty($html_content)) {
+                    if (isset($global_inf_conf[$target_conf_slug][$key])) {
+                        $global_inf_conf[$target_conf_slug][$key] .= '<br>' . $html_content;
+                    } else {
+                        $global_inf_conf[$target_conf_slug][$key] = $html_content;
+                    }
                 }
             }
         }
@@ -361,7 +380,6 @@ class PWEConferenceCap {
             } else {
                 $cap_database = false;
             }
-
             if (!$one_conf_mode) {
                 // Generujemy nawigację (kafelki)
                 $output .= '<div class="conference_cap__conf-slug-navigation">';
@@ -700,7 +718,7 @@ class PWEConferenceCap {
 
         $output .= '</div>';
 
-        self::addingScripts($atts, $speakersDataMapping, $one_conf_mode);
+        self::addingScripts($atts, $speakersDataMapping, $one_conf_mode, $conference_cap_conference_arichive);
 
         return $output;
     }        
