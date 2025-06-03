@@ -99,14 +99,48 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
+
+        // Build column list
+        $columns = "
+            id,
+            fair_name_pl,
+            fair_name_en,
+            fair_desc_pl,
+            fair_desc_en,
+            fair_short_desc_pl,
+            fair_short_desc_en,
+            fair_full_desc_pl,
+            fair_full_desc_en,
+            fair_date_start,
+            fair_date_start_hour,
+            fair_date_end,
+            fair_date_end_hour,
+            fair_edition,
+            fair_visitors,
+            fair_exhibitors,
+            fair_countries,
+            fair_facebook,
+            fair_instagram,
+            fair_linkedin,
+            fair_youtube,
+            fair_color_accent,
+            fair_color_main2,
+            fair_hall,
+            fair_area,
+            fair_kw,
+            fair_badge,
+            fair_domain,
+            fair_shop,
+            fair_group
+        ";
         
         if (!isset($fair_domain)){
             // Retrieving all data from the database
-            $results = $cap_db->get_results("SELECT * FROM fairs");
+            $results = $cap_db->get_results("SELECT $columns FROM fairs");
         } else {
             // Retrieving fair data from the database
             $results = $cap_db->get_results(
-                $cap_db->prepare("SELECT * FROM fairs WHERE fair_domain = %s", $fair_domain)
+                $cap_db->prepare("SELECT $columns FROM fairs WHERE fair_domain = %s", $fair_domain)
             );
         }
     
@@ -118,6 +152,79 @@ class PWECommonFunctions {
             }
         }
     
+        return $results;
+    }
+    
+    public static function get_database_translations_data($fair_domain = null) {
+        $cap_db = self::connect_database();
+        if (!$cap_db) return [];
+
+        $columns = "
+            id,
+            fair_domain,
+            fair_name_pl,
+            fair_name_en,
+            fair_desc_pl,
+            fair_desc_en,
+            fair_short_desc_pl,
+            fair_short_desc_en,
+            fair_full_desc_pl,
+            fair_full_desc_en
+        ";
+
+        // Pobierz wszystkie targi
+        if (!isset($fair_domain)){
+            // Retrieving all data from the database
+            $fairs = $cap_db->get_results("SELECT $columns FROM fairs");
+        } else {
+            // Retrieving fair data from the database
+            $fairs = $cap_db->get_results(
+                $cap_db->prepare("SELECT $columns FROM fairs WHERE fair_domain = %s", $fair_domain)
+            );
+        }
+
+        // Download all translations
+        $translations = $cap_db->get_results("SELECT * FROM translations");
+
+        // Map translations by fair_id and language
+        $translations_map = [];
+        foreach ($translations as $tr) {
+            $fair_id = $tr->fair_id;
+            $lang = strtolower($tr->language); // ex. de, es
+            $data = json_decode($tr->translation, true);
+            if ($data) {
+                $translations_map[$fair_id][$lang] = $data;
+            }
+        }
+
+        // Building the final array
+        $results = [];
+        foreach ($fairs as $fair) {
+            $row = [
+                'fair_domain'           => $fair->fair_domain,
+                'fair_name_pl'          => $fair->fair_name_pl,
+                'fair_name_en'          => $fair->fair_name_en,
+                'fair_desc_pl'          => $fair->fair_desc_pl,
+                'fair_desc_en'          => $fair->fair_desc_en,
+                'fair_short_desc_pl'    => $fair->fair_short_desc_pl,
+                'fair_short_desc_en'    => $fair->fair_short_desc_en,
+                'fair_full_desc_pl'     => $fair->fair_full_desc_pl,
+                'fair_full_desc_en'     => $fair->fair_full_desc_en,
+            ];
+
+            // If there are translations - add them as additional languages
+            if (isset($translations_map[$fair->id])) {
+                foreach ($translations_map[$fair->id] as $lang => $fields) {
+                    if (isset($fields['fair_name']))         $row["fair_name_$lang"] = $fields['fair_name'];
+                    if (isset($fields['fair_desc']))         $row["fair_desc_$lang"] = $fields['fair_desc'];
+                    if (isset($fields['fair_short_desc']))   $row["fair_short_desc_$lang"] = $fields['fair_short_desc'];
+                    if (isset($fields['fair_full_desc']))    $row["fair_full_desc_$lang"] = $fields['fair_full_desc'];
+                }
+            }
+
+            $results[] = $row;
+        }
+
         return $results;
     }    
 
@@ -578,28 +685,6 @@ class PWECommonFunctions {
      */
     public static function languageChecker($pl, $en = '') {
         return get_locale() == 'pl_PL' ? $pl : $en;
-    }
-
-    /**
-     * Multi translation for text
-     * 
-     * @param string [0] index - text in Polish.
-     * @param string [1] index - text in English.
-     * @param string [2] index - text in Germany.
-     * @return string 
-     */
-    public static function multi_translation(...$translations) {
-        $locale = get_locale();
-        
-        // Mapping languages ​​to appropriate indexes in the array
-        $languages = [
-            'pl_PL' => 0, // Polish
-            'en_US' => 1, // English
-            'de_DE' => 2, // German
-            // 'es_ES' => 3, // Spanish
-        ];
-        
-        return isset($languages[$locale]) ? $translations[$languages[$locale]] : $translations[1];;
     }
 
      /**
