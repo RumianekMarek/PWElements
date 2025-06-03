@@ -2,13 +2,15 @@
 
 $output = '';
 
-if ($registration_type == 'PWERegistrationVisitors') {
+if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket || (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false)) {
 
     $btn_color_vip = '#B69663';
     $darker_btn_vip_color = self::adjustBrightness($btn_color_vip, -20);
 
     $btn_color_premium = self::$accent_color;
     $darker_btn_premium_color = self::adjustBrightness($btn_color_premium, -20);
+
+
 
     if (strpos($source_utm, 'utm_source=byli') !== false) {
         $output .= '
@@ -800,11 +802,14 @@ if ($registration_type == 'PWERegistrationVisitors') {
             background: #555; /* Zmiana koloru rączki podczas najechania */
         }
     </style>';
-} else if ($registration_type == 'PWERegistrationTicket') {
+} else if ($register_show_ticket === "true" && (strpos($source_utm, 'utm_source=byli') === false || strpos($source_utm, 'utm_source=premium') === false || strpos($source_utm, 'utm_source=platyna') === false)) {
     $background_color = self::$accent_color;
 
     $output = '
     <style>
+        .wpb_column:has(.exhibitors-catalog) {
+            display:none !important;
+        }
         .row-container:has(#pweRegistrationTicket) {
             background-image: url(/doc/background.webp);
             background-repea: no-repeat;
@@ -918,7 +923,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
         #pweRegistrationTicket input {
             border-radius:18px;
         }
-        #pweRegistrationTicket .ticket-card__cta, #pweRegistrationTicket input[type="submit"] {
+        #pweRegistrationTicket .ticket-card__cta, #pweRegistrationTicket input[type="submit"], .popup_katalog {
             background-color: '. $btn_color .' !important;
             border: 2px solid '. $btn_color .' !important;
             border-radius: 35px !important;
@@ -933,7 +938,7 @@ if ($registration_type == 'PWERegistrationVisitors') {
             text-align: center;
             margin:0 !important;
         }
-        #pweRegistrationTicket  .registration-ticket__option--business .ticket-card__cta {
+        #pweRegistrationTicket  .registration-ticket__option--business .ticket-card__cta, .popup_katalog {
             background-color: black !important;
             border: 2px solid black !important;
         }
@@ -974,7 +979,107 @@ if ($registration_type == 'PWERegistrationVisitors') {
         }
     </style>'
     ;
+    if(empty($ticket_link)){
+        $output .= '
+        <style>
+            .popup {
+                display: none; /* domyślnie ukryty */
+                position: fixed;
+                justify-content: center;
+                align-items: center;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 1000;
+            }
 
+            .popup__content {
+                background: #fff;
+                padding: 20px;
+                min-width: 360px;
+                position: relative;
+                border-radius: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 200px;
+                max-width: 800px;
+                align-items: stretch;
+            }
+
+            .popup__close {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 32px;
+                cursor: pointer;
+                transform: rotate(45deg);
+                display: inline-block;
+                user-select: none;
+            }
+            .popup__content_button {
+                flex: .1;
+                display: flex;
+                justify-content: right;
+                align-items: flex-start;
+            }
+            .popup__content_button div {
+               color:white;
+                border-radius: 50%;
+                  width: 50px;
+                height: 50px;
+                background: black;
+                color: white;
+                font-size: 50px;
+                line-height: 50px;
+                text-align: center;
+                cursor: pointer;
+                transform: rotate(45deg); /* + staje się X */
+                user-select: none;
+                transition: background 0.3s;
+            }
+            .popup__content_button div:hover {
+                background-color: '. $darker_btn_color .'!important;
+            }
+            .popup__content_text {
+                flex:.9;
+                justify-content: center;
+                display: flex;
+                flex-direction: column;
+                align-items: anchor-center;
+                min-height: 160px;
+            }
+            .popup__content_text a {
+                color: white !important;
+                display: inline-block  !important;
+                min-width: 240px !important;
+                margin-top: 16px !important;
+                background-color: '. $darker_btn_color .'!important;
+                border:2px solid '. $darker_btn_color .' !important;
+            }
+            .popup__content_text a:hover {
+                background-color: black !important;
+                border:2px solid black !important;
+            }
+            .popup__content_text p {
+
+                font-weight:700;
+                font-size:16px;
+            }
+            .popup__content_text .text {
+                font-size:14px;
+                font-weight:600;
+            }
+
+            @media(min-width:1200px){
+                .popup__content {
+                    min-width: 420px;
+                }
+            }
+        </style>';
+    };
     if (glob($_SERVER['DOCUMENT_ROOT'] . '/doc/header_mobile.webp', GLOB_BRACE)) {
         $output .= '
         <style>
