@@ -997,7 +997,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
 
             .popup__content {
                 background: #fff;
-                padding: 20px;
+                padding: 36px;
                 min-width: 360px;
                 position: relative;
                 border-radius: 8px;
@@ -1007,8 +1007,11 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
                 min-height: 200px;
                 max-width: 800px;
                 align-items: stretch;
+                flex-direction: column;
             }
-
+            .popup__content_text_container {
+                display:flex;
+            }
             .popup__close {
                 position: absolute;
                 top: 10px;
@@ -1045,13 +1048,17 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
             }
             .popup__content_text {
                 flex:.9;
-                justify-content: center;
+                justify-content: start;
                 display: flex;
                 flex-direction: column;
                 align-items: anchor-center;
-                min-height: 160px;
+                min-height: auto;
             }
-            .popup__content_text a {
+            .popup__content_button_container {
+                display: flex;
+                justify-content: space-around;
+            }
+            .popup__content_button_container a {
                 color: white !important;
                 display: inline-block  !important;
                 min-width: 240px !important;
@@ -1059,18 +1066,27 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
                 background-color: '. $darker_btn_color .'!important;
                 border:2px solid '. $darker_btn_color .' !important;
             }
-            .popup__content_text a:hover {
+            .popup__content_button_container a:hover {
                 background-color: black !important;
                 border:2px solid black !important;
             }
+            .popup__content_button_container  .popup_rej {
+                background-color: black !important;
+                border:2px solid black !important;
+            }
+            .popup__content_button_container  .popup_rej:hover {
+                background-color: '. $darker_btn_color .'!important;
+                border:2px solid '. $darker_btn_color .' !important;
+            }
             .popup__content_text p {
-
+                margin-top:0;
                 font-weight:700;
                 font-size:16px;
             }
             .popup__content_text .text {
                 font-size:14px;
                 font-weight:600;
+                margin-top:12px;
             }
 
             @media(min-width:1200px){

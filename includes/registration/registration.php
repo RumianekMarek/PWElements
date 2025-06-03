@@ -185,6 +185,30 @@ public function initVCMapPWERegistration() {
                         'save_always' => true,
                     ),
                     array(
+                        'type' => 'textfield',
+                        'heading' => __('Ticket link', 'pwe_registration'),
+                        'param_name' => 'register_ticket_link',
+                        'description' => __('Enter the link for the ticket.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-fourth-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'registration_type',
+                            'value' => array('PWERegistrationVisitors'),
+                        ),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Ticket price', 'pwe_registration'),
+                        'param_name' => 'register_ticket_price',
+                        'description' => __('Enter the custom price for the ticket.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-fourth-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'registration_type',
+                            'value' => array('PWERegistrationVisitors'),
+                        ),
+                    ),
+                    array(
                         'type' => 'param_group',
                         'group' => 'Replace Strings',
                         'param_name' => 'pwe_replace',
@@ -205,18 +229,7 @@ public function initVCMapPWERegistration() {
                             ),
                         ),
                     ),
-                    array(
-                        'type' => 'textfield',
-                        'heading' => __('Ticket link', 'pwe_registration'),
-                        'param_name' => 'ticket_link',
-                        'description' => __('Enter the link for the ticket.', 'pwe_registration'),
-                        'param_holder_class' => 'backend-area-one-fourth-width',
-                        'save_always' => true,
-                        'dependency' => array(
-                            'element' => 'registration_type',
-                            'value' => array('PWERegistrationTicket'),
-                        ),
-                    ),
+
                 ),
             ),
         ));
@@ -268,6 +281,8 @@ public function initVCMapPWERegistration() {
             'registration_form_id' => '',
             'pwe_replace' => '',
             'register_show_ticket' => '',
+            'register_ticket_link' => '',
+            'register_ticket_price' => '',
         ), $atts ));
 
         // Replace strings

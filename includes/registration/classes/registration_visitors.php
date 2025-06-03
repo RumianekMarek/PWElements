@@ -62,7 +62,8 @@ class PWERegistrationVisitors extends PWERegistration {
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
-        $ticket_link = !empty($atts['ticket_link']) ? $atts['ticket_link'] : '';
+        $register_ticket_link = !empty($atts['register_ticket_link']) ? $atts['register_ticket_link'] : '';
+        $register_ticket_price = !empty($atts['register_ticket_price']) ? $atts['register_ticket_price'] : '90';
 
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
@@ -112,8 +113,8 @@ class PWERegistrationVisitors extends PWERegistration {
 
                           <div class="ticket-card">
                             <div class="ticket-card__price">
-                              <h2 class="ticket-card__price-value">0 PLN</h2>
-                              <p class="ticket-card__note">'. self::languageChecker('* po krótkiej rejestracji', '* after a short registration') .'</p>
+                              <h2 class="ticket-card__price-value">'. self::languageChecker('Bezpłatny po rejestracji</br>online', 'Free after online</br>registration') .'</h2>
+                              <p class="ticket-card__note">'. self::languageChecker('lub 150 PLN podczas dni targowych', 'or 150 PLN during the trade fair days') .'</p>
                             </div>
 
                             <div class="ticket-card__details">
@@ -135,7 +136,7 @@ class PWERegistrationVisitors extends PWERegistration {
                           <div class="ticket-card__name">'. self::languageChecker('Business Priority Pass', 'Business Priority Pass') .'</div>
                           <div class="ticket-card">
                             <div class="ticket-card__price">
-                              <h2 class="ticket-card__price-value">249 PLN</h2>
+                              <h2 class="ticket-card__price-value">'.$register_ticket_price.' PLN</h2>
                               <p class="ticket-card__note">'. self::languageChecker('lub poproś o zaproszenie wystawcę', 'or request an invitation from an exhibitor') .'</p>
                               <a class="exhibitor-catalog" href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'">'. self::languageChecker('katalog wystawców', 'exhibitor catalog') .'</a>
                             </div>
@@ -151,14 +152,14 @@ class PWERegistrationVisitors extends PWERegistration {
                                 <li>'. self::languageChecker('darmowy parking', 'Free parking') .'</li>
                               </ul>
                               <div class="ticket-card__details_button">';
-                              if(empty($ticket_link)){
+                              if(empty($register_ticket_link)){
                                 $output .= '
                                  <a href="#" class="ticket-card__cta" data-popup-trigger>
                                   '. self::languageChecker('Kup bilet', 'Buy a ticket') .'
                                 </a>';
                               } else {
                                 $output .= '
-                                <a href="'.$ticket_link.'" class="ticket-card__cta">
+                                <a target="_blank" href="'.$register_ticket_link.'" class="ticket-card__cta">
                                     '. self::languageChecker('Kup bilet', 'Buy a ticket') .'
                                 </a>';
                               }
@@ -170,7 +171,7 @@ class PWERegistrationVisitors extends PWERegistration {
                       </div>
                     </div>
                     ';
-                    if(empty($ticket_link)){
+                    if(empty($register_ticket_link)){
                         $output .= '
                         <script>
                         document.addEventListener("DOMContentLoaded", function() {
@@ -198,16 +199,22 @@ class PWERegistrationVisitors extends PWERegistration {
                         ';
                         $output.='<div class="popup" id="popup">
                             <div class="popup__content">
+                                <div class="popup__content_text_container">
+                                    <div class="popup__content_text">
+                                        <p style="font-size:16px;">'. self::languageChecker('Poproś wybranego wystawcę o zaproszenie – to szybki i pewny sposób aby otrzymać Zaproszenie Priority Pass', 'Ask your chosen exhibitor for an invitation - it s a quick and sure way to get a Priority Pass invitation') .'</p>
+                                        <p class="text">'. self::languageChecker('Obecna pula biletów Business Priority Pass przeznaczona do sprzedaży została wyczerpana. Zachęcamy do bezpłatnej rejestracji i odbioru Biletu Branżowego', 'The current pool of Business Priority Pass tickets for sale has been exhausted. We encourage you to register and pick up your Business Pass for free') .'</p>
 
-                                <div class="popup__content_text">
-                                    <p style="font-size:16px;">'. self::languageChecker('Poproś wybranego wystawcę o zaproszenie – to szybki i pewny sposób aby otrzymać Zaproszenie Priority Pass', 'Ask your chosen exhibitor for an invitation - it s a quick and sure way to get a Priority Pass invitation') .'</p>
-                                    <p class="text">'. self::languageChecker('Obecna pula biletów Business Priority Pass przeznaczona do sprzedaży została wyczerpana. Zachęcamy do bezpłatnej rejestracji i odbioru Biletu Branżowego', 'The current pool of Business Priority Pass tickets for sale has been exhausted. We encourage you to register and pick up your Business Pass for free') .'</p>
-                                    <a href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'" class="popup_katalog">'. self::languageChecker('Katalog wystawców', 'Exhibitor Catalog') .'</a>
+                                    </div>
+                                    <div class="popup__content_button">
+                                        <div id="popupClose">+</div>
+                                    </div>
                                 </div>
-                                <div class="popup__content_button">
-                                    <div id="popupClose">+</div>
+                                <div class="popup__content_button_container">
+                                    <a href="'. self::languageChecker('/rejestracja', '/en/registration/') .'" class="popup_katalog ">'. self::languageChecker('Zarejestruj się', 'Register') .'</a>
+                                    <a href="'. self::languageChecker('/katalog-wystawcow', '/en/exhibitors-catalog/') .'" class="popup_katalog popup_rej">'. self::languageChecker('Katalog wystawców', 'Exhibitor Catalog') .'</a>
                                 </div>
                             </div>
+
                         </div>';
                     }
         } else {
