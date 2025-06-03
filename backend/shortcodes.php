@@ -113,7 +113,7 @@ function register_dynamic_shortcodes() {
         'pwe_instagram' => 'instagram',
         'pwe_linkedin' => 'linkedin',
         'pwe_youtube' => 'youtube',
-        'pwe_catalog' => 'catalog'
+        'pwe_catalog' => 'catalog' 
     ];
 
     // Shortcode handling function
@@ -132,24 +132,3 @@ function register_dynamic_shortcodes() {
 }
 
 add_action('init', 'register_dynamic_shortcodes');
-
-// Shortcodes for Gravity forms
-add_filter('gform_replace_merge_tags', 'GF_dynamic_pwe_shortcodes', 10, 7);
-function GF_dynamic_pwe_shortcodes($text, $form, $entry, $url_encode, $esc_html, $nl2br, $format) {
-    // Pattern for detecting merge tags with optional `domain` parameter
-    $pattern = '/\{(pwe_[a-z_]+)(?:\s+domain="([^"]+)")?\}/';
-
-    $text = preg_replace_callback($pattern, function($matches) {
-        $shortcode = $matches[1]; // ex. "pwe_name_pl"
-        $domain = !empty($matches[2]) ? $matches[2] : null; // ex. "domain.com"
-
-        // Assembling a shortcode with an optional parameter
-        $shortcode_str = $domain ? "[{$shortcode} domain=\"{$domain}\"]" : "[{$shortcode}]";
-
-        return do_shortcode($shortcode_str);
-    }, $text);
-
-    return $text;
-}
-
-
