@@ -1057,6 +1057,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
             .popup__content_button_container {
                 display: flex;
                 justify-content: space-around;
+                flex-wrap: wrap;
             }
             .popup__content_button_container a {
                 color: white !important;

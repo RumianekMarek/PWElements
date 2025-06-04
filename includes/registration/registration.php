@@ -192,8 +192,20 @@ public function initVCMapPWERegistration() {
                         'param_holder_class' => 'backend-area-one-fourth-width',
                         'save_always' => true,
                         'dependency' => array(
-                            'element' => 'registration_type',
-                            'value' => array('PWERegistrationVisitors'),
+                            'element' => 'register_show_ticket',
+                            'value' => array('true'),
+                        ),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Ticket during the fair', 'pwe_registration'),
+                        'param_name' => 'register_ticket_price_frist',
+                        'description' => __('Enter the custom price for the ticket.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-fourth-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'register_show_ticket',
+                            'value' => array('true'),
                         ),
                     ),
                     array(
@@ -204,8 +216,8 @@ public function initVCMapPWERegistration() {
                         'param_holder_class' => 'backend-area-one-fourth-width',
                         'save_always' => true,
                         'dependency' => array(
-                            'element' => 'registration_type',
-                            'value' => array('PWERegistrationVisitors'),
+                            'element' => 'register_show_ticket',
+                            'value' => array('true'),
                         ),
                     ),
                     array(
@@ -283,6 +295,7 @@ public function initVCMapPWERegistration() {
             'register_show_ticket' => '',
             'register_ticket_link' => '',
             'register_ticket_price' => '',
+            'register_ticket_price_frist' => '',
         ), $atts ));
 
         // Replace strings
@@ -300,7 +313,7 @@ public function initVCMapPWERegistration() {
 
             if (class_exists($registration_type)) {
                 $output_class = new $registration_type;
-                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket);
+                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist);
             } else {
                 // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $registration_type .' does not exist")</script>';

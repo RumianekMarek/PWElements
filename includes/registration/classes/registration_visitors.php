@@ -56,14 +56,15 @@ class PWERegistrationVisitors extends PWERegistration {
      *
      * @param array @atts options
      */
-    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket) {
+    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist) {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $register_ticket_link = !empty($atts['register_ticket_link']) ? $atts['register_ticket_link'] : '';
-        $register_ticket_price = !empty($atts['register_ticket_price']) ? $atts['register_ticket_price'] : '90';
+        $register_ticket_price = !empty($atts['register_ticket_price']) ? $atts['register_ticket_price'] : '249';
+        $register_ticket_price_frist = !empty($atts['register_ticket_price_frist']) ? $atts['register_ticket_price_frist'] : '150';
 
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
@@ -114,7 +115,7 @@ class PWERegistrationVisitors extends PWERegistration {
                           <div class="ticket-card">
                             <div class="ticket-card__price">
                               <h2 class="ticket-card__price-value">'. self::languageChecker('Bezpłatny po rejestracji</br>online', 'Free after online</br>registration') .'</h2>
-                              <p class="ticket-card__note">'. self::languageChecker('lub 150 PLN podczas dni targowych', 'or 150 PLN during the trade fair days') .'</p>
+                              <p class="ticket-card__note">'. self::languageChecker('lub ', 'or ') .' '.$register_ticket_price_frist .' '. self::languageChecker(' podczas dni targowych', ' during the trade fair days') .'</p>
                             </div>
 
                             <div class="ticket-card__details">
