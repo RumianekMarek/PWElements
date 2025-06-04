@@ -350,3 +350,19 @@ strong {
 #masthead .mobile-menu-button {
     padding: 0 18px !important;
 }
+
+
+/*ROZWIJANE ZGODY*/
+.gfield_consent_description {
+    overflow: auto !important;
+    max-height: auto !important;
+    border: none !important;
+    display: none;
+}
+
+
+.gform_footer:has(.gform_ajax_spinner) .gform_button,
+.gform_footer:has(.gform-loader) .gform_button {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
