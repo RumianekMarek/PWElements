@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.7.1
+ * Version: 2.7.2
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
