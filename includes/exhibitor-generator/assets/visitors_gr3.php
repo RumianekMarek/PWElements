@@ -16,7 +16,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                 <div class="exhibitor-generator__right">
                     <div class="exhibitor-generator__right-wrapper">
                         <div class="exhibitor-generator__right-title">
-                            <h3>GR3 ' . PWECommonFunctions::languageChecker('WYGENERUJ</br>IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>';
+                            <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ</br>IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>';
                             if (!empty(PWEExhibitorVisitorGenerator::$exhibitor_logo_url)  && !$pweGeneratorWebsite) {
                                 $output .= '
                                 <img id="exhibitor_logo_img" style="max-height: 120px;" src="' . PWEExhibitorVisitorGenerator::$exhibitor_logo_url . '">
@@ -60,7 +60,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                         </div>';
 
                         // Add a mass invite send button if not on a personal exhibitor page
-                        if((get_locale() == "pl-PL" && !isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
+                        if((get_locale() == "pl_PL" && !isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
                             $output .= '<button class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
                         }
 
