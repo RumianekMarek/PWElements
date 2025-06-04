@@ -53,9 +53,9 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                         <div class="exhibitor-generator__right-form">
                             [gravityform id="'. $generator_form_id .'" title="false" description="false" ajax="false"]
                         </div>';
-
+                        
                         // Add a mass invite send button if not on a personal exhibitor page
-                        if(get_locale() == "pl-PL" && (!isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
+                        if(get_locale() == "pl_PL" && (!isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
                             $output .= '<button type="button" class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
                         }
 
