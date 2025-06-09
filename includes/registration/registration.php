@@ -221,6 +221,30 @@ public function initVCMapPWERegistration() {
                         ),
                     ),
                     array(
+                        'type' => 'textarea_html',
+                        'heading' => __('Registration benefits', 'pwe_registration'),
+                        'param_name' => 'register_ticket_register_benefits',
+                        'description' => __('Enter custom HTML list of register benefits. If left empty, default content will be used.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-two-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'register_show_ticket',
+                            'value' => array('true'),
+                        ),
+                    ),
+                    array(
+                        'type' => 'textarea_html',
+                        'heading' => __('Ticket benefits', 'pwe_registration'),
+                        'param_name' => 'register_ticket_benefits',
+                        'description' => __('Enter custom HTML list of ticket benefits. If left empty, default content will be used.', 'pwe_registration'),
+                        'param_holder_class' => 'backend-area-one-two-width',
+                        'save_always' => true,
+                        'dependency' => array(
+                            'element' => 'register_show_ticket',
+                            'value' => array('true'),
+                        ),
+                    ),
+                    array(
                         'type' => 'param_group',
                         'group' => 'Replace Strings',
                         'param_name' => 'pwe_replace',
@@ -296,6 +320,8 @@ public function initVCMapPWERegistration() {
             'register_ticket_link' => '',
             'register_ticket_price' => '',
             'register_ticket_price_frist' => '',
+            'register_ticket_benefits' => '',
+            'register_ticket_register_benefits' => '',
         ), $atts ));
 
         // Replace strings
@@ -313,7 +339,7 @@ public function initVCMapPWERegistration() {
 
             if (class_exists($registration_type)) {
                 $output_class = new $registration_type;
-                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist);
+                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist, $register_ticket_benefits, $register_ticket_register_benefits);
             } else {
                 // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $registration_type .' does not exist")</script>';

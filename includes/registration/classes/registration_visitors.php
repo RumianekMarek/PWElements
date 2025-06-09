@@ -56,15 +56,50 @@ class PWERegistrationVisitors extends PWERegistration {
      *
      * @param array @atts options
      */
-    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist) {
+    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist, $register_ticket_register_benefits, $register_ticket_benefits) {
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
+
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        $current_domain = $_SERVER['HTTP_HOST'];
+        $current_fair_group = null;
+
+        foreach ($pwe_groups_data as $item) {
+            if ($item->fair_domain === $current_domain) {
+                $current_fair_group = $item->fair_group;
+                break;
+            }
+        }
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $register_ticket_link = !empty($atts['register_ticket_link']) ? $atts['register_ticket_link'] : '';
         $register_ticket_price = !empty($atts['register_ticket_price']) ? $atts['register_ticket_price'] : '249';
         $register_ticket_price_frist = !empty($atts['register_ticket_price_frist']) ? $atts['register_ticket_price_frist'] : '150';
+
+        $register_ticket_register_benefits = $register_ticket_benefits = !empty(trim(strip_tags($atts['register_ticket_register_benefits'] ?? '')))
+        ? $atts['register_ticket_register_benefits']
+        : '
+            <ul class="ticket-card__benefits">
+              <li>'. self::languageChecker('<strong>wejścia na targi po rejestracji przez 3 dni</strong>', '<strong>access to the trade fair for all 3 days upon registration</strong>') .'</li>
+              <li>'. self::languageChecker('<strong>możliwość udziału w konferencjach</strong> lub warsztatach na zasadzie “wolnego słuchacza”', '<strong>the chance to join conferences</strong> or workshops as a listener') .'</li>
+              <li>'. self::languageChecker('darmowy parking', 'free parking') .'</li>
+            </ul>
+        ';
+
+        $register_ticket_benefits = !empty(trim(strip_tags($atts['register_ticket_benefits'] ?? '')))
+            ? $atts['register_ticket_benefits']
+            : '
+                <ul class="ticket-card__benefits">
+                    <li>'. self::languageChecker('<strong>fast track</strong> - szybkie wejście na targi dedykowaną bramką przez 3 dni', '<strong>fast track access</strong> – skip the line and enter the trade fair through a dedicated priority gate for all 3 days') .'</li>
+                    <li>'. self::languageChecker('<strong>imienny pakiet</strong> - targowy przesyłany kurierem przed wydarzeniem', '<strong>Personalized trade fair package</strong> - delivered by courier to your address before the event') .'</li>
+                    <li>'. self::languageChecker('<strong>welcome pack</strong> - przygotowany specjalnie przez wystawców', '<strong>welcome pack</strong> - a special set of materials and gifts prepared by exhibitors') .'</li>
+                    <li>'. self::languageChecker('obsługa concierge', 'Concierge service') .'</li>
+                    <li>'. self::languageChecker('możliwość udziału w konferencjach i  warsztatach', 'Access to conferences and workshops') .'</li>
+                    <li>'. self::languageChecker('darmowy parking', 'Free parking') .'</li>
+                </ul>
+            ';
+
 
         if (isset($_SERVER['argv'][0])) {
             $source_utm = $_SERVER['argv'][0];
@@ -73,8 +108,8 @@ class PWERegistrationVisitors extends PWERegistration {
         }
 
         if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false ) {
-            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
-        } else {
+            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
+        } else if(strpos($source_utm, 'utm_source=byli') !== false ) {
             if (get_locale() == 'pl_PL') {
                 $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
             } else {
@@ -115,16 +150,12 @@ class PWERegistrationVisitors extends PWERegistration {
                           <div class="ticket-card">
                             <div class="ticket-card__price">
                               <h2 class="ticket-card__price-value">'. self::languageChecker('Bezpłatny po rejestracji</br>online', 'Free after online</br>registration') .'</h2>
-                              <p class="ticket-card__note">'. self::languageChecker('lub ', 'or ') .' '.$register_ticket_price_frist .' '. self::languageChecker(' podczas dni targowych', ' during the trade fair days') .'</p>
+                              <p class="ticket-card__note">'. self::languageChecker('lub ', 'or ') .' '.$register_ticket_price_frist .' '. self::languageChecker('PLN podczas dni targowych', 'PLN during the trade fair days') .'</p>
                             </div>
 
                             <div class="ticket-card__details">
                               <p class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</p>
-                              <ul class="ticket-card__benefits">
-                                <li>'. self::languageChecker('<strong>wejścia na targi po rejestracji przez 3 dni</strong>', '<strong>access to the trade fair for all 3 days upon registration</strong>') .'</li>
-                                <li>'. self::languageChecker('<strong>możliwość udziału w konferencjach</strong> lub warsztatach na zasadzie “wolnego słuchacza”', '<strong>the chance to join conferences</strong> or workshops as a listener') .'</li>
-                                <li>'. self::languageChecker('darmowy parking', 'free parking') .'</li>
-                              </ul>
+                              '.$register_ticket_register_benefits.'
                               <div class="pwe-registration-form">
                                 [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
                               </div>
@@ -144,14 +175,7 @@ class PWERegistrationVisitors extends PWERegistration {
 
                             <div class="ticket-card__details">
                               <h2 class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</h2>
-                              <ul class="ticket-card__benefits">
-                                <li>'. self::languageChecker('<strong>fast track</strong> - szybkie wejście na targi dedykowaną bramką przez 3 dni', '<strong>fast track access</strong> – skip the line and enter the trade fair through a dedicated priority gate for all 3 days') .'</li>
-                                <li>'. self::languageChecker('<strong>imienny pakiet</strong> - targowy przesyłany kurierem przed wydarzeniem', '<strong>Personalized trade fair package</strong> - delivered by courier to your address before the event') .'</li>
-                                <li>'. self::languageChecker('<strong>welcome pack</strong> - przygotowany specjalnie przez wystawców', '<strong>welcome pack</strong> - a special set of materials and gifts prepared by exhibitors') .'</li>
-                                <li>'. self::languageChecker('obsługa concierge', 'Concierge service') .'</li>
-                                <li>'. self::languageChecker('możliwość udziału w konferencjach i  warsztatach', 'Access to conferences and workshops') .'</li>
-                                <li>'. self::languageChecker('darmowy parking', 'Free parking') .'</li>
-                              </ul>
+                              '.$register_ticket_benefits.'
                               <div class="ticket-card__details_button">';
                               if(empty($register_ticket_link)){
                                 $output .= '
@@ -194,6 +218,15 @@ class PWERegistrationVisitors extends PWERegistration {
                                 popup.style.display = "none";
                                 }
                             });
+
+                            const popupRegisterBtn = document.querySelector(".popup_katalog:not(.popup_rej)");
+
+                            if (popupRegisterBtn) {
+                                popupRegisterBtn.addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    popup.style.display = "none";
+                                });
+                            }
                         });
                         </script>
 

@@ -912,12 +912,12 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
             font-size:18px;
             text-align: left;
         }
-        #pweRegistrationTicket .ticket-card__benefits {
+        #pweRegistrationTicket .ticket-card__details ul {
             list-style: disc;
             padding-left: 18px;
             margin: 15px 0 25px;
         }
-        #pweRegistrationTicket .ticket-card__benefits::marker  {
+        #pweRegistrationTicket .ticket-card__details ul::marker  {
             margin-right:2px !important;
         }
         #pweRegistrationTicket input {
