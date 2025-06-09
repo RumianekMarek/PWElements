@@ -1,11 +1,28 @@
 window.speakersData = confCapData.data || {};
 window.oneConfMode = confCapData.oneConfMode || false;
 jQuery(document).ready(function($){
-    $(".conference_cap__lecture-speaker-btn").each(function() {
-        $(this).on("click", function(){
-            const lectureId = $(this).closest(".conference_cap__lecture-box").attr("id");
-            if (!lectureId || !window.speakersData[lectureId]) return;
-            openSpeakersModal(window.speakersData[lectureId]);
+    $(".conference_cap__lecture-speaker-btn").each(function () {
+        $(this).on("click", function () {
+            const lectureId = $(this).data("lecture-id") || $(this).closest(".conference_cap__lecture-box").attr("id");
+            let data = null;
+
+            const confContainer = $(this).closest(".conference_cap__conf-slug, .konferencja");
+            const confSlug = confContainer.attr("id")?.replace(/^conf_/, "");
+
+            const activeDayBtn = confContainer.find(".conference_cap__conf-slug-navigation-day.active-day").first();
+            const day = activeDayBtn.length ? activeDayBtn.attr("id")?.split("_").pop() : null;
+
+            const fullKey = confSlug && day ? `${confSlug}_${day}` : null;
+
+            if (lectureId?.startsWith("global_") && confSlug && window.speakersData?.[confSlug]?.[lectureId]) {
+                data = window.speakersData[confSlug][lectureId];
+            } else if (lectureId && fullKey && window.speakersData?.[fullKey]?.[lectureId]) {
+                data = window.speakersData[fullKey][lectureId];
+            }
+
+            if (!data) return;
+
+            openSpeakersModal(Array.isArray(data) ? data : [data]);
         });
     });
 

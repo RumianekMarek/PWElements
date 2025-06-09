@@ -70,6 +70,7 @@ class PWEConferenceCap {
                         'value' => array(
                             'Mode' => '',
                             'Full Mode' => 'PWEConferenceCapFullMode',
+                            'Full Mode Speakers' => 'PWEConferenceCapFullMode2',
                             'Simple Mode' => 'PWEConferenceCapSimpleMode',
                             'Medal Ceremony' => 'PWEConferenceCapMedalCeremony',
                         ),
@@ -341,6 +342,7 @@ class PWEConferenceCap {
                 } 
 
                 $currentYear  = (int) date('Y', strtotime(do_shortcode('[trade_fair_enddata]')));
+                if ($currentYear < 2000) $currentYear = do_shortcode('[trade_fair_catalog_year]');
                 $previousYear = $currentYear - 1;
 
                 $archiveYear = trim($atts['conference_cap_conference_arichive'] ?? '');
@@ -389,7 +391,7 @@ class PWEConferenceCap {
                             return !empty($conf['manual_conf_img']) && !empty($conf['manual_conf_id']);
                         }));
 
-                            // TERAZ dopiero przygotowujemy manuale oraz slugi do ukrycia
+                        // TERAZ dopiero przygotowujemy manuale oraz slugi do ukrycia
                         $new_manual_conferences = [];
                         $manual_slugs_to_hide = [];
 
@@ -562,13 +564,21 @@ class PWEConferenceCap {
 
                     $inf_conf = isset($global_inf_conf[$conf_slug]) ? $global_inf_conf[$conf_slug] : [];
 
-                    if (empty($conference_cap_conference_mode)) {
-                        $conference_modes = PWEConferenceCapFunctions::findConferenceMode($conf_style);
-                        $new_class = $conf_style ?? 'PWEConferenceCapFullMode';
-                    } else {
-                        $conference_modes = PWEConferenceCapFunctions::findConferenceMode($conference_cap_conference_mode);
-                        $new_class = $conference_cap_conference_mode;
+                    $conf_mode = $conference_cap_conference_mode;
+                    $prelegent_show = true;
+
+                    if ($conf_mode === 'PWEConferenceCapFullMode2') {
+                        $conf_mode = 'PWEConferenceCapFullMode';
+                        $prelegent_show = false;
                     }
+
+                    if (empty($conf_mode)) {
+                        $conf_mode = $conf_style ?? 'PWEConferenceCapFullMode';
+                    }
+
+                    $conference_modes = PWEConferenceCapFunctions::findConferenceMode($conf_mode);
+                    $new_class = $conf_mode;
+
                 
                     require_once plugin_dir_path(__FILE__) . $conference_modes['php'];
                     $mode_class = new $new_class;
@@ -684,6 +694,8 @@ class PWEConferenceCap {
                         
                 
                             // **Treść dla poszczególnych dni**
+                        $all_day_speakers = [];
+
                             $output .= '<div class="conference_cap__conf-slug-contents">';
                                 foreach ($conferences as $confData) {
                                     $dayCounter = 1;
@@ -694,12 +706,68 @@ class PWEConferenceCap {
                                         $short_day = 'day-' . $dayCounter++;
                                         $output .= '
                                         <div id="content_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-content">
-                                        <div class="conference_cap__before-day-html">' . ($inf_conf['before_day_' . esc_attr($conf_slug) . '_' . esc_attr($short_day)] ?? '') . '</div>
-                                            '. $mode_class::output($atts, $sessions, $conf_function, $speakersDataMapping, $short_day, $conf_slug, $panel, $conf_location) .'
-                                        <div class="conference_cap__after-day-html">' . ($inf_conf['after_day_' . esc_attr($conf_slug) . '_' . esc_attr($short_day)] ?? '') . '</div>
-                                        </div>'; // Zamknięcie kontenera treści dnia
+                                            <div class="conference_cap__before-day-html">' . ($inf_conf['before_day_' . esc_attr($conf_slug) . '_' . esc_attr($short_day)] ?? '') . '</div>
+                                                '. $mode_class::output($atts, $sessions, $conf_function, $speakersDataMapping, $all_day_speakers, $short_day, $conf_slug, $panel, $conf_location, $prelegent_show) .'
+                                            <div class="conference_cap__after-day-html">' . ($inf_conf['after_day_' . esc_attr($conf_slug) . '_' . esc_attr($short_day)] ?? '') . '</div>';
+                                        $output .= '</div>'; // Zamknięcie kontenera treści dnia
                                     }
+                                    if ($prelegent_show == false) {
+                                        $output .= '<div class="conference_cap__lecture-speaker-flex">';
+
+                                        foreach ($all_day_speakers as $index => $speaker) {
+                                            $lectureId = 'global_' . $index;
+                                            $has_image = !empty($speaker['url']);
+                                            $has_name  = !empty($speaker['name_html']);
+                                            $has_bio   = !empty($speaker['desc']);
+
+                                            // Pomijamy tych bez bio i bez zdjęcia
+                                            if (!$has_image && !$has_bio) {
+                                                continue;
+                                            }
+
+                                            // Pomijamy duplikaty (po nazwie i firmie)
+                                            $speakerKey = md5(strip_tags($speaker['name_html']));
+                                            if (isset($seen_speakers[$speakerKey])) {
+                                                continue;
+                                            }
+                                            $seen_speakers[$speakerKey] = true;
+
+                                            $output .= '<div class="conference_cap__lecture-speaker-item">';
+                                            $output .= '<div class="conference_cap__lecture-speaker-photo-name">';
+                                            $output .= '<div class="conference_cap__lecture-speaker-img">';
+                                            $output .= '<img src="' . esc_url($speaker['url']) . '" alt="" class="conference_cap__lecture-speaker-img-item" />';
+                                            $output .= '</div>';
+
+                                            if ($has_name) {
+                                                $output .= '<h5 class="conference_cap__lecture-name">' . $speaker['name_html'] . '</h5>';
+                                            }
+
+                                            $output .= '</div>'; // photo-name
+
+                                            if ($has_bio) {
+                                                $output .= '<button class="conference_cap__lecture-speaker-btn" data-lecture-id="' . $lectureId . '">BIO</button>';
+
+                                                // ⬇️ DANE DO JS – ZGODNE Z HTML-em
+                                                if (!isset($speakersDataMapping[$conf_slug])) {
+                                                    $speakersDataMapping[$conf_slug] = [];
+                                                }
+
+                                                $speakersDataMapping[$conf_slug][$lectureId] = [
+                                                    'name'      => strip_tags($speaker['name_html']),
+                                                    'name_html' => $speaker['name_html'],
+                                                    'url'       => $speaker['url'],
+                                                    'bio'       => $speaker['desc']
+                                                ];
+                                            }
+
+                                            $output .= '</div>'; // .lecture-speaker-item
+                                        }
+
+                                        $output .= '</div>'; // .lecture-speaker-flex
+                                    }
+
                                 }
+                                
                             $output .= '</div>'; // Zamknięcie kontenera zakładek
 
                             if($panel === true){

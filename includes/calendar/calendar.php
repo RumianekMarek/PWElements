@@ -280,24 +280,24 @@ function event_dates_callback($post) {
         $pwe_db_date_start_available = $shortcodes_active && !empty($pwe_db_date_start) && $pwe_db_date_start !== "";
         $pwe_db_date_end_available = $shortcodes_active && !empty($pwe_db_date_end) && $pwe_db_date_end !== "";
 
-        $fair_date_start = !empty(get_post_meta($post->ID, 'fair_date_start', true)) ? get_post_meta($post->ID, 'fair_date_start', true) : ($pwe_db_date_start_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_start))) : "");
-        $fair_date_end = !empty(get_post_meta($post->ID, 'fair_date_end', true)) ? get_post_meta($post->ID, 'fair_date_end', true) : ($pwe_db_date_end_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_end))) : "");
+        $fair_date_start_cap = $pwe_db_date_start_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_start))) : "";
+        $fair_date_end_cap = $pwe_db_date_end_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_end))) : "";
 
-        $quarterly_date = ((empty($fair_date_start) || empty($fair_date_end)) && empty(get_post_meta($post->ID, 'quarterly_date', true))) ? ($lang === "pl" ? 'Nowa data wkrótce' : 'New date comming soon') : get_post_meta($post->ID, 'quarterly_date', true);
+        $quarterly_date = ((empty($fair_date_start_cap) || empty($fair_date_end_cap)) && empty(get_post_meta($post->ID, 'quarterly_date', true))) ? ($lang === "pl" ? 'Nowa data wkrótce' : 'New date comming soon') : get_post_meta($post->ID, 'quarterly_date', true);
     }
     echo '
     <div class="pwe-calendar-inputs-container">
         <div class="pwe-calendar-input one-third-width">
             <label for="fair_date_start">Fair Date Start: </label>
-            <input type="text" id="fair_date_start" name="fair_date_start" class="pwe-calendar-full-width-input" value="'. $fair_date_start .'" />
+            <input type="text" id="fair_date_start" name="fair_date_start" class="pwe-calendar-full-width-input" placeholder="'. (!empty($fair_date_start_cap) ? $fair_date_start_cap : 'empty') .' - (Date from CAP DB)" value="'. get_post_meta($post->ID, 'fair_date_start', true) .'" />
         </div>
         <div class="pwe-calendar-input one-third-width">
             <label for="fair_date_end">Fair Date End: </label>
-            <input type="text" id="fair_date_end" name="fair_date_end" class="pwe-calendar-full-width-input" value="'. $fair_date_end .'" />
+            <input type="text" id="fair_date_end" name="fair_date_end" class="pwe-calendar-full-width-input" placeholder="'. (!empty($fair_date_end_cap) ? $fair_date_end_cap : 'empty') .' - (Date from CAP DB)" value="'. get_post_meta($post->ID, 'fair_date_end', true) .'" />
         </div>
         <div class="pwe-calendar-input one-third-width">
             <label for="quarterly_date">Quarterly Date: </label>
-            <input type="text" id="quarterly_date" name="quarterly_date" class="pwe-calendar-full-width-input" value="'. $quarterly_date .'" />
+            <input type="text" id="quarterly_date" name="quarterly_date" class="pwe-calendar-full-width-input" placeholder="'. $quarterly_date .'" value="'. get_post_meta($post->ID, 'quarterly_date', true) .'" />
         </div>
     </div>';
 }

@@ -310,16 +310,6 @@ class PWEMap extends PWECommonFunctions {
                         ),
                         array(
                             'type' => 'textfield',
-                            'heading' => __('Date of events', 'pwe_map'),
-                            'param_name' => 'map_event_date',
-                            'save_always' => true,
-                            'dependency' => array(
-                                'element' => 'map_dynamic_preset',
-                                'value' => 'preset_1',
-                            ),
-                        ),
-                        array(
-                            'type' => 'textfield',
                             'heading' => __('More LOGOS', 'pwe_map'),
                             'param_name' => 'map_more_logotypes',
                             'save_always' => true,
@@ -423,7 +413,6 @@ class PWEMap extends PWECommonFunctions {
             'map_exhibition_space_previous' => '',
             'map_number_countries' => '',
             'map_percent_polish_visitors' => '',
-            'map_event_date' => '',
             'pwe_replace' => '',
         ), $atts ));
 

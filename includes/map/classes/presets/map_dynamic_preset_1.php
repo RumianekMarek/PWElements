@@ -92,10 +92,9 @@ if ($map_dynamic_3d == true) {
                             foreach($map_more_logotypes as $single_logo){
                                 $output .= '<img src="' . $single_logo . '"/>';
                             }
-                            $map_event_date = str_replace(array('`{`', '`}`'), array('[', ']'), $map_event_date);
-                            $output .= '<p class="pwe-map__logotypes-data" style="text-align: right;">'. $map_event_date .'</p>';
+                            $output .= '<p class="pwe-map__logotypes-data" style="text-align: right;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                         } else {
-                            $output .= '<p class="pwe-map__logotypes-data" style="text-align: center;">'. $map_event_date .'</p>';
+                            $output .= '<p class="pwe-map__logotypes-data" style="text-align: center;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                         }
                         $output .= '
                     </div>';
@@ -294,9 +293,9 @@ if ($map_dynamic_3d == true) {
                     foreach($map_more_logotypes as $single_logo){
                         $output .= '<img src="' . $single_logo . '"/>';
                     }
-                    $output .= '<p class="pwe-mapa-right-data" style="text-align: right;">'. $map_event_date .'</p>';
+                    $output .= '<p class="pwe-mapa-right-data" style="text-align: right;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                 } else {
-                    $output .= '<p class="pwe-mapa-right-data" style="text-align: center;">'. $map_event_date .'</p>';
+                    $output .= '<p class="pwe-mapa-right-data" style="text-align: center;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                 }
                 $output .= '
             </div>

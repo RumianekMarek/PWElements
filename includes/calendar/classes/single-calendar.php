@@ -194,7 +194,7 @@ $date_object = DateTime::createFromFormat('d-m-Y', $start_date);
 
 $quarterly_date = !empty(get_post_meta($post_id, 'quarterly_date', true)) ? get_post_meta($post_id, 'quarterly_date', true) : ($lang_pl ? 'Nowa data wkrótce' : 'New date comming soon');
 
-if (($date_object && $date_object->format('Y') == 2050) || (strtotime($end_date . " +1 day") < time())) {
+if (($date_object && $date_object->format('Y') == 2050) || (strtotime($end_date . " +20 hours") < time())) {
     $fair_date =  $quarterly_date;
 } else {
     $fair_date = $formatted_date;
@@ -641,6 +641,7 @@ $output .= '
         text-align: center;
     }
     .single-event__statistics-name {
+        text-transform: uppercase;
         color: white;
         font-family: system-ui !important;
         text-shadow: 1px 1px 24px black;

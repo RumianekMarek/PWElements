@@ -44,7 +44,6 @@ class PWEMapDynamic extends PWEMap {
             'map_exhibition_space_previous' => '',
             'map_number_countries' => '',
             'map_percent_polish_visitors' => '',
-            'map_event_date' => '',
             'map_exhibition_space' => '',
         ), $atts ));
 
