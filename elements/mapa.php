@@ -150,17 +150,17 @@ class PWElementMapa extends PWElements {
                     'value' => 'default_mode',
                 ),
             ),
-            array(
-                'type' => 'textfield',
-                'group' => 'PWE Element',
-                'heading' => __('Date of events', 'pwelement'),
-                'param_name' => 'pwe_event_date',
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'pwe_map_mode',
-                    'value' => 'default_mode',
-                ),
-            ),
+            // array(
+            //     'type' => 'textfield',
+            //     'group' => 'PWE Element',
+            //     'heading' => __('Date of events', 'pwelement'),
+            //     'param_name' => 'pwe_event_date',
+            //     'save_always' => true,
+            //     'dependency' => array(
+            //         'element' => 'pwe_map_mode',
+            //         'value' => 'default_mode',
+            //     ),
+            // ),
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
@@ -201,7 +201,7 @@ class PWElementMapa extends PWElements {
             'pwe_number_exhibitors' => '',
             'pwe_number_countries' => '',
             'pwe_percent_polish_visitors' => '',
-            'pwe_event_date' => '',
+            // 'pwe_event_date' => '',
             'pwe_exhibition_space' => '',
         ), $atts ));
 
@@ -490,9 +490,9 @@ class PWElementMapa extends PWElements {
                                     foreach($map_more_logos as $single_logo){
                                         $output .= '<img src="' . $single_logo . '"/>';
                                     }
-                                    $output .= '<p class="pwe-map__logotypes-data" style="text-align: right;">'. $pwe_event_date .'</p>';
+                                    $output .= '<p class="pwe-map__logotypes-data" style="text-align: right;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                                 } else {
-                                    $output .= '<p class="pwe-map__logotypes-data" style="text-align: center;">'. $pwe_event_date .'</p>';
+                                    $output .= '<p class="pwe-map__logotypes-data" style="text-align: center;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                                 }
                                 $output .= '
                             </div>
@@ -717,9 +717,9 @@ class PWElementMapa extends PWElements {
                                 foreach($map_more_logos as $single_logo){
                                     $output .= '<img src="' . $single_logo . '"/>';
                                 }
-                                $output .= '<p class="pwe-mapa-right-data" style="text-align: right;">'. $pwe_event_date .'</p>';
+                                $output .= '<p class="pwe-mapa-right-data" style="text-align: right;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                             } else {
-                                $output .= '<p class="pwe-mapa-right-data" style="text-align: center;">'. $pwe_event_date .'</p>';
+                                $output .= '<p class="pwe-mapa-right-data" style="text-align: center;">'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</p>';
                             }
                             $output .= '
                         </div>

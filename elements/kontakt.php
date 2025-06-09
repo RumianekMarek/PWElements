@@ -66,6 +66,12 @@ class PWElementContact extends PWElements {
                             $marketing_contact_data = json_decode($group_contact->groups_data);
                             $marketing_email = trim($marketing_contact_data->email);
                         }
+                        if ($group_contact->groups_slug == "osoba-kontakt") {
+                            $contact_person_data = json_decode($group_contact->groups_data);
+                            $contact_person_name = trim($contact_person_data->name);
+                            $contact_person_email = trim($contact_person_data->email);
+                            $contact_person_phone = trim($contact_person_data->tel);
+                        }  
                     } 
                 }
             }
@@ -114,6 +120,9 @@ class PWElementContact extends PWElements {
             }
 
             @media (max-width:860px){
+                .pwelement_'. self::$rnd_id .' .pwe-container-contact {
+                    padding: 18px;
+                }
                 .pwelement_'. self::$rnd_id .' .pwe-contact-icon-item {
                     flex-wrap: wrap;
                     justify-content: center;
@@ -204,17 +213,20 @@ class PWElementContact extends PWElements {
                     </div>
                 </div>';
 
-                if ($current_group == "gr1") {
+                if (!empty($contact_person_name) && (!empty($contact_person_email) || !empty($contact_person_phone))) {
                     $output .= '
                     <div class="pwe-contact-icon-item">
                         <img src="/wp-content/plugins/PWElements/media/Person.jpg" alt="grafika osoby">
                         <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                             <p>
-                                <b>Agata Olej</b>
-                                <a href="tel:+48690520874">+48 690 520 874</a>
-                                <a href="mailto:agata.olej@warsawexpo.eu">
-                                    <span>agata.olej</span><span>@warsawexpo.eu</span>
-                                </a>
+                                <b>'. $contact_person_name .'</b>';
+                                if (!empty($contact_person_phone)) {
+                                    $output .= '<a href="tel:'. $contact_person_phone .'">'. $contact_person_phone .'</a>';
+                                }
+                                if (!empty($contact_person_email)) {
+                                    $output .= '<a href="mailto:'. $contact_person_email .'">'. $contact_person_email .'</a>';
+                                }
+                            $output .= '    
                             </p>
                         </div>
                     </div>';

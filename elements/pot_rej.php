@@ -184,7 +184,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     min-height: 90vh;
                 }
                 .pwelement_' . self::$rnd_id . ' #xForm>div{
-                    align-content: center;
+                    align-content: start;
                     min-height: 643px;
                     width: 33.3%;
                 }
@@ -517,7 +517,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     </div>
                 ';
             } else {
-                if (strpos($source_utm, 'utm_source=byli') !== false) {
+                if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
                     if (get_locale() == 'pl_PL') {
                         $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
                     } else {
@@ -526,15 +526,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
 
                     $output .= '
                         <div class="form-3-left form-3-left-vip" style="padding:0;">
-                            <img src="'. $badgevipmockup .'">
-                        </div>
-                    ';
-                } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-
-                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
-
-                    $output .= '
-                        <div class="form-3-left form-3-left-premium" style="padding:0;">
                             <img src="'. $badgevipmockup .'">
                         </div>
                     ';
@@ -687,7 +678,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     ';
                     }
 
-                if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false && strpos($source_utm, 'utm_source_hs=premium') === false) {
+                if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
                     $output .= '
                         <div class="form-3-right form-3-right-visit">
                             <img src="/doc/badge-mockup.webp">
