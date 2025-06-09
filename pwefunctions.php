@@ -51,6 +51,13 @@ class PWECommonFunctions {
                 $database_password = defined('PWE_DB_PASSWORD_93') ? PWE_DB_PASSWORD_93 : '';
                 break;
 
+            case '91.225.28.47':
+                $database_host = 'localhost';
+                $database_name = defined('PWE_DB_NAME_239') ? PWE_DB_NAME_239 : '';
+                $database_user = defined('PWE_DB_USER_239') ? PWE_DB_USER_239 : '';
+                $database_password = defined('PWE_DB_PASSWORD_239') ? PWE_DB_PASSWORD_239 : '';
+                break;
+
             default:
                 $database_host = 'dedyk180.cyber-folks.pl';
                 $database_name = defined('PWE_DB_NAME_180') ? PWE_DB_NAME_180 : '';
@@ -408,7 +415,7 @@ class PWECommonFunctions {
         // Pobieramy dane bez względu na język
         $results = $cap_db->get_results(
             $cap_db->prepare(
-                "SELECT * FROM conferences WHERE conf_site_link LIKE %s",
+                "SELECT * FROM conferences WHERE conf_site_link LIKE %s AND deleted_at IS NULL",
                 '%' . $domain . '%'
             )
         );
@@ -687,7 +694,7 @@ class PWECommonFunctions {
         return get_locale() == 'pl_PL' ? $pl : $en;
     }
 
-     /**
+    /**
      * Function to change color brightness (taking color in hex format)
      *
      * @return array

@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.7.6
+ * Version: 2.7.7
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -42,6 +42,8 @@ class PWElementsPlugin {
         // Add main CSS to wp_enqueue_scripts
         add_action('wp_enqueue_scripts', array($this, 'pwe_enqueue_styles'));
 
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_swiper_assets'));
+
         // $this -> resendTicket();
 
         // List of JavaScript files to exclude
@@ -50,7 +52,7 @@ class PWElementsPlugin {
             '/wp-content/plugins/PWElements/assets/three-js/three.min.js',
             '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
             '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js',
-            '/wp-content/cache/min/1/npm/swiper@11/swiper-bundle.min.js',
+            '/wp-content/plugins/PWElements/assets/swiper-slider/swiper-bundle.min.js',
         ];
 
         // Excluding JS files from delayed loading (delay JS)
@@ -107,6 +109,11 @@ class PWElementsPlugin {
             $css_version,
             'all'
         );
+    }
+
+    public function enqueue_swiper_assets() {
+        wp_enqueue_style('swiper-slider-theme-css', plugins_url('/assets/swiper-slider/swiper-bundle.min.css', __FILE__));
+        wp_enqueue_script('swiper-slider-js', plugins_url('/assets/swiper-slider/swiper-bundle.min.js', __FILE__), array('jquery'), null, true);
     }
 
     private function initClasses() {
