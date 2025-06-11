@@ -184,7 +184,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     min-height: 90vh;
                 }
                 .pwelement_' . self::$rnd_id . ' #xForm>div{
-                    align-content: start;
+                    align-content: center;
                     min-height: 643px;
                     width: 33.3%;
                 }
@@ -1420,6 +1420,9 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper {
                     display: flex;
                     min-height: 100%;
+                }
+                .pwelement_' . self::$rnd_id . ' #xForm>div {
+                    align-content: start;
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left {
                     width: 60%;

@@ -30,6 +30,9 @@
         min-width: calc(20% - 5px) !important;
         width: calc(20% - 5px) !important;
     }
+    .input-margin {
+        margin: 5px;
+    }
     .backend-area-half-width, 
     .backend-area-one-third-width, 
     .backend-area-one-fourth-width,
