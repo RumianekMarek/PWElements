@@ -285,7 +285,7 @@ class PWECommonFunctions {
         return $results;
     } 
 
-    public static function get_database_meta_data() {
+    public static function get_database_meta_data($data_id = null) {
         // Database connection
         $cap_db = self::connect_database();
         // If connection failed, return empty array
@@ -295,10 +295,16 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
-        // Retrieving data from the database
-        $results = $cap_db->get_results("SELECT * FROM meta_data");
-    
+        
+        if($data_id === null){
+            // Retrieving data from the database
+            $results = $cap_db->get_results("SELECT * FROM meta_data");
+        } else {
+            $results = $cap_db->get_var(
+                $cap_db->prepare("SELECT meta_data FROM meta_data WHERE slug = %s", $data_id)
+            );
+        }
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];

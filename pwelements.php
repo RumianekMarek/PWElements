@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.7.7
+ * Version: 2.7.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -53,6 +53,7 @@ class PWElementsPlugin {
             '/wp-content/plugins/PWElements/assets/three-js/GLTFLoader.js',
             '/wp-content/plugins/PWElements/includes/nav-menu/assets/script.js',
             '/wp-content/plugins/PWElements/assets/swiper-slider/swiper-bundle.min.js',
+            '/wp-content/cache/min/1/npm/swiper@11/swiper-bundle.min.js'
         ];
 
         // Excluding JS files from delayed loading (delay JS)
@@ -66,29 +67,6 @@ class PWElementsPlugin {
         }, 10, 1);
 
         add_filter( 'the_content', array($this, 'add_date_to_post') );
-
-        if ( !wp_next_scheduled( 'save_fairs_data_cron' ) ) {
-            // Ustawienie na 3:00 w nocy, następnego dnia
-            $timestamp = strtotime('tomorrow 03:00');
-            wp_schedule_event( $timestamp, 'daily', 'save_fairs_data_cron' );
-        }
-
-        // Rejestracja metody klasy
-        add_action( 'save_fairs_data_cron', array($this, 'load_save_fairs_data') );
-    }
-
-    // Funkcja do uruchomienia zapisu danych do pliku
-    public function load_save_fairs_data() {
-        // Ścieżka do pliku, w którym zapisujemy dane
-        $file_path = plugin_dir_path( __FILE__ ) . 'other/save_fairs_data.php';
-
-        // Sprawdź, czy plik istnieje
-        if ( file_exists( $file_path ) ) {
-            // Uruchom plik (wywołaj go w kontekście WordPressa)
-            include_once( $file_path );
-        } else {
-            echo "Plik nie istnieje!";
-        }
     }
 
     public function add_date_to_post( $content ) {
