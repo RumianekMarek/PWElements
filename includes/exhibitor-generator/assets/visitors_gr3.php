@@ -10,13 +10,13 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
 
     $output = '';
     $output .= '
-        <div class="exhibitor-generator" data-group="gr3">
+        <div class="exhibitor-generator gr3" data-group="gr3">
             <div class="exhibitor-generator__wrapper">
                 <div class="exhibitor-generator__left"></div>
                 <div class="exhibitor-generator__right">
                     <div class="exhibitor-generator__right-wrapper">
                         <div class="exhibitor-generator__right-title">
-                            <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ</br>IDENTYFIKATOR VIP</br>DLA SWOICH GOŚCI!', 'GENERATE</br>A VIP INVITATION</br>FOR YOUR GUESTS!') . '</h3>';
+                            <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ IDENTYFIKATOR</br>BUSINESS PRIORITY PASS </br>DLA SWOICH GOŚCI!', 'GENERATE</br> A BUSINESS PRIORITY PASS</br>INVITATION FOR YOUR GUESTS!') . '</h3>';
                             if (!empty(PWEExhibitorVisitorGenerator::$exhibitor_logo_url)  && !$pweGeneratorWebsite) {
                                 $output .= '
                                 <img id="exhibitor_logo_img" style="max-height: 120px;" src="' . PWEExhibitorVisitorGenerator::$exhibitor_logo_url . '">
@@ -25,7 +25,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                         $output .= '
                         </div>
                         <div class="exhibitor-generator__right-icons">
-                            <h5>' . PWECommonFunctions::languageChecker('Identyfikator VIP uprawnia do:', 'The VIP invitation entitles you to:') . '</h5>
+                            <h5>' . PWECommonFunctions::languageChecker('Identyfikator upoważnia do:', 'The badge entitles you to:') . '</h5>
                             <div class="exhibitor-generator__right-icons-wrapper">
                                 <div class="exhibitor-generator__right-icon">
                                     <img src="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/ico3.png" alt="icon3">
@@ -36,13 +36,18 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                                     <p>' . PWECommonFunctions::languageChecker('Opieki concierge`a', 'Concierge care') . '</p>
                                 </div>
                                 <div class="exhibitor-generator__right-icon">
-                                    <img src="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/ico1.png" alt="icon1">
-                                    <p>' . PWECommonFunctions::languageChecker('VIP ROOM', 'VIP ROOM ') . '</p>
+                                    <img src="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/ico8.png" alt="icon1">
+                                    <p>' . PWECommonFunctions::languageChecker('Imienny pakiet', 'Named packet') . '</p>
                                 </div>
                                 <div class="exhibitor-generator__right-icon">
                                     <img src="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/ico2.png" alt="icon2">
                                     <p>' . PWECommonFunctions::languageChecker('Udział w konferencjach', 'Participation in conferences') . '</p>
-                                </div>';
+                                </div>
+                                <div class="exhibitor-generator__right-icon">
+                                    <img src="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/ico9.png" alt="icon1">
+                                    <p>' . PWECommonFunctions::languageChecker('Darmowy Parking', 'Free Parking') . '</p>
+                                </div>
+';
 
                                 if($pweGeneratorWebsite){
                                     $output .= '
@@ -103,6 +108,11 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                 });
            });
         </script>
+        <style>
+            .exhibitor-generator__right-icons h5 {
+                margin-top: 5px;
+            }
+        </style>
         ';
         if($pweGeneratorWebsite){
             $output .= '

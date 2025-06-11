@@ -1,6 +1,6 @@
 <?php
 
-function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
+function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite, $domain){
     extract( shortcode_atts( array(
         'generator_form_id' => '',
         'exhibitor_generator_html_text' => '',
@@ -8,19 +8,35 @@ function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
         'generator_patron' => '',
     ), $atts ));
 
+    $code_count = strlen($_GET['wystawca']) ?? 0;
+
+    $all_senders = array();
+
+    foreach($all_exhibitors as $cat_id => $cat_value){
+        $full_id = $cat_id . $domain;
+        $id_hash = $hash = substr(sha1($full_id), 0, 10);
+        $all_senders[$id_hash] = $cat_value['Nazwa_wystawcy'];
+    }
+    foreach($all_partners as $part_id => $part_value){
+        if(in_array($part_value->logos_type, ['partner-targow', 'patron-medialny']) && $part_value->logos_alt != 'Federacja'){
+            $full_id = $part_value->id . $domain;
+            $id_hash = $hash = substr(sha1($full_id), 0, 12);
+            $all_senders[$id_hash] = $part_value->logos_alt;
+        } 
+    } 
+
     $output = '';
 
     $output = '
         <style>
-            .gfield:has(input[placeholder^="Firma"]),
-            .gfield:has(input[placeholder^="Invit"]){
+            .gfield:has(input[placeholder^="Firma"]){
                 display: none;
             }
         </style>
     ';
 
     $output .= '
-    <div class="exhibitor-generator" data-group="gr2">
+    <div class="exhibitor-generator gr2" data-group="gr2">
         <div class="exhibitor-generator__wrapper">
             <div class="exhibitor-generator__left"></div>
             <div class="exhibitor-generator__right">
@@ -62,15 +78,20 @@ function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
                         </div>
                     </div>
                     <div class="exhibitor-generator__right-form">
-                        <div class="exhibitor-selector__container">
-                            <select id="exhibitors_selector">';
-                                $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">' . PWECommonFunctions::languageChecker('Firma Zapraszająca', 'Inviting Comapny') . '</option>';
-                                foreach($all_exhibitors as $cat_id => $cat_value){
-                                    $output .='<option class="cat-exhibitor" val="' . $cat_value['Nazwa_wystawcy'] . '">' . $cat_value['Nazwa_wystawcy'] . '</option>';
-                                }  
-                                $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Patron</option>'; 
-                            $output .='</select>
-                        </div>
+                        <div class="exhibitor-selector__container">';
+                            if(isset($_GET['wystawca'])){
+                                $output .='<h3 class="exhibitors-name" data-ex="' . $all_senders[$_GET['wystawca']] . '">' . $all_senders[$_GET['wystawca']] . '<h3>';
+                            } 
+                            else {
+                                $output .='
+                                    <select id="exhibitors_selector">';
+                                        $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">' . PWECommonFunctions::languageChecker('Firma Zapraszająca', 'Inviting Comapny') . '</option>';
+                                        foreach($all_senders as $cat_id => $cat_value){
+                                            $output .='<option class="cat-exhibitor" val="' . $cat_value . '" data-id="' . $cat_id . '">' . $cat_value . '</option>';
+                                        }
+                                    $output .='</select>';
+                            }
+                        $output .='</div>
                         [gravityform id="'. $generator_form_id .'" title="false" description="false" ajax="false"]
                     </div>';
 
@@ -92,14 +113,20 @@ function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
     <script>
         jQuery(document).ready(function($){
             
-            let exhibitor_name = "' . PWEExhibitorVisitorGenerator::$exhibitor_name . '";
+            let exhibitor_name = $(".exhibitors-name").data("ex");
             let exhibitor_desc = `' . PWEExhibitorVisitorGenerator::$exhibitor_desc . '`;
             let exhibitor_stand = "' . PWEExhibitorVisitorGenerator::$exhibitor_stand . '";
             let submitBtn = $(`input[type="submit"]`);
+            if(' . $code_count . ' <= 10) {
+                console.log("gr2");
+                $(`input[placeholder="patron"]`).val("gr2");
+            } else {
+                console.log("patron");
+                $(`input[placeholder="patron"]`).val("patron");
+            }
             submitBtn.addClass("button-blocked");
 
             $("#exhibitors_selector").on("change",function(){
-            console.log($(this).val());
                 switch($(this).val()){
                     case "Firma Zapraszająca":
                         $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").hide();
@@ -151,31 +178,31 @@ function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
     if($generator_patron){
         $output .= '
         <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function getParamFromURL(param) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-
-            const patronValue = getParamFromURL("p");
-
-            if (patronValue) {
-                const labels = document.querySelectorAll("label");
-
-                labels.forEach(function(label) {
-
-                if (label.textContent.trim().toLowerCase() === "patron") {
-                    const inputId = label.getAttribute("for");
-                    if (inputId) {
-                    const inputElement = document.getElementById(inputId);
-                    if (inputElement) {
-                        inputElement.value = patronValue;
-                    }
-                    }
+            document.addEventListener("DOMContentLoaded", function() {
+                function getParamFromURL(param) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(param);
                 }
-                });
-            }
-        });
+
+                const patronValue = getParamFromURL("p");
+
+                if (patronValue) {
+                    const labels = document.querySelectorAll("label");
+
+                    labels.forEach(function(label) {
+
+                    if (label.textContent.trim().toLowerCase() === "patron") {
+                        const inputId = label.getAttribute("for");
+                        if (inputId) {
+                        const inputElement = document.getElementById(inputId);
+                        if (inputElement) {
+                            inputElement.value = patronValue;
+                        }
+                        }
+                    }
+                    });
+                }
+            });
         </script>
         ';
     }
@@ -228,8 +255,8 @@ function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
                 ';
 
                 $output .='
-                <input type="text" class="patron" value="">
-                <input type="text" class="company" value="" placeholder="'.
+                <input type="text" class="patron" value=""style="display:none;" >
+                <input type="text" class="company" value="" style="display:none;" placeholder="'.
                     PWECommonFunctions::languageChecker(
                         <<<PL
                         Firma Zapraszająca (wpisz nazwę swojej firmy)
@@ -326,7 +353,7 @@ function render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite){
                         EN
                     )
                 .'</button>
-            <div>
+            </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         ';

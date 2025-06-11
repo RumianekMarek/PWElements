@@ -154,8 +154,9 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr1.php';
                 return render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite);
             case 'gr2':
+                $all_partners = PWECommonFunctions::get_database_logotypes_data();
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr2.php';
-                return render_gr2($atts, $all_exhibitors, $pweGeneratorWebsite);
+                return render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite, $domain);
             case 'gr3':
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr3.php';
                 return render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite);
@@ -224,7 +225,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
 
                         // Add a mass invite send button if not on a personal exhibitor page
                         if((!isset($company_array['exhibitor_name'])  && self::fairStartDateCheck()) || current_user_can('administrator')){
-                            $output .= '<button class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
+                            $output .= '<button type="button" class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
                         }
 
                         // Add optional content to the page if available

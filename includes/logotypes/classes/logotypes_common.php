@@ -1176,11 +1176,13 @@ class PWElementAdditionalLogotypes {
 
                 // console.log(get_database_logotypes_data);
                 
-                updated_images_url.forEach(logo => {
-                    if (logo.site !== "" && logo.site != null) {
-                        console.log("url:" + logo.img + " " + "link:" + logo.site);
-                    }
-                });
+                if (updated_images_url != null) {
+                    updated_images_url.forEach(logo => {
+                        if (logo.site !== "" && logo.site != null) {
+                            console.log("url:" + logo.img + " " + "link:" + logo.site);
+                        }
+                    });
+                }
 
                 // Funkcja do sprawdzania statusu obrazu
                 function checkImage(url, callback) {

@@ -10,7 +10,7 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
     
     $output = '';
     $output .= '
-        <div class="exhibitor-generator" data-group="gr1">
+        <div class="exhibitor-generator gr1" data-group="gr1">
             <div class="exhibitor-generator__wrapper">
                 <div class="exhibitor-generator__left"></div>
                 <div class="exhibitor-generator__right">

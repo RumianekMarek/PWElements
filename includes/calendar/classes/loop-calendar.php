@@ -110,18 +110,18 @@ class PWECalendar extends PWECommonFunctions {
 
     public static function format_date_range($start_date, $end_date, $locale) {
         $months = array(
-            '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY'),
-            '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY'),
-            '03' => array('PL' => 'MARCA', 'EN' => 'MARCH'),
-            '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL'),
-            '05' => array('PL' => 'MAJA', 'EN' => 'MAY'),
-            '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE'),
-            '07' => array('PL' => 'LIPCA', 'EN' => 'JULY'),
-            '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST'),
-            '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER'),
-            '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER'),
-            '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER'),
-            '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER'),
+            '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR'),
+            '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR'),
+            '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ'),
+            '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL'),
+            '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI'),
+            '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI'),
+            '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI'),
+            '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST'),
+            '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER'),
+            '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER'),
+            '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER'),
+            '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER'),
         );
 
         $start_parts = explode("-", $start_date);
@@ -133,16 +133,45 @@ class PWECalendar extends PWECommonFunctions {
         $end_month = $end_parts[1];
         $year = $start_parts[2];
 
-        // Wybierz nazwę miesiąca w zależności od języka
-        $lang_key = ($locale == "pl_PL") ? "PL" : "EN";
+        // Select month name depending on language
+        if ($locale == "pl_PL") {
+            $lang_key = "PL";
+        } else if ($locale == "en_US") {
+            $lang_key = "EN";
+        } else if ($locale == "de_DE") {
+            $lang_key = "DE";
+        } else {
+            $lang_key = "EN";
+        }
+        
         $start_month_name = isset($months[$start_month][$lang_key]) ? $months[$start_month][$lang_key] : "";
         $end_month_name = isset($months[$end_month][$lang_key]) ? $months[$end_month][$lang_key] : "";
 
-        // Sprawdź, czy miesiące są różne
-        if ($start_month === $end_month) {
-            return "$start_day - $end_day $start_month_name $year";
+        // Check if months are different
+        if ($locale == "pl_PL") {
+            if ($start_month === $end_month) {
+                return "$start_day-$end_day $start_month_name $year";
+            } else {
+                return "$start_day $start_month_name - $end_day $end_month_name $year";
+            }
+        } else if ($locale == "en_US") {
+            if ($start_month === $end_month) {
+                return "$start_month_name $start_day-$end_day, $year";
+            } else {
+                return "$start_month_name $start_day - $end_month_name $end_day, $year";
+            }
+        } else if ($locale == "de_DE") {
+            if ($start_month === $end_month) {
+                return "$start_day.-$end_day. $start_month_name $year";
+            } else {
+                return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+            }
         } else {
-            return "$start_day $start_month_name - $end_day $end_month_name $year";
+            if ($start_month === $end_month) {
+                return "$start_month_name $start_day-$end_day, $year";
+            } else {
+                return "$start_month_name $start_day - $end_month_name $end_day, $year";
+            }
         }
     }
 
@@ -1099,7 +1128,7 @@ class PWECalendar extends PWECommonFunctions {
                 <div class="pwe-calendar__date">
                     <h5>' . $fair_date . '</h5>
                 </div>';
-                if($edition == 'Premierowa edycja' || $edition == 'Premier edition'){
+                if($edition == 'Premierowa edycja' || $edition == 'Premier edition' || $edition == 'Premierenedition'){
                     $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("estimates") .'</div>';
                 } else {
                     $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("statistics") . '</div>';

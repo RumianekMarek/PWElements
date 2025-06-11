@@ -157,19 +157,19 @@
     color: #555555;
 }
 
-.exhibitor_stand label, 
+.exhibitor_stand label,
 .input_logo label{
     font-weight: 700 !important;
 }
 
-.exhibitor_stand input, 
+.exhibitor_stand input,
 .input_logo input{
     border-radius: 15px !important;
     border: 1px solid black;
 }
 
 #exhibitors_selector{
-    background-image: 
+    background-image:
         url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/box.png"),
         url("/wp-content/plugins/PWElements/media/arrow-down.png");
     background-repeat: no-repeat, no-repeat;
@@ -374,7 +374,7 @@
 }
 
 .modal__element input[type="text"],
-.modal__element select, 
+.modal__element select,
 #exhibitors_selector__modal {
     border: 1px solid black;
     border-radius: 10px;
