@@ -28,7 +28,8 @@ jQuery(document).ready(function($){
     console.log(formId);
     // Button "Wysyłka Zbiorcze" functionality
     // Show odal and hide footer
-    $(".tabela-masowa").on("click",function(){
+    $(".tabela-masowa").on("click",function(e){
+        e.preventDefault();
         modal.show();
         $("footer").hide();
     });

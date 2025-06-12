@@ -143,5 +143,150 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
             </style>';
         }
 
+        if(PWEExhibitorVisitorGenerator::senderFlowChecker() || current_user_can('administrator')){
+            $output .='
+            <div class="modal__element">
+                <div class="inner">
+                    <span class="btn-close">x</span>';
+    
+                    $output .='
+                        <p style="max-width:90%;">'.
+                            PWECommonFunctions::languageChecker(
+                                <<<PL
+                                Uzupełnij poniżej nazwę firmy zapraszającej oraz wgraj plik (csv, xls, xlsx) z danymi osób, które powinny otrzymać zaproszenia VIP GOLD. Przed wysyłką zweryfikuj zgodność danych.
+                                PL,
+                                <<<EN
+                                Fill in below the name of the inviting company and the details of the people who should receive VIP GOLD invitations. Verify the accuracy of the data before sending.
+                                EN
+                            )
+                        .'</p>
+                    ';
+    
+                    $output .='
+                    <input type="text" class="patron" value=""style="display:none;" >
+                    <input type="text" class="company" value="" placeholder="'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Firma Zapraszająca (wpisz nazwę swojej firmy)
+                            PL,
+                            <<<EN
+                            Inviting Company (your company's name)
+                            EN
+                        )
+                    .'"></input>
+                    <label class="mass_checkbox_label" style="display:none;">
+                        <input type="checkbox" id="mass_exhibitor_badge" name="mass_exhibitor_badge" class="mass_checkbox" >
+                        Brak uwzględnienia nazwy firmy na identyfikatorze
+                    </label>
+                    <div class="file-uloader">
+                        <label for="fileUpload">Wybierz plik z danymi</label>
+                        <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
+                        <p class="under-label">'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            PL,
+                            <<<EN
+                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            EN
+                        )
+                        .'</p>
+                        <p class="file-size-error error-color"">'.
+                            PWECommonFunctions::languageChecker(
+                                <<<PL
+                                Zbyt duży plik &nbsp;&nbsp;&nbsp; 
+                                PL,
+                                <<<EN
+                                File is to big &nbsp;&nbsp;&nbsp;
+                                EN
+                            )
+                        .'<span class="info-box-sign border-red">i</span></p>
+                        <div class="file-size-info">
+                            <h5 style="margin-top: 0">
+                                '.
+                            PWECommonFunctions::languageChecker(
+                                <<<PL
+                                Jak obniżyć wielkość pliku:</h5>
+                                <ul>
+                                    <li>Zapisz plik (eksportuj) w formacie CSV</li>
+                                    <li>Usuń kolumny poza Imionami oraz Emailami</li>
+                                    <li>Użyj darmowego programu (LibreOffice, Open Office ...) do ponownego przetworzenia i zapisania pliku</li>
+                                    <li>Podziel plik na mniejsze pliki</li>
+                                </ul>
+                                PL,
+                                <<<EN
+                                How to reduce file size:</h5>
+                                    <ul>
+                                        <li>Save the file (export) in CSV format</li>
+                                        <li>Remove columns other than First Names and Emails</li>
+                                        <li>Use free software (LibreOffice, Open Office, etc.) to reprocess and save the file</li>
+                                        <li>Split the file into smaller files</li>
+                                    </ul>
+                                EN
+                            ). '
+                        </div>';
+                        if ($phone_field){
+                            $output .='
+                                <a href="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/genrator-example.xlsx">
+                                    <button class="btn-gen-file">'.
+                                        PWECommonFunctions::languageChecker(
+                                            <<<PL
+                                            Przykładowy Plik
+                                            PL,
+                                            <<<EN
+                                            Example File
+                                            EN
+                                        )
+                                    .'</button>
+                                </a>
+                            ';
+                        }
+                        
+                    $output .='
+                    </div>
+                    <button class="wyslij btn-gold">'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Wyślij
+                            PL,
+                            <<<EN
+                            Send
+                            EN
+                        )
+                    .'</button>
+                </div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+            ';
+        // Message whene there is no more space in queue
+        } else {
+            $output .='
+            <div class="modal__element">
+                <div class="inner">
+                    <span class="btn-close">x</span>
+                    <h3 style="margin-top: 45px;">'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: 
+                            PL,
+                            <<<EN
+                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at: 
+                            EN
+                        )
+                    .'<a href="mailto:generator.wystawcow@warsawexpo.eu" style="text-decoration:underline; color:blue;">generator.wystawcow@warsawexpo.eu</a></h3>
+                    <h3>'.
+                        PWECommonFunctions::languageChecker(
+                            <<<PL
+                            Za utrudnienia przepraszamy
+                            PL,
+                            <<<EN
+                            We apologize for any inconvenience
+                            EN
+                        )
+                    .'</h3>
+                </div>
+            </div>';
+        }
+        
         return $output;
     }

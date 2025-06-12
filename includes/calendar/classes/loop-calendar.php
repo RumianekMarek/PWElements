@@ -110,18 +110,18 @@ class PWECalendar extends PWECommonFunctions {
 
     public static function format_date_range($start_date, $end_date, $locale) {
         $months = array(
-            '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR'),
-            '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR'),
-            '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ'),
-            '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL'),
-            '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI'),
-            '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI'),
-            '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI'),
-            '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST'),
-            '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER'),
-            '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER'),
-            '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER'),
-            '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER'),
+            '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR', 'LT' => 'SAUSIO'),
+            '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR', 'LT' => 'VASARIO'),
+            '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ', 'LT' => 'KOVO'),
+            '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL', 'LT' => 'BALANDŽIO'),
+            '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI', 'LT' => 'GEGUŽĖS'),
+            '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI', 'LT' => 'BIRŽELIO'),
+            '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI', 'LT' => 'LIEPOS'),
+            '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST', 'LT' => 'RUGPJŪČIO'),
+            '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER', 'LT' => 'RUGSĖJO'),
+            '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER', 'LT' => 'SPALIO'),
+            '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER', 'LT' => 'LAPKRIČIO'),
+            '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER', 'LT' => 'GRUODŽIO'),
         );
 
         $start_parts = explode("-", $start_date);
@@ -140,6 +140,8 @@ class PWECalendar extends PWECommonFunctions {
             $lang_key = "EN";
         } else if ($locale == "de_DE") {
             $lang_key = "DE";
+        } else if ($locale == "lt_LT") {
+            $lang_key = "LT";
         } else {
             $lang_key = "EN";
         }
@@ -150,7 +152,7 @@ class PWECalendar extends PWECommonFunctions {
         // Check if months are different
         if ($locale == "pl_PL") {
             if ($start_month === $end_month) {
-                return "$start_day-$end_day $start_month_name $year";
+                return "$start_day - $end_day $start_month_name $year";
             } else {
                 return "$start_day $start_month_name - $end_day $end_month_name $year";
             }
@@ -166,6 +168,12 @@ class PWECalendar extends PWECommonFunctions {
             } else {
                 return "$start_day. $start_month_name - $end_day. $end_month_name $year";
             }
+        } else if ($locale == "lt_LT") {
+            if ($start_month === $end_month) {
+                return "$year m. $start_month_name $start_day-$end_day d.";
+            } else {
+                return "$year m. $start_month_name $start_day d. - $end_month_name $end_day d.";
+            }
         } else {
             if ($start_month === $end_month) {
                 return "$start_month_name $start_day-$end_day, $year";
@@ -175,7 +183,7 @@ class PWECalendar extends PWECommonFunctions {
         }
     }
 
-    public static function multi_translation($key) {
+    function multi_translation($key) {
         $locale = get_locale();
         $translations_file = __DIR__ . '/../assets/translations.json';
 
@@ -194,19 +202,19 @@ class PWECalendar extends PWECommonFunctions {
         return isset($translations_map[$key]) ? $translations_map[$key] : $key;
     }
 
-    public static function get_translated_field($fair, $field_base_name) {
-        // Pobierz język w formacie np. "de", "pl"
-        $locale = get_locale(); // np. "de_DE"
+    function get_translated_field($fair, $field_base_name) {
+        // Get the language in the format e.g. "de", "pl"
+        $locale = get_locale(); // ex. "de_DE"
         $lang = strtolower(substr($locale, 0, 2)); // "de"
 
-        // Sprawdź, czy istnieje konkretne tłumaczenie (np. fair_name_de)
+        // Check if a specific translation exists (e.g. fair_name_{lang})
         $field_with_lang = "{$field_base_name}_{$lang}";
 
         if (!empty($fair[$field_with_lang])) {
             return $fair[$field_with_lang];
         }
 
-        // Fallback do angielskiego
+        // Fallback to English
         $fallback = "{$field_base_name}_en";
         return $fair[$fallback] ?? '';
     }

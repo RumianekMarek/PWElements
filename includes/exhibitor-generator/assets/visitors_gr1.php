@@ -74,7 +74,8 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                 let exhibitor_desc = `' . PWEExhibitorVisitorGenerator::$exhibitor_desc . '`;
                 let exhibitor_stand = "' . PWEExhibitorVisitorGenerator::$exhibitor_stand . '";
                 const group_tag = $(".exhibitor-generator").data("group");
-                        
+
+                $(`.gfield--type-fileupload input[type="file"]`).attr("accept", "image/jpeg, image/png");
                 $(".exhibitor_stand").addClass("gfield_visibility_visible").removeClass("gfield_visibility_hidden");
                 $(".input_logo").addClass("gfield_visibility_visible").removeClass("gfield_visibility_hidden");
 

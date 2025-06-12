@@ -79,5 +79,32 @@
     "all": "alle-kategorien",
     "other": "andere",
     "premier_editions_class": "premiereneditionen"
+  },
+  "lt_LT": {
+    "buy_ticket": "Pirkti bilietą",
+    "collect_invitation": "Gauti kvietimą",
+    "become_exhibitor": "Tapkite parodos dalyviu",
+    "website": "Interneto svetainė",
+    "premier_edition": "Pirmasis leidimas",
+    "edition": "-asis leidimas",
+    "check_out": "Sužinokite daugiau",
+    "patrons_and_partners": "Rėmėjai ir partneriai",
+    "discover_trade_fair": "Sužinokite apie tarptautinę parodą",
+    "attractions": "Parodos akcentai",
+    "attractions_url": "/en/attractions/",
+    "conference": "Konferencija",
+    "conference_url": "/en/conferences/",
+    "visitors": "Lankytojai",
+    "exhibitors": "Dalyviai",
+    "countries": "Šalys",
+    "exhibition_area": "Parodos plotas",
+    "estimates": "Apskaičiavimai",
+    "statistics": "Statistika",
+    "most_important_industry_events_in_europe": "Svarbiausi Europos pramonės renginiai",
+    "select_categories": "Pasirinkti kategorijas",
+    "search": "Ieškoti",
+    "all": "visos-kategorijos",
+    "other": "kita",
+    "premier_editions_class": "pirmieji-leidimai"
   }
-}
+} 

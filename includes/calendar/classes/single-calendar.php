@@ -147,18 +147,18 @@ $end_date = $pwe_db_date_end_available ? date("d-m-Y", strtotime(str_replace("/"
 $end_date = empty($end_date) ? "30-01-2050" : $end_date;
 
 $months = array(
-    '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR'),
-    '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR'),
-    '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ'),
-    '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL'),
-    '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI'),
-    '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI'),
-    '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI'),
-    '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST'),
-    '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER'),
-    '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER'),
-    '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER'),
-    '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER'),
+    '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR', 'LT' => 'SAUSIO'),
+    '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR', 'LT' => 'VASARIO'),
+    '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ', 'LT' => 'KOVO'),
+    '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL', 'LT' => 'BALANDŽIO'),
+    '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI', 'LT' => 'GEGUŽĖS'),
+    '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI', 'LT' => 'BIRŽELIO'),
+    '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI', 'LT' => 'LIEPOS'),
+    '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST', 'LT' => 'RUGPJŪČIO'),
+    '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER', 'LT' => 'RUGSĖJO'),
+    '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER', 'LT' => 'SPALIO'),
+    '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER', 'LT' => 'LAPKRIČIO'),
+    '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER', 'LT' => 'GRUODŽIO'),
 );
 
 // Date formatting function
@@ -180,6 +180,8 @@ if (!function_exists('format_date_range')) {
             $lang_key = "EN";
         } else if ($locale == "de_DE") {
             $lang_key = "DE";
+        } else if ($locale == "lt_LT") {
+            $lang_key = "LT";
         } else {
             $lang_key = "EN";
         }
@@ -205,6 +207,12 @@ if (!function_exists('format_date_range')) {
                 return "$start_day.-$end_day. $start_month_name $year";
             } else {
                 return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+            }
+        } else if ($locale == "lt_LT") {
+            if ($start_month === $end_month) {
+                return "$year m. $start_month_name $start_day-$end_day d.";
+            } else {
+                return "$year m. $start_month_name $start_day d. - $end_month_name $end_day d.";
             }
         } else {
             if ($start_month === $end_month) {

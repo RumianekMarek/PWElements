@@ -13,6 +13,73 @@ function pwe_calendar_single_template($single_template) {
 }
 add_filter('single_template', 'pwe_calendar_single_template');
 
+// Add custom meta description to <head>
+function custom_meta_description() {
+    global $post;
+    
+    $meta_description = '';
+
+    if ($post->post_type == 'event') {
+        $website = get_post_meta($post->ID, 'web_page_link', true);
+        if (!empty($website)) {
+            $host = parse_url($website, PHP_URL_HOST);
+            $domain = preg_replace('/^www\./', '', $host);
+        }
+
+        $shortcodes_active = empty(get_option('pwe_general_options', [])['pwe_dp_shortcodes_unactive']);
+
+        if (!function_exists('get_translated_field')) {
+            function get_translated_field($fair, $field_base_name) {
+                // Get the language in the format e.g. "de", "pl"
+                $locale = get_locale(); // ex. "de_DE"
+                $lang = strtolower(substr($locale, 0, 2)); // "de"
+
+                // Check if a specific translation exists (e.g. fair_name_{lang})
+                $field_with_lang = "{$field_base_name}_{$lang}";
+
+                if (!empty($fair[$field_with_lang])) {
+                    return $fair[$field_with_lang];
+                }
+
+                // Fallback to English
+                $fallback = "{$field_base_name}_en";
+                return $fair[$fallback] ?? '';
+            }
+        }
+
+        if (!function_exists('get_pwe_shortcode')) {
+            function get_pwe_shortcode($shortcode, $domain) {
+                return shortcode_exists($shortcode) ? do_shortcode('[' . $shortcode . ' domain="' . $domain . '"]') : "";
+            }
+        }
+
+        if (!function_exists('check_available_pwe_shortcode')) {
+            function check_available_pwe_shortcode($shortcodes_active, $shortcode) {
+                return $shortcodes_active && !empty($shortcode) && $shortcode !== "Brak danych";
+            }
+        }
+
+        $translates = PWECommonFunctions::get_database_translations_data($domain);
+
+        $shortcode_full_desc_pl = get_pwe_shortcode("pwe_full_desc_pl", $domain);
+        $shortcode_full_desc_pl_available = check_available_pwe_shortcode($shortcodes_active, $shortcode_full_desc_pl);
+        $fair_full_desc = $shortcode_full_desc_pl_available ? get_translated_field($translates[0], 'fair_full_desc') : '';
+
+        if (!empty($fair_full_desc)) {
+            $meta_description = strstr($fair_full_desc, '<br>', true);
+            
+            // If strstr returned false (i.e. no <br>), we assign the entire content
+            if ($meta_description === false) {
+                $meta_description = $fair_full_desc;
+            }
+        }
+    } 
+    
+    // Add meta description to the <head> section
+    echo '<meta name="description" content="' . esc_attr(strip_tags($meta_description)) . '">';
+}
+add_action('wp_head', 'custom_meta_description');
+
 // Create new post type
 function create_event_post_type() {
     $args = array(
