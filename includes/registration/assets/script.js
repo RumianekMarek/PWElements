@@ -244,6 +244,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Adding the "active" class to the selected option
                 e.target.classList.add("active");
 
+                if (e.target.classList.contains('active')) {
+                    const domainAttr = e.target.getAttribute('domain');
+                    const submit = potentialExhibitorsElement.querySelector(".gform_footer .gform_button");
+                    if (domainAttr !== null && domainAttr !== '') {   
+                        submit.classList.add('active');
+                    } else submit.classList.remove('active');
+                }
+
                 // Update the displayed text
                 selectedText.textContent = e.target.textContent;
                 customSelect.classList.remove("open");
@@ -272,5 +280,45 @@ document.addEventListener("DOMContentLoaded", function() {
         if (confirmationMessage && fairsSelectContainer) {
             fairsSelectContainer.style.display = "none";
         }
+    }
+
+    /* One Reg Form */
+    function getLocationPathReg() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const registrationParam = urlParams.get('reg');
+        const utmSource = urlParams.get('utm_source');
+
+        if (registrationParam) {
+            return registrationParam;
+        } else if (utmSource === 'byli') {
+            return 'vip';
+        } else if (utmSource === 'premium') {
+            return 'platinum';
+        } else if (utmSource === 'platyna') {
+            return 'platyna';
+        } else {
+            let urlPath = window.location.pathname;
+            urlPath = urlPath.replace(/^\/en\//, '').replace(/^\/|\/$/g, '');
+            return urlPath.length > 0 ? urlPath : "header";
+        }
+    }
+
+    function setLocationToFormReg() {
+        const locationInput = document.querySelector(".location input");
+        if (locationInput) {
+            const locationPath = getLocationPathReg();
+            locationInput.value = locationPath;
+        }
+    }
+
+    const emailInput = document.querySelector('input[type="email"]') || document.querySelector('.ginput_container_email input');
+
+    if (emailInput) {
+        emailInput.addEventListener('change', function() {
+            const locationInputContainer = document.querySelector(".location input");
+            if (locationInputContainer) {
+                setLocationToFormReg();
+            }
+        });
     }
 });

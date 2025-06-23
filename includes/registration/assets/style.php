@@ -2,7 +2,7 @@
 
 $output = '';
 
-if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket || (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false)) {
+if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket && strpos($source_utm, 'utm_source=platyna') === false  || (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false )) {
 
     $btn_color_vip = '#B69663';
     $darker_btn_vip_color = self::adjustBrightness($btn_color_vip, -20);
@@ -25,7 +25,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
                 border: 2px solid '. $darker_btn_vip_color .' !important;
             }
         </style>';
-    } else if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
+    } else if (strpos($source_utm, 'utm_source=premium') !== false ) {
         $output .= '
         <style>
             #pweRegistration input[type="submit"] {
@@ -53,7 +53,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
         </style>';
     }
 
-    if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
+    if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
         $output .= '
         <style>
             .row-parent:has(#pweRegistration) .wpb_column {
@@ -208,7 +208,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
             </style>';
         }
 
-    } else {
+    }  else {
 
         $output .= '
         <style>
@@ -801,8 +801,18 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
         #pweRegistration.potential-exhibitors ::-webkit-scrollbar-thumb:hover {
             background: #555; /* Zmiana koloru rączki podczas najechania */
         }
+
+        #pweRegistration.potential-exhibitors .gform_footer .gform_button {
+            pointer-events: none !important;
+            opacity: 0.5 !important;
+            transition: .3s ease;
+        }
+        #pweRegistration.potential-exhibitors .gform_footer .gform_button.active {
+            pointer-events: all !important;
+            opacity: 1 !important;
+        }
     </style>';
-} else if ($register_show_ticket === "true" && (strpos($source_utm, 'utm_source=byli') === false || strpos($source_utm, 'utm_source=premium') === false || strpos($source_utm, 'utm_source=platyna') === false)) {
+} else if ($register_show_ticket === "true" && (strpos($source_utm, 'utm_source=byli') === false || strpos($source_utm, 'utm_source=premium') === false || strpos($source_utm, 'utm_source=platyna') === false )) {
     $background_color = self::$accent_color;
 
     $output = '
@@ -1107,4 +1117,160 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket ||
             }
         </style>';
     }
+} else if(strpos($source_utm, 'utm_source=platyna') !== false){
+
+    $output .= '
+    <style>
+        .limit-width:has(.platyna) {
+            max-width:none !important;
+            padding: 0px !important;
+        }
+        .wpb_column:has(.exhibitors-catalog) {
+            display:none !important;
+        }
+        .row-container:has(#pweRegistration) {
+            // background: linear-gradient(0deg, rgba(168, 168, 168, 0.58) 13%, rgba(150, 150, 150, 0.94) 23%, rgba(66, 66, 66, 0.02) 28%, rgba(170, 171, 175, 0.84) 100%);
+            background-image: url(/doc/platinum_background.webp);
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .pwe-registration-image-container img {
+            max-width:80%;
+        }
+        #pweForm {
+            --p: 70px;
+            margin-left: auto;
+            max-width: 60%;
+            border-radius: 40px 0 0 40px;
+            overflow: hidden;
+            border: 1px solid #838B8F;
+            background: #838B8F;
+            background: linear-gradient(90deg, rgba(131, 139, 143, 1) 0%, rgba(224, 224, 224, 1) 50%, rgba(252, 252, 252, 1) 100%);
+        }
+        .pweform_container {
+            display: flex;
+            max-width: 80%;
+            margin-left: auto;
+            padding: 18px 0;
+            margin-right: 15px;
+        }
+        .form, .benefits {
+            flex:1;
+        }
+        .pwe-registration-column {
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            min-height: 650px;
+        }
+        #pweRegistration .form-title {
+            color:#636363;
+            font-weight:800;
+        }
+        .form h3, .form label {
+            color:#737374;
+            font-weight:600 !important;
+        }
+        #pweRegistration form ul {
+            padding:0 !important;
+        }
+        #pweRegistration form ul input, input::placeholder {
+            border-radius:18px;
+            color: #8a8a8a !important;
+        }
+        #pweRegistration .ginput_container_consent label {
+            line-height: 1.4;
+            font-size: 12px;
+        }
+        #pweRegistration form input[type="submit"] {
+            display: inline-block;
+            width: 100%;
+            border-radius: 18px !important;
+            color:white !important;
+            background-color:#636363;
+        }
+        #pweRegistration .benefits_icon img {
+            width: 70px;
+        }
+        #pweRegistration .benefits {
+            gap: 10px;
+            text-align: center;
+            justify-content: space-around;
+        }
+        #pweRegistration .benefits, #pweRegistration .benefits .benefits_icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #pweRegistration .benefits .benefits_icon {
+            max-width: 250px;
+            justify-content: center;
+        }
+        #pweRegistration .benefits h2 {
+            color: #636363;
+            font-size: 18px;
+            font-weight: 700 !important;
+            margin-top: 80px;
+        }
+        #pweRegistration .benefits p {
+            color: #646464;
+            font-weight: 500;
+            line-height: 1.3;
+            margin-top: 0;
+            font-size: 14px;
+        }
+        @media(max-width:1500px){
+            .pweform_container {
+                padding: 0 0 5px 0;
+            }
+            .pwe-registration-column {
+                min-height: 580px;
+            }
+            .form h3, #pweRegistration .form-title {
+                margin-top: 14px;
+            }
+            #pweRegistration .benefits h2 {
+                margin-top: 60px;
+            }
+        }
+        @media(max-width:1200px){
+            .row-container:has(#pweRegistration) {
+                background-size: cover;
+            }
+            .pweform_container {
+                max-width: 90%;
+            }
+        }
+        @media(max-width:960px){
+            .row-container:has(.gform_wrapper, .pwe-container-grupy) .wpb_column, .row-container:has(.pwe-route) .wpb_column {
+                max-width: 100%;
+            }
+            #pweForm {
+                max-width: 100%;
+                border-radius: 40px;
+            }
+        }
+        @media(max-width:650px){
+            .row-container:has(#pweRegistration) {
+                background: #838B8F;
+                background: linear-gradient(90deg, rgb(161 161 161) 0%, rgb(255 255 255) 50%, rgb(184 180 180) 100%);
+            }
+        }
+        @media(max-width:480px){
+            .pweform_container {
+                flex-direction: column;
+            }
+            #pweRegistration .benefits {
+                flex-wrap: wrap;
+                flex-direction: row;
+            }
+            #pweRegistration .benefits .benefits_icon {
+                flex: 1;
+            }
+            #pweRegistration .benefits h2 {
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
+    </style>';
 }

@@ -49,7 +49,7 @@ class PWERegistrationVisitors extends PWERegistration {
         }
         return $form;
     }
-
+    public static $inline_styles = '';
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -57,6 +57,7 @@ class PWERegistrationVisitors extends PWERegistration {
      * @param array @atts options
      */
     public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist, $register_ticket_register_benefits, $register_ticket_benefits) {
+
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
 
@@ -107,18 +108,34 @@ class PWERegistrationVisitors extends PWERegistration {
             $source_utm = '';
         }
 
-        if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false ) {
-            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
-        } else if(strpos($source_utm, 'utm_source=byli') !== false ) {
+        if (strpos($source_utm, 'utm_source=premium') !== false  ) {
+            $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '');
+        } else if(strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=platyna') !== false ) {
             if (get_locale() == 'pl_PL') {
                 $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
             } else {
                 $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
             }
         }
-
         // CSS <----------------------------------------------------------------------------------------------<
         require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
+
+        $domain = $parsed = parse_url(site_url())['host'];
+        $fair_data = PWECommonFunctions::get_database_fairs_data($domain);
+
+        switch (strtolower($fair_data[0]->fair_group)) {
+            // case 'gr1':
+            //     require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr1.php';
+            //     return render_gr1($atts);
+            case 'gr2':
+                require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr2.php';
+                $output .= render_gr2($atts, $source_utm, $badgevipmockup);
+                return $output ;
+            // case 'gr3':
+            //     require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr3.php';
+            //     return render_gr3($atts);
+        }
+
 
         if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false) {
             $output .= '

@@ -30,6 +30,16 @@ function pwe_elements_page() {
         'pwe-elements-menu',
         'pwe_menu_settings_render'
     );
+
+    // // Submenu for "Shortcodes"
+    // add_submenu_page(
+    //     'pwe-elements',
+    //     'Shortcodes',
+    //     'Shortcodes (TEST)',
+    //     'manage_options',
+    //     'pwe-elements-shortcodes',
+    //     'pwe_shortcodes_settings_render'
+    // );
 }
 
 function pwe_elements_render() {
@@ -40,6 +50,7 @@ function pwe_elements_render() {
         <h2 class="nav-tab-wrapper">
             <a href="?page=pwe-elements&tab=general" class="nav-tab '. ($active_tab === 'general' ? 'nav-tab-active' : '') .'">General</a>
             <a href="?page=pwe-elements&tab=menu" class="nav-tab '. ($active_tab === 'menu' ? 'nav-tab-active' : '') .'">Menu</a>
+            <a href="?page=pwe-elements&tab=shortcodes" class="nav-tab '. ($active_tab === 'shortcodes' ? 'nav-tab-active' : '') .'">Shortcodes</a>
         </h2>
         <form method="post" action="options.php">';
             if ($active_tab === 'general') {
@@ -48,6 +59,9 @@ function pwe_elements_render() {
             } else if ($active_tab === 'menu') {
                 settings_fields('pwe_menu_options_group');
                 do_settings_sections('pwe-menu-settings');
+            } else if ($active_tab === 'shortcodes') {
+                settings_fields('pwe_shortcodes_options_group');
+                do_settings_sections('pwe-shortcodes-settings');
             } 
             submit_button();
             echo '
@@ -80,3 +94,17 @@ function pwe_menu_settings_render() {
     </div>';
 }
 
+// function pwe_shortcodes_settings_render() {
+//     echo '
+//     <div class="wrap">
+//         <h1>Shortcodes Settings</h1>
+//         <form method="post" action="options.php">';
+//             settings_fields('pwe_shortcodes_options_group');
+//             do_settings_sections('pwe-shortcodes-settings');
+//             submit_button();
+
+//             echo '
+//         </form>
+//     </div>';
+// }
+ 
