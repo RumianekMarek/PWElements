@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.7.9
+ * Version: 2.8.0
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -96,6 +96,12 @@ class PWElementsPlugin {
 
     private function initClasses() {
 
+        // Helpers functions
+        require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
+
+        // Shortcodes from CAP
+        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
+
         if (is_admin()) {
             // Admin menu
             include_once plugin_dir_path(__FILE__) . 'includes/settings/admin-menu.php';
@@ -103,13 +109,9 @@ class PWElementsPlugin {
             include_once plugin_dir_path(__FILE__) . 'includes/settings/general-settings.php';
             // Settings nav menu
             include_once plugin_dir_path(__FILE__) . 'includes/settings/nav-menu-settings.php';
+            // Settings shortcodes
+            // include_once plugin_dir_path(__FILE__) . 'includes/settings/shortcodes-settings.php';
         }
-
-        // Helpers functions
-        require_once plugin_dir_path(__FILE__) . 'pwefunctions.php';
-
-        // Shortcodes from CAP
-        require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
 
         // Variables of styles
         require_once plugin_dir_path(__FILE__) . 'pwe-style-var.php';

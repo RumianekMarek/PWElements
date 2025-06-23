@@ -515,7 +515,9 @@ class PWECommonFunctions {
             "youtube" => $fair->fair_youtube ?? "",
             "badge" => $fair->fair_badge ?? "",
             "catalog" => $fair->fair_kw ?? "",
-            "shop" => $fair->fair_shop ?? ""
+            "shop" => $fair->fair_shop ?? "",
+            "group" => $fair->fair_group ?? ""
+            
         ];
     }
 
@@ -559,10 +561,12 @@ class PWECommonFunctions {
     /**
      * Function to transform the date
      */
-    public static function transform_dates($start_date, $end_date) {
+    public static function transform_dates($start_date, $end_date, $include_hours = true) {
+        $format = $include_hours ? "Y/m/d H:i" : "Y/m/d";
+
         // Convert date strings to DateTime objects
-        $start_date_obj = DateTime::createFromFormat("Y/m/d H:i", $start_date);
-        $end_date_obj = DateTime::createFromFormat("Y/m/d H:i", $end_date);
+        $start_date_obj = DateTime::createFromFormat($format, $start_date);
+        $end_date_obj = DateTime::createFromFormat($format, $end_date);
     
         // Check if the conversion was correct
         if ($start_date_obj && $end_date_obj) {
