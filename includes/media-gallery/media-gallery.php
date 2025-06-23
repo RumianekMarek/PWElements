@@ -33,6 +33,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                 'params' => array(
                     array(
                         'type' => 'attach_images',
+                        'group' => 'PWE Element',
                         'heading' => __('Select Images', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_images',
                         'description' => __('Choose images from the media library.', 'pwe_media_gallery'),
@@ -40,6 +41,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Gallery Catalog', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_catalog',
                         'description' => __('Set a catalog name in /doc/', 'pwe_media_gallery'),
@@ -47,6 +49,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),  
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Unique ID', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_id',
                         'description' => __('This value has to be unique. Change it in case it`s needed.', 'pwe_media_gallery'),
@@ -54,6 +57,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Gallery name', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_name',
                         'description' => __('Set a name that will by displayed at the top of gallery', 'pwe_media_gallery'),
@@ -61,6 +65,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),  
                     array(
                         'type' => 'dropdown',
+                        'group' => 'PWE Element',
                         'heading' => __('Images clicked', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_clicked',
                         'description' => __('Action after clicking on the image', 'pwe_media_gallery'),
@@ -73,6 +78,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'param_group',
+                        'group' => 'Links',
                         'heading' => __('Set link', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_links',
                         'params' => array(
@@ -94,6 +100,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'dropdown',
+                        'group' => 'PWE Element',
                         'heading' => __('Layout', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_layout',
                         'param_holder_class' => 'media_gallery_layout',
@@ -104,10 +111,13 @@ class PWEMediaGallery extends PWECommonFunctions {
                             'Justify' => 'flex',
                             'Carousel' => 'carousel',
                             'Slider with thumbnails' => 'slider',
+                            'Coverflow' => 'coverflow',
+                            'Carousel Dual Swiper' => 'carousel-dual-swiper',
                         ),
                     ),
                     array(
                         'type' => 'dropdown',
+                        'group' => 'Justify',
                         'heading' => __('Justify last row', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_justify_last_row',
                         'description' => __('Don`t justify the last row', 'pwe_media_gallery'),
@@ -129,6 +139,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'dropdown',
+                        'group' => 'PWE Element',
                         'heading' => __('Aspect Ratio', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_aspect_ratio',
                         'description' => __('Set an aspect ratio for the images', 'pwe_media_gallery'),
@@ -160,6 +171,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Gap', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_gap',
                         'description' => __('Set the items gap.', 'pwe_media_gallery'),
@@ -170,11 +182,14 @@ class PWEMediaGallery extends PWECommonFunctions {
                                 'columns',
                                 'grid',
                                 'carousel',
+                                'coverflow',
+                                'carousel-dual-swiper',
                             ),
                         ),
                     ),  
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Border radius', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_border_radius',
                         'description' => __('Set the items border radius.', 'pwe_media_gallery'),
@@ -191,6 +206,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),  
                     array(
                         'type' => 'textfield',
+                        'group' => 'Justify',
                         'heading' => __('Margin items', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_margin',
                         'description' => __('Set the items margin.', 'pwe_media_gallery'),
@@ -204,6 +220,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ), 
                     array(
                         'type' => 'checkbox',
+                        'group' => 'PWE Element',
                         'heading' => __('Full width', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_full_width',
                         'description' => __('overflow: visible;', 'pwe_media_gallery'),
@@ -221,6 +238,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'checkbox',
+                        'group' => 'Navigation',
                         'heading' => __('Turn on dots', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_dots_display',
                         'description' => __('Check if you want to turn on dots.', 'pwe_media_gallery'),
@@ -231,11 +249,13 @@ class PWEMediaGallery extends PWECommonFunctions {
                             'element' => 'media_gallery_layout',
                             'value' => array(
                                 'carousel',
+                                'coverflow',
                             ),
                         ),
                     ),
                     array(
                         'type' => 'checkbox',
+                        'group' => 'Navigation',
                         'heading' => __('Dots inside of container', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_dots_inside',
                         'description' => __('Check if you want to turn on dots inside of container.', 'pwe_media_gallery'),
@@ -251,6 +271,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'checkbox',
+                        'group' => 'Navigation',
                         'heading' => __('Turn on arrow', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_arrows_display',
                         'description' => __('Check if you want to turn on arrows.', 'pwe_media_gallery'),
@@ -261,11 +282,13 @@ class PWEMediaGallery extends PWECommonFunctions {
                             'element' => 'media_gallery_layout',
                             'value' => array(
                                 'carousel',
+                                'coverflow',
                             ),
                         ),
                     ),
                     array(
                         'type' => 'checkbox',
+                        'group' => 'Navigation',
                         'heading' => __('Arrows inside of container', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_arrows_inside',
                         'description' => __('Check if you want to turn on arrows inside of container.', 'pwe_media_gallery'),
@@ -281,6 +304,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),
                     array(
                         'type' => 'checkbox',
+                        'group' => 'Navigation',
                         'heading' => __('Add button (Go to gallery)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_button',
                         'admin_label' => true,
@@ -290,11 +314,13 @@ class PWEMediaGallery extends PWECommonFunctions {
                             'element' => 'media_gallery_layout',
                             'value' => array(
                                 'carousel',
+                                'coverflow',
                             ),
                         ),
                     ),
                     array(
                         'type' => 'dropdown',
+                        'group' => 'PWE Element',
                         'heading' => __('Thumbnail width (desktop', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_desktop',
                         'description' => __('Specify the thumbnail width for desktop.', 'pwe_media_gallery'),
@@ -326,6 +352,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ), 
                     array(
                         'type' => 'dropdown',
+                        'group' => 'PWE Element',
                         'heading' => __('Thumbnail width (tablet)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_tablet',
                         'description' => __('Specify the thumbnail width for tablet.', 'pwe_media_gallery'),
@@ -357,6 +384,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ), 
                     array(
                         'type' => 'dropdown',
+                        'group' => 'PWE Element',
                         'heading' => __('Thumbnail width (mobile)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_width_mobile',
                         'description' => __('Specify the thumbnail width for mobile.', 'pwe_media_gallery'),
@@ -388,6 +416,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),   
                     array(
                         'type' => 'textfield',
+                        'group' => 'Justify',
                         'heading' => __('Thumbnails rows height (200px default)', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_thumbnails_rows_height',
                         'description' => __('Write the thumbnails rows height.', 'pwe_media_gallery'),
@@ -401,6 +430,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),   
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Breakpoint for tablet', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_breakpoint_tablet',
                         'description' => __('Set a breakpoint for tablet (default 959px)', 'pwe_media_gallery'),
@@ -417,6 +447,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                     ),  
                     array(
                         'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Breakpoint for mobile', 'pwe_media_gallery'),
                         'param_name' => 'media_gallery_breakpoint_mobile',
                         'description' => __('Set a breakpoint for mobile (default 480px)', 'pwe_media_gallery'),
@@ -431,6 +462,49 @@ class PWEMediaGallery extends PWECommonFunctions {
                             ),
                         ),
                     ), 
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Coverflow Effect',
+                        'heading' => __('Coverflow: Rotate', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_coverflow_rotate',
+                        'dependency' => array('element' => 'media_gallery_layout', 'value' => array('coverflow')),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Coverflow Effect',
+                        'heading' => __('Coverflow: Stretch', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_coverflow_stretch',
+                        'dependency' => array('element' => 'media_gallery_layout', 'value' => array('coverflow')),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Coverflow Effect',
+                        'heading' => __('Coverflow: Scale', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_coverflow_scale',
+                        'dependency' => array('element' => 'media_gallery_layout', 'value' => array('coverflow')),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Coverflow Effect',
+                        'heading' => __('Coverflow: Depth', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_coverflow_depth',
+                        'dependency' => array('element' => 'media_gallery_layout', 'value' => array('coverflow')),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Coverflow Effect',
+                        'heading' => __('Coverflow: Modifier', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_coverflow_modifier',
+                        'dependency' => array('element' => 'media_gallery_layout', 'value' => array('coverflow')),
+                    ),
+                    array(
+                        'type' => 'dropdown',
+                        'group' => 'Coverflow Effect',
+                        'heading' => __('Coverflow: Slide Shadows', 'pwe_media_gallery'),
+                        'param_name' => 'media_gallery_coverflow_shadows',
+                        'value' => array('true' => 'true', 'false' => 'false'),
+                        'dependency' => array('element' => 'media_gallery_layout', 'value' => array('coverflow')),
+                    ),
                 ),
             ));
         }
@@ -487,6 +561,12 @@ class PWEMediaGallery extends PWECommonFunctions {
             'media_gallery_thumbnails_rows_height' => '',
             'media_gallery_breakpoint_tablet' => '',
             'media_gallery_breakpoint_mobile' => '',
+            'media_gallery_coverflow_rotate' => '',
+            'media_gallery_coverflow_stretch' => '',
+            'media_gallery_coverflow_scale' => '',
+            'media_gallery_coverflow_depth' => '',
+            'media_gallery_coverflow_modifier' => '',
+            'media_gallery_coverflow_shadows' => '',
         ), $atts));
     
         $media_gallery_images = explode(',', $atts['media_gallery_images']);
@@ -551,6 +631,15 @@ class PWEMediaGallery extends PWECommonFunctions {
         $media_gallery_gap = str_replace("px", "", $media_gallery_gap);
         $media_gallery_margin = str_replace("px", "", $media_gallery_margin);
         $media_gallery_border_radius = str_replace("px", "", $media_gallery_border_radius);
+
+        // Coverflow Effects
+        $coverflow_rotate   = is_numeric($media_gallery_coverflow_rotate) ? $media_gallery_coverflow_rotate : 0;
+        $coverflow_stretch  = is_numeric($media_gallery_coverflow_stretch) ? $media_gallery_coverflow_stretch : 0;
+        $coverflow_scale    = is_numeric($media_gallery_coverflow_scale) ? $media_gallery_coverflow_scale : 0.9;
+        $coverflow_depth    = is_numeric($media_gallery_coverflow_depth) ? $media_gallery_coverflow_depth : 345;
+        $coverflow_modifier = is_numeric($media_gallery_coverflow_modifier) ? $media_gallery_coverflow_modifier : 1.5;
+        $coverflow_shadows  = ($media_gallery_coverflow_shadows === 'false') ? 'false' : 'true';
+
         
         $output = '';
 
@@ -807,7 +896,339 @@ class PWEMediaGallery extends PWECommonFunctions {
                             <script src="/wp-content/plugins/PWElements/includes/media-gallery/assets/fotorama/fotorama.js"></script>
                         
                         </div>';  
+                    } else if (in_array('coverflow', $layouts)) { // Coverflow <--------------------------------------<
+                        $output .= '
+                        <div class="pwe-gallery-container pwe-media-gallery">
+                            <link href="/wp-content/plugins/PWElements/includes/media-gallery/assets/coverflow-gallery/coverflow-gallery.css" rel="stylesheet">
+                            ';
+
+                            $output .= '
+                                <div class="swiper coverflow-gallery">
+                                    <div class="swiper-wrapper">';
+
+                                        foreach ($media_gallery_array as $image_url) {
+                                            $path_parts = pathinfo($image_url);
+                                            $image_filename = $path_parts['basename'];
+
+                                            $output .= '<div class="swiper-slide">';
+                                                if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                                    $output .= '<a href="'. $media_gallery_links_map[$image_filename] .'">
+                                                                    <div class="pwe-media-gallery-image">
+                                                                        <img src="' . $image_url . '" style="' . $aspect_ratio_style . '">
+                                                                    </div>
+                                                                </a>';
+                                                } else { 
+                                                    $output .= '<div class="pwe-media-gallery-image">
+                                                                    <img src="' . $image_url . '" style="' . $aspect_ratio_style . '">
+                                                                </div>';
+                                                }
+                                            $output .= '</div>';
+                                        }
+                                        $output .= '
+                                    </div>';
+                                        
+                                    if ($media_gallery_dots_display === 'true') {
+                                        $output .= '
+                                        <style>.pwe-container-media-gallery .coverflow-gallery {padding-bottom: 36px;}</style>
+                                        <div class="swiper-pagination"></div>';
+                                    } else {
+                                        $output .= '<script>
+                                            document.addEventListener("DOMContentLoaded", function () {
+                                                if (window.innerWidth < 570) {
+                                                    
+                                                    const swiper = document.querySelector("#' . $media_gallery_id . ' .swiper.coverflow-gallery");
+                                                    if (swiper && !swiper.querySelector(".swiper-pagination")) {
+                                                        const pagDiv = document.createElement("div");
+                                                        pagDiv.classList.add("swiper-pagination");
+                                                        swiper.appendChild(pagDiv);
+                                                    }
+
+                                                    swiper.style.paddingBottom = "36px";
+                                                }
+                                            });
+                                        </script>';
+                                    }
+
+                                    $output .= '
+                                </div>
+                        </div>';
+
+                        $output .= '
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    const swiperEl = document.querySelector("#' . $media_gallery_id . ' .swiper.coverflow-gallery");
+                                    if (!swiperEl) return;
+
+                                    const screenWidth = window.innerWidth;
+                                    const showPagination = screenWidth < 570 || ' . ($media_gallery_dots_display === 'true' ? 'true' : 'false') . ';
+
+                                    const swiperOptions = {
+                                        effect: screenWidth >= 570 ? "coverflow" : "slider",
+                                        grabCursor: true,
+                                        loop: true,
+                                        centeredSlides: screenWidth >= 570,
+                                        slidesPerView: screenWidth >= 570 ? 3 : 2,
+                                        spaceBetween: screenWidth >= 570 ? ' . $media_gallery_gap . ' : -160,
+                                        speed: 900,
+                                        autoplay: {
+                                            delay: 3000,
+                                            disableOnInteraction: false
+                                        },
+                                        coverflowEffect: {
+                                            rotate: ' . $coverflow_rotate . ',
+                                            stretch: ' . $coverflow_stretch . ',
+                                            scale: ' . $coverflow_scale . ',
+                                            depth: ' . $coverflow_depth . ',
+                                            modifier: ' . $coverflow_modifier . ',
+                                            slideShadows: ' . $coverflow_shadows . '
+                                        }
+                                    };
+
+                                    if (showPagination) {
+                                        swiperOptions.pagination = {
+                                            el: swiperEl.querySelector(".swiper-pagination"),
+                                            clickable: true
+                                        };
+                                    }
+
+                                    new Swiper(swiperEl, swiperOptions);
+                                });
+                            </script>';
+                    } else if (in_array('carousel-dual-swiper', $layouts)) { // Carousel Swiper <--------------------------------------<
+                        $midpoint = ceil(count($media_gallery_array) / 2);
+                        $top_slides = array_slice($media_gallery_array, 0, $midpoint);
+                        $bottom_slides = array_slice($media_gallery_array, $midpoint);
+
+                        $output .= '
+                        <style>
+                            #'. $media_gallery_id .' #dual-slider {
+                                display: flex;
+                                flex-direction: column;
+                                gap: ' . $media_gallery_gap . 'px;
+                                padding: 24px;
+                                overflow: hidden;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper {
+                                overflow: visible;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .top-slider {
+                                transform: translateX(-10%);
+                            }
+                            #'. $media_gallery_id .' #dual-slider .bottom-slider {
+                                transform: translateX(-25%);
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper-wrapper {
+                                height: 280px;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper-slide {
+                                overflow: hidden;
+                                border-radius: 24px;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .top-slider .swiper-slide {
+                                padding-top: 36px;
+                                transition: 0.3s;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .top-slider .swiper-slide:hover {
+                                padding-top: 0;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .bottom-slider .swiper-slide {
+                                padding-bottom: 36px;
+                                transition: 0.3s;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .bottom-slider .swiper-slide:hover {
+                                padding-bottom: 0;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper-slide:before {
+                                content: "";
+                                width: 100%;
+                                height: 100%;
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                transition: 0.3s;
+                                opacity: 0;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .top-slider .swiper-slide:before {
+                                background: linear-gradient(to bottom, black, transparent 50%);
+                            }
+                            #'. $media_gallery_id .' #dual-slider .bottom-slider .swiper-slide:before {
+                                background: linear-gradient(to top, black, transparent 50%);
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper-slide:hover:before {
+                                opacity: 1;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper .swiper-slide {
+                                position: relative;
+                                height: 100%;
+                                display: flex;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .slide-title {
+                                position: absolute;
+                                left: 0;
+                                padding: 18px;
+                                font-size: 20px;
+                                font-weight: 600;
+                                color: white;
+                                opacity: 0;
+                                transition: 0.3s;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .top-slider .slide-title { top: 0; }
+                            #'. $media_gallery_id .' #dual-slider .bottom-slider .slide-title { bottom: 0; }
+                            #'. $media_gallery_id .' #dual-slider .swiper-slide:hover .slide-title {
+                                opacity: 1;
+                            }
+                            #'. $media_gallery_id .' #dual-slider .swiper-slide img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                border-radius: 24px;
+                                transition: 0.3s;
+                            }
+                            @media(max-width: 480px) {
+                                #'. $media_gallery_id .' #dual-slider .top-slider,
+                                #'. $media_gallery_id .' #dual-slider .bottom-slider {
+                                    transform: translateX(0%);
+                                }
+                                #'. $media_gallery_id .' #dual-slider .swiper-wrapper {
+                                    height: 260px;
+                                }
+                                 #'. $media_gallery_id .' #dual-slider .swiper-slide .slide-title {
+                                    opacity: 1;
+                                }
+                                #'. $media_gallery_id .' #dual-slider .top-slider .swiper-slide {
+                                    padding-top: 0;
+                                }
+                                #'. $media_gallery_id .' #dual-slider .bottom-slider .swiper-slide {
+                                    padding-bottom: 0;
+                                }
+                                #'. $media_gallery_id .' #dual-slider .swiper-slide:before {
+                                    opacity: 1;
+                                }
+                            }
+                        </style>';
+
+                        $output .= '<div id="dual-slider">';
+
+                        // TOP SLIDER
+                        $output .= '<div class="slider-wrapper top-slider"><div class="swiper topSwiper-' . esc_attr($media_gallery_id) . '"><div class="swiper-wrapper">';
+                        foreach ($top_slides as $image_url) {
+                            $path_parts = pathinfo($image_url);
+                            $image_filename = $path_parts['basename'];
+                            $title = basename($image_filename, '.' . $path_parts['extension']);
+
+                            $output .= '<div class="swiper-slide">';
+                            if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                $output .= '<a href="' . esc_url($media_gallery_links_map[$image_filename]) . '">';
+                            }
+
+                            $output .= '<img src="' . esc_url($image_url) . '" alt=""><span class="slide-title">' . esc_html($title) . '</span>';
+
+                            if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                $output .= '</a>';
+                            }
+
+                            $output .= '</div>';
+                        }
+                        $output .= '</div></div></div>';
+
+                        // BOTTOM SLIDER
+                        $output .= '<div class="slider-wrapper bottom-slider"><div class="swiper bottomSwiper-' . esc_attr($media_gallery_id) . '"><div class="swiper-wrapper">';
+                        foreach ($bottom_slides as $image_url) {
+                            $path_parts = pathinfo($image_url);
+                            $image_filename = $path_parts['basename'];
+                            $title = basename($image_filename, '.' . $path_parts['extension']);
+
+                            $output .= '<div class="swiper-slide">';
+                            if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                $output .= '<a href="' . esc_url($media_gallery_links_map[$image_filename]) . '">';
+                            }
+
+                            $output .= '<img src="' . esc_url($image_url) . '" alt=""><span class="slide-title">' . esc_html($title) . '</span>';
+
+                            if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                $output .= '</a>';
+                            }
+
+                            $output .= '</div>';
+                        }
+                        $output .= '</div></div></div>';
+
+                        $output .= '</div>';
+
+                        // Swiper init
+                        $output .= '<script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                function duplicateSlidesIfNeeded(wrapperSelector, slidesPerView, slidesPerGroup) {
+                                    const wrapper = document.querySelector(wrapperSelector);
+                                    if (!wrapper) return;
+
+                                    const slides = wrapper.children;
+                                    const totalSlides = slides.length;
+                                    const minSlides = slidesPerView + slidesPerGroup;
+                                    let slidesToAdd = 0;
+
+                                    if (totalSlides < minSlides || totalSlides % slidesPerGroup !== 0) {
+                                        slidesToAdd = minSlides - totalSlides;
+                                        if (totalSlides % slidesPerGroup !== 0) {
+                                            slidesToAdd += slidesPerGroup - (totalSlides % slidesPerGroup);
+                                        }
+
+                                        const slidesHTML = Array.from(slides).map(slide => slide.outerHTML).join("");
+                                        const tempDiv = document.createElement("div");
+                                        tempDiv.innerHTML = slidesHTML;
+
+                                        for (let i = 0; i < slidesToAdd; i++) {
+                                            const clone = tempDiv.cloneNode(true);
+                                            while (clone.firstChild) {
+                                                wrapper.appendChild(clone.firstChild);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Duplikujemy slajdy PRZED tworzeniem Swipera
+                                duplicateSlidesIfNeeded(".topSwiper-' . esc_attr($media_gallery_id) . ' .swiper-wrapper", 3.5, 3);
+                                duplicateSlidesIfNeeded(".bottomSwiper-' . esc_attr($media_gallery_id) . ' .swiper-wrapper", 3.5, 3);
+
+                                const commonSettings = {
+                                    loop: true,
+                                    spaceBetween: ' . $media_gallery_gap . ',
+                                    speed: 900,
+                                    autoplay: {
+                                        delay: 3000,
+                                        disableOnInteraction: false
+                                    },
+                                    breakpoints: {
+                                        1024: { slidesPerView: 3.5 },
+                                        768: { slidesPerView: 2 },
+                                        480: { slidesPerView: 1 }
+                                    }
+                                };
+
+                                const topSwiper = new Swiper(".topSwiper-' . esc_attr($media_gallery_id) . '", commonSettings);
+                                const bottomSwiper = new Swiper(".bottomSwiper-' . esc_attr($media_gallery_id) . '", {
+                                    ...commonSettings,
+                                    autoplay: {
+                                        delay: 3000,
+                                        reverseDirection: true,
+                                        disableOnInteraction: false
+                                    }
+                                });
+
+                                const slidersContainer = document.getElementById("dual-slider");
+                                slidersContainer.addEventListener("mouseenter", () => {
+                                    topSwiper.autoplay.stop();
+                                    bottomSwiper.autoplay.stop();
+                                });
+                                slidersContainer.addEventListener("mouseleave", () => {
+                                    topSwiper.autoplay.start();
+                                    bottomSwiper.autoplay.start();
+                                });
+                            });
+                            </script>';
+
                     }
+
 
                     $output .= '  
                 </div>

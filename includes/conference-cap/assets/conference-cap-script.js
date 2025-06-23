@@ -89,6 +89,10 @@ jQuery(document).ready(function($){
         // Przełączanie konferencji po kliknięciu obrazka
         confImages.on("click", function () {
             const parentLink = $(this).closest('a');
+
+            if (parentLink.length > 0) {
+                return;
+            }
         
             const slug = this.id.replace("nav_", "");
 

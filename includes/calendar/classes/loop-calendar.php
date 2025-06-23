@@ -4,9 +4,6 @@ class PWECalendar extends PWECommonFunctions {
 
     public function __construct() {
         // Hook actions
-        // add_action('wp_enqueue_scripts', array($this, 'adding_styles'));
-        // add_action('wp_enqueue_scripts', array($this, 'adding_scripts'));
-        
         add_action('init', array($this, 'init_vc_map_pwe_calendar'));
         add_action('wp_ajax_load_more_calendar', [$this, 'load_more_calendar']);
         add_action('wp_ajax_nopriv_load_more_calendar', [$this, 'load_more_calendar']);
@@ -82,24 +79,6 @@ class PWECalendar extends PWECommonFunctions {
         }
     }
 
-    //     /**
-    //  * Adding Styles
-    //  */
-    // public function adding_styles(){
-    //     $css_file = plugins_url('assets/style.css', __FILE__);
-    //     $css_version = filemtime(plugin_dir_path(__FILE__) . 'assets/style.css');
-    //     wp_enqueue_style('pwe-calendar-css', $css_file, array(), $css_version);
-    // }
-
-    // /**
-    //  * Adding Scripts
-    //  */
-    // public function adding_scripts(){
-    //     $js_file = plugins_url('assets/script.js', __FILE__);
-    //     $js_version = filemtime(plugin_dir_path(__FILE__) . 'assets/script.js');
-    //     wp_enqueue_script('pwe-calendar-js', $js_file, array('jquery'), $js_version, true);
-    // }
-
     public static function get_pwe_shortcode($shortcode, $domain) {
         return shortcode_exists($shortcode) ? do_shortcode('[' . $shortcode . ' domain="' . $domain . '"]') : "";
     }
@@ -109,20 +88,7 @@ class PWECalendar extends PWECommonFunctions {
     }
 
     public static function format_date_range($start_date, $end_date, $locale) {
-        $months = array(
-            '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR', 'LT' => 'SAUSIO'),
-            '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR', 'LT' => 'VASARIO'),
-            '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ', 'LT' => 'KOVO'),
-            '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL', 'LT' => 'BALANDŽIO'),
-            '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI', 'LT' => 'GEGUŽĖS'),
-            '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI', 'LT' => 'BIRŽELIO'),
-            '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI', 'LT' => 'LIEPOS'),
-            '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST', 'LT' => 'RUGPJŪČIO'),
-            '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER', 'LT' => 'RUGSĖJO'),
-            '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER', 'LT' => 'SPALIO'),
-            '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER', 'LT' => 'LAPKRIČIO'),
-            '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER', 'LT' => 'GRUODŽIO'),
-        );
+        $months = json_decode(file_get_contents(__DIR__ . '/../assets/months.json'), true);
 
         $start_parts = explode("-", $start_date);
         $end_parts = explode("-", $end_date);
@@ -134,53 +100,57 @@ class PWECalendar extends PWECommonFunctions {
         $year = $start_parts[2];
 
         // Select month name depending on language
-        if ($locale == "pl_PL") {
-            $lang_key = "PL";
-        } else if ($locale == "en_US") {
-            $lang_key = "EN";
-        } else if ($locale == "de_DE") {
-            $lang_key = "DE";
-        } else if ($locale == "lt_LT") {
-            $lang_key = "LT";
-        } else {
-            $lang_key = "EN";
-        }
+        $lang_key = strtoupper(substr($locale, 0, 2));
         
         $start_month_name = isset($months[$start_month][$lang_key]) ? $months[$start_month][$lang_key] : "";
         $end_month_name = isset($months[$end_month][$lang_key]) ? $months[$end_month][$lang_key] : "";
 
         // Check if months are different
-        if ($locale == "pl_PL") {
-            if ($start_month === $end_month) {
-                return "$start_day - $end_day $start_month_name $year";
-            } else {
-                return "$start_day $start_month_name - $end_day $end_month_name $year";
-            }
-        } else if ($locale == "en_US") {
-            if ($start_month === $end_month) {
-                return "$start_month_name $start_day-$end_day, $year";
-            } else {
-                return "$start_month_name $start_day - $end_month_name $end_day, $year";
-            }
-        } else if ($locale == "de_DE") {
-            if ($start_month === $end_month) {
-                return "$start_day.-$end_day. $start_month_name $year";
-            } else {
-                return "$start_day. $start_month_name - $end_day. $end_month_name $year";
-            }
-        } else if ($locale == "lt_LT") {
-            if ($start_month === $end_month) {
-                return "$year m. $start_month_name $start_day-$end_day d.";
-            } else {
-                return "$year m. $start_month_name $start_day d. - $end_month_name $end_day d.";
-            }
-        } else {
-            if ($start_month === $end_month) {
-                return "$start_month_name $start_day-$end_day, $year";
-            } else {
-                return "$start_month_name $start_day - $end_month_name $end_day, $year";
-            }
+        switch ($lang_key) {
+            case "PL":
+                if ($start_month === $end_month) {
+                    return "$start_day - $end_day $start_month_name $year";
+                } else {
+                    return "$start_day $start_month_name - $end_day $end_month_name $year";
+                }
+            case "EN":
+                if ($start_month === $end_month) {
+                    return "$start_month_name $start_day-$end_day, $year";
+                } else {
+                    return "$start_month_name $start_day - $end_month_name $end_day, $year";
+                }
+            case "DE":
+                if ($start_month === $end_month) {
+                    return "$start_day.-$end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "LT":
+                if ($start_month === $end_month) {
+                    return "$year m. $start_month_name $start_day-$end_day d.";
+                } else {
+                    return "$year m. $start_month_name $start_day d. - $end_month_name $end_day d.";
+                }
+            case "LV":
+                if ($start_month === $end_month) {
+                    return "$start_day. - $end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "UK":
+                if ($start_month === $end_month) {
+                    return "$start_day - $end_day $start_month_name $year";
+                } else {
+                    return "$start_day $start_month_name - $end_day $end_month_name $year";
+                }
+            default:
+                if ($start_month === $end_month) {
+                    return "$start_month_name $start_day-$end_day, $year";
+                } else {
+                    return "$start_month_name $start_day - $end_month_name $end_day, $year";
+                }
         }
+
     }
 
     function multi_translation($key) {
@@ -240,6 +210,21 @@ class PWECalendar extends PWECommonFunctions {
 
         $query = new WP_Query($args);
 
+        $terms = get_terms(array(
+            'taxonomy' => 'event_category',
+            'hide_empty' => false,
+        ));
+
+        if (!is_wp_error($terms) && !empty($terms)) {
+            $all_categories = array();
+            foreach ($terms as $term) {
+                $all_categories[] = array(
+                    'name' => $term->name,
+                    'slug' => $term->slug
+                );
+            }
+        }
+
         if ($query->have_posts()) :
 
             $thumbnail_url = '';
@@ -247,208 +232,209 @@ class PWECalendar extends PWECommonFunctions {
             $shortcodes_active = empty(get_option('pwe_general_options', [])['pwe_dp_shortcodes_unactive']);
             
             $output = '
-            <style>
-                .pwe-calendar__wrapper {
-                    max-width: 1400px;
-                    margin: 0 auto;
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 24px;
-                    margin-top: 36px;
-                }
-                .pwe-calendar__item {
-                    background-color: #e9e9e9;
-                    text-align: -webkit-center;
-                    border-radius: 30px;
-                    box-shadow: unset;
-                    transition: .3s ease;
-                }
-                .pwe-calendar__item:hover {
-                    transform: scale(1.05);
-                }
-                .pwe-calendar__wrapper:after {
-                    content:none !important;
-                }
-                .pwe-calendar__link {
-                    position: relative;
-                    z-index: 1;
-                    text-decoration: none;
-                }
-                .pwe-calendar__tile {
-                    position: relative;
-                    aspect-ratio: 1 / 1;
-                    background-size: cover;
-                    background-position: center;
-                    border-radius: 0;
-                    border-top-left-radius: 15px;
-                    border-top-right-radius: 15px;
-                    display: flex;
-                    align-items: flex-end;
-                    justify-content: center;
-                }
-                .pwe-calendar__short-name {
-                    position: absolute;
-                    top: 65%;
-                    left: 50%;
-                    transform: translate(-50%, -65%);
-                    z-index: 1;
-                    width: 300px;
-                    max-width: 90%;
-                }
-                .pwe-calendar__short-name h4 {
-                    color: white !important;
-                    font-size: 17px;
-                    font-weight: 600;
-                    text-shadow: 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black;
-                    text-transform: uppercase;
-                    text-align: center;
-                }
-                .pwe-calendar__statistics-word {
-                    font-size: 13px;
-                    color: grey;
-                    margin: 0;
-                    font-weight: 600;
-                }
-                .pwe-calendar_strip {
-                    width: 100%;
-                    display: flex;
-                    align-items: center;
-                    margin: 6px;
-                }
-                .pwe-calendar__button-check {
-                    width: 40%;
-                }
-                .pwe-calendar__button-check p {
-                    width: fit-content;
-                    line-height: 1;
-                    color: white;
-                    font-size: 12px;
-                    font-weight: 700;
-                    margin: 0;
-                    text-transform: uppercase;
-                    background-color: grey;
-                    padding: 9px;
-                    border-radius: 12px;
-                }
-                .pwe-calendar__edition {
-                    width: 60%;
-                }
-                .pwe-calendar__edition p {
-                    margin: 0 0 0 2px;
-                    line-height: 1;
-                    color: white;
-                    font-size: 15px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                }
-                .pwe-calendar__date {
-                    padding: 6px;
-                }
-                .pwe-calendar__date h5 {
-                    margin: 0;
-                    line-height: 1.2;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    display: flex;
-                    justify-content: space-evenly;
-                } 
-                .pwe-calendar_statistics {
-                    padding: 10px;
-                }
-                .pwe-calendar__statistics-item {
-                    display: flex;
-                    justify-content: space-between;
-                }
-                .pwe-calendar__statistics-name {
-                    width: 76%;
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 10px;
-                }
-                .pwe-calendar__statistics-name p {
-                    margin: 0;
-                    line-height: 1;
-                    text-align: start;
-                }
-                .pwe-calendar__statistics-icon {
-                    width: 20%;
-                }
-                .pwe-calendar__statistics-icon img {
-                    max-width: 30px;
-                    vertical-align: middle;
-                }
-                .pwe-calendar__statistics-label {
-                    width: 65%;
-                    font-size: 14px;
-                    margin: 0;
-                    line-height: 1;
-                    color: black;
-                }
-                .pwe-calendar__statistics-value {
-                    width: 35%;
-                    font-size: 14px;
-                    color: grey;
-                    margin: 0;
-                    font-weight: 800;
-                    display: flex;
-                    white-space: nowrap;
-                    align-items: center;
-                }
-                @media (min-width: 960px){
-                    .row-parent:has(.pwe-calendar__item){
-                        max-width: unset !important;
-                    } 
-                }
-                @media (max-width: 1200px){
+                <style>
                     .pwe-calendar__wrapper {
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 18px;
+                        max-width: 1400px;
+                        margin: 0 auto;
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 24px;
+                        margin-top: 36px;
                     }
-                }
-                @media (max-width: 960px){
-                    .pwe-calendar__short-name h4 {
-                        font-size: 14px;
+                    .pwe-calendar__item {
+                        background-color: #e9e9e9;
+                        text-align: -webkit-center;
+                        border-radius: 30px;
+                        box-shadow: unset;
+                        transition: .3s ease;
                     }
                     .pwe-calendar__item:hover {
-                        transform: scale(1.02);
+                        transform: scale(1.05);
                     }
-                }
-                @media (max-width: 768px) {
-                    .pwe-calendar__wrapper {
-                        grid-template-columns: repeat(2, 1fr);
+                    .pwe-calendar__wrapper:after {
+                        content:none !important;
                     }
-                }
-                @media (max-width: 569px) {
-                    .main-container .row-parent:has(.pwe-calendar__item) {
-                        padding: 10px;
+                    .pwe-calendar__link {
+                        position: relative;
+                        z-index: 1;
+                        text-decoration: none;
                     }
-                    .pwe-calendar__wrapper {
-                        gap: 10px;
+                    .pwe-calendar__tile {
+                        position: relative;
+                        aspect-ratio: 1 / 1;
+                        background-size: cover;
+                        background-position: center;
+                        border-radius: 0;
+                        border-top-left-radius: 15px;
+                        border-top-right-radius: 15px;
+                        display: flex;
+                        align-items: flex-end;
+                        justify-content: center;
+                    }
+                    .pwe-calendar__short-name {
+                        position: absolute;
+                        top: 65%;
+                        left: 50%;
+                        transform: translate(-50%, -65%);
+                        z-index: 1;
+                        width: 300px;
+                        max-width: 90%;
                     }
                     .pwe-calendar__short-name h4 {
-                        font-size: 12px;
+                        color: white !important;
+                        font-size: 17px;
+                        font-weight: 600;
+                        text-shadow: 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black;
+                        text-transform: uppercase;
+                        text-align: center;
+                    }
+                    .pwe-calendar__statistics-word {
+                        font-size: 13px;
+                        color: grey;
+                        margin: 0;
+                        font-weight: 600;
                     }
                     .pwe-calendar_strip {
                         width: 100%;
-                        margin: 0;
-                        height: 20%;
-                    }
-                    .pwe-calendar__button-check p, 
-                    .pwe-calendar__edition p {
-                        font-size: 10px !important;
-                        padding: 4px !important;
-                    }
-                    .pwe-calendar_statistics {
                         display: flex;
-                        flex-direction: column;
-                        gap: 6px;   
+                        align-items: center;
+                        margin: 6px;
+                    }
+                    .pwe-calendar__button-check {
+                        width: 40%;
+                    }
+                    .pwe-calendar__button-check p {
+                        width: fit-content;
+                        line-height: 1;
+                        color: white;
+                        font-size: 12px;
+                        font-weight: 700;
+                        margin: 0;
+                        text-transform: uppercase;
+                        background-color: grey;
+                        padding: 9px;
+                        border-radius: 12px;
+                    }
+                    .pwe-calendar__edition {
+                        width: 60%;
+                    }
+                    .pwe-calendar__edition p {
+                        margin: 0 0 0 2px;
+                        line-height: 1;
+                        color: white;
+                        font-size: 15px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                    }
+                    .pwe-calendar__date {
+                        padding: 6px;
+                    }
+                    .pwe-calendar__date h5 {
+                        margin: 0;
+                        line-height: 1.2;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        display: flex;
+                        justify-content: space-evenly;
+                    } 
+                    .pwe-calendar_statistics {
+                        padding: 10px;
+                    }
+                    .pwe-calendar__statistics-item {
+                        display: flex;
+                        justify-content: space-between;
                     }
                     .pwe-calendar__statistics-name {
-                        flex-direction: column;
-                        gap: 5px;
+                        width: 76%;
+                        display: flex;
+                        justify-content: space-between;
+                        gap: 10px;
                     }
-                }
-            </style>';
+                    .pwe-calendar__statistics-name p {
+                        margin: 0;
+                        line-height: 1;
+                        text-align: start;
+                    }
+                    .pwe-calendar__statistics-icon {
+                        width: 20%;
+                    }
+                    .pwe-calendar__statistics-icon img {
+                        max-width: 30px;
+                        vertical-align: middle;
+                    }
+                    .pwe-calendar__statistics-label {
+                        width: 65%;
+                        font-size: 14px;
+                        margin: 0;
+                        line-height: 1;
+                        color: black;
+                    }
+                    .pwe-calendar__statistics-value {
+                        width: 35%;
+                        font-size: 14px;
+                        color: grey;
+                        margin: 0;
+                        font-weight: 800;
+                        display: flex;
+                        white-space: nowrap;
+                        align-items: center;
+                    }
+                    @media (min-width: 960px){
+                        .row-parent:has(.pwe-calendar__item){
+                            max-width: unset !important;
+                        } 
+                    }
+                    @media (max-width: 1200px){
+                        .pwe-calendar__wrapper {
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 18px;
+                        }
+                    }
+                    @media (max-width: 960px){
+                        .pwe-calendar__short-name h4 {
+                            font-size: 14px;
+                        }
+                        .pwe-calendar__item:hover {
+                            transform: scale(1.02);
+                        }
+                    }
+                    @media (max-width: 768px) {
+                        .pwe-calendar__wrapper {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
+                    @media (max-width: 569px) {
+                        .main-container .row-parent:has(.pwe-calendar__item) {
+                            padding: 10px;
+                        }
+                        .pwe-calendar__wrapper {
+                            gap: 10px;
+                        }
+                        .pwe-calendar__short-name h4 {
+                            font-size: 12px;
+                        }
+                        .pwe-calendar_strip {
+                            width: 100%;
+                            margin: 0;
+                            height: 20%;
+                        }
+                        .pwe-calendar__button-check p, 
+                        .pwe-calendar__edition p {
+                            font-size: 10px !important;
+                            padding: 4px !important;
+                        }
+                        .pwe-calendar_statistics {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 6px;   
+                        }
+                        .pwe-calendar__statistics-name {
+                            flex-direction: column;
+                            gap: 5px;
+                        }
+                    }
+                </style>
+            ';
 
             $event_posts = [];
 
@@ -640,7 +626,7 @@ class PWECalendar extends PWECommonFunctions {
                             margin: 5px 0;
                         }
                     }
-                    .pwe-calendar__categories-dropdown-content .wszystkie { 
+                    .pwe-calendar__categories-dropdown-content .'. self::multi_translation("all") .' { 
                         background-color: #594334;
                         font-size: 21px;
                     }
@@ -947,6 +933,8 @@ class PWECalendar extends PWECommonFunctions {
             $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
+                    const allCategoriesData = '. json_encode($all_categories) .';
+
                     function replacePL(text) {
                         return decodeURIComponent(text.replace(/\+/g, " ")).replace(/-/g, " ");
                     }
@@ -966,60 +954,66 @@ class PWECalendar extends PWECommonFunctions {
                         dropdownContent?.classList.toggle("dropdown-delay", isExpanded);
                     });
 
-                    // Generating a list of categories
-                    const categories = new Set();
-                    allEvents.forEach(event => {
-                        const eventCategories = event.getAttribute("search_category")?.split(/\s+/) || [];
-                        eventCategories.forEach(category => {
-                        if (!["pwe-calendar__item", "'. self::multi_translation("all") .'", "'. self::multi_translation("other") .'", "'. self::multi_translation("premier_editions_class") .'"].includes(category)) {
-                            categories.add(category);
-                        }
+                    // Sorting categories to display "all", followed by other categories, and "other" and "premier_editions_class" last
+                    if (Array.isArray(allCategoriesData)) {
+                        // Sort categories with "all" first, then "other", "premier_editions_class", followed by others
+                        const sortedCategories = allCategoriesData.sort((a, b) => {
+                            if (a.slug === "'. self::multi_translation("all") .'") return -1;
+                            if (b.slug === "'. self::multi_translation("all") .'") return 1;
+                            if (a.slug === "'. self::multi_translation("other") .'") return 1;
+                            if (b.slug === "'. self::multi_translation("other") .'") return -1;
+                            return a.name.localeCompare(b.name);
                         });
-                    });
 
-                    const uniqueCategories = ["'. self::multi_translation("all") .'", ...[...categories].sort(), "'. self::multi_translation("other") .'", "'. self::multi_translation("premier_editions_class") .'"];
-                    uniqueCategories.forEach((cat, i) => {
-                        if (cat !== "") {
+                        // Manually add "Premier editions" at the end
+                        sortedCategories.push({
+                            name: "'. self::multi_translation("premier_edition") .'",
+                            slug: "premier-edition"
+                        });
+
+                        // Generate dropdown list with categories from sorted allCategoriesData
+                        sortedCategories.forEach((category, i) => {
+                            // Create the list item for each category
                             const li = document.createElement("li");
-                            li.classList.add(cat.toLowerCase().replace(/\s+/g, "-"));
-                            li.innerText = replacePL(cat).toUpperCase();
+                            const categorySlug = category.slug.toLowerCase().replace(/\s+/g, "-");
+                            li.classList.add(categorySlug);  // Add class based on slug
+                            li.innerText = replacePL(category.name).toUpperCase();  // Set inner text as category name
                             li.style = `--delay: ${i + 1}`;
+
+                            // Adding click event to filter the events based on the selected category
+                            li.addEventListener("click", function () {
+                                const selectedCategorySlug = categorySlug;
+                                if (selectedCategorySlug === "premier-edition") {
+                                    // Show only events with "premier edycja"
+                                    allEvents.forEach(eventItem => {
+                                        const editionText = eventItem.querySelector(".pwe-calendar__edition p")?.innerText.toLowerCase() || "";
+                                        const isPremier = editionText.includes("'. self::multi_translation("premier_edition") .'".toLowerCase());
+                                        eventItem.classList.toggle("dont-show", !isPremier);
+                                    });
+                                } else {
+                                    // Show events based on the selected category
+                                    allEvents.forEach(eventItem => {
+                                        const eventCategories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
+                                        const eventCategorySlug = eventCategories.map(cat => cat.toLowerCase().replace(/\s+/g, "-"));
+                                        const isCategoryMatched = eventCategorySlug.includes(selectedCategorySlug);
+
+                                        eventItem.classList.toggle("dont-show", !isCategoryMatched);
+                                    });
+                                }
+
+                                // Update dropdown button text
+                                dropdownBtn.innerHTML = `<span>${event.target.innerText}</span><span class="arrow"></span>`;
+                                dropdownBtn.click(); // Close dropdown after selection
+                            });
+
+                            // Append the list item to the dropdown menu
                             dropdownMenu?.appendChild(li);
-                        }
-                    });
-
-                    // Changing category names: ŻYWNOŚĆ i PRZEMYSŁ
-                    const zywnosc = dropdownMenu?.querySelector(".zywnosc");
-                    if (zywnosc) zywnosc.innerText = "ŻYWNOŚĆ";
-
-                    const przemysl = dropdownMenu?.querySelector(".przemysl");
-                    if (przemysl) przemysl.innerText = "PRZEMYSŁ";
+                        });
+                    }
 
                     const b2cElements = dropdownMenu?.querySelectorAll("[class*=\'b2c-\']");
                     b2cElements.forEach(element => {
                         element.style.display = "none";
-                    });
-
-                    // Handling clicking on a category
-                    dropdownMenu?.querySelectorAll("li").forEach(li => {
-                        li.addEventListener("click", function (event) {
-                            const selected = event.target.className;
-                            allEvents.forEach(eventItem => {
-                                const categories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
-                                const editionText = eventItem.querySelector(".pwe-calendar__edition p")?.innerText.toLowerCase() || "";
-                                const isPremier = editionText.includes("premierowa edycja");
-
-                                let show = selected === "'. self::multi_translation("all") .'"
-                                || categories.includes(selected)
-                                || (selected === "'. self::multi_translation("premier_editions_class") .'" && isPremier)
-                                || (selected === "'. self::multi_translation("other") .'" && categories.length === 0);
-
-                                eventItem.classList.toggle("dont-show", !show);
-                            });
-
-                            dropdownBtn.innerHTML = `<span>${event.target.innerText}</span><span class="arrow"></span>`;
-                            dropdownBtn.click(); // Closing dropdown
-                        });
                     });
 
                     // Search engine support
@@ -1067,7 +1061,23 @@ class PWECalendar extends PWECommonFunctions {
 
         $date_object = DateTime::createFromFormat('d-m-Y', $start_date);
 
-        $quarterly_date = !empty(get_post_meta($post_id, 'quarterly_date', true)) ? get_post_meta($post_id, 'quarterly_date', true) : ($lang_pl ? 'Nowa data wkrótce' : 'New date comming soon');
+        if ($locale == "pl_PL") {
+            $new_date_coming_soon = "Nowa data wkrótce";
+        } else if ($locale == "en_US") {
+            $new_date_coming_soon = "New date coming soon";
+        } else if ($locale == "de_DE") {
+            $new_date_coming_soon = "Neuer Termin folgt in Kürze";
+        } else if ($locale == "lt_LT") {
+            $new_date_coming_soon = "Nauja data netrukus";
+        } else if ($locale == "lv_LV") {
+            $new_date_coming_soon = "Jauns datums drīzumā";
+        } else if ($locale == "uk") {
+            $new_date_coming_soon = "Нова дата незабаром";
+        } else {
+            $new_date_coming_soon = "New date coming soon";
+        }
+
+        $quarterly_date = !empty(get_post_meta($post_id, 'quarterly_date', true)) ? get_post_meta($post_id, 'quarterly_date', true) : $new_date_coming_soon;
 
         if (($date_object && $date_object->format('Y') == 2050) || (strtotime($end_date . " +1 day") < time())) {
             $fair_date =  $quarterly_date;
@@ -1136,7 +1146,7 @@ class PWECalendar extends PWECommonFunctions {
                 <div class="pwe-calendar__date">
                     <h5>' . $fair_date . '</h5>
                 </div>';
-                if($edition == 'Premierowa edycja' || $edition == 'Premier edition' || $edition == 'Premierenedition'){
+                if ($edition == self::multi_translation("premier_edition")) {
                     $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("estimates") .'</div>';
                 } else {
                     $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("statistics") . '</div>';

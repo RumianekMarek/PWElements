@@ -350,7 +350,26 @@ function event_dates_callback($post) {
         $fair_date_start_cap = $pwe_db_date_start_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_start))) : "";
         $fair_date_end_cap = $pwe_db_date_end_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_end))) : "";
 
-        $quarterly_date = ((empty($fair_date_start_cap) || empty($fair_date_end_cap)) && empty(get_post_meta($post->ID, 'quarterly_date', true))) ? ($lang === "pl" ? 'Nowa data wkrótce' : 'New date comming soon') : get_post_meta($post->ID, 'quarterly_date', true);
+        if ($lang == "pl") {
+            $new_date_coming_soon = "Nowa data wkrótce";
+        } else if ($lang == "en") {
+            $new_date_coming_soon = "New date coming soon";
+        } else if ($lang == "de") {
+            $new_date_coming_soon = "Neuer Termin folgt in Kürze";
+        } else if ($lang == "lt") {
+            $new_date_coming_soon = "Nauja data netrukus";
+        } else if ($lang == "lv") {
+            $new_date_coming_soon = "Jauns datums drīzumā";
+        } else if ($lang == "uk") {
+            $new_date_coming_soon = "Нова дата незабаром";
+        } else {
+            $new_date_coming_soon = "New date coming soon";
+        }
+
+        // delete_post_meta($post->ID, 'quarterly_date');
+
+
+        $quarterly_date = ((empty($fair_date_start_cap) || empty($fair_date_end_cap)) && empty(get_post_meta($post->ID, 'quarterly_date', true))) ? $new_date_coming_soon : get_post_meta($post->ID, 'quarterly_date', true);
     }
     echo '
     <div class="pwe-calendar-inputs-container">

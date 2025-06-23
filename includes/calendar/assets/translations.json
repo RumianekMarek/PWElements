@@ -24,7 +24,8 @@
     "search": "Szukaj",
     "all": "wszystkie",
     "other": "inne",
-    "premier_editions_class": "premierowe-edycje"
+    "premier_editions_class": "premierowe-edycje",
+    "new_date_coming_soon": "Nowa data wkrótce"
   },
   "en_US": {
     "buy_ticket": "Buy ticket",
@@ -51,7 +52,8 @@
     "search": "Search",
     "all": "all-categories",
     "other": "other",
-    "premier_editions_class": "premier-editions"
+    "premier_editions_class": "premier-editions",
+    "new_date_coming_soon": "New date coming soon"
   },
   "de_DE": {
     "buy_ticket": "Ticket kaufen",
@@ -78,7 +80,8 @@
     "search": "Suchen",
     "all": "alle-kategorien",
     "other": "andere",
-    "premier_editions_class": "premiereneditionen"
+    "premier_editions_class": "premiereneditionen",
+    "new_date_coming_soon": "Neuer Termin folgt in Kürze"
   },
   "lt_LT": {
     "buy_ticket": "Pirkti bilietą",
@@ -105,6 +108,63 @@
     "search": "Ieškoti",
     "all": "visos-kategorijos",
     "other": "kita",
-    "premier_editions_class": "pirmieji-leidimai"
+    "premier_editions_class": "pirmieji-leidimai",
+    "new_date_coming_soon": "Nauja data netrukus"
+  },
+  "lv_LV": {
+    "buy_ticket": "Pirkt biļeti",
+    "collect_invitation": "Saņemt ielūgumu",
+    "become_exhibitor": "Kļūt par izstādes dalībnieku",
+    "website": "Mājaslapa",
+    "premier_edition": "Pirmā izstādes edīcija",
+    "edition": ". edīcija ",
+    "check_out": "Norēķināties",
+    "patrons_and_partners": "Patroni un partneri",
+    "discover_trade_fair": "Iepazīstiet nozares tirdzniecības izstādi",
+    "attractions": "Izklaides",
+    "attractions_url": "/en/attractions/",
+    "conference": "Konference",
+    "conference_url": "/en/conferences/",
+    "visitors": "Apmeklētāji",
+    "exhibitors": "Izstādes dalībnieki",
+    "countries": "Valstis",
+    "exhibition_area": "Izstāžu platība",
+    "estimates": "Aptuvenās aplēses",
+    "statistics": "Statistika",
+    "most_important_industry_events_in_europe": "Svarīgākie nozares pasākumi Eiropā",
+    "select_categories": "Izvēlieties kategorijas",
+    "search": "Meklēt",
+    "all": "visas-kategorijas",
+    "other": "cits",
+    "premier_editions_class": "premjerizlaidumu-serija",
+    "new_date_coming_soon": "Jauns datums drīzumā"
+  },
+  "uk": {
+    "buy_ticket": "Купити квиток",
+    "collect_invitation": "Отримати запрошення",
+    "become_exhibitor": "Стати учасником",
+    "website": "Вебсайт",
+    "premier_edition": "Прем'єрне видання",
+    "edition": ". видання",
+    "check_out": "Детальніше",
+    "patrons_and_partners": "Патрони та партнери",
+    "discover_trade_fair": "Відкрийте для себе галузеву виставку",
+    "attractions": "Розваги",
+    "attractions_url": "/en/attractions/",
+    "conference": "Конференція",
+    "conference_url": "/en/conferences/",
+    "visitors": "Відвідувачі",
+    "exhibitors": "Учасники виставки",
+    "countries": "Країни",
+    "exhibition_area": "Виставкова площа",
+    "estimates": "Прогнозні показники",
+    "statistics": "Статистика",
+    "most_important_industry_events_in_europe": "Найважливіші події галузі в Європі",
+    "select_categories": "Виберіть категорію",
+    "search": "Пошук",
+    "all": "vsi-kategorii",
+    "other": "inshi",
+    "premier_editions_class": "premyerne-vydannya",
+    "new_date_coming_soon": "Нова дата незабаром"
   }
 } 

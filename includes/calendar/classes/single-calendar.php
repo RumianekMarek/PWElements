@@ -146,20 +146,7 @@ $start_date = empty($start_date) ? "28-01-2050" : $start_date;
 $end_date = $pwe_db_date_end_available ? date("d-m-Y", strtotime(str_replace("/", "-", $pwe_db_date_end))) : get_post_meta($post_id, 'fair_date_end', true);
 $end_date = empty($end_date) ? "30-01-2050" : $end_date;
 
-$months = array(
-    '01' => array('PL' => 'STYCZNIA', 'EN' => 'JANUARY', 'DE' => 'JANUAR', 'LT' => 'SAUSIO'),
-    '02' => array('PL' => 'LUTEGO', 'EN' => 'FEBRUARY', 'DE' => 'FEBRUAR', 'LT' => 'VASARIO'),
-    '03' => array('PL' => 'MARCA', 'EN' => 'MARCH', 'DE' => 'MÄRZ', 'LT' => 'KOVO'),
-    '04' => array('PL' => 'KWIETNIA', 'EN' => 'APRIL', 'DE' => 'APRIL', 'LT' => 'BALANDŽIO'),
-    '05' => array('PL' => 'MAJA', 'EN' => 'MAY', 'DE' => 'MAI', 'LT' => 'GEGUŽĖS'),
-    '06' => array('PL' => 'CZERWCA', 'EN' => 'JUNE', 'DE' => 'JUNI', 'LT' => 'BIRŽELIO'),
-    '07' => array('PL' => 'LIPCA', 'EN' => 'JULY', 'DE' => 'JULI', 'LT' => 'LIEPOS'),
-    '08' => array('PL' => 'SIERPNIA', 'EN' => 'AUGUST', 'DE' => 'AUGUST', 'LT' => 'RUGPJŪČIO'),
-    '09' => array('PL' => 'WRZEŚNIA', 'EN' => 'SEPTEMBER', 'DE' => 'SEPTEMBER', 'LT' => 'RUGSĖJO'),
-    '10' => array('PL' => 'PAŹDZIERNIKA', 'EN' => 'OCTOBER', 'DE' => 'OKTOBER', 'LT' => 'SPALIO'),
-    '11' => array('PL' => 'LISTOPADA', 'EN' => 'NOVEMBER', 'DE' => 'NOVEMBER', 'LT' => 'LAPKRIČIO'),
-    '12' => array('PL' => 'GRUDNIA', 'EN' => 'DECEMBER', 'DE' => 'DEZEMBER', 'LT' => 'GRUODŽIO'),
-);
+$months = json_decode(file_get_contents(__DIR__ . '/../assets/months.json'), true);
 
 // Date formatting function
 if (!function_exists('format_date_range')) {
@@ -174,52 +161,55 @@ if (!function_exists('format_date_range')) {
         $year = $start_parts[2];
 
         // Select month name depending on language
-        if ($locale == "pl_PL") {
-            $lang_key = "PL";
-        } else if ($locale == "en_US") {
-            $lang_key = "EN";
-        } else if ($locale == "de_DE") {
-            $lang_key = "DE";
-        } else if ($locale == "lt_LT") {
-            $lang_key = "LT";
-        } else {
-            $lang_key = "EN";
-        }
+        $lang_key = strtoupper(substr($locale, 0, 2));
 
         $start_month_name = isset($months[$start_month][$lang_key]) ? $months[$start_month][$lang_key] : "";
         $end_month_name = isset($months[$end_month][$lang_key]) ? $months[$end_month][$lang_key] : "";
 
         // Check if months are different
-        if ($locale == "pl_PL") {
-            if ($start_month === $end_month) {
-                return "$start_day - $end_day $start_month_name $year";
-            } else {
-                return "$start_day $start_month_name - $end_day $end_month_name $year";
-            }
-        } else if ($locale == "en_US") {
-            if ($start_month === $end_month) {
-                return "$start_month_name $start_day-$end_day, $year";
-            } else {
-                return "$start_month_name $start_day - $end_month_name $end_day, $year";
-            }
-        } else if ($locale == "de_DE") {
-            if ($start_month === $end_month) {
-                return "$start_day.-$end_day. $start_month_name $year";
-            } else {
-                return "$start_day. $start_month_name - $end_day. $end_month_name $year";
-            }
-        } else if ($locale == "lt_LT") {
-            if ($start_month === $end_month) {
-                return "$year m. $start_month_name $start_day-$end_day d.";
-            } else {
-                return "$year m. $start_month_name $start_day d. - $end_month_name $end_day d.";
-            }
-        } else {
-            if ($start_month === $end_month) {
-                return "$start_month_name $start_day-$end_day, $year";
-            } else {
-                return "$start_month_name $start_day - $end_month_name $end_day, $year";
-            }
+        switch ($lang_key) {
+            case "PL":
+                if ($start_month === $end_month) {
+                    return "$start_day - $end_day $start_month_name $year";
+                } else {
+                    return "$start_day $start_month_name - $end_day $end_month_name $year";
+                }
+            case "EN":
+                if ($start_month === $end_month) {
+                    return "$start_month_name $start_day-$end_day, $year";
+                } else {
+                    return "$start_month_name $start_day - $end_month_name $end_day, $year";
+                }
+            case "DE":
+                if ($start_month === $end_month) {
+                    return "$start_day.-$end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "LT":
+                if ($start_month === $end_month) {
+                    return "$year m. $start_month_name $start_day-$end_day d.";
+                } else {
+                    return "$year m. $start_month_name $start_day d. - $end_month_name $end_day d.";
+                }
+            case "LV":
+                if ($start_month === $end_month) {
+                    return "$start_day. - $end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "UK":
+                if ($start_month === $end_month) {
+                    return "$start_day - $end_day $start_month_name $year";
+                } else {
+                    return "$start_day $start_month_name - $end_day $end_month_name $year";
+                }
+            default:
+                if ($start_month === $end_month) {
+                    return "$start_month_name $start_day-$end_day, $year";
+                } else {
+                    return "$start_month_name $start_day - $end_month_name $end_day, $year";
+                }
         }
     }
 }
@@ -229,7 +219,7 @@ $formatted_date = format_date_range($start_date, $end_date, $months, $locale);
 
 $date_object = DateTime::createFromFormat('d-m-Y', $start_date);
 
-$quarterly_date = !empty(get_post_meta($post_id, 'quarterly_date', true)) ? get_post_meta($post_id, 'quarterly_date', true) : ($lang_pl ? 'Nowa data wkrótce' : 'New date comming soon');
+$quarterly_date = !empty(get_post_meta($post_id, 'quarterly_date', true)) ? get_post_meta($post_id, 'quarterly_date', true) : multi_translation("new_date_coming_soon");
 
 if (($date_object && $date_object->format('Y') == 2050) || (strtotime($end_date . " +20 hours") < time())) {
     $fair_date =  $quarterly_date;
@@ -486,6 +476,7 @@ $output .= '
         font-weight: 700 !important;
     }
     .single-event__desc-column p {
+        line-height: 1.3;
         margin: 0;
     }
     .single-event__date {

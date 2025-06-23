@@ -46,7 +46,7 @@ class PWECatalog10 extends PWECatalog {
             $source_utm = '';
         }
 
-        if(count($exhibitors) >= 12 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) || strpos($source_utm, 'utm_source=platyna') !== false){
+        if(count($exhibitors) >= 12 && (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false)){
 
             $output .= '
             <style>
