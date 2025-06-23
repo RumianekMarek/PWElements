@@ -312,7 +312,7 @@ class PWElementPosts extends PWElements {
             }
             </style>
 
-            <div id="PostsSliderSyncing" class="posts_slider_syncing__main_container">
+            <div id="PostsSliderSyncing" class="posts_slider_syncing__main_container pwelement_' . self::$rnd_id . '">
                     <h2 class="posts_slider_syncing__title">' . $posts_title . '</h2>
                     <div class="posts_slider_syncing__container">';
                         $output .= '<div class="slider_syncing slider_syncing__main">';
@@ -355,21 +355,21 @@ class PWElementPosts extends PWElements {
             </div>
         <script>
             jQuery(document).ready(function($) {
-                const rootSingle = $(".slider_syncing__main");
-                const rootNav = $(".slider_syncing__nav");
+                const rootSingle = $(".pwelement_' . self::$rnd_id . ' .slider_syncing__main");
+                const rootNav = $(".pwelement_' . self::$rnd_id . ' .slider_syncing__nav");
 
                 function setGlobalMaxHeight() {
                     let maxHeight = 0;
 
-                    $(".slider_syncing__item").each(function () {
+                    $(".pwelement_' . self::$rnd_id . ' .slider_syncing__item").each(function () {
                         $(this).css("height", "auto");
                         const h = $(this).outerHeight();
                         if (h > maxHeight) maxHeight = h;
                     });
 
-                    $(".slider_syncing__item").height(maxHeight);
-                    $(".slick-slide").height("auto"); // reset
-                    $(".slider_syncing__main .slick-slide, .slider_syncing__nav .slick-slide").height(maxHeight);
+                    $(".pwelement_' . self::$rnd_id . ' .slider_syncing__item").height(maxHeight);
+                    $(".pwelement_' . self::$rnd_id . ' .slick-slide").height("auto"); // reset
+                    $(".pwelement_' . self::$rnd_id . ' .slider_syncing__main .slick-slide, .slider_syncing__nav .slick-slide").height(maxHeight);
                 }
 
                 rootSingle.on("init", function () {
@@ -419,7 +419,7 @@ class PWElementPosts extends PWElements {
                 });
 
                 // Wstrzymaj oba slidery, gdy myszka jest nad którymkolwiek
-                $("#PostsSliderSyncing").on("mouseenter", function () {
+                $(".pwelement_' . self::$rnd_id . ' #PostsSliderSyncing").on("mouseenter", function () {
                     rootSingle.slick("slickPause");
                     rootNav.slick("slickPause");
                 }).on("mouseleave", function () {
@@ -958,8 +958,8 @@ class PWElementPosts extends PWElements {
                         <input type="range" class="slider-range_' . self::$rnd_id . '" min="0" step="1">
                         <script>
                         jQuery(document).ready(function ($) {
-                            const $slider = $(".'.$slider_id.'");
-                            const $range = $(".slider-range_' . self::$rnd_id . '");
+                            const $slider = $(".pwelement_' . self::$rnd_id . ' .'.$slider_id.'");
+                            const $range = $(".pwelement_' . self::$rnd_id . ' .slider-range_' . self::$rnd_id . '");
 
                             $slider.on("init", function (event, slick) {
                                 $range.attr("max", slick.slideCount - 1);

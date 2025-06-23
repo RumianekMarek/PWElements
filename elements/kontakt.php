@@ -43,7 +43,7 @@ class PWElementContact extends PWElements {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
         $pwe_groups_data = PWECommonFunctions::get_database_groups_data(); 
-        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data(); 
+        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data();  
 
         // Get domain address
         $current_domain = $_SERVER['HTTP_HOST'];
@@ -77,7 +77,8 @@ class PWElementContact extends PWElements {
             }
         }  
         
-        $service_email = !empty($service_email) ? $service_email : "sponsoring3@warsawexpo.eu";
+        $service_email = !empty($service_email) ? $service_email : "zgloszenia@warsawexpo.eu";
+        // $service_email = "anton.melnychuk@warsawexpo.eu";
         
         $output = '
         <style>
@@ -172,46 +173,56 @@ class PWElementContact extends PWElements {
                     <img src="/wp-content/plugins/PWElements/media/Phone.jpg" alt="grafika słuchawka">
                     <div class="uncode_text_column">
                         <p>
-                            <b>'. self::languageChecker('Biuro obsługi', 'Customer Service Office') .'</b>
-                            <a href="tel:'. $service_phone .'">'. $service_phone .'</a>
+                            <b>'. self::languageChecker('Biuro obsługi', 'Customer Service Office') .'</b>';
+                            if (!empty($service_phone)) {
+                                $output .= '<a href="tel:'. $service_phone .'">'. $service_phone .'</a>';
+                            }
+                            $output .= '
                             <a href="mailto:'. str_replace("@warsawexpo.eu", "", $service_email) .'@warsawexpo.eu">
                                 <span>'. str_replace("@warsawexpo.eu", "", $service_email) .'</span><span>@warsawexpo.eu</span>
                             </a>
                         </p>
                     </div>
-                </div>
+                </div>';
 
-                <div class="pwe-contact-icon-item">
-                    <img src="/wp-content/plugins/PWElements/media/WystawcyZ.jpg" alt="grafika wystawcy">
-                    <div class="uncode_text_column">
-                        <p>
-                            <b>'.self::languageChecker('Obsługa techniczna wystawców<br>', 'Technical support for exhibitors<br>').'</b>
-                            <a href="mailto:'. str_replace("@warsawexpo.eu", "", $consultant_email) .'@warsawexpo.eu">
-                                <span>'. str_replace("@warsawexpo.eu", "", $consultant_email) .'</span><span>@warsawexpo.eu</span>
-                            </a>
-                        </p>
-                    </div>
-                </div>
+                if (!empty($consultant_email)) {
+                    $output .= '
+                    <div class="pwe-contact-icon-item">
+                        <img src="/wp-content/plugins/PWElements/media/WystawcyZ.jpg" alt="grafika wystawcy">
+                        <div class="uncode_text_column">
+                            <p>
+                                <b>'.self::languageChecker('Obsługa techniczna wystawców<br>', 'Technical support for exhibitors<br>').'</b>
+                                <a href="mailto:'. str_replace("@warsawexpo.eu", "", $consultant_email) .'@warsawexpo.eu">
+                                    <span>'. str_replace("@warsawexpo.eu", "", $consultant_email) .'</span><span>@warsawexpo.eu</span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>';
+                }
 
+            $output .= '
             </div>
 
             <div class="pwe-heading-text main-pwe-heading-text" style="margin-top: 36px;">
                 <h4>'.self::languageChecker('Media i marketing', 'Media and marketing').'</h4>
             </div>
 
-            <div class="pwe-container-contact-items">
+            <div class="pwe-container-contact-items">';
 
-                <div class="pwe-contact-icon-item">
-                    <img src="/wp-content/plugins/PWElements/media/Marketing.jpg" alt="grafika technicy">
-                    <div class="uncode_text_column" style="overflow-wrap: anywhere;">
-                        <p>
-                            <b>'. self::languageChecker('Obsługa marketingowa i media', 'Marketing and media services').'</b>
-                            <a href="mailto:'. str_replace("@warsawexpo.eu", "", $marketing_email) .'@warsawexpo.eu">
-                                <span>'. str_replace("@warsawexpo.eu", "", $marketing_email) .'</span><span>@warsawexpo.eu</span>
-                            </a>
-                        </p>
-                    </div>
-                </div>';
+                if (!empty($marketing_email)) {
+                    $output .= '
+                    <div class="pwe-contact-icon-item">
+                        <img src="/wp-content/plugins/PWElements/media/Marketing.jpg" alt="grafika technicy">
+                        <div class="uncode_text_column" style="overflow-wrap: anywhere;">
+                            <p>
+                                <b>'. self::languageChecker('Obsługa marketingowa i media', 'Marketing and media services').'</b>
+                                <a href="mailto:'. str_replace("@warsawexpo.eu", "", $marketing_email) .'@warsawexpo.eu">
+                                    <span>'. str_replace("@warsawexpo.eu", "", $marketing_email) .'</span><span>@warsawexpo.eu</span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>';
+                }
 
                 if (!empty($contact_person_name) && (!empty($contact_person_email) || !empty($contact_person_phone))) {
                     $output .= '
@@ -235,16 +246,17 @@ class PWElementContact extends PWElements {
                 $output .= '
             </div>
 
-        </div>
-        
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const emailAdminInput = document.querySelector(".email-admin-input input");
-                if (emailAdminInput) {
-                    emailAdminInput.value = "'. str_replace(" ", "", $service_email) .'";
-                }
-            });
-        </script>';         
+        </div>';
+
+        // $output .= '
+        // <script>
+        //     document.addEventListener("DOMContentLoaded", function () {
+        //         const emailAdminInput = document.querySelector(".email-admin-input input");
+        //         if (emailAdminInput) {
+        //             emailAdminInput.value = "'. str_replace(" ", "", $service_email) .'";
+        //         }
+        //     });
+        // </script>';         
 
     return $output;
     }

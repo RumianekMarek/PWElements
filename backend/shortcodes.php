@@ -113,7 +113,8 @@ function register_dynamic_shortcodes() {
         'pwe_instagram' => 'instagram',
         'pwe_linkedin' => 'linkedin',
         'pwe_youtube' => 'youtube',
-        'pwe_catalog' => 'catalog' 
+        'pwe_catalog' => 'catalog',
+        'pwe_group' => 'group' 
     ];
 
     // Shortcode handling function

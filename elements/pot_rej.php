@@ -79,12 +79,9 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         $selected_form_id = '';
         //$selected_form = '';
 
-        if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false && strpos($source_utm, 'utm_source_hs=premium') === false){
+        if (strpos($source_utm, 'utm_source=byli') === false){
             $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Zamawiam Bezpłatny identyfikator" : "Order your Free ID" ;
-        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-            $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color);
-            $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
         } else if (strpos($source_utm, 'utm_source=byli') !== false){
             $btn_color = '#b69663';
             $confirmation_page_text_btn = (get_locale() == 'pl_PL') ? "Wyślij" : "Send" ;
@@ -485,10 +482,10 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     }
                 }
             </style>';
-
+        if(strpos($source_utm, 'utm_source=platyna') === false){
             $output .= '
             <div id="xForm">';
-            if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false && strpos($source_utm, 'utm_source_hs=premium') === false) {
+            if (strpos($source_utm, 'utm_source=byli') === false) {
                 $output .= '
                     <div class="form-3-left">
                         <div>'.
@@ -517,23 +514,24 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     </div>
                 ';
             } else {
-                if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
+                if (strpos($source_utm, 'utm_source=byli') !== false ) {
                     if (get_locale() == 'pl_PL') {
                         $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
                     } else {
                         $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
                     }
-
-                    $output .= '
+                } else if( strpos($source_utm, 'utm_source=premium') !== false) {
+                    $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badge-mockup.webp') ? '/doc/badge-mockup.webp' : '/doc/badge-mockup.webp');
+                }
+                $output .= '
                         <div class="form-3-left form-3-left-vip" style="padding:0;">
                             <img src="'. $badgevipmockup .'">
                         </div>
                     ';
-                }
             }
             $output .= '
                 <div class="form-3">';
-                    if (strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false  && strpos($source_utm, 'utm_source_hs=premium') === false) {
+                    if (strpos($source_utm, 'utm_source=byli') === false) {
                         $output .=
                             self::languageChecker(
                                 <<<PL
@@ -566,28 +564,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                 PL,
                                 <<<EN
                                     <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="golden-text">digital <strong>VIP</strong> package</span></p>
-                                EN
-                            );
-                        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-                            $output .='
-                            <div class="pwe-registration-step-text">
-                                <p>'.
-                                    self::languageChecker(
-                                        <<<PL
-                                            Krok 2 z 2
-                                        PL,
-                                        <<<EN
-                                            Step 2 of 2
-                                        EN
-                                    )
-                                .'</p>
-                            </div>' .
-                            self::languageChecker(
-                                <<<PL
-                                    <p class="display-befor-subbmit vip-pack">Podaj adres, na który mamy wysłać <span class="silver-text">darmowy pakiet <strong>PLATINIUM</strong></span></p>
-                                PL,
-                                <<<EN
-                                    <p class="display-befor-subbmit vip-pack">Enter the details to receive free <span class="silver-text">digital <strong>PLATINIUM</strong> package</span></p>
                                 EN
                             );
                         }
@@ -678,7 +654,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     ';
                     }
 
-                if(strpos($source_utm, 'utm_source=byli') === false && strpos($source_utm, 'utm_source=premium') === false) {
+                if(strpos($source_utm, 'utm_source=byli') === false) {
                     $output .= '
                         <div class="form-3-right form-3-right-visit">
                             <img src="/doc/badge-mockup.webp">
@@ -781,94 +757,272 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                 </div>
                             </div>
                         ';
-                    } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-                        $output .= '
-                            <div class="form-3-right form-3-right_vip">
-                                <div>
-                                    <h3>'.
-                                        self::languageChecker(
-                                            <<<PL
-                                                Pakiet PLATINIUM upoważnia do:
-                                            PL,
-                                            <<<EN
-                                                The PLATINIUM package entitles you to:
-                                            EN
-                                        )
-                                    .'</h3>
-                                    <div class="vip_options">
-                                        <div>
-                                            <img src="/wp-content/plugins/PWElements/media/premium_diament.webp">
-                                            <span class="opis_vip">'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                        Wstępu do strefy VIP
-                                                    PL,
-                                                    <<<EN
-                                                        Admission to the VIP area
-                                                    EN
-                                                )
-                                            .'</span>
-                                        </div>
-                                        <div>
-                                            <img src="/wp-content/plugins/PWElements/media/premium_ludzik.webp">
-                                            <span class="opis_vip">'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                        Uczestnictwa w wydarzeniach towarzyszących targom
-                                                    PL,
-                                                    <<<EN
-                                                        Participation in events accompanying the fair
-                                                    EN
-                                                )
-                                            .'</span>
-                                        </div>
-                                        <div>
-                                            <img src="/wp-content/plugins/PWElements/media/premium_ulotka.webp">
-                                            <span class="opis_vip">'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    Dostępu do materiałów targowych dostępnych wyłącznie w strefie VIP
-                                                    PL,
-                                                    <<<EN
-                                                    Access to trade show materials available only in the VIP area
-                                                    EN
-                                                )
-                                            .'</span>
-                                        </div>
-                                        <div>
-                                            <img src="/wp-content/plugins/PWElements/media/premium_wifi.webp">
-                                            <span class="opis_vip">'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    Skorzystania z darmowego WI-FI i strefy ładowania urządzeń
-                                                    PL,
-                                                    <<<EN
-                                                    Take advantage of free WI-FI and a device charging zone
-                                                    EN
-                                                )
-                                            .'</span>
-                                        </div>
-                                    </div>
-                                    <div class="vip_options_foot">
-                                        <p>'.
-                            self::languageChecker(
-                                <<<PL
-                                    Zarezerwuj swoje miejsce już dziś i podnieś swoje doświadczenie targowe na wyższy poziom!
-                                PL,
-                                <<<EN
-                                    Reserve your spot today and elevate your trade show experience to the next level!
-                                EN
-                            )
-                            .'</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ';
                     }
                 }
             $output .= '
             </div>';
+        } else {
+            $output .= '
+                <div id="pweRegistration" class="pwe-registration platyna">
+                    <div class="pwe-registration-column">
+                        <div id="pweForm">
+                            <div class="pweform_container">
+                                <div class="form">
+                                    <h2 class="form-title">'. PWECommonFunctions::languageChecker('Podaj adres, na który mamy wysłać <span style="color:#616161">darmowy pakiet PLATINUM</span>', 'Enter the address to which we should send<br/>the <span style="color:#616161">free PLATINUM package</strong>') .'</h2>
+                                    <div class="pwe-registration-form">
+                                        <div class="pwe-gravity-form">
+                                            <div class="gf_browser_chrome gform_wrapper gravity-theme gform-theme--no-framework">
+                                                <form id="addressUpdateForm">
+                                                    <div class="gform-body gform_body">
+                                                        <div class="gform_fields">
+                                                            <div class="gfield gfield--width-full">
+                                                                <label class="gfield_label gform-field-label">' . $t['name'] . '</label>
+                                                                <input type="text" id="name" placeholder="' . $t['name'] . '" required />
+                                                            </div>
+                                                            <div class="gfield gfield--width-full">
+                                                                <label class="gfield_label gform-field-label">' . $t['street'] . '</label>
+                                                                <input type="text" id="street" placeholder="' . $t['street'] . '" required />
+                                                            </div>
+                                                            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+                                                                <div style="flex:1;"  class="gfield gfield--width-full">
+                                                                    <label class="gfield_label gform-field-label">' . $t['house'] . '</label>
+                                                                    <input type="text" id="house" placeholder="' . $t['house'] . '" required />
+                                                                </div>
+                                                                <div style="flex:1;"  class="gfield gfield--width-full">
+                                                                    <label class="gfield_label gform-field-label">'. PWECommonFunctions::languageChecker('Numer lokalu', 'Premises number') .'</label>
+                                                                    <input type="text" id="local" placeholder="'. PWECommonFunctions::languageChecker('Numer lokalu', 'Premises number') .'" required />
+                                                                </div>
+                                                            </div>
+                                                            <div style="display: flex; flex-direction: row; gap: 10px; justify-content: space-between;">
+                                                                <div style="flex:1;" class="gfield gfield--width-half">
+                                                                    <label class="gfield_label gform-field-label">' . $t['post'] . '</label>
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <input type="text" id="post1" maxlength="2" placeholder="00" required />
+                                                                        <span style="margin: 0 5px;">-</span>
+                                                                        <input type="text" id="post2" maxlength="3" placeholder="000" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div style="flex:1;" class="gfield gfield--width-half">
+                                                                    <label class="gfield_label gform-field-label">' . $t['city'] . '</label>
+                                                                    <input type="text" id="city" placeholder="' . $t['city'] . '" required />
+                                                                </div>
+                                                            </div>
+                                                            <div id="statusMessage" class="status-message"></div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="pwe-submitting-buttons display-befor-subbmit">
+                                            <button id="pweSendStepTwo"  type="button" class="update-button btn pwe-btn pwe_reg_visitor"  onclick="updateGravityForm()">'. $confirmation_page_text_btn .'</button>
+                                            </div>
+                                            <div class="pwe-submitting-buttons display-after-subbmit">
+                                                <a href="'.
+                                                self::languageChecker(
+                                                    <<<PL
+                                                    /
+                                                    PL,
+                                                    <<<EN
+                                                        /en/
+                                                    EN
+                                                )
+                                            .'"><button class="btn pwe-btn pwe_reg_visitor">'. $main_page_text_btn .'</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="benefits">
+                                    <h2>'. PWECommonFunctions::languageChecker('Pakiet PLATINIUM upoważnia do:', 'The PLATINIUM package<br/>entitles you to:') .'</h2>
+                                    <div class="benefits_icon">
+                                        <img src="/wp-content/plugins/pwe-media/media/platyna/fasttrack.webp" />
+                                        <p>'. PWECommonFunctions::languageChecker('Wejście bezpłatne', 'Free entry') .'</br>FAST TRACK</p>
+                                    </div>
+                                    <div class="benefits_icon">
+                                        <img src="/wp-content/plugins/pwe-media/media/platyna/obsluga.webp" />
+                                        <p>'. PWECommonFunctions::languageChecker('Obsługę concierge"a', 'Concierge service') .'</p>
+                                    </div>
+                                    <div class="benefits_icon">
+                                        <img src="/wp-content/plugins/pwe-media/media/platyna/vip.webp" />
+                                        <p>'. PWECommonFunctions::languageChecker('Strefę VIP ROOM', 'VIP ROOM area') .'</p>
+                                    </div>
+                                    <div class="benefits_icon">
+                                        <img src="/wp-content/plugins/pwe-media/media/platyna/aktywacja.webp" />
+                                        <p>'. PWECommonFunctions::languageChecker('Możliwość wcześniejszej</br>aktywacji zaproszenia', 'Possibility of earlier</br> activation of the invitation') .'</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .limit-width:has(.platyna) {
+                        max-width:none !important;
+                        padding: 0px !important;
+                    }
+                    .wpb_column:has(.exhibitors-catalog) {
+                        display:none !important;
+                    }
+                    .row-container:has(#pweRegistration) {
+                        // background: linear-gradient(0deg, rgba(168, 168, 168, 0.58) 13%, rgba(150, 150, 150, 0.94) 23%, rgba(66, 66, 66, 0.02) 28%, rgba(170, 171, 175, 0.84) 100%);
+                        background-image: url(/doc/platinum_background.webp);
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                    }
+                    .pwe-registration-image-container img {
+                        max-width:80%;
+                    }
+                    #pweForm {
+                        width: 100%;
+                        --p: 70px;
+                        margin-left: auto;
+                        max-width: 60%;
+                        border-radius: 40px 0 0 40px;
+                        overflow: hidden;
+                        border: 1px solid #838B8F;
+                        background: #838B8F;
+                        background: linear-gradient(90deg, rgba(131, 139, 143, 1) 0%, rgba(224, 224, 224, 1) 50%, rgba(252, 252, 252, 1) 100%);
+                    }
+                    #pweRegistration .pweform_container {
+                        display: flex;
+                        max-width: 80%;
+                        margin-left: auto;
+                        padding: 18px 0;
+                        margin-right: 15px;
+                    }
+                    #pweRegistration .form {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    #pweRegistration .form, .benefits {
+                        flex:1;
+                    }
+                    .pwe-registration-column {
+                        display: flex;
+                        justify-content: right;
+                        align-items: center;
+                        min-height: 650px;
+                    }
+                    #pweRegistration .form-title, #pweRegistration .gform_confirmation_wrapper {
+                        color:black;
+                        font-weight:500;
+                        text-align: center;
+                        margin-top: 0px;
+                        font-size: 30px;
+                    }
+                    .pwelement_'. self::$rnd_id .' form :is(input, textarea) {
+                        margin-bottom:8px !important;
+                    }
+                    #pweRegistration .form h3, #pweRegistration .form label {
+                        color:#737374;
+                        font-weight:600 !important;
+                    }
+                    #pweRegistration form ul {
+                        padding:0 !important;
+                    }
+                    #pweRegistration form ul input, input::placeholder {
+                        border-radius:18px;
+                        color: #8a8a8a !important;
+                    }
+                    #pweRegistration .ginput_container_consent label {
+                        line-height: 1.4;
+                        font-size: 12px;
+                    }
+                    #pweRegistration form input[type="submit"] {
+                        display: inline-block;
+                        width: 100%;
+                        border-radius: 18px !important;
+                        color:white !important;
+                        background-color:#636363;
+                    }
+                    #pweRegistration .benefits_icon img {
+                        width: 70px;
+                    }
+                    #pweRegistration .benefits {
+                        gap: 10px;
+                        text-align: center;
+                        justify-content: space-around;
+                    }
+                    #pweRegistration .benefits, #pweRegistration .benefits .benefits_icon {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    #pweRegistration .benefits .benefits_icon {
+                        max-width: 250px;
+                        justify-content: center;
+                    }
+                    #pweRegistration .benefits h2 {
+                        color: #636363;
+                        font-size: 18px;
+                        font-weight: 700 !important;
+                        margin-top: 60px;
+                    }
+                    #pweRegistration .benefits p {
+                        color: #646464;
+                        font-weight: 500;
+                        line-height: 1.3;
+                        margin-top: 0;
+                        font-size: 14px;
+                    }
 
+                    @media(max-width:1500px){
+                        .pweform_container {
+                            padding: 0 0 5px 0;
+                        }
+                        .pwe-registration-column {
+                            min-height: 580px;
+                        }
+                        .form h3, #pweRegistration .form-title {
+                            margin-top: 14px;
+                        }
+                        #pweRegistration .benefits h2 {
+                            margin-top: 60px;
+                        }
+                    }
+                    @media(max-width:1200px){
+                        .row-container:has(#pweRegistration) {
+                            background-size: cover;
+                        }
+                        .pweform_container {
+                            max-width: 90%;
+                        }
+                    }
+                    @media(max-width:960px){
+                        .row-container:has(.gform_wrapper, .pwe-container-grupy) .wpb_column, .row-container:has(.pwe-route) .wpb_column {
+                            max-width: 100%;
+                        }
+                        #pweForm {
+                            max-width: 100%;
+                            border-radius: 40px;
+                            margin: 15px 5px;
+                        }
+                    }
+                    @media(max-width:650px){
+                        .row-container:has(#pweRegistration) {
+                            background: #838B8F;
+                            background: linear-gradient(90deg, rgb(161 161 161) 0%, rgb(255 255 255) 50%, rgb(184 180 180) 100%);
+                        }
+                    }
+                    @media(max-width:480px){
+                        .pweform_container {
+                            flex-direction: column;
+                        }
+                        #pweRegistration .benefits {
+                            flex-wrap: wrap;
+                            flex-direction: row;
+                        }
+                        #pweRegistration .benefits .benefits_icon {
+                            flex: 1;
+                        }
+                        #pweRegistration .benefits h2 {
+                            width: 100%;
+                            margin-top: 20px;
+                        }
+                    }
+                </style>
+            ';
+        }
             if(!$reg_form_update_entries){
                 $output .= '
                 <script>
@@ -901,6 +1055,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 $output .= '
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD10_XMpLZxzQT_65E58g0yTq7GQBXUks4&libraries=places"></script>
                 <script>
+
                     function initAutocomplete() {
                         const streetInput = document.getElementById("street");
                         const autocomplete = new google.maps.places.Autocomplete(streetInput, {
@@ -1033,8 +1188,21 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                 const confirmationWrapper = document.createElement("div");
                                 confirmationWrapper.classList.add("gform_confirmation_wrapper");
                                 confirmationWrapper.style.textAlign = "center";
-                                confirmationWrapper.innerText = "'.$t['confirm_text'].'";
-                                document.getElementById("xForm").getElementsByClassName("form-3")[0].prepend(confirmationWrapper);
+                                ';
+                                if(strpos($source_utm, 'utm_source=platyna') === false){
+                                    $output .= '
+                                    confirmationWrapper.innerText = "'.$t['confirm_text'].'";
+                                    document.getElementById("xForm").getElementsByClassName("form-3")[0].prepend(confirmationWrapper);';
+                                } else {
+                                    $output .= '
+                                    confirmationWrapper.innerText = "'.$t['confirm_text'].'";
+
+                                    document.getElementById("pweRegistration").getElementsByClassName("display-befor-subbmit")[0].style.display = "none";
+                                    document.getElementById("pweRegistration").getElementsByClassName("form-title")[0].style.display = "none";
+                                    document.getElementById("pweRegistration").getElementsByClassName("display-after-subbmit")[0].style.display = "block";
+                                    document.getElementById("pweRegistration").getElementsByClassName("pwe-registration-form")[0].prepend(confirmationWrapper);';
+                                }
+                                $output .= '
                             } else {
                                 document.getElementById("statusMessage").innerText = "Błąd: " + data.message;
                                 document.getElementById("statusMessage").classList.add("error");
@@ -1376,367 +1544,6 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             EN
                         )
                         .'</div>`;
-
-                    const targetNode = document.getElementById("xForm");
-
-                    const observer = new MutationObserver(mutationsList => {
-                        for (const mutation of mutationsList) {
-                            if (mutation.type === "childList") {
-                                for (const addedNode of mutation.addedNodes) {
-                                    if (addedNode.nodeType === Node.ELEMENT_NODE && addedNode.classList.contains("gform_confirmation_wrapper")) {
-                                        let xForm = document.getElementById("xForm");
-                                        xForm.innerHTML = content;
-                                        xForm.classList.add("has-confirmation");
-                                    }
-                                }
-                            }
-                        }
-                    });
-
-                    const config = { childList: true, subtree: true };
-
-                    observer.observe(targetNode, config);
-
-                    if (document.querySelector(".gform_confirmation_wrapper")) {
-                        let xForm = document.getElementById("xForm");
-                        xForm.innerHTML = content;
-                    }
-                });
-            </script>';
-        } else if (strpos($source_utm, 'utm_source=premium') !== false) {
-
-            $output .= '
-            <style>
-                .row-parent:has(.pwe-confirmation-premium) {
-                    max-width: 100%;
-                    padding: 0 !important;
-                }
-                .wpb_column:has(.pwe-confirmation-premium) {
-                    max-width: 100%;
-                }
-                .pwelement_'. self::$rnd_id .' #xForm:has(.pwe-confirmation-premium) > div {
-                    width: 100%;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper {
-                    display: flex;
-                    min-height: 100%;
-                }
-                .pwelement_' . self::$rnd_id . ' #xForm>div {
-                    align-content: start;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left {
-                    width: 60%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
-                    width: 40%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background-image: url(/doc/header_mobile.webp);
-                    background-repeat: no-repeat;
-                    background-position: center;
-                    background-size: cover;
-                    background-color: #009cff;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content,
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
-                    padding: 72px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
-                    align-items: center;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left h4 {
-                    font-size: 24px;
-                    font-weight: 700;
-                    margin: 0;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left p {
-                    font-size: 18px;
-                    margin: 0;
-                }
-                .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes {
-                    width: 90%;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-wrap: nowrap;
-                    padding: 20px 0;
-                }
-                .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes-column {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-wrap: nowrap;
-                }
-                .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes img {
-                    max-width: 25%;
-                    height: auto;
-                    flex-shrink: 1;
-                    object-fit: contain;
-                    transition: transform 0.2s ease-in-out;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-home-btn-container {
-                    background-color: black;
-                    padding: 18px;
-                    border-radius: 40px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-home-btn {
-                    color: white !important;
-                    text-transform: uppercase;
-                    font-size: 18px;
-                    font-weight: 600;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
-                    max-width: 100%;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right-content {
-                    padding: 18px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right img {
-                    max-width: 400px;
-                    width: 100%;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                    color: white;
-                    text-align: center;
-                    margin: 0;
-                    text-transform: uppercase;
-                }
-                .pwelement_'. self::$rnd_id .' .form-2-bottom{
-                    background-color: #f7f7f7;
-                    display: flex;
-                    justify-content: center;
-                    gap: 18px;
-                    flex-wrap: wrap;
-                    padding: 18px;
-                }
-                .pwelement_'. self::$rnd_id .' .form-2-bottom div{
-                    flex:1;
-                    display: flex;
-                    justify-content: center;
-                    flex-wrap: wrap;
-                    gap:9px;
-                }
-                .pwelement_'. self::$rnd_id .' .form-2-bottom div > div{
-                    flex:1;
-                    min-width: 200px;
-                }
-                .pwelement_'. self::$rnd_id .' .form-2-bottom img{
-                    max-height: 80px;
-                    object-fit: contain;
-                }
-                .pwelement_'. self::$rnd_id .' .form-2-bottom :is(.for-exhibitors, .for-visitors){
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-                .pwelement_'. self::$rnd_id .' .form-2-bottom :is(.for-exhibitors, .for-visitors) p {
-                    margin-top: 0px;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
-                    max-width: 400px;
-                    width: 100%;
-                    border-radius: 0;
-                    background-color: white;
-                    font-size: 36px;
-                    margin: 0;
-                    margin-top: 9px;
-                    padding: 3px 0;
-                    line-height: 1;
-                    text-transform: uppercase;
-                    text-align: center;
-                    font-weight: 700;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition span {
-                    background: url(/doc/header_mobile.webp) no-repeat center;
-                    color: transparent;
-                        -webkit-background-clip: text;
-                    background-clip: text;
-                }
-                @media (max-width:960px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
-                        padding: 36px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes {
-                        width: 100%;
-                        display: flex;
-                        justify-content: space-between;
-                        flex-direction: column;
-                    }
-                    .pwelement_'. self::$rnd_id .' .confirmation-premium-logotypes-column {
-                        width: 100%;
-                    }
-                }
-                @media (max-width:768px) {
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper,
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left,
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
-                        min-height: auto;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-wrapper {
-                        flex-direction: column;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left,
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right {
-                        width: 100%;
-                        padding: 36px 18px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-left-content {
-                        padding: 0 0 36px;
-                    }
-                    .pwelement_'. self::$rnd_id .' .form-2-bottom div > div {
-                        min-width: unset;
-                    }
-                    .pwelement_'. self::$rnd_id .' .form-2-bottom div{
-                        flex: unset;
-                        width: 100%;
-                    }
-                }
-            </style>';
-
-            if (!is_numeric($trade_fair_edition_shortcode) || $trade_fair_edition_shortcode == 1) {
-                $output .= '
-                <style>
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
-                        font-size: 28px;
-                    }
-                    @media (max-width:420px) {
-                       .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-edition {
-                            font-size: 24px;
-                        }
-                    }
-                </style>';
-            }
-
-            if (self::isTradeDateExist()) {
-                $output .= '
-                <style>
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                        font-size: 32px;
-                    }
-                    @media (min-width: 768px) and (max-width: 1100px) {
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                            font-size: calc(24px + (32 - 24) * ( (100vw - 768px) / ( 1100 - 768) ));
-                        }
-                    }
-                    @media (min-width: 300px) and (max-width: 550px) {
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                            font-size: calc(24px + (32 - 24) * ( (100vw - 300px) / ( 550 - 300) ));
-                        }
-                    }
-                </style>';
-            } else {
-                $output .= '
-                <style>
-                    .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                        font-size: 56px;
-                    }
-                    @media (min-width: 768px) and (max-width: 1100px) {
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                            font-size: calc(24px + (56 - 24) * ( (100vw - 768px) / ( 1100 - 768) ));
-                        }
-                    }
-                    @media (min-width: 300px) and (max-width: 550px) {
-                        .pwelement_'. self::$rnd_id .' .pwe-confirmation-premium-right h2 {
-                            font-size: calc(24px + (56 - 24) * ( (100vw - 300px) / ( 550 - 300) ));
-                        }
-                    }
-                </style>';
-            }
-
-            $output .= '
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const content = `
-                        <div class="pwe-confirmation-premium">
-                            <div class="pwe-confirmation-premium-wrapper">
-                                <div class="pwe-confirmation-premium-left">
-                                    <div class="pwe-confirmation-premium-left-content">
-                                        <h4>'.
-                                            self::languageChecker(
-                                                <<<PL
-                                                Dziękujemy za rejestrację na targi <span style="white-space: nowrap;">[trade_fair_name]</span>
-                                                PL,
-                                                <<<EN
-                                                Thank you for registering for <span style="white-space: nowrap;">[trade_fair_name_eng]</span>
-                                                EN
-                                            )
-                                        .'</h4>
-                                        <br>
-                                        <div class="confirmation-vip-text">
-                                            <p><strong>'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    Na miesiąc przed targami otrzymują Państwo przesyłkę, w której znajdzie się:
-                                                    PL,
-                                                    <<<EN
-                                                    One month before the fair, you will recive a package that includes:
-                                                    EN
-                                                )
-                                            .'</strong></p>
-                                            <ul>'.
-                                                self::languageChecker(
-                                                    <<<PL
-                                                    <li>Identyfikator upoważniający do wejścia na targi i do VIP ROOM</li>
-                                                    <li>Kartę parkingową upoważniającą do korzystania z darmowego parkingu</li>
-                                                    <li>Szczegółowe informacje o targach i o wydarzeniach towarzyszących</li>
-                                                    PL,
-                                                    <<<EN
-                                                    <li>Badge authorizing entry to the fair and VIP ROOM</li>
-                                                    <li>Parking pass entitling to free parking</li>
-                                                    <li>Detailed information about the fair and accompanying events</li>
-                                                    EN
-                                                )
-                                            .'</ul>
-                                        </div>
-                                        <div class="confirmation-premium-logotypes">
-                                            <div class="confirmation-premium-logotypes-column">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/inpost.png">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dhl.png">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/ups.png">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/pocztex.png">
-                                            </div>
-                                            <div class="confirmation-premium-logotypes-column">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/fedex.png">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/poczta-polska.png">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/gls.png">
-                                                <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dpd.png">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="pwe-confirmation-premium-home-btn-container">'.
-                                    self::languageChecker(
-                                        <<<PL
-                                        <a href="/" class="pwe-confirmation-premium-home-btn">Strona główna</a>
-                                        PL,
-                                        <<<EN
-                                        <a href="/en/" class="pwe-confirmation-premium-home-btn">Home page</a>
-                                        EN
-                                    )
-                                    .'</div>
-                                </div>
-                                <div class="pwe-confirmation-premium-right">
-                                    <div class="pwe-confirmation-premium-right-content">
-                                        <img src="/doc/logo.webp">';
-                                        if (!empty($trade_fair_edition_shortcode)) {
-                                            $output .= '<p class="pwe-confirmation-premium-edition"><span>'. $trade_fair_edition .'</span></p>';
-                                        }
-                                        $output .= '
-                                        <h2>'. $actually_date .'</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
 
                     const targetNode = document.getElementById("xForm");
 

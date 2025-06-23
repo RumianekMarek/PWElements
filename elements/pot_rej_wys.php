@@ -108,7 +108,7 @@ class PWElementStepTwoExhibitor extends PWElements {
 
         $userSessionEmail = $_SESSION["pwe_reg_entry"]["email"]  ?? null;
         $userSessionPhone = $_SESSION["pwe_reg_entry"]["phone"] ?? null;
-        // var_dump($_SESSION);
+
 
         $directUrl = $_SESSION['pwe_exhibitor_entry']['current_url'];
 

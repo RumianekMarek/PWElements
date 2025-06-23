@@ -58,7 +58,7 @@ class PWElementOtherEvents extends PWElements {
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
                 'heading' => __('Full background version', 'pwe_element'),
-                'param_name' => 'full_background_version',
+                'param_name' => 'other_full_background_version',
                 'value' => array(__('Yes', 'pwe_element') => 'true'),
                 'save_always' => true,
                 'dependency' => array(
@@ -75,6 +75,18 @@ class PWElementOtherEvents extends PWElements {
                 'dependency' => array(
                     'element' => 'pwe_element',
                     'value' => 'PWElementOtherEvents',
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Show More Btn', 'pwe_element'),
+                'param_name' => 'other_show_more_btn',
+                'value' => array(__('Yes', 'pwe_element') => 'true'),
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'other_events_slider_type',
+                    'value' => array('swiper'),
                 ),
             ),
             array(
@@ -120,7 +132,7 @@ class PWElementOtherEvents extends PWElements {
                 'type' => 'checkbox',
                 'group' => 'Swiper Settings',
                 'heading' => __('Show arrows (navigation)', 'pwe_element'),
-                'param_name' => 'swiper_show_arrows',
+                'param_name' => 'other_events_arrows_display',
                 'value' => array(__('Yes', 'pwe_element') => 'true'),
                 'save_always' => true,
                 'dependency' => array(
@@ -132,12 +144,38 @@ class PWElementOtherEvents extends PWElements {
                 'type' => 'checkbox',
                 'group' => 'Swiper Settings',
                 'heading' => __('Show scrollbar', 'pwe_element'),
-                'param_name' => 'swiper_show_scrollbar',
+                'param_name' => 'other_events_scrollbar_display',
                 'value' => array(__('Yes', 'pwe_element') => 'true'),
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'other_events_slider_type',
                     'value' => array('swiper'),
+                ),
+            ),
+            array(
+                'type' => 'param_group',
+                'group' => 'Swiper Settings',
+                'heading' => __('Breakpoints (slidesPerView)', 'pwe_element'),
+                'param_name' => 'other_events_breakpoints',
+                'dependency' => array(
+                    'element' => 'other_events_slider_type',
+                    'value' => array('swiper'),
+                ),
+                'params' => array(
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Min. Width (px)', 'pwe_element'),
+                        'param_name' => 'breakpoint_width',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Slides Per View', 'pwe_element'),
+                        'param_name' => 'breakpoint_slides',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
                 ),
             ),
         );
@@ -152,9 +190,11 @@ class PWElementOtherEvents extends PWElements {
             'other_events_style' => '',
             'other_events_items' => '',
             'other_show_strip' => '',
-            'swiper_show_arrows' => '',
-            'swiper_show_scrollbar' => '',
-            'full_background_version' => '',
+            'other_events_arrows_display' => '',
+            'other_events_scrollbar_display' => '',
+            'other_full_background_version' => '',
+            'other_show_more_btn' => '',
+            'other_events_breakpoints' => '',
         ), $atts ));
 
         $other_events_items_urldecode = urldecode($other_events_items);
@@ -212,28 +252,7 @@ class PWElementOtherEvents extends PWElements {
 
             $output = '
             <style>
-                :root {
-                --swiper-navigation-sides-offset: -36px;
-                --swiper-scrollbar-size: 8px;
-                --swiper-scrollbar-bottom: -12px;
-                }
-                .pwelement_'. self::$rnd_id .' .swiper {
-                    width: 100%;
-                    padding: 10px;
-                }
 
-                .pwelement_'. self::$rnd_id .' .swiper-wrapper {
-                    overflow: visible !important; /* UWAGA: kluczowe */
-                }
-
-                .pwelement_'. self::$rnd_id .' .swiper-slide {
-                    flex-shrink: 0;
-                }
-                .pwelement_'. self::$rnd_id .' .pwe-other-events__wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 36px;
-                }
                 .pwelement_'. self::$rnd_id .' .pwe-other-events__heading h4 {
                     margin: 0 auto;
                     text-align: center;
@@ -399,19 +418,25 @@ class PWElementOtherEvents extends PWElements {
                     }
                 </style>';
 
-                if ($full_background_version === 'true') {
+                if ($other_full_background_version === 'true') {
                     $output .= '
                     <style>
                         .pwelement_'. self::$rnd_id .' .pwe-other-events__item {
                             overflow: hidden;
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-other-events__item-logo {
-                            height: 160px;
+                            height: 180px;
                             overflow: hidden;
                             margin: -16px -16px 0;
+                            background-size: cover;
+                            background-repeat: no-repeat;
                         }
                         .pwelement_'. self::$rnd_id .' .pwe-other-events__item-logo img {
-                            border-radius: 0;
+                            object-fit: contain !important;
+                            height: auto !important;
+                            border-radius: unset !important;
+                            width: 100%;
+                            max-width: 160px;
                         }
                     </style>';
                 }
@@ -444,12 +469,13 @@ class PWElementOtherEvents extends PWElements {
                 </style>';
             }
 
-            if ($swiper_show_scrollbar === 'true' && $swiper_show_arrows === 'true') { 
+            if ($other_events_scrollbar_display === 'true' && $other_events_arrows_display === 'true') { 
 
                 $output .= '
                 <style>
-                    .swiper-scrollbar.swiper-scrollbar-horizontal {
+                    .swiper-scrollbar.swiper-scrollbar.swiper-scrollbar-horizontal {
                         position: inherit;
+                        height: 8px;
                     }
                     .swiper-button-prev, .swiper-button-next {
                         position: inherit;
@@ -458,20 +484,66 @@ class PWElementOtherEvents extends PWElements {
                         padding: 6px 24px;
                         border-radius: 36px;
                         min-width: 100px;
+                        margin: 0;
                     }
                     .swiper-button-next:after, .swiper-button-prev:after {
                         font-size: 22px;
                     }
                     .swiper-navigation-container {
                         display: flex;
+                        align-items: center;
+                        padding: 24px 12px;
                         gap: 36px;
                     }
                     .swiper-arrows-container {
                         display: flex;
                         gap: 18px;
                     }
-                    .swiper-scrollbar-drag:before {
-                        content: "";
+                </style>';
+            }
+
+            if ($other_events_scrollbar_display === 'true') { 
+
+                $output .= '
+                <style>
+                    @media(max-width:400px) {
+                        .pwelement_'. self::$rnd_id .' .pwe-other-events__wrapper {
+                            gap: 12px;
+                        }
+                        .pwelement_'. self::$rnd_id .' .swiper-navigation-container {
+                            flex-wrap: wrap;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .pwelement_'. self::$rnd_id .' .swiper-scrollbar.swiper-scrollbar-horizontal {
+                            max-width: 200px;
+                        }
+                    }
+                </style>';
+            }
+
+            if ($other_show_more_btn === 'true') {  
+                $output .= '
+                <style>
+                    .pwe-other-events__show-more-btn {
+                        background: #ececec;
+                        padding: 6px 18px;
+                        border-radius: 36px;
+                        width: 60%;
+                    }
+                    .pwe-other-events__show-more-text {
+                        color: var(--accent-color);
+                        font-weight: 600;
+                        text-transform: capitalize;
+                    }
+                    .pwe-other-events__show-more-arrow {
+                        color: var(--accent-color);
+                        font-weight: 500;
+                        margin-left: 0;
+                        transition: 0.3s;
+                    }
+                    .pwe-other-events__item:hover .pwe-other-events__show-more-arrow {
+                        margin-left: 6px;
                     }
                 </style>';
             }
@@ -497,10 +569,18 @@ class PWElementOtherEvents extends PWElements {
                                         <div class="pwe-other-events__item swiper-slide" style="'. $other_events_style .'">
                                             <a href="https://'. $other_events_domain .''. PWECommonFunctions::languageChecker('/', '/en/') .'" target="_blank">';
                                             if ($other_events_preset == 'preset_3') {
+                                                if ($other_full_background_version === 'true') { 
+                                                    $output .= '
+                                                    <div class="pwe-other-events__item-logo" style="background-image: url(https://'. $other_events_domain .'/doc/background.webp);">
+                                                        <img data-no-lazy="1" src="https://'. $other_events_domain .'/doc/logo.webp"/>
+                                                    </div>';
+                                                } else {
+                                                    $output .= '
+                                                    <div class="pwe-other-events__item-logo">
+                                                        <img data-no-lazy="1" src="https://'. $other_events_domain .'/doc/kafelek.jpg"/>
+                                                    </div>';
+                                                }
                                                 $output .= '
-                                                <div class="pwe-other-events__item-logo">
-                                                    <img data-no-lazy="1" src="https://'. $other_events_domain .'/doc/kafelek.jpg"/>
-                                                </div>
                                                 <div class="pwe-other-events__item-statistic">
                                                     <div class="pwe-other-events__item-text">'. $other_events_text_content .'</div>
                                                     <div class="pwe-other-events__item-statistic-numbers-block">
@@ -541,25 +621,37 @@ class PWElementOtherEvents extends PWElements {
                                                 </div>
                                                 <div class="pwe-other-events__item-text">'. $other_events_text_content .'</div>';
                                             }
+                                            if ($other_show_more_btn === 'true') { 
+                                                $output .= '
+                                                    <div class="pwe-other-events__show-more-btn">
+                                                        <span class="pwe-other-events__show-more-text">'. PWECommonFunctions::languageChecker('Więcej', 'More') .'</span>
+                                                        <span class="pwe-other-events__show-more-arrow">➜</span>
+                                                    </div>
+                                                ';
+                                            }
                                             $output .= '
                                             </a>
                                         </div>
                                     ';
                                 }
                             }
-
                         $output .= '
-                        </div>';
-                        $output .= '</div>';
-                        if ($swiper_show_scrollbar === 'true' && $swiper_show_arrows === 'true') { $output .= '<div class="swiper-navigation-container">'; }
-                            if ($swiper_show_scrollbar === 'true') { $output .= '<div class="swiper-scrollbar"></div>'; }
-                            if ($swiper_show_arrows === 'true') { $output .= '<div class="swiper-arrows-container"><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>'; }
-                        if ($swiper_show_scrollbar === 'true' && $swiper_show_arrows === 'true') { $output .= '</div>'; }
+                        </div></div>
+                        <div class="swiper-navigation-container">';
+                            if ($other_events_scrollbar_display === 'true') { $output .= '<div class="swiper-scrollbar"></div>'; }
+                            $output .= '
+                            <div class="swiper-arrows-container">';
+                                if ($other_events_arrows_display === 'true') { $output .= '
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>'; }
+                            $output .= '
+                            </div>
+                        </div>
+                    ';
 
                     $other_events_options[] = array(
                         "other_events_preset" => $other_events_preset,
                     );
-                    $other_events_arrows_display = 'false';
 
                     $output .= '
                 </div>
@@ -603,59 +695,9 @@ class PWElementOtherEvents extends PWElements {
                 });
             </script>';
 
-            $slides_count = count($other_events_items_json);
-            $loop_enabled = $slides_count > $slides_to_show ? 'true' : 'false';
+            include_once plugin_dir_path(__FILE__) . '/../scripts/swiper.php';
 
-            if ($loop_enabled === 'false') {
-                $output .= '<style>
-                    .pwelement_'. self::$rnd_id .' .swiper-wrapper {
-                        justify-content: center;
-                    }
-                </style>';
-            }
-
-            $output .= '<script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const swiper = new Swiper(".pwelement_'. self::$rnd_id .' .swiper", {
-                            slidesPerView: '. $slides_to_show .',
-                            spaceBetween: 20,
-                            loop: ' . $loop_enabled . ',
-                            grabCursor: true,
-                            autoplay: {
-                                delay: 3000,
-                                disableOnInteraction: false,
-                                pauseOnMouseEnter: true,
-                            },';
-
-                if ($swiper_show_arrows === 'true') {
-                    $output .= '
-                            navigation: {
-                                nextEl: ".swiper-button-next",
-                                prevEl: ".swiper-button-prev"
-                            },';
-                }
-
-                if ($swiper_show_scrollbar === 'true') {
-                    $output .= '
-                            scrollbar: {
-                                el: ".swiper-scrollbar",
-                                draggable: false,
-                            },';
-                }
-
-                $output .= '
-                            pagination: {
-                                el: ".swiper-pagination",
-                                clickable: true
-                            },
-                            breakpoints: {
-                                320: { slidesPerView: 1 },
-                                768: { slidesPerView: 2 },
-                                1024: { slidesPerView: '. $slides_to_show .' }
-                            }
-                        });
-                    });
-            </script>';
+            $output .= PWESwiperScripts::swiperScripts('other-events', '.pwelement_' . self::$rnd_id, $other_events_dots_display, $other_events_arrows_display, $other_events_scrollbar_display, $other_events_options, $other_events_breakpoints);
 
         } else { $output = '<style>.row-container:has(.pwelement_'. self::$rnd_id .') {display: none !important;}</style>'; }
 
@@ -670,7 +712,7 @@ class PWElementOtherEvents extends PWElements {
             'other_events_items' => '',
             'other_show_strip' => '',
             'other_events_slider_type' => 'slick',
-            'full_background_version' => '',
+            'other_full_background_version' => '',
         ), $atts ));
 
         if ($other_events_slider_type === 'swiper') {

@@ -24,7 +24,7 @@ class PWElementTimelineStats extends PWElements {
                 'save_always' => true,
                 'admin_label' => true,
                 'dependency' => array(
-                    'element' => 'pwe_timeline_stats',
+                    'element' => 'pwe_element',
                     'value' => 'PWElementTimelineStats',
                 ),
             ),
@@ -35,7 +35,18 @@ class PWElementTimelineStats extends PWElements {
                 'param_name' => 'pwe_timeline_stats_text',
                 'save_always' => true,
                 'dependency' => array(
-                    'element' => 'pwe_timeline_stats',
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementTimelineStats',
+                ),
+            ),
+            array(
+                'type' => 'attach_image',
+                'group' => 'PWE Element',
+                'heading' => __('Timeline Background', 'pwe_timeline_stats'),
+                'param_name' => 'pwe_timeline_stats_background',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
                     'value' => 'PWElementTimelineStats',
                 ),
             ),
@@ -47,7 +58,7 @@ class PWElementTimelineStats extends PWElements {
                 'param_holder_class' => 'backend-area-half-width',
                 'save_always' => true,
                 'dependency' => array(
-                    'element' => 'pwe_timeline_stats',
+                    'element' => 'pwe_element',
                     'value' => 'PWElementTimelineStats',
                 ),
             ),
@@ -59,7 +70,7 @@ class PWElementTimelineStats extends PWElements {
                 'param_holder_class' => 'backend-area-half-width',
                 'save_always' => true,
                 'dependency' => array(
-                    'element' => 'pwe_timeline_stats',
+                    'element' => 'pwe_element',
                     'value' => 'PWElementTimelineStats',
                 ),
             ),
@@ -74,7 +85,7 @@ class PWElementTimelineStats extends PWElements {
                     'Zigzag' => 'pwe_timeline_stats_svg_zigzag',
                 ),
                 'dependency' => array(
-                    'element' => 'pwe_timeline_stats',
+                    'element' => 'pwe_element',
                     'value' => 'PWElementTimelineStats',
                 ),
             ),
@@ -84,7 +95,7 @@ class PWElementTimelineStats extends PWElements {
                 'heading' => __('Events', 'pwe_timeline_stats'),
                 'param_name' => 'pwe_timeline_stats_events',
                 'dependency' => array(
-                    'element' => 'pwe_timeline_stats',
+                    'element' => 'pwe_element',
                     'value' => 'PWElementTimelineStats',
                 ),
                 'params' => array(
@@ -92,6 +103,13 @@ class PWElementTimelineStats extends PWElements {
                         'type' => 'attach_image',
                         'heading' => __('Event Image', 'pwe_timeline_stats'),
                         'param_name' => 'pwe_timeline_stats_event_img',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Event Image URL', 'pwe_timeline_stats'),
+                        'param_name' => 'pwe_timeline_stats_event_img_url',
+                        'description' => __('Optional. If provided, it will override the uploaded image.'),
                         'save_always' => true,
                     ),
                     array(
@@ -154,11 +172,14 @@ class PWElementTimelineStats extends PWElements {
             'pwe_timeline_stats_btn_text' => '',
             'pwe_timeline_stats_btn_link' => '',
             'pwe_timeline_stats_svg_style' => 'pwe_timeline_stats_svg_smooth',
+            'pwe_timeline_stats_background' => '',
         ), $atts));
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $event_items = vc_param_group_parse_atts($atts['pwe_timeline_stats_events']);
+
+        $timeline_background = wp_get_attachment_image_src($pwe_timeline_stats_background, 'full')[0] ?? '';
 
         $cta_html = '
             <div class="timeline-pwe-event timeline-pwe-cta timeline-pwe-event--top">
@@ -168,7 +189,7 @@ class PWElementTimelineStats extends PWElements {
                         <p style="font-size: 1rem; max-width: 300px; margin: auto;">' . esc_html($pwe_timeline_stats_text) . '</p>';
 
         if (!empty($pwe_timeline_stats_btn_text) && !empty($pwe_timeline_stats_btn_link)) {
-            $cta_html .= '<a href="' . esc_url($pwe_timeline_stats_btn_link) . '" class="cta pwe-button-link" style="margin-top: 1rem;">'
+            $cta_html .= '<a href="' . esc_url($pwe_timeline_stats_btn_link) . '" class="timeline-pwe-cta-btn pwe-button-link" style="margin-top: 1rem;">'
                     . esc_html($pwe_timeline_stats_btn_text) . '</a>';
         }
 
@@ -181,7 +202,9 @@ class PWElementTimelineStats extends PWElements {
         $events_html = '';
 
         foreach ($event_items as $idx => $event) {
-            $img = wp_get_attachment_image_src($event['pwe_timeline_stats_event_img'], 'full')[0] ?? '';
+            $img = !empty($event['pwe_timeline_stats_event_img_url'])
+                ? esc_url($event['pwe_timeline_stats_event_img_url'])
+                : (wp_get_attachment_image_src($event['pwe_timeline_stats_event_img'], 'full')[0] ?? '');
             $year = esc_html($event['pwe_timeline_stats_event_year'] ?? '');
             $edition = esc_html($event['pwe_timeline_stats_event_edition'] ?? '');
             $exhibitors = esc_html($event['pwe_timeline_stats_event_exhibitors'] ?? '');
@@ -443,6 +466,23 @@ class PWElementTimelineStats extends PWElements {
                 top: 16%;
                 transform: translateY(-50%);
             }
+
+            .timeline-pwe-cta-btn {
+                display: inline-flex;
+                align-items: center;
+                padding: 14px 32px;
+                background: var(--main2-color);
+                color: var(--accent-color) !important;
+                font-size: 18px;
+                font-weight: 600;
+                text-transform: uppercase;
+                text-decoration: none;
+                border-radius: 36px;
+            }
+
+            .timeline-pwe-cta-btn:hover { 
+                background-color: color-mix(in srgb, var(--main2-color) 80%, white 20%);
+            }
             
             @media(max-width: 570px){
                 .timeline-pwe-wrapper .timeline-pwe-cta, .timeline-pwe-connector {
@@ -465,7 +505,7 @@ class PWElementTimelineStats extends PWElements {
                     min-width: 12px;
                 }
                 .timeline-pwe-wrapper {
-                    min-height: 760px;
+                    min-height: 900px;
                     padding: 0 0 15rem;
                     margin-top: 64px;
                 }
@@ -502,8 +542,27 @@ class PWElementTimelineStats extends PWElements {
                     max-width: 85vw;
                 }
             }
-        </style>
+        </style>';
 
+        if (!empty($timeline_background)) {
+            $output .= '
+            <style>
+            .pwelement:has(#pwe-timeline-stats):before {
+                content: "";
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: url(https://mr.glasstec.pl/wp-content/uploads/2025/02/sponsor-gali-scaled.webp);
+                background-size: cover;
+                background-repeat: no-repeat;
+                opacity: 0.3;
+            }
+            </style>';
+        }
+
+        $output .= '
         <div id="pwe-timeline-stats" class="timeline-stats">
             <div class="timeline-pwe-card-mobile">
                 ' . $cta_html . '
