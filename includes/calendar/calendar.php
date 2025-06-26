@@ -362,6 +362,12 @@ function event_dates_callback($post) {
             $new_date_coming_soon = "Jauns datums drīzumā";
         } else if ($lang == "uk") {
             $new_date_coming_soon = "Нова дата незабаром";
+        } else if ($lang == "cs") {
+            $new_date_coming_soon = "Nový termín již brzy";
+        } else if ($lang == "sk") {
+            $new_date_coming_soon = "Nový termín už čoskoro";
+        } else if ($lang == "ru") {
+            $new_date_coming_soon = "Новая дата скоро";
         } else {
             $new_date_coming_soon = "New date coming soon";
         }

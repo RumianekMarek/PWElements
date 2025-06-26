@@ -143,6 +143,24 @@ class PWECalendar extends PWECommonFunctions {
                 } else {
                     return "$start_day $start_month_name - $end_day $end_month_name $year";
                 }
+            case "CS":
+                if ($start_month === $end_month) {
+                    return "$start_day.-$end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "SK":
+                if ($start_month === $end_month) {
+                    return "$start_day. - $end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "RU":
+                if ($start_month === $end_month) {
+                    return "$start_day - $end_day $start_month_name $year";
+                } else {
+                    return "$start_day $start_month_name - $end_day $end_month_name $year";
+                }
             default:
                 if ($start_month === $end_month) {
                     return "$start_month_name $start_day-$end_day, $year";
@@ -1073,6 +1091,12 @@ class PWECalendar extends PWECommonFunctions {
             $new_date_coming_soon = "Jauns datums drīzumā";
         } else if ($locale == "uk") {
             $new_date_coming_soon = "Нова дата незабаром";
+        } else if ($locale == "cs_CZ") {
+            $new_date_coming_soon = "Nový termín již brzy";
+        } else if ($locale == "sk_SK") {
+            $new_date_coming_soon = "Nový termín už čoskoro";
+        } else if ($locale == "ru_RU") {
+            $new_date_coming_soon = "Новая дата скоро";
         } else {
             $new_date_coming_soon = "New date coming soon";
         }

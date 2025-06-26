@@ -668,7 +668,8 @@ class PWElementAdditionalLogotypes {
                             $logo_data->logos_type === "partner-honorowy" ||
                             $logo_data->logos_type === "principal-partner" ||
                             $logo_data->logos_type === "industry-media-partner" ||
-                            $logo_data->logos_type === "partner-branzowy") {
+                            $logo_data->logos_type === "partner-branzowy" ||
+                            $logo_data->logos_type === "partner-merytoryczny") {
                             $saving_paths($files, $logo_data);
                         }
                     }

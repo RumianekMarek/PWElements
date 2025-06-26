@@ -421,6 +421,8 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
         $info_speakers_slider = array();
 
         if (is_array($speakers_json)) {
+                    $output .= '<div class="pwe-speaker-wrapper pwe-slides">';
+
             foreach ($speakers_json as $speaker){
                 $speaker_image = $speaker["speaker_image"];
                 $speaker_name = $speaker["speaker_name"];
@@ -433,24 +435,21 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $speaker_img = !empty($speaker_image_doc_src) ? "https://" . $_SERVER['HTTP_HOST'] . "/doc/" . $speaker_image_doc_src : $speaker_image_src;
 
                 $item_speaker_id = 'pweSpeaker-' . $rnd;
-
-                if ($info_speakers_slider_on != true && !$mobile) {
-                    $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">';
-                        // Check if the URL exists
-                        if (filter_var($speaker_img, FILTER_VALIDATE_URL)) {
-                            // Check if the first header indicates a successful response (200 OK)
-                            if (isset(get_headers($speaker_img)[0]) && strpos(get_headers($speaker_img)[0], '200') !== false) {
-                                $output .= !empty($speaker_image_doc_src) ? '<img class="pwe-speaker-img" src="https://' . $_SERVER['HTTP_HOST'] . '/doc/' . $speaker_image_doc_src .'">' : '<img class="pwe-speaker-img" src="'. $speaker_image_src .'">';
-                            } else {
-                                $output .= '<img class="pwe-speaker-img" src="/wp-content/plugins/PWElements/includes/display-info/media/white_square.jpg">';
+                        $output .= '<div id="'. $item_speaker_id .'" class="pwe-speaker">';
+                            // Check if the URL exists
+                            if (filter_var($speaker_img, FILTER_VALIDATE_URL)) {
+                                // Check if the first header indicates a successful response (200 OK)
+                                if (isset(get_headers($speaker_img)[0]) && strpos(get_headers($speaker_img)[0], '200') !== false) {
+                                    $output .= !empty($speaker_image_doc_src) ? '<img class="pwe-speaker-img" src="https://' . $_SERVER['HTTP_HOST'] . '/doc/' . $speaker_image_doc_src .'">' : '<img class="pwe-speaker-img" src="'. $speaker_image_src .'">';
+                                } else {
+                                    $output .= '<img class="pwe-speaker-img" src="/wp-content/plugins/PWElements/includes/display-info/media/white_square.jpg">';
+                                }
                             }
-                        }
-                        $output .= '<h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>';
-                        $output .= !empty($speaker_bio_excerpt) ? '<div class="pwe-speaker-excerpt">'. $speaker_bio_excerpt .'</div>' : '';
-                        $output .= '<div class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</div>';
-                        $output .= !empty($speaker_bio) ? '<button class="pwe-speaker-btn">BIO</button>' : '';
-                    $output .='</div>';
-                }
+                            $output .= '<h5 class="pwe-speaker-name" style="margin-top: 9px;">'. $speaker_name .'</h5>';
+                            $output .= !empty($speaker_bio_excerpt) ? '<div class="pwe-speaker-excerpt">'. $speaker_bio_excerpt .'</div>' : '';
+                            $output .= '<div class="pwe-speaker-desc" style="display:none;">'. $speaker_bio .'</div>';
+                            $output .= !empty($speaker_bio) ? '<button class="pwe-speaker-btn">BIO</button>' : '';
+                        $output .='</div>';
                 
                 $info_speakers_slider[] = array(
                     "img" => $speaker_image_src,
@@ -459,11 +458,10 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     "bio_excerpt" => $speaker_bio_excerpt
                 );
             }
+                        $output .='</div>';
 
-            if ($info_speakers_slider_on == true || $mobile) {         
-                include_once plugin_dir_path(dirname(dirname(__DIR__))) . 'scripts/speakers-slider.php';
-                $output .= PWESpeakersSlider::sliderOutput($info_speakers_slider, 3000, $info_speakers_options);
-            }
+                include_once plugin_dir_path(dirname(dirname(__DIR__))) . 'scripts/slider.php';
+                $output .= PWESliderScripts::sliderScripts('display-info',  '#info-speaker-'. self::$rnd_id, $info_speakers_dots_off = 'true', false, $slides_to_show = 3);
         }   
        
         $output .='

@@ -75,7 +75,7 @@ if (!empty($api_media["doc"])) {
 
     // Background search
     foreach ($api_media["doc"] as $file) {
-        if (strpos($file['path'], 'background.webp') !== false) {
+        if (strpos($file['path'], 'doc/background.webp') !== false) {
             $header_bg = $file['path'];
         }
     }  
@@ -199,6 +199,24 @@ if (!function_exists('format_date_range')) {
                     return "$start_day. $start_month_name - $end_day. $end_month_name $year";
                 }
             case "UK":
+                if ($start_month === $end_month) {
+                    return "$start_day - $end_day $start_month_name $year";
+                } else {
+                    return "$start_day $start_month_name - $end_day $end_month_name $year";
+                }
+            case "CS":
+                if ($start_month === $end_month) {
+                    return "$start_day.-$end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "SK":
+                if ($start_month === $end_month) {
+                    return "$start_day. - $end_day. $start_month_name $year";
+                } else {
+                    return "$start_day. $start_month_name - $end_day. $end_month_name $year";
+                }
+            case "RU":
                 if ($start_month === $end_month) {
                     return "$start_day - $end_day $start_month_name $year";
                 } else {

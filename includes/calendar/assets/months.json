@@ -5,7 +5,10 @@
         "DE": "JANUAR", 
         "LT": "SAUSIO", 
         "LV": "janvāris", 
-        "UK": "січня"
+        "UK": "січня",
+        "CS": "ledna",
+        "SK": "januára",
+        "RU": "января"
     },
     "02": {
         "PL": "LUTEGO", 
@@ -13,7 +16,10 @@
         "DE": "FEBRUAR", 
         "LT": "VASARIO", 
         "LV": "februāris", 
-        "UK": "лютого"
+        "UK": "лютого",
+        "CS": "února",
+        "SK": "februára",
+        "RU": "февраля"
     
     },
     "03": {
@@ -22,7 +28,10 @@
         "DE": "MÄRZ", 
         "LT": "KOVO", 
         "LV": "marts", 
-        "UK": "березня"
+        "UK": "березня",
+        "CS": "března",
+        "SK": "marca",
+        "RU": "марта"
     },
     "04": {
         "PL": "KWIETNIA", 
@@ -30,7 +39,10 @@
         "DE": "APRIL", 
         "LT": "BALANDŽIO", 
         "LV": "aprīlis", 
-        "UK": "квітня"
+        "UK": "квітня",
+        "CS": "dubna",
+        "SK": "apríla",
+        "RU": "апреля"
     },
     "05": {
         "PL": "MAJA", 
@@ -38,7 +50,10 @@
         "DE": "MAI", 
         "LT": "GEGUŽĖS", 
         "LV": "maijs", 
-        "UK": "травня"
+        "UK": "травня",
+        "CS": "května",
+        "SK": "mája",
+        "RU": "мая"
     },
     "06": {
         "PL": "CZERWCA", 
@@ -46,7 +61,10 @@
         "DE": "JUNI", 
         "LT": "BIRŽELIO", 
         "LV": "jūnijs", 
-        "UK": "червня"
+        "UK": "червня",
+        "CS": "června",
+        "SK": "júna",
+        "RU": "июня"
     },
     "07": {
         "PL": "LIPCA", 
@@ -54,7 +72,10 @@
         "DE": "JULI", 
         "LT": "LIEPOS", 
         "LV": "jūlijs", 
-        "UK": "липня"
+        "UK": "липня",
+        "CS": "července",
+        "SK": "júla",
+        "RU": "июля"
     },
     "08": {
         "PL": "SIERPNIA", 
@@ -62,7 +83,10 @@
         "DE": "AUGUST", 
         "LT": "RUGPJŪČIO", 
         "LV": "augusts", 
-        "UK": "серпня"
+        "UK": "серпня",
+        "CS": "srpna",
+        "SK": "augusta",
+        "RU": "августа"
     },
     "09": {
         "PL": "WRZEŚNIA", 
@@ -70,7 +94,10 @@
         "DE": "SEPTEMBER", 
         "LT": "RUGSĖJO", 
         "LV": "septembris", 
-        "UK": "вересня"
+        "UK": "вересня",
+        "CS": "září",
+        "SK": "septembra",
+        "RU": "сентября"
     },
     "10": {
         "PL": "PAŹDZIERNIKA", 
@@ -78,7 +105,10 @@
         "DE": "OKTOBER", 
         "LT": "SPALIO", 
         "LV": "oktobris", 
-        "UK": "жовтня"
+        "UK": "жовтня",
+        "CS": "října",
+        "SK": "októbra",
+        "RU": "октября"
     },
     "11": {
         "PL": "LISTOPADA", 
@@ -86,7 +116,10 @@
         "DE": "NOVEMBER", 
         "LT": "LAPKRIČIO", 
         "LV": "novembris", 
-        "UK": "листопада"
+        "UK": "листопада",
+        "CS": "listopadu",
+        "SK": "novembra",
+        "RU": "ноября"
     },
     "12": {
         "PL": "GRUDNIA", 
@@ -94,6 +127,9 @@
         "DE": "DEZEMBER", 
         "LT": "GRUODŽIO", 
         "LV": "decembris", 
-        "UK": "грудня"
+        "UK": "грудня",
+        "CS": "prosince",
+        "SK": "decembra",
+        "RU": "декабря"
     }
 }
