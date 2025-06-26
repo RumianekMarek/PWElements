@@ -56,7 +56,7 @@ class PWERegistrationVisitors extends PWERegistration {
      *
      * @param array @atts options
      */
-    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist, $register_ticket_register_benefits, $register_ticket_benefits) {
+    public static function output($atts, $registration_type, $registration_form_id, $register_show_ticket) {
 
         $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white');
         $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
@@ -78,7 +78,7 @@ class PWERegistrationVisitors extends PWERegistration {
         $register_ticket_price = !empty($atts['register_ticket_price']) ? $atts['register_ticket_price'] : '249';
         $register_ticket_price_frist = !empty($atts['register_ticket_price_frist']) ? $atts['register_ticket_price_frist'] : '150';
 
-        $register_ticket_register_benefits = $register_ticket_benefits = !empty(trim(strip_tags($atts['register_ticket_register_benefits'] ?? '')))
+        $register_ticket_register_benefits  = !empty(trim(strip_tags($atts['register_ticket_register_benefits'] ?? '')))
         ? $atts['register_ticket_register_benefits']
         : '
             <ul class="ticket-card__benefits">
@@ -117,11 +117,13 @@ class PWERegistrationVisitors extends PWERegistration {
                 $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup-en.webp') ? '/doc/badgevipmockup-en.webp' : '/doc/badgevipmockup.webp');
             }
         }
-        // CSS <----------------------------------------------------------------------------------------------<
-        require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 
         $domain = $parsed = parse_url(site_url())['host'];
         $fair_data = PWECommonFunctions::get_database_fairs_data($domain);
+        $domain_gr = strtolower($fair_data[0]->fair_group);
+
+        // CSS <----------------------------------------------------------------------------------------------<
+        require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 
         switch (strtolower($fair_data[0]->fair_group)) {
             // case 'gr1':
@@ -129,7 +131,7 @@ class PWERegistrationVisitors extends PWERegistration {
             //     return render_gr1($atts);
             case 'gr2':
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr2.php';
-                $output .= render_gr2($atts, $source_utm, $badgevipmockup);
+                $output .= render_gr2($atts, $source_utm, $badgevipmockup, $register_show_ticket);
                 return $output ;
             // case 'gr3':
             //     require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr3.php';

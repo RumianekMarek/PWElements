@@ -11,6 +11,7 @@ function render_gr2($atts, $source_utm){
   ), $atts ));
 
 
+
   if (strpos($source_utm, 'utm_source=premium') !== false || strpos($source_utm, 'utm_source=platyna') !== false ) {
       $badgevipmockup = (file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevipmockup.webp') ? '/doc/badgevipmockup.webp' : '');
   } else if(strpos($source_utm, 'utm_source=byli') !== false ) {

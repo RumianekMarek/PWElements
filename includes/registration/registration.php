@@ -221,19 +221,20 @@ public function initVCMapPWERegistration() {
                         ),
                     ),
                     array(
-                        'type' => 'textarea_html',
+                        'type' => 'textarea',
                         'heading' => __('Registration benefits', 'pwe_registration'),
                         'param_name' => 'register_ticket_register_benefits',
                         'description' => __('Enter custom HTML list of register benefits. If left empty, default content will be used.', 'pwe_registration'),
                         'param_holder_class' => 'backend-area-one-two-width',
                         'save_always' => true,
+                        'admin_label' => true,
                         'dependency' => array(
                             'element' => 'register_show_ticket',
                             'value' => array('true'),
                         ),
                     ),
                     array(
-                        'type' => 'textarea_html',
+                        'type' => 'textarea',
                         'heading' => __('Ticket benefits', 'pwe_registration'),
                         'param_name' => 'register_ticket_benefits',
                         'description' => __('Enter custom HTML list of ticket benefits. If left empty, default content will be used.', 'pwe_registration'),
@@ -339,7 +340,7 @@ public function initVCMapPWERegistration() {
 
             if (class_exists($registration_type)) {
                 $output_class = new $registration_type;
-                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket, $register_ticket_price_frist, $register_ticket_benefits, $register_ticket_register_benefits);
+                $output = $output_class->output($atts, $registration_type, $registration_form_id, $register_show_ticket);
             } else {
                 // Log if the class doesn't exist
                 echo '<script>console.log("Class '. $registration_type .' does not exist")</script>';
