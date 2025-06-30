@@ -1,4 +1,4 @@
-<!-- <?php
+<?php /*
 
 $katalog_id = '1169';
 $secret = '#22targiexpo22@@@#';
