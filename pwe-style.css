@@ -359,10 +359,3 @@ strong {
     border: none !important;
     display: none;
 }
-
-
-.gform_footer:has(.gform_ajax_spinner) .gform_button,
-.gform_footer:has(.gform-loader) .gform_button {
-    pointer-events: none !important;
-    opacity: 0.5 !important;
-}

@@ -253,6 +253,13 @@ class PWESliderScripts {
                         elementWidth < 1100 ? 5 :
                         slidesToShowSetting;
                 ';
+            } else if ($id == 'display-info') { // conference_cap.php <-------------------------------------------------------------<
+                $get_initial_slides_to_show = '
+                return  elementWidth < 400 ? 1 :
+                        elementWidth < 600 ? 2 :
+                        elementWidth < 1100 ? 3 :
+                        slidesToShowSetting;
+                ';
             }
 
             $output .= '

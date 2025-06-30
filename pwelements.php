@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.8.0
+ * Version: 2.8.2
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -34,6 +34,7 @@ class PWElementsPlugin {
 
         // Initialize classes
         $this->initClasses();
+
         $this->init();
 
         // Send CSS variables to <head>
@@ -152,21 +153,20 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
         $this->PWEMap = new PWEMap();
-
+        
         require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
         $this->PWEStore = new PWEStore();
 
         require_once plugin_dir_path(__FILE__) . 'includes/conference-cap/conference_cap.php';
         $this->PWEConferenceCap = new PWEConferenceCap();
 
-        if ($_SERVER['HTTP_HOST'] === 'warsawexpo.eu' || $_SERVER['HTTP_HOST'] === 'rfl.warsawexpo.eu') {
+        if (!empty($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === 'warsawexpo.eu' || $_SERVER['HTTP_HOST'] === 'rfl.warsawexpo.eu')) {
             require_once plugin_dir_path(__FILE__) . 'includes/calendar/calendar.php';
             $this->PWECalendar = new PWECalendar();
         }
 
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
-
         
         require_once plugin_dir_path(__FILE__) . 'includes/reviews/reviews.php';
         $this->PWEReviews = new PWEReviews();
