@@ -94,10 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
     // Mobile header <--------------------------------------------------------------------------<
     const squaresModeBgs = document.querySelectorAll('.pwe-header-background .pwe-bg-image');
 
@@ -214,6 +210,3 @@ document.addEventListener('DOMContentLoaded', function () {
 //         field.value = utmParams;
 //     });
 // }
-
-
-

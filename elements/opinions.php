@@ -92,6 +92,17 @@ class PWElementOpinions extends PWElements {
                 ),
             ),
             array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
+                'heading' => __('Opinions to hide', 'pwe_display_info'),
+                'param_name' => 'opinions_to_hide',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOpinions',
+                ),
+            ),
+            array(
                 'type' => 'param_group',
                 'group' => 'PWE Element',
                 'param_name' => 'opinions_items',
@@ -159,7 +170,7 @@ class PWElementOpinions extends PWElements {
                 ),
             ),
         );
-       
+
         $swiper_fields = array(
             array(
                 'type' => 'checkbox',
@@ -226,6 +237,7 @@ class PWElementOpinions extends PWElements {
             'opinions_arrows_display' => '',
             'opinions_scrollbar_display' => '',
             'opinions_breakpoints' => '',
+            'opinions_to_hide' => '',
         ), $atts ));
 
         $opinions_items_urldecode = urldecode($opinions_items);
@@ -233,6 +245,8 @@ class PWElementOpinions extends PWElements {
 
         $opinions_width_element = ($opinions_limit_width == true) ? '1200px' : '100%';
         $slides_to_show = ($opinions_limit_width == true) ? 4 : 5;
+
+
 
         $output = '';
         $output .= '
@@ -841,6 +855,16 @@ class PWElementOpinions extends PWElements {
                     $default_opinions = array_merge($default_opinions, $no_premiere_edition_opinions);
                 }
 
+                $to_hide_raw = $opinions_to_hide ?? '';
+
+                $companies_to_hide = array_map(function($val) {
+                    return mb_strtolower(trim($val));
+                }, explode(',', $to_hide_raw));
+
+                $default_opinions = array_filter($default_opinions, function ($opinion) use ($companies_to_hide) {
+                    return !in_array(mb_strtolower(trim($opinion['opinions_company'])), $companies_to_hide);
+                });
+
                 $output .= '
                 <div id="pweOpinions" class="pwe-opinions">
                     <div class="pwe-posts-title main-heading-text">
@@ -1137,6 +1161,7 @@ class PWElementOpinions extends PWElements {
             'opinions_items' => '',
             'opinions_remove_display_more_button' => '',
             'opinions_slider_type' => 'slick',
+            'opinions_to_hide' => '',
         ), $atts ));
 
         if ($opinions_slider_type === 'swiper') {
@@ -1751,7 +1776,18 @@ class PWElementOpinions extends PWElements {
                     ];
 
                     $default_opinions = array_merge($default_opinions, $no_premiere_edition_opinions);
+
                 }
+
+                $to_hide_raw = $opinions_to_hide ?? '';
+
+                $companies_to_hide = array_map(function($val) {
+                    return mb_strtolower(trim($val));
+                }, explode(',', $to_hide_raw));
+
+                $default_opinions = array_filter($default_opinions, function ($opinion) use ($companies_to_hide) {
+                    return !in_array(mb_strtolower(trim($opinion['opinions_company'])), $companies_to_hide);
+                });
 
             $output .= '
             <div id="pweOpinions"class="pwe-opinions">

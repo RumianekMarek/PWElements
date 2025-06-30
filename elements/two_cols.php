@@ -551,7 +551,8 @@ class PWElementTwoCols extends PWElements {
                     $logo_data->logos_type === "partner-honorowy" ||
                     $logo_data->logos_type === "principal-partner" ||
                     $logo_data->logos_type === "industry-media-partner" ||
-                    $logo_data->logos_type === "partner-branzowy") {
+                    $logo_data->logos_type === "partner-branzowy" ||
+                    $logo_data->logos_type === "partner-merytoryczny") {
                   $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
                 }
               }

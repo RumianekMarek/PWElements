@@ -158,6 +158,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 'success' => 'Dane zostały zaktualizowane!',
                 'error' => 'Wszystkie pola są wymagane!',
                 'confirm_text' => 'Dziękujemy za skontaktowanie się z nami, odezwiemy się do Ciebie wkrótce.',
+                'confirm_text_platyna' => 'Dziękujemy za rejestrację! Cieszymy się, że będziesz z nami na targach [trade_fair_name]. Do zobaczenia już wkrótce!',
             ],
             'en' => [
                 'name' => 'Full Name',
@@ -169,6 +170,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 'success' => 'Data has been updated!',
                 'error' => 'All fields are required!',
                 'confirm_text' => 'Thank you for contacting us, we will get back to you soon.',
+                'confirm_text_platyna' => 'Thank you for registering! We are glad you will be with us at [trade_fair_name]. See you soon!',
             ]
         ];
 
@@ -1195,11 +1197,21 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                     document.getElementById("xForm").getElementsByClassName("form-3")[0].prepend(confirmationWrapper);';
                                 } else {
                                     $output .= '
-                                    confirmationWrapper.innerText = "'.$t['confirm_text'].'";
+                                    confirmationWrapper.innerText = "'.$t['confirm_text_platyna'].'";
 
                                     document.getElementById("pweRegistration").getElementsByClassName("display-befor-subbmit")[0].style.display = "none";
                                     document.getElementById("pweRegistration").getElementsByClassName("form-title")[0].style.display = "none";
                                     document.getElementById("pweRegistration").getElementsByClassName("display-after-subbmit")[0].style.display = "block";
+                                    document.getElementById("pweRegistration").getElementsByClassName("benefits")[0].style.display = "none";
+
+                                    Object.assign(
+                                        document.getElementById("pweRegistration").getElementsByClassName("pweform_container")[0].style,
+                                        {
+                                            margin: "0 auto",
+                                            minHeight: "400px"
+                                        }
+                                    );
+
                                     document.getElementById("pweRegistration").getElementsByClassName("pwe-registration-form")[0].prepend(confirmationWrapper);';
                                 }
                                 $output .= '

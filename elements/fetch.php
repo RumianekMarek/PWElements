@@ -132,6 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if ($direction !== "registration") {
+            $entry = GFAPI::get_entry($entry_id);
+
             $notifications = $form['notifications'];
             foreach ($form["notifications"] as $id => &$key) {
                 $key['isActive'] = in_array($key['name'], ['Admin Notification Potwierdzenie']);
@@ -140,6 +142,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         echo json_encode(["message" => "Dane zaktualizowane"]);
+    }
+
+    if (!empty($entry_id)){
+        wp_remote_post(home_url('wp-content/plugins/custom-element/action_handler.php'), [
+            'body' => [
+                'element' => 'gform_after_submission',
+                'entry_id' => $entry_id,
+                'url' => null
+            ],
+            'timeout' => 0.01,
+            'blocking' => false,
+        ]);
     }
 }
 ?>

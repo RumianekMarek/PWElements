@@ -41,17 +41,17 @@ class PWElementHale extends PWElements {
                     'value' => 'PWElementHale',
                 ),
             ),
-            array(
-                'type' => 'checkbox',
-                'group' => 'PWE Element',
-                'heading' => __('Show hall', 'pwelement'),
-                'param_name' => 'hall_show',
-                'save_always' => true,
-                'dependency' => array(
-                    'element' => 'pwe_element',
-                    'value' => 'PWElementHale',
-                ),
-            ),
+            // array(
+            //     'type' => 'checkbox',
+            //     'group' => 'PWE Element',
+            //     'heading' => __('Show hall', 'pwelement'),
+            //     'param_name' => 'hall_show',
+            //     'save_always' => true,
+            //     'dependency' => array(
+            //         'element' => 'pwe_element',
+            //         'value' => 'PWElementHale',
+            //     ),
+            // ),
         );
         return $element_output;
     }
@@ -61,7 +61,7 @@ class PWElementHale extends PWElements {
         extract( shortcode_atts( array(
             'hall_names' => '',
             'hall_image' => '',
-            'hall_show' => '',
+            // 'hall_show' => '',
         ), $atts ));
 
         $hall_image_src = wp_get_attachment_url($hall_image);
@@ -137,15 +137,16 @@ class PWElementHale extends PWElements {
             : self::languageChecker('Hala', 'Hall');
 
 
-        $current_day_timestamp = time();
+        // $current_day_timestamp = time();
 
-        $days_to_event = (($trade_fair_end_timestamp - $current_day_timestamp) / (60 * 60 * 24));
-        $days_after_event = ($current_day_timestamp - $trade_fair_end_timestamp) / (60 * 60 * 24);
+        // $days_to_event = (($trade_fair_end_timestamp - $current_day_timestamp) / (60 * 60 * 24));
+        // $days_after_event = ($current_day_timestamp - $trade_fair_end_timestamp) / (60 * 60 * 24);
 
-        $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 63;
-        $less_1_day_after = ($trade_fair_start_timestamp != false || !empty($trade_fair_end)) && $days_after_event > 0 && $days_after_event < 1;
+        // $less_2_month_before = ($trade_fair_start_timestamp != false || !empty($trade_fair_start)) && $days_to_event > 0 && $days_to_event < 63;
+        // $less_1_day_after = ($trade_fair_start_timestamp != false || !empty($trade_fair_end)) && $days_after_event > 0 && $days_after_event < 1;
 
-        if ((!empty($all_halls) && ($less_2_month_before || $less_1_day_after)) || $hall_show ) {
+        // if ((!empty($all_halls) && ($less_2_month_before || $less_1_day_after)) || $hall_show ) {
+        if (!empty($all_halls)) {
             $output = '
             <style>
                 .pwe-halls {
