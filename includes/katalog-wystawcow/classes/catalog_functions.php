@@ -29,8 +29,8 @@ class CatalogFunctions {
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
-        $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id; 
-        
+        $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id;
+
         if ( current_user_can( 'administrator' ) ) {
             if (!empty($katalog_id)) {
                 echo '<script>console.log("'.$canUrl.'")</script>';
@@ -45,12 +45,12 @@ class CatalogFunctions {
                 if ($json === false) {
                     throw new Exception('Nie można pobrać danych JSON.');
                 }
-        
+
                 $data = json_decode($json, true);
                 if ($data === null) {
                     throw new Exception('Błąd dekodowania danych JSON.');
                 }
-        
+
                 $basic_wystawcy = reset($data)['Wystawcy'];
             } catch (Exception $e) {
                 echo '<script>console.error("Błąd w logosChecker: ' . addslashes($e->getMessage()) . '")</script>';
@@ -59,9 +59,9 @@ class CatalogFunctions {
         } else {
             $basic_wystawcy = [];
         }
-        
+
         $logos_array = array();
-        
+
         $basic_wystawcy = (!empty($file_changer)) ? self::orderChanger($file_changer, $basic_wystawcy) : $basic_wystawcy;
 
         if($basic_wystawcy != '') {
@@ -134,14 +134,14 @@ class CatalogFunctions {
                     }
                 }
                 break;
-            default : 
+            default :
                 if(!is_numeric($PWECatalogFull)){
                     break;
                 }
 
                 $i = 0;
                 foreach($basic_wystawcy as $wystawca){
-                    if ($wystawca['URL_logo_wystawcy']){ 
+                    if ($wystawca['URL_logo_wystawcy']){
                         $logos_array[] = $wystawca;
                         $i++;
                         if ($i >= $PWECatalogFull) {
@@ -149,7 +149,7 @@ class CatalogFunctions {
                         }
                     }
                 }
-                
+
         }
         if($pwe_catalog_random){
             shuffle($logos_array);
@@ -195,7 +195,7 @@ class CatalogFunctions {
             } elseif (strpos($single_change, '=>>') !== false) {
                 $id = [];
                 $names = explode('=>>', $single_change);
-                foreach($names as $name){                
+                foreach($names as $name){
                     $name = trim($name);
                     if(is_numeric($name)){
                         $id[] = $name.'.00';

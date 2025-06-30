@@ -116,6 +116,7 @@ class PWEConferenceCap {
                                     __('After title', 'pwe_conference_cap') => 'after_title',
                                     __('Before day', 'pwe_conference_cap') => 'before_day',
                                     __('After day', 'pwe_conference_cap') => 'after_day',
+                                    __('After all', 'pwe_conference_cap') => 'after_all',
                                 ),
                                 'description' => __('Choose where to insert the custom HTML.', 'pwe_conference_cap'),
                                 'save_always' => true,
@@ -241,7 +242,8 @@ class PWEConferenceCap {
                 if ($conf_cap_html['conference_cap_html_position'] === 'after_header' || 
                     $conf_cap_html['conference_cap_html_position'] === 'after_location' ||
                     $conf_cap_html['conference_cap_html_position'] === 'after_title' ||
-                    $conf_cap_html['conference_cap_html_position'] === 'after_patrons') {
+                    $conf_cap_html['conference_cap_html_position'] === 'after_patrons' || 
+                    $conf_cap_html['conference_cap_html_position'] === 'after_all') {
                     $key = $conf_cap_html['conference_cap_html_position'] . '_' . $target_conf_slug;
                 } else {
                     $key = $conf_cap_html['conference_cap_html_position'] . 
@@ -365,6 +367,19 @@ class PWEConferenceCap {
                         $conf_slugs += $slugs;
                     }
                 }
+
+                uksort($conf_slugs, function($a_slug, $b_slug) use ($database_data) {
+                    $getOrder = function($slug) use ($database_data) {
+                        foreach ($database_data as $conf) {
+                            if ($conf->conf_slug === $slug) {
+                                return intval($conf->conf_order ?? 999);
+                            }
+                        }
+                        return 999;
+                    };
+
+                    return $getOrder($a_slug) <=> $getOrder($b_slug);
+                });
 
                 // Przetwarzanie 'conference_cap_conference_display_slug'
                 $display_slugs_raw = $atts['conference_cap_conference_display_slug'] ?? '';
@@ -678,23 +693,38 @@ class PWEConferenceCap {
                         
                         if (get_class($mode_class) !== 'PWEConferenceCapMedalCeremony') {
                             // **Zakładki dni**
-                            $output .= '<div class="conference_cap__conf-slug-navigation-days">';
+                            // Sprawdź, czy są jakiekolwiek sesje do pokazania
+                            $has_sessions = false;
                             foreach ($conferences as $confData) {
-                                $dayCounter = 1;
                                 foreach ($confData as $day => $sessions) {
-                                        if ($day === 'main-desc') {
-                                            continue; // pomijamy main-desc w pętli dni
+                                    if ($day === 'main-desc') continue;
+
+                                    foreach ($sessions as $session_id => $session_data) {
+                                        if (strpos($session_id, 'pre-') === 0 && !empty($session_data['title'])) {
+                                            $has_sessions = true;
+                                            break 3;
                                         }
-                                        $short_day = 'day-' . $dayCounter++;
-                                        $day = str_replace(';;', '<br>', wp_kses_post($day));
-                                        $output .= '<button id="tab_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-navigation-day">' . $day . '</button>';
                                     }
                                 }
-                            $output .= '</div>'; // Zamknięcie kontenera zakładek dni
-                        
+                            }
+                            if ($has_sessions) {
+                                $output .= '<div class="conference_cap__conf-slug-navigation-days">';
+                                foreach ($conferences as $confData) {
+                                    $dayCounter = 1;
+                                    foreach ($confData as $day => $sessions) {
+                                            if ($day === 'main-desc') {
+                                                continue; // pomijamy main-desc w pętli dni
+                                            }
+                                            $short_day = 'day-' . $dayCounter++;
+                                            $day = str_replace(';;', '<br>', wp_kses_post($day));
+                                            $output .= '<button id="tab_' . esc_attr($conf_slug) . '_' . esc_attr($short_day) . '" class="conference_cap__conf-slug-navigation-day">' . $day . '</button>';
+                                        }
+                                    }
+                                $output .= '</div>'; // Zamknięcie kontenera zakładek dni
+                            }
                 
                             // **Treść dla poszczególnych dni**
-                        $all_day_speakers = [];
+                            $all_day_speakers = [];
 
                             $output .= '<div class="conference_cap__conf-slug-contents">';
                                 foreach ($conferences as $confData) {
@@ -769,6 +799,8 @@ class PWEConferenceCap {
                                 }
                                 
                             $output .= '</div>'; // Zamknięcie kontenera zakładek
+
+                            $output .= '<div class="conference_cap__after-all-html">' . ($inf_conf['after_all_' . $conf_slug] ?? '') . '</div>';
 
                             if($panel === true){
                                 require_once plugin_dir_path(__FILE__) . 'assets/conference-cap-trends-panel.php';
