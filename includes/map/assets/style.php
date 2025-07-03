@@ -25,7 +25,7 @@ if ($map_type === 'PWEMapDynamic') {
             .pwe-map__title {
                 margin-top: 0;
                 text-transform: uppercase;
-                font-size: 34px;
+                font-size: 34px !important;
                 max-width: 550px;
                 text-shadow: 0px 0px 2px white;
             }

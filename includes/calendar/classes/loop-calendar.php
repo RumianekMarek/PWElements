@@ -219,11 +219,14 @@ class PWECalendar extends PWECommonFunctions {
 
         $pwe_calendar_posts_num = !empty($pwe_calendar_posts_num) ? $pwe_calendar_posts_num : 0;
 
+        $lang = ICL_LANGUAGE_CODE;
+
         // Creating a query for 'event' posts
         $args = array(
             'post_type' => 'event',
             'posts_per_page' => -1,
             'post_status' => 'publish',
+            'lang' => $lang
         );
 
         $query = new WP_Query($args);
@@ -486,6 +489,13 @@ class PWECalendar extends PWECommonFunctions {
                 $shortcode_edition_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_edition);
                 $edition_num = $shortcode_edition_available ? $shortcode_edition : get_post_meta($post_id, 'edition', true);
 
+                // if (
+                //     strtotime(str_replace("/", "-", $pwe_db_date_start)) > strtotime("2026-05-01")
+                //     || empty($pwe_db_date_start)
+                // ) {
+                //     continue;
+                // }
+
                 // Add only posts with edition_num == 1 if $pwe_calendar_premier_edition is true
                 if ($pwe_calendar_premier_edition == true && $edition_num == 1) {
                     $event_posts[] = [
@@ -664,19 +674,30 @@ class PWECalendar extends PWECommonFunctions {
                 </div>';
             }
 
+            $startMemory = memory_get_usage();
+
             $output .= '<div class="pwe-calendar__wrapper">';
 
+                ob_start();
+
                 foreach ($event_posts as $event) {
-                    $post = get_post($event['post_id']);
-                    setup_postdata($post);
     
                     $output .= self::render_calendar_event_card($event, $shortcodes_active, $lang_pl);
                 }
+
+                $output .= 
+                ob_get_clean();
 
                 wp_reset_postdata();
 
             $output .= '</div>';
 
+            $endMemory = memory_get_usage();
+
+            if (current_user_can('administrator')) {
+                echo '<script>console.log("Calendar memory size loop - '. ($endMemory - $startMemory) / 1024 .'kb")</script>';
+            }
+            
             // Add load more button and script if needed
             if ($pwe_calendar_load_more && !empty($pwe_calendar_posts_num) && (count($event_posts_full) > $pwe_calendar_posts_num)) {
                 $output .= '
@@ -1070,6 +1091,8 @@ class PWECalendar extends PWECommonFunctions {
             $domain = '';
         }  
 
+        $post_meta = get_post_meta($post_id);
+
         // Get dates
         $start_date = $event['start_date'];
         $end_date = $event['end_date'];
@@ -1101,7 +1124,7 @@ class PWECalendar extends PWECommonFunctions {
             $new_date_coming_soon = "New date coming soon";
         }
 
-        $quarterly_date = !empty(get_post_meta($post_id, 'quarterly_date', true)) ? get_post_meta($post_id, 'quarterly_date', true) : $new_date_coming_soon;
+        $quarterly_date = !empty($post_meta['quarterly_date'][0]) ? $post_meta['quarterly_date'][0] : $new_date_coming_soon;
 
         if (($date_object && $date_object->format('Y') == 2050) || (strtotime($end_date . " +1 day") < time())) {
             $fair_date =  $quarterly_date;
@@ -1109,32 +1132,32 @@ class PWECalendar extends PWECommonFunctions {
             $fair_date = $formatted_date;
         }
 
-        $translates = PWECommonFunctions::get_database_translations_data($domain);
+        $lang = ICL_LANGUAGE_CODE;
 
         // [pwe_short_desc_{lang}]
-        $shortcode_short_desc_pl = self::get_pwe_shortcode("pwe_short_desc_pl", $domain);
-        $shortcode_short_desc_pl_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_short_desc_pl);
-        $short_desc = $shortcode_short_desc_pl_available ? self::get_translated_field($translates[0], 'fair_short_desc') : get_post_meta($post_id, 'short_desc', true);
+        $shortcode_short_desc = self::get_pwe_shortcode("pwe_short_desc_$lang", $domain);
+        $shortcode_short_desc_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_short_desc);
+        $short_desc = $shortcode_short_desc_available ? $shortcode_short_desc : $post_meta['short_desc'][0];
 
         // [pwe_visitors]
         $shortcode_visitors = self::get_pwe_shortcode("pwe_visitors", $domain);
         $shortcode_visitors_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_visitors);
-        $visitors_num = $shortcode_visitors_available ? $shortcode_visitors : get_post_meta($post_id, 'visitors', true);
+        $visitors_num = $shortcode_visitors_available ? $shortcode_visitors : $post_meta['visitors'][0];
 
         // [pwe_exhibitors]
         $shortcode_exhibitors = self::get_pwe_shortcode("pwe_exhibitors", $domain);
         $shortcode_exhibitors_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_exhibitors);
-        $exhibitors_num = $shortcode_exhibitors_available ? $shortcode_exhibitors : get_post_meta($post_id, 'exhibitors', true);
+        $exhibitors_num = $shortcode_exhibitors_available ? $shortcode_exhibitors : $post_meta['exhibitors'][0];
 
         // [pwe_countries]
         $shortcode_area = self::get_pwe_shortcode("pwe_area", $domain);
         $shortcode_area_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_area);
-        $area_num = $shortcode_area_available ? $shortcode_area : get_post_meta($post_id, 'area', true);
+        $area_num = $shortcode_area_available ? $shortcode_area : $post_meta['area'][0];
 
         // [pwe_edition]
         $shortcode_edition = self::get_pwe_shortcode("pwe_edition", $domain);
         $shortcode_edition_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_edition);
-        $edition_num = $shortcode_edition_available ? $shortcode_edition : get_post_meta($post_id, 'edition', true);
+        $edition_num = $shortcode_edition_available ? $shortcode_edition : $post_meta['edition'][0];
         $edition = '';
         if($edition_num == '1'){
             $edition .= self::multi_translation("premier_edition");
@@ -1148,11 +1171,11 @@ class PWECalendar extends PWECommonFunctions {
                 $category_classes .= ' ' . $category->slug;
         }
 
-        $featured_image_url = get_post_meta($post_id, '_featured_image_url', true);
-        $secondary_image_url = get_post_meta($post_id, '_secondary_image_url', true);
+        $featured_image_url = $post_meta['_featured_image_url'][0];
+        $secondary_image_url = $post_meta['_secondary_image_url'][0];
 
         $output = '
-        <div class="pwe-calendar__item" search_engine="'. $event['post_title'] .' '. get_post_meta($post_id, 'keywords', true) .' " search_category="' . $category_classes . '">
+        <div class="pwe-calendar__item" search_engine="'. $event['post_title'] .' '. $post_meta['keywords'][0] .' " search_category="' . $category_classes . '">
             <a class="pwe-calendar__link" href="'. $permalink .'">
                 <div class="pwe-calendar__tile" style="background-image:url(' . esc_url($secondary_image_url) . ');">';
                     if (!empty($short_desc)) {

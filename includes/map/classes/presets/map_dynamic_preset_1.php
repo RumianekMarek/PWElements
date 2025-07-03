@@ -6,7 +6,7 @@ if ($map_dynamic_3d == true) {
     <div id="pweMap" class="pwe-map">
         <div class="pwe-map__wrapper">
             <div class="pwe-map__staticts"> 
-                <h2 class="pwe-map__title text-accent-color">'. $map_custom_title .'</h2>
+                <h3 class="pwe-map__title text-accent-color">'. $map_custom_title .'</h3>
                 <div class="pwe-map__rounded-stat">
                     <div class="pwe-map__rounded-element text-accent-color">
                         <p style="font-weight: 800; font-size: 21px;">
