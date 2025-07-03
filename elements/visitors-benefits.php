@@ -63,7 +63,7 @@ class PWElementVisitorsBenefits extends PWElements {
             </style>
 
             <div id="visitorsBenefits"class="pwe-container-visitors-benefits">
-                <div class="pwe-visitors-benefits-heading main-heading-text">
+                <div id="main-content" class="pwe-visitors-benefits-heading main-heading-text">
                     <h3>'.
                         self::languageChecker(
                             <<<PL

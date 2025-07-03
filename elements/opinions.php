@@ -463,7 +463,7 @@ class PWElementOpinions extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info {
                         text-align: center;
                     }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info h5 {
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info h4 {
                         width: 100%;
                         text-align: center;
                         font-size: 16px;
@@ -954,8 +954,8 @@ class PWElementOpinions extends PWElements {
                                                     <img data-no-lazy="1" src="' . $opinions_face_img . '">
                                                 </div>
                                                 <div class="pwe-opinions__item-person-info">
-                                                    <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
-                                                    <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                                    <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
+                                                    <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
                                                 </div>
                                             </div>
                                             <div class="pwe-opinions__item-opinion">
@@ -976,9 +976,9 @@ class PWElementOpinions extends PWElements {
                                                 </div>
                                             </div>
                                             <div class="pwe-opinions__item-person-info">
-                                                <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                                <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
                                                 ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
-                                                <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                                <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
                                             </div>
                                             <div class="pwe-opinions__item-opinion">
                                                 <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
@@ -1001,12 +1001,12 @@ class PWElementOpinions extends PWElements {
                                                 <div class="pwe-opinions__item-speaker-img">
                                                     <img data-no-lazy="1" src="' . $opinions_face_img . '">
                                                 </div>
-                                                </div>
+                                            </div>
 
-                                                <div class="pwe-opinions__item-speaker">
+                                            <div class="pwe-opinions__item-speaker">
                                                 <div class="pwe-opinions__item-speaker-info">
-                                                    <h5 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h5>
-                                                    ' . (!empty($opinions_desc) ? '<h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>' : '<span></span>') . '
+                                                    <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
+                                                    ' . (!empty($opinions_desc) ? '<h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>' : '<span></span>') . '
                                                     ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
                                                 </div>
                                                 <div class="pwe-opinions__item-opinion">
@@ -1034,8 +1034,8 @@ class PWElementOpinions extends PWElements {
                                             <div class="pwe-opinions__item-right">
                                                 <div class="pwe-opinions__item-info-container">
                                                     <div class="pwe-opinions__item-person-info-container">
-                                                        <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
-                                                        <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                                        <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
+                                                        <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
                                                     </div>
                                                         <div class="pwe-opinions__item-company-info-container">
                                                         <div class="pwe-opinions__item-company_logo">
@@ -1060,8 +1060,8 @@ class PWElementOpinions extends PWElements {
                                                 <div class="pwe-opinions__item-person-container">
                                                     <img data-no-lazy="1" src="' . $opinions_face_img . '">
                                                     <div class="pwe-opinions__item-person-info-container">
-                                                        <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
-                                                        <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                                        <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
+                                                        <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
                                                     </div>
                                                 </div>
                                                 <div class="pwe-opinions__item-info-container">
@@ -1389,11 +1389,11 @@ class PWElementOpinions extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info {
                         text-align: center;
                     }
-                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info h5 {
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-speaker-info h4 {
                         width: 100%;
                         text-align: center;
                         font-size: 16px;
-                        margin: 0;
+                        margin: 0 auto;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-company-name {
                         margin: 0;
@@ -1792,7 +1792,7 @@ class PWElementOpinions extends PWElements {
             $output .= '
             <div id="pweOpinions"class="pwe-opinions">
                 <div class="pwe-posts-title main-heading-text">
-                    <h4 class="pwe-opinions__title pwe-uppercase">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h4>
+                    <h3 class="pwe-opinions__title pwe-uppercase">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h3>
                 </div>
                 <div class="pwe-opinions__wrapper">
                     <div class="pwe-opinions__items pwe-slides">';
@@ -1869,16 +1869,16 @@ class PWElementOpinions extends PWElements {
                                 <div class="pwe-opinions__item-company">
                                     ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
                                     <div class="pwe-opinions__item-company_logo">
-                                        <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_company_img . '" alt="Logo ' . $opinions_company . '">
                                     </div>
                                 </div>
                                 <div class="pwe-opinions__item-person">
                                     <div class="pwe-opinions__item-person-img">
-                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '" alt="Photo ' . $opinions_name . '">
                                     </div>
                                     <div class="pwe-opinions__item-person-info">
-                                        <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
-                                        <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                        <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
+                                        <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
                                     </div>
                                 </div>
                                 <div class="pwe-opinions__item-opinion">
@@ -1892,16 +1892,16 @@ class PWElementOpinions extends PWElements {
                             <div class="pwe-opinions__item">
                                 <div class="pwe-opinions__item-media">
                                     <div class="pwe-opinions__item-person-img">
-                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '" alt="Photo ' . $opinions_name . '">
                                     </div>
                                     <div class="pwe-opinions__item-company_logo">
-                                        <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_company_img . '" alt="Logo ' . $opinions_company . '">
                                     </div>
                                 </div>
                                 <div class="pwe-opinions__item-person-info">
-                                    <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                    <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
                                     ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
-                                    <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                    <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
                                 </div>
                                 <div class="pwe-opinions__item-opinion">
                                     <p style="display: inline;" class="pwe-opinions__item-opinion-text">' . $short_text . ' </p>' .
@@ -1915,21 +1915,21 @@ class PWElementOpinions extends PWElements {
                                 if (!empty($opinions_company_img)) {
                                     $output .= '
                                     <div class="pwe-opinions__item-company_logo">
-                                        <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_company_img . '" alt="Logo ' . $opinions_company . '">
                                     </div>';
                                 }
 
                                 $output .= '
                                 <div class="pwe-opinions__item-speaker-container">
                                     <div class="pwe-opinions__item-speaker-img">
-                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '" alt="Photo ' . $opinions_name . '">
                                     </div>
                                     </div>
 
                                     <div class="pwe-opinions__item-speaker">
                                     <div class="pwe-opinions__item-speaker-info">
-                                        <h5 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h5>
-                                        ' . (!empty($opinions_desc) ? '<h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>' : '<span></span>') . '
+                                        <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
+                                        ' . (!empty($opinions_desc) ? '<h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>' : '<span></span>') . '
                                         ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
                                     </div>
                                     <div class="pwe-opinions__item-opinion">
@@ -1951,18 +1951,18 @@ class PWElementOpinions extends PWElements {
                             <div class="pwe-opinions__item">
                                 <div class="pwe-opinions__item-left">
                                     <div class="pwe-opinions__item-person-img">
-                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '" alt="Photo ' . $opinions_name . '">
                                     </div>
                                 </div>
                                 <div class="pwe-opinions__item-right">
                                     <div class="pwe-opinions__item-info-container">
                                         <div class="pwe-opinions__item-person-info-container">
-                                            <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
-                                            <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
+                                            <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
+                                            <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
                                         </div>
                                             <div class="pwe-opinions__item-company-info-container">
                                             <div class="pwe-opinions__item-company_logo">
-                                                <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                                <img data-no-lazy="1" src="' . $opinions_company_img . '" alt="Logo ' . $opinions_company . '">
                                             </div>
                                             ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
                                         </div>
@@ -1981,16 +1981,16 @@ class PWElementOpinions extends PWElements {
                             <div class="pwe-opinions__item">
                                 <div class="pwe-opinions__item-top">
                                     <div class="pwe-opinions__item-person-container">
-                                        <img data-no-lazy="1" src="' . $opinions_face_img . '">
+                                        <img data-no-lazy="1" src="' . $opinions_face_img . '" alt="Photo ' . $opinions_name . '">
                                         <div class="pwe-opinions__item-person-info-container">
-                                        <h3 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h3>
-                                        <h5 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h5>
+                                        <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
+                                        <h4 class="pwe-opinions__item-person-info-desc">' . $opinions_desc . '</h4>
                                         </div>
                                     </div>
                                     <div class="pwe-opinions__item-info-container">
                                             <div class="pwe-opinions__item-company-info-container">
                                             <div class="pwe-opinions__item-company_logo">
-                                                <img data-no-lazy="1" src="' . $opinions_company_img . '">
+                                                <img data-no-lazy="1" src="' . $opinions_company_img . '" alt="Logo ' . $opinions_company . '">
                                             </div>
                                         </div>
                                     </div>

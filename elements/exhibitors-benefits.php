@@ -23,7 +23,7 @@ class PWElementExhibitors extends PWElements {
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Logo in color', 'pwelement'),
+                'heading' => __('Logo in color', 'pwelement'), 
                 'param_name' => 'logo_color',
                 'value' => '',
                 'dependency' => array(
@@ -116,7 +116,7 @@ class PWElementExhibitors extends PWElements {
 
             <div id="exhibitorsBenefits" class="pwe-container-exhibitors-benefits">
 
-                <div class="pwe-row-border">
+                <div id="main-content" class="pwe-row-border">
                     <div class="pwe-border-top-left"></div>
                 </div>
                     <!-- benefit-container -->'.

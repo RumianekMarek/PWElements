@@ -203,11 +203,11 @@ class PWElementRoute extends PWElements {
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
                                     <<<PL
-                                        <h5>SAMOLOTEM</h5>
+                                        <h4>SAMOLOTEM</h4>
                                         <p>Do Ptak Warsaw Expo z Międzynarodowego Portu Lotniczego im. Fryderyka Chopina dotrzeć można w niespełna 10 minut! Nasze Centrum jest również dogodnie położone względem <span>lotniska w Modlinie oraz Łodzi.</span></p>
                                     PL,
                                     <<<EN
-                                        <h5>BY PLANE</h5>
+                                        <h4>BY PLANE</h4>
                                         <p>To Ptak Warsaw Expo from the International Warsaw Chopin Airport in less than 10 minutes! Our Center is also conveniently located when travelling from the airports in Modlin and Lodz.</p>
                                     EN
                                 )
@@ -220,11 +220,11 @@ class PWElementRoute extends PWElements {
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
                                     <<<PL
-                                        <h5>POCIĄGIEM</h5>
+                                        <h4>POCIĄGIEM</h4>
                                         <p>Warszawa posiada trzy stacje kolejowe dla pociągów dalekobieżnych: Dworzec Centralny (Warszawa Centralna), Dworzec Wschodni (Warszawa Wschodnia) oraz Dworzec Zachodni (Warszawa Zachodnia). <span>Z dworca</span> zachodniego do Ptak Warsaw Expo można dojechać samochodem już w 13 minut (wg Google).</p>
                                     PL,
                                     <<<EN
-                                        <h5>BY TRAIN</h5>
+                                        <h4>BY TRAIN</h4>
                                         <p>Warsaw has three railway stations for long-distance trains: Central Railway Station (Central Warsaw), Eastern Railway Station (Eastern Warsaw) and Western Railway Station (Western Warsaw). Ptak Warsaw Expo can be reached by car from the western station in just 13 minutes (according to Google).</p>
                                     EN
                                 )
@@ -238,11 +238,11 @@ class PWElementRoute extends PWElements {
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
                                     <<<PL
-                                        <h5>AUTOBUSEM MIEJSKIM</h5>
+                                        <h4>AUTOBUSEM MIEJSKIM</h4>
                                         <p>Autobusy linii 703, 711 z zajezdni Krakowska P+R do przystanku „Paszków” lub autobus 733 do przystanku „Centrum Mody”. Uwaga! „Przystanek Paszków” <span>i „Centrum mody”</span> mieszczą się w II strefie biletowej. W bilety zaopatrzyć się można w większości kiosków, <span>w biletomatach</span> oraz autobusach.</p>
                                     PL,
                                     <<<EN
-                                        <h5>BY CITY BUS</h5>
+                                        <h4>BY CITY BUS</h4>
                                         <p>Buses 703, 711 from Krakowska P+R depot to the “Paszków” stop or bus 733 to the “Centrum Mody” stop. Please note that “Paszków” and “Centrum Mody” stops are located in the second ticket zone. Tickets can be purchased in most kiosks, ticket machines and buses.</p>
                                     EN
                                 )
@@ -256,11 +256,11 @@ class PWElementRoute extends PWElements {
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
                                     <<<PL
-                                        <h5>SAMOCHODEM</h5>
+                                        <h4>SAMOCHODEM</h4>
                                         <p>Ptak Warsaw Expo znajduje się bezpośrednio przy trasie S8 w kierunku na Katowice. Zjazd Paszków. Dojazd z okolic lotniska Okęcie zajmie około 10 minut. <span>Z centrum</span> Warszawy – 15 minut. Z parkowaniem nie będzie problemu, nasze centrum dysponuje 15 000 miejsc parkingowych!</p>
                                     PL,
                                     <<<EN
-                                        <h5>BY CAR</h5>
+                                        <h4>BY CAR</h4>
                                         <p>Ptak Warsaw Expo is located directly at the S8 route in the direction of Katowice, Paszków exit. It will take about 10 minutes to get here from the Warsaw Okęcie airport. From downtown Warsaw – 15 minutes. Parking is not a problem, our center has 15,000 parking spaces!</p>
                                     EN
                                 )

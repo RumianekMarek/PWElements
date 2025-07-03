@@ -44,13 +44,20 @@ jQuery(function ($) {
     }); 
 });
 
+
+
+
 /* ROZWIJANE ZGODY */
-// jQuery('document').ready(function ($) {
-//     $('.show-consent').on('click touch', function () {
-//         $(this).parents( "li" ).find('.gfield_consent_description').toggle( "slow" );
-//         $(this).parents( "fieldset" ).find('.gfield_consent_description').toggle( "slow" );
-//     });
-// });
+jQuery('document').ready(function ($) {
+    $('.show-consent').on('click touch', function () {
+        // $(this).parents( "li" ).find('.gfield_consent_description').toggle( "slow" );
+        $(this).parents( "fieldset" ).find('.gfield_consent_description').toggle( "slow" );
+    });
+});
+
+
+
+
 
 // function getLocationPath() {
 //     const urlParams = new URLSearchParams(window.location.search);

@@ -537,33 +537,35 @@ class PWElementTwoCols extends PWElements {
 
           $patronImages = PWEProfileButtons::getImagesFromDirectory($base_directory, $limit, $remove_randomize);
 
-          $logotypy = array_slice($patronImages, 0, 10);
-
           // Get logotypes from CAP database
           $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data();
           if (!empty($cap_logotypes_data)) {
             if (strpos($base_directory, 'Rotator 2') !== false) {
               $logotypy = [];
               foreach ($cap_logotypes_data as $logo_data) {
-                if ($logo_data->logos_type === "partner-targow" || 
-                    $logo_data->logos_type === "patron-medialny" || 
-                    $logo_data->logos_type === "partner-strategiczny" || 
+                if ($logo_data->logos_type === "partner-targow" ||
+                    $logo_data->logos_type === "patron-medialny" ||
+                    $logo_data->logos_type === "partner-strategiczny" ||
                     $logo_data->logos_type === "partner-honorowy" ||
                     $logo_data->logos_type === "principal-partner" ||
                     $logo_data->logos_type === "industry-media-partner" ||
                     $logo_data->logos_type === "partner-branzowy" ||
                     $logo_data->logos_type === "partner-merytoryczny") {
-                  $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
+                  $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
                 }
               }
             }
             $logotypes_catalogs_array = explode(',', $base_directory);
             foreach ($cap_logotypes_data as $logo_data) {
                 if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
-                    $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url; 
+                    $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
                 }
             }
           }
+
+          $logotypy = array_slice($patronImages, 0, 10);
+
+
         }
 
         /* End Patroni */
@@ -590,6 +592,8 @@ class PWElementTwoCols extends PWElements {
               $logotypy = array_slice($logotypy, 0, 20);
           }
       }
+
+      $id_rnd = PWECommonFunctions::id_rnd();
 
       $output = '
       <style>
@@ -889,7 +893,7 @@ class PWElementTwoCols extends PWElements {
         }
       $output .= '
 
-      <div id="two_cols_element" class="'. $element_unique_id .'">';
+      <div id="two_cols_element-'. $id_rnd .'" class="'. $element_unique_id .'">';
         if($pwe_two_cols_heading && !$pwe_two_cols_title_in_row){
           $output .= '
             <div class="background-title">
@@ -899,7 +903,7 @@ class PWElementTwoCols extends PWElements {
         if($pwe_two_cols_backgroundimage){
           $output .= '
             <div class="background-image">
-              <img src="'. $pwe_two_cols_backgroundimage .'" />
+              <img src="'. $pwe_two_cols_backgroundimage .'" alt="Logo [trade_fair_name]"/>
             </div>';
         }
         $output .= '<div class="info-image-container">';
@@ -922,7 +926,7 @@ class PWElementTwoCols extends PWElements {
               /* logo kongres */
               if($pwe_two_cols_show_logocongres){
                 $output .= '
-                <img class="logo-kongres" src="/doc/kongres-color.webp" />';
+                <img class="logo-kongres" src="/doc/kongres-color.webp" alt="Congress logo"/>';
               }
 
               /* slider */
@@ -932,12 +936,11 @@ class PWElementTwoCols extends PWElements {
                   <div class="two-cols-logotypes pwe-slides">';
 
                 foreach ($logotypy as $logo) {
-                    $output .= '<img data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="Logo wystawcy"/>';
-
+                    $output .= '<img id="'. pathinfo($logo)['filename'] .'" data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="'. pathinfo($logo)['filename'] .'"/>';
                 }
                 $output .= '</div>';
                 include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
-                $output .= PWESliderScripts::sliderScripts('two-cols-logotypes', '#two_cols_element', $opinions_dots_display = 'true', $opinions_arrows_display = false, 5);
+                $output .= PWESliderScripts::sliderScripts('two-cols-logotypes', '#two_cols_element-'. $id_rnd, $opinions_dots_display = 'true', $opinions_arrows_display = false, 5);
               }
 
             $output .= '
@@ -969,7 +972,7 @@ class PWElementTwoCols extends PWElements {
                       $image_url = wp_get_attachment_image_url((int)$image_id, 'full');
 
                       if ($image_url) {
-                          $output .= '<img data-no-lazy="1" src="' . esc_url($image_url) . '" alt="Logo wystawcy"/>';
+                          $output .= '<img id="'. pathinfo($image_url)['filename'] .'" data-no-lazy="1" src="' . esc_url($image_url) . '" alt="Logo wystawcy"/>';
                       }
                   }
 
@@ -1021,7 +1024,7 @@ class PWElementTwoCols extends PWElements {
 
               foreach ($logotypy as $logo) {
 
-                $output .= '<img data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="Logo wystawcy">';
+                $output .= '<img id="'. pathinfo($logo)['filename'] .'" data-no-lazy="1" src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="Logo wystawcy">';
               }
               $output .= '</div></div>';
             }
@@ -1055,7 +1058,7 @@ class PWElementTwoCols extends PWElements {
                       $image_url = wp_get_attachment_image_url((int)$image_id, 'full');
 
                       if ($image_url) {
-                          $output .= '<img data-no-lazy="1" src="' . esc_url($image_url) . '" alt="Logo wystawcy"/>';
+                          $output .= '<img id="'. pathinfo($image_url)['filename'] .'" data-no-lazy="1" src="' . esc_url($image_url) . '" alt="Logo wystawcy"/>';
                       }
                   }
 

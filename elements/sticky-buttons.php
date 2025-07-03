@@ -742,13 +742,15 @@ class PWElementStickyButtons extends PWElements {
                     if (is_array($sticky_buttons_json)) {
                         foreach ($sticky_buttons_json as $sticky_button) {
                             $button_id = $sticky_button["sticky_buttons_id"];
-                            $section_id = str_replace("-btn", "", $button_id);
-                            $output .= '
-                            <style>
-                                #'. $section_id .' {
-                                    opacity: 0;
-                                }
-                            </style>';
+                            if (!empty($button_id)) {
+                                $section_id = str_replace("-btn", "", $button_id);
+                                $output .= '
+                                <style>
+                                    #'. $section_id .' {
+                                        opacity: 0;
+                                    }
+                                </style>';
+                            }
                         }
                     }
 
@@ -770,23 +772,23 @@ class PWElementStickyButtons extends PWElements {
 
                                 if (!empty($image_full_size_url)) {
                                     if (!empty($link)) {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">
                                                         <a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'"></a>
                                                         <div class="custom-image-button-text">'. $button_text .'</div>
                                                     </div>';
                                     } else {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">
                                                         <img style="aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size" src="' . esc_url($image_full_size_url) . '" alt="sticky-button-'. $attachment_full_size_img_id .'">
                                                         <div class="custom-image-button-text">'. $button_text .'</div>
                                                     </div>';
                                     }
                                 } else {
                                     if (!empty($link)) {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">
                                                         <a href="'. $link .'" '. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div></a>
                                                     </div>';
                                     } else {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">
                                                         <div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio_full_size .';" class="custom-image-button custom-button-full-size"><span>'. $button_text .'</span></div>
                                                     </div>';
                                     }
@@ -983,23 +985,23 @@ class PWElementStickyButtons extends PWElements {
 
                                 if (!empty($image_url)) {
                                     if (!empty($link)) {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">
                                                         <a href="'. $link .'" '. $target_blank .'><img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'"></a>
                                                         <div class="custom-image-button-text">'. $button_text .'</div>
                                                     </div>';
                                     } else {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">
                                                         <img style="aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped" src="' . esc_url($image_url) . '" alt="sticky-button-'. $attachment_img_id .'">
                                                         <div class="custom-image-button-text">'. $button_text .'</div>
                                                     </div>';
                                     }
                                 } else {
                                     if (!empty($link)) {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">';
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">';
                                             $output .= '<a href="'. $link .'"'. $target_blank .'><div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div></a>';
                                         $output .= '</div>';
                                     } else {
-                                        $output .= '<div id="' . $button_id . '-btn" class="custom-sticky-button-item">';
+                                        $output .= '<div '. (!empty($button_id) ? 'id="' . $button_id . '-btn"' : '') .' class="custom-sticky-button-item">';
                                             $output .= '<div style="background-color:'. $button_color .'; aspect-ratio:'. $sticky_buttons_aspect_ratio .';" class="custom-image-button custom-button-cropped"><span>'. $button_text .'</span></div>';
                                         $output .= '</div>';
                                     }

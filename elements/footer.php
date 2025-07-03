@@ -106,7 +106,7 @@ class PWElementFooter extends PWElements {
             .pwe-footer-logo-pwe img {
                 width: 140px;
             }
-            .pwe-footer-title-section h4 span {
+            .pwe-footer-title-section h3 span {
                 color: white;
                 width: auto;
             }
@@ -169,7 +169,7 @@ class PWElementFooter extends PWElements {
             .pwe-footer-nav-column {
                 width: 33.333%;
             }
-            .pwe-footer-nav-column h5 span {
+            .pwe-footer-nav-column h4 span {
                 color: white;
             }
             .pwe-footer-nav-logo-top,
@@ -193,7 +193,7 @@ class PWElementFooter extends PWElements {
                     flex-direction: column;
                     justify-content: center;
                 }
-                .pwe-footer-nav-column h5 span {
+                .pwe-footer-nav-column h4 span {
                     font-size: 16px;
                 }
                 .pwe-footer-nav-left-column {
@@ -209,7 +209,7 @@ class PWElementFooter extends PWElements {
                 }
             }
             @media (max-width:720px) {
-                .pwe-footer-nav-column h5 span {
+                .pwe-footer-nav-column h4 span {
                     font-size: 14px;
                 }
                 .pwe-footer-nav-links ul li a {
@@ -235,11 +235,11 @@ class PWElementFooter extends PWElements {
                 .pwe-footer-bg {
                     padding: 18px;
                 }
-                .pwe-footer-title-section h4 {
+                .pwe-footer-title-section h3 {
                     text-align: center;
                     width: auto;
                 }
-                .pwe-footer-title-section h4 span {
+                .pwe-footer-title-section h3 span {
                     font-size: 16px;
                 }
                 .pwe-footer-nav-right-column {
@@ -265,12 +265,12 @@ class PWElementFooter extends PWElements {
                         <div class="pwe-footer-title-section">'. 
                             self::languageChecker(
                                 <<<PL
-                                <h4 class="pwe-align-left"><span>Targi / Konferencje / Eventy</span></h4>
-                                <h2 class="pwe-align-center"><span class="pwe-uppercase pwe-footer-title-pl">Stolica Targów</span></h2>
+                                <h3 class="pwe-align-left"><span>Targi / Konferencje / Eventy</span></h3>
+                                <h3 class="pwe-align-center"><span class="pwe-uppercase pwe-footer-title-pl">Stolica Targów</span></h3>
                                 PL,
                                 <<<EN
-                                <h4 class="pwe-align-left"><span>Trade Fairs / Conferences / Events</span></h4>
-                                <h2 class="pwe-align-center"><span class="pwe-uppercase pwe-footer-title-en">Capital of the Fair</span></h2>
+                                <h3 class="pwe-align-left"><span>Trade Fairs / Conferences / Events</span></h3>
+                                <h3 class="pwe-align-center"><span class="pwe-uppercase pwe-footer-title-en">Capital of the Fair</span></h3>
                                 EN
                             )
                         .'</div>
@@ -344,7 +344,7 @@ class PWElementFooter extends PWElements {
                         $output .= '
                         <!-- nav-column-item -->
                         <div class="pwe-footer-nav-column">
-                            <h5><span class="pwe-uppercase">' . $menu_titles[$index] . '</span></h5>
+                            <h4><span class="pwe-uppercase">' . $menu_titles[$index] . '</span></h4>
                             <div class="pwe-footer-nav-links">' . wp_nav_menu(["menu" => $menu, "echo" => false]) . '</div>
                         </div>';
                     }
