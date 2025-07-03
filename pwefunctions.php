@@ -34,6 +34,8 @@ class PWECommonFunctions {
         if (!isset($_SERVER['SERVER_ADDR'])) {
             $_SERVER['SERVER_ADDR'] = self::resolveServerAddrFallback();
         }
+
+        $database_host = $database_name = $database_user = $database_password = '';
         
         // Set connection data depending on the server
         switch ($_SERVER['SERVER_ADDR']) {
@@ -66,7 +68,7 @@ class PWECommonFunctions {
         }
 
         // Check if there is complete data for connection
-        if ($database_user && $database_password && $database_name && $database_host) {
+        if (!empty($database_user) && !empty($database_password) && !empty($database_name) && !empty($database_host)) {
             try {
                 $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
             } catch (Exception $e) {
@@ -79,6 +81,7 @@ class PWECommonFunctions {
             return false;
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
+                error_log("Nieprawidłowe dane połączenia z bazą danych.");
             }
         }
     
@@ -515,9 +518,41 @@ class PWECommonFunctions {
             "youtube" => $fair->fair_youtube ?? "",
             "badge" => $fair->fair_badge ?? "",
             "catalog" => $fair->fair_kw ?? "",
-            "shop" => $fair->fair_shop ?? "",
-            "group" => $fair->fair_group ?? ""
-            
+            "shop" => $fair->fair_shop ?? ""
+        ];
+    }
+
+    public static function generate_fair_translation_data($fair) {
+        return [
+            "domain" => $fair["fair_domain"],
+            "name_cs" => $fair["fair_name_cs"] ?? "",
+            "desc_cs" => $fair["fair_desc_cs"] ?? "",
+            "short_desc_cs" => $fair["fair_short_desc_cs"] ?? "",
+            "full_desc_cs" => $fair["fair_full_desc_cs"] ?? "",
+            "name_de" => $fair["fair_name_de"] ?? "",
+            "desc_de" => $fair["fair_desc_de"] ?? "",
+            "short_desc_de" => $fair["fair_short_desc_de"] ?? "",
+            "full_desc_de" => $fair["fair_full_desc_de"] ?? "",
+            "name_lt" => $fair["fair_name_lt"] ?? "",
+            "desc_lt" => $fair["fair_desc_lt"] ?? "",
+            "short_desc_lt" => $fair["fair_short_desc_lt"] ?? "",
+            "full_desc_lt" => $fair["fair_full_desc_lt"] ?? "",
+            "name_lv" => $fair["fair_name_lv"] ?? "",
+            "desc_lv" => $fair["fair_desc_lv"] ?? "",
+            "short_desc_lv" => $fair["fair_short_desc_lv"] ?? "",
+            "full_desc_lv" => $fair["fair_full_desc_lv"] ?? "",
+            "name_ru" => $fair["fair_name_ru"] ?? "",
+            "desc_ru" => $fair["fair_desc_ru"] ?? "",
+            "short_desc_ru" => $fair["fair_short_desc_ru"] ?? "",
+            "full_desc_ru" => $fair["fair_full_desc_ru"] ?? "",
+            "name_sk" => $fair["fair_name_sk"] ?? "",
+            "desc_sk" => $fair["fair_desc_sk"] ?? "",
+            "short_desc_sk" => $fair["fair_short_desc_sk"] ?? "",
+            "full_desc_sk" => $fair["fair_full_desc_sk"] ?? "",
+            "name_uk" => $fair["fair_name_uk"] ?? "",
+            "desc_uk" => $fair["fair_desc_uk"] ?? "",
+            "short_desc_uk" => $fair["fair_short_desc_uk"] ?? "",
+            "full_desc_uk" => $fair["fair_full_desc_uk"] ?? ""
         ];
     }
 

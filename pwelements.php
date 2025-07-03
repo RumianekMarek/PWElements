@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.8.2
+ * Version: 2.8.4
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -27,6 +27,7 @@ class PWElementsPlugin {
     public $PWEProfile;
     public $PWEStore;
     public $PWEConferenceCap;
+    // public $PWELogoFetcher;
 
     public function __construct() {
         // Clearing wp_rocket cache
@@ -153,7 +154,7 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/map/map.php';
         $this->PWEMap = new PWEMap();
-        
+
         require_once plugin_dir_path(__FILE__) . 'includes/store/store.php';
         $this->PWEStore = new PWEStore();
 
@@ -165,16 +166,20 @@ class PWElementsPlugin {
             $this->PWECalendar = new PWECalendar();
         }
 
+        // require_once plugin_dir_path(__FILE__) . 'includes/top10/pwelogofetcher.php';
+        // $placeholderPath = plugin_dir_path(__FILE__) . 'media/ufi_black.png';
+        // $this->PWELogoFetcher = new PWELogoFetcher($placeholderPath);
+
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
-        
+
         require_once plugin_dir_path(__FILE__) . 'includes/reviews/reviews.php';
         $this->PWEReviews = new PWEReviews();
 
         require_once plugin_dir_path(__FILE__) . 'other/test.php';
         $this->PWETest = new PWETest();
     }
-    
+
     // Czyszczenie pamięci wp_rocket
     public function clearWpRocketCacheOnPluginUpdate( $upgrader_object, $options ) {
         $plugin = isset( $options['plugin'] ) ? $options['plugin'] : '';
@@ -190,7 +195,7 @@ class PWElementsPlugin {
 
     private function getGithubKey() {
         global $wpdb;
-    
+
         $table_name = $wpdb->prefix . 'custom_klavio_setup';
         if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $table_name) {
             return null;
@@ -198,7 +203,7 @@ class PWElementsPlugin {
 
         $github_pre = $wpdb->prepare("SELECT klavio_list_id FROM $table_name WHERE klavio_list_name = %s", 'github_secret');
         $github_result = $wpdb->get_results($github_pre);
-        
+
         if (!empty($github_result)) {
             return $github_result[0]->klavio_list_id;
         } else {

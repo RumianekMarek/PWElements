@@ -359,3 +359,8 @@ strong {
     border: none !important;
     display: none;
 }
+
+
+.site-footer .social-icon {
+    display: none !important;
+}

@@ -308,6 +308,33 @@ class PWESliderScripts {
                         } else {
                             sliderArrows.show();
                         }
+
+                        monitorRoleAttributes();
+                    }
+
+                    // Function to monitor role="tabpanel" and remove it if it"s added
+                    function monitorRoleAttributes() {
+                        // Create a MutationObserver to watch for changes in the DOM
+                        const observer = new MutationObserver(function(mutationsList) {
+                            for (const mutation of mutationsList) {
+                                if (mutation.type === "attributes" && mutation.attributeName === "role") {
+                                    const target = mutation.target;
+                                    if (target.getAttribute("role") === "tabpanel") {
+                                        target.removeAttribute("role"); // Remove role="tabpanel"
+                                    }
+                                }
+                            }
+                        });
+
+                        // Target all img elements inside .two-cols-logotypes
+                        const targetNodes = document.querySelectorAll(".two-cols-logotypes img");
+
+                        // Observe changes in these elements
+                        targetNodes.forEach(node => {
+                            observer.observe(node, {
+                                attributes: true // Watch for attribute changes
+                            });
+                        });
                     }
 
                     // Settings for slidesToShow based on breakpoints

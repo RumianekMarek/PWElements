@@ -33,12 +33,16 @@ $output .= '
             flex-direction: column;
             gap: 14px;
         }
-        .pwe-header-partners__title h5 {
+        .pwe-header-partners__title {
+            margin: 0 auto;
+        }
+        .pwe-header-partners__title h3 {
             color: '. $pwe_header_partners_title_color .' !important;
             text-transform: uppercase;
             max-width: 250px;
             text-align: center;
             margin: 16px auto 0;
+            font-size: 20px;
         }
         .pwe-header-partners__items {
             display: flex;
@@ -114,7 +118,7 @@ $output .= '
     <div class="pwe-header-partners">
         <div class="pwe-header-partners-container">
             <div class="pwe-header-partners__title">
-                <h5>'. $pwe_header_partners_title .'</h5>
+                <h3>'. $pwe_header_partners_title .'</h3>
             </div>
             <div class="pwe-header-partners__items">';
                 foreach ($pwe_header_partners_items as $item) {
