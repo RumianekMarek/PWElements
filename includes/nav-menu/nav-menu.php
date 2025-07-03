@@ -84,8 +84,8 @@ class pweNavMenu extends PWECommonFunctions {
         
         $output .= '
         <header id="pweMenu" class="pwe-menu"> 
+            <a style="opacity: 0; width: 0; height: 0;"  href="#main-content" class="skip-link">Skip to main content</a>
             <div class="pwe-menu__wrapper">
-    
                 <div class="pwe-menu__main-logo">
                     <a class="pwe-menu__main-logo-ptak ' . (file_exists($_SERVER['DOCUMENT_ROOT'] . self::languageChecker('/doc/logo-x-pl.webp', '/doc/logo-x-en.webp')) ? "hidden-mobile" : "") . '" target="_blank" href="https://warsawexpo.eu'. self::languageChecker('/', '/en/') .'">
                         <img data-no-lazy="1" src="/wp-content/plugins/PWElements/media/logo_pwe.webp" alt="logo ptak">
@@ -138,14 +138,58 @@ class pweNavMenu extends PWECommonFunctions {
         $output .= '</ul>'; 
                     
         $socials = ot_get_option('_uncode_social_list');
-        if (!empty($socials) && is_array($socials)) {
+
+        $socials_cap = array(
+            'facebook' => do_shortcode('[pwe_facebook]'),
+            'instagram' => do_shortcode('[pwe_instagram]'),
+            'linkedin' => do_shortcode('[pwe_linkedin]'),
+            'youtube' => do_shortcode('[pwe_youtube]')
+        );
+       
+        if ((!empty($socials)) || !empty($socials_cap)) {
             $output .= '<ul class="pwe-menu__social">';
-            foreach ($socials as $social) { 
-                $output .= '<li class="pwe-menu__social-item-link social-icon '.esc_attr($social['_uncode_social_unique_id']).'">
-                                <a href="'.esc_url($social['_uncode_link']).'" class="social-menu-link" target="_blank">
-                                    <i class="'.esc_attr($social['_uncode_social']).'"></i>
-                                </a>
-                            </li>';
+            if (!empty($socials_cap)) {
+                if (!empty($socials_cap['facebook'])) {
+                    $output .= '
+                    <li class="pwe-menu__social-item-link social-icon facebook">
+                        <a href="'. esc_url($socials_cap['facebook']) .'" class="social-menu-link" target="_blank" aria-label="Visit our Facebook profile">
+                            <i class="fa fa-facebook-square"></i>
+                        </a>
+                    </li>';
+                }
+                if (!empty($socials_cap['instagram'])) {
+                    $output .= '
+                    <li class="pwe-menu__social-item-link social-icon instagram">
+                        <a href="'. esc_url($socials_cap['instagram']) .'" class="social-menu-link" target="_blank" aria-label="Visit our Instagram profile">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </li>';
+                }
+                if (!empty($socials_cap['linkedin'])) {
+                    $output .= '
+                    <li class="pwe-menu__social-item-link social-icon linkedin">
+                        <a href="'. esc_url($socials_cap['linkedin']) .'" class="social-menu-link" target="_blank" aria-label="Visit our Linkedin profile">
+                            <i class="fa fa-linkedin-square"></i>
+                        </a>
+                    </li>';
+                }
+                if (!empty($socials_cap['youtube'])) {
+                    $output .= '
+                    <li class="pwe-menu__social-item-link social-icon youtube">
+                        <a href="'. esc_url($socials_cap['youtube']) .'" class="social-menu-link" target="_blank" aria-label="Visit our Youtube profile">
+                            <i class="fa fa-youtube-play"></i>
+                        </a>
+                    </li>';
+                }
+            } else if (!empty($socials)) {
+                foreach ($socials as $social) { 
+                    $output .= '
+                    <li class="pwe-menu__social-item-link social-icon '.esc_attr($social['_uncode_social_unique_id']).'">
+                        <a href="'.esc_url($social['_uncode_link']).'" class="social-menu-link" target="_blank">
+                            <i class="'.esc_attr($social['_uncode_social']).'"></i>
+                        </a>
+                    </li>';
+                }
             }
             $output .= '</ul>';
         }
@@ -185,8 +229,17 @@ class pweNavMenu extends PWECommonFunctions {
 
                 $target_blank = !empty($child->target) ? 'target="_blank"' : '';
 
+                $aria_label_for_visitors = (strpos(esc_url($child->url), self::languageChecker('/dla-odwiedzajacych/', '/for-visitors/')) !== false && $has_submenu_children != true) ? 'aria-label="Dlaczego warto: dla odwiedzajacych"' : '';
+                $aria_label_for_exhibitors = (strpos(esc_url($child->url), self::languageChecker('/dla-wystawcow/', '/for-exhibitors/')) !== false && $has_submenu_children != true) ? 'aria-label="Dlaczego warto: dla wystawcow"' : '';
+
+                if (!empty($aria_label_for_visitors)) {
+                    $aria_label = $aria_label_for_visitors;
+                } else if ($aria_label_for_exhibitors) {
+                    $aria_label = $aria_label_for_exhibitors;
+                } else $aria_label = '';
+
                 $output .= '<li class="pwe-menu__submenu-item' . ($has_submenu_children ? ' has-children' : '') . '">';
-                $output .= '<a '. $target_blank .' href="' . esc_url($child->url) . '">' . wp_kses_post($child->title) . ($has_submenu_children ? '<span class="pwe-menu__arrow">›</span>' : '') . '</a>';
+                $output .= '<a '. $target_blank .' '. $aria_label .' href="' . esc_url($child->url) . '">' . wp_kses_post($child->title) . ($has_submenu_children ? '<span class="pwe-menu__arrow">›</span>' : '') . '</a>';
                 $output .= $this->display_sub_menu($child->ID, $menu_items, $depth + 1);
                 $output .= '</li>';
             }

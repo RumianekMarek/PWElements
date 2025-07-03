@@ -60,10 +60,11 @@ $output .= '
     .pwelement_'. $el_id .' .pwe-header-text {
         padding: 0 !important;
     }
-    .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, h3) {
+    .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, .pwe-header-edition) {
         color: '. $text_color .';
         text-align: start;
         margin: 0;
+        font-weight: 600;
     }
     .pwelement_'. $el_id .' .pwe-header-text h1 {
         text-transform: uppercase;
@@ -77,15 +78,15 @@ $output .= '
         margin-top: 24px;
         font-size: 28px;
     }
-    .pwelement_'. $el_id .' .pwe-header-text h3 {
+    .pwelement_'. $el_id .' .pwe-header-text .pwe-header-edition {
         text-transform: uppercase;
         font-size: 30px;
         padding: 6px 8px;
     }
-    .pwelement_'. $el_id .' .pwe-header-text p {
+    .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
         color: '. $text_color .';
     }
-    .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
+    .pwelement_'. $el_id .' .pwe-header-text .pwe-header-location {
         display: none;
     }
     .pwelement_'. $el_id .' .pwe-header-edition {
@@ -229,11 +230,11 @@ $output .= '
             letter-spacing: 5px;
             text-align: center;
         }
-        .pwelement_'. $el_id .' .pwe-header-text h3 {
+        .pwelement_'. $el_id .' .pwe-header-text .pwe-header-edition {
             border-radius: 8px;
             margin-top: 12px;
         }
-        .pwelement_'. $el_id .' .pwe-header-text p {
+        .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
             font-size: 30px;
             font-weight: 500;
             margin: 0;
@@ -394,7 +395,7 @@ $output .= '
             justify-content: center;
             align-items: center;
         }
-        .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
+        .pwelement_'. $el_id .' .pwe-header-text .pwe-header-location {
             display: block;
             margin: 0;
         }
@@ -427,7 +428,7 @@ $output .= '
             gap: 18px;
             padding-top: 18px;
         }
-        .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, h3) {
+        .pwelement_'. $el_id .' .pwe-header-text :is(h1, h2, .pwe-header-edition) {
             text-align: center;
             width: auto;
             font-size: 22px;
@@ -438,7 +439,7 @@ $output .= '
         .pwelement_'. $el_id .' .pwe-header-text h2 {
             margin-top: 0;
         }
-        .pwelement_'. $el_id .' .pwe-header-text h3 {
+        .pwelement_'. $el_id .' .pwe-header-text .pwe-header-edition {
             margin-top: 10px;
         }
         .pwelement_'. $el_id .' .pwe-header-title {
@@ -476,7 +477,7 @@ $output .= '
             .pwelement_'. $el_id .' .pwe-header .header-center-date {
                 font-size: 34px;
             }
-            .pwelement_'. $el_id .' .pwe-header-text p {
+            .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
                 display: none;
             }
             .pwelement_'. $el_id .' .pwe-header  .pwe-header-title {
@@ -509,19 +510,19 @@ $output .= '
                     <div class="pwe-header-text">
                         <div class="pwe-header-main-content-block">
                             <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">';
-                            $output .= ($pwe_header_center == true) ? '<h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>' : ''; $output .= '
+                            $output .= ($pwe_header_center == true) ? '<p class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></p>' : ''; $output .= '
                             <div class="pwe-header-title">
                                 <h1>'. $trade_fair_desc .'</h1>
                                 <h2 class="header-center-date">'. $actually_date .'</h2>';
                                 $city =  self::languageChecker('Warszawa', 'Warsaw');
-                                $output .= ($pwe_header_center != true) ? '<h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>' : '';
-                                $output .= ($pwe_header_center == true) ? '<p>'. $city .'</p>' : '';
+                                $output .= ($pwe_header_center != true) ? '<p class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></p>' : '';
+                                $output .= ($pwe_header_center == true) ? '<p class="pwe-header-city">'. $city .'</p>' : '';
                                 $output .= '
                             </div>
                         </div>
                         <div class="pwe-header-date-block">
                             <h2>'. $trade_fair_date .'<span class="el-hidden-desktop" style="text-transform: capitalize;">, '. $city .'</span></h2>
-                            <p class="pwe-header-city">'. self::languageChecker('Warszawa, Polska', 'Warsaw, Poland') .'</p>
+                            <p class="pwe-header-city pwe-header-location">'. self::languageChecker('Warszawa, Polska', 'Warsaw, Poland') .'</p>
                         </div>
                     </div>
 

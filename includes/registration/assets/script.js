@@ -2,7 +2,6 @@ const utm = data_js.source_utm;
 const htmlLang = document.documentElement.lang;
 const registrationMode = data_js.registration_modes;
 
-
 // Function that writes the title attribute to input
 function updateCountryInput() {
     const selectedFlag = document.querySelector(".iti__flag-container .iti__selected-flag");

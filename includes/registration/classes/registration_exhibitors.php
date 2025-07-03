@@ -52,11 +52,11 @@ class PWERegistrationExhibitors extends PWERegistration {
         require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 
         $output .= '
-        <div id="pweRegistration" class="pwe-registration">
+        <div id="pweRegistration" class="pwe-registration for-exhibitors">
             <div class="pwe-registration-column">
                 <div id="pweFormContent" class="pwe-form-content">
-                    <div class="pwe-registration-title main-heading-text">
-                        <h4 class="custom-uppercase"><span>'. self::languageChecker('DLA WYSTAWCÓW', 'BOOK A STAND') .'</span></h4>
+                    <div id="main-content" class="pwe-registration-title main-heading-text">
+                        <h1 class="custom-uppercase" style="font-size: 26px;"><span>'. self::languageChecker('DLA WYSTAWCÓW', 'BOOK A STAND') .'</span></h1>
                     </div>
                     <div class="pwe-registration-text">
                         <p>'.  $registration_text .'</p>

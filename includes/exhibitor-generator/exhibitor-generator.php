@@ -19,6 +19,7 @@ class PWEExhibitorGenerator{
     public static $accent_color;
     public static $main2_color;
     public static $fair_forms;
+    public static $local_lang_pl;
     private $atts;
 
     /**
@@ -30,6 +31,7 @@ class PWEExhibitorGenerator{
         self::$fair_forms = $pweComonFunction->findFormsGF('id');
         self::$fair_colors = $pweComonFunction->findPalletColors();
         self::$accent_color = (self::$fair_colors['Accent']) ? self::$fair_colors['Accent'] : '';
+        self::$local_lang_pl = (get_locale() == 'pl_PL');
 
         foreach(self::$fair_colors as $color_key => $color_value){
             if(strpos($color_key, 'main2') != false){
@@ -283,6 +285,9 @@ class PWEExhibitorGenerator{
         extract( shortcode_atts( array(
             'exhibitor_generator_mode' => '',
         ), $atts ));
+
+        global $local_lang_pl;
+        $local_lang_pl = self::$local_lang_pl;
 
         if ($this->findClassElements()[$exhibitor_generator_mode]){
             require_once plugin_dir_path(__FILE__) . $this->findClassElements()[$exhibitor_generator_mode];

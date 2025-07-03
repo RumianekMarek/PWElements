@@ -29,7 +29,6 @@ class PWERegistration extends PWECommonFunctions {
 
         // Hook actions
         add_action('init', array($this, 'initVCMapPWERegistration'));
-        add_action('wp_enqueue_scripts', array($this, 'addingScripts'));
 
         add_shortcode('pwe_registration', array($this, 'PWERegistrationOutput'));
         add_action('gform_after_submission', array($this, 'entryToSession'), 10, 2);
@@ -277,7 +276,7 @@ public function initVCMapPWERegistration() {
      * Adding Scripts
      */
     public function addingScripts(){
-
+        
         $source_utm = (isset($_SERVER['argv'][0])) ? $_SERVER['argv'][0] : '';
 
         $data_js_array = array(
@@ -312,6 +311,7 @@ public function initVCMapPWERegistration() {
      * @param array @atts options
      */
     public function PWERegistrationOutput($atts) {
+        $this->addingScripts();
 
         extract( shortcode_atts( array(
             'registration_type' => '',

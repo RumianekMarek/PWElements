@@ -694,6 +694,25 @@ class PWElementAdditionalLogotypes {
                         $saving_paths($files, $logo_data);
                     }
                 }
+
+                // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
+                if ($logotypes_exhibitors_on == true && in_array('wystawcy', $logotypes_catalogs) && count($logotypes_catalogs) > 1) {
+                    foreach ($exhibitors_catalog as $catalog_img) {
+                        $element = [
+                            'url' => $catalog_img,
+                            'desc_pl' => 'wystawca',
+                            'desc_en' => 'exhibitor',
+                            'link' => ''
+                        ];
+
+                        // Adding logos_url to $files only if it is not already there
+                        if (!in_array($element, $files)) {
+                            $files[] = $element;
+                        }
+                    }
+
+                    shuffle($files);
+                }
             }
 
             if (count($files) > 0) {
@@ -932,7 +951,7 @@ class PWElementAdditionalLogotypes {
                         if (count($updated_images_url) > 0) {
                             foreach ($updated_images_url as $url) {
                                 // Ustalanie tekstu alternatywnego (alt)
-                                $alt_text = (!empty($url["folder_name"]) && !preg_match('/\d{2}/', $url["folder_name"])) ? $url["folder_name"] : "gallery element";
+                                $alt_text = (!empty($url["folder_name"]) && !preg_match('/\d{2}/', $url["folder_name"])) ? $url["folder_name"] . pathinfo($url["img"])['filename'] : "gallery element";
 
                                 // Ustalanie napisu (caption) dla logotypów
                                 if (($logotypes_caption_on == true || (isset($header_logotypes_caption_on) && $header_logotypes_caption_on == true)) && empty($logotypes_name)) {
@@ -971,7 +990,7 @@ class PWElementAdditionalLogotypes {
                                         $output .= '
                                         <a class="pwe-logo-item-container" ' . $target_blank . ' href="' . $url["site"] . '" style="' . $logotypes_items_custom_style . '">
                                             <div class="pwe-logo-item ' . $url["class"] . '" style="' . $url["style"] . ' ' . $logotypes_items_width . ' ' . $logotypes_items_custom_style . '">
-                                                <img alt="' . $alt_text . '" data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                <img id="'. pathinfo($url["img"])['filename'] .'" alt="' . $alt_text . '" data-no-lazy="1" src="' . $url["img"] . '"/>
                                                 ' . $logo_caption_text . '
                                             </div>
                                         </a>';
@@ -979,7 +998,7 @@ class PWElementAdditionalLogotypes {
                                         $output .= '
                                         <div class="pwe-logo-item-container" style="' . $logotypes_items_custom_style . '">
                                             <div class="pwe-logo-item ' . $url["class"] . '" style="' . $url["style"] . ' ' . $logotypes_items_width . '">
-                                                <img alt="' . $alt_text . '" data-no-lazy="1" src="' . $url["img"] . '"/>
+                                                <img id="'. pathinfo($url["img"])['filename'] .'" alt="' . $alt_text . '" data-no-lazy="1" src="' . $url["img"] . '"/>
                                                 ' . $logo_caption_text . '
                                             </div>
                                         </div>';

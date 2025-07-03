@@ -353,7 +353,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
                 flex-direction: column;
             }
             #pweForm input {
-                border: 1px solid #ACACAC !important;
+                border: 2px solid rgb(0, 0, 0) !important;
                 border-radius: 10px;
                 box-shadow: none !important;
             }
