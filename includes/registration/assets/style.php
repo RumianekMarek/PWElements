@@ -1130,7 +1130,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
         }
         .row-container:has(#pweRegistration) {
             // background: linear-gradient(0deg, rgba(168, 168, 168, 0.58) 13%, rgba(150, 150, 150, 0.94) 23%, rgba(66, 66, 66, 0.02) 28%, rgba(170, 171, 175, 0.84) 100%);
-            background-image: url(/doc/platinum_background.webp);
+            background-image: url(/wp-content/plugins/pwe-media/media/platyna/platinum_background.webp);
             background-size: contain;
             background-repeat: no-repeat;
         }
