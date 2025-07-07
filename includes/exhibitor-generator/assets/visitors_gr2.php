@@ -194,7 +194,7 @@ function add_field_phone_number($generator_form_id) {
     // Sprawdź, czy pole już istnieje
     foreach ( $form['fields'] as $field ) {
 
-        if ( isset( $field->type ) && $field->type === 'tel') {
+        if ( !empty($field->cssClass) && $filed->cssClass == 'pwe-phone-number') {
             update_option( $done_option_key, 1 ); // zaznacz jako wykonane
             $phone_field_exists = true;
         }
@@ -305,7 +305,10 @@ function logged_in_exhibitor_fields_hidden($form) {
         session_start();
     }
 
-    if (!empty($_SESSION['logged_in_exhibitor'])) {
+    $code_count = strlen($_GET['wystawca']) ?? 0;
+
+
+    if (!empty($_SESSION['logged_in_exhibitor']) && $code_count <= 10 ) {
         foreach ($form['fields'] as &$field) {
             if ($field->type === 'phone') {
                 $field->visibility = 'hidden';
@@ -336,21 +339,24 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
         'generator_patron' => '',
     ), $atts ));
 
+    global $local_lang_pl;
+
     add_field_marketing_consent( $generator_form_id );
     add_field_phone_number( $generator_form_id );
 
     $code_count = strlen($_GET['wystawca']) ?? 0;
 
     $all_senders = array();
+    $no_nip_index = 10000;
 
     foreach ($all_exhibitors as $cat_id => $cat_value) {
-        $full_id = $cat_value['NIP'];
+        $full_id = (!empty($cat_value['NIP'])) ? $cat_value['NIP'] : $no_nip_index++;
         $id_hash = substr(sha1($full_id), 0, 10);
 
         $all_senders[$id_hash] = array(
             'name' => $cat_value['Nazwa_wystawcy'],
             'logo' => $cat_value['URL_logo_wystawcy'],
-            'pass' => $full_id,
+            'pass' => (strlen($full_id) > 5) ? $full_id : '',
             'desc' => $id_hash,
         );
     }
@@ -432,7 +438,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 remove_query_arg('p', $_SERVER['REQUEST_URI'])
             );
         } else {
-            $_SESSION['login_error'] = 'Błędne hasło';
+            $_SESSION['login_error'] = $local_lang_pl ? 'Błędne hasło lub nazwa użytkownika' : 'Incorrect password or username';
 
             $redirect_url = $_SERVER['REQUEST_URI'];
         }
@@ -862,7 +868,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
 
     $gr_data = ($code_count <= 10) ? 'gr2' : 'patron';
     $output .= '
-    <div class="exhibitor-generator gr2" data-group="' . $gr_data . '">
+    <div class="exhibitor-generator gr2" data-group="gr2">
         <div class="exhibitor-generator__wrapper">
             <div class="exhibitor-generator__left-badge">
                 <img class="exhibitor-generator__form-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
@@ -885,8 +891,12 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                                         $output .='<option class="cat-exhibitor" value="' . $cat_id . '" data-id="' . $cat_id . '" data-nip="' . $cat_value["pass"] . '">' . $cat_value["name"] . '</option>';
                                     }
                                 $output .='</select>
-                                <input type="password" id="exhibitors_password" name="password" placeholder="' . PWECommonFunctions::languageChecker('Hasło', 'Password') . '" required />
-                                <button type="submit" class="login-button btn-gold">' . PWECommonFunctions::languageChecker('Zatwierdź', 'Confirm') . '</button>
+                                <input type="password" id="exhibitors_password" name="password" placeholder="' . PWECommonFunctions::languageChecker('Hasło', 'Password') . '" required />';
+                                if (isset($_SESSION['login_error'])) {
+                                    $output .= '<div id="login-error-message" style="color:red; text-align:center; font-weight:bold;">' . $_SESSION['login_error'] . '</div>';
+                                    unset($_SESSION['login_error']);
+                                }
+                                $output .='<button type="submit" class="login-button btn-gold">' . PWECommonFunctions::languageChecker('Zatwierdź', 'Confirm') . '</button>
                                 </form>';
                         }
                     $output .='</div>
@@ -1098,11 +1108,9 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                         }
                     });
 
-                if ($(".validation_message").length === 0 && $(".gfield--type-phone").hasClass("gfield_visibility_hidden")) {
+                if ($(".validation_message:not(.validation_message--hidden-on-empty)").length === 0 && ($(".gfield--type-phone").hasClass("gfield_visibility_hidden") || $(".pwe-phone-number").hasClass("gfield_visibility_hidden"))) {
                     $(event.target).closest("form").submit();
                 }
-
-
             }
 
             $("form").has(".gfield_visibility_visible").find(".gform_button").on("click", function (event) {

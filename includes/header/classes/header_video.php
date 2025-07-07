@@ -221,7 +221,7 @@ $output .= '
         .pwelement_'. $el_id .' .pwe-header-text h1 {
             font-size: 32px;
             max-width: 1200px;
-            text-align: center;
+            text-align: center !important;
         }
         .pwelement_'. $el_id .' .pwe-header-text .header-center-date {
             margin-top: 12px;
@@ -572,7 +572,7 @@ $output .= '
                         require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/counter-to-fair.php';
                     }
 
-                    // Partners widget --------------------------------------------------------------------------------------<     
+                    // Partners widget --------------------------------------------------------------------------------------<
                     if (!empty($pwe_header_partners_items)) {
                         require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
                     }

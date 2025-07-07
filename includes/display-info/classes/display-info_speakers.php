@@ -174,6 +174,19 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 ),
             ),
             array(
+                'type' => 'checkbox',
+                'group' => 'options',
+                'heading' => __('Show excerpt in full', 'pwe_display_info'),
+                'param_name' => 'info_speakers_excerpt_in_full',
+                'description' => __('Check to show bio excerpt in bio full.', 'pwe_display_info'),
+                'admin_label' => true,
+                'value' => array(__('True', 'pwe_display_info') => 'true',),
+                'dependency' => array(
+                    'element' => 'display_info_format',
+                    'value' => 'PWEDisplayInfoSpeakers',
+                ),
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'options',
                 'heading' => __('Display items for desktop', 'pwe_display_info'),
@@ -273,6 +286,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
             'info_speakers_bio_color' => '',
             'info_speakers_element_width' => '',
             'info_speakers_photo_square' => '',
+            'info_speakers_excerpt_in_full' => '',
         ), $atts ) );
 
         $info_speakers_options = array();
@@ -393,8 +407,13 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 transform: scale(1.2);
             }
             #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-title,
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-excerpt,
             #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-desc {
                 margin: 18px 0 0;
+            }
+            #pweSpeakerModal-'. $rnd .' .pwe-speaker-modal-excerpt {
+                text-align: center;
+                max-width: 80%;
             }
             #pweSpeakerModal-'. $rnd .'.is-visible {
                 opacity: 1;
@@ -465,7 +484,6 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                 $output .= PWESpeakersSlider::sliderOutput($info_speakers_slider, 3000, $info_speakers_options);
             }
         }   
-       
         $output .='
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
@@ -474,6 +492,7 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                     speakers.forEach((speaker) => {
                         const img = speaker.querySelector(".pwe-speaker-img");
                         const name = speaker.querySelector(".pwe-speaker-name");
+                        const excerpt = speaker.querySelector(".pwe-speaker-excerpt");
                         const desc = speaker.querySelector(".pwe-speaker-desc");
                         const btn = speaker.querySelector(".pwe-speaker-btn");
 
@@ -500,7 +519,11 @@ class PWEDisplayInfoSpeakers extends PWEDisplayInfo {
                                     <div class="pwe-speaker-modal-content" style="display:flex; flex-direction:column; align-items:center; padding:20px;">
                                         <span class="pwe-speaker-modal-close">&times;</span>
                                         <img class="pwe-speaker-modal-image" src="" alt="Speaker Image" style="width:100%; max-width:150px;">
-                                        <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>
+                                        <h5 class="pwe-speaker-modal-title">${name.innerHTML}</h5>';
+                                        if ($info_speakers_excerpt_in_full) {
+                                            $output .='<div class="pwe-speaker-modal-excerpt">${excerpt.innerHTML}</div>';
+                                        }
+                                        $output .='
                                         <div class="pwe-speaker-modal-desc">${desc.innerHTML}</div>
                                     </div>
                                 `;
