@@ -693,8 +693,16 @@ function initVCMapHeader() {
                     array(
                         'type' => 'attach_images',
                         'group' => 'Partners/Patrons',
-                        'heading' => __('Partners logotypes', 'pwe_header'),
+                        'heading' => __('Select Partners/Patrons from media gallery', 'pwe_header'),
                         'param_name' => 'pwe_header_partners_items',
+                        'save_always' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Partners/Patrons catalog', 'pwe_header'),
+                        'param_name' => 'pwe_header_partners_catalog',
+                        'save_always' => true,
                     ),
                     array(
                         'type' => 'param_group',
@@ -713,6 +721,13 @@ function initVCMapHeader() {
                                 'heading' => __('Logotypes', 'pwe_header'),
                                 'param_name' => 'pwe_header_partners_other_logotypes',
                                 'save_always' => true
+                            ),
+                            array(
+                                'type' => 'textfield',
+                                'group' => 'Partners/Patrons',
+                                'heading' => __('Partners/Patrons catalog', 'pwe_header'),
+                                'param_name' => 'pwe_header_partners_other_logotypes_catalog',
+                                'save_always' => true,
                             ),
                         ),
                     ),

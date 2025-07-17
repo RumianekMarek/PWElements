@@ -81,6 +81,8 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_partners_position' => '',
             'pwe_header_partners_title' => '',
             'pwe_header_partners_items' => '',
+            'pwe_header_partners_catalog' => '',
+            'pwe_header_partners_other_logotypes_catalog' => '',
             'pwe_header_partners_title_color' => '',
             'pwe_header_partners_background_color' => '',
             'pwe_header_other_partners' => '',

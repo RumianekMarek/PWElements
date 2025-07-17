@@ -82,6 +82,7 @@ $output .= '
         text-transform: uppercase;
         font-size: 30px;
         padding: 6px 8px;
+        width: fit-content;
     }
     .pwelement_'. $el_id .' .pwe-header-text .pwe-header-city {
         color: '. $text_color .';
@@ -500,7 +501,7 @@ $output .= '
     <div class="pwe-header-container pwe-header-background" style="background-image: url('. $background_header .');">
         <div class="pwe-bg-image1 pwe-bg-image"></div>
         <div class="pwe-bg-image2 pwe-bg-image"></div>
-        <div class="pwe-bg-image3 pwe-bg-image"></div>
+        <div class="pwe-bg-image3 pwe-bg-image"></div> 
 
         <div class="pwe-header-wrapper">
 
