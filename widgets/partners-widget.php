@@ -180,7 +180,7 @@ $output .= '
                 $output .= '
                 <div class="pwe-header-partners-container">
                     <div class="pwe-header-partners__title">
-                        <h5>'. $pwe_header_other_partner_title .'</h5>
+                        <h3>'. $pwe_header_other_partner_title .'</h3>
                     </div>
                     <div class="pwe-header-partners__items">';
                         foreach ($pwe_header_other_partner_logo_ids as $logo_id) {
