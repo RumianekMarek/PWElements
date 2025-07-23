@@ -173,8 +173,8 @@ class PWERegistrationVisitors extends PWERegistration {
                             </div>
 
                             <div class="ticket-card__details">
-                              <p class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</p>
-                              '.$register_ticket_register_benefits.'
+                                <p class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</p>
+                                '. self::languageChecker(do_shortcode('[trade_fair_registration_benefits_pl]'), do_shortcode('[trade_fair_registration_benefits_en]')) .'
                               <div class="pwe-registration-form">
                                 [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
                               </div>
@@ -194,7 +194,7 @@ class PWERegistrationVisitors extends PWERegistration {
 
                             <div class="ticket-card__details">
                               <h2 class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</h2>
-                              '.$register_ticket_benefits.'
+                                '. self::languageChecker(do_shortcode('[trade_fair_ticket_benefits_pl]'), do_shortcode('[trade_fair_ticket_benefits_en]')) .'        
                               <div class="ticket-card__details_button">';
                               if(empty($register_ticket_link)){
                                 $output .= '
