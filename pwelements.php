@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.8.6
+ * Version: 2.8.7
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -27,6 +27,7 @@ class PWElementsPlugin {
     public $PWEProfile;
     public $PWEStore;
     public $PWEConferenceCap;
+    public $PWEIndustryEvening;
     // public $PWELogoFetcher;
 
     public function __construct() {
@@ -164,6 +165,9 @@ class PWElementsPlugin {
         if (!empty($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === 'warsawexpo.eu' || $_SERVER['HTTP_HOST'] === 'rfl.warsawexpo.eu')) {
             require_once plugin_dir_path(__FILE__) . 'includes/calendar/calendar.php';
             $this->PWECalendar = new PWECalendar();
+
+            require_once plugin_dir_path(__FILE__) . 'includes/conference-calendar/conference-calendar.php';
+            $this->PWEConferenceCalendar = new PWEConferenceCalendar();
         }
 
         // require_once plugin_dir_path(__FILE__) . 'includes/top10/pwelogofetcher.php';
@@ -172,6 +176,9 @@ class PWElementsPlugin {
 
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/industry-evening/industry-evening.php';
+        $this->PWEIndustryEvening = new PWEIndustryEvening();
 
         require_once plugin_dir_path(__FILE__) . 'includes/reviews/reviews.php';
         $this->PWEReviews = new PWEReviews();
