@@ -96,7 +96,7 @@ $output .= '
                 'link' => ''
             ];
         }
-        unset($file);
+        unset($file); 
     }
 
     $saving_paths = function (&$files, $logo_data) {
@@ -168,8 +168,8 @@ $output .= '
     }
 
     $output .= ' 
-    <div class="pwe-header-partners partners-'. $unique_id .'">
-        <div class="pwe-header-partners-container">
+    <div class="pwe-header-partners">
+        <div class="pwe-header-partners-container partners-'. $unique_id .'">
             <div class="pwe-header-partners__title">
                 <h3>'. $pwe_header_partners_title .'</h3>
             </div>
