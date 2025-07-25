@@ -574,7 +574,7 @@ $output .= '
                     }
 
                     // Partners widget --------------------------------------------------------------------------------------<
-                    if (!empty($pwe_header_partners_items)) {
+                    if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
                         require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
                     }
                     $output .= '
