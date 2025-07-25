@@ -175,18 +175,19 @@ $output .= '
             </div>
             <div class="pwe-header-partners__items">';
                 foreach ($files as $item) {
-                    if (!empty($item["link"])) {
-                        $output .= '
-                        <div class="pwe-header-partners__item">
-                            <a href="'. $item["link"] .'" target"_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
-                        </div>';
-                    } else {
-                        $output .= '
-                        <div class="pwe-header-partners__item">
-                            <img src="'. $item["url"] .'" alt="partner logo">
-                        </div>';
-                    }
-                    
+                    if (!empty($item["url"])) {
+                        if (!empty($item["link"])) {
+                            $output .= '
+                            <div class="pwe-header-partners__item">
+                                <a href="'. $item["link"] .'" target"_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
+                            </div>';
+                        } else {
+                            $output .= '
+                            <div class="pwe-header-partners__item">
+                                <img src="'. $item["url"] .'" alt="partner logo">
+                            </div>';
+                        }
+                    }  
                 }
             $output .= '
             </div> 
@@ -282,16 +283,18 @@ $output .= '
                     </div>
                     <div class="pwe-header-partners__items">';
                         foreach ($other_files as $item) {
-                            if (!empty($item["link"])) {
-                                $output .= '
-                                <div class="pwe-header-partners__item">
-                                    <a href="'. $item["link"] .'" target"_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
-                                </div>';
-                            } else {
-                                $output .= '
-                                <div class="pwe-header-partners__item">
-                                    <img src="'. $item["url"] .'" alt="partner logo">
-                                </div>';
+                            if (!empty($item["url"])) {
+                                if (!empty($item["link"])) {
+                                    $output .= '
+                                    <div class="pwe-header-partners__item">
+                                        <a href="'. $item["link"] .'" target"_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
+                                    </div>';
+                                } else {
+                                    $output .= '
+                                    <div class="pwe-header-partners__item">
+                                        <img src="'. $item["url"] .'" alt="partner logo">
+                                    </div>';
+                                }
                             }
                         }
                     $output .= '
