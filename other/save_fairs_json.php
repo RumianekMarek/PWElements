@@ -29,13 +29,31 @@ if ($token === $secret_key) {
     $get_fairs_data = function () {
 
         $pwe_fairs = PWECommonFunctions::get_database_fairs_data();
+        $pwe_fairs_translations = PWECommonFunctions::get_database_translations_data();
 
         $fairs_data = ["fairs" => []];
 
         if (!empty($pwe_fairs) && is_array($pwe_fairs)) {
             foreach ($pwe_fairs as $fair) {
                 $domain = $fair->fair_domain;
-                $fairs_data["fairs"][$domain] = PWECommonFunctions::generate_fair_data($fair);
+                
+                $fair_data = PWECommonFunctions::generate_fair_data($fair);
+                
+                $fairs_data["fairs"][$domain] = $fair_data;
+            }
+        }
+
+        if (!empty($pwe_fairs_translations) && is_array($pwe_fairs_translations)) {
+            foreach ($pwe_fairs_translations as $fair_translations) {
+                $domain = $fair_translations['fair_domain'];
+
+                $fair_translation_data = PWECommonFunctions::generate_fair_translation_data($fair_translations);
+                
+                unset($fair_translation_data['domain']);
+                
+                if (isset($fairs_data["fairs"][$domain])) {
+                    $fairs_data["fairs"][$domain] = array_merge($fairs_data["fairs"][$domain], $fair_translation_data);
+                }
             }
         }
 

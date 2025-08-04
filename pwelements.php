@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.8.8
+ * Version: 2.8.9
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -27,7 +27,8 @@ class PWElementsPlugin {
     public $PWEProfile;
     public $PWEStore;
     public $PWEConferenceCap;
-    // public $PWEIndustryEvening;
+    public $PWEIndustryEvening;
+    public $PWEConferenceShortInfo;
     // public $PWELogoFetcher;
 
     public function __construct() {
@@ -166,8 +167,8 @@ class PWElementsPlugin {
             require_once plugin_dir_path(__FILE__) . 'includes/calendar/calendar.php';
             $this->PWECalendar = new PWECalendar();
 
-            // require_once plugin_dir_path(__FILE__) . 'includes/conference-calendar/conference-calendar.php';
-            // $this->PWEConferenceCalendar = new PWEConferenceCalendar();
+            require_once plugin_dir_path(__FILE__) . 'includes/conference-calendar/conference-calendar.php';
+            $this->PWEConferenceCalendar = new PWEConferenceCalendar();
         }
 
         // require_once plugin_dir_path(__FILE__) . 'includes/top10/pwelogofetcher.php';
@@ -177,14 +178,17 @@ class PWElementsPlugin {
         // require_once plugin_dir_path(__FILE__) . 'qr-active/main-qr-active.php';
         // $this->PWEQRActive = new PWEQRActive();
 
-        // require_once plugin_dir_path(__FILE__) . 'includes/industry-evening/industry-evening.php';
-        // $this->PWEIndustryEvening = new PWEIndustryEvening();
+        require_once plugin_dir_path(__FILE__) . 'includes/industry-evening/industry-evening.php';
+        $this->PWEIndustryEvening = new PWEIndustryEvening();
 
         require_once plugin_dir_path(__FILE__) . 'includes/reviews/reviews.php';
         $this->PWEReviews = new PWEReviews();
 
         require_once plugin_dir_path(__FILE__) . 'other/test.php';
         $this->PWETest = new PWETest();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/conference-short-info/conference-short-info.php';
+        $this->PWETest = new PWEConferenceShortInfo();
     }
 
     // Czyszczenie pamięci wp_rocket

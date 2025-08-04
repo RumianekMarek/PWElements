@@ -133,7 +133,6 @@ class PWESwiperScripts {
             $output .= '
             </style>';
 
-
             if (!empty($breakpoints)) {
                 $swiper_breakpoints = '';
                 foreach ($breakpoints as $width => $slides) {
@@ -176,11 +175,18 @@ class PWESwiperScripts {
                         grabCursor: true,
                         observer: true,
                         observeParents: true,
-                        autoplay: {
-                            delay: 3000,
-                            disableOnInteraction: false,
-                            pauseOnMouseEnter: true
-                        },
+                        ';
+                        if (isset($options['autoplay']) && $options['autoplay'] === false) {
+                            $output .= 'autoplay: false,';
+                        } else {
+                            $output .= 'autoplay: {
+                                delay: 3000,
+                                disableOnInteraction: false,
+                                pauseOnMouseEnter: true
+                            },';
+                        }
+
+                        $output .= '
                         breakpoints: breakpoints,
                         on: {
                             init: function () {
@@ -203,7 +209,9 @@ class PWESwiperScripts {
                         $output .= '
                     swiperConfig.pagination = {
                         el: "' . $pwe_element . ' .swiper-pagination",
-                        clickable: true
+                        clickable: true,
+                        dynamicBullets: true,
+                        dynamicMainBullets: 3
                     };';
                     }
 

@@ -2,6 +2,10 @@
 
 class PWECommonFunctions {
 
+    private static $cached_db_connection = null;
+    private static $connection_attempts = 0;
+    private static $max_connection_attempts = 2;
+
     /**
      * Random number
      */
@@ -28,6 +32,18 @@ class PWECommonFunctions {
      * Connecting to CAP database
      */
     public static function connect_database() {
+         // Return cached connection if already established
+        if (self::$cached_db_connection !== null) {
+            // Return cache if connection already exists
+            return self::$cached_db_connection;
+        }
+
+        // Limit the number of connection attempts
+        if (self::$connection_attempts >= self::$max_connection_attempts) {
+            // End attempt after 2 failed attempts
+            return false; 
+        }
+
         // Initialize connection variables
         $cap_db = null;
 
@@ -71,14 +87,22 @@ class PWECommonFunctions {
         if (!empty($database_user) && !empty($database_password) && !empty($database_name) && !empty($database_host)) {
             try {
                 $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
+                
+                // Check if the connection was successful
+                if ($cap_db->dbh) {
+                    self::$cached_db_connection = $cap_db; // Cache the connection if successful
+                } else {
+                    throw new Exception('Nie udało się połączyć z bazą danych.');
+                }
+
             } catch (Exception $e) {
-                return false;
+                self::$connection_attempts++;
                 if (current_user_can("administrator") && !is_admin()) {
                     echo '<script>console.error("Błąd połączenia z bazą danych: '. addslashes($e->getMessage()) .'")</script>';
                 }
             }
         } else {
-            return false;
+            self::$connection_attempts++;
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Nieprawidłowe dane połączenia z bazą danych.")</script>';
                 error_log("Nieprawidłowe dane połączenia z bazą danych.");
@@ -86,13 +110,15 @@ class PWECommonFunctions {
         }
     
         // Check for connection errors
-        if (!$cap_db->dbh || mysqli_connect_errno()) {
-            return false;
+        if (!$cap_db || !$cap_db->dbh || mysqli_connect_errno()) {
+            self::$connection_attempts++;
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Błąd połączenia MySQL: '. addslashes(mysqli_connect_error()) .'")</script>';
             }
+            return false;
         }
-    
+
+        error_log("connected to database");
         return $cap_db;
     } 
 
@@ -408,7 +434,7 @@ class PWECommonFunctions {
         return $results;
     } 
 
-    public static function get_database_conferences_data() {
+    public static function get_database_conferences_data($domain = null) {
         // Database connection
         $cap_db = self::connect_database();
         // If connection failed, return empty array
@@ -419,7 +445,7 @@ class PWECommonFunctions {
             }
         }
 
-        $domain = $_SERVER['HTTP_HOST'];
+        $domain = ($domain == null) ? $_SERVER['HTTP_HOST'] : $domain;
 
         // Pobieramy dane bez względu na język
         $results = $cap_db->get_results(
