@@ -177,6 +177,97 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
         return $json;
     }
 
+    public static function getConferencePatronLogosFromList($conf_id, $conf_slug, $logo_files = []) {
+        $cap_db = PWECommonFunctions::connect_database();
+        if (!$cap_db) {
+            return '<!-- Brak połączenia z bazą danych CAP -->';
+        }
+
+        if (empty($logo_files)) {
+            return '<!-- Brak logotypów -->';
+        }
+
+        // Pobierz dane dodatkowe z conf_adds
+        $adds_raw = $cap_db->get_results(
+            $cap_db->prepare("SELECT slug, data FROM conf_adds WHERE conf_id = %d", $conf_id),
+            ARRAY_A
+        );
+
+        // Slugi => dane
+        $adds = [];
+        foreach ($adds_raw as $row) {
+            $slug = trim($row['slug']);
+            $adds[$slug] = json_decode($row['data'], true);
+        }
+
+        // URL do katalogu
+        $patroni_dir_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/patrons';
+        $output = '';
+
+        foreach ($logo_files as $slug) {
+            $slug = trim($slug);
+            $data = $adds[$slug] ?? [];
+
+            $logo_url = $patroni_dir_url . '/' . $slug;
+            $alt = !empty($data['alt']) ? esc_attr($data['alt']) : 'Patron Logo';
+            $title = !empty($data['desc']) ? esc_attr($data['desc']) : '';
+            $link = !empty($data['link']) ? esc_url($data['link']) : '';
+            $class = 'conference_patroni_logo';
+
+            $output .= '<div class="conference_cap__patrons-container-logo">';
+            $img_html = '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="' . $alt . '" class="' . $class . '">';
+
+            $output .= $link
+                ? '<a href="' . $link . '" target="_blank" rel="noopener noreferrer">' . $img_html . '</a>'
+                : $img_html;
+
+            if (!empty($title)) {
+                $output .= '<span class="conference_cap__patrons-container-logo-title">' . $title . '</span>';
+            }
+
+            $output .= '</div>';
+        }
+
+        return $output;
+    }
+
+    public static function getConferenceOrganizer($conf_id, $conf_slug) {
+        $cap_db = PWECommonFunctions::connect_database();
+        if (!$cap_db) {
+            return null;
+        }
+
+        $sql = $cap_db->prepare(
+            "SELECT data FROM conf_adds WHERE conf_id = %d AND slug = %s LIMIT 1",
+            $conf_id,
+            'org-name'
+        );
+
+        $row = $cap_db->get_row($sql, ARRAY_A);
+
+        if (!$row || empty($row['data']) || $row['data'] == 'null') {
+            return null;
+        }
+
+        $organizer_name = trim($row['data'], "\"");
+
+        $logo_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/organizer/conf_organizer.webp';
+
+        $response = wp_remote_head($logo_url);
+
+        if (
+            is_wp_error($response) ||
+            wp_remote_retrieve_response_code($response) === 404
+        ) {
+            return null; // Nie pokazuj logo, jeśli nie istnieje
+        }
+
+        return [
+            'logo_url' => $logo_url,
+            'desc'     => $organizer_name,
+        ];
+    }
+
     protected static function debugConferencesConsole( array $database_data ) {
 
         if ( ! is_user_logged_in() || ! current_user_can( 'administrator' ) ) {

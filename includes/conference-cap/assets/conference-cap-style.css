@@ -50,6 +50,56 @@
   height: auto;
 }
 
+.conference_cap__more-coming-soon {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 36px;
+    color: #333;
+}
+
+.conference_cap__patrons-container-logo {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+}
+
+.conference_cap__patrons-container-logo-title {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ------------------ Org Logo ------------------ */
+
+.conference_cap__conf-organizer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.conference_cap__conf-organizer-wrapper .conference_cap__conf-organizer-title {
+    font-size: 26px;
+    text-align: center;
+}
+
+.conference_cap__conf-organizer-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.conference_cap__conf-organizer-wrapper .conference_cap__conf-org-logo {
+    max-width: 260px;
+    margin: 0 auto;
+}
+
+.conference_cap__conf-organizer-wrapper .conference_cap__conf-organizer-logo-title {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
 /* ------------------ Default Header ------------------ */
 
 .conference_cap__conf-slug-default-header {
@@ -252,5 +302,17 @@
   .custom-modal {
     max-height: 80%;
   }
+
+    .conference_cap__conf-organizer-wrapper .conference_cap__conf-organizer-title {
+        font-size: 22px;
+    }
+
+    .conference_cap__conf-logotypes-title {
+        font-size: 20px !important;
+    }
+
+    #conference-cap .slick-dots {
+        bottom: -8px;
+    }
 
 }

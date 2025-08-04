@@ -88,11 +88,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
                 $fields = [];
                 foreach($all_fields as $field){
-                    if(strpos(strtolower($field['label']), 'name') !== false || strpos(strtolower($field['label']), 'nazwisko') !== false){
+                    if(strpos(strtolower($field['label']), 'full name') !== false || strpos(strtolower($field['label']), 'nazwisko') !== false){
                         $fields['name'] = $field['id'];
                     } elseif(strpos(strtolower($field['label']), 'e-mail') !== false){
                         $fields['email'] = $field['id'];
-                    } elseif(strpos(strtolower($field['label']), 'firma') !== false || strpos(strtolower($field['label']), 'company') !== false){
+                    } elseif(strpos(strtolower($field['label']), 'firma') !== false || strpos(strtolower($field['label']), 'inviting company') !== false){
                         $fields['company'] = $field['id'];
                     } elseif(strpos(strtolower($field['label']), 'telefon') !== false || strpos(strtolower($field['label']), 'phone') !== false){
                         $fields['phone'] = $field['id'];
@@ -110,7 +110,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $fields['patron'] = $field['id'];
                     }
                 }  
-
                 $input_exhibitors_logo = SaveUploadedFile();
 
                 // Process entry data.

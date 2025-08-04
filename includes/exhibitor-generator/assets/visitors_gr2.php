@@ -9,7 +9,7 @@ function modify_placeholders_labels($generator_form_id) {
             $field->labelPlacement = '';
         }
 
-        
+
         // 2. Pogrub pierwsze słowo labela
         if (!empty($field->label) && strip_tags($field->label) === $field->label) {
             $parts = explode(' ', $field->label, 2);
@@ -17,7 +17,7 @@ function modify_placeholders_labels($generator_form_id) {
                 $field->label = "<strong> {$parts[0]} </strong> " . $parts[1];
 
             }
-        } 
+        }
 
         // 3. Zmień placeholdery
         if (!empty($field->placeholder)) {
@@ -101,11 +101,11 @@ function add_field_marketing_consent($generator_form_id) {
         'isRequired'    => false,
         'inputType'     => 'consent',
         'cssClass'      => 'pwe-marketing-consent',
-        'checkboxLabel' => $local_lang_pl 
-            ? 'Wyrażam zgodę na przetwarzanie przez PTAK WARSAW EXPO sp. z o.o. moich danych osobowych w celach marketingowych i wysyłki wiadomości. <span class="show-consent">(Więcej)</span>' 
+        'checkboxLabel' => $local_lang_pl
+            ? 'Wyrażam zgodę na przetwarzanie przez PTAK WARSAW EXPO sp. z o.o. moich danych osobowych w celach marketingowych i wysyłki wiadomości. <span class="show-consent">(Więcej)</span>'
             : 'I agree to the processing by PTAK WARSAW EXPO sp. z o.o. my personal data for marketing purposes and sending messages.  <span class="show-consent">(More)</span>',
-        'description'   => $local_lang_pl 
-            ? 'Wyrażam zgodę na przetwarzanie przez PTAK WARSAW EXPO sp. z o.o. moich danych osobowych, tj. 1) imię i nazwisko; 2) adres e-mail 3) nr telefonu w celach wysyłki wiadomości marketingowych i handlowych związanych z produktami i usługami oferowanymi przez Ptak Warsaw Expo sp. z o.o. za pomocą środków komunikacji elektronicznej lub bezpośredniego porozumiewania się na odległość, w tym na otrzymywanie informacji handlowych, stosownie do treści Ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną. Wiem, że wyrażenie zgody jest dobrowolne, lecz konieczne w celu dokonania rejestracji. Zgodę mogę wycofać w każdej chwili.' 
+        'description'   => $local_lang_pl
+            ? 'Wyrażam zgodę na przetwarzanie przez PTAK WARSAW EXPO sp. z o.o. moich danych osobowych, tj. 1) imię i nazwisko; 2) adres e-mail 3) nr telefonu w celach wysyłki wiadomości marketingowych i handlowych związanych z produktami i usługami oferowanymi przez Ptak Warsaw Expo sp. z o.o. za pomocą środków komunikacji elektronicznej lub bezpośredniego porozumiewania się na odległość, w tym na otrzymywanie informacji handlowych, stosownie do treści Ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną. Wiem, że wyrażenie zgody jest dobrowolne, lecz konieczne w celu dokonania rejestracji. Zgodę mogę wycofać w każdej chwili.'
             : 'I agree to the processing by PTAK WARSAW EXPO sp. z o.o. of my personal data, i.e. 1) name and surname; 2) e-mail address; 3) telephone number for the purposes of sending marketing and commercial messages related to products and services offered by Ptak Warsaw Expo sp. z o.o. by means of electronic communication or direct remote communication, including receiving commercial information, pursuant to the Act of 18 July 2002 on the provision of services by electronic means. I know that the consent is voluntary but necessary for registration. I can withdraw my consent at any time.',
         'inputs' => array(
             array( 'id' => "{$next_id}.1", 'label' => 'Zgoda', 'name' => '' ),
@@ -300,15 +300,224 @@ function add_field_phone_number($generator_form_id) {
     update_option( $done_option_key, 1 );
 };
 
+function add_notification_conf_to_form($generator_form_id) {
+    global $local_lang_pl;
+
+    $done_option_key = "gf_notification_conf_added_$generator_form_id";
+
+    // delete_option( $done_option_key );
+
+    if (get_option($done_option_key)) {
+        return;
+    }
+
+    $form = GFAPI::get_form($generator_form_id);
+    if (!$form || is_wp_error($form)) {
+        echo "<script>console.log('GF: nie udało się pobrać formularza');</script>";
+        return;
+    }
+
+    // foreach ($form['notifications'] as $key => $notification) {
+    //     if (
+    //         isset($notification['name']) &&
+    //         in_array($notification['name'], [
+    //             'Dziękujemy za rejestrację na Targi Konferencja',
+    //             'Dziękujemy za rejestrację na Targi Konferencja - ENG',
+    //         ])
+    //     ) {
+    //         unset($form['notifications'][$key]);
+    //     }
+    // }
+
+    $admin_label_to_id = [];
+    foreach ($form['fields'] as $field) {
+        if (!empty($field->adminLabel)) {
+            $admin_label_to_id[$field->adminLabel] = $field->id;
+        }
+    }
+
+    // Dodaj lub zmodyfikuj logikę pola telefonu (po adminLabel lub CSS class)
+    foreach ($form['fields'] as $index => $field) {
+        if (isset($field->cssClass) && strpos($field->cssClass, 'pwe-phone-number') !== false) {
+
+            $patron_id = isset($admin_label_to_id['patron']) ? (string) $admin_label_to_id['patron'] : null;
+
+            if ($patron_id !== null) {
+                $form['fields'][$index]->conditionalLogic = [
+                    'actionType' => 'show',
+                    'logicType' => 'any',
+                    'rules' => [
+                        [
+                            'fieldId' => $patron_id,
+                            'operator' => 'is',
+                            'value' => 'conf',
+                        ],
+                        [
+                            'fieldId' => $patron_id,
+                            'operator' => 'is',
+                            'value' => 'gr2',
+                        ],
+                        [
+                            'fieldId' => $patron_id,
+                            'operator' => 'is',
+                            'value' => 'patron',
+                        ],
+                    ],
+                ];
+            }
+
+            // Nie przetwarzaj dalej — zakładamy, że tylko jedno pole telefonu
+            break;
+        }
+    }
+
+    // Dodaj logikę do pola zgody marketingowej
+    foreach ($form['fields'] as $index => $field) {
+        if (isset($field->inputName) && $field->inputName === 'zgoda_marketingowa') {
+            $patron_id = isset($admin_label_to_id['patron']) ? (string) $admin_label_to_id['patron'] : null;
+
+            if ($patron_id !== null) {
+                $form['fields'][$index]->conditionalLogic = [
+                    'actionType' => 'show',
+                    'logicType' => 'any',
+                    'rules' => [
+                        [
+                            'fieldId' => $patron_id,
+                            'operator' => 'is',
+                            'value' => 'gr2',
+                        ],
+                        [
+                            'fieldId' => $patron_id,
+                            'operator' => 'is',
+                            'value' => 'conf',
+                        ],
+                        [
+                            'fieldId' => $patron_id,
+                            'operator' => 'is',
+                            'value' => 'patron',
+                        ],
+                    ],
+                ];
+            }
+
+            break; // zakładamy jedno pole zgody
+        }
+    }
+
+    $lang = $local_lang_pl ? 'pl' : 'en';
+
+    // Wybierz nazwę i temat
+    $notification_data = [
+        'name' => [
+            'pl' => 'Dziękujemy za rejestrację na Targi Konferencja',
+            'en' => 'Dziękujemy za rejestrację na Targi Konferencja - ENG',
+        ],
+        'subject' => [
+            'pl' => 'Dziękujemy za rejestrację na {trade_fair_name}',
+            'en' => 'Thank you for registering at {trade_fair_name}',
+        ],
+        'file' => [
+            'pl' => 'generator_gosci_conf_notification_pl.html',
+            'en' => 'generator_gosci_conf_notification_en.html',
+        ],
+    ];
+
+    $message = '';
+    $template_file = plugin_dir_path(__FILE__) . 'notifications/' . $notification_data['file'][$lang];
+
+    $qr_feed_id = null;
+    $feeds = GFAPI::get_feeds(null, $generator_form_id);
+
+    foreach ($feeds as $feed) {
+        if (isset($feed['addon_slug']) && $feed['addon_slug'] === 'qr-code') {
+            $qr_feed_id = $feed['id'];
+            break; // tylko pierwszy QR-code feed
+        }
+    }
+
+    if (file_exists($template_file)) {
+        $message = file_get_contents($template_file);
+        $message = str_replace('[qr_feed_id]', $qr_feed_id, $message);
+    } else {
+        $message = 'Dziękujemy za udział w wydarzeniu.'; // fallback
+    }
+
+    $email_input_ref = ''; // np. inputName lub ID
+
+    foreach ($form['fields'] as $field) {
+        if ($field->type === 'email') {
+            $email_input_ref = $field->inputName ?: $field->id;
+            break;
+        }
+    }
+
+    $new_notification = [
+        'id' => uniqid(),
+        'isActive' => true,
+        'name' => $notification_data['name'][$lang],
+        'event' => 'form_submission',
+        'toType' => 'field',
+        'toField' => $email_input_ref,
+        'to' => $email_input_ref,
+        'subject' => $notification_data['subject'][$lang],
+        'message' => $message,
+        'messageFormat' => 'html',
+        'from' => '{trade_fair_rejestracja}',
+        'fromName' => '{trade_fair_name}',
+        'disableAutoformat' => true,
+        'enableAttachments' => false,
+        'enableQrAttachment' => true,
+        'conditionalLogic' => [
+            'actionType' => 'show',
+            'logicType' => 'any',
+            'rules' => [
+                [
+                    'fieldId' => 'patron',
+                    'operator' => 'is',
+                    'value' => 'conf'
+                ],
+            ]
+        ],
+    ];
+
+    if ($qr_feed_id !== null) {
+        $new_notification['spgfqrcode_notification_feed_' . $qr_feed_id] = '1';
+        $new_notification['spgfqrcode_embed_image_feed_' . $qr_feed_id] = '1';
+    }
+
+    foreach (['confirmation_conditional_logic_object', 'conditionalLogic'] as $logic_key) {
+        if (isset($new_notification[$logic_key]['rules'])) {
+            foreach ($new_notification[$logic_key]['rules'] as &$rule) {
+                $admin_label = $rule['fieldId'];
+                if (!is_numeric($admin_label) && isset($admin_label_to_id[$admin_label])) {
+                    $rule['fieldId'] = (string) $admin_label_to_id[$admin_label];
+                }
+            }
+        }
+    }
+
+    // Dodaj notyfikację do formularza
+    $form['notifications'][] = $new_notification;
+
+    $result = GFAPI::update_form($form);
+    if (is_wp_error($result)) {
+        error_log('GF: Błąd zapisu formularza przy dodawaniu powiadomienia – ' . $result->get_error_message());
+        return;
+    }
+
+    update_option($done_option_key, 1);
+}
+
 function logged_in_exhibitor_fields_hidden($form) {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+    echo "<script>console.log('Sesja: " . json_encode($_SESSION) . "');</script>";
 
     $code_count = strlen($_GET['wystawca']) ?? 0;
 
 
-    if (!empty($_SESSION['logged_in_exhibitor']) && $code_count <= 10 ) {
+    if (!empty($_SESSION['logged_in_exhibitor'])) {
         foreach ($form['fields'] as &$field) {
             if ($field->type === 'phone') {
                 $field->visibility = 'hidden';
@@ -316,7 +525,7 @@ function logged_in_exhibitor_fields_hidden($form) {
              if ($field->type === 'consent') {
                 $field->visibility = 'hidden';
             }
-        } 
+        }
     } else {
         foreach ($form['fields'] as &$field) {
             if ($field->type === 'phone') {
@@ -331,7 +540,7 @@ function logged_in_exhibitor_fields_hidden($form) {
     return $form;
 }
 
-function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite, $domain){
+function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pweGeneratorWebsite, $domain){
     extract( shortcode_atts( array(
         'generator_form_id' => '',
         'exhibitor_generator_html_text' => '',
@@ -343,6 +552,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
 
     add_field_marketing_consent( $generator_form_id );
     add_field_phone_number( $generator_form_id );
+    add_notification_conf_to_form( $generator_form_id );
 
     $code_count = strlen($_GET['wystawca']) ?? 0;
 
@@ -358,22 +568,48 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
             'logo' => $cat_value['URL_logo_wystawcy'],
             'pass' => (strlen($full_id) > 5) ? $full_id : '',
             'desc' => $id_hash,
+            'type' => 'gr2',
         );
     }
+
 
     foreach($all_partners as $part_id => $part_value){
         if(in_array($part_value->logos_type, ['partner-targow', 'patron-medialny']) && $part_value->logos_alt != 'Federacja'){
             $full_id = $part_value->id . $domain;
+
+            // zmiana 'pass' => $id_hash, na 'pass' => $full_id,  aby łatwiej było o hasło do patrona można sprawdzić w capie
+            // na jakiej podstawie macie wysyłać powiadomienie patro? bo teraz jako patron bieże gr2
+
             $id_hash = $hash = substr(sha1($full_id), 0, 12);
             $all_senders[$id_hash] = array(
                 'name' => $part_value->logos_alt,
                 'logo' => 'https://cap.warsawexpo.eu/public' . $part_value->logos_url,
-                'pass' => $id_hash,
+                'pass' => $full_id,
                 'desc' => $id_hash,
+                'type' => 'patron',
             );
-            
-        } 
-    } 
+
+
+        }
+    }
+    // dodanie konferencji aby można było wysyłać zaproszenia hasło nazwa konferencji np. "Konferencja PIME HEATING TECH"
+    foreach($all_conferences as $conf) {
+
+        if (!empty($conf->conf_name_pl) && !empty($conf->conf_img_pl)) {
+
+            $full_id = $conf->conf_name_pl;
+            $id_hash = substr(sha1($full_id), 0, 12);
+
+            $all_senders[$id_hash] = array(
+                'name' => ($local_lang_pl ? $conf->conf_name_pl : $conf->conf_name_en),
+                'logo' => $conf->conf_img_pl,
+                'pass' => $full_id,
+                'desc' => $id_hash,
+                'type' => 'conf',
+            );
+        }
+    }
+
 
     if (isset($_GET['wystawca']) && $_GET['wystawca'] === '7JF9vQcFR5KmzaHqNCSw') {
         uasort($all_senders, function($a, $b) {
@@ -531,7 +767,18 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 width: 100%;
                 object-fit: contain;
             }
-
+            .exhibitor-generator.gr2 .exhibitor-selector__container:has(.exhibitors-logo[src*="/uploads/conf/"]) {
+                align-items: center;
+                max-width: 220px;
+                aspect-ratio: 1 / 1;
+                overflow: hidden;
+            }
+            .exhibitor-generator.gr2 .exhibitors-logo[src*="/uploads/conf/"] {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
             .exhibitor-generator.gr2 .exhibitor-generator__left-badge input {
                 border-radius: 36px;
                 text-align: center;
@@ -582,7 +829,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 font-weight: 600;
             }
 
-            .exhibitor-generator.gr2 .exhibitor-generator__left-badge input[type="submit"], 
+            .exhibitor-generator.gr2 .exhibitor-generator__left-badge input[type="submit"],
             .exhibitor-generator.gr2 .exhibitor-generator__left-badge .tabela-masowa {
                 border-radius: 36px !important;
                 max-width: 46%;
@@ -748,7 +995,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 margin: 5px;
             }
 
-            .exhibitor-generator.gr2 .iti--allow-dropdown .iti__flag-container, 
+            .exhibitor-generator.gr2 .iti--allow-dropdown .iti__flag-container,
             .exhibitor-generator.gr2 .iti--separate-dial-code .iti__flag-container {
                 left: 28px !important;
             }
@@ -780,11 +1027,11 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
             }
 
             @media(max-width:960px) {
-                .wpb_column:has(.exhibitor-generator.gr2), 
+                .wpb_column:has(.exhibitor-generator.gr2),
                 .row.limit-width.row-parent:has(.exhibitor-generator.gr2) {
                     padding-top: 0 !important;
                 }
-                .exhibitor-generator.gr2 .exhibitor-generator__left-badge, 
+                .exhibitor-generator.gr2 .exhibitor-generator__left-badge,
                 .exhibitor-generator.gr2 .exhibitor-generator__right {
                     width: 100%;
                     margin-top: 0;
@@ -818,7 +1065,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 box-sizing: border-box;
                 vertical-align: middle;
             }
-            .exhibitor-generator.gr2 .gfield--type-consent label, 
+            .exhibitor-generator.gr2 .gfield--type-consent label,
             .exhibitor-generator.gr2 .ginput_container_consent {
                 display: inline !important;
                 margin: 0 !important;
@@ -843,7 +1090,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 display: flex !important;
                 justify-content: space-around !important;
             }
-            .exhibitor-generator.gr2 input[type=checkbox]:checked:before, 
+            .exhibitor-generator.gr2 input[type=checkbox]:checked:before,
             .exhibitor-generator.gr2 input[type=radio]:checked:before {
                 box-sizing: border-box;
                 font-family: "uncodeicon";
@@ -866,9 +1113,11 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
         </style>
     ';
 
-    $gr_data = ($code_count <= 10) ? 'gr2' : 'patron';
+    $exhibitor_id = $_GET['wystawca'] ?? '';
+    $gr_data = $all_senders[$exhibitor_id]['type'] ?? 'gr2';
+
     $output .= '
-    <div class="exhibitor-generator gr2" data-group="gr2">
+    <div class="exhibitor-generator gr2" data-group="' . $gr_data . '">
         <div class="exhibitor-generator__wrapper">
             <div class="exhibitor-generator__left-badge">
                 <img class="exhibitor-generator__form-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
@@ -880,7 +1129,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                     <div class="exhibitor-selector__container">';
                         if(isset($_GET['wystawca'])){
                             $output .='<img class="exhibitors-logo" src="' . $all_senders[$_GET['wystawca']]['logo'] . '">';
-                        } 
+                        }
                         else {
                             $output .='
                                 <form id="exhibitors-login-form" method="post" action="">
@@ -888,7 +1137,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                                     $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">' . PWECommonFunctions::languageChecker('Firma Zapraszająca', 'Inviting Comapny') . '</option>';
                                     foreach($all_senders as $cat_id => $cat_value){
                                         if (!is_array($cat_value)) continue;
-                                        $output .='<option class="cat-exhibitor" value="' . $cat_id . '" data-id="' . $cat_id . '" data-nip="' . $cat_value["pass"] . '">' . $cat_value["name"] . '</option>';
+                                        $output .='<option class="cat-exhibitor" value="' . $cat_id . '" " data-type="' . $cat_value['type'] . '" data-id="' . $cat_id . '" data-nip="' . $cat_value["pass"] . '">' . $cat_value["name"] . '</option>';
                                     }
                                 $output .='</select>
                                 <input type="password" id="exhibitors_password" name="password" placeholder="' . PWECommonFunctions::languageChecker('Hasło', 'Password') . '" required />';
@@ -913,7 +1162,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
                 <div class="exhibitor-generator__right-wrapper">
                     <div class="exhibitor-generator__right-title">
                         <h3>' . PWECommonFunctions::languageChecker('WYGENERUJ</br>IDENTYFIKATOR VIP', 'GENERATE</br>A VIP INVITATION') . '</h3>';
-    
+
                     $output .= '
                     </div>
                     <div class="exhibitor-generator__right-icons">
@@ -977,26 +1226,21 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite,
             </div>
         </div>
     </div>';
+
     $is_logged_in = isset($_SESSION['logged_in_exhibitor']);
-$exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
+    $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
 
     $output .= '
     <script>
         jQuery(document).ready(function($){
-            
-            let exhibitor_name = $(".exhibitors-name").data("ex") ?? "' . $all_senders[$_GET['wystawca']]['name'] . '";
+
+            let exhibitor_name = $(".exhibitors-name").data("ex") ?? ' . json_encode($all_senders[$_GET['wystawca']]['name']) . ';
             let exhibitor_desc = `' . PWEExhibitorVisitorGenerator::$exhibitor_desc . '`;
             let exhibitor_stand = "' . PWEExhibitorVisitorGenerator::$exhibitor_stand . '";
             let submitBtn = $(`input[type="submit"]`);
             let massTable = $(".tabela-masowa");
-            console.log(' . $code_count . ');
-            if(' . $code_count . ' <= 10) {
-                console.log("gr2");
-                $(`input[placeholder="patron"]`).val("gr2");
-            } else {
-                console.log("patron");
-                $(`input[placeholder="patron"]`).val("patron");
-            }
+            console.log("Typ nadawcy: ' . $gr_data . '");
+            $(`input[placeholder="patron"]`).val("' . $gr_data . '");
             if ($("#exhibitors_selector").length) {
                 submitBtn.addClass("button-blocked");
                 massTable.addClass("123");
@@ -1008,7 +1252,7 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                             $(`input[placeholder="Inviting Company"]`).closest(".gfield").hide();
                             submitBtn.addClass("button-blocked");
                             break;
-                        case "Patron": 
+                        case "Patron":
                             submitBtn.removeClass("button-blocked");
                             $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").show();
                             $(`input[placeholder="Inviting Company"]`).closest(".gfield").show();
@@ -1041,7 +1285,7 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
 
                 $("#exhibitors_selector").closest(".gfield").show();
             }
-                 
+
             $(".exhibitor_logo input").val("' . PWEExhibitorVisitorGenerator::$exhibitor_logo_url . '");
             $(".exhibitors_name input").val(exhibitor_name);
             $(".exhibitor_desc input").val(exhibitor_desc);
@@ -1078,14 +1322,14 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
 
             /* ---- WALIDACJA PUSTYCH PÓL W .gfield_visibility_visible ---- */
             const errorEmptyField = (event) => {
-                event.preventDefault(); 
+                event.preventDefault();
 
                 $(event.target).closest("form").find(".gfield_description.validation_message.gfield_validation_message").remove();
 
-                
+
                 $(event.target)
                     .closest("form").find(".gfield_visibility_visible").not(`[data-conditional-logic="hidden"]`).find("input").each(function() {
-                        const $input = $(this); 
+                        const $input = $(this);
                         const getLocal = $("html").attr("lang");
 
                         let errorMessage = "To pole jest wymagane.";
@@ -1096,7 +1340,7 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                         const errorDiv = $("<span>")
                             .addClass("gfield_description validation_message gfield_validation_message")
                             .text(errorMessage);
-                        
+
                         if ($input.attr("type") === "checkbox") {
                             if (!$input.prop("checked")) {
                                 $input.closest(".gfield").append(errorDiv);
@@ -1108,14 +1352,14 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                         }
                     });
 
-                if ($(".validation_message:not(.validation_message--hidden-on-empty)").length === 0 && ($(".gfield--type-phone").hasClass("gfield_visibility_hidden") || $(".pwe-phone-number").hasClass("gfield_visibility_hidden"))) {
+                if ($(".validation_message:not(.validation_message--hidden-on-empty)").length === 0 && ($(".gfield--type-phone").hasClass("gfield_visibility_hidden") || $(".pwe-phone-number").hasClass("gfield_visibility_hidden") || $(".pwe-phone-number").is(".gfield_visibility_visible[data-conditional-logic=\'hidden\']"))) {
                     $(event.target).closest("form").submit();
                 }
             }
 
             $("form").has(".gfield_visibility_visible").find(".gform_button").on("click", function (event) {
                 if (window.location.hostname !== "warsawexpo.eu") {
-                    errorEmptyField(event); 
+                    errorEmptyField(event);
                 }
             });
             /* ---- KONIEC WALIDACJI ---- */
@@ -1196,6 +1440,28 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
         </style>';
     }
 
+    if ( current_user_can('administrator') ) {
+        $output .= '
+        <script>
+            jQuery(document).ready(function($){
+                $("#exhibitors_selector").on("change", function(){
+                    const selected = $(this).find(":selected");
+                    const pass = selected.data("nip") ?? "";
+                    const passwordField = $("#exhibitors_password");
+
+                    if ($(this).val() === "Firma Zapraszająca") {
+                        passwordField.val("").prop("readonly", false).show();
+                    } else if ($(this).val() === "Patron") {
+                        passwordField.val("").prop("readonly", false).show();
+                    } else {
+                        passwordField.val(pass).prop("readonly", true).show();
+                    }
+                });
+            });
+        </script>
+        ';
+    }
+
     if(PWEExhibitorVisitorGenerator::senderFlowChecker() || current_user_can('administrator')){
         $output .='
         <div class="modal__element">
@@ -1232,7 +1498,17 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                     Brak uwzględnienia nazwy firmy na identyfikatorze
                 </label>
                 <div class="file-uloader">
-                    <label for="fileUpload">Wybierz plik z danymi</label>
+                    <label for="fileUpload">
+                    '.
+                    PWECommonFunctions::languageChecker(
+                        <<<PL
+                        Wybierz plik z danymi
+                        PL,
+                        <<<EN
+                        Select a file with data
+                        EN
+                    )
+                    .'</label>
                     <input type="file" id="fileUpload" name="fileUpload" accept=".csv, .xls, .xlsx">
                     <p class="under-label">'.
                     PWECommonFunctions::languageChecker(
@@ -1247,7 +1523,7 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                     <p class="file-size-error error-color"">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Zbyt duży plik &nbsp;&nbsp;&nbsp; 
+                            Zbyt duży plik &nbsp;&nbsp;&nbsp;
                             PL,
                             <<<EN
                             File is to big &nbsp;&nbsp;&nbsp;
@@ -1294,7 +1570,7 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                             </a>
                         ';
                     // }
-                    
+
                 $output .='
                 </div>
                 <button class="wyslij btn-gold">'.
@@ -1320,10 +1596,10 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
                 <h3 style="margin-top: 45px;">'.
                     PWECommonFunctions::languageChecker(
                         <<<PL
-                        Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: 
+                        Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem:
                         PL,
                         <<<EN
-                        We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at: 
+                        We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at:
                         EN
                     )
                 .'<a href="mailto:generator.wystawcow@warsawexpo.eu" style="text-decoration:underline; color:blue;">generator.wystawcow@warsawexpo.eu</a></h3>
@@ -1345,3 +1621,24 @@ $exhibitor_id = $is_logged_in ? $_SESSION['logged_in_exhibitor'] : '';
 }
 
 add_filter('gform_pre_render', 'logged_in_exhibitor_fields_hidden');
+
+add_filter('gform_notification', 'inject_qr_code_into_email', 10, 3);
+function inject_qr_code_into_email($notification, $form, $entry) {
+    // Sprawdź, czy wiadomość zawiera placeholder
+    if (strpos($notification['message'], '{qr_feed_url}') !== false) {
+        $feeds = GFAPI::get_feeds(null, $form['id']);
+
+        foreach ($feeds as $feed) {
+            if ($feed['addon_slug'] === 'qr-code') {
+                $url = gform_get_meta($entry['id'], 'qr-code_feed_' . $feed['id'] . '_url');
+
+                if ($url) {
+                    $notification['message'] = str_replace('{qr_feed_url}', $url, $notification['message']);
+                    break;
+                }
+            }
+        }
+    }
+
+    return $notification;
+}

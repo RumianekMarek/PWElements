@@ -270,7 +270,8 @@ class PWELogotypes extends PWECommonFunctions {
             $today = new DateTime();
             $formattedDate = $today->format('Y-m-d');
             $token = md5("#22targiexpo22@@@#" . $formattedDate);
-            $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='. $token .'&id_targow='. $catalog_id;
+            $exh_catalog_address = PWECommonFunctions::get_database_meta_data('exh_catalog_address');
+            $canUrl = $exh_catalog_address . $token . '&id_targow=' . $catalog_id;
 
             try {
                 $json = @file_get_contents($canUrl);

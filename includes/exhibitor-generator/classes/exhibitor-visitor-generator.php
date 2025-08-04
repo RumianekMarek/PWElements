@@ -40,7 +40,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
     /**
      * Static method to generate the HTML output.
      * Creating modal form to upload file with visitors data
-     * 
+     *
      * @param array @atts options
      * @return string html output
      */
@@ -48,11 +48,11 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
         global $wpdb;
         $table_name = $wpdb->prefix . 'mass_exhibitors_invite_query';
         if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") == $table_name) {
-            $count_new = $wpdb->get_var( 
-                $wpdb->prepare( 
-                    "SELECT COUNT(*) FROM $table_name WHERE status = %s", 
+            $count_new = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT COUNT(*) FROM $table_name WHERE status = %s",
                     'new'
-                ) 
+                )
             );
         } else {
             return true;
@@ -60,23 +60,23 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
 
         $today_date = new DateTime();
         $fair_start_date = new DateTime(do_shortcode('[trade_fair_datetotimer]'));
-        
+
         $date_diffarance = $today_date->diff($fair_start_date);
 
         if($date_diffarance->invert == 0){
             $hours_remaining = ($date_diffarance->days * 24 + $date_diffarance->h) - 34;
             $total_email_capacity = $hours_remaining * 100;
-    
+
             $canSend = $total_email_capacity - $count_new;
-            
+
             if($canSend < -2000 || $canSend > 0){
                 echo '<script>console.log('.$canSend.')</script>';
             }
-            
+
             if($total_email_capacity > $count_new){
                 return true;
-            } 
-        } 
+            }
+        }
         return false;
     }
 
@@ -103,8 +103,8 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
 
         if(!empty($catalog_array)){
             $all_exhibitors = reset($catalog_array)['Wystawcy'];
-        } 
-        
+        }
+
         $pweGeneratorWebsite = strpos($_SERVER['REQUEST_URI'], '/generator-odwiedzajacych-pwe') !== false || strpos($_SERVER['REQUEST_URI'], '/en/exhibitor-generator-pwe/') !== false;
         // Check if ?katalog = * exists in the URL
         if(isset($_GET['katalog'])){
@@ -137,7 +137,7 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
             if(!empty($catalog_array)){
                 $all_exhibitors = reset($catalog_array)['Wystawcy'];
             }
-            
+
             self::$exhibitor_logo_url = 'https://' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png';
         }
 
@@ -160,13 +160,14 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
                 return render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite);
             case 'gr2':
                 $all_partners = PWECommonFunctions::get_database_logotypes_data();
+                $all_conferences = PWECommonFunctions::get_database_conferences_data();
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr2.php';
-                return render_gr2($atts, $all_exhibitors, $all_partners, $pweGeneratorWebsite, $domain);
+                return render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pweGeneratorWebsite, $domain);
             case 'gr3':
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr3.php';
                 return render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite);
         }
 
-        
+
     }
 }

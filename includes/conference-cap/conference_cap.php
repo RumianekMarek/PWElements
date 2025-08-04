@@ -55,6 +55,15 @@ class PWEConferenceCap {
                     array(
                         'type' => 'textfield',
                         'group' => 'PWE Element',
+                        'heading' => __('Display domains', 'pwe_conference_cap'),
+                        'param_name' => 'conference_cap_domains',
+                        'description' => __('Podaj listę domen oddzielonych przecinkiem, np.: warsawexpo.eu,mr.glasstec.pl. Tylko konferencje przypisane do tych domen będą widoczne.', 'pwe_conference_cap'),
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'group' => 'PWE Element',
                         'heading' => __('Arichive', 'pwe_conference_cap'),
                         'param_name' => 'conference_cap_conference_arichive',
                         'description' => __('Type [ year ] of the conference to display or type [ all ] to display everything except the current one.', 'pwe_conference_cap'),
@@ -216,18 +225,23 @@ class PWEConferenceCap {
             'conference_cap_html' => '',
             'conference_cap_conference_mode' => '',
             'conference_cap_conference_arichive' =>'',
+            'conference_cap_domains',
         ), $atts));
 
         $lang = 'PL';
         if (strpos($_SERVER['REQUEST_URI'], '/en/') !== false) {
             $lang = 'EN';
         }
-
-        $one_conf_mode = isset($atts['conference_cap_one_conference_mode']) && $atts['conference_cap_one_conference_mode'] === 'true';
+        
+        if (strpos($_SERVER['HTTP_HOST'], 'warsawexpo.eu') !== false) {
+            require_once plugin_dir_path(__FILE__) . 'classes/conference-cap-warsawexpo.php';
+            return PWEConferenceCapWarsawExpo::output($atts, $lang, $conf_function);
+        }
 
         $database_data = PWECommonFunctions::get_database_conferences_data();
-        // PWEConferenceCapFunctions::debugConferencesConsole( $database_data ); // checking recent changes 
+        // PWEConferenceCapFunctions::debugConferencesConsole( $database_data ); // checking recent changes
 
+        $one_conf_mode = isset($atts['conference_cap_one_conference_mode']) && $atts['conference_cap_one_conference_mode'] === 'true';
         $conference_cap_html = vc_param_group_parse_atts( $conference_cap_html );
 
         $global_inf_conf = [];
@@ -269,8 +283,6 @@ class PWEConferenceCap {
                 }
             }
         }
-        
-
 
         // Wczytanie i przygotowanie manualnych konferencji
         $manual_conferences = [];
@@ -546,6 +558,11 @@ class PWEConferenceCap {
                     }
 
                 $output .= '</div>'; // Zamknięcie `conf-tabs`
+
+                $tileCount = count($normalTiles) + count($specialTiles['medal'] ?? []) + count($specialTiles['panel'] ?? []) + count($manual_conferences);
+                if ($tileCount > 0 && $tileCount <= 3) {
+                    $output .= '<div class="conference_cap__more-coming-soon">'. PWECommonFunctions::languageChecker('Więcej wydarzeń pojawi się wkrótce', 'More events coming soon') .'</div>';
+                }
             }
 
 
@@ -616,7 +633,21 @@ class PWEConferenceCap {
                                 <img src="' . $conf_img . '" alt="' . esc_attr($conf_name) . '" class="conference_cap__conf-slug-image">
                                 <div class="conference_cap__after-header-html">' . ($inf_conf['after_header_' . $conf_slug] ?? '') . '</div>';
 
-                                $patroni_dir_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/patrons';
+                                // ✅ Organizator konferencji
+                                $organizer = PWEConferenceCapFunctions::getConferenceOrganizer((int)$conf->id, $conf->conf_slug);
+
+                                if ($organizer) {
+                                    $output .= '
+                                    <div class="conference_cap__conf-organizer-wrapper">
+                                        <h2 class="conference_cap__conf-organizer-title">' .
+                                            PWECommonFunctions::languageChecker('Organizator Konferencji', 'Conference Organizer') .
+                                        '</h2>
+                                        <div class="conference_cap__conf-organizer-logo">
+                                            <img src="' . esc_url($organizer['logo_url']) . '" alt="' . esc_attr($organizer['desc']) . '" class="conference_cap__conf-org-logo">
+                                            <span class="conference_cap__conf-organizer-logo-title">' . esc_html($organizer['desc']) . '</span>
+                                        </div>
+                                    </div>';
+                                }
 
                                 if (!empty($conf->conf_patrons_img)) {
                                     $logo_files = explode(',', $conf->conf_patrons_img);
@@ -638,11 +669,8 @@ class PWEConferenceCap {
                                             ) . 
                                         '</h2>
                                         <div class="conference_patroni_logos pwe-slides">';
-                                
-                                        foreach ($logo_files as $logo_file) {
-                                            $logo_url = $patroni_dir_url . '/' . trim($logo_file);
-                                            $output .= '<img src="' . esc_url($logo_url) . '" data-no-lazy="1" alt="Patron Logo" class="conference_patroni_logo">';
-                                        }
+                                        
+                                        $output .= PWEConferenceCapFunctions::getConferencePatronLogosFromList($conf->id, $conf->conf_slug, $logo_files);
                                 
                                         $output .= '</div>';
                                     }
@@ -690,6 +718,14 @@ class PWEConferenceCap {
                             
                         $output .= '</div>'; // Zamknięcie nagłówka
                 
+                        // TYMCZASOWE ROZWIĄZANIE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        if ($_SERVER['HTTP_HOST'] === "beautydays.pl" && ($conf_name === "Warsztaty makijażu z Magdaleną Pieczonką" || $conf_name === "Makeup Masterclass with Magdalena Pieczonka")) {
+                            $output .= '
+                            <div id="pweButton-'. $conf_slug .'" class="pwe-button" style="display: flex; justify-content: center; margin: 18px auto;">
+                                <a class="pwe-button-link btn" style="background: #176a7c; color: white; border-radius: 8px;" href="'. (($lang === "PL") ? '/rejestracja/' : '/en/registration/') .'">'. (($lang === "PL") ? 'Odbierz zaproszenie' : 'Receive your invitation') .'</a> 
+                            </div>';
+                        }
+                        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         
                         if (get_class($mode_class) !== 'PWEConferenceCapMedalCeremony') {
                             // **Zakładki dni**

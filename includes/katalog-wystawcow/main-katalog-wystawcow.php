@@ -126,16 +126,18 @@ class PWECatalog {
 
         $output_html = '';
 
-        $exhibitors_top10 = ($identification) ? CatalogFunctions::logosChecker($identification, "PWECatalog10") : 0;
-        if ($exhibitors_top10 === null){
-            if (current_user_can('administrator')) {
-                return '<p>Błędny numer katalogu wystawców</p>';
-            } else {
-                return '<style>.row-container:has(.catalog-not-found-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-found-' . self::$rnd_id . '"></div>';
+        if ($format == 'PWECatalog10') {
+            $exhibitors_top10 = ($identification) ? CatalogFunctions::logosChecker($identification, "PWECatalog10") : 0;
+            if ($exhibitors_top10 === null){
+                if (current_user_can('administrator')) {
+                    return '<p>Błędny numer katalogu wystawców</p>';
+                } else {
+                    return '<style>.row-container:has(.catalog-not-found-' . self::$rnd_id . '){display:none !important;}</style><div class="catalog-not-found-' . self::$rnd_id . '"></div>';
+                }
             }
         }
-
-        if ((empty($identification) || count($exhibitors_top10) < 12) && $format == 'PWECatalog10') {
+        
+        if ((empty($identification) || (is_array($exhibitors_top10) && count($exhibitors_top10) < 12)) && $format == 'PWECatalog10') {
             if (isset($_SERVER['argv'][0])) {
                 $source_utm = $_SERVER['argv'][0];
             } else {

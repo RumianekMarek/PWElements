@@ -14,6 +14,7 @@ class CatalogFunctions {
             'PWECatalog21'     => 'classes/catalog_21.php',
             'PWECatalog10'     => 'classes/catalog_10.php',
             'PWECatalog7'      => 'classes/catalog_7.php',
+            'PWECatalogCombined'   => 'classes/catalog_combined.php',
         );
     }
 
@@ -29,7 +30,8 @@ class CatalogFunctions {
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
-        $canUrl = 'https://export.www2.pwe-expoplanner.com/mapa.php?token='.$token.'&id_targow='.$katalog_id;
+        $exh_catalog_address = PWECommonFunctions::get_database_meta_data('exh_catalog_address');
+        $canUrl = $exh_catalog_address . $token . '&id_targow=' . $katalog_id;
 
         if ( current_user_can( 'administrator' ) ) {
             if (!empty($katalog_id)) {
@@ -98,6 +100,18 @@ class CatalogFunctions {
                         if($i >=21){
                             break;
                         }
+                    }
+                }
+                break;
+            case 'PWECatalogCombined' :
+                $i = 0;
+                foreach($basic_wystawcy as $wystawca){
+                    if($wystawca['URL_logo_wystawcy']){
+                        $logos_array[] = $wystawca;
+                        $i++;
+                        // if($i >=21){
+                        //     break;
+                        // }
                     }
                 }
                 break;
@@ -323,7 +337,8 @@ class CatalogFunctions {
                 'Full' => 'PWECatalogFull',
                 'Top21' => 'PWECatalog21',
                 'Top10' => 'PWECatalog10',
-                'Recently7' => 'PWECatalog7'
+                'Recently7' => 'PWECatalog7',
+                'Combined' => 'PWECatalogCombined'
                 ),
                 'save_always' => true,
                 'admin_label' => true
