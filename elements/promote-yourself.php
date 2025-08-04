@@ -297,6 +297,17 @@ class PWElementPromot extends PWElements {
                         }
                     }
 
+                    $pwe_groups_data = PWECommonFunctions::get_database_groups_data(); 
+                    $current_domain = $_SERVER['HTTP_HOST'];
+
+                    if (!empty($pwe_groups_data)) {
+                        foreach ($pwe_groups_data as $group) {
+                            if ($current_domain == $group->fair_domain) {
+                                $fair_group = $group->fair_group;    
+                            }
+                        }
+                    }
+
                     $output .='
                         <div class="pwe-column pwe-content-promote-element">
                             <h3>'.
@@ -423,8 +434,13 @@ class PWElementPromot extends PWElements {
                                 EN
                             )                           
                         .'</h2>
-                        <div class="text-centered link-text-underline">
-                            <a class="h2 mobile-kons-email" href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>
+                        <div class="text-centered link-text-underline">';
+                                if ($fair_group === "gr3") {
+                                    $output .= '<a class="h2 mobile-kons-email" href="mailto:media3@warsawexpo.eu"><span style="display:inline-block;">media3</span><span style="display:inline-block;">@warsawexpo.eu</span></a>';
+                                } else {
+                                    $output .= '<a class="h2 mobile-kons-email" href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>';
+                                }
+                        $output .= '    
                         </div>
                     </div>
                 </div>';

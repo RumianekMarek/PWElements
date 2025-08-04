@@ -136,8 +136,8 @@ class PWElementOtherEvents extends PWElements {
                 'value' => array(__('Yes', 'pwe_element') => 'true'),
                 'save_always' => true,
                 'dependency' => array(
-                    'element' => 'other_events_slider_type',
-                    'value' => array('swiper'),
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOtherEvents',
                 ),
             ),
             array(
@@ -148,8 +148,8 @@ class PWElementOtherEvents extends PWElements {
                 'value' => array(__('Yes', 'pwe_element') => 'true'),
                 'save_always' => true,
                 'dependency' => array(
-                    'element' => 'other_events_slider_type',
-                    'value' => array('swiper'),
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOtherEvents',
                 ),
             ),
             array(
@@ -158,8 +158,8 @@ class PWElementOtherEvents extends PWElements {
                 'heading' => __('Breakpoints (slidesPerView)', 'pwe_element'),
                 'param_name' => 'other_events_breakpoints',
                 'dependency' => array(
-                    'element' => 'other_events_slider_type',
-                    'value' => array('swiper'),
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementOtherEvents',
                 ),
                 'params' => array(
                     array(
@@ -238,7 +238,7 @@ class PWElementOtherEvents extends PWElements {
                 if ($date_start && $date_end) {
                     if ((($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
                         ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) &&
-                        strpos($fair['domain'], $current_domain) === false) {
+                        strpos($fair['domain'], $current_domain) === false && (strpos($fair['domain'], "fasttextile.com") === false && strpos($fair['domain'], "expotrends.eu") === false && strpos($fair['domain'], "fabrics-expo.eu") === false)) {
                         $other_events_items_json[] = [
                             "other_events_domain" => $fair["domain"],
                             "other_events_text" => PWECommonFunctions::languageChecker($fair["desc_pl"], $fair["desc_en"])
@@ -760,7 +760,7 @@ class PWElementOtherEvents extends PWElements {
                 if ($date_start && $date_end) {
                     if ((($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
                         ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) &&
-                        strpos($fair['domain'], $current_domain) === false) {
+                        strpos($fair['domain'], $current_domain) === false && (strpos($fair['domain'], "fasttextile.com") === false && strpos($fair['domain'], "expotrends.eu") === false && strpos($fair['domain'], "fabrics-expo.eu") === false)) {
                         $other_events_items_json[] = [
                             "other_events_domain" => $fair["domain"],
                             "other_events_text" => PWECommonFunctions::languageChecker($fair["desc_pl"], $fair["desc_en"])

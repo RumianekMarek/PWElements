@@ -238,6 +238,16 @@ class PWElementOrgInfo extends PWElements {
                                 <p>Rozładunek i transport materiałów na terenie PWE WYSTAWCY KORZYSTAJĄCY Z FIRM KURIERSKICH SĄ ZOBOWIĄZANI OSOBIŚCIE ODBIERAĆ PRZESYŁANE PACZKI.</p>
                                 <p>Dostawa towarów i eksponatów targowych podczas trwania Targów musi być zakończona co najmniej na 30 minut przed otwarciem Targów, a w pozostałe dni odbywa się w godzinach montażu stoisk.</p>
                                 <p>Organizator nie bierze odpowiedzialności za przesyłane Wystawcom paczki, dlatego żadna przesyłka nie zostanie odebrana od firmy kurierskiej w Punkcie Technicznej Obsługi Wystawców.</p>
+                                <p><strong>Wyłączność na usługi transportowe</strong> (m.in. poruszanie się po halach targowych wózków widłowych i innych pojazdów transportowych) ma poniższa firma:</p>
+                                <h4>NETLOG POLSKA Sp. z o.o.</h4>
+                                <p>
+                                    Rafał Skrobutan<br>
+                                    Koordynator / Coordinator<br>
+                                    tel. +48 22 256 70 55<br>
+                                    tel. +48 668 890 274<br>
+                                    e-mail: rafal.skrobutan@netlog.org.pl<br>
+                                    <a href="https://www.netlog.org.pl" target="_blank">www.netlog.org.pl</a>
+                                </p>
                                 <p><strong>Oficjalny Spedytor Targów wykonuje na zasadzie wyłączności usługi wyładunkowo/załadunkowe na terenie PWE z wykorzystaniem urządzeń mechanicznych tj. wózki widłowe i dźwigowe.</strong> W związku z tym, na terenie PWE obowiązuje zakaz wprowadzania na teren obiektu przez Wystawców i osoby trzecie urządzeń mechanicznych służących do rozładunków, np. dźwigi, wózki widłowe mechaniczne, bez zgody Organizatora lub Oficjalnego Spedytora Targów.</p>
                                 <h5>Spedytor świadczy usługi poprzez:</h5>
                                 <ul>
@@ -394,6 +404,16 @@ class PWElementOrgInfo extends PWElements {
                                 <p>Unloading and transport of materials on the premises of PWE. EXHIBITORS USING COURIER COMPANIES ARE REQUIRED TO PERSONALLY RECEIVE THE DISPATCHED PACKAGES.</p>
                                 <p>The delivery of goods and trade show exhibits during the Trade Fair must be completed at least 30 minutes before the opening of the Fair, and on the remaining days, it takes place during the stand setup hours.</p>
                                 <p>The organizer does not take responsibility for packages sent to exhibitors, therefore, no shipment will be accepted from the courier company at the Exhibitors" Technical Service Point.</p>
+                                <p><strong>Exclusive rights for transport services</strong> (including movement within the trade halls of forklifts and other transport vehicles) are held by the following company:</p>
+                                <h4>NETLOG POLSKA Sp. z o.o.</h4>
+                                <p>
+                                    Rafał Skrobutan<br>
+                                    Coordinator<br>
+                                    tel. +48 22 256 70 55<br>
+                                    mobile: +48 668 890 274<br>
+                                    e-mail: rafal.skrobutan@netlog.org.pl<br>
+                                    www.netlog.org.pl
+                                </p>
                                 <p><strong>The official Trade Fair Freight Forwarder performs, on an exclusive basis, loading and unloading services on the premises of the PWE (Polish Exhibition and Congress Center) using mechanical devices such as forklifts and cranes.</strong> In connection with this, a prohibition on the introduction of mechanical devices for unloading, such as cranes and mechanical forklifts, onto the premises by Exhibitors and third parties is in force at the PWE (Exhibition Grounds), without the consent of the Organizer or the Official Fair Freight Forwarder.</p>
                                 <h5>The Freight Forwarder provides services through:</h5>
                                 <ul>

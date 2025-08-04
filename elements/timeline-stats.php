@@ -53,6 +53,17 @@ class PWElementTimelineStats extends PWElements {
             array(
                 'type' => 'textfield',
                 'group' => 'PWE Element',
+                'heading' => __('Timeline Background link', 'pwe_timeline_stats'),
+                'param_name' => 'pwe_timeline_stats_background_link',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementTimelineStats',
+                ),
+            ),
+            array(
+                'type' => 'textfield',
+                'group' => 'PWE Element',
                 'heading' => __('Btn Text Timeline', 'pwe_timeline_stats'),
                 'param_name' => 'pwe_timeline_stats_btn_text',
                 'param_holder_class' => 'backend-area-half-width',
@@ -173,13 +184,15 @@ class PWElementTimelineStats extends PWElements {
             'pwe_timeline_stats_btn_link' => '',
             'pwe_timeline_stats_svg_style' => 'pwe_timeline_stats_svg_smooth',
             'pwe_timeline_stats_background' => '',
+            'pwe_timeline_stats_background_link' => '',
         ), $atts));
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
         $event_items = vc_param_group_parse_atts($atts['pwe_timeline_stats_events']);
 
-        $timeline_background = wp_get_attachment_image_src($pwe_timeline_stats_background, 'full')[0] ?? '';
+        $img_data = wp_get_attachment_image_src($pwe_timeline_stats_background, 'full');
+        $timeline_background = $img_data[0] ?? $pwe_timeline_stats_background_link ?? '';
 
         $cta_html = '
             <div class="timeline-pwe-event timeline-pwe-cta timeline-pwe-event--top">
@@ -554,7 +567,7 @@ class PWElementTimelineStats extends PWElements {
                 position: absolute;
                 left: 0;
                 top: 0;
-                background: url(https://mr.glasstec.pl/wp-content/uploads/2025/02/sponsor-gali-scaled.webp);
+                background: url(' . esc_url($timeline_background) . ');
                 background-size: cover;
                 background-repeat: no-repeat;
                 opacity: 0.3;

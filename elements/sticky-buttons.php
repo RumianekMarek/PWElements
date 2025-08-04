@@ -383,6 +383,32 @@ class PWElementStickyButtons extends PWElements {
                     ),
                 ),
             ),
+            array(
+                'type' => 'param_group',
+                'group' => 'Additional options',
+                'heading' => __('Breakpoints (slidesPerView)', 'pwe_element'),
+                'param_name' => 'sticky_buttons_breakpoints',
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementStickyButtons',
+                ),
+                'params' => array(
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Min. Width (px)', 'pwe_element'),
+                        'param_name' => 'sticky_buttons_breakpoint_width',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => __('Slides Per View', 'pwe_element'),
+                        'param_name' => 'sticky_buttons_breakpoint_slides',
+                        'save_always' => true,
+                        'admin_label' => true,
+                    ),
+                ),
+            ),
         );
         return $element_output;
     }
@@ -422,6 +448,7 @@ class PWElementStickyButtons extends PWElements {
             'sticky_buttons_auto_slider' => '',
             'sticky_buttons_slides_to_show' => '',
             'sticky_buttons_show_strip' => '',
+            'sticky_buttons_breakpoints' => '',
         ), $atts ));
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
@@ -801,11 +828,29 @@ class PWElementStickyButtons extends PWElements {
                     $output .= '
                     </div>';
 
+                    if (!empty($sticky_buttons_breakpoints)) {
+
+                        $sticky_buttons_breakpoints = json_decode(urldecode($sticky_buttons_breakpoints), true);
+
+                        usort($sticky_buttons_breakpoints, function($a, $b) {
+                            return (int)$a['sticky_buttons_breakpoint_width'] - (int)$b['sticky_buttons_breakpoint_width'];
+                        });
+
+                        $sticky_buttons_breakpoints_return = "return ";
+                        foreach ($sticky_buttons_breakpoints as $bp) {
+                            $width = (int)$bp['sticky_buttons_breakpoint_width'];
+                            $slides = $bp['sticky_buttons_breakpoint_slides'];
+                            $sticky_buttons_breakpoints_return .= "elementWidth < $width ? $slides :\n                        ";
+                        }
+                        $sticky_buttons_breakpoints_return .= 'slidesToShowSetting;';
+
+                    }
+
                     if ($sticky_buttons_auto_slider == true) {
                         $sticky_buttons_slides_to_show = !empty($sticky_buttons_slides_to_show) ? $sticky_buttons_slides_to_show : 4;
 
                         include_once plugin_dir_path(__FILE__) . '/../scripts/slider.php';
-                        $output .= PWESliderScripts::sliderScripts('sticky-buttons', '.pwelement_'. self::$rnd_id, $sticky_buttons_dots_display = 'true', $sticky_buttons_arrows_display = false, $sticky_buttons_slides_to_show);
+                        $output .= PWESliderScripts::sliderScripts('sticky-buttons', '.pwelement_'. self::$rnd_id, $sticky_buttons_dots_display = 'true', $sticky_buttons_arrows_display = false, $sticky_buttons_slides_to_show, $options = null, $slides_to_show_1 = null, $slides_to_show_2 = null, $slides_to_show_3 = null, $sticky_buttons_breakpoints_return);
 
                         if($sticky_buttons_show_strip){
 
@@ -1204,7 +1249,9 @@ class PWElementStickyButtons extends PWElements {
                                     hideSections[i].style.display = "none";
                                 }
                                 if (index === 0 && button) {
-                                    hideSections[0].style.display = "block";
+                                    if (hideSections.length > 0) {
+                                        hideSections[0].style.display = "block";
+                                    }
                                     button.style.transform = "scale(1.1)";
                                 }
                             } else {
