@@ -2,7 +2,19 @@
 
 $output = '';
 
-if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket && strpos($source_utm, 'utm_source=platyna') === false  || (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false )) {
+if (
+    (
+        $registration_type == 'PWERegistrationVisitors' &&
+        (
+            ($domain_gr == 'gr3' && !$register_show_ticket) || $domain_gr != 'gr3'
+        ) &&
+        strpos($source_utm, 'utm_source=platyna') === false
+    )
+    ||
+    strpos($source_utm, 'utm_source=byli') !== false
+    ||
+    strpos($source_utm, 'utm_source=premium') !== false
+) {
 
     $btn_color_vip = '#B69663';
     $darker_btn_vip_color = self::adjustBrightness($btn_color_vip, -20);
@@ -25,7 +37,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
                 border: 2px solid '. $darker_btn_vip_color .' !important;
             }
         </style>';
-    } else if (strpos($source_utm, 'utm_source=premium') !== false ) {
+    } else if (strpos($source_utm, 'utm_source=premium') !== false || (strpos($source_utm, 'utm_source=platyna') !== false && $domain_gr !== "gr2") ) {
         $output .= '
         <style>
             #pweRegistration input[type="submit"] {
@@ -53,7 +65,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
         </style>';
     }
 
-    if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false) {
+    if (strpos($source_utm, 'utm_source=byli') !== false || strpos($source_utm, 'utm_source=premium') !== false || (strpos($source_utm, 'utm_source=platyna') !== false && $domain_gr !== "gr2")) {
         $output .= '
         <style>
             .row-parent:has(#pweRegistration) .wpb_column {
@@ -516,6 +528,11 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
     }
 
 } else if ($registration_type == 'PWERegistrationExhibitors') {
+
+    $final_btn_color = ($domain_gr_exhib == 'gr3') ? self::$accent_color : $btn_color;
+    $darker_btn_premium_color = self::adjustBrightness(self::$accent_color, -20);
+    $final_darker_btn_color = ($domain_gr_exhib == 'gr3') ? $darker_btn_color_premium : $darker_btn_color;
+
     $output = '
     <style>
         .gform_validation_errors {
@@ -527,7 +544,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
             border: 2px solid #564949;
             border-radius: 36px;
         }
-        #pweRegistration input{
+        #pweRegistration input {
             border: 2px solid #564949 !important;
             box-shadow: none !important;
             line-height: 1 !important;
@@ -542,13 +559,13 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
             border-radius: 2px !important;
         }
         #pweRegistration input[type=submit] {
-            background-color: '. $btn_color .' !important;
-            border: 2px solid '. $btn_color .' !important;
+            background-color: '. $final_btn_color .' !important;
+            border: 2px solid '. $final_btn_color .' !important;
             color: '. $btn_text_color .';
         }
         #pweRegistration input[type=submit]:hover {
-            background-color: '. $darker_btn_color.' !important;
-            border: 2px solid '. $darker_btn_color .' !important;
+            background-color: '. $final_darker_btn_color .' !important;
+            border: 2px solid '. $final_darker_btn_color .' !important;
         }
         #pweRegistration .gform_fields {
             padding-left: 0 !important;
@@ -597,6 +614,19 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
             }
         }
     </style>';
+    if($domain_gr == "gr3"){
+       $output = '<style>
+            #pweRegistration input[type=submit] {
+                background-color: red !important;
+                border: 2px solid '. $btn_color_premium .' !important;
+            }
+            #pweRegistration input[type=submit]:hover {
+                background-color: '. $darker_btn_premium_color.' !important;
+                border: 2px solid '. $darker_btn_premium_color .' !important;
+            }
+
+       </style>';
+    }
 } else if ($registration_type == 'PWERegistrationPotentialExhibitors') {
     $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
     $darker_btn_color = self::adjustBrightness($btn_color, -20);
@@ -812,7 +842,7 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
             opacity: 1 !important;
         }
     </style>';
-} else if ($register_show_ticket === "true" && (strpos($source_utm, 'utm_source=byli') === false || strpos($source_utm, 'utm_source=premium') === false || strpos($source_utm, 'utm_source=platyna') === false )) {
+} else if ($register_show_ticket === "true" && $domain_gr == "gr3" && (strpos($source_utm, 'utm_source=byli') === false || strpos($source_utm, 'utm_source=premium') === false || strpos($source_utm, 'utm_source=platyna') === false )) {
     $background_color = self::$accent_color;
 
     $output = '
@@ -1117,7 +1147,8 @@ if ($registration_type == 'PWERegistrationVisitors' && !$register_show_ticket &&
             }
         </style>';
     }
-} else if(strpos($source_utm, 'utm_source=platyna') !== false){
+}
+if(strpos($source_utm, 'utm_source=platyna') !== false && $domain_gr=="gr2"){
 
     $output .= '
     <style>

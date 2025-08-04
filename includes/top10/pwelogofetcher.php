@@ -62,8 +62,8 @@ class PWELogoFetcher extends PWECommonFunctions {
 
     private function getApiUrl(): string
     {
-        return 'https://export.www2.pwe-expoplanner.com/mapa.php?token=' .
-            $this->generateToken() . '&id_targow=' . $this->katalog_id;
+        $exh_catalog_address = PWECommonFunctions::get_database_meta_data('exh_catalog_address');
+        return $exh_catalog_address . $this->generateToken() . '&id_targow=' . $this->katalog_id;
     }
 
     private function fetchApiData(): ?array

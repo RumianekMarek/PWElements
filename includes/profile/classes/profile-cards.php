@@ -37,7 +37,6 @@ class PWEProfileCards extends PWEProfile {
                 'heading' => __('Single card min width', 'pwe_profile'),
                 'param_name' => 'profile_min_width_cards',
                 'save_always' => true,
-                'admin_label' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
                     'value' => 'PWEProfileCards', 
@@ -48,7 +47,6 @@ class PWEProfileCards extends PWEProfile {
                 'heading' => __('Single card border radius', 'pwe_profile'),
                 'param_name' => 'profile_border_radius_cards',
                 'save_always' => true,
-                'admin_label' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
                     'value' => 'PWEProfileCards', 
@@ -58,8 +56,20 @@ class PWEProfileCards extends PWEProfile {
                 'type' => 'colorpicker',
                 'heading' => __('Hover background color', 'pwe_profile'),
                 'param_name' => 'profile_hover_bg_cards',
+                'param_holder_class' => 'backend-area-half-width',
                 'save_always' => true,
-                'admin_label' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileCards', 
+                ),
+            ),
+            array(
+                'type' => 'checkbox',
+                'heading' => __('Turn OFF Hover', 'pwe_profile'),
+                'param_name' => 'profile_hover_bg_cards_off',
+                'param_holder_class' => 'backend-area-half-width',
+                'save_always' => true,
+                'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
                     'element' => 'profile_type',
                     'value' => 'PWEProfileCards', 
@@ -124,6 +134,29 @@ class PWEProfileCards extends PWEProfile {
                           'value' => 'PWElementProfile',
                       ),
                   ),
+                  array(
+                        'type' => 'textfield',
+                        'heading' => __('Btn Title', 'pwe_profile'),
+                        'param_name' => 'profile_title_btn_cards',
+                        'save_always' => true,
+                    ),
+                  array(
+                        'type' => 'textfield',
+                        'heading' => __('Btn link', 'pwe_profile'),
+                        'param_name' => 'profile_link_btn_cards',
+                        'save_always' => true,
+                    ),
+                ),
+            ),
+            array(
+                'type' => 'textarea_raw_html',
+                'group' => 'CSS',
+                'heading' => __('Custom style', 'pwe_element'),
+                'param_name' => 'profile_cards_custom_style',
+                'save_always' => true,
+                'dependency' => array(
+                    'element' => 'profile_type',
+                    'value' => 'PWEProfileCards', 
                 ),
             ),
         );
@@ -143,9 +176,14 @@ class PWEProfileCards extends PWEProfile {
             'profile_cards_title' => '',
             'profile_items_cards' => '',
             'profile_hover_bg_cards' => '',
+            'profile_hover_bg_cards_off' => '',
+            'profile_cards_custom_style' => '',
         ), $atts ));
 
-        $profile_hover_bg_cards = !empty($profile_hover_bg_cards) ? $profile_hover_bg_cards : self::$accent_color;          
+        $profile_hover_bg_cards = !empty($profile_hover_bg_cards) ? $profile_hover_bg_cards : self::$accent_color;
+
+        $profile_cards_custom_style = !empty($profile_cards_custom_style) ? PWECommonFunctions::decode_clean_content($profile_cards_custom_style) : '';
+        $clean_custom_style = str_replace(['<p>', '</p>', '<br>', '<br/>', '<br />'], '', $profile_cards_custom_style);
 
         $profile_border_radius_cards = (!empty($atts['profile_border_radius_cards'])) ? $atts['profile_border_radius_cards'] : '18px';
         $profile_min_width_cards = (!empty($atts['profile_min_width_cards'])) ? $atts['profile_min_width_cards'] : '100%';
@@ -170,19 +208,24 @@ class PWEProfileCards extends PWEProfile {
                 gap: 36px;
                 margin-top: 18px;
             }
-            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item {
+            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item-container {
                 width: 100%;
                 max-width: '. $profile_min_width_cards .';
                 min-width: 280px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+                flex: 0.5;
+            }   
+            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item {
+                width: 100%;
                 padding: 18px;
                 border-radius: '. $profile_border_radius_cards .';
                 background: white;
                 transition: 0.6s ease;
                 box-shadow: 0px 30px 60px -30px rgba(0, 0, 0, .45);
                 flex: 0.5;
-            }
-            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover {
-                background: '. $profile_hover_bg_cards .';
             }
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-icon img{
                 width: 60px;
@@ -191,19 +234,13 @@ class PWEProfileCards extends PWEProfile {
                 filter: brightness(0);
                 transition: 0.6s ease;
             }
-            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-icon img{
-                filter: unset;
-            }
-                .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-icon svg {
+            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-icon svg {
                 margin: 0 18px;
             }
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-icon svg path{
                 fill: '. $profile_hover_bg_cards .';
                 margin: 0 18px;
                 transition: 0.6s ease;
-            }
-            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-icon svg path{
-                fill: #ffffff;
             }
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-title{
                 margin: 12px 18px;
@@ -219,9 +256,6 @@ class PWEProfileCards extends PWEProfile {
                 transition: 0.6s ease;
                 font-weight: 600;
             }
-            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-title, .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover li, .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-see-more{
-                color: white !important;
-            }
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-line{
                 width: 30%;
                 border-color: '. $profile_hover_bg_cards .';
@@ -232,12 +266,53 @@ class PWEProfileCards extends PWEProfile {
                 max-width: 100px;
                 transition: 0.6s ease;
             }
-            .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-line{
-                border-color: white;
-            }
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-content-hidden ul{
                 margin-top: 0;
             }
+            .profile-cards-'. self::$rnd_id .' .profile-cards-btn {
+                border-radius: 24px;
+                font-weight: 600;
+                font-size: 16px;
+                border: unset;
+                color: white;
+                background-color: var(--accent-color);
+                min-width: 240px;
+                text-align: center;
+                padding: 13px 31px;
+                transition: background 0.3s;
+            }
+            .profile-cards-'. self::$rnd_id .' .profile-cards-btn:hover {
+                color: white !important;
+                background-color: color-mix(in srgb, var(--accent-color) 80%, black 20%);
+            }';
+
+            if ($profile_hover_bg_cards_off !== 'true') {
+                $output .= '
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover {
+                        background: '. $profile_hover_bg_cards .';
+                    }
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-icon img{
+                        filter: unset;
+                    }
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-icon svg path{
+                        fill: #ffffff;
+                    }
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-title, 
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover li, 
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-see-more{
+                        color: white !important;
+                    }
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-line{
+                        border-color: white;
+                    }
+                ';
+            }
+
+            if (!empty($profile_cards_custom_style)) {
+                $output .= ' ' . $clean_custom_style . ' ';
+            }
+            
+            $output .= '
             @media(max-width:600px){
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item {
                 flex: 1;
@@ -248,10 +323,7 @@ class PWEProfileCards extends PWEProfile {
         include 'profile-icons-svg.php';
 
         if (!empty($profile_cards_title)) {
-            $output .= '
-            <div class="profile_cards_title main-heading-text">
-                <h4 class="pwe-uppercase"><span>'. $profile_cards_title .'</span></h4>
-            </div>';
+            $output .= strip_tags($profile_cards_custom_style);
         }
         $output .= '
         <div class="pwe-profiles__main-container-cards">';
@@ -260,6 +332,9 @@ class PWEProfileCards extends PWEProfile {
           $profile_icon_svg = '';
           $profile_title_select_cards = '';
           $profile_icons_cards_icon = '';
+
+          $profile_title_btn_cards = $profile_item["profile_title_btn_cards"];
+          $profile_link_btn_cards = $profile_item["profile_link_btn_cards"];
 
           $profile_icon_nmb_cards = $profile_item["profile_icon_cards"];
           $profile_icon_src_cards = wp_get_attachment_url($profile_icon_nmb_cards);  
@@ -294,25 +369,33 @@ class PWEProfileCards extends PWEProfile {
           $text_color = 'black';
           $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
         $output .= '
-            <div class="pwe-profiles__cards-item">
-                <div class="pwe-profiles__cards-icon">
-                    ' . $profile_icons_cards_icon . '
-                </div>
-                <div class="pwe-profile-text">
-                    <h5 class="pwe-profiles__cards-title">'. $profile_title .'</h5>
-                    <hr class="pwe-profiles__cards-line">
-                    <div class="pwe-profiles__cards-content-visable">
-                        '. $profile_content_cards .'
+            <div class="pwe-profiles__cards-item-container">
+                <div class="pwe-profiles__cards-item">
+                    <div class="pwe-profiles__cards-icon">
+                        ' . $profile_icons_cards_icon . '
                     </div>
-                </div>
-                <div class="pwe-profiles__cards-content-hidden" style="display: none; color: '. $text_color .';">
-                    '. $profile_show_more_cards .'
+                    <div class="pwe-profile-text">
+                        <h5 class="pwe-profiles__cards-title">'. $profile_title .'</h5>
+                        <hr class="pwe-profiles__cards-line">
+                        <div class="pwe-profiles__cards-content-visable">
+                            '. $profile_content_cards .'
+                        </div>
+                    </div>
+                    <div class="pwe-profiles__cards-content-hidden" style="display: none; color: '. $text_color .';">
+                        '. $profile_show_more_cards .'
+                    </div>';
+                    if (!empty($profile_show_more_cards)) {
+                        $output .= '
+                        <p class="pwe-see-more" style="cursor: pointer; color: '. $text_color .';">'. $showMore .'</p>';
+                    }
+                $output .= '
                 </div>';
-                if (!empty($profile_show_more_cards)) {
+                if (!empty($profile_title_btn_cards) && !empty($profile_link_btn_cards)) {
                     $output .= '
-                    <p class="pwe-see-more" style="cursor: pointer; color: '. $text_color .';">'. $showMore .'</p>';
+                        <a href=" ' . $profile_link_btn_cards . ' " class="profile-cards-btn pwe-btn">' . $profile_title_btn_cards . '</a>
+                    ';
                 }
-        $output .= '
+            $output .= '
             </div>';
         }
         $output .= '

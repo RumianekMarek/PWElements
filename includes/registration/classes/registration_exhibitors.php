@@ -26,10 +26,35 @@ class PWERegistrationExhibitors extends PWERegistration {
 
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        $current_domain = $_SERVER['HTTP_HOST'];
+        $current_fair_group = null;
+
+        foreach ($pwe_groups_data as $item) {
+            if ($item->fair_domain === $current_domain) {
+                $current_fair_group = $item->fair_group;
+                break;
+            }
+        }
+
+        $domain_gr_exhib = $current_fair_group;
+
         if(get_locale() == 'pl_PL') {
-            $registration_text = "Zapytaj o stoisko<br>Wypełnij poniższy formularz, a my skontaktujemy się z Tobą w celu przedstawienia preferencyjnych stawek* za powierzchnię wystawienniczą i zabudowę stoiska.<br>*oferta ograniczona czasowo";
+            if($current_fair_group === "gr3"){
+                $registration_text = "Wypełnij poniższy formularz, a my skontaktujemy się z Tobą w celu przedstawienia preferencyjnych stawek* za powierzchnię wystawienniczą i zabudowę stoiska.<br>*oferta ograniczona czasowo";
+                $registration_title = "Zapytaj o stoisko";
+            } else {
+                $registration_text = "Zapytaj o stoisko<br>Wypełnij poniższy formularz, a my skontaktujemy się z Tobą w celu przedstawienia preferencyjnych stawek* za powierzchnię wystawienniczą i zabudowę stoiska.<br>*oferta ograniczona czasowo";
+                $registration_title = "DLA WYSTAWCÓW";
+            }
         } else {
-            $registration_text = "Ask for a stand<br>Fill out the form below and we will contact you to present preferential rates *  for the exhibition space and stand construction<br>* limited time offer";
+            if($current_fair_group === "gr3"){
+                $registration_text = "Fill out the form below and we will contact you to present preferential rates *  for the exhibition space and stand construction<br>* limited time offer";
+                $registration_title = "Ask for a stand";
+            } else {
+                $registration_text = "Ask for a stand<br>Fill out the form below and we will contact you to present preferential rates *  for the exhibition space and stand construction<br>* limited time offer";
+                $registration_title = "BOOK A STAND";
+            }
         }
 
         $output = '
@@ -56,7 +81,7 @@ class PWERegistrationExhibitors extends PWERegistration {
             <div class="pwe-registration-column">
                 <div id="pweFormContent" class="pwe-form-content">
                     <div id="main-content" class="pwe-registration-title main-heading-text">
-                        <h1 class="custom-uppercase" style="font-size: 26px;"><span>'. self::languageChecker('DLA WYSTAWCÓW', 'BOOK A STAND') .'</span></h1>
+                        <h1 class="custom-uppercase" style="font-size: 26px;"><span>'. $registration_title .'</span></h1>
                     </div>
                     <div class="pwe-registration-text">
                         <p>'.  $registration_text .'</p>

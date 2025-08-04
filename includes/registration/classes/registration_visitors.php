@@ -157,7 +157,7 @@ class PWERegistrationVisitors extends PWERegistration {
                     </div>
                 </div>
             </div>';
-            } else if($register_show_ticket === "true") {
+            } else if($register_show_ticket === "true" && $domain_gr == "gr3") {
                 $output .= '
                     <div id="pweRegistrationTicket" class="registration-ticket">
                       <h1 class="registration-ticket__title">'. self::languageChecker('Opcje biletów dla odwiedzających:', 'Ticket options for visitors:') .'</h1>
@@ -194,7 +194,7 @@ class PWERegistrationVisitors extends PWERegistration {
 
                             <div class="ticket-card__details">
                               <h2 class="ticket-card__details-title">'. self::languageChecker('Bilet upoważnia do:', 'With this ticket, you get:') .'</h2>
-                                '. self::languageChecker(do_shortcode('[trade_fair_ticket_benefits_pl]'), do_shortcode('[trade_fair_ticket_benefits_en]')) .'        
+                                '. self::languageChecker(do_shortcode('[trade_fair_ticket_benefits_pl]'), do_shortcode('[trade_fair_ticket_benefits_en]')) .'
                               <div class="ticket-card__details_button">';
                               if(empty($register_ticket_link)){
                                 $output .= '
