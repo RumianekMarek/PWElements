@@ -118,7 +118,7 @@ class PWECommonFunctions {
             return false;
         }
 
-        error_log("connected to database");
+        // error_log("connected to database");
         return $cap_db;
     } 
 
@@ -137,48 +137,97 @@ class PWECommonFunctions {
         }
 
         // Build column list
-        $columns = "
-            id,
-            fair_name_pl,
-            fair_name_en,
-            fair_desc_pl,
-            fair_desc_en,
-            fair_short_desc_pl,
-            fair_short_desc_en,
-            fair_full_desc_pl,
-            fair_full_desc_en,
-            fair_date_start,
-            fair_date_start_hour,
-            fair_date_end,
-            fair_date_end_hour,
-            fair_edition,
-            fair_visitors,
-            fair_exhibitors,
-            fair_countries,
-            fair_facebook,
-            fair_instagram,
-            fair_linkedin,
-            fair_youtube,
-            fair_color_accent,
-            fair_color_main2,
-            fair_hall,
-            fair_area,
-            fair_kw,
-            fair_badge,
-            fair_domain,
-            fair_shop,
-            fair_group
+        $sql = "
+            SELECT
+                f.id,
+                f.fair_name_pl,
+                f.fair_name_en,
+                f.fair_desc_pl,
+                f.fair_desc_en,
+                f.fair_short_desc_pl,
+                f.fair_short_desc_en,
+                f.fair_full_desc_pl,
+                f.fair_full_desc_en,
+                f.fair_date_start,
+                f.fair_date_start_hour,
+                f.fair_date_end,
+                f.fair_date_end_hour,
+                f.fair_edition,
+                f.fair_visitors,
+                f.fair_exhibitors,
+                f.fair_countries,
+                f.fair_facebook,
+                f.fair_instagram,
+                f.fair_linkedin,
+                f.fair_youtube,
+                f.fair_color_accent,
+                f.fair_color_main2,
+                f.fair_hall,
+                f.fair_area,
+                f.fair_kw,
+                f.fair_badge,
+                f.fair_domain,
+                f.fair_shop,
+                f.fair_group,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_pl' ORDER BY id ASC LIMIT 1) AS category_pl,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_en' ORDER BY id ASC LIMIT 1) AS category_en
+            FROM fairs f
         ";
-        
-        if (!isset($fair_domain)){
-            // Retrieving all data from the database
-            $results = $cap_db->get_results("SELECT $columns FROM fairs");
+
+        // Jeśli chcesz dodać warunek po domenie:
+        if (!isset($fair_domain)) {
+            $results = $cap_db->get_results($sql);
         } else {
-            // Retrieving fair data from the database
-            $results = $cap_db->get_results(
-                $cap_db->prepare("SELECT $columns FROM fairs WHERE fair_domain = %s", $fair_domain)
-            );
+            $sql .= " WHERE f.fair_domain = %s";
+            $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
         }
+
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }
+
+    public static function get_database_fairs_data_adds($fair_domain = null) {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+
+        $fair_domain = ($fair_domain == null) ? $_SERVER['HTTP_HOST'] : $fair_domain;
+
+        // Build column list
+        $sql = "
+            SELECT
+                f.id,
+                f.fair_domain,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_name' ORDER BY id ASC LIMIT 1) AS konf_name,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_title_pl' ORDER BY id ASC LIMIT 1) AS konf_title_pl,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_title_en' ORDER BY id ASC LIMIT 1) AS konf_title_en,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_desc_pl' ORDER BY id ASC LIMIT 1) AS konf_desc_pl,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_desc_en' ORDER BY id ASC LIMIT 1) AS konf_desc_en
+            FROM fairs f
+        ";
+
+        // Jeśli chcesz dodać warunek po domenie:
+        if (!isset($fair_domain)) {
+            $results = $cap_db->get_results($sql);
+        } else {
+            $sql .= " WHERE f.fair_domain = %s";
+            $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
+        }
+
     
         // SQL error checking
         if ($cap_db->last_error) {
@@ -395,7 +444,7 @@ class PWECommonFunctions {
         return $results;
     } 
 
-    public static function get_database_logotypes_data() {
+    public static function get_database_logotypes_data($fair_domain = null) {
         // Database connection
         $cap_db = self::connect_database();
         // If connection failed, return empty array
@@ -407,7 +456,11 @@ class PWECommonFunctions {
         }
     
         // Get current domain
-        $current_domain = $_SERVER['HTTP_HOST'];
+        if ($fair_domain == null) {
+            $domain = $_SERVER['HTTP_HOST'];
+        } else {
+            $domain = $fair_domain;
+        }
     
         // SQL query to fetch logos with the matching fair_id and fair_domain
         $query = "
@@ -421,7 +474,7 @@ class PWECommonFunctions {
         ";
     
         // Retrieve data from the database
-        $results = $cap_db->get_results($cap_db->prepare($query, $current_domain));
+        $results = $cap_db->get_results($cap_db->prepare($query, $domain));
     
         // SQL error checking
         if ($cap_db->last_error) {
@@ -544,7 +597,9 @@ class PWECommonFunctions {
             "youtube" => $fair->fair_youtube ?? "",
             "badge" => $fair->fair_badge ?? "",
             "catalog" => $fair->fair_kw ?? "",
-            "shop" => $fair->fair_shop ?? ""
+            "shop" => $fair->fair_shop ?? "",
+            "category_pl" => $fair->category_pl ?? "",
+            "category_en" => $fair->category_en ?? ""
         ];
     }
 

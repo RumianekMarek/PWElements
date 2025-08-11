@@ -179,7 +179,7 @@ $output .= '
                         if (!empty($item["link"])) {
                             $output .= '
                             <div class="pwe-header-partners__item">
-                                <a href="'. $item["link"] .'" target"_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
+                                <a href="'. $item["link"] .'" target="_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
                             </div>';
                         } else {
                             $output .= '
@@ -287,7 +287,7 @@ $output .= '
                                 if (!empty($item["link"])) {
                                     $output .= '
                                     <div class="pwe-header-partners__item">
-                                        <a href="'. $item["link"] .'" target"_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
+                                        <a href="'. $item["link"] .'" target="_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
                                     </div>';
                                 } else {
                                     $output .= '

@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.8.9
+ * Version: 2.9.0
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -45,7 +45,7 @@ class PWElementsPlugin {
 
         // Add main CSS to wp_enqueue_scripts
         add_action('wp_enqueue_scripts', array($this, 'pwe_enqueue_styles'));
-
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_slick_assets'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_swiper_assets'));
 
         // $this -> resendTicket();
@@ -91,6 +91,12 @@ class PWElementsPlugin {
             $css_version,
             'all'
         );
+    }
+
+    public function enqueue_slick_assets() {
+        wp_enqueue_style('slick-slider-css', plugins_url('/assets/slick-slider/slick.css', __FILE__));
+        wp_enqueue_style('slick-slider-theme-css', plugins_url('/assets/slick-slider/slick-theme.css', __FILE__));
+        wp_enqueue_script('slick-slider-js', plugins_url('/assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
     }
 
     public function enqueue_swiper_assets() {
