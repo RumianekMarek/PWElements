@@ -535,6 +535,9 @@ if (
 
     $output = '
     <style>
+        .pwelement, .pwe-registration, .pwe-registration-column {
+            height: 100%;
+        }
         .gform_validation_errors {
             border:none !important;
         }
