@@ -136,6 +136,8 @@ function register_dynamic_shortcodes() {
         'pwe_linkedin'          => 'linkedin',
         'pwe_youtube'           => 'youtube',
         'pwe_catalog'           => 'catalog',
+        'pwe_category_pl'       => 'category_pl',
+        'pwe_category_en'       => 'category_en',
         'pwe_name_cs'           => 'name_cs',
         'pwe_desc_cs'           => 'desc_cs',
         'pwe_short_desc_cs'     => 'short_desc_cs',

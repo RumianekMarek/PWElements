@@ -70,6 +70,27 @@ class PWElementPromot extends PWElements {
                 $logo_href = $href;
             }
         }
+
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data(); 
+        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data();  
+
+        // Get domain address
+        $current_domain = $_SERVER['HTTP_HOST'];
+
+        foreach ($pwe_groups_data as $group) {
+            if ($current_domain == $group->fair_domain) {
+                $current_group = $group->fair_group;
+                foreach ($pwe_groups_contacts_data as $group_contact) {
+                    if ($group->fair_group == $group_contact->groups_name) {
+                        if ($group_contact->groups_slug == "ob-marketing-media") {
+                            $marketing_contact_data = json_decode($group_contact->groups_data);
+                            $marketing_email = trim($marketing_contact_data->email);
+                        }
+                    } 
+                }
+            }
+        }
+
         $output = '';
 
         $promoteImage = self::findAllImages('/doc/galeria', 1);
@@ -172,6 +193,42 @@ class PWElementPromot extends PWElements {
                 .pwe-content-promote-item__help :is(h2, a) {
                     font-size: 24px !important;
                 }
+                .pwe-content-promote-single-tile {
+                    padding: 36px 0;
+                }
+                .pwe-content-promote-tile-container {
+                    justify-content: space-between;
+                    margin: 36px 0;
+                    gap: 36px;
+                }
+                .pwe-content-promote-tile {
+                    aspect-ratio: 1 / 1;
+                    object-fit: cover;
+                    max-width: 300px !important;
+                    width: 100%;
+                    height: 100%;
+                    margin: auto;
+                    border-radius: 24px;
+                }
+                .pwe-content-promote-tile-info {
+                    max-width: 700px;
+                    padding: 18px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    gap: 12px;
+                }
+                .pwe-content-promote-tile-info h5, 
+                .pwe-content-promote-tile-info ul, 
+                .pwe-content-promote-tile-info p {
+                    margin: 0;
+                }
+                .pwe-content-promote-tile-btn {
+                    max-width: 700px;
+                    display: flex;
+                    margin-left: auto;
+                    justify-content: center;
+                }
                 @media(max-width:960px) {
                     .pwe-image-container,
                     .pwe-promote-text-block {
@@ -197,6 +254,17 @@ class PWElementPromot extends PWElements {
                     }
                     .pwe-hide-promote {
                         width: 100%;
+                    }
+                    .pwe-content-promote-tile-container {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    .pwe-content-promote-tile-btn {
+                        max-width: 100%;
+                        margin-left: 0;
+                    }
+                    .pwe-content-promote-tile-info {
+                        max-width: 100%;
                     }
                 }
                 @media (max-width:600px) {
@@ -255,7 +323,7 @@ class PWElementPromot extends PWElements {
                                 <li>Poinformuj swoich klientów za pomocą swoich kanałów Social Media o tym, co na nich czeka na Twoim stoisku! (jakie brandy? jakie innowacyjne produkty i usługi? jakie atrakcje?)</li>
                                 <li>Przygotuj ofertę specjalną na targi i poinformuj o niej swoich klientów za pomocą kanałów Social Media oraz mailingu.</li>
                                 <li>Umieść na swojej stronie podlinkowany baner [trade_fair_name].</li>
-                                <li class="link-text-underline">Podziel się wszystkim tym, co przygotowałeś na [trade_fair_name] z naszym zespołem! Wyślij nam listę atrakcji i ambasadorów obecnych na Twoim stoisku oraz poinformuj nas o premierach, promocjach i rabatach, które przygotowałeś na targi, a my zamieścimy to w naszych kanałach Social Media. (wszelkie materiały wysyłaj na adres mailowy: <a href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>)</li>
+                                <li class="link-text-underline">Podziel się wszystkim tym, co przygotowałeś na [trade_fair_name] z naszym zespołem! Wyślij nam listę atrakcji i ambasadorów obecnych na Twoim stoisku oraz poinformuj nas o premierach, promocjach i rabatach, które przygotowałeś na targi, a my zamieścimy to w naszych kanałach Social Media. (wszelkie materiały wysyłaj na adres mailowy: <a href="mailto:$marketing_email"><span style="display:inline-block;">$marketing_email</a>)</li>
                                 <li>Jeśli potrzebujesz materiałów o naszych targach, poniżej znajduje się lista plików do pobrania.</li>
                             </ol>
                             <p>Gdybyś potrzebował więcej, napisz do nas, a my postaramy się pomóc! Tylko działając razem jesteśmy w stanie osiągnąć sukces.</p>
@@ -268,13 +336,103 @@ class PWElementPromot extends PWElements {
                                 <li>Inform your pweers through your Social Media channels about what is waiting for them at your stand! (what brands? what innovative products and services? what attractions?)</li>
                                 <li>Prepare a special offer for the fair and inform your pweers about it using Social Media channels and mailing.</li>
                                 <li>Place the linked banner [trade_fair_name_eng] on your website.</li>
-                                <li class="link-text-underline">Share everything you've prepared on [trade_fair_name_eng] with our team! Send us a list of attractions and ambassadors present at your stand and inform us about the premieres, promotions and discounts that you have prepared for the fair, and we will post it in our Social Media channels. (all materials should be sent to the following e-mail address: <a href="mailto:konsultantmarketingowy@warsawexpo.eu"><span style="display:inline-block;">konsultantmarketingowy</span><span style="display:inline-block;">@warsawexpo.eu</span></a>)</li>
+                                <li class="link-text-underline">Share everything you've prepared on [trade_fair_name_eng] with our team! Send us a list of attractions and ambassadors present at your stand and inform us about the premieres, promotions and discounts that you have prepared for the fair, and we will post it in our Social Media channels. (all materials should be sent to the following e-mail address: <a href="mailto:$marketing_email"><span style="display:inline-block;">$marketing_email</a>)</li>
                                 <li>If you need materials about our fair, below is a list of files to download.</li>
                             </ol>
                             <p>If you need more, write to us and we will try to help! Only by working together are we able to achieve success.</p>
                         EN
                     )
                 .'</div>
+
+                <div class="pwe-content-promote-item pwe-content-promote-tiles">
+                    <div class="pwe-content-promote-single-tile">'.
+                        self::languageChecker(
+                            <<<PL
+                                <h3>Zadbaj o widoczność swojej marki podczas targów i w pełni wykorzystaj potencjał na targach!</h3>
+                                <p>Targi to nie tylko przestrzeń wystawiennicza, ale także doskonała okazja do budowania rozpoznawalności, pozyskiwania klientów i wyróżnienia się na tle konkurencji. Skorzystaj z naszej oferty pakietów promocyjnych, usług premium, marketingowych i działań w social media – wszystko dostępne w wygodnej formie online.</p>
+                            PL,
+                            <<<EN
+                                <h3>Ensure your brand’s visibility during the trade fair and make the most of its potential!</h3>
+                                <p>A trade fair is more than just an exhibition space – it’s a unique opportunity to build brand recognition, attract new customers, and stand out from the competition. Explore our promotional packages, premium services, marketing solutions, and social media campaigns – all easily accessible online.</p>
+                            EN
+                        ).'
+                        <div class="pwe-flex pwe-content-promote-tile-container">
+                            <img class="pwe-content-promote-tile" src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/store/header_store_pl.webp', '/wp-content/plugins/pwe-media/media/store/header_store_en.webp') .'" alt="Store header">
+                            <div class="pwe-border-element pwe-content-promote-tile-info">'.
+                            self::languageChecker(
+                                <<<PL
+                                    <ul>
+                                        <li><strong>Usługi Premium</strong> – Materiały identyfikacyjne, smycze, plan targowy, sponsoring stref VIP, restauracji i wydarzeń branżowych.</li>
+                                        <li><strong>Usługi Marketingowe</strong> – Publikacja firmy w newsletterach, katalogu wystawców i materiałach promocyjnych wydarzenia.</li>
+                                        <li><strong>Usługi Social Media</strong> – Promocja firmy w kanałach społecznościowych Warsaw Food Expo – posty, zapowiedzi, relacje.</li>
+                                        <li><strong>Pakiety</strong> – Zestawy łączące usługi premium, marketingowe i social media w jednej ofercie.</li>
+                                    </ul>
+                                PL,
+                                <<<EN
+                                    <ul>
+                                        <li><strong>Premium Services</strong> – Identification materials, lanyards, trade fair plan, sponsorship of VIP areas, restaurants, and industry events.</li>
+                                        <li><strong>Marketing Services</strong> – Company publication in newsletters, the exhibitors’ catalogue, and the event’s promotional materials.</li>
+                                        <li><strong>Social Media Services</strong> – Promotion of the company on Warsaw Food Expo’s social media channels – posts, announcements, and event coverage.</li>
+                                        <li><strong>Packages</strong> – Bundles combining premium, marketing, and social media services in a single offer.</li>
+                                    </ul>
+                                EN
+                            ).'
+                            </div>
+                        </div>
+                        <div class="pwe-content-promote-tile-btn">'.
+                            self::languageChecker(
+                                <<<PL
+                                    <a href="/sklep/" class="pwe-link btn pwe-btn" rel="nofollow" title="[trade_fair_name] - sklep">Poznaj ofertę</a>
+                                PL,
+                                <<<EN
+                                     <a href="/en/store/" class="pwe-link btn pwe-btn" rel="nofollow" title="[trade_fair_name_eng] - shop">EXPLORE OUR OFFER</a>
+                                EN
+                            ).'
+                        </div>
+                    </div>
+                    <div class="pwe-content-promote-single-tile">'.
+                        self::languageChecker(
+                            <<<PL
+                                <h3>Panel Trendów i Prezentacji Wystawców – Zobacz, co kształtuje przyszłość branży!</h3>
+                                <p>Podczas nadchodzącej edycji targów zapraszamy do udziału w Panelu Trendów i Prezentacji Wystawców – przestrzeni pełnej inspiracji, innowacji i praktycznej wiedzy! To wyjątkowe miejsce na mapie wydarzenia, gdzie liderzy opinii, eksperci i przedstawiciele wiodących marek prezentują najświeższe trendy, nowatorskie rozwiązania oraz premiery produktowe. W dynamicznej formule krótkich wystąpień i pokazów uczestnicy otrzymają esencję aktualnej wiedzy rynkowej, praktyczne case studies i ogromną dawkę inspiracji – wszystko to w intensywnym, angażującym formacie.</p>
+                            PL,
+                            <<<EN
+                                <h3>Trends & Exhibitors’ Presentation Panel – Discover what’s shaping the future of the industry!</h3>
+                                <p>During the upcoming edition of the trade fair, we invite you to take part in the Trends and Exhibitors’ Presentation Panel – a space full of inspiration, innovation, and practical knowledge! This is a unique spot on the event map where opinion leaders, experts, and representatives of leading brands present the latest trends, innovative solutions, and product premieres. In a dynamic format of short presentations and demonstrations, participants will gain the essence of current market knowledge, practical case studies, and a huge dose of inspiration – all delivered in an intense, engaging format.</p>
+                            EN
+                        ).'
+                        <div class="pwe-flex pwe-content-promote-tile-container">
+                            <img class="pwe-content-promote-tile" src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/kafelek-panel-pl.webp', '/wp-content/plugins/pwe-media/media/kafelek-panel-en.webp') .'" alt="Panel tile">
+                            <div class="pwe-border-element pwe-content-promote-tile-info">'.
+                                self::languageChecker(
+                                    <<<PL
+                                        <h5>Co zyskasz jako uczestnik?</h5>
+                                        <ul>
+                                            <li>poznasz kierunki rozwoju branży prosto od praktyków,</li>
+                                            <li>porównasz innowacyjne rozwiązania i oferty wystawców,</li>
+                                            <li>nawiążesz wartościowe kontakty z liderami rynku,</li>
+                                            <li>znajdziesz potencjalnych partnerów do współpracy i rozwoju biznesu</li>
+                                        </ul>
+                                        <h5>Chcesz wystąpić i zaprezentować swoją markę, produkt lub ideę?</h5>
+                                        <p>Zgłoś chęć udziału, wysyłając wiadomość na adres:  <a href="mailto:$marketing_email"><strong>$marketing_email</strong></a> – liczba miejsc jest ograniczona!</p>
+                                    PL,
+                                    <<<EN
+                                        <h5>What’s in it for you as a participant?</h5>
+                                        <ul>
+                                            <li>Gain insights into industry development directions straight from experienced professionals</li>
+                                            <li>Compare innovative solutions and exhibitors’ offers</li>
+                                            <li>Build valuable connections with market leaders</li>
+                                            <li>Find potential partners for cooperation and business growth</li>
+                                        </ul>
+                                        <h5>Want to speak and showcase your brand, product, or idea?</h5>
+                                        <p>Send your application to <a href="mailto:$marketing_email"><strong>$marketing_email</strong></a> – places are limited!</p>
+                                    EN
+                                ).'
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="pwe-flex pwe-content-promote-item pwe-border-element">';
 
                 if ($show_banners != 'true') {
