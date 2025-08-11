@@ -122,11 +122,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $fields['company'] => $_POST['company'],
                         $fields['exhibitors_name'] => ($_POST['exhibitor_name'] != '0') ? '' : $_POST['company'],
                         $fields['phone'] => $phoneVal,
-                        $fields['exhibitor_desc'] => $_POST['exhibitor_desc'] ?? '',
                         $fields['patron'] => $_POST['patron'] ?? '',
                         $fields['exhibitor_stand'] => $_POST['exhibitor_stand'] ?? '',
                         $fields['input_logo'] => $input_exhibitors_logo ?? 'https://' . do_shortcode('[trade_fair_domainadress]') . '/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/logotyp_wystawcy.png',
                     ];
+                        
+                    if(!empty($_POST['exhibitor_desc']) && !empty($fields['exhibitor_desc'])) {
+                        $entry[$fields['exhibitor_desc']] =  $_POST['exhibitor_desc'] ?? '';
+                    }
 
                     $entry[$fields['exhibitor_logo']] = !empty($_POST['exhibitor_logo']) ?
                         $_POST['exhibitor_logo'] :

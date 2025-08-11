@@ -231,35 +231,67 @@ class PWEConferenceCapFunctions extends PWEConferenceCap{
         return $output;
     }
 
-    public static function getConferenceOrganizer($conf_id, $conf_slug) {
+    public static function getConferenceOrganizer($conf_id, $conf_slug, $lang) {
         $cap_db = PWECommonFunctions::connect_database();
         if (!$cap_db) {
             return null;
         }
 
+        // Kolejność preferencji wg języka:
+        $preferred_slugs = ($lang === 'PL')
+            ? ['org-name_pl']
+            : ['org-name_en', 'org-name_pl'];
+
+        // Dodatkowy legacy fallback
+        $all_slugs = array_merge($preferred_slugs, ['org-name']);
+
+        // Zbuduj placeholdery do IN (...)
+        $placeholders = implode(',', array_fill(0, count($all_slugs), '%s'));
+
+        // Pobierz potencjalne wartości jednym zapytaniem
         $sql = $cap_db->prepare(
-            "SELECT data FROM conf_adds WHERE conf_id = %d AND slug = %s LIMIT 1",
-            $conf_id,
-            'org-name'
+            "SELECT slug, data
+            FROM conf_adds
+            WHERE conf_id = %d
+            AND slug IN ($placeholders)",
+            array_merge([$conf_id], $all_slugs)
         );
+        $rows = $cap_db->get_results($sql, ARRAY_A);
 
-        $row = $cap_db->get_row($sql, ARRAY_A);
+        // Zmapuj po slugach i oczyść
+        $by_slug = [];
+        if (!empty($rows)) {
+            foreach ($rows as $r) {
+                if (!empty($r['data']) && $r['data'] !== 'null') {
+                    $by_slug[$r['slug']] = trim($r['data'], "\"");
+                }
+            }
+        }
 
-        if (!$row || empty($row['data']) || $row['data'] == 'null') {
+        // Wybierz wg preferencji językowych
+        $organizer_name = '';
+        foreach ($preferred_slugs as $slug_key) {
+            if (!empty($by_slug[$slug_key])) {
+                $organizer_name = $by_slug[$slug_key];
+                break;
+            }
+        }
+
+        // Jeśli nadal brak nazwy — nie pokazuj nic (nie ma sensu sprawdzać logo)
+        if (empty($organizer_name)) {
             return null;
         }
 
-        $organizer_name = trim($row['data'], "\"");
-
+        // Sprawdź logo (2xx/3xx -> OK)
         $logo_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/organizer/conf_organizer.webp';
-
         $response = wp_remote_head($logo_url);
-
-        if (
-            is_wp_error($response) ||
-            wp_remote_retrieve_response_code($response) === 404
-        ) {
-            return null; // Nie pokazuj logo, jeśli nie istnieje
+        $code = is_wp_error($response) ? 0 : (int) wp_remote_retrieve_response_code($response);
+        if ($code < 200 || $code >= 400) {
+            // Brak/nieosiągalne logo — zwróć tylko opis
+            return [
+                'logo_url' => null,
+                'desc'     => $organizer_name,
+            ];
         }
 
         return [

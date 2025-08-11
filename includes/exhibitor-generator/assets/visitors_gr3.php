@@ -65,7 +65,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                         </div>';
 
                         // Add a mass invite send button if not on a personal exhibitor page
-                        if((get_locale() == "pl_PL" && !isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
+                        if((!isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
                             $output .= '<button class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
                         }
 
@@ -148,7 +148,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
             <div class="modal__element">
                 <div class="inner">
                     <span class="btn-close">x</span>';
-    
+
                     $output .='
                         <p style="max-width:90%;">'.
                             PWECommonFunctions::languageChecker(
@@ -161,7 +161,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                             )
                         .'</p>
                     ';
-    
+
                     $output .='
                     <input type="text" class="patron" value=""style="display:none;" >
                     <input type="text" class="company" value="" placeholder="'.
@@ -194,7 +194,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                         <p class="file-size-error error-color"">'.
                             PWECommonFunctions::languageChecker(
                                 <<<PL
-                                Zbyt duży plik &nbsp;&nbsp;&nbsp; 
+                                Zbyt duży plik &nbsp;&nbsp;&nbsp;
                                 PL,
                                 <<<EN
                                 File is to big &nbsp;&nbsp;&nbsp;
@@ -225,7 +225,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                                 EN
                             ). '
                         </div>';
-                        if ($phone_field){
+                        if (!empty($phone_field)){
                             $output .='
                                 <a href="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/genrator-example.xlsx">
                                     <button class="btn-gen-file">'.
@@ -241,7 +241,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                                 </a>
                             ';
                         }
-                        
+
                     $output .='
                     </div>
                     <button class="wyslij btn-gold">'.
@@ -267,10 +267,10 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                     <h3 style="margin-top: 45px;">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: 
+                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem:
                             PL,
                             <<<EN
-                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at: 
+                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at:
                             EN
                         )
                     .'<a href="mailto:generator.wystawcow@warsawexpo.eu" style="text-decoration:underline; color:blue;">generator.wystawcow@warsawexpo.eu</a></h3>
@@ -287,6 +287,6 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                 </div>
             </div>';
         }
-        
+
         return $output;
     }

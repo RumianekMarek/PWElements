@@ -6,7 +6,7 @@ class PWEConferenceShortInfoGr1 {
         return [];
     }
 
-    public static function output($atts, $all_conferences, $rnd_class) {
+    public static function output($atts, $all_conferences, $rnd_class, $name, $title, $desc) {
         $output = '';
 
         // Styl
@@ -16,17 +16,6 @@ class PWEConferenceShortInfoGr1 {
                 flex-wrap: wrap;
                 justify-content: center;
                 align-items: stretch;
-            }
-
-            .pwe-conf-short-info-gr1__wrapper:before {
-                content: "";
-                width: 100%;
-                height: 20px;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                background: #EFEFEF;
-                z-index: 1;
             }
 
             .pwe-conf-short-info-gr1__left {
@@ -71,11 +60,10 @@ class PWEConferenceShortInfoGr1 {
                 justify-content: space-around;
                 align-items: center;
                 flex-wrap: wrap;
-                gap: 14px;
             }
 
             .pwe-conf-short-info-gr1__btn {
-                min-width: 220px;
+                width: 48%;
                 text-align: center;
                 font-weight: 600;
                 padding: 13px 29px;
@@ -104,6 +92,20 @@ class PWEConferenceShortInfoGr1 {
                 width: 100%;
             }
 
+            @media(min-width: 1120px) {
+                .pwe-conf-short-info-gr1__btn {
+                    min-width: 220px;
+                    max-width: 220px;
+                }
+            }
+
+            @media(max-width:960px) {
+                .pwe-conf-short-info-gr1__btn {
+                    font-size: 14px;
+                    padding: 12px;
+                }
+            }
+
             @media(max-width:760px) {
 
                 .row.limit-width.row-parent:has(#PWEConferenceShortInfo) {
@@ -114,9 +116,6 @@ class PWEConferenceShortInfoGr1 {
                 }
                 .pwe-conf-short-info-gr1__left {
                     padding: 18px;
-                    padding-top: 42px;
-                    margin-top: -34px;
-                    background: #EFEFEF;
                 }
                 .pwe-conf-short-info-gr1__right {
                     flex: 1 1 100%;
@@ -126,7 +125,7 @@ class PWEConferenceShortInfoGr1 {
                     gap: 18px;
                 }
                 .pwe-conf-short-info-gr1__right-content {
-                    padding: 36px;
+                    padding: 36px 36px 0;
                 }
                 .pwe-conf-short-info-gr1__logo {
                     z-index: 1;
@@ -135,6 +134,10 @@ class PWEConferenceShortInfoGr1 {
                 }
                 .pwe-conf-short-info-gr1__logo img {
                     max-width: 180px;
+                }
+                .pwe-conf-short-info-gr1__btn {
+                    margin: 6px;
+                    min-width: 180px;
                 }
             }
 
@@ -147,11 +150,8 @@ class PWEConferenceShortInfoGr1 {
             </div>
             <div class="pwe-conf-short-info-gr1__right">
                 <div class="pwe-conf-short-info-gr1__right-content">
-                    <div class="pwe-conf-short-info-gr1__title">' . PWECommonFunctions::languageChecker('KONFERENCJA', 'CONFERENCE') . '</div>
-                    <div class="pwe-conf-short-info-gr1__subtitle">Inspiracje i wiedza dla liderów branży fasad!</div>
-                    <div class="pwe-conf-short-info-gr1__desc">
-                        Konferencja Innovations in Facade Design Conference to wyjątkowa okazja do poznania najnowszych trendów w branży fasad i elewacji. Eksperci podzielą się wiedzą i doświadczeniem, inspirując do tworzenia nowoczesnych rozwiązań. Dołącz już dziś!
-                    </div>
+                    <div class="pwe-conf-short-info-gr1__title">' . $name . '</div>
+                    <div class="pwe-conf-short-info-gr1__desc">' . $desc . '</div>
                     <div class="pwe-conf-short-info-gr1__btn-container">
                         <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-gr1__btn">' . PWECommonFunctions::languageChecker('Szczegóły', 'Details') . '</a>
                         <a href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-gr1__btn pwe-conf-short-info-gr1__btn_accent">' . PWECommonFunctions::languageChecker('Zarejestruj się', 'Registration') . '</a>

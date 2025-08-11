@@ -102,7 +102,7 @@ class PWEConferenceCapWarsawExpo {
 
             $sessions_by_day = $confData[$lang_key];
             foreach ($sessions_by_day as $day_label => $sessions) {
-                if (str_contains(strtolower($day_label), 'main-desc')) continue;
+                if (strpos(strtolower($day_label), 'main-desc') !== false) continue;
 
                 $date_info = self::parse_date_to_standard($day_label);
                 if (!$date_info) {
@@ -220,7 +220,7 @@ class PWEConferenceCapWarsawExpo {
                     // ► dopisz konferencję, jeżeli jeszcze jej nie ma
                     if (!$already_added) {
                         $confs_by_day[$date_key]['confs'][] = [
-                            'title' => $conf->{"conf_name_" . $lang},
+                            'title' => $conf->{"conf_name_" . $lang_lower},
                             'img'   => $conf->{"conf_img_" . $lang_lower},
                             'slug'  => $conf->conf_slug,
                             'fair'   => $conf->fair,
@@ -244,7 +244,7 @@ class PWEConferenceCapWarsawExpo {
             }
         }
 
-        if (empty($confs_by_day)) return '<p class="no-conf-msg">Brak konferencji do wyświetlenia.</p>';
+        if (empty($confs_by_day)) return '';
 
         /* -----------------------------------------------------------------
          *  3. Generowanie outputu HTML
@@ -388,6 +388,7 @@ class PWEConferenceCapWarsawExpo {
             <style>
                 .conference-cap-warsawexpo__container {
                     max-width: 1200px;
+                    width: 100%;
                     margin: 0 auto;
                 }
                 .conference-cap-warsawexpo__heading {

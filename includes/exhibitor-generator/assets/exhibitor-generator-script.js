@@ -54,7 +54,7 @@ jQuery(document).ready(function($){
                 $('.company').hide();
                 $(`.patron`).val(group_tag);
                 break;
-            case "Patron": 
+            case "Patron":
                 $('.company').val("");
                 $('.company').show()
                 $(`.patron`).val("patron");
@@ -391,11 +391,11 @@ jQuery(document).ready(function($){
                 processData: false,
                 contentType: false,
                 success: function (response) {
+                    console.log(response);
                     const resdata = JSON.parse(response);
                     $(".modal__element .inner").children().each(function () {
                         $(this).not('.btn-close').remove();
                     });
-                console.log(resdata);
                 if (resdata == 'true'){
                     $(".modal__element .inner").append("<p style='color:green; font-weight: 600; width: 90%;'>Dziękujemy za skorzystanie z generatora zaproszeń. Państwa goście wkrótce otrzymają zaproszenia VIP.</p>");
                 } else {

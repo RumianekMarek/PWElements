@@ -3,64 +3,113 @@
 class PWEConferenceShortInfoDefault {
 
     public static function initElements() {
-        return []; // Jeśli nie ma pól specyficznych dla gr2
+        return [];
     }
 
-    private static function parse_conference_key_to_date($key) {
-        if (strpos($key, ';;') !== false) {
-            [, $raw_date] = explode(';;', $key);
-        } else {
-            $raw_date = $key;
-        }
+    private static function parse_conference_key_to_date($key, $conf_slug = '') {
+        $candidates = [];
 
-        $formats = ['Y/m/d', 'd/m/Y', 'd.m.Y', 'Y-m-d'];
-        foreach ($formats as $format) {
-            $date_obj = DateTime::createFromFormat($format, trim($raw_date));
-            $errors = DateTime::getLastErrors();
-            if ($date_obj && $errors['warning_count'] === 0 && $errors['error_count'] === 0) {
-                return $date_obj->format('Y-m-d');
+        // Rozbij po ';;' i oczyść
+        foreach (explode(';;', (string)$key) as $piece) {
+            $piece = trim(html_entity_decode(strip_tags($piece)));
+            if ($piece !== '') {
+                $candidates[] = $piece;
             }
         }
 
-        // DEBUG - pokaż które daty się nie parsują:
-        error_log("Nieparsowalna data: " . $raw_date);
+        // Jeżeli nie było ';;', skanuj cały oryginał
+        if (empty($candidates)) {
+            $candidates[] = trim(html_entity_decode(strip_tags((string)$key)));
+        }
 
+        // Wzorce odpowiadające dokładnie czterem formatom
+        $date_patterns = [
+            '\b\d{4}/\d{1,2}/\d{1,2}\b',   // Y/m/d
+            '\b\d{1,2}/\d{1,2}/\d{4}\b',   // d/m/Y
+            '\b\d{1,2}\.\d{1,2}\.\d{4}\b', // d.m.Y
+            '\b\d{4}-\d{1,2}-\d{1,2}\b',   // Y-m-d
+        ];
+
+        // UŻYJ innego delimitera niż '/'
+        $regex = '~(' . implode('|', $date_patterns) . ')~u';
+
+
+        $formats = ['Y/m/d', 'd/m/Y', 'd.m.Y', 'Y-m-d'];
+
+        foreach ($candidates as $raw) {
+            if (preg_match($regex, $raw, $m)) {
+                $found = $m[0];
+
+                foreach ($formats as $fmt) {
+                    $dt = DateTime::createFromFormat($fmt, $found);
+                    $errors = DateTime::getLastErrors();
+                    if ($dt && $errors['warning_count'] === 0 && $errors['error_count'] === 0) {
+                        // dodatkowa walidacja, gdyby były 1-cyfrowe d/m
+                        [$Y,$mth,$d] = explode('-', $dt->format('Y-m-d'));
+                        if (checkdate((int)$mth, (int)$d, (int)$Y)) {
+                            return $dt->format('Y-m-d');
+                        }
+                    }
+                }
+            }
+        }
+
+        if (current_user_can('manage_options')) {
+            echo "<script>console.log('Nieparsowalna data | slug: " . addslashes($conf_slug) . " | key: " . addslashes((string)$key) . "');</script>";
+        }
         return null;
     }
 
-    public static function getConferenceOrganizer($conf_id, $conf_slug) {
-        $cap_db = PWECommonFunctions::connect_database();
-        if (!$cap_db) {
-            return null;
-        }
-
-        $sql = $cap_db->prepare(
-            "SELECT data FROM conf_adds WHERE conf_id = %d AND slug = %s LIMIT 1",
-            $conf_id,
-            'org-name'
-        );
-
-        $row = $cap_db->get_row($sql, ARRAY_A);
-
-        if (!$row || empty($row['data']) || $row['data'] == 'null') {
-            return null;
-        }
-
-        $organizer_name = trim($row['data'], "\"");
-
+    public static function getConferenceOrganizer($conf_id, $conf_slug, $lang) {
         $logo_url = 'https://cap.warsawexpo.eu/public/uploads/conf/' . $conf_slug . '/organizer/conf_organizer.webp';
+        $organizer_name = '';
 
+        // Priorytet wg języka
+        $preferred_slugs = ($lang === 'PL')
+            ? ['org-name_pl']
+            : ['org-name_en', 'org-name_pl'];
+
+        $cap_db = PWECommonFunctions::connect_database();
+        if ($cap_db) {
+            $placeholders = implode(',', array_fill(0, count($preferred_slugs), '%s'));
+            $sql = $cap_db->prepare(
+                "SELECT slug, data
+                FROM conf_adds
+                WHERE conf_id = %d AND slug IN ($placeholders)",
+                array_merge([$conf_id], $preferred_slugs)
+            );
+            $rows = $cap_db->get_results($sql, ARRAY_A);
+
+            $by_slug = [];
+            foreach ($rows as $r) {
+                if (!empty($r['data']) && $r['data'] !== 'null') {
+                    $by_slug[$r['slug']] = trim($r['data'], "\"");
+                }
+            }
+
+            foreach ($preferred_slugs as $slug_key) {
+                if (!empty($by_slug[$slug_key])) {
+                    $organizer_name = $by_slug[$slug_key];
+                    break;
+                }
+            }
+
+        }
+
+        // Sprawdzenie logo
+        $has_logo = false;
         $response = wp_remote_head($logo_url);
+        $code = is_wp_error($response) ? 0 : (int) wp_remote_retrieve_response_code($response);
+        if ($code >= 200 && $code < 400) {
+            $has_logo = true;
+        }
 
-        if (
-            is_wp_error($response) ||
-            wp_remote_retrieve_response_code($response) === 404
-        ) {
-            return null; // Nie pokazuj logo, jeśli nie istnieje
+        if (empty($organizer_name) && !$has_logo) {
+            return null;
         }
 
         return [
-            'logo_url' => $logo_url,
+            'logo_url' => $has_logo ? $logo_url : null,
             'desc'     => $organizer_name,
         ];
     }
@@ -90,7 +139,7 @@ class PWEConferenceShortInfoDefault {
             foreach (array_keys($decoded_data[$lang]) as $key) {
                 if ($key === 'main-desc') continue;
 
-                $parsed_date = self::parse_conference_key_to_date($key);
+                $parsed_date = self::parse_conference_key_to_date($key, $conf->conf_slug);
                 if ($parsed_date && in_array($parsed_date, $fair_days)) {
                     return true;
                 }
@@ -100,7 +149,7 @@ class PWEConferenceShortInfoDefault {
         return false;
     }
 
-    public static function output($atts, $all_conferences, $rnd_class) {
+    public static function output($atts, $all_conferences, $rnd_class, $name, $title, $desc) {
 
         $fair_start_date_raw = do_shortcode('[trade_fair_datetotimer]');
         $fair_end_date_raw   = do_shortcode('[trade_fair_enddata]');
@@ -110,9 +159,11 @@ class PWEConferenceShortInfoDefault {
 
         $fair_days = [];
 
+        $lang = (defined('ICL_LANGUAGE_CODE') && ICL_LANGUAGE_CODE === 'en') ? 'EN' : 'PL';
+
         if ($fair_start && $fair_end) {
             $interval = new DateInterval('P1D');
-            $period = new DatePeriod($fair_start, $interval, $fair_end->modify('+1 day'));
+            $period = new DatePeriod($fair_start, $interval, $fair_end);
             foreach ($period as $day) {
                 $fair_days[] = $day->format('Y-m-d');
             }
@@ -121,7 +172,15 @@ class PWEConferenceShortInfoDefault {
         $total_days = count($fair_days);
         if ($total_days === 0) return '<p>Brak danych o dniach targowych.</p>';
 
-        if (!self::hasValidConferences($all_conferences, $fair_days)) {
+        $no_organizer = true;
+        foreach ($all_conferences as $conf) {
+            if (self::getConferenceOrganizer($conf->id, $conf->conf_slug, $lang)) {
+                $no_organizer = false;
+                break;
+            }
+        }
+        
+        if (!self::hasValidConferences($all_conferences, $fair_days) || $no_organizer) {
             $domain = parse_url(site_url(), PHP_URL_HOST);
             $fair_data = PWECommonFunctions::get_database_fairs_data($domain);
             $fair_group = strtolower($fair_data[0]->fair_group ?? 'fallback');
@@ -129,37 +188,45 @@ class PWEConferenceShortInfoDefault {
             switch ($fair_group) {
                 case 'gr1':
                     require_once plugin_dir_path(__FILE__) . 'conference-short-info-gr1.php';
-                    return PWEConferenceShortInfoGr1::output($atts, $all_conferences, $rnd_class);
+                    return PWEConferenceShortInfoGr1::output($atts, $all_conferences, $rnd_class, $name, $title, $desc);
 
                 case 'gr2':
                     require_once plugin_dir_path(__FILE__) . 'conference-short-info-gr2.php';
-                    return PWEConferenceShortInfoGr2::output($atts, $all_conferences, $rnd_class);
+                    return PWEConferenceShortInfoGr2::output($atts, $all_conferences, $rnd_class, $name, $title, $desc);
 
                 default:
                     require_once plugin_dir_path(__FILE__) . 'conference-short-info-gr3.php';
-                    return PWEConferenceShortInfoGr3::output($atts, $all_conferences, $rnd_class);
+                    return PWEConferenceShortInfoGr3::output($atts, $all_conferences, $rnd_class, $name, $title, $desc);
             }
         }
 
         $processed_conferences = [];
         foreach ($all_conferences as $conf) {
             $conf_slug = $conf->conf_slug;
-            $organizer_info = self::getConferenceOrganizer($conf->id, $conf_slug);
+            $organizer_info = self::getConferenceOrganizer($conf->id, $conf_slug, $lang);
+
             if (!$organizer_info) continue;
 
             $logo = $organizer_info['logo_url'];
             $organizer_name = $organizer_info['desc'];
 
             $decoded_data = json_decode($conf->conf_data, true);
-            $lang = (defined('ICL_LANGUAGE_CODE') && ICL_LANGUAGE_CODE === 'en') ? 'EN' : 'PL';
 
             if (!is_array($decoded_data) || !isset($decoded_data[$lang])) continue;
+
+            $keys = array_diff(array_keys($decoded_data[$lang]), ['main-desc']);
+            if (empty($keys)) {
+                if (current_user_can('manage_options')) {
+                    echo "<script>console.log('Brak dni (tylko main-desc) | slug: " . addslashes($conf->conf_slug) . "');</script>";
+                }
+                continue;
+            }
 
             $conference_dates = [];
             foreach (array_keys($decoded_data[$lang]) as $key) {
                 if ($key === 'main-desc') continue;
 
-                $parsed_date = self::parse_conference_key_to_date($key);
+                $parsed_date = self::parse_conference_key_to_date($key, $conf->conf_slug);
                 if ($parsed_date) {
                     $conference_dates[] = $parsed_date;
                 }
@@ -186,137 +253,136 @@ class PWEConferenceShortInfoDefault {
             ];
         }
 
-        // $processed_conferences = [];
-        $processed_conferences = [
-            [
-                "title" => "Pełna Nazwa Konferencji PL",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "test",
-                "start_index" => 0,
-                "end_index" => 1,
-                "slug" => "test123-2025"
-            ],
-            [
-                "title" => "Międzynarodowa Konferencja IT 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "itexpo",
-                "start_index" => 2,
-                "end_index" => 3,
-                "slug" => "itexpo-2025"
-            ],
-            [
-                "title" => "Targi Nowych Technologii 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "technofair",
-                "start_index" => 2,
-                "end_index" => 2,
-                "slug" => "technofair-2025"
-            ],
-            [
-                "title" => "Forum Przemysłu 4.0",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "industryforum",
-                "start_index" => 1,
-                "end_index" => 3,
-                "slug" => "industryforum-2025"
-            ],
-                        [
-                "title" => "Pełna Nazwa Konferencji PL",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "test",
-                "start_index" => 0,
-                "end_index" => 1,
-                "slug" => "test123-2025"
-            ],
-            [
-                "title" => "Międzynarodowa Konferencja IT 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "itexpo",
-                "start_index" => 2,
-                "end_index" => 3,
-                "slug" => "itexpo-2025"
-            ],
-            [
-                "title" => "Targi Nowych Technologii 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "technofair",
-                "start_index" => 2,
-                "end_index" => 2,
-                "slug" => "technofair-2025"
-            ],
-            [
-                "title" => "Forum Przemysłu 4.0",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "industryforum",
-                "start_index" => 1,
-                "end_index" => 3,
-                "slug" => "industryforum-2025"
-            ],
-            [
-                "title" => "Pełna Nazwa Konferencji PL",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "test",
-                "start_index" => 0,
-                "end_index" => 1,
-                "slug" => "test123-2025"
-            ],
-            [
-                "title" => "Międzynarodowa Konferencja IT 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "itexpo",
-                "start_index" => 2,
-                "end_index" => 3,
-                "slug" => "itexpo-2025"
-            ],
-            [
-                "title" => "Targi Nowych Technologii 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "technofair",
-                "start_index" => 2,
-                "end_index" => 2,
-                "slug" => "technofair-2025"
-            ],
-            [
-                "title" => "Forum Przemysłu 4.0",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "industryforum",
-                "start_index" => 1,
-                "end_index" => 3,
-                "slug" => "industryforum-2025"
-            ],
-                        [
-                "title" => "Pełna Nazwa Konferencji PL",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "test",
-                "start_index" => 0,
-                "end_index" => 1,
-                "slug" => "test123-2025"
-            ],
-            [
-                "title" => "Międzynarodowa Konferencja IT 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "itexpo",
-                "start_index" => 2,
-                "end_index" => 3,
-                "slug" => "itexpo-2025"
-            ],
-            [
-                "title" => "Targi Nowych Technologii 2025",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "technofair",
-                "start_index" => 2,
-                "end_index" => 2,
-                "slug" => "technofair-2025"
-            ],
-            [
-                "title" => "Forum Przemysłu 4.0",
-                "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
-                "organizer" => "industryforum",
-                "start_index" => 1,
-                "end_index" => 3,
-                "slug" => "industryforum-2025"
-            ]
-        ];
+        // $processed_conferences = [
+        //     [
+        //         "title" => "Pełna Nazwa Konferencji PL",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "test",
+        //         "start_index" => 0,
+        //         "end_index" => 1,
+        //         "slug" => "test123-2025"
+        //     ],
+        //     [
+        //         "title" => "Międzynarodowa Konferencja IT 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "itexpo",
+        //         "start_index" => 2,
+        //         "end_index" => 3,
+        //         "slug" => "itexpo-2025"
+        //     ],
+        //     [
+        //         "title" => "Targi Nowych Technologii 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "technofair",
+        //         "start_index" => 2,
+        //         "end_index" => 2,
+        //         "slug" => "technofair-2025"
+        //     ],
+        //     [
+        //         "title" => "Forum Przemysłu 4.0",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "industryforum",
+        //         "start_index" => 1,
+        //         "end_index" => 3,
+        //         "slug" => "industryforum-2025"
+        //     ],
+        //                 [
+        //         "title" => "Pełna Nazwa Konferencji PL",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "test",
+        //         "start_index" => 0,
+        //         "end_index" => 1,
+        //         "slug" => "test123-2025"
+        //     ],
+        //     [
+        //         "title" => "Międzynarodowa Konferencja IT 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "itexpo",
+        //         "start_index" => 2,
+        //         "end_index" => 3,
+        //         "slug" => "itexpo-2025"
+        //     ],
+        //     [
+        //         "title" => "Targi Nowych Technologii 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "technofair",
+        //         "start_index" => 2,
+        //         "end_index" => 2,
+        //         "slug" => "technofair-2025"
+        //     ],
+        //     [
+        //         "title" => "Forum Przemysłu 4.0",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "industryforum",
+        //         "start_index" => 1,
+        //         "end_index" => 3,
+        //         "slug" => "industryforum-2025"
+        //     ],
+        //     [
+        //         "title" => "Pełna Nazwa Konferencji PL",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "test",
+        //         "start_index" => 0,
+        //         "end_index" => 1,
+        //         "slug" => "test123-2025"
+        //     ],
+        //     [
+        //         "title" => "Międzynarodowa Konferencja IT 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "itexpo",
+        //         "start_index" => 2,
+        //         "end_index" => 3,
+        //         "slug" => "itexpo-2025"
+        //     ],
+        //     [
+        //         "title" => "Targi Nowych Technologii 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "technofair",
+        //         "start_index" => 2,
+        //         "end_index" => 2,
+        //         "slug" => "technofair-2025"
+        //     ],
+        //     [
+        //         "title" => "Forum Przemysłu 4.0",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "industryforum",
+        //         "start_index" => 1,
+        //         "end_index" => 3,
+        //         "slug" => "industryforum-2025"
+        //     ],
+        //                 [
+        //         "title" => "Pełna Nazwa Konferencji PL",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "test",
+        //         "start_index" => 0,
+        //         "end_index" => 1,
+        //         "slug" => "test123-2025"
+        //     ],
+        //     [
+        //         "title" => "Międzynarodowa Konferencja IT 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "itexpo",
+        //         "start_index" => 2,
+        //         "end_index" => 3,
+        //         "slug" => "itexpo-2025"
+        //     ],
+        //     [
+        //         "title" => "Targi Nowych Technologii 2025",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "technofair",
+        //         "start_index" => 2,
+        //         "end_index" => 2,
+        //         "slug" => "technofair-2025"
+        //     ],
+        //     [
+        //         "title" => "Forum Przemysłu 4.0",
+        //         "logo" => "https://cap.warsawexpo.eu/public/uploads/conf/test123-2025/organizer/conf_organizer.webp",
+        //         "organizer" => "industryforum",
+        //         "start_index" => 1,
+        //         "end_index" => 3,
+        //         "slug" => "industryforum-2025"
+        //     ]
+        // ];
 
         $is_mobile = self::is_mobile_device();
 
@@ -332,7 +398,7 @@ class PWEConferenceShortInfoDefault {
 
         $output .= '
             <style>
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__wrapper {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__wrapper {
                     background-color: color-mix(in srgb, var(--accent-color) 40%, white 60%);
                     background-color: #f2f2f2;
                     box-shadow: 0 0 12px -3px #888888;
@@ -340,23 +406,23 @@ class PWEConferenceShortInfoDefault {
                     border-radius: 12px;
                     margin: 0 !important;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__top {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__top {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     padding: 0 14px;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__top img {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__top img {
                     max-width: 260px;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__top h3 {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__top h3 {
                     font-size: 29px;
                     font-weight: 700;
                     max-width: 560px;
                     margin: 0;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__title-container {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__title-container {
                     display: flex;
                     flex-direction: column;
                     align-items: flex-end;
@@ -367,19 +433,19 @@ class PWEConferenceShortInfoDefault {
                     --border-color: #f2f2f2;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__table { 
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table { 
                     width: 100%; 
                     border-collapse: 
                     collapse; margin: 0px; 
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__table th, 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__table td {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table th, 
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table td {
                     border: 2px solid var(--border-color) !important;
                     padding: 6px;
                     text-align: center;
                     background: white !important;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__timeline-bar { 
+                .' . $rnd_class . ' .pwe-conf-short-info-default__timeline-bar { 
                     height: 20px; 
                     background-color: var(--accent-color); 
                     animation: slide 1s ease-out; 
@@ -387,32 +453,32 @@ class PWEConferenceShortInfoDefault {
                 }
                 @keyframes slide { from { width: 0; } to { width: 100%; } }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__table td:not(:nth-child(1)):not(:nth-child(2)) {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table td:not(:nth-child(1)):not(:nth-child(2)) {
                     border-left: none !important;
                     border-right: none !important;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__wrapper .pwe-conf-short-info-gr2__table td:last-of-type {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__wrapper .pwe-conf-short-info-default__table td:last-of-type {
                     border-right: 2px solid var(--border-color) !important;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__table tbody tr:not(:nth-child(1)) {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table tbody tr:not(:nth-child(1)) {
                     border-top-style: dashed;
                     border-bottom-style: dashed;
                     border-color: var(--border-color);
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__org-logo {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__org-logo {
                     max-height: 60px;
                 }
                 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__buttons {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__buttons {
                     display: flex;
                     justify-content: space-around;
                     align-items: center;
                     margin-top: 18px;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__btn {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__btn {
                     background-color: var(--main2-color);
                     color: white !important;
                     padding: 8px 24px;
@@ -424,19 +490,19 @@ class PWEConferenceShortInfoDefault {
                     font-size: 14px;
                 }
                 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__row-link {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__row-link {
                     transition: 0.3s;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__row-link:hover {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__row-link:hover {
                     transform: scale(1.01);
                 }
                     
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__row-link:hover td {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__row-link:hover td {
                     background-color: color-mix(in srgb, var(--accent-color) 10%, white 90%) !important;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-gr2__conf-name {
+                .' . $rnd_class . ' .pwe-conf-short-info-default__conf-name {
                     font-size: 16px;
                     margin: 0;
                     color: black;
@@ -458,39 +524,39 @@ class PWEConferenceShortInfoDefault {
                 } 
 
                 @media (min-width: 768px) {
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-list-wrapper {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-list-wrapper {
                         display: none;
                     }
                 }
 
                 @media (max-width: 768px) {
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__top {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__top {
                         flex-direction: column;
                         text-align: center;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__title-container {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__title-container {
                         flex-direction: column-reverse;
                         text-align: center;
                         align-items: center;
                         gap: 6px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__top img {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__top img {
                         max-width: 180px;
                         margin-bottom: 12px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__top h2 {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__top h2 {
                         font-size: 12px;
                         line-height: 1.3;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__top h3 {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__top h3 {
                         font-size: 16px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table {
                         display: block;
                         width: 100%;
                         overflow-x: auto;
@@ -498,41 +564,41 @@ class PWEConferenceShortInfoDefault {
                         border-collapse: separate;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table table,
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table thead,
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table tbody,
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table th,
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table td,
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__table tr {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table table,
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table thead,
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table tbody,
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table th,
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table td,
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__table tr {
                         white-space: nowrap;
                         display: none;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__btn {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__btn {
                         min-width: 160px;
                         padding: 10px 14px;
                         font-size: 12px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__buttons {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__buttons {
                         flex-direction: column;
                         gap: 10px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-list-wrapper {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-list-wrapper {
                         overflow-x: auto;
                         scroll-snap-type: x mandatory;
                         -webkit-overflow-scrolling: touch;
                         padding: 0 12px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-list {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-list {
                         display: flex;
                         gap: 16px;
                         padding: 16px 0;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-card {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card {
                         flex: 0 0 80%;
                         scroll-snap-align: center;
                         background: white;
@@ -546,20 +612,20 @@ class PWEConferenceShortInfoDefault {
                         align-items: center;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-card img {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card img {
                         max-width: 80%;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-card h3 {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card h3 {
                         margin-top: 18px;
                         font-size: 14px;
                     }
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-card p {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card p {
                         font-size: 12px;
                     }  
 
-                    .' . $rnd_class . ' .pwe-conf-short-info-gr2__mobile-card em {
+                    .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card em {
                         background: var(--accent-color);
                         padding: 4px 10px;
                         color: white;
@@ -570,17 +636,17 @@ class PWEConferenceShortInfoDefault {
             </style>';
 
         $output .= '
-        <div class="pwe-conf-short-info-gr2__wrapper">
-            <div class="pwe-conf-short-info-gr2__top">
+        <div class="pwe-conf-short-info-default__wrapper">
+            <div class="pwe-conf-short-info-default__top">
                 <img src="/doc/kongres-color.webp" alt="Congress logo">
-                <div class="pwe-conf-short-info-gr2__title-container">
-                    <h2 class="pwe-conf-short-info-gr2__conf-name">' . do_shortcode('[trade_fair_conferance]') . '</h2>
-                    <h3>Międzynarodowa Konferencja Branży Spawalniczej</h3>
+                <div class="pwe-conf-short-info-default__title-container">
+                    <h2 class="pwe-conf-short-info-default__conf-name">' . do_shortcode('[trade_fair_conferance]') . '</h2>
+                    <h3>' . $title . '</h3>
                 </div>
             </div>';
             if (!$is_mobile) {
                 $output .= '
-                <div class="pwe-conf-short-info-gr2__multi-table-wrapper">';
+                <div class="pwe-conf-short-info-default__multi-table-wrapper">';
                     if ($use_swiper) {
                         $output .= '
                         <div class="swiper">
@@ -591,7 +657,7 @@ class PWEConferenceShortInfoDefault {
                             $output .= '<div class="swiper-slide">';
                         }
                         $total_columns = 2 + count($fair_days);
-                        $output .= '<table class="pwe-conf-short-info-gr2__table">';
+                        $output .= '<table class="pwe-conf-short-info-default__table">';
                             $output .= '<thead><tr><th>' . PWECommonFunctions::languageChecker('Organizator', 'Organizer') . '</th><th>' . PWECommonFunctions::languageChecker('Temat', 'Subject') . '</th>';
                             foreach ($fair_days as $date) {
                                 $output .= '<th>' . date('d.m', strtotime($date)) . '</th>';
@@ -601,14 +667,14 @@ class PWEConferenceShortInfoDefault {
 
                                 foreach ($group as $conf) {
                                     $output .= '
-                                    <tr class="pwe-conf-short-info-gr2__row-link" data-href="/' . PWECommonFunctions::languageChecker('wydarzenia', '/en/conferences') . '/?konferencja=' . esc_attr($conf['slug']) . '">
-                                        <td><img src="' . esc_url($conf['logo']) . '" alt="" class="pwe-conf-short-info-gr2__org-logo"></td>
+                                    <tr class="pwe-conf-short-info-default__row-link" data-href="/' . PWECommonFunctions::languageChecker('wydarzenia', '/en/conferences') . '/?konferencja=' . esc_attr($conf['slug']) . '">
+                                        <td><img src="' . esc_url($conf['logo']) . '" alt="" class="pwe-conf-short-info-default__org-logo"></td>
                                         <td><strong>' . esc_html($conf['title']) . '</strong><br><small>' . esc_html($conf['organizer']) . '</small></td>';
 
                                         for ($i = 0; $i < $total_days; $i++) {
                                             if ($i === $conf['start_index']) {
                                                 $colspan = $conf['end_index'] - $conf['start_index'] + 1;
-                                                $output .= '<td colspan="' . $colspan . '"><div class="pwe-conf-short-info-gr2__timeline-bar" style="width:100%"></div></td>';
+                                                $output .= '<td colspan="' . $colspan . '"><div class="pwe-conf-short-info-default__timeline-bar" style="width:100%"></div></td>';
                                                 $i = $conf['end_index'];
                                             } else {
                                                 $output .= '<td></td>';
@@ -635,15 +701,15 @@ class PWEConferenceShortInfoDefault {
             }
 
             $output .= '
-            <div class="pwe-conf-short-info-gr2__mobile-list-wrapper">
-                <div class="pwe-conf-short-info-gr2__mobile-list">';
+            <div class="pwe-conf-short-info-default__mobile-list-wrapper">
+                <div class="pwe-conf-short-info-default__mobile-list">';
 
                     foreach ($processed_conferences as $conf) {
                         $conf_days = array_slice($fair_days, $conf['start_index'], $conf['end_index'] - $conf['start_index'] + 1);
                         $conf_days_formatted = implode(', ', array_map(fn($d) => date('d.m', strtotime($d)), $conf_days));
 
                         $output .= '
-                        <div class="pwe-conf-short-info-gr2__mobile-card">
+                        <div class="pwe-conf-short-info-default__mobile-card">
                             <img src="' . esc_url($conf['logo']) . '" alt="">
                             <h3>' . esc_html($conf['title']) . '</h3>
                             <p><strong>' . esc_html($conf['organizer']) . '</strong></p>
@@ -657,9 +723,9 @@ class PWEConferenceShortInfoDefault {
         </div>';
 
         $output .= '
-        <div class="pwe-conf-short-info-gr2__buttons">
-            <a href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-gr2__btn">' . PWECommonFunctions::languageChecker('WEŹ UDZIAŁ', 'TAKE PART') . '</a>
-            <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-gr2__btn secondary">' . PWECommonFunctions::languageChecker('DOWIEDZ SIĘ WIĘCEJ', 'FIND OUT MORE') . '</a>
+        <div class="pwe-conf-short-info-default__buttons">
+            <a href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-default__btn">' . PWECommonFunctions::languageChecker('WEŹ UDZIAŁ', 'TAKE PART') . '</a>
+            <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-default__btn secondary">' . PWECommonFunctions::languageChecker('DOWIEDZ SIĘ WIĘCEJ', 'FIND OUT MORE') . '</a>
         </div>';
 
         if ($use_swiper) {
@@ -678,14 +744,14 @@ class PWEConferenceShortInfoDefault {
                 ['breakpoint_width' => 1200, 'breakpoint_slides' => 1]
             ]);
 
-            $output .= PWESwiperScripts::swiperScripts('conference-pagination', '.pwe-conf-short-info-gr2__multi-table-wrapper', 'true', 'true', 'false', $swiper_options, $swiper_breakpoints
+            $output .= PWESwiperScripts::swiperScripts('conference-pagination', '.pwe-conf-short-info-default__multi-table-wrapper', 'true', 'true', 'false', $swiper_options, $swiper_breakpoints
             );
         }
 
         $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    document.querySelectorAll(".pwe-conf-short-info-gr2__row-link").forEach(function(row) {
+                    document.querySelectorAll(".pwe-conf-short-info-default__row-link").forEach(function(row) {
                         row.style.cursor = "pointer";
                         row.addEventListener("click", function() {
                             window.location = row.getAttribute("data-href");

@@ -89,9 +89,18 @@ class PWEConferenceShortInfo {
 
         $renderer_class = $this->getConferenceRendererClass();
         $all_conferences = PWECommonFunctions::get_database_conferences_data();
+        $fairs_data_adds = PWECommonFunctions::get_database_fairs_data_adds();
+        $selected_lang = self::$local_lang_pl ? 'pl' : 'en';
+
+        $first_fair = $fairs_data_adds[0] ?? null;
+
+        $name = $first_fair ? ($first_fair->{'konf_name'} ?? '') : '';
+        $title = $first_fair ? ($first_fair->{'konf_title_' . $selected_lang} ?? '') : '';
+        $desc  = $first_fair ? ($first_fair->{'konf_desc_' . $selected_lang} ?? '') : '';
 
         if (method_exists($renderer_class, 'output')) {
-            $content = $renderer_class::output($atts, $all_conferences, $rnd_class);
+            $content = $renderer_class::output($atts, $all_conferences, $rnd_class, $name, $title, $desc);
+
             
             if (trim($content) === '') {
                 return ''; // nic nie wyświetlaj, jeśli pusty wynik

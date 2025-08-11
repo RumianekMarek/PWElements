@@ -3,10 +3,10 @@
 class PWEConferenceShortInfoGr3 {
 
     public static function initElements() {
-        return []; // Jeśli nie ma pól specyficznych dla gr2
+        return [];
     }
 
-    public static function output($atts, $all_conferences, $rnd_class) {
+    public static function output($atts, $all_conferences, $rnd_class, $name, $title, $desc) {
         $output = '';
 
         // Styl
@@ -14,16 +14,15 @@ class PWEConferenceShortInfoGr3 {
             .' . $rnd_class . ' .pwe-conf-short-info-default__wrapper {
                 display: flex;
                 flex-wrap: wrap;
-                align-items: center;
                 justify-content: center;
                 max-width: 1200px;
                 margin: 0 auto !important;
-                font-family: sans-serif;
                 align-items: stretch;
             }
 
             .' . $rnd_class . ' .pwe-conf-short-info-default__left {
-                flex: 1 1 50%;
+                flex: 1;
+                width: 50%;
                 padding: 0;
                 display: flex;
                 flex-direction: column;
@@ -38,7 +37,8 @@ class PWEConferenceShortInfoGr3 {
             }
 
             .' . $rnd_class . ' .pwe-conf-short-info-default__right {
-                flex: 1 1 50%;
+                flex: 1;
+                width: 50%;
                 max-width: 560px;
                 padding: 24px 24px 0;
                 display: flex;
@@ -61,7 +61,7 @@ class PWEConferenceShortInfoGr3 {
                 width: 100%;
                 overflow: hidden;
                 margin-top: 0px;
-                color: #3b1105;
+                color: var(--accent-color);
                 opacity: .5;
                 text-align: center;
                 text-transform: uppercase;
@@ -155,8 +155,9 @@ class PWEConferenceShortInfoGr3 {
                 }
 
                 .' . $rnd_class . ' .pwe-conf-short-info-default__left, .pwe-conf-short-info-default__right {
-                    flex: 1 1 100%;
-                    width: 100%;
+                    flex: 1 1 100% !important;
+                    width: 100% !important;
+                    max-width: unset !important;
                 }
 
                 .' . $rnd_class . ' .pwe-conf-short-info-default__right {
@@ -170,7 +171,7 @@ class PWEConferenceShortInfoGr3 {
         </style>';
 
         // Tytuł
-        $output .= '<div class="pwe-conf-short-info-default__title">KONFERENCJA</div>';
+        $output .= '<div class="pwe-conf-short-info-default__title">' . PWECommonFunctions::languageChecker('KONFERENCJA', 'Conference') . '</div>';
 
         // Layout
         $output .= '<div class="pwe-conf-short-info-default__wrapper">
@@ -180,10 +181,8 @@ class PWEConferenceShortInfoGr3 {
             </div>
             <div class="pwe-conf-short-info-default__right">
                 <div class="pwe-conf-short-info-default__right-content">
-                    <div class="pwe-conf-short-info-default__subtitle">Inspiracje i wiedza dla liderów branży fasad!</div>
-                    <div class="pwe-conf-short-info-default__desc">
-                        Konferencja Innovations in Facade Design Conference to wyjątkowa okazja do poznania najnowszych trendów w branży fasad i elewacji. Eksperci podzielą się wiedzą i doświadczeniem, inspirując do tworzenia nowoczesnych rozwiązań. Dołącz już dziś!
-                    </div>
+                    <div class="pwe-conf-short-info-default__subtitle">' . $name . '</div>
+                    <div class="pwe-conf-short-info-default__desc">' . $desc . '</div>
                     <div class="pwe-conf-short-info-default__logo">
                         <img src="/doc/kongres-color.webp" alt="Congress logo">
                     </div>';

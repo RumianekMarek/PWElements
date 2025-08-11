@@ -634,7 +634,7 @@ class PWEConferenceCap {
                                 <div class="conference_cap__after-header-html">' . ($inf_conf['after_header_' . $conf_slug] ?? '') . '</div>';
 
                                 // ✅ Organizator konferencji
-                                $organizer = PWEConferenceCapFunctions::getConferenceOrganizer((int)$conf->id, $conf->conf_slug);
+                                $organizer = PWEConferenceCapFunctions::getConferenceOrganizer((int)$conf->id, $conf->conf_slug, $lang);
 
                                 if ($organizer) {
                                     $output .= '
@@ -642,8 +642,12 @@ class PWEConferenceCap {
                                         <h2 class="conference_cap__conf-organizer-title">' .
                                             PWECommonFunctions::languageChecker('Organizator Konferencji', 'Conference Organizer') .
                                         '</h2>
-                                        <div class="conference_cap__conf-organizer-logo">
-                                            <img src="' . esc_url($organizer['logo_url']) . '" alt="' . esc_attr($organizer['desc']) . '" class="conference_cap__conf-org-logo">
+                                        <div class="conference_cap__conf-organizer-logo">';
+                                            if (!empty($organizer['logo_url'])) {
+                                                $output .= '
+                                                <img src="' . esc_url($organizer['logo_url']) . '" alt="' . esc_attr($organizer['desc']) . '" class="conference_cap__conf-org-logo">';
+                                            }
+                                            $output .= '
                                             <span class="conference_cap__conf-organizer-logo-title">' . esc_html($organizer['desc']) . '</span>
                                         </div>
                                     </div>';

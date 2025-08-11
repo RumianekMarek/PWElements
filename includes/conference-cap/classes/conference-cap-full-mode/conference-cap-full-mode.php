@@ -29,7 +29,7 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
                     $name = isset($value['name']) ? trim($value['name']) : '';
                     $has_valid_name = !empty($name) && $name !== '*';
 
-                    if ($has_valid_name && (!empty($value['url']) || !empty($value['desc']))) {
+                    if ((!empty($value['url']) || !empty($value['desc']))) {
                         $has_any_speaker_info = true;
                         break 2;
                     }
@@ -61,74 +61,74 @@ class PWEConferenceCapFullMode extends PWEConferenceCap{
                 }
 
                 $content .= '<div id="' . esc_attr($lectureId) . '" class="conference_cap__lecture-box">';
-                    if ($has_any_speaker_info) {
-                        $speakers_bios = [];
 
-                        if (!empty($speakers)) {
-                            $speaker_images = []; // Tablica na zdjęcia prelegentów
+                    $speakers_bios = [];
+                    $speaker_images = [];
+
+                    if (!empty($speakers)) {
+                    
+                        foreach ($speakers as $speaker) {
+                            $raw_name = isset($speaker['name']) ? $speaker['name'] : '';
+                            $name_parts = explode(';;', $raw_name);
                         
-                            foreach ($speakers as $speaker) {
-                                $raw_name = isset($speaker['name']) ? $speaker['name'] : '';
-                                $name_parts = explode(';;', $raw_name);
-                            
-                                // Do HTML-a
-                                $speaker_name_html = esc_html($name_parts[0]);
-                                if (isset($name_parts[1])) {
-                                    $speaker_name_html .= '<br><span class="conference_cap__lecture-name-subline">' . esc_html($name_parts[1]) . '</span>';
+                            // Do HTML-a
+                            $speaker_name_html = esc_html($name_parts[0]);
+                            if (isset($name_parts[1])) {
+                                $speaker_name_html .= '<br><span class="conference_cap__lecture-name-subline">' . esc_html($name_parts[1]) . '</span>';
+                            }
+                        
+                            // Do atrybutów alt, bio['name'], itp.
+                            $speaker_name_plain = esc_html(trim($name_parts[0] . (isset($name_parts[1]) ? ' ' . $name_parts[1] : '')));
+                        
+                            $speaker_url  = isset($speaker['url']) ? $speaker['url'] : '';
+                            $speaker_desc = isset($speaker['desc']) ? $speaker['desc'] : '';
+                        
+                            if (!empty($speaker_name_plain) && $speaker_name_plain !== '*') {
+                        
+                                if (!empty($speaker_url)) {
+                                    $speaker_images[] = $speaker_url;
                                 }
-                            
-                                // Do atrybutów alt, bio['name'], itp.
-                                $speaker_name_plain = esc_html(trim($name_parts[0] . (isset($name_parts[1]) ? ' ' . $name_parts[1] : '')));
-                            
-                                $speaker_url  = isset($speaker['url']) ? $speaker['url'] : '';
-                                $speaker_desc = isset($speaker['desc']) ? $speaker['desc'] : '';
-                            
-                                if (!empty($speaker_name_plain) && $speaker_name_plain !== '*') {
-                            
-                                    if (!empty($speaker_url)) {
-                                        $speaker_images[] = $speaker_url;
-                                    }
-                            
-                            
-                                    if (!empty($speaker_desc)) {
-                                        $speakers_bios[] = array(
-                                            'name' => $speaker_name_plain,
-                                            'name_html' => $speaker_name_html,
-                                            'url'  => $speaker_url,
-                                            'bio'  => $speaker_desc
-                                        );
-                                    }
-                            
-                                    // Zbieramy nazwę w wersji HTML do późniejszego użycia (np. <h5>)
-                                    $formatted_speaker_names[] = $speaker_name_html;
-
-                                    $all_speakers_combined[] = array(
+                        
+                        
+                                if (!empty($speaker_desc)) {
+                                    $speakers_bios[] = array(
+                                        'name' => $speaker_name_plain,
                                         'name_html' => $speaker_name_html,
-                                        'url' => $speaker_url,
-                                        'desc' => $speaker_desc
+                                        'url'  => $speaker_url,
+                                        'bio'  => $speaker_desc
                                     );
                                 }
-                            }
+                        
+                                // Zbieramy nazwę w wersji HTML do późniejszego użycia (np. <h5>)
+                                $formatted_speaker_names[] = $speaker_name_html;
 
-                            if ($prelegent_show && $has_any_speaker_info) {
-                            
-                                $content .= '<div class="conference_cap__lecture-speaker">';
-                            
-                                    // Dodanie funkcji speakerImageMini po pętli
-                                    if (!empty($speaker_images)) {
-                                        $content .= '<div class="conference_cap__lecture-speaker-img">' . $conf_function::speakerImageMini($speaker_images) . '</div>';
-                                    }
-                                
-                                    if (!empty($speakers_bios)) {
-                                        $speakersDataMapping[$conf_slug_index . '_' . $short_day][$lectureId] = $speakers_bios;
-
-                                        $content .= '<button class="conference_cap__lecture-speaker-btn" data-lecture-id="' . $lectureId . '">BIO</button>';
-                                    }
-
-                                $content .= '</div>';
+                                $all_speakers_combined[] = array(
+                                    'name_html' => $speaker_name_html,
+                                    'url' => $speaker_url,
+                                    'desc' => $speaker_desc
+                                );
                             }
                         }
+
+                        if ($prelegent_show && $has_any_speaker_info) {
+                        
+                            $content .= '<div class="conference_cap__lecture-speaker">';
+                        
+                                // Dodanie funkcji speakerImageMini po pętli
+                                if (!empty($speaker_images)) {
+                                    $content .= '<div class="conference_cap__lecture-speaker-img">' . $conf_function::speakerImageMini($speaker_images) . '</div>';
+                                }
+                            
+                                if (!empty($speakers_bios)) {
+                                    $speakersDataMapping[$conf_slug_index . '_' . $short_day][$lectureId] = $speakers_bios;
+
+                                    $content .= '<button class="conference_cap__lecture-speaker-btn" data-lecture-id="' . $lectureId . '">BIO</button>';
+                                }
+
+                            $content .= '</div>';
+                        }
                     }
+                    
 
                      $content .= '
                      <div class="conference_cap__lecture-box-info">
