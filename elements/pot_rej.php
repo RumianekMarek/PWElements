@@ -14,6 +14,82 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
         parent::__construct();
     }
 
+    public static function add_field_apartment($reg_form_name_pr) {
+
+        $form_id = PWECommonFunctions::findFormsID($reg_form_name_pr);
+
+        if ( empty( $form_id ) ) {
+            return;
+        }
+
+        $done_option_key = "gf_apartment_added_$form_id";
+
+        // delete_option( $done_option_key );
+
+        // Jeśli już zrobione -> nic nie rób
+        if ( get_option( $done_option_key ) ) {
+            return;
+        }
+
+        $apartment_exists = false;
+
+        $form = GFAPI::get_form( $form_id );
+        if ( ! $form || is_wp_error( $form ) ) {
+            echo "<script>console.log('GF: nie udało się pobrać formularza');</script>";
+            return;
+        }
+
+        $form_title = isset($form['title']) ? $form['title'] : '';
+
+        if (strpos($form_title, 'Rejestracja PL') === false ) {
+            return;
+        }
+
+        // Sprawdź, czy pole już istnieje
+        foreach ( $form['fields'] as $field ) {
+            if ( ! empty( $field->adminLabel ) && ($field->adminLabel === 'apartment' || $field->adminLabel === 'local') ) {
+                update_option( $done_option_key, 1 );
+                return;
+            }
+        }
+
+        $next_id = max( wp_list_pluck( $form['fields'], 'id' ) ) + 1;
+
+        $new_apartment_field = new GF_Field_Text(array(
+            'id'            => $next_id,
+            'label'         => 'Numer lokalu',
+            'adminLabel'    => 'apartment',
+            'visibility'    => 'hidden',
+            'inputName'     => 'numer_lokalu',
+            'isRequired'    => false,
+            'cssClass'      => 'pwe-field-apartment',
+        ));
+
+        $insert_index = null;
+        foreach ($form['fields'] as $index => $field) {
+            if (!empty($field->adminLabel) && $field->adminLabel === 'house') {
+                $insert_index = $index + 1;
+                break;
+            }
+        }
+
+        if ($insert_index === null) {
+            $form['fields'][] = $new_apartment_field;
+        } else {
+            array_splice($form['fields'], $insert_index, 0, array($new_apartment_field));
+        }
+
+        $result = GFAPI::update_form( $form );
+
+        if ( is_wp_error( $result ) ) {
+            error_log( 'GF: błąd zapisu formularza – ' . $result->get_error_message() );
+            return;
+        }
+
+        // Oznacz jako wykonane, żeby kod więcej nie biegał
+        update_option( $done_option_key, 1 );
+    }
+
     // /**
     //  * Static method to initialize Visual Composer elements.
     //  * Returns an array of parameters for the Visual Composer element.
@@ -59,6 +135,8 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
             'reg_form_name_pr' => '',
             'reg_form_update_entries' => '',
         ), $atts ));
+
+        self::add_field_apartment($reg_form_name_pr);
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -1073,6 +1151,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
 
                             let street = "";
                             let house = "";
+                            let apartment = "";
                             let city = "";
                             let postCode = "";
 
@@ -1085,11 +1164,25 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                     postCode = component.long_name;
                                 } else if (component.types.includes("locality")) {
                                     city = component.long_name;
+                                } else if (component.types.includes("subpremise")) {
+                                    apartment = component.long_name;
                                 }
                             });
 
+                            // fallback: spróbuj wykroić mieszkanie z adresu/tekstu
+                            if (!apartment) {
+                            const candidates = [
+                                place.name || "",
+                                place.formatted_address || "",
+                                document.getElementById("street")?.value || ""
+                            ].filter(Boolean);
+
+                            apartment = extractApartmentFromText(candidates, house);
+                            }
+
                             document.getElementById("street").value = street;
                             document.getElementById("house").value = house;
+                            document.getElementById("local").value = apartment;
                             document.getElementById("city").value = city;
                             if (postCode.includes("-")) {
                                 const [post1, post2] = postCode.split("-");
@@ -1168,7 +1261,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             name: document.getElementById("name").value.trim(),
                             street: document.getElementById("street").value.trim(),
                             house: document.getElementById("house").value.trim(),
-                            local: document.getElementById("local").value.trim(),
+                            apartment: document.getElementById("local").value.trim(),
                             post: postCode,
                             city: document.getElementById("city").value.trim(),
                             formName: "'.$form_name.'",

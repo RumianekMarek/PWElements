@@ -85,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'name' => 'Imię i nazwisko',
         'street' => 'Ulica',
         'house' => 'Numer domu',
+        'apartment' => 'Numer lokalu',
         'post' => 'Kod pocztowy',
         'city' => 'Miasto'
     ];
@@ -94,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'name' => 'name',
             'street' => 'street',
             'house' => 'house',
+            'apartment' => 'apartment',
             'post' => 'post',
             'city' => 'city'
         ];
