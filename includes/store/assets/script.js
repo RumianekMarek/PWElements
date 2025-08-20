@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Handle clicking the "MORE" button and card item
-        const moreButtons = document.querySelectorAll('.pwe-store__service-card a');
+        const moreButtons = document.querySelectorAll('.pwe-store__service-card a:not(.pwe-store__buy-ticket-button)');
         moreButtons.forEach(button => {
             button.addEventListener('click', function(event) {
                 event.preventDefault();

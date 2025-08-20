@@ -510,7 +510,8 @@
     background-color: var(--gold-color);
     color: white !important;
 }
-.pwe-store__reservation-button {
+.pwe-store__reservation-button,
+.pwe-store__buy-ticket-button {
     background-color: var(--gold-color);
     color: white !important;
     border: none;
@@ -521,7 +522,8 @@
     text-decoration: none;
     transition: 0.3s ease;
 }
-.pwe-store__reservation-button:hover {
+.pwe-store__reservation-button:hover,
+.pwe-store__buy-ticket-button:hover {
     background-color: var(--gold-color-hover);
 }
 .pwe-store__featured-service.sold-out .pwe-store__reservation-button,

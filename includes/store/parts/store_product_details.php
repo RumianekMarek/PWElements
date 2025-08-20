@@ -39,6 +39,8 @@ $output .= '
                                                             ? (self::lang_pl() ? $option['prod_image_text_pl'] : $option['prod_image_text_en']) 
                                                             : "";
                                             $status = !empty($status_text) ? "status" : "";
+
+                                            $custom_link = $option['custom-link'] ? $option['custom-link'] : "";
                                         }
                                     }
                                 }
@@ -107,9 +109,16 @@ $output .= '
                                 <div class="pwe-store__featured-footer">
                                     <span class="pwe-store__featured-price">'. self::price($product, $store_options, $pwe_meta_data, $category, $current_domain) .'</span>
                                     <span class="pwe-store__featured-price-info">'. ( self::lang_pl() ? '* Do ceny netto należy doliczyć podatek VAT 23%.' : '* VAT 23% should be added to the net price.' ) .'</span>
-                                    <div class="pwe-store__featured-buttons">
-                                        <a href="#" class="pwe-store__contact-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
-                                        <a href="#" class="pwe-store__reservation-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>
+                                    <div class="pwe-store__featured-buttons">';
+                                        if (!empty($custom_link)) {
+                                            $output .= '
+                                            <a href="'. $custom_link .'" target="_blank" class="pwe-store__buy-ticket-button">'. (self::lang_pl() ? 'KUP BILET' : 'BUY A TICKET') .'</a>';
+                                        } else {
+                                            $output .= '
+                                            <a href="#" class="pwe-store__contact-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'KONTAKT' : 'CONTACT' ) .'</a>
+                                            <a href="#" class="pwe-store__reservation-button pwe-store__form-modal-open">'. ( self::lang_pl() ? 'ZAREZERWUJ' : 'BOOK NOW' ) .'</a>';
+                                        }
+                                        $output .= '
                                     </div>
                                 </div>
                             </div>
