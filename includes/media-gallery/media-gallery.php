@@ -966,6 +966,7 @@ class PWEMediaGallery extends PWECommonFunctions {
                                         effect: screenWidth >= 570 ? "coverflow" : "slider",
                                         grabCursor: true,
                                         loop: true,
+                                        loopAdditionalSlides: 5,
                                         centeredSlides: screenWidth >= 570,
                                         slidesPerView: screenWidth >= 570 ? 3 : 2,
                                         spaceBetween: screenWidth >= 570 ? ' . $media_gallery_gap . ' : -160,

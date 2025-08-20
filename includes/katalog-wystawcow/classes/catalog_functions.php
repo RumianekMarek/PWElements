@@ -55,7 +55,7 @@ class CatalogFunctions {
 
                 $basic_wystawcy = reset($data)['Wystawcy'];
             } catch (Exception $e) {
-                echo '<script>console.error("Błąd w logosChecker: ' . addslashes($e->getMessage()) . '")</script>';
+                // echo '<script>console.error("Błąd w logosChecker: ' . addslashes($e->getMessage()) . '")</script>';
                 $basic_wystawcy = [];
             }
         } else {

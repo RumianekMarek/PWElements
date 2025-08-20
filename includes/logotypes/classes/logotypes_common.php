@@ -880,7 +880,7 @@ class PWElementAdditionalLogotypes {
 
                         // Search for the corresponding logo and set the properties
                         foreach ($logotypes_files_json as $logotype) {
-                            if (strpos($full_path, $logotype["logotype_filename"]) !== false) {
+                            if (!empty($logotype["logotype_filename"]) && strpos($full_path, $logotype["logotype_filename"]) !== false) {
                                 $site = $logotype["logotype_link"];
                                 $class = ($logotype["logotype_color"] === "true") ? 'pwe-logo-original' : '';
                                 $style = ($logotype["logotype_style"] === "") ? '' : $logotype["logotype_style"];

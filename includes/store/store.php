@@ -150,7 +150,7 @@ class PWEStore extends PWECommonFunctions {
 
             $final_price_desc = self::lang_pl() ? $updated_price_desc_pl : $updated_price_desc_en;
 
-            if ($price_margin) {
+            if ($price_margin && empty($new_price_pl)) {
                 $updated_price_pl = $updated_price_pl + ($updated_price_pl * ($price_margin / 100));
                 $updated_price_en = $updated_price_en + ($updated_price_en * ($price_margin / 100));
 
