@@ -11,25 +11,25 @@ class PWEConferenceShortInfoGr1 {
 
         // Styl
         $output .= '<style>
-            .pwe-conf-short-info-gr1__wrapper {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__wrapper {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
                 align-items: stretch;
             }
 
-            .pwe-conf-short-info-gr1__left {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__left {
                 flex: 1 1 50%;
                 z-index: 2;
             }
                 
-            .pwe-conf-short-info-gr1__left img {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__left img {
                 height: 100%;
                 border-radius: 22px;
                 object-fit: cover;
             }
 
-            .pwe-conf-short-info-gr1__right {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__right {
                 flex: 1 1 50%;
                 padding: 48px 36px 0;
                 display: flex;
@@ -39,22 +39,29 @@ class PWEConferenceShortInfoGr1 {
                 z-index: 2;
             }
 
-            .pwe-conf-short-info-gr1__right-content {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__right-content {
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
             }
 
-            .pwe-conf-short-info-gr1__title {
-                font-size: 32px;
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__title {
+                font-size: 44px;
                 font-weight: 800;
+                margin: 0;
             }
 
-            .pwe-conf-short-info-gr1__subtitle {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__name {
+                font-size: 20px;
+                font-weight: 800;
+                margin: 0;
+            }
+
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__subtitle {
                 font-weight: 600;
             }
 
-            .pwe-conf-short-info-gr1__btn-container {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__btn-container {
                 display: flex;
                 flex-direction: row;
                 justify-content: space-around;
@@ -62,7 +69,7 @@ class PWEConferenceShortInfoGr1 {
                 flex-wrap: wrap;
             }
 
-            .pwe-conf-short-info-gr1__btn {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__btn {
                 width: 48%;
                 text-align: center;
                 font-weight: 600;
@@ -72,11 +79,11 @@ class PWEConferenceShortInfoGr1 {
                 border-radius: 36px;
             }
 
-            .pwe-conf-short-info-gr1__btn_accent {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__btn_accent {
                 background: var(--accent-color);
             }
 
-            .pwe-conf-short-info-gr1__logo {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__logo {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -85,7 +92,7 @@ class PWEConferenceShortInfoGr1 {
                 border-radius: 22px;
             }
 
-            .pwe-conf-short-info-gr1__logo img {
+            .' . $rnd_class . '  .pwe-conf-short-info-gr1__logo img {
                 max-width: 240px;
                 max-height: 80px;
                 object-fit: contain;
@@ -93,14 +100,14 @@ class PWEConferenceShortInfoGr1 {
             }
 
             @media(min-width: 1120px) {
-                .pwe-conf-short-info-gr1__btn {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__btn {
                     min-width: 220px;
                     max-width: 220px;
                 }
             }
 
             @media(max-width:960px) {
-                .pwe-conf-short-info-gr1__btn {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__btn {
                     font-size: 14px;
                     padding: 12px;
                 }
@@ -111,31 +118,31 @@ class PWEConferenceShortInfoGr1 {
                 .row.limit-width.row-parent:has(#PWEConferenceShortInfo) {
                     padding: 0;
                 }
-                .pwe-conf-short-info-gr1__wrapper {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__wrapper {
                     flex-direction: column-reverse;
                 }
-                .pwe-conf-short-info-gr1__left {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__left {
                     padding: 18px;
                 }
-                .pwe-conf-short-info-gr1__right {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__right {
                     flex: 1 1 100%;
                     width: 100%;
                     padding: 0;
                     text-align: center;
                     gap: 18px;
                 }
-                .pwe-conf-short-info-gr1__right-content {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__right-content {
                     padding: 36px 36px 0;
                 }
-                .pwe-conf-short-info-gr1__logo {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__logo {
                     z-index: 1;
                     margin: 0 36px;
                     padding: 18px;
                 }
-                .pwe-conf-short-info-gr1__logo img {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__logo img {
                     max-width: 180px;
                 }
-                .pwe-conf-short-info-gr1__btn {
+                .' . $rnd_class . '  .pwe-conf-short-info-gr1__btn {
                     margin: 6px;
                     min-width: 180px;
                 }
@@ -150,7 +157,8 @@ class PWEConferenceShortInfoGr1 {
             </div>
             <div class="pwe-conf-short-info-gr1__right">
                 <div class="pwe-conf-short-info-gr1__right-content">
-                    <div class="pwe-conf-short-info-gr1__title">' . $name . '</div>
+                    <h2 class="pwe-conf-short-info-gr1__title">' . PWECommonFunctions::languageChecker('Konferencja', 'Conference') . '</h2>
+                    <h4 class="pwe-conf-short-info-gr1__name">' . $name . '</h4>
                     <div class="pwe-conf-short-info-gr1__desc">' . $desc . '</div>
                     <div class="pwe-conf-short-info-gr1__btn-container">
                         <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-gr1__btn">' . PWECommonFunctions::languageChecker('Szczegóły', 'Details') . '</a>

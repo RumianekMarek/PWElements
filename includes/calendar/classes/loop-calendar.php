@@ -43,6 +43,14 @@ class PWECalendar extends PWECommonFunctions {
                         ),
                         array(
                             'type' => 'checkbox',
+                            'heading' => __('Warsaw week ONLY', 'pwe_calendar'),
+                            'param_name' => 'pwe_calendar_week',
+                            'save_always' => true,
+                            'admin_label' => true,
+                            'value' => array(__('True', 'pwe_calendar') => 'true',),
+                        ),
+                        array(
+                            'type' => 'checkbox',
                             'heading' => __('AJAX Load more', 'pwe_calendar'),
                             'param_name' => 'pwe_calendar_load_more',
                             'save_always' => true,
@@ -168,7 +176,6 @@ class PWECalendar extends PWECommonFunctions {
                     return "$start_month_name $start_day - $end_month_name $end_day, $year";
                 }
         }
-
     }
 
     function multi_translation($key) {
@@ -211,6 +218,7 @@ class PWECalendar extends PWECommonFunctions {
         extract(shortcode_atts(array(
             'pwe_calendar_posts_num' => '',
             'pwe_calendar_posts_per_page' => '',
+            'pwe_calendar_week' => '',
             'pwe_calendar_load_more' => '',
             'pwe_calendar_pagination' => '',
             'pwe_calendar_premier_edition' => '',
@@ -223,7 +231,7 @@ class PWECalendar extends PWECommonFunctions {
 
         // Creating a query for 'event' posts
         $args = array(
-            'post_type' => 'event',
+            'post_type' => array('event', 'events_week'),
             'posts_per_page' => -1,
             'post_status' => 'publish',
             'lang' => $lang
@@ -231,10 +239,12 @@ class PWECalendar extends PWECommonFunctions {
 
         $query = new WP_Query($args);
 
+        // var_dump($query);
+
         $terms = get_terms(array(
             'taxonomy' => 'event_category',
             'hide_empty' => false,
-        ));
+        )); 
 
         if (!is_wp_error($terms) && !empty($terms)) {
             $all_categories = array();
@@ -434,6 +444,9 @@ class PWECalendar extends PWECommonFunctions {
                         .pwe-calendar__short-name h4 {
                             font-size: 12px;
                         }
+                        .pwe-calendar__date h5 {
+                            font-size: 15px;
+                        } 
                         .pwe-calendar_strip {
                             width: 100%;
                             margin: 0;
@@ -452,6 +465,51 @@ class PWECalendar extends PWECommonFunctions {
                         .pwe-calendar__statistics-name {
                             flex-direction: column;
                             gap: 5px;
+                        }
+                    }
+
+
+
+
+
+
+
+                    .week .pwe-calendar__short-name {
+                        top: 50%;
+                    }
+                    .week .pwe-calendar__short-name h4 {
+                        margin: 0;
+                    }
+                    .week .pwe-calendar__count-events {
+                        width: 60%;
+                    }
+                    .week .pwe-calendar__count-events p {
+                        font-size: 14px;
+                        margin: 0;
+                        color: white;
+                        font-size: 15px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                    }
+                    .week .pwe-calendar_info p {
+                        color: black;
+                        margin: 0;
+                    }
+                    .week .pwe-calendar_info-list {
+                        text-align: left;
+                        padding: 0px 18px 12px 18px !important;
+                        margin: 0;
+                    }
+                    .week .pwe-calendar_info-list li {
+                        color: black;
+                        line-height: 1.4;
+                        font-size: 14px;
+                        list-style: none;
+                    }
+                    @media (max-width: 569px) {
+                        .week .pwe-calendar_info-list {
+                            max-height: 150px;
+                            overflow: scroll;
                         }
                     }
                 </style>
@@ -489,17 +547,13 @@ class PWECalendar extends PWECommonFunctions {
                 $shortcode_edition_available = self::check_available_pwe_shortcode($shortcodes_active, $shortcode_edition);
                 $edition_num = $shortcode_edition_available ? $shortcode_edition : get_post_meta($post_id, 'edition', true);
 
-                // if (
-                //     strtotime(str_replace("/", "-", $pwe_db_date_start)) > strtotime("2026-05-01")
-                //     || empty($pwe_db_date_start)
-                // ) {
-                //     continue;
-                // }
+                $event_type = get_post_meta($post_id, 'pwe_event_type', true);
 
                 // Add only posts with edition_num == 1 if $pwe_calendar_premier_edition is true
                 if ($pwe_calendar_premier_edition == true && $edition_num == 1) {
                     $event_posts[] = [
                         'post_id' => $post_id,
+                        'event_type' => $event_type,
                         'start_date' => $start_date,
                         'end_date' => $end_date,
                         'domain' => $domain,
@@ -511,6 +565,7 @@ class PWECalendar extends PWECommonFunctions {
                     // If $pwe_calendar_premier_edition is false, add all posts
                     $event_posts[] = [
                         'post_id' => $post_id,
+                        'event_type' => $event_type,
                         'start_date' => $start_date,
                         'end_date' => $end_date,
                         'domain' => $domain,
@@ -681,7 +736,9 @@ class PWECalendar extends PWECommonFunctions {
                 ob_start();
 
                 foreach ($event_posts as $event) {
-    
+                    if ($pwe_calendar_week && $event['event_type'] !== "week") {
+                        continue; // pomiń wszystkie, które nie są tygodniowe
+                    }
                     $output .= self::render_calendar_event_card($event, $shortcodes_active, $lang_pl);
                 }
 
@@ -1091,6 +1148,8 @@ class PWECalendar extends PWECommonFunctions {
             $domain = '';
         }  
 
+        $event_type = get_post_meta($post_id, 'pwe_event_type', true);
+
         $post_meta = get_post_meta($post_id);
 
         // Get dates
@@ -1174,72 +1233,111 @@ class PWECalendar extends PWECommonFunctions {
         $featured_image_url = $post_meta['_featured_image_url'][0];
         $secondary_image_url = $post_meta['_secondary_image_url'][0];
 
-        $output = '
-        <div class="pwe-calendar__item" search_engine="'. $event['post_title'] .' '. $post_meta['keywords'][0] .' " search_category="' . $category_classes . '">
-            <a class="pwe-calendar__link" href="'. $permalink .'">
-                <div class="pwe-calendar__tile" style="background-image:url(' . esc_url($secondary_image_url) . ');">';
-                    if (!empty($short_desc)) {
+        if ($event_type === "" || $event_type === "event") {
+            $output = '
+            <div class="pwe-calendar__item" search_engine="'. $event['post_title'] .' '. $post_meta['keywords'][0] .' " search_category="' . $category_classes . '">
+                <a class="pwe-calendar__link" href="'. $permalink .'">
+                    <div class="pwe-calendar__tile" style="background-image:url(' . esc_url($secondary_image_url) . ');">';
+                        if (!empty($short_desc)) {
+                            $output .= '
+                            <div class="pwe-calendar__short-name">
+                                <h4>'. $short_desc .'</h4>
+                            </div>';
+                        };
                         $output .= '
-                        <div class="pwe-calendar__short-name">
-                            <h4>'. $short_desc .'</h4>
-                        </div>';
-                    };
+                        <div class="pwe-calendar_strip">
+                            <div class="pwe-calendar__button-check"><p>' . self::multi_translation("check_out") . ' ❯</p></div>
+                            <div class="pwe-calendar__edition"><p>' . $edition . '</p></div>
+                        </div>
+                    </div>
+                    <div class="pwe-calendar__date">
+                        <h5>' . $fair_date . '</h5>
+                    </div>';
+                    if ($edition == self::multi_translation("premier_edition")) {
+                        $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("estimates") .'</div>';
+                    } else {
+                        $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("statistics") . '</div>';
+                    }
                     $output .= '
-                    <div class="pwe-calendar_strip">
-                        <div class="pwe-calendar__button-check"><p>' . self::multi_translation("check_out") . ' ❯</p></div>
-                        <div class="pwe-calendar__edition"><p>' . $edition . '</p></div>
-                    </div>
-                </div>
-                <div class="pwe-calendar__date">
-                    <h5>' . $fair_date . '</h5>
-                </div>';
-                if ($edition == self::multi_translation("premier_edition")) {
-                    $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("estimates") .'</div>';
-                } else {
-                    $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("statistics") . '</div>';
-                }
-                $output .= '
 
-                <div class="pwe-calendar_statistics">
-                    <div class="pwe-calendar__statistics-item">
-                        <div class="pwe-calendar__statistics-icon">
-                            <img 
-                                src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_odwiedzajacy.svg" 
-                                alt="' . ($lang_pl ? "Ikona odwiedzający" : "Icon visitors") . '"
-                            >
+                    <div class="pwe-calendar_statistics">
+                        <div class="pwe-calendar__statistics-item">
+                            <div class="pwe-calendar__statistics-icon">
+                                <img 
+                                    src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_odwiedzajacy.svg" 
+                                    alt="' . ($lang_pl ? "Ikona odwiedzający" : "Icon visitors") . '"
+                                >
+                            </div>
+                            <div class="pwe-calendar__statistics-name">
+                                <p class="pwe-calendar__statistics-label">' . self::multi_translation("visitors") . '</p>
+                                <p class="pwe-calendar__statistics-value">' . $visitors_num . '</p>
+                            </div>
                         </div>
-                        <div class="pwe-calendar__statistics-name">
-                            <p class="pwe-calendar__statistics-label">' . self::multi_translation("visitors") . '</p>
-                            <p class="pwe-calendar__statistics-value">' . $visitors_num . '</p>
+                        <div class="pwe-calendar__statistics-item">
+                            <div class="pwe-calendar__statistics-icon">
+                                <img 
+                                    src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_wystawcy.svg" 
+                                    alt="' . ($lang_pl ? "Ikona wystawcy" : "Icon exhibitors") . '"
+                                >
+                            </div>
+                            <div class="pwe-calendar__statistics-name">
+                                <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibitors") . '</p>
+                                <p class="pwe-calendar__statistics-value">' . $exhibitors_num . '</p>
+                            </div>
+                        </div>
+                        <div class="pwe-calendar__statistics-item">
+                            <div class="pwe-calendar__statistics-icon">
+                                <img 
+                                    src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_powierzchnia.svg" 
+                                    alt="' . ($lang_pl ? "Ikona powierzchnia wystawiennicza" : "Icon exhibition area") . '"
+                                >
+                            </div>
+                            <div class="pwe-calendar__statistics-name">
+                                <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibition_area") . '</p>
+                                <p class="pwe-calendar__statistics-value">' . $area_num . ' m<sup>2</sup></p>
+                            </div>
                         </div>
                     </div>
-                    <div class="pwe-calendar__statistics-item">
-                        <div class="pwe-calendar__statistics-icon">
-                            <img 
-                                src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_wystawcy.svg" 
-                                alt="' . ($lang_pl ? "Ikona wystawcy" : "Icon exhibitors") . '"
-                            >
+                </a>
+            </div>';
+        } else {
+            $fairs_week = get_post_meta($post_id, 'events_week_fairs', true);
+            $fairs_week = explode(", ", $fairs_week);
+
+            if (count($fairs_week) == 1) {
+                $events_word_declination = "wydarzenie";
+            } else if (count($fairs_week) > 1 && count($fairs_week) < 5) {
+                $events_word_declination = "wydarzenia";
+            } else {
+                $events_word_declination = "wydarzeń";
+            }
+            
+            $output = '
+            <div class="pwe-calendar__item '. $event_type .'" search_engine="'. $event['post_title'] .' '. $post_meta['keywords'][0] .' " search_category="' . $category_classes . '">
+                <a class="pwe-calendar__link" href="'. $permalink .'">
+                    <div class="pwe-calendar__tile" style="background-image:url(' . esc_url($secondary_image_url) . ');">
+                        <div class="pwe-calendar__short-name">
+                            <h4>'. get_the_title($post_id) .'</h4>
                         </div>
-                        <div class="pwe-calendar__statistics-name">
-                            <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibitors") . '</p>
-                            <p class="pwe-calendar__statistics-value">' . $exhibitors_num . '</p>
+                        <div class="pwe-calendar_strip">
+                            <div class="pwe-calendar__button-check"><p>' . self::multi_translation("check_out") . ' ❯</p></div>
+                            <div class="pwe-calendar__count-events"><p>'. count($fairs_week) . ' ' . $events_word_declination .'</p></div>
                         </div>
                     </div>
-                    <div class="pwe-calendar__statistics-item">
-                        <div class="pwe-calendar__statistics-icon">
-                            <img 
-                                src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_powierzchnia.svg" 
-                                alt="' . ($lang_pl ? "Ikona powierzchnia wystawiennicza" : "Icon exhibition area") . '"
-                            >
+                    <div class="pwe-calendar_info">
+                        <div class="pwe-calendar__date">
+                            <h5>' . $fair_date . '</h5>
                         </div>
-                        <div class="pwe-calendar__statistics-name">
-                            <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibition_area") . '</p>
-                            <p class="pwe-calendar__statistics-value">' . $area_num . ' m<sup>2</sup></p>
-                        </div>
+                        <ul class="pwe-calendar_info-list">';
+                            foreach ($fairs_week as $fair) {
+                                $output .= '<li>&#8226; '. $fair .'</li>';
+                            }
+                        $output .= '
+                        </ul>
                     </div>
-                </div>
-            </a>
-        </div>';
+                </a>
+            </div>';
+        }
 
         return $output;
     }

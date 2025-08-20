@@ -37,7 +37,7 @@ class PWEConferenceCalendar {
         }
 
         $conferences = $cap_db->get_results("
-            SELECT conf_name_pl, conf_name_en, conf_slug, conf_img_pl, conf_img_en, conf_site_link
+            SELECT conf_name_pl, conf_name_en, conf_slug, conf_img_pl, conf_img_en, conf_site_link, deleted_at
             FROM conferences
         ");
         if ($cap_db->last_error) {
@@ -112,6 +112,7 @@ class PWEConferenceCalendar {
                         'conf_fair_edition' => $fair->fair_edition,
                         'conf_fair_category_pl' => $fair->category_pl,
                         'conf_fair_category_en' => $fair->category_en,
+                        'conf_deleted_at' => $conf->deleted_at,
                     ];
                     break;
                 }
@@ -513,6 +514,7 @@ class PWEConferenceCalendar {
                 $fair_category = $lang ? $conference->conf_fair_category_pl : $conference->conf_fair_category_en;
                 $fair_date_start = $conference->conf_fair_date_start;
                 $fair_date_end = $conference->conf_fair_date_end;
+                $conf_deleted_at = $conference->conf_deleted_at;
 
                 $edition_first = $lang ? "Premierowa Edycja" : "Premier Edition";
                 $edition_text = $lang ? ". edycja" : ". edition";
@@ -528,8 +530,10 @@ class PWEConferenceCalendar {
                               strpos(strtolower($conference->conf_name_en), 'main stage') === false &&
                               strpos(strtolower($conference->conf_name_pl), 'ceremonia wręczenia') === false &&
                               strpos(strtolower($conference->conf_name_en), 'medal ceremony') === false;
+
+                              
                 
-                if (!empty($domain) && $exclusions) {
+                if (!empty($domain) && $exclusions && $conf_deleted_at == NULL) {
                     $output .= '
                     <div 
                         class="pwe-conference-calendar__item" 

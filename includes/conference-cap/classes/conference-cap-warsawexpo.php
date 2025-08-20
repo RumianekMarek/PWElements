@@ -420,12 +420,16 @@ class PWEConferenceCapWarsawExpo {
                     text-align: center;
                 }
                 .conference-cap-warsawexpo__day-tabs button:hover { 
-                    border-color: #0056b3; 
+                    border-color: var(--main2-color); 
                 }
                 .conference-cap-warsawexpo__day-tabs button.active {
-                    background: #f0f0f0;
-                    border-color: #333;
+                    background: white;
+                    border-color: var(--main2-color);
                     font-weight: 700;
+                }
+                .conference-cap-warsawexpo__day-tabs button.active .conference-cap-warsawexpo__day-name, 
+                .conference-cap-warsawexpo__day-tabs button.active .conference-cap-warsawexpo__day-date {
+                    color: var(--main2-color);
                 }
                 .conference-cap-warsawexpo__day-tabs .conference-cap-warsawexpo__day-name { 
                     font-size: 0.95rem; display: block; 
@@ -456,8 +460,9 @@ class PWEConferenceCapWarsawExpo {
                 }
                 .conference-cap-warsawexpo__fair-btn img {
                     width: 100%;
-                    height: 100%;
+                    height: auto;
                     object-fit: cover;
+                    aspect-ratio: 5 / 3;
                 }
                 .conference-cap-warsawexpo__fair-btn:not(.active) {
                     filter: grayscale(1);
@@ -551,6 +556,7 @@ class PWEConferenceCapWarsawExpo {
                     padding: 0px 4px 0px 10px;
                     font-size: 0.8rem;
                     color: #999;
+                    background: #fff;
                     font-weight: 500;
                     height: 80px;
                     position: relative;
@@ -670,7 +676,7 @@ class PWEConferenceCapWarsawExpo {
                 @media(max-width:570px) {
                     .conference-cap-warsawexpo__hall-column {
                         position: relative;
-                        min-width: 100%;
+                        min-width: 80%;
                     }
                     .main-conference-cap-warsawexpo__container .row-conference-cap-warsawexpo__container .row-parent:has(.conference-cap-warsawexpo__schedule-container) {
                         padding: 0 !important;

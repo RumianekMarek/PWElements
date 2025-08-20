@@ -55,7 +55,7 @@ function custom_meta_description() {
 
         if (!function_exists('check_available_pwe_shortcode')) {
             function check_available_pwe_shortcode($shortcodes_active, $shortcode) {
-                return $shortcodes_active && !empty($shortcode) && $shortcode !== "Brak danych";
+                return $shortcodes_active && !empty($shortcode) && $shortcode !== "";
             }
         }
 
@@ -80,7 +80,7 @@ function custom_meta_description() {
 }
 add_action('wp_head', 'custom_meta_description');
 
-// Create new post type
+// Register one custom post type
 function create_event_post_type() {
     $args = array(
         'labels' => array(
@@ -101,11 +101,10 @@ function create_event_post_type() {
         'has_archive' => false,
         'rewrite' => array('slug' => 'kalendarz-targowy'),
         'supports' => array('title', 'custom-fields'),
-        'show_in_rest' => true,  // Gutenberg Support
+        'show_in_rest' => true,
         'menu_icon' => 'dashicons-calendar',
         'menu_position' => 3,
     );
-    
     register_post_type('event', $args);
 
     // Registering a taxonomy (category) for a custom post type
@@ -134,128 +133,799 @@ function create_event_post_type() {
 }
 add_action('init', 'create_event_post_type');
 
-// Create meta boxes
-function add_event_meta_boxes() {
-    // Metabox for links fields
-    add_meta_box(
-        'event_links', 
-        'Event links', 
-        'event_links_callback', 
-        'event', // Typ postu
-        'normal', // Pozycja
-        'high' // Priorytet
+// Taxonomy „Event Type” (event / week)
+function create_event_type_taxonomy() {
+    $args = array(
+        'labels' => array(
+            'name' => 'Event type',
+            'singular_name' => 'Event type',
+            'search_items' => 'Search for type',
+            'all_items' => 'All types',
+            'edit_item' => 'Edit type',
+            'update_item' => 'Update type',
+            'add_new_item' => 'Add new type',
+            'new_item_name' => 'New type name',
+            'menu_name' => 'Types of events'
+        ),
+        'hierarchical' => true,
+        'public' => true,
+        'publicly_queryable' => true,
+        'query_var' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'rewrite' => array('slug' => 'event-type'),
     );
-    // Metabox for desc fields
-    add_meta_box(
-        'event_desc',
-        'Event description',
-        'event_desc_callback',
-        'event',
-        'normal',
-        'high'
-    );
-    // Metabox for dates fields
-    add_meta_box(
-        'event_dates',
-        'Event dates',
-        'event_dates_callback',
-        'event',
-        'normal',
-        'high'
-    );
-    // Metabox for colors fields
-    add_meta_box(
-        'event_colors',
-        'Event colors',
-        'event_colors_callback',
-        'event',
-        'normal',
-        'high'
-    );
+    register_taxonomy('event_type', 'event', $args);
 
-    // Metabox fo statistics fields
-    add_meta_box(
-        'event_statistics',
-        'Statistics',
-        'event_statistics_callback',
-        'event',
-        'normal',
-        'high'
-    );
-    // Metabox for the organizer fields
-    add_meta_box(
-        'event_organizer',
-        'Organizer information',
-        'event_organizer_callback',
-        'event',
-        'normal',
-        'high'
-    );
-    // Metabox for other fields
-    add_meta_box(
-        'event_other',
-        'Other information',
-        'event_other_callback',
-        'event',
-        'normal',
-        'high'
-    );
-    // Featured Image
-    add_meta_box(
-        'featured_image_url',
-        'Featured Image',
-        'featured_image_meta_box_callback',
-        'event',
-        'side',
-        'high'
-    );
-
-    // Secondary image
-    add_meta_box(
-        'secondary_image_url',
-        'Secondary Image',
-        'secondary_image_meta_box_callback',
-        'event', 
-        'side',
-        'high'
-    );
-    // Metabox for header image
-    add_meta_box(
-        'header_image',
-        'Header Image',
-        'header_image_callback',
-        'event',
-        'side',
-        'low'
-    );
-    // Metabox for logo image
-    add_meta_box(
-        'logo_image',
-        'Logo Image',
-        'logo_image_callback',
-        'event',
-        'side',
-        'low'
-    );
-    // Metabox for gallery of partners
-    add_meta_box(
-        'partners_gallery',
-        'Partners Gallery',
-        'partners_gallery_callback', 
-        'event',
-        'side',
-        'low'
-    );
+    if (!get_term_by('slug', 'event', 'event_type')) {
+        wp_insert_term('Event', 'event_type', ['slug' => 'event']);
+    }
+    if (!get_term_by('slug', 'week', 'event_type')) {
+        wp_insert_term('Week', 'event_type', ['slug' => 'week']);
+    }
 }
-add_action('add_meta_boxes', 'add_event_meta_boxes');
+add_action('init', 'create_event_type_taxonomy');
 
-// Hide secondary thumbnail meta box
-function hide_secondary_thumbnail_meta_box() {
-    echo '<style>.post-type-event #uncode-secondary-featured-image { display: none; }</style>';
+// Separate tabs in the admin menu
+add_action('admin_menu', function() {
+     // Remote the default "Add New"
+    remove_submenu_page('edit.php?post_type=event', 'post-new.php?post_type=event');
+
+    add_submenu_page(
+        'edit.php?post_type=event',
+        'Add a new event',
+        'Add a new event',
+        'edit_posts',
+        'post-new.php?post_type=event&set_event_type=event'
+    );
+    add_submenu_page(
+        'edit.php?post_type=event',
+        'Add a new week',
+        'Add a new week',
+        'edit_posts',
+        'post-new.php?post_type=event&set_event_type=week'
+    );
+    // One single events
+    add_submenu_page(
+        'edit.php?post_type=event',
+        'Events (single)',
+        'Events (single)',
+        'edit_posts',
+        'edit.php?post_type=event&event_type=event'
+    );
+    // Only weeks
+    add_submenu_page(
+        'edit.php?post_type=event',
+        'Weeks of events',
+        'Weeks of events',
+        'edit_posts',
+        'edit.php?post_type=event&event_type=week'
+    );
+});
+
+// WP_ADMIN filtering (weeks only/events only)
+add_action('restrict_manage_posts', function($post_type) {
+    if ($post_type === 'event') {
+        $selected = isset($_GET['event_type']) ? $_GET['event_type'] : '';
+        $terms = get_terms(array(
+            'taxonomy' => 'event_type',
+            'hide_empty' => false,
+        ));
+        echo '<select name="event_type" id="event_type">';
+        echo '<option value="">-- All types --</option>';
+        foreach ($terms as $term) {
+            printf(
+                '<option value="%1$s" %2$s>%3$s</option>',
+                esc_attr($term->slug),
+                selected($selected, $term->slug, false),
+                esc_html($term->name)
+            );
+        }
+        echo '</select>';
+    }
+});
+
+// Taxonomy filter
+add_filter('parse_query', function($query) {
+    global $pagenow;
+    if ($pagenow == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'event' && isset($_GET['event_type']) && $_GET['event_type'] != '') {
+        $query->query_vars['tax_query'][] = array(
+            'taxonomy' => 'event_type',
+            'field' => 'slug',
+            'terms' => $_GET['event_type'],
+        );
+    }
+});
+
+// helper: find source post ID by WPML trid + source_lang
+function pwe_wpml_source_from_request() {
+    if (!defined('ICL_SITEPRESS_VERSION')) return 0;
+
+    $trid = isset($_GET['trid']) ? (int) $_GET['trid'] : 0;
+    if (!$trid) return 0;
+
+    $source_lang = isset($_GET['source_lang']) ? sanitize_text_field($_GET['source_lang']) : '';
+
+    // For CPT 'event' element type = 'post_event'
+    $translations = apply_filters('wpml_get_element_translations', null, $trid, 'post_event');
+    if (!is_array($translations)) return 0;
+
+    if ($source_lang) {
+        foreach ($translations as $t) {
+            if (!empty($t->language_code) && $t->language_code === $source_lang) {
+                return (int) $t->element_id;
+            }
+        }
+    }
+    // original
+    foreach ($translations as $t) {
+        if (!empty($t->original)) {
+            return (int) $t->element_id;
+        }
+    }
+    // fallback
+    foreach ($translations as $t) {
+        return (int) $t->element_id;
+    }
+    return 0;
 }
-add_action('admin_head', 'hide_secondary_thumbnail_meta_box');
 
-// Functions for displaying fields in metaboxes
+// Helper for reading the type (week/event) from the source post
+function pwe_get_event_type_slug($post_id) {
+    $terms = wp_get_post_terms($post_id, 'event_type', array('fields' => 'slugs'));
+    if (!empty($terms) && !is_wp_error($terms)) {
+        return $terms[0];
+    }
+    $meta = get_post_meta($post_id, 'pwe_event_type', true);
+    if (!empty($meta)) {
+        return sanitize_key($meta);
+    }
+    return null;
+}
+
+// Append set_event_type={week|event} to the URL when creating the translation
+add_action('load-post-new.php', function () {
+    if (!isset($_GET['post_type']) || $_GET['post_type'] !== 'event') return;
+
+    // set original: from_post -> trid/source_lang
+    $src_id = isset($_GET['from_post']) ? (int) $_GET['from_post'] : 0;
+    if (!$src_id) {
+        $src_id = pwe_wpml_source_from_request();
+    }
+    if (!$src_id) return;
+
+    // what type is the original? (event|week)
+    $slug = pwe_get_event_type_slug($src_id);
+    if (empty($slug)) $slug = 'event';
+
+    // if the URL doesn't have the correct set_event_type yet -> redirect with the attached parameter
+    if (!isset($_GET['set_event_type']) || $_GET['set_event_type'] !== $slug) {
+        wp_safe_redirect(add_query_arg('set_event_type', $slug));
+        exit;
+    }
+});
+
+// If WPML opens post.php directly (editing a new translation), it will add set_event_type as in post-new.php
+add_action('load-post.php', function () {
+    if (!isset($_GET['post'])) return;
+    $post_id = (int) $_GET['post'];
+    if (get_post_type($post_id) !== 'event') return;
+
+    // Don't duplicate if already present
+    if (isset($_GET['set_event_type'])) return;
+
+    // Find the original via WPML
+    $src_id = function_exists('pwe_wpml_get_source_post_id') ? pwe_wpml_get_source_post_id($post_id) : 0;
+    if (!$src_id && function_exists('pwe_wpml_source_from_request')) {
+        // emergency try trid/source_lang
+        $src_id = pwe_wpml_source_from_request();
+    }
+    if (!$src_id) return;
+
+    // What type is the original?
+    $slug = function_exists('pwe_get_event_type_slug') ? pwe_get_event_type_slug($src_id) : 'event';
+    if (empty($slug)) $slug = 'event';
+
+    wp_safe_redirect(add_query_arg('set_event_type', $slug));
+    exit;
+});
+
+// Various fields in edit (dynamic meta boxes)
+add_action('add_meta_boxes_event', function($post) {
+    $event_type = '';
+
+    if (is_object($post) && isset($post->ID) && $post->ID) {
+        $terms = wp_get_post_terms($post->ID, 'event_type', array('fields' => 'slugs'));
+        if (!empty($terms)) {
+            $event_type = $terms[0];
+        } else {
+            $event_type = get_post_meta($post->ID, 'pwe_event_type', true);
+        }
+
+        // Fallback – jeśli wciąż pusto, dociągnij z oryginału WPML
+        if (empty($event_type) && defined('ICL_SITEPRESS_VERSION')) {
+            $src_id = isset($_GET['from_post']) ? (int) $_GET['from_post'] : pwe_wpml_get_source_post_id($post->ID);
+            if ($src_id) {
+                $event_type = pwe_get_event_type_slug($src_id);
+            }
+        }
+    } else {
+        if (isset($_GET['set_event_type'])) {
+            $event_type = sanitize_key($_GET['set_event_type']);
+        }
+    }
+
+    if ($event_type === 'week') {
+        // Metabox for fairs field
+        add_meta_box(
+            'events_week_fairs',
+            'All events of week',
+            'events_week_fairs_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for dates fields
+        add_meta_box(
+            'events_dates',
+            'Events week dates',
+            'events_week_dates_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Headers Slider
+        add_meta_box(
+            'header_slider',
+            'Headers (Slider)',
+            'events_week_header_slider_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for other fields
+        add_meta_box(
+            'events_week_halls',
+            'Halls',
+            'events_week_halls_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for other fields
+        add_meta_box(
+            'events_week_other',
+            'Other options',
+            'events_week_other_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Featured Image
+        add_meta_box(
+            'featured_image_url',
+            'Featured Image',
+            'featured_image_meta_box_callback',
+            'event',
+            'side',
+            'high'
+        );
+        // Secondary image
+        add_meta_box(
+            'secondary_image_url',
+            'Secondary Image',
+            'secondary_image_meta_box_callback',
+            'event', 
+            'side',
+            'high'
+        );
+    }
+    if ($event_type === 'event' || $event_type === '') {
+        // Metabox for links fields
+        add_meta_box(
+            'event_links', 
+            'Event links', 
+            'event_links_callback', 
+            'event', // Typ postu
+            'normal', // Pozycja
+            'high' // Priorytet
+        );
+        // Metabox for desc fields
+        add_meta_box(
+            'event_desc',
+            'Event description',
+            'event_desc_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for dates fields
+        add_meta_box(
+            'event_dates',
+            'Event dates',
+            'event_dates_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for colors fields
+        add_meta_box(
+            'event_colors',
+            'Event colors',
+            'event_colors_callback',
+            'event',
+            'normal',
+            'high'
+        );
+
+        // Metabox fo statistics fields
+        add_meta_box(
+            'event_statistics',
+            'Statistics',
+            'event_statistics_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for the organizer fields
+        add_meta_box(
+            'event_organizer',
+            'Organizer information',
+            'event_organizer_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Metabox for other fields
+        add_meta_box(
+            'event_other',
+            'Other information',
+            'event_other_callback',
+            'event',
+            'normal',
+            'high'
+        );
+        // Featured Image
+        add_meta_box(
+            'featured_image_url',
+            'Featured Image',
+            'featured_image_meta_box_callback',
+            'event',
+            'side',
+            'high'
+        );
+
+        // Secondary image
+        add_meta_box(
+            'secondary_image_url',
+            'Secondary Image',
+            'secondary_image_meta_box_callback',
+            'event', 
+            'side',
+            'high'
+        );
+        // Metabox for header image
+        add_meta_box(
+            'header_image',
+            'Header Image',
+            'header_image_callback',
+            'event',
+            'side',
+            'low'
+        );
+        // Metabox for logo image
+        add_meta_box(
+            'logo_image',
+            'Logo Image',
+            'logo_image_callback',
+            'event',
+            'side',
+            'low'
+        );
+        // Metabox for gallery of partners
+        add_meta_box(
+            'partners_gallery',
+            'Partners Gallery',
+            'partners_gallery_callback', 
+            'event',
+            'side',
+            'low'
+        );
+    }
+});
+
+add_action('save_post_event', function($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (defined('DOING_AJAX') && DOING_AJAX) return;
+ 
+    $current_types = wp_get_post_terms($post_id, 'event_type', ['fields' => 'ids']);
+    if (!empty($current_types)) return;
+
+    // Próbuj najpierw z GET/POST (np. jak tworzysz przez custom link)
+    $event_type = null;
+    if (isset($_GET['set_event_type'])) {
+        $event_type = sanitize_key($_GET['set_event_type']);
+    } elseif (isset($_POST['set_event_type'])) {
+        $event_type = sanitize_key($_POST['set_event_type']);
+    } else {
+        $event_type = 'event';
+    }
+
+    update_post_meta($post_id, 'pwe_event_type', $event_type);
+
+    $term = get_term_by('slug', $event_type, 'event_type');
+    if ($term) {
+        wp_set_post_terms($post_id, [$term->term_id], 'event_type');
+    }
+}, 10, 3);
+
+// Replace the event_type taxonomy meta box with radio (single selection)
+add_action('admin_menu', function() {
+    remove_meta_box('event_typediv', 'event', 'side');
+    add_meta_box('event_type_radio', 'Event type', function($post){
+        $current = get_post_meta($post->ID, 'pwe_event_type', true);
+        $terms = get_terms(['taxonomy' => 'event_type', 'hide_empty' => false]);
+        foreach ($terms as $t) {
+            printf(
+                '<p><label><input type="radio" name="tax_input[event_type][]" value="%d" %s> %s</label></p>',
+                $t->term_id,
+                checked($current === $t->slug, true, false),
+                esc_html($t->name)
+            );
+        }
+    }, 'event', 'side', 'core');
+});
+
+// WEEK metaboxes <----------------------------------<
+
+function events_week_fairs_callback($post) {
+    wp_nonce_field('save_events_week_fairs', 'events_week_fairs_nonce');
+    $lang = ICL_LANGUAGE_CODE;
+    $date_start = get_post_meta($post->ID, 'fair_date_start', true);
+    $date_end = get_post_meta($post->ID, 'fair_date_end', true);
+    if (!empty($date_start) && !empty($date_end)) {
+
+        $trade_fair_start_timestamp = strtotime($date_start);
+        $trade_fair_end_timestamp = strtotime($date_end);
+
+        $fairs_json = PWECommonFunctions::json_fairs();
+
+        $events = "";
+        $event_names = [];
+        foreach ($fairs_json as $fair) {
+            $event_date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
+            $event_date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
+            $event_name = $lang === "pl" ? $fair["name_pl"] : $fair["name_en"];
+
+            if ($event_date_start && $event_date_end) {
+                $isStartInside = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
+                $isEndInside = $event_date_end >= $trade_fair_start_timestamp && $event_date_end <= $trade_fair_end_timestamp;
+                $isNotFastTextile = strpos($fair['domain'], "fasttextile.com") === false;
+                $isNotExpoTrends = strpos($fair['domain'], "expotrends.eu") === false;
+                $isNotFabricsExpo = strpos($fair['domain'], "fabrics-expo.eu") === false;
+
+                if (($isStartInside || $isEndInside) && $isNotFastTextile && $isNotExpoTrends && $isNotFabricsExpo) {
+                    $event_names[] = $event_name;
+                }
+            }
+        }
+
+        $events = implode(", ", $event_names);
+    }
+    
+    echo '
+    <div class="pwe-calendar-inputs-container">
+        <div class="pwe-calendar-input">';
+            if (!empty(get_post_meta($post->ID, 'events_week_fairs', true))) {
+                echo '<span style="color: green;">Dane są zapisane!</span>';
+            }
+            echo '
+            <textarea 
+                id="events_week_fairs" 
+                name="events_week_fairs" 
+                class="pwe-calendar-full-width-input" 
+                style="height: 60px; background-color: #e0e0e0; cursor: not-allowed;" 
+                readonly
+                placeholder="'. $events .'">'. $events .'</textarea>
+        </div>
+    </div>';
+}
+
+function events_week_dates_callback($post) {
+    wp_nonce_field('save_events_week_dates', 'events_week_dates_nonce');
+ 
+    echo '
+    <div class="pwe-calendar-inputs-container">
+        <div class="pwe-calendar-input one-third-width">
+            <label for="fair_date_start">Fairs Date Start: </label>
+            <input type="text" id="fair_date_start" name="fair_date_start" class="pwe-calendar-full-width-input" placeholder="Data początkowa" value="'. get_post_meta($post->ID, 'fair_date_start', true) .'" />
+        </div>
+        <div class="pwe-calendar-input one-third-width">
+            <label for="fair_date_end">Fairs Date End: </label>
+            <input type="text" id="fair_date_end" name="fair_date_end" class="pwe-calendar-full-width-input" placeholder="Data końcowa" value="'. get_post_meta($post->ID, 'fair_date_end', true) .'" />
+        </div>';
+}
+
+function events_week_header_slider_callback($post) {
+    wp_nonce_field('save_header_slider', 'header_slider_nonce');
+    $header_slider = get_post_meta($post->ID, 'header_slider', true);
+    $header_slider = !empty($header_slider) && is_array($header_slider) ? $header_slider : array(array());
+
+    echo '<div id="headers-slider-repeatable">';
+    foreach ($header_slider as $index => $header) {
+        $text = esc_attr($header['text'] ?? '');
+        $category = esc_attr($header['category'] ?? '');
+        $image_id = isset($header['image_id']) ? intval($header['image_id']) : '';
+        $image_url = $image_id ? wp_get_attachment_url($image_id) : '';
+
+        $categories = get_terms([
+            'taxonomy' => 'event_category',
+            'hide_empty' => false,
+        ]);
+
+        echo '
+        <div class="header-slider-item" style="border:1px solid #ccc;padding:10px;margin-bottom:10px;">
+            <label>Title:<br>
+                <input type="text" name="header_slider['.$index.'][text]" value="'.$text.'" style="width:100%;" />
+            </label><br>
+            <label>Trade Fair Categories:<br>
+                <select name="header_slider['.$index.'][category]" style="width:100%;">
+                    <option value="">-- wybierz kategorię --</option>';
+                    foreach ($categories as $cat) {
+                        $selected = ($category == $cat->name) ? 'selected' : '';
+                        echo '<option value="' . esc_attr($cat->name) . '" ' . $selected . '>' . esc_html($cat->name) . '</option>';
+                    }
+                echo '</select>
+            </label><br>
+            <label>Obrazek:<br>
+                <input type="hidden" class="header-image-id" name="header_slider['.$index.'][image_id]" value="'.$image_id.'" />
+                <img class="header-image-preview" src="'.esc_url($image_url).'" style="max-width:120px;max-height:80px;display:'.($image_url?'block':'none').';margin-bottom:5px;" />
+                <button type="button" class="select-header-image button">Wybierz obrazek</button>
+                <button type="button" class="remove-header-image button" style="display:'.($image_url?'inline-block':'none').'">Usuń</button>
+                <input type="text" class="header-image-url" name="header_slider['.$index.'][image_url]" value="'.esc_url($image_url).'" style="width:100%;margin-top:8px;" readonly placeholder="Link do obrazka" />
+            </label>
+            <div class="header-slider-button" style="margin-top:8px;">
+                <button class="remove-header-slider button">Usuń header</button>
+            </div>
+        </div>';
+    }
+    echo '</div>';
+    echo '<button type="button" class="add-header-slider button button-primary">Dodaj Header</button>';
+
+    // Skrypt JS
+    ?>
+     <script>
+    (function($){
+        $(document).ready(function(){
+            let i = $('#headers-slider-repeatable .header-slider-item').length;
+            const eventCategories = <?php echo json_encode($categories); ?>;
+
+            $('.add-header-slider').on('click', function(e){
+                e.preventDefault();
+                let newItem = `
+                <div class="header-slider-item" style="border:1px solid #ccc;padding:10px;margin-bottom:10px;">
+                    <label>Title:<br>
+                        <input type="text" name="header_slider[`+i+`][text]" value="" style="width:100%;" />
+                    </label><br>
+                    <label>Trade Fair Categories:<br>
+                        <select name="header_slider[`+i+`][category]" style="width:100%;">
+                            <option value="">-- wybierz kategorię --</option>
+                            ${
+                                eventCategories.map(cat =>
+                                    `<option value="${cat.name}">${cat.name}</option>`
+                                ).join('')
+                            }
+                        </select>
+                    </label><br>
+                    <label>Obrazek:<br>
+                        <input type="hidden" class="header-image-id" name="header_slider[`+i+`][image_id]" value="" />
+                        <img class="header-image-preview" src="" style="max-width:120px;max-height:80px;display:none;margin-bottom:5px;" />
+                        <button type="button" class="select-header-image button">Wybierz obrazek</button>
+                        <button type="button" class="remove-header-image button" style="display:none;">Usuń</button>
+                        <input type="text" class="header-image-url" name="header_slider[`+i+`][image_url]" value="" style="width:100%;margin-top:8px;" readonly placeholder="Link do obrazka" />
+                    </label>
+                    <div class="header-slider-button" style="margin-top:8px;">
+                        <button class="remove-header-slider button">Usuń header</button>
+                    </div>
+                </div>
+                `;
+                $('#headers-slider-repeatable').append(newItem);
+                i++;
+            });
+
+            $(document).on('click', '.remove-header-slider', function(e){
+                e.preventDefault();
+                $(this).closest('.header-slider-item').remove();
+            });
+
+            // Obsługa mediów
+            let media_frame;
+            $(document).on('click', '.select-header-image', function(e){
+                e.preventDefault();
+                let btn = $(this);
+                let parent = btn.closest('.header-slider-item');
+                if (media_frame) {
+                    media_frame.close();
+                }
+                media_frame = wp.media({
+                    title: 'Wybierz obrazek',
+                    library: { type: 'image' },
+                    multiple: false
+                });
+                media_frame.on('select', function(){
+                    let attachment = media_frame.state().get('selection').first().toJSON();
+                    parent.find('.header-image-id').val(attachment.id);
+                    parent.find('.header-image-preview').attr('src', attachment.url).show();
+                    parent.find('.header-image-url').val(attachment.url); // <-- tutaj wstawiamy URL do inputa!
+                    parent.find('.remove-header-image').show();
+                });
+                media_frame.open();
+            });
+
+            // Usuwanie obrazka
+            $(document).on('click', '.remove-header-image', function(e){
+                e.preventDefault();
+                let parent = $(this).closest('.header-slider-item');
+                parent.find('.header-image-id').val('');
+                parent.find('.header-image-preview').attr('src','').hide();
+                parent.find('.header-image-url').val('');
+                $(this).hide();
+            });
+        });
+    })(jQuery);
+    </script>
+    <?php
+}
+
+function events_week_halls_callback($post) {
+    wp_nonce_field('save_events_week_halls', 'events_week_halls_nonce');
+
+    $halls_image_url = get_post_meta($post->ID, 'events_week_halls_image_url', true);
+    
+    echo '
+    <label for="events_week_halls_image_url">Featured Image URL:</label>
+    <div class="events_week_halls_image_url-container">
+        <input type="text" id="events_week_halls_image_url" name="events_week_halls_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' . esc_attr($halls_image_url) . '" />
+    </div>
+    <br>
+    <input type="button" class="button-secondary" value="Select Image" id="events_week_halls_image_url_button" />
+    <div id="events_week_halls_image_url_preview" style="margin-top: 10px;">';
+        if (!empty($halls_image_url)) {
+            echo '<img src="' . esc_url($halls_image_url) . '" style="max-width: 250px; width: 100%;" />';
+        }
+    echo '
+    </div>';
+    
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        var mediaUploader;
+        
+        $('#events_week_halls_image_url_button').click(function(e) {
+            e.preventDefault();
+
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+
+            // Initialization uploader
+            mediaUploader = wp.media.frames.file_frame = wp.media({
+                title: 'Select Image',
+                button: {
+                    text: 'Select Image'
+                },
+                multiple: false
+            });
+            
+            // After selecting the image, insert the URL into the field
+            mediaUploader.on('select', function() {
+                var attachment = mediaUploader.state().get('selection').first().toJSON();
+
+                $('.events_week_halls_image_url-container').html('<input type="text" id="events_week_halls_image_url" name="events_week_halls_image_url" class="events_week_halls_image_url pwe-calendar-full-width-input" value="' + attachment.url + '" />');
+                $('#events_week_halls_image_url_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />');
+            });
+
+            mediaUploader.open();
+        });
+    });
+    </script>
+    <?php
+}
+
+function events_week_other_callback($post) {
+    wp_nonce_field('save_events_week_other', 'events_week_other_nonce');
+
+    $percent = !empty(get_post_meta($post->ID, 'events_week_percent', true)) ? get_post_meta($post->ID, 'events_week_percent', true) : '';
+    $area = !empty(get_post_meta($post->ID, 'events_week_area', true)) ? get_post_meta($post->ID, 'events_week_area', true) : '';
+    $color_1 = !empty(get_post_meta($post->ID, 'events_week_color_1', true)) ? get_post_meta($post->ID, 'events_week_color_1', true) : '';
+    $color_2 = !empty(get_post_meta($post->ID, 'events_week_color_2', true)) ? get_post_meta($post->ID, 'events_week_color_2', true) : '';
+
+    echo '
+    <div class="pwe-calendar-inputs-container">
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_percent">Increase since last year (%): </label>
+            <input type="number" id="events_week_percent" name="events_week_percent" class="pwe-calendar-full-width-input" value="'. $percent .'" />
+        </div>
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_area">Exhibition space: </label>
+            <input type="number" id="events_week_area" name="events_week_area" class="pwe-calendar-full-width-input" value="'. $area .'" />
+        </div>
+    </div>
+    <div class="pwe-calendar-inputs-container">
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_color_1">Color title 1: </label>
+            <input type="text" id="events_week_color_1" name="events_week_color_1" class="pwe-calendar-full-width-input color-picker" value="'. $color_1 .'" />
+        </div>
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_color_2">Color title 2: </label>
+            <input type="text" id="events_week_color_2" name="events_week_color_2" class="pwe-calendar-full-width-input color-picker" value="'. $color_2 .'" />
+        </div>
+    </div>';
+}
+
+// Function of saving data from metaboxes
+function save_events_week_meta($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return $post_id;
+
+    if (isset($_POST['events_week_dates_nonce']) && wp_verify_nonce($_POST['events_week_dates_nonce'], 'save_events_week_dates')) {
+        update_post_meta($post_id, 'fair_date_start', sanitize_text_field($_POST['fair_date_start']));
+        update_post_meta($post_id, 'fair_date_end', sanitize_text_field($_POST['fair_date_end']));
+    }
+
+    if (isset($_POST['header_slider']) && is_array($_POST['header_slider'])) {
+        $headers = array();
+        foreach ($_POST['header_slider'] as $header) {
+            $headers[] = array(
+                'text' => sanitize_text_field($header['text'] ?? ''),
+                'category' => sanitize_text_field($header['category'] ?? ''),
+                'image_id' => isset($header['image_id']) ? intval($header['image_id']) : '',
+            );
+        }
+        update_post_meta($post_id, 'header_slider', $headers);
+    } else {
+        delete_post_meta($post_id, 'header_slider');
+    }
+
+    if (isset($_POST['events_week_halls_nonce']) && wp_verify_nonce($_POST['events_week_halls_nonce'], 'save_events_week_halls')) {
+        if (isset($_POST['events_week_halls_image_url'])) {
+            update_post_meta($post_id, 'events_week_halls_image_url', sanitize_text_field($_POST['events_week_halls_image_url']));
+        }
+    }
+
+    if (isset($_POST['events_week_other_nonce']) && wp_verify_nonce($_POST['events_week_other_nonce'], 'save_events_week_other')) {
+        update_post_meta($post_id, 'events_week_percent', sanitize_text_field($_POST['events_week_percent']));
+        update_post_meta($post_id, 'events_week_area', sanitize_text_field($_POST['events_week_area']));
+        update_post_meta($post_id, 'events_week_color_1', sanitize_text_field($_POST['events_week_color_1']));
+        update_post_meta($post_id, 'events_week_color_2', sanitize_text_field($_POST['events_week_color_2']));
+    }
+
+    if (isset($_POST['events_week_fairs_nonce']) && wp_verify_nonce($_POST['events_week_fairs_nonce'], 'save_events_week_fairs')) {
+        update_post_meta($post_id, 'events_week_fairs', sanitize_text_field($_POST['events_week_fairs']));
+    }
+    
+    if (isset($_POST['featured_image_nonce']) && wp_verify_nonce($_POST['featured_image_nonce'], 'save_featured_image')) {
+        if (isset($_POST['featured_image_url'])) {
+            update_post_meta($post_id, '_featured_image_url', sanitize_text_field($_POST['featured_image_url']));
+        }
+    }
+
+    if (isset($_POST['secondary_image_nonce']) && wp_verify_nonce($_POST['secondary_image_nonce'], 'save_secondary_image')) {
+        if (isset($_POST['secondary_image_url'])) {
+            update_post_meta($post_id, '_secondary_image_url', sanitize_text_field($_POST['secondary_image_url']));
+        }
+    }
+}
+add_action('save_post', 'save_events_week_meta');
+
+add_action('admin_enqueue_scripts', function($hook) {
+    if ('post.php' == $hook || 'post-new.php' == $hook) {
+        wp_enqueue_media();
+    }
+});
+
+// EVENT metaboxes <----------------------------------<
+
 function event_links_callback($post) {
     wp_nonce_field('save_event_links', 'event_links_nonce');
     $lang = ICL_LANGUAGE_CODE;
@@ -746,18 +1416,18 @@ function partners_gallery_callback($post) {
 
 function featured_image_meta_box_callback($post) {
     wp_nonce_field('save_featured_image', 'featured_image_nonce');
-    $featured_image_url = get_post_meta($post->ID, '_featured_image_url', true);
+    $halls_image_url = get_post_meta($post->ID, '_featured_image_url', true);
     
     echo '
     <label for="featured_image_url">Featured Image URL:</label>
     <div class="featured-image-url-container">
-        <input type="text" id="featured_image_url" name="featured_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' . esc_attr($featured_image_url) . '" />
+        <input type="text" id="featured_image_url" name="featured_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' . esc_attr($halls_image_url) . '" />
     </div>
     <br>
     <input type="button" class="button-secondary" value="Select Image" id="featured_image_button" />
     <div id="featured_image_preview" style="margin-top: 10px;">';
-        if (!empty($featured_image_url)) {
-            echo '<img src="' . esc_url($featured_image_url) . '" style="max-width: 250px; width: 100%;" />';
+        if (!empty($halls_image_url)) {
+            echo '<img src="' . esc_url($halls_image_url) . '" style="max-width: 250px; width: 100%;" />';
         }
     echo '
     </div>';
@@ -935,6 +1605,12 @@ function save_event_meta($post_id) {
 }
 add_action('save_post', 'save_event_meta');
 
+// Hide secondary thumbnail meta box
+function hide_secondary_thumbnail_meta_box() {
+    echo '<style>.post-type-event #uncode-secondary-featured-image { display: none; }</style>';
+}
+add_action('admin_head', 'hide_secondary_thumbnail_meta_box');
+
 function load_datepicker_styles() {
     ?>
     <style>
@@ -1063,6 +1739,19 @@ function load_admin_styles($hook) {
             width: 100%;
             gap: 6px;
         }
+        .pwe-calendar-input.checkbox {
+            flex-direction: row-reverse;
+            justify-content: left;
+        }
+        .pwe-calendar-input.checkbox input {
+            width: 25px !important;
+            height: 25px !important;
+        }
+        .pwe-calendar-input.checkbox input:before {
+            margin: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
         .pwe-calendar-input.half-width {
             width: 49%;
         }
@@ -1079,6 +1768,15 @@ function load_admin_styles($hook) {
         #partners_gallery_images {
             margin-top: 10px;
         }
+
+
+        .header-slider-button {
+            margin-top: 10px;
+            text-align: end; 
+        }
+        .add-header-slider {
+            margin: 0 0 18px 18px;
+        }
     </style>
     <?php
 }
@@ -1086,7 +1784,7 @@ add_action('admin_enqueue_scripts', 'load_admin_styles');
 
 // Function to add content editor at the bottom of the form
 function move_content_editor_to_bottom() {
-    if (get_post_type() != 'event') {
+    if (get_post_type() != 'event' && get_post_type() != 'events_week') {
         return;
     }
     // Adding content editor after all metaboxes
