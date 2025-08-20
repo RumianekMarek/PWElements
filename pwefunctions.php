@@ -216,7 +216,11 @@ class PWECommonFunctions {
                 (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_title_pl' ORDER BY id ASC LIMIT 1) AS konf_title_pl,
                 (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_title_en' ORDER BY id ASC LIMIT 1) AS konf_title_en,
                 (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_desc_pl' ORDER BY id ASC LIMIT 1) AS konf_desc_pl,
-                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_desc_en' ORDER BY id ASC LIMIT 1) AS konf_desc_en
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_desc_en' ORDER BY id ASC LIMIT 1) AS konf_desc_en,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'about_title_pl' ORDER BY id ASC LIMIT 1) AS about_title_pl,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'about_title_en' ORDER BY id ASC LIMIT 1) AS about_title_en,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'about_desc_pl' ORDER BY id ASC LIMIT 1) AS about_desc_pl,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'about_desc_en' ORDER BY id ASC LIMIT 1) AS about_desc_en
             FROM fairs f
         ";
 

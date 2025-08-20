@@ -30,15 +30,91 @@ class PWESwiperScripts {
                 $decoded = json_decode(urldecode($breakpoints_raw), true);
                 if (is_array($decoded)) {
                     foreach ($decoded as $item) {
-                        $width = intval($item['breakpoint_width'] ?? 0);
-                        $slides = intval($item['breakpoint_slides'] ?? 1);
-                        if ($width > 0 && $slides > 0) {
-                            $breakpoints[$width] = $slides;
+                        $width = isset($item['breakpoint_width']) ? intval($item['breakpoint_width']) : 0;
+                        if ($width < 0) continue;
+
+                        $bp = [];
+
+                        // slidesPerView — ułamki OK
+                        if (isset($item['breakpoint_slides'])) {
+                            $slides_raw = $item['breakpoint_slides'];
+                            if (is_string($slides_raw)) {
+                                $slides_raw = str_replace(',', '.', $slides_raw);
+                            }
+                            $slides = floatval($slides_raw);
+                            if ($slides > 0) {
+                                $bp['slidesPerView'] = $slides;
+                            }
+                        }
+
+                        // przepuść dodatkowe klucze per-breakpoint
+                        $allow = [
+                            'centeredSlides','centeredSlidesBounds','spaceBetween','slidesPerGroup',
+                            'slidesPerGroupSkip','initialSlide','watchSlidesProgress','loopAdditionalSlides',
+                            'loopPreventsSlide','allowTouchMove','freeMode','effect','grabCursor'
+                        ];
+                        foreach ($allow as $k) {
+                            if (array_key_exists($k, $item)) {
+                                $bp[$k] = $item[$k];
+                            }
+                        }
+
+                        if (!empty($bp)) {
+                            $breakpoints[$width] = $bp;
                         }
                     }
-                    ksort($breakpoints);
+                    ksort($breakpoints, SORT_NUMERIC);
                 }
             }
+
+            // JSON do wstrzyknięcia w JS
+            if (!empty($breakpoints)) {
+                $swiper_breakpoints_json = wp_json_encode($breakpoints, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            } else {
+                $swiper_breakpoints_json = wp_json_encode([
+                    400  => ['slidesPerView' => 1],
+                    650  => ['slidesPerView' => 2],
+                    960  => ['slidesPerView' => 3],
+                    1100 => ['slidesPerView' => 4],
+                ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            }
+
+            $default_autoplay = [
+                'delay' => 3000,
+                'disableOnInteraction' => false,
+                'pauseOnMouseEnter' => true,
+            ];
+
+            $autoplay_js = wp_json_encode($default_autoplay, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+            if (is_array($options) && array_key_exists('autoplay', $options)) {
+                $ap = $options['autoplay'];
+
+                if ($ap === false) {
+                    $autoplay_js = 'false'; // dokładnie JS-owe false
+                } elseif (is_bool($ap) && $ap === true) {
+                    // zostawiamy defaulty
+                    $autoplay_js = wp_json_encode($default_autoplay, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                } elseif (is_numeric($ap)) {
+                    // liczba -> delay
+                    $merged = $default_autoplay;
+                    $merged['delay'] = (int)$ap;
+                    $autoplay_js = wp_json_encode($merged, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                } elseif (is_array($ap)) {
+                    // merge user -> defaults (user ma pierwszeństwo)
+                    $merged = array_merge($default_autoplay, $ap);
+                    $autoplay_js = wp_json_encode($merged, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                }
+            }
+
+            // --- Pozostałe opcje do JS, ale BEZ autoplay (żeby nie nadpisać powyższego)
+            $options_no_autoplay = is_array($options) ? $options : [];
+            if (array_key_exists('autoplay', $options_no_autoplay)) {
+                unset($options_no_autoplay['autoplay']);
+            }
+            $js_options = !empty($options_no_autoplay)
+                ? wp_json_encode($options_no_autoplay, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                : '{}';
 
             $output = '
             <style>
@@ -61,14 +137,6 @@ class PWESwiperScripts {
                     width: 100%;
                     padding: 14px;
                     margin: 14px 0 0;
-                }
-
-                ' . $pwe_element . ' .swiper-wrapper {
-
-                }
-
-                ' . $pwe_element . ' .swiper-slide {
-                    
                 }
 
                 @media(max-width: 400px) {
@@ -129,22 +197,37 @@ class PWESwiperScripts {
                         }';
 
                 }
+
+                if ($dots_display === 'true') {
+                    $output .= '
+                    ' . $pwe_element . ' .swiper-pagination{
+                            display: block;
+                            overflow-x: auto;
+                            overflow-y: hidden;
+                            white-space: nowrap;
+                            max-width: 50px;
+                            scroll-behavior: smooth;
+                            -ms-overflow-style: none;
+                            scrollbar-width: none;
+                            left: 50% !important;
+                            transform: translateX(-50%);
+                            padding: 0 4px;
+                        }
+                    ' . $pwe_element . ' .swiper-pagination::-webkit-scrollbar{
+                        width: 0;
+                        height: 0;
+                        background: transparent;
+                    }
+
+                        /* kropki w linii */
+                    ' . $pwe_element . ' .swiper-pagination-bullet{
+                        display: inline-block;
+                        margin: 0 3px;
+                    }';
+                }
                 
             $output .= '
             </style>';
-
-            if (!empty($breakpoints)) {
-                $swiper_breakpoints = '';
-                foreach ($breakpoints as $width => $slides) {
-                    $swiper_breakpoints .= $width . ': { slidesPerView: ' . $slides . ' },';
-                }
-            } else {
-                $swiper_breakpoints = '
-                    400: { slidesPerView: 1 },
-                    650: { slidesPerView: 2 },
-                    960: { slidesPerView: 3 },
-                    1100: { slidesPerView: 4 }';
-            }
 
             $output .= '
             <script>
@@ -155,19 +238,49 @@ class PWESwiperScripts {
                     const slidesCount = slides.length;
                     const containerWidth = container.clientWidth;
 
-                    const breakpoints = {
-                        ' . rtrim($swiper_breakpoints, ',') . '
-                    };
+                    const breakpoints = ' . $swiper_breakpoints_json . ';
 
                     let slidesPerView = 1;
-                    Object.keys(breakpoints).sort((a, b) => a - b).forEach(function(bp) {
-                        const bpInt = parseInt(bp);
-                        if (containerWidth >= bpInt && typeof breakpoints[bp] === "object" && breakpoints[bp].slidesPerView) {
-                            slidesPerView = breakpoints[bp].slidesPerView;
+                    const cw = Number(container.clientWidth);
+
+                    // posortowane breakpointy -> odczyt slidesPerView + centeredSlides
+                    let centeredSlides = false;
+                    Object.keys(breakpoints)
+                    .map(k => parseInt(k, 10))
+                    .filter(n => !Number.isNaN(n))
+                    .sort((a, b) => a - b)
+                    .forEach(function (bpInt) {
+                        if (cw >= bpInt) {
+                        const conf = breakpoints[String(bpInt)] ?? breakpoints[bpInt];
+                        if (conf && typeof conf === "object") {
+                            if ("slidesPerView" in conf) {
+                            slidesPerView = (conf.slidesPerView === "auto") ? "auto" : Number(conf.slidesPerView);
+                            }
+                            if ("centeredSlides" in conf) centeredSlides = !!conf.centeredSlides;
+                        }
                         }
                     });
 
-                    const shouldLoop = slidesCount > slidesPerView;
+                    const totalSlides = Number(slidesCount);
+
+                    // KONSERWATYWNA REGUŁA:
+                    // - przy "auto" i tak nie ma sensownego porównania -> traktujemy jak 1
+                    // - przy ułamkach (np. 1.5) wymagamy co najmniej floor(spv)+2 elementów do loop
+                    // - przy liczbie całkowitej wymagamy spv+1
+                    // - dodatkowo: dla centeredSlides i totalSlides <= 2 -> FORSUJ brak loopa
+                    const spv = (slidesPerView === "auto") ? 1 : Math.max(1, Number(slidesPerView));
+                    const needForLoop = (Number.isInteger(spv) ? (spv + 1) : (Math.floor(spv) + 2));
+                    let shouldLoop = totalSlides >= needForLoop;
+
+                    if (centeredSlides && totalSlides <= 2) {
+                    shouldLoop = false;
+                    }
+
+                    // Zapisz do configu również "rewind", żeby na mobile nadal dało się „zawinąć”
+                    const useRewind = !shouldLoop;
+
+                    // DEBUG (możesz skasować):
+                    // console.log({ cw, slidesPerView: spv, centeredSlides, totalSlides, needForLoop, shouldLoop, useRewind });
 
                     const swiperConfig = {
                         loop: shouldLoop,
@@ -175,19 +288,8 @@ class PWESwiperScripts {
                         grabCursor: true,
                         observer: true,
                         observeParents: true,
-                        ';
-                        if (isset($options['autoplay']) && $options['autoplay'] === false) {
-                            $output .= 'autoplay: false,';
-                        } else {
-                            $output .= 'autoplay: {
-                                delay: 3000,
-                                disableOnInteraction: false,
-                                pauseOnMouseEnter: true
-                            },';
-                        }
-
-                        $output .= '
-                        breakpoints: breakpoints,
+                        autoplay: ' . $autoplay_js . ',
+                        breakpoints: ' . $swiper_breakpoints_json . ',
                         on: {
                             init: function () {
                                 setTimeout(() => {
@@ -196,23 +298,35 @@ class PWESwiperScripts {
 
                                 if (!shouldLoop) {
                                     const swiperWrapper = container.querySelector(".swiper-wrapper");
-                                    if (swiperWrapper) {
+                                    const swiperPagination = container.querySelector(".swiper-pagination");
+                                    swiperPagination.style.display = "none";
+                                    if (swiperWrapper && "' . $id . '" !== "conf-short-info-gr3-schedule") {
                                         swiperWrapper.style.justifyContent = "center";
                                     }
                                 }
                             }
                         }
-                    };';
+                    };
+
+                    ' . "const phpOptions = $js_options;
+                    if (phpOptions && typeof phpOptions === 'object') {
+                        if (phpOptions.on && typeof phpOptions.on === 'object') {
+                            swiperConfig.on = Object.assign({}, swiperConfig.on || {}, phpOptions.on);
+                            delete phpOptions.on;
+                        }
+                        Object.assign(swiperConfig, phpOptions);
+                    }
+                    ";
 
                     // Dodaj warunki dynamiczne do konfiguracji Swipera
                     if ($dots_display === "true") {
                         $output .= '
-                    swiperConfig.pagination = {
-                        el: "' . $pwe_element . ' .swiper-pagination",
-                        clickable: true,
-                        dynamicBullets: true,
-                        dynamicMainBullets: 3
-                    };';
+                            swiperConfig.pagination = {
+                                el: "' . $pwe_element . ' .swiper-pagination",
+                                clickable: true,
+                                dynamicBullets: false,
+                                dynamicMainBullets: 3
+                            };';
                     }
 
                     if ($arrows_display === "true") {
@@ -240,6 +354,55 @@ class PWESwiperScripts {
                 $output .= '
 
                     const swiper = new Swiper(container, swiperConfig);
+
+                    // Przewijanie paginacji tak, by aktywna kropka była na środku
+                    const paginationEl = container.querySelector(".swiper-pagination");
+
+                    function scrollDotsToActive() {
+                        if (!paginationEl) return;
+                        const active = paginationEl.querySelector(".swiper-pagination-bullet-active");
+                        if (!active) return;
+
+                        // Wylicz docelowy scrollLeft tak, aby aktywna kropka była ~wycentrowana
+                        const target =
+                            active.offsetLeft - (paginationEl.clientWidth / 2) + (active.clientWidth / 2);
+
+                        // jQuery animate – jak w Twoim przykładzie ze Slickiem
+                        jQuery(paginationEl).stop(true).animate({ scrollLeft: Math.max(0, target) }, 300);
+                        }
+
+                        // Po inicjalizacji oraz przy każdej zmianie slajdu/rozmiaru
+                        if (paginationEl) {
+                        // po utworzeniu instancji Swipera kropki już są w DOM, można przewinąć
+                        setTimeout(scrollDotsToActive, 0);
+
+                        swiper.on("slideChange", scrollDotsToActive);
+                        swiper.on("resize", scrollDotsToActive);
+
+                        // gdy użytkownik kliknie w kropkę, przewiń po aktualizacji klasy „active”
+                        paginationEl.addEventListener("click", () => {
+                            setTimeout(scrollDotsToActive, 0);
+                        });
+                    }
+
+                    // --- RĘCZNY klik do realnego indeksu, działa stabilnie w loop
+                    if (swiper.params.loop === true && swiperConfig.slideToClickedSlide === true) {
+                    // wyłącz natywne, żeby nie było podwójnych ruchów
+                    swiper.params.slideToClickedSlide = false;
+
+                    const allSlides = container.querySelectorAll(".swiper-slide");
+                    allSlides.forEach((slideEl) => {
+                        slideEl.addEventListener("click", (e) => {
+                        // jeśli to był drag, nie reaguj na klik
+                        if (swiper.animating) return;
+                        const realAttr = slideEl.getAttribute("data-swiper-slide-index");
+                        if (realAttr != null) {
+                            const realIndex = parseInt(realAttr, 10);
+                            swiper.slideToLoop(realIndex); // właściwy skok do klikniętego slajdu, niezależnie od duplikatów
+                        }
+                        });
+                    });
+                    }
 
                 });
             </script>';

@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.9.1
+ * Version: 2.9.2
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -29,6 +29,7 @@ class PWElementsPlugin {
     public $PWEConferenceCap;
     public $PWEIndustryEvening;
     public $PWEConferenceShortInfo;
+    public $PWEAboutFairInfo;
     // public $PWELogoFetcher;
 
     public function __construct() {
@@ -194,7 +195,10 @@ class PWElementsPlugin {
         $this->PWETest = new PWETest();
 
         require_once plugin_dir_path(__FILE__) . 'includes/conference-short-info/conference-short-info.php';
-        $this->PWETest = new PWEConferenceShortInfo();
+        $this->PWEConferenceShortInfo = new PWEConferenceShortInfo();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/about-fair-info/about-fair-info.php';
+        $this->PWEAboutFairInfo = new PWEAboutFairInfo();
     }
 
     // Czyszczenie pamięci wp_rocket
