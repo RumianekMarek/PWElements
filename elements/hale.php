@@ -108,10 +108,12 @@ class PWElementHale extends PWElements {
         foreach ($fair_items_json as $item) {
             $halls = array_map('trim', explode(',', $item['halls']));
             foreach ($halls as $hall) {
-                $json_data_all[] = [
-                    "id" => $hall,
-                    "domain" => $item['domain']
-                ];
+                if (strpos($item['domain'], "mr.glasstec.pl") === false) {
+                    $json_data_all[] = [
+                        "id" => $hall,
+                        "domain" => $item['domain']
+                    ];
+                }
             }
 
             if ($item['domain'] === $current_domain) {

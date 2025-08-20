@@ -149,9 +149,24 @@ class PWElementPopup extends PWElements {
                 }
                 .custom-popup-modal__desc {
                     padding: 18px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 18px;
                 }
                 .custom-popup-modal__desc p{
                     margin: 0;
+                }
+
+                .custom-popup-modal__desc a {
+                    color: white !important;
+                    background: black;
+                    padding: 12px 30px;
+                    border-radius: 36px;
+                    font-size: 14px;
+                    display: block;
+                    margin: 0 auto;
+                    max-width: 240px;
+                    text-align: center;
                 }
 
                 ' . $popup_modal_style . '
