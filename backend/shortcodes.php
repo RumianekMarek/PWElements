@@ -101,7 +101,16 @@ function get_fair_data($specific_domain = null) {
     }
 
     // Domain definition
-    $current_domain = $specific_domain ?? ($_SERVER['HTTP_HOST'] ?? '');
+    if ($specific_domain) {
+        $current_domain = $specific_domain;
+    } else {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (empty($host)) {
+            // CRON/CLI – weź hosta z ustawień WP
+            $host = parse_url(home_url(), PHP_URL_HOST) ?: '';
+        }
+        $current_domain = $host;
+    }
 
     // Return data or null if domain does not exist in data
     return $current_domain && isset($cached_data[$current_domain]) ? $cached_data[$current_domain] : null;
