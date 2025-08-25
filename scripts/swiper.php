@@ -51,7 +51,7 @@ class PWESwiperScripts {
                         $allow = [
                             'centeredSlides','centeredSlidesBounds','spaceBetween','slidesPerGroup',
                             'slidesPerGroupSkip','initialSlide','watchSlidesProgress','loopAdditionalSlides',
-                            'loopPreventsSlide','allowTouchMove','freeMode','effect','grabCursor'
+                            'loopPreventsSlide','allowTouchMove','freeMode','effect','grabCursor', 'slidesPerView'
                         ];
                         foreach ($allow as $k) {
                             if (array_key_exists($k, $item)) {
@@ -200,25 +200,33 @@ class PWESwiperScripts {
 
                 if ($dots_display === 'true') {
                     $output .= '
+                    ' . $pwe_element . ' .swiper {
+                        padding-bottom: 24px !important;
+                    }
                     ' . $pwe_element . ' .swiper-pagination{
-                            display: block;
-                            overflow-x: auto;
-                            overflow-y: hidden;
-                            white-space: nowrap;
-                            max-width: 50px;
-                            scroll-behavior: smooth;
-                            -ms-overflow-style: none;
-                            scrollbar-width: none;
-                            left: 50% !important;
-                            transform: translateX(-50%);
-                            padding: 0 4px;
-                        }
+                        display: block;
+                        overflow-x: auto;
+                        overflow-y: hidden;
+                        white-space: nowrap;
+                        max-width: 50px;
+                        scroll-behavior: smooth;
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                        left: 50% !important;
+                        transform: translateX(-50%);
+                        padding: 0 4px;
+                    }
+                    ' . $pwe_element . ' .swiper-horizontal>.swiper-pagination-bullets {
+                        bottom: 3px;
+                    }
+                    ' . $pwe_element . ' .swiper-pagination-bullet-active {
+                        background: var(--accent-color);
+                    }
                     ' . $pwe_element . ' .swiper-pagination::-webkit-scrollbar{
                         width: 0;
                         height: 0;
                         background: transparent;
                     }
-
                         /* kropki w linii */
                     ' . $pwe_element . ' .swiper-pagination-bullet{
                         display: inline-block;
@@ -233,8 +241,8 @@ class PWESwiperScripts {
             <script>
                 jQuery(function ($) {
                     const wrapper = document.querySelector("' . $pwe_element . '");
-                    const container = wrapper.querySelector(".swiper");
-                    const slides = container.querySelectorAll(".swiper-slide");
+                    const container = wrapper.querySelector("' . $pwe_element . ' .swiper");
+                    const slides = container.querySelectorAll("' . $pwe_element . ' .swiper-slide");
                     const slidesCount = slides.length;
                     const containerWidth = container.clientWidth;
 
@@ -278,9 +286,6 @@ class PWESwiperScripts {
 
                     // Zapisz do configu również "rewind", żeby na mobile nadal dało się „zawinąć”
                     const useRewind = !shouldLoop;
-
-                    // DEBUG (możesz skasować):
-                    // console.log({ cw, slidesPerView: spv, centeredSlides, totalSlides, needForLoop, shouldLoop, useRewind });
 
                     const swiperConfig = {
                         loop: shouldLoop,
