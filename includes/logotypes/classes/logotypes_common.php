@@ -673,7 +673,6 @@ class PWElementAdditionalLogotypes {
                             $saving_paths($files, $logo_data);
                         }
                     }
-
                 }
 
                 if (strpos($logotypes_catalog, 'Rotator Konferencji') !== false) {
@@ -685,7 +684,6 @@ class PWElementAdditionalLogotypes {
                             $saving_paths($files, $logo_data);
                         }
                     }
-
                 } 
 
                 if (strpos($logotypes_catalog, 'international') !== false) {
@@ -697,7 +695,6 @@ class PWElementAdditionalLogotypes {
                             $saving_paths($files, $logo_data);
                         }
                     }
-
                 }
 
                 $logotypes_catalogs_array = explode(',', $logotypes_catalog);
@@ -841,6 +838,14 @@ class PWElementAdditionalLogotypes {
                 <div id="'. $element_unique_id .'" class="pwe-container-logotypes-gallery">
                     <div class="pwe-logotypes-title main-heading-text">';
                     $logotypes_title = str_replace(array('`{`', '`}`'), array('[', ']'), $logotypes_title);
+                    if (do_shortcode("[trade_fair_group]") === "gr2") {
+                        $logotypes_title = str_replace(
+                            PWECommonFunctions::lang_pl() ? "patroni międzynarodowi" : "international patrons",
+                            PWECommonFunctions::lang_pl() ? "PATRONI I PARTNERZY ZAGRANICZNI" : "FOREIGN PATRONS AND PARTNERS",
+                            mb_strtolower($logotypes_title, "UTF-8")
+                        );
+                    }
+                    
                     $output .= '
                         <h4 class="pwe-uppercase"><span>'. $logotypes_title .'</span></h4>
                     </div>
@@ -988,6 +993,10 @@ class PWElementAdditionalLogotypes {
                                     $logo_caption_text = '<p>' . $url["logotypes_name"] . '</p>';
                                 }
 
+                                $logo_caption_text = str_replace(
+                                    PWECommonFunctions::lang_pl() ? "międzynarodowy" : "international", "", mb_strtolower($logo_caption_text, "UTF-8")
+                                );
+                                
                                 // Ustalanie szerokości elementów logotypów
                                 $logotypes_items_width = isset($header_logotypes_items_width) && $header_logotypes_items_width != ''
                                     ? 'min-width:' . $header_logotypes_items_width . ';'
