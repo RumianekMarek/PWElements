@@ -40,7 +40,12 @@ $output .= '
                                                             : "";
                                             $status = !empty($status_text) ? "status" : "";
 
-                                            $custom_link = $option['custom-link'] ? $option['custom-link'] : "";
+                                            // Prices descriptions
+                                            $new_price_desc_pl = $option['prod_price_desc_pl'] ? $option['prod_price_desc_pl'] : "";
+                                            $new_price_desc_en = $option['prod_price_desc_en'] ? $option['prod_price_desc_en'] : "";
+
+                                            $custom_link = isset($option['custom-link']) ? $option['custom-link'] : "";
+                                            // $custom_link = self::lang_pl() ? $custom_link : str_replace("/pl/", "/en/", $custom_link);
                                         }
                                     }
                                 }
@@ -107,8 +112,13 @@ $output .= '
                                     </div>
                                 </div>
                                 <div class="pwe-store__featured-footer">
-                                    <span class="pwe-store__featured-price">'. self::price($product, $store_options, $pwe_meta_data, $category, $current_domain) .'</span>
-                                    <span class="pwe-store__featured-price-info">'. ( self::lang_pl() ? '* Do ceny netto należy doliczyć podatek VAT 23%.' : '* VAT 23% should be added to the net price.' ) .'</span>
+                                    <span class="pwe-store__featured-price">'. self::price($product, $store_options, $pwe_meta_data, $category, $current_domain) .'</span>';
+
+                                    if ($new_price_desc_pl !== "brutto") {
+                                        $output .= '<span class="pwe-store__featured-price-info">'. ( self::lang_pl() ? '* Do ceny netto należy doliczyć podatek VAT 23%.' : '* VAT 23% should be added to the net price.' ) .'</span>';
+                                    }
+
+                                    $output .= '
                                     <div class="pwe-store__featured-buttons">';
                                         if (!empty($custom_link)) {
                                             $output .= '

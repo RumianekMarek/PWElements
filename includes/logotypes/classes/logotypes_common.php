@@ -688,6 +688,18 @@ class PWElementAdditionalLogotypes {
 
                 } 
 
+                if (strpos($logotypes_catalog, 'international') !== false) {
+                    $files = [];
+
+                    foreach ($cap_logotypes_data as $logo_data) {
+                        if ($logo_data->logos_type === "international-partner" ||
+                            $logo_data->logos_type === "miedzynarodowy-patron-medialny") {
+                            $saving_paths($files, $logo_data);
+                        }
+                    }
+
+                }
+
                 $logotypes_catalogs_array = explode(',', $logotypes_catalog);
                 foreach ($cap_logotypes_data as $logo_data) {
                     if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {

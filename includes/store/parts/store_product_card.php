@@ -26,7 +26,8 @@ $output .= '
                                                             : "";
                                                 $status = !empty($status_text) ? "status" : ""; 
 
-                                                $custom_link = $option['custom-link'] ? $option['custom-link'] : "";
+                                                $custom_link = isset($option['custom-link']) ? $option['custom-link'] : "";
+                                                // $custom_link = self::lang_pl() ? $custom_link : str_replace("/pl/", "/en/", $custom_link);
                                             }
                                         }
                                     }

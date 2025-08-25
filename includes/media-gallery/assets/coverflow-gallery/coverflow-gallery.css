@@ -41,7 +41,7 @@
 }
 @media (max-width: 570px) {
     .main-container .row-container .row-parent:has(.coverflow-gallery) {
-        padding: 36px 0px 36px 36px !important;
+        padding: 36px 0px !important;
     }
     .pwe-container-media-gallery .coverflow-gallery .swiper-slide {
         width: 400px;

@@ -897,105 +897,97 @@ class PWEMediaGallery extends PWECommonFunctions {
                         
                         </div>';  
                     } else if (in_array('coverflow', $layouts)) { // Coverflow <--------------------------------------<
+                        // Podstawowe style coverflow
                         $output .= '
                         <div class="pwe-gallery-container pwe-media-gallery">
-                            <link href="/wp-content/plugins/PWElements/includes/media-gallery/assets/coverflow-gallery/coverflow-gallery.css" rel="stylesheet">
-                            ';
+                            <link href="/wp-content/plugins/PWElements/includes/media-gallery/assets/coverflow-gallery/coverflow-gallery.css" rel="stylesheet">';
 
-                            $output .= '
-                                <div class="swiper coverflow-gallery">
-                                    <div class="swiper-wrapper">';
+                        // Markup Swipera
+                        $output .= '
+                            <div class="swiper coverflow-gallery">
+                                <div class="swiper-wrapper">';
 
-                                        foreach ($media_gallery_array as $image_url) {
-                                            $path_parts = pathinfo($image_url);
-                                            $image_filename = $path_parts['basename'];
+                                    foreach ($media_gallery_array as $image_url) {
+                                        $path_parts = pathinfo($image_url);
+                                        $image_filename = $path_parts['basename'];
 
-                                            $output .= '<div class="swiper-slide">';
-                                                if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
-                                                    $output .= '<a href="'. $media_gallery_links_map[$image_filename] .'">
-                                                                    <div class="pwe-media-gallery-image">
-                                                                        <img src="' . $image_url . '" style="' . $aspect_ratio_style . '">
-                                                                    </div>
-                                                                </a>';
-                                                } else { 
-                                                    $output .= '<div class="pwe-media-gallery-image">
-                                                                    <img src="' . $image_url . '" style="' . $aspect_ratio_style . '">
-                                                                </div>';
-                                                }
-                                            $output .= '</div>';
-                                        }
-                                        $output .= '
-                                    </div>';
-                                        
-                                    if ($media_gallery_dots_display === 'true') {
-                                        $output .= '
-                                        <style>.pwe-container-media-gallery .coverflow-gallery {padding-bottom: 36px;}</style>
-                                        <div class="swiper-pagination"></div>';
-                                    } else {
-                                        $output .= '<script>
-                                            document.addEventListener("DOMContentLoaded", function () {
-                                                if (window.innerWidth < 570) {
-                                                    
-                                                    const swiper = document.querySelector("#' . $media_gallery_id . ' .swiper.coverflow-gallery");
-                                                    if (swiper && !swiper.querySelector(".swiper-pagination")) {
-                                                        const pagDiv = document.createElement("div");
-                                                        pagDiv.classList.add("swiper-pagination");
-                                                        swiper.appendChild(pagDiv);
-                                                    }
-
-                                                    swiper.style.paddingBottom = "36px";
-                                                }
-                                            });
-                                        </script>';
+                                        $output .= '<div class="swiper-slide">';
+                                            if ($media_gallery_clicked === 'linked' && isset($media_gallery_links_map[$image_filename])) {
+                                                $output .= '<a href="'. esc_url($media_gallery_links_map[$image_filename]) .'">
+                                                                <div class="pwe-media-gallery-image">
+                                                                    <img src="' . esc_url($image_url) . '" style="' . esc_attr($aspect_ratio_style) . '">
+                                                                </div>
+                                                            </a>';
+                                            } else { 
+                                                $output .= '<div class="pwe-media-gallery-image">
+                                                                <img src="' . esc_url($image_url) . '" style="' . esc_attr($aspect_ratio_style) . '">
+                                                            </div>';
+                                            }
+                                        $output .= '</div>';
                                     }
 
-                                    $output .= '
+                        // Paginacja — zawsze wstawiamy element, ale kontrolujemy widoczność CSS/JS niżej
+                        $output .= '
                                 </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
                         </div>';
 
-                        $output .= '
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    const swiperEl = document.querySelector("#' . $media_gallery_id . ' .swiper.coverflow-gallery");
-                                    if (!swiperEl) return;
+                        // Na desktopie ukryj kropki, jeśli „Turn on dots” jest OFF; na mobile (<570px) pokaż zawsze
+                        if ($media_gallery_dots_display !== 'true') {
+                            $output .= '
+                            <style>
+                                @media (min-width: 570px) {
+                                    #'. $media_gallery_id .' .swiper-pagination { display: none !important; }
+                                    #'. $media_gallery_id .' .coverflow-gallery { padding: 0 !important; }
+                                }
+                                @media (max-width: 569px) {
+                                    #'. $media_gallery_id .' .coverflow-gallery { padding: 24px !important; }
+                                }
+                            </style>';
+                        } else {
+                            $output .= '<style>
+                                #'. $media_gallery_id .' .coverflow-gallery { padding-bottom: 36px; }
+                            </style>';
+                        }
 
-                                    const screenWidth = window.innerWidth;
-                                    const showPagination = screenWidth < 570 || ' . ($media_gallery_dots_display === 'true' ? 'true' : 'false') . ';
+                        // Inicjalizacja przez wspólny helper Swipera
+                        include_once plugin_dir_path(dirname(__DIR__)) . 'scripts/swiper.php';
 
-                                    const swiperOptions = {
-                                        effect: screenWidth >= 570 ? "coverflow" : "slider",
-                                        grabCursor: true,
-                                        loop: true,
-                                        loopAdditionalSlides: 5,
-                                        centeredSlides: screenWidth >= 570,
-                                        slidesPerView: screenWidth >= 570 ? 3 : 2,
-                                        spaceBetween: screenWidth >= 570 ? ' . $media_gallery_gap . ' : -160,
-                                        speed: 900,
-                                        autoplay: {
-                                            delay: 3000,
-                                            disableOnInteraction: false
-                                        },
-                                        coverflowEffect: {
-                                            rotate: ' . $coverflow_rotate . ',
-                                            stretch: ' . $coverflow_stretch . ',
-                                            scale: ' . $coverflow_scale . ',
-                                            depth: ' . $coverflow_depth . ',
-                                            modifier: ' . $coverflow_modifier . ',
-                                            slideShadows: ' . $coverflow_shadows . '
-                                        }
-                                    };
+                        // OPCJE bazowe (desktop) – coverflow
+                        $swiper_options = [
+                            // globalnie coverflow, a w breakpointach zmienimy na „slide” dla mobile
+                            'effect' => 'coverflow',
+                            'grabCursor' => true,
+                            'loopAdditionalSlides' => 5,
+                            'speed' => 900,
+                            'autoplay' => [
+                                'delay' => 3000,
+                                'disableOnInteraction' => false,
+                                // pauseOnMouseEnter domyślnie true w helperze — nadpisujemy żeby zachować Twoje zachowanie
+                                'pauseOnMouseEnter' => false,
+                            ],
+                            'coverflowEffect' => [
+                                'rotate' => (float) $coverflow_rotate,
+                                'stretch' => (float) $coverflow_stretch,
+                                'scale' => (float) $coverflow_scale,
+                                'depth' => (float) $coverflow_depth,
+                                'modifier' => (float) $coverflow_modifier,
+                                'slideShadows' => ($coverflow_shadows === 'true'),
+                            ],
+                            // Dodatkowo możesz włączyć klikanie w slajd jak w innych miejscach
+                            'slideToClickedSlide' => true,
+                            'watchSlidesProgress' => true,
+                        ];
 
-                                    if (showPagination) {
-                                        swiperOptions.pagination = {
-                                            el: swiperEl.querySelector(".swiper-pagination"),
-                                            clickable: true
-                                        };
-                                    }
+                        // BREAKPOINTY – mobile: zwykły „slide”, 2 karty, ujemny odstęp jak u Ciebie
+                        $breakpoints = [
+                            [ 'breakpoint_width' => 0,    'effect' => 'coverflow',    'centeredSlides' => true, 'slidesPerView' => 1, 'spaceBetween' => -160 ],
+                            [ 'breakpoint_width' => 570,  'effect' => 'coverflow','centeredSlides' => true,  'slidesPerView' => 3, 'spaceBetween' => (int)$media_gallery_gap ],
+                        ];
 
-                                    new Swiper(swiperEl, swiperOptions);
-                                });
-                            </script>';
-                    } else if (in_array('carousel-dual-swiper', $layouts)) { // Carousel Swiper <--------------------------------------<
+                        $output .= PWESwiperScripts::swiperScripts('media-gallery-coverflow', '#'. $media_gallery_id, 'true', $media_gallery_arrows_display ?: '', '', $swiper_options, rawurlencode(json_encode($breakpoints)));
+                    }  else if (in_array('carousel-dual-swiper', $layouts)) { // Carousel Swiper <--------------------------------------<
                         $midpoint = ceil(count($media_gallery_array) / 2);
                         $top_slides = array_slice($media_gallery_array, 0, $midpoint);
                         $bottom_slides = array_slice($media_gallery_array, $midpoint);

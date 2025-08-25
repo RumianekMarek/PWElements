@@ -91,7 +91,23 @@ class PWERegistrationExhibitors extends PWERegistration {
                     [gravityform id="'. $registration_form_id .'" title="false" description="false" ajax="false"]
                 </div>
             </div>
-        </div>';
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const labels = document.querySelectorAll("label.gfield_label");
+
+                labels.forEach(label => {
+                    if (label.textContent.trim().toLowerCase() === "patron") {
+
+                        const input = document.getElementById(label.getAttribute("for"));
+                        if (input) {
+                            input.value = "'. $domain_gr_exhib .'";
+                        }
+                    }
+                });
+            });
+        </script>';
 
         return $output;
     }

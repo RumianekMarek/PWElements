@@ -165,7 +165,7 @@ class PWEStore extends PWECommonFunctions {
                 $final_price = number_format((self::lang_pl() ? $updated_price_pl : (!empty($updated_price_en) ? $updated_price_en : $eur_price)), 0, ',', ' ') . ( self::lang_pl() ? ' zł ' : ' € ' );
             }
             
-            $product_price = $final_price . ($num_only == true ? '' : $final_price_desc);
+            $product_price = $final_price . ($num_only == true ? '' : $final_price_desc); 
             $product_price = $num_only == true ? preg_replace('/[^0-9\.]/', '', $product_price) : $product_price;
             
             return $product_price;
