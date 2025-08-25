@@ -1319,6 +1319,27 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                             document.getElementById("statusMessage").classList.add("error");
                         });
                     }
+                    function extractApartmentFromText(candidates, house) {
+                        let apartment = "";
+
+                        for (let text of candidates) {
+                            if (!text) continue;
+
+                            let regex1 = new RegExp("\\b" + house + "\\s*/\\s*(\\w+)");
+                            let match1 = text.match(regex1);
+                            if (match1) {
+                                return match1[1];
+                            }
+
+                            let match2 = text.match(/(?:m\.|lok\.)\s*(\w+)/i);
+                            if (match2) {
+                                return match2[1];
+                            }
+                        }
+
+                        return apartment; // "" jeśli nic nie znalazło
+                    }
+
                 </script>';
             }
 

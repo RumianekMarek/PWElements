@@ -473,11 +473,12 @@ class PWElementOtherEvents extends PWElements {
 
                 $output .= '
                 <style>
-                    .swiper-scrollbar.swiper-scrollbar.swiper-scrollbar-horizontal {
+                    .pwelement_'. self::$rnd_id .' .swiper-scrollbar.swiper-scrollbar.swiper-scrollbar-horizontal {
                         position: inherit;
                         height: 8px;
                     }
-                    .swiper-button-prev, .swiper-button-next {
+                    .pwelement_'. self::$rnd_id .' .swiper-button-prev, 
+                    .pwelement_'. self::$rnd_id .'.swiper-button-next {
                         position: inherit;
                         background: var(--accent-color);
                         color: white;
@@ -486,16 +487,17 @@ class PWElementOtherEvents extends PWElements {
                         min-width: 100px;
                         margin: 0;
                     }
-                    .swiper-button-next:after, .swiper-button-prev:after {
+                    .pwelement_'. self::$rnd_id .' .swiper-button-next:after, 
+                    .pwelement_'. self::$rnd_id .' .swiper-button-prev:after {
                         font-size: 22px;
                     }
-                    .swiper-navigation-container {
+                    .pwelement_'. self::$rnd_id .' .swiper-navigation-container {
                         display: flex;
                         align-items: center;
                         padding: 24px 12px;
                         gap: 36px;
                     }
-                    .swiper-arrows-container {
+                    .pwelement_'. self::$rnd_id .' .swiper-arrows-container {
                         display: flex;
                         gap: 18px;
                     }
@@ -525,24 +527,24 @@ class PWElementOtherEvents extends PWElements {
             if ($other_show_more_btn === 'true') {  
                 $output .= '
                 <style>
-                    .pwe-other-events__show-more-btn {
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__show-more-btn {
                         background: #ececec;
                         padding: 6px 18px;
                         border-radius: 36px;
                         width: 60%;
                     }
-                    .pwe-other-events__show-more-text {
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__show-more-text {
                         color: var(--accent-color);
                         font-weight: 600;
                         text-transform: capitalize;
                     }
-                    .pwe-other-events__show-more-arrow {
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__show-more-arrow {
                         color: var(--accent-color);
                         font-weight: 500;
                         margin-left: 0;
                         transition: 0.3s;
                     }
-                    .pwe-other-events__item:hover .pwe-other-events__show-more-arrow {
+                    .pwelement_'. self::$rnd_id .' .pwe-other-events__item:hover .pwe-other-events__show-more-arrow {
                         margin-left: 6px;
                     }
                 </style>';

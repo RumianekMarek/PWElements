@@ -136,7 +136,7 @@ class PWElementGenerator extends PWElements {
         $secret_key = '^GY0ZlZ!xzn1eM5';
         return hash_hmac('sha256', $domain, $secret_key);
     }
-    
+
     /**
      * Static method to hide specjal input.
      * Returns form for GF filter.
@@ -172,6 +172,26 @@ class PWElementGenerator extends PWElements {
         ), $atts ));
 
         $company_array = array();
+
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        $current_domain = $_SERVER['HTTP_HOST'];
+        $current_fair_group = null;
+
+        foreach ($pwe_groups_data as $item) {
+            if ($item->fair_domain === $current_domain) {
+                $current_fair_group = $item->fair_group;
+                break;
+            }
+        }
+
+        $domain_gr_exhib = $current_fair_group;
+
+        if ($domain_gr_exhib === 'gr3') {
+            $email = 'biuro.podawcze3@warsawexpo.eu';
+        } else {
+            $email = 'info@warsawexpo.eu';
+        }
+
 
         if(isset($_GET['wystawca'])){
 
@@ -675,11 +695,11 @@ class PWElementGenerator extends PWElements {
                 text-align: center;
                 margin: 18px auto;
             }
-                
+
             .modal__elements input[type="text"]{
                 width:60%;
             }
-               
+
             .modal__elements input[type="text"],
             .modal__elements select {
                 border: 1px solid black;
@@ -747,8 +767,8 @@ class PWElementGenerator extends PWElements {
             }
             .modal__elements .zastepczy{
                 color: #ccc;
-                font-style: italic; 
-            } 
+                font-style: italic;
+            }
             .file-uloader{
                 margin-top: 18px;
             }
@@ -800,7 +820,7 @@ class PWElementGenerator extends PWElements {
                     font-size: 14px;
                 }
             }
-            
+
             @media (max-width:960px) {
                 .pwe-generator-wystawcow .container {
                     max-width: none !important;
@@ -915,9 +935,9 @@ class PWElementGenerator extends PWElements {
                     max-width: 90px;
                 }
             }
-            </style>
+        </style>
 
-            <div id="pweGeneratorWystawcow" class="pwe-generator-wystawcow">
+        <div id="pweGeneratorWystawcow" class="pwe-generator-wystawcow">
                 ';
                     if ($generator_select == "exhibitor_quest") {
                     $output .= '
@@ -1230,18 +1250,18 @@ class PWElementGenerator extends PWElements {
                         self::languageChecker(
                             <<<PL
                                 Potrzebujesz pomocy?<br>
-                                Skontaktuj się z nami - <a href="mailto:info@warsawexpo.eu">info@warsawexpo.eu</a>
+                                Skontaktuj się z nami - <a href="mailto:$email">$email</a>
                             PL,
                             <<<EN
                                 Need help?<br>
-                                Contact us - <a href="mailto:info@warsawexpo.eu">info@warsawexpo.eu</a>
+                                Contact us - <a href="mailto:$email">$email</a>
                             EN
                         )
                     .'</h3>
 
                 </div>
             </div>
-            
+
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
             <script type="text/javascript">
                 jQuery(document).ready(function($){
@@ -1319,7 +1339,7 @@ class PWElementGenerator extends PWElements {
                                 $("footer").show();
                             }
                         });
-                        
+
                         $(".company").on("click", function(){
                             if($(this).next().attr("class").match(/-error/)){
                                 $(this).next().remove();
@@ -1345,7 +1365,7 @@ class PWElementGenerator extends PWElements {
                                 }
 
                                 const reader = new FileReader();
-                                
+
                                 reader.onload = function(e) {
                                     fileContent = e.target.result;
 
@@ -1359,16 +1379,16 @@ class PWElementGenerator extends PWElements {
                                         fileContent = e.target.result;
                                     }
                                     fileContent = fileContent.replace(/\r/g, "");
-                                    
+
                                     fileArray = fileContent.split("\n");
 
                                     filteredArray = [];
-                                    
+
                                     fileArray.forEach(function(element){
                                         if (element.trim() !== "" && !/^[,\s"]+$/.test(element)){
                                             let newElement = element.split(/,(?=(?:[^"]|"[^"]*")*$)/);
 
-                                            newElement = newElement.map(function(elem){ 
+                                            newElement = newElement.map(function(elem){
                                                 elem = elem.replace(/\\\\/g, ``);
                                                 elem = elem.replace(/\\"/g, ``);
                                                 return elem;
@@ -1382,7 +1402,7 @@ class PWElementGenerator extends PWElements {
 
                                     $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z adresami e-mail</label><select type="select" id="email-column" name="email-column" class="selectoret vars-to-insert"></select></div>`);
                                     $(".file-uloader").after(`<div class="file-selctor"><label>Kolumna z imionami i nazwiskami</label><select type="select" id="name-column" name="name-column" class="selectoret vars-to-insert"></select></div>`);
-                                    
+
                                     $(".selectoret").each(function(){
                                         $(this).append(`<option value="">Wybierz</option>`);
                                     });
@@ -1394,7 +1414,7 @@ class PWElementGenerator extends PWElements {
                                             }
                                         })
                                     });
-                                    
+
                                     $(".vars-to-insert").on("change", function(){
                                         if($(this).parent().next().attr("class").match(/-error/) == "-error"){
                                             $(this).parent().next().remove();
@@ -1441,9 +1461,9 @@ class PWElementGenerator extends PWElements {
                                 }
                             });
                         });
-                        
+
                         $(".wyslij").on("click",function(){
-                            if(!emailTrue){                 
+                            if(!emailTrue){
                                 return;
                             }
                             let pageLang = "' .get_locale(). '" == "pl_PL" ? "pl" : "en";
@@ -1486,7 +1506,7 @@ class PWElementGenerator extends PWElements {
                             }
                             if ($("#name-column").val() != ""){
                                 nameColumn = $("#name-column").val();
-                                
+
                             } else {
                                 if ($(".name-error").length == 0){
                                     $(".file-selctor").has("#name-column").after(`<p class="name-error error-color" >'.
@@ -1501,7 +1521,7 @@ class PWElementGenerator extends PWElements {
                                     .'</p>`);
                                 }
                             }
-                            
+
                             if(company_name == "" || emailColumn == "" || nameColumn == ""){
                                 return;
                             }
@@ -1517,7 +1537,7 @@ class PWElementGenerator extends PWElements {
                                 } else if (emailErrors < 5) {
                                     emailErrors++;
                                 } else {
-                                    
+
                                 }
                                 return acc;
                             }, []);
@@ -1526,7 +1546,7 @@ class PWElementGenerator extends PWElements {
                                 $(".modal__elements").html("<span class=btn-close>x</span>");
                                 $(".modal__elements").append("<div id=spinner class=spinner></div>");
                                 $closeBtn = $modal.find(".btn-close");
-                                
+
                                 $.post("' . $send_file . '", {
                                     token: "' . self::generateToken() .'",
                                     lang: pageLang,
@@ -1541,7 +1561,7 @@ class PWElementGenerator extends PWElements {
                                     } else {
                                         $(".modal__elements").append(`<p style="color:red; font-weight: 600; width: 90%;">Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo</p>`);
                                     }
-                                    
+
                                     $("#spinner").remove();
                                     tableCont.splice(0, tableCont.length);
                                     $("#dataContainer").empty();
@@ -1556,11 +1576,11 @@ class PWElementGenerator extends PWElements {
                                     self::languageChecker(
                                         <<<PL
                                         Przepraszamy, wystąpił problem techniczny. Spróbuj ponownie później lub zgłoś problem mailowo
-                                        Error -> 
+                                        Error ->
                                         PL,
                                         <<<EN
                                         Sorry, there was a technical problem. Please try again later or report the problem by email
-                                        Error -> 
+                                        Error ->
                                         EN
                                     )
                                 .' ${errorMessage}</p>`);
@@ -1588,7 +1608,7 @@ class PWElementGenerator extends PWElements {
             </script>';
 
             $output .= "
-            <script>                
+            <script>
                 var registrationCount = '" . $registration_count . "';
                 if (document.querySelector('html').lang === 'pl-PL') {
                     const companyNameInput = document.querySelector('.wyst .forms-container-form__right input[placeholder=\'FIRMA ZAPRASZAJĄCA\']');
