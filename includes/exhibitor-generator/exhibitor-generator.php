@@ -252,7 +252,7 @@ class PWEExhibitorGenerator{
      */
     public static function catalog_data($exhibitor_id = null) {
         $katalog_id = do_shortcode('[trade_fair_catalog]');
-        
+
         $today = new DateTime();
         $formattedDate = $today->format('Y-m-d');
         $token = md5("#22targiexpo22@@@#".$formattedDate);
@@ -317,6 +317,25 @@ class PWEExhibitorGenerator{
         $exhibitor_generator_id = 'pweExhibitor'. $exhibitor_generator_id_word .'Generator';
         $exhibitor_generator_class = 'pwe-exhibitor-'. $exhibitor_generator_class_word .'-generator';
 
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        $current_domain = $_SERVER['HTTP_HOST'];
+        $current_fair_group = null;
+
+        foreach ($pwe_groups_data as $item) {
+            if ($item->fair_domain === $current_domain) {
+                $current_fair_group = $item->fair_group;
+                break;
+            }
+        }
+
+        $domain_gr_exhib = $current_fair_group;
+
+        if ($domain_gr_exhib === 'gr3') {
+            $email = 'media3@warsawexpo.eu';
+        } else {
+            $email = 'generator.wystawcow@warsawexpo.eu';
+        }
+
         //Creating output for display
         $output_html = '
         <div id="'. $exhibitor_generator_id .'" class="'. $exhibitor_generator_class .'">
@@ -326,11 +345,11 @@ class PWEExhibitorGenerator{
                     PWECommonFunctions::languageChecker(
                         <<<PL
                             Potrzebujesz pomocy?<br>
-                            Skontaktuj się z nami - <a href="mailto:generator.wystawcow@warsawexpo.eu">generator.wystawcow@warsawexpo.eu</a>
+                            Skontaktuj się z nami - <a href="mailto:$email">$email</a>
                         PL,
                         <<<EN
                             Need help?<br>
-                            Contact us - <a href="mailto:generator.wystawcow@warsawexpo.eu">generator.wystawcow@warsawexpo.eu</a>
+                            Contact us - <a href="mailto:$email">$email</a>
                         EN
                     )
                 .'</h3>

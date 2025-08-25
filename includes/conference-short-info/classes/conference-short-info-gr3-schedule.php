@@ -25,9 +25,10 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
             $conf_slug = $conf->conf_slug;
             $organizer_info = self::getConferenceOrganizer($conf->id, $conf_slug, $lang);
 
-            if (!$organizer_info) continue;
+            // if (!$organizer_info) continue;
 
             $logo = $organizer_info['logo_url'];
+            $logo_alt = $organizer_info['desc'];
 
             $fair_days = self::getFairDaysFromShortcodes();
 
@@ -88,6 +89,7 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
                 'title' => PWECommonFunctions::languageChecker($conf->conf_name_pl, $conf->conf_name_en ?? $conf->conf_name_pl),
                 'img'   => PWECommonFunctions::languageChecker($conf->conf_img_pl, $conf->conf_img_en ?? $conf->conf_img_pl),
                 'logo'  => $logo,
+                'alt' => $logo_alt,
                 'date'  => $date_range,
                 'url'   => PWECommonFunctions::languageChecker('/wydarzenia', '/en/conferences') . '/?konferencja=' . $conf_slug,
             ];
@@ -343,12 +345,13 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
                             $content_title    = htmlspecialchars($limited_title, ENT_QUOTES, 'UTF-8');
                             $content_date     = $item['date'];
                             $content_logo     = $item['logo'];
+                            $content_alt     = $item['alt'];
                             $content_url      = $item['url'];
 
                             $output .= '<div class="pwe-conf-short-info-gr3-schedule__info-box ' . $slug . '-content ' . ($is_first_panel ? ' is-active' : '') .'">'
                                 . ($content_date ? '<div class="pwe-conf-short-info-gr3-schedule__info-box-date">' . $content_date . '</div>' : '') .
 
-                                 ($content_logo ? '<img class="pwe-conf-short-info-gr3-schedule__info-box-logo" src="' . $content_logo . '" alt="Logo">' : '') . '
+                                 ($content_logo ? '<img class="pwe-conf-short-info-gr3-schedule__info-box-logo" src="' . $content_logo . '" alt="Logo - ' . $content_alt . '">' : '') . '
                                 <div class="pwe-conf-short-info-gr3-schedule__info-box-title">' . $content_title . '</div>
                                 <a class="pwe-conf-short-info-gr3-schedule__info-box-btn btn" href="' . $content_url . '" target="_blank" rel="noopener">' .
                                     PWECommonFunctions::languageChecker('Zobacz więcej', 'See more') .
@@ -367,7 +370,7 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
 
                                 $output .= '
                                 <div class="swiper-slide ' . $item['slug'] . '-slide">
-                                    <img id="' . $id . '" class="pwe-conf-short-info-gr3-schedule__tile" data-no-lazy="1" src="' . $src . '" alt="' . $alt . '">
+                                    <img id="' . $id . '" class="pwe-conf-short-info-gr3-schedule__tile" data-no-lazy="1" src="' . $src . '" alt="' . PWECommonFunctions::languageChecker('Konferencja ', 'Conference') . $alt . '">
                                 </div>';
                             }
                         $output .= '</div>

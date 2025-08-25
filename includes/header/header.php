@@ -292,6 +292,8 @@ class PWEHeader extends PWECommonFunctions {
             require_once plugin_dir_path(__FILE__) . 'classes/header_squares.php';
         } else if ($pwe_header_modes == "video_mode") {
             require_once plugin_dir_path(__FILE__) . 'classes/header_video.php';
+        } else if ($pwe_header_modes == "glass_mode") {
+            require_once plugin_dir_path(__FILE__) . 'classes/header_glass.php';
         }
 
         $output = do_shortcode($output);

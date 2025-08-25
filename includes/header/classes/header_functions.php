@@ -202,6 +202,7 @@ function initVCMapHeader() {
                             'Coference mode' => 'conference_mode',
                             'Squares mode' => 'squares_mode',
                             'Video mode' => 'video_mode',
+                            'Glass mode' => 'glass_mode',
                         ),
                     ),
                     array(

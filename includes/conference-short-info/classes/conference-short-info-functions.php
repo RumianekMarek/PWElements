@@ -5,13 +5,29 @@ trait PWEConferenceShortInfoFunctions {
     /** WYBÓR KLASY RENDERERA (widok skrótu) */
     public static function getConferenceRendererClass($domain, $fair_group) {
 
-        if (in_array($domain, [
-            'warsawhome.eu', 'warsawhomefurniture.com', 'warsawhometextile.com',
-            'warsawhomelight.com', 'warsawhomekitchen.com', 'warsawhomebathroom.com',
-            'warsawbuild.eu'
-        ], true)) {
-            require_once plugin_dir_path(__FILE__) . '/conference-short-info-home.php';
-            return 'PWEConferenceShortInfoHome';
+        $base   = plugin_dir_path(__FILE__);
+        $domain = strtolower((string) $domain); // opcjonalna normalizacja
+
+        // Mapowanie domen → [plik, klasa]
+        $domainMap = [
+            'warsawhome.eu'           => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'warsawhomefurniture.com' => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'warsawhometextile.com'   => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'warsawhomelight.com'     => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'warsawhomekitchen.com'   => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'warsawhomebathroom.com'  => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'warsawbuild.eu'          => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
+            'mr.glasstec.pl'         => ['conference-short-info-solar.php', 'PWEConferenceShortInfoSolar'],
+            'remadays.com'            => ['conference-short-info-rema.php', 'PWEConferenceShortInfoRema'],
+            'warsawhvacexpo.com'      => ['conference-short-info-hvac.php', 'PWEConferenceShortInfoHvac'],
+            'warsawpack.pl'           => ['conference-short-info-pack.php', 'PWEConferenceShortInfoPack'],
+            'industryweek.pl'         => ['conference-short-info-pack.php', 'PWEConferenceShortInfoPack'],
+        ];
+
+        // Najpierw decyzja po domenie (bez zmian w logice)
+        if (isset($domainMap[$domain])) {
+            require_once $base . '/' . $domainMap[$domain][0];
+            return $domainMap[$domain][1];
         }
 
         switch ($fair_group) {
@@ -55,6 +71,34 @@ trait PWEConferenceShortInfoFunctions {
         $period = new DatePeriod($start, new DateInterval('P1D'), (clone $end));
         foreach ($period as $d) $days[] = $d->format('Y-m-d');
         return $days;
+    }
+
+    /** Rok końca targów (YYYY) na podstawie shortcode'u */
+    public static function getFairEndYear(): ?int {
+        $end_raw = do_shortcode('[trade_fair_enddata]');           // np. 2025/10/15 18:00
+        $end     = DateTime::createFromFormat('Y/m/d H:i', $end_raw);
+        return $end ? (int)$end->format('Y') : null;
+    }
+
+    /** Wyciąga rok (YYYY) ze slug’a, np. "akademia-budowy-domu-warsaw-home-2025" -> 2025 */
+    public static function getYearFromSlug(string $slug): ?int {
+        // dopasuj 4-cyfrowy rok „w segmentach” sluga
+        if (preg_match('~(?:^|-)(20\d{2})(?:-|$)~', $slug, $m)) {
+            return (int)$m[1];
+        }
+        return null;
+    }
+
+    /** Filtr: konferencje „aktualne” = rok w slug’u == rok końca targów */
+    public static function filterCurrentConferencesByEndYear(array $all_conferences): array {
+        $fair_end_year = self::getFairEndYear();
+        if (!$fair_end_year) return [];
+        $out = [];
+        foreach ($all_conferences as $conf) {
+            $y = self::getYearFromSlug((string)$conf->conf_slug);
+            if ($y && $y === $fair_end_year) $out[] = $conf;
+        }
+        return $out;
     }
 
     /** CZY SĄ KONFERENCJE W DNIACH TARGOWYCH */
@@ -159,4 +203,53 @@ trait PWEConferenceShortInfoFunctions {
 
         return ['logo_url' => $has_logo ? $logo_url : null, 'desc' => $organizer_name];
     }
+
+    /** SORTOWANIE: zwykłe -> medal -> panel; w grupach po conf_order (rosnąco) */
+    public static function sortConferencesCustom(array $confs): array {
+        usort($confs, function($a, $b) {
+
+            // 0 = zwykłe, 1 = medal, 2 = panel
+            $groupOf = static function($c) {
+                $slug = strtolower($c->conf_slug ?? '');
+                if (strpos($slug, 'panel') !== false) return 2;
+                if (strpos($slug, 'medal') !== false) return 1;
+                return 0;
+            };
+
+            $ga = $groupOf($a);
+            $gb = $groupOf($b);
+            if ($ga !== $gb) {
+                return $ga <=> $gb; // różne -> medal -> panel
+            }
+
+            // w obrębie tej samej grupy sort po conf_order (liczbowo, puste na koniec)
+            $oa = isset($a->conf_order) && $a->conf_order !== '' ? (int)$a->conf_order : PHP_INT_MAX;
+            $ob = isset($b->conf_order) && $b->conf_order !== '' ? (int)$b->conf_order : PHP_INT_MAX;
+            if ($oa !== $ob) return $oa <=> $ob;
+
+            // tie-breaker dla stabilności
+            $na = $a->conf_name_pl ?? $a->conf_name_en ?? '';
+            $nb = $b->conf_name_pl ?? $b->conf_name_en ?? '';
+            $cmp = strcmp($na, $nb);
+            if ($cmp !== 0) return $cmp;
+
+            return (int)($a->id ?? 0) <=> (int)($b->id ?? 0);
+        });
+
+        return $confs;
+    }
+
+    /** Utility: zamiana ;; na <br> w nazwach konferencji */
+    public static function normalizeConferenceNames(array $confs): array {
+        foreach ($confs as $conf) {
+            if (isset($conf->conf_name_pl)) {
+                $conf->conf_name_pl = str_replace(';;', '<br>', $conf->conf_name_pl);
+            }
+            if (isset($conf->conf_name_en)) {
+                $conf->conf_name_en = str_replace(';;', '<br>', $conf->conf_name_en);
+            }
+        }
+        return $confs;
+    }
+
 }

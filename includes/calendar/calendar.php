@@ -305,31 +305,6 @@ add_action('load-post-new.php', function () {
     }
 });
 
-// If WPML opens post.php directly (editing a new translation), it will add set_event_type as in post-new.php
-add_action('load-post.php', function () {
-    if (!isset($_GET['post'])) return;
-    $post_id = (int) $_GET['post'];
-    if (get_post_type($post_id) !== 'event') return;
-
-    // Don't duplicate if already present
-    if (isset($_GET['set_event_type'])) return;
-
-    // Find the original via WPML
-    $src_id = function_exists('pwe_wpml_get_source_post_id') ? pwe_wpml_get_source_post_id($post_id) : 0;
-    if (!$src_id && function_exists('pwe_wpml_source_from_request')) {
-        // emergency try trid/source_lang
-        $src_id = pwe_wpml_source_from_request();
-    }
-    if (!$src_id) return;
-
-    // What type is the original?
-    $slug = function_exists('pwe_get_event_type_slug') ? pwe_get_event_type_slug($src_id) : 'event';
-    if (empty($slug)) $slug = 'event';
-
-    wp_safe_redirect(add_query_arg('set_event_type', $slug));
-    exit;
-});
-
 // Various fields in edit (dynamic meta boxes)
 add_action('add_meta_boxes_event', function($post) {
     $event_type = '';
@@ -344,7 +319,7 @@ add_action('add_meta_boxes_event', function($post) {
 
         // Fallback – jeśli wciąż pusto, dociągnij z oryginału WPML
         if (empty($event_type) && defined('ICL_SITEPRESS_VERSION')) {
-            $src_id = isset($_GET['from_post']) ? (int) $_GET['from_post'] : pwe_wpml_get_source_post_id($post->ID);
+            $src_id = isset($_GET['from_post']) ? (int) $_GET['from_post'] : pwe_wpml_source_from_request();
             if ($src_id) {
                 $event_type = pwe_get_event_type_slug($src_id);
             }

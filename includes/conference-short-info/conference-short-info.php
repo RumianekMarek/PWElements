@@ -41,6 +41,8 @@ class PWEConferenceShortInfo {
 
     public function initVCMapPWEConferenceShortInfo() {
         if (class_exists('Vc_Manager')) {
+            $domain     = parse_url(site_url(), PHP_URL_HOST);
+            $fair_group = strtolower($fair_data[0]->fair_group ?? 'fallback');
             $renderer_class = $this->getConferenceRendererClass($domain, $fair_group);
 
             $params = method_exists($renderer_class, 'initElements') 
@@ -102,12 +104,19 @@ class PWEConferenceShortInfo {
         $has_schedule = self::hasValidConferences($all_conferences, $fair_days);
         $has_any_conference = !empty($all_conferences);
 
+
+        // NOWY WARUNEK: czy są konferencje aktualne?
+        $current_conferences = self::filterCurrentConferencesByEndYear($all_conferences);
+        $has_current = !empty($current_conferences);
+        $sorted_current_conferences = self::sortConferencesCustom($current_conferences);
+        $sorted_current_conferences = self::normalizeConferenceNames($sorted_current_conferences);
+
         if ($fair_group === 'gr3') {
-            // DLA GR3: jeśli jest jakakolwiek konferencja -> schedule
-            $use_schedule = $has_any_conference;
+            // dla gr3: musi być konferencja + aktualna
+            $use_schedule = ($has_any_conference && $has_current);
         } else {
-            // DLA POZOSTAŁYCH: jak dotychczas (wymagany organizer i dopasowanie do dni targowych)
-            $use_schedule = ($has_schedule && !$no_organizer);
+            // dla pozostałych: stara logika + aktualna
+            $use_schedule = ($has_schedule && !$no_organizer && $has_current);
         }
 
         $renderer_class = $use_schedule
@@ -123,8 +132,10 @@ class PWEConferenceShortInfo {
         $title = $first_fair_adds ? ($first_fair_adds->{'konf_title_' . $selected_lang} ?? '') : '';
         $desc  = $first_fair_adds ? ($first_fair_adds->{'konf_desc_' . $selected_lang} ?? '') : '';
 
+        $list_for_renderer = $use_schedule ? $sorted_current_conferences : [];
+
         if (method_exists($renderer_class, 'output')) {
-            $content = $renderer_class::output($atts, $all_conferences, $rnd_class, $name, $title, $desc);
+            $content = $renderer_class::output($atts, $list_for_renderer, $rnd_class, $name, $title, $desc);
             if (trim($content) === '') return '';
             return '<div id="PWEConferenceShortInfo" class="' . esc_attr($rnd_class) . '">' . $content . '</div>';
         }

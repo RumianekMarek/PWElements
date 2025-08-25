@@ -581,11 +581,26 @@ class PWECalendar extends PWECommonFunctions {
 
             $event_posts_full = $event_posts;
 
-            // Sorting posts by date
+            // Sorting by date first, and if the date is the same, "week" goes first
             usort($event_posts, function($a, $b) {
                 $a_date = DateTime::createFromFormat('d-m-Y', $a['start_date']);
                 $b_date = DateTime::createFromFormat('d-m-Y', $b['start_date']);
-                return $a_date <=> $b_date;
+
+                // Date comparison
+                $dateComparison = $a_date <=> $b_date;
+                if ($dateComparison !== 0) {
+                    return $dateComparison;
+                }
+
+                // If the dates are the same, "week" should go first
+                if ($a['event_type'] === 'week' && $b['event_type'] !== 'week') {
+                    return -1; // $a przed $b
+                } elseif ($a['event_type'] !== 'week' && $b['event_type'] === 'week') {
+                    return 1; // $b przed $a
+                }
+
+                // If both are the same type or neither is "week", leave the order unchanged
+                return 0;
             });
 
             if (!empty($pwe_calendar_posts_num) && $pwe_calendar_posts_num > 0) {
@@ -709,7 +724,7 @@ class PWECalendar extends PWECommonFunctions {
                             margin: 5px 0;
                         }
                     }
-                    .pwe-calendar__categories-dropdown-content .'. self::multi_translation("all") .' { 
+                    .pwe-calendar__categories-dropdown-content .all { 
                         background-color: #594334;
                         font-size: 21px;
                     }
@@ -737,7 +752,7 @@ class PWECalendar extends PWECommonFunctions {
 
                 foreach ($event_posts as $event) {
                     if ($pwe_calendar_week && $event['event_type'] !== "week") {
-                        continue; // pomiń wszystkie, które nie są tygodniowe
+                        continue;
                     }
                     $output .= self::render_calendar_event_card($event, $shortcodes_active, $lang_pl);
                 }
@@ -1029,8 +1044,6 @@ class PWECalendar extends PWECommonFunctions {
             $output .= '
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    const allCategoriesData = '. json_encode($all_categories) .';
-
                     function replacePL(text) {
                         return decodeURIComponent(text.replace(/\+/g, " ")).replace(/-/g, " ");
                     }
@@ -1042,7 +1055,97 @@ class PWECalendar extends PWECommonFunctions {
                     const callendarContainer = document.querySelector(".pwe-calendar__wrapper");
                     const allEvents = callendarContainer ? callendarContainer.querySelectorAll(".pwe-calendar__item") : [];
 
-                    // Expand/close dropdown
+                    // 1. Get all categories from the search_category attribute
+                    const categorySet = new Set();
+                    allEvents.forEach(eventItem => {
+                        const categories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
+                        categories.forEach(cat => categorySet.add(cat.toLowerCase()));
+                    });
+
+                    // 2. Convert Set to array
+                    let allCategoriesArray = Array.from(categorySet);
+
+                    // 3. Sort alphabetically, but move "other" to the end
+                    allCategoriesArray.sort((a, b) => {
+                        if (a === "'. self::multi_translation('other') .'") return 1; // "other" after everything else
+                        if (b === "'. self::multi_translation('other') .'") return -1;
+                        return a.localeCompare(b); // alphabetical order for the rest
+                    });
+
+                    // 4. Map to objects for dropdown
+                    let sortedCategories = allCategoriesArray.map(cat => ({
+                        name: cat,
+                        slug: cat.toLowerCase().replace(/\s+/g, "-")
+                    }));
+
+                    // 5. Add "All" at the beginning
+                    sortedCategories.unshift({
+                        name: "'. self::multi_translation('all') .'",
+                        slug: "all"
+                    });
+
+                    // 6. Add "Premier editions" at the end if needed
+                    if ("'. $pwe_calendar_week .'" !== "true") {
+                        sortedCategories.push({
+                            name: "'. self::multi_translation('premier_edition') .'",
+                            slug: "premier-edition"
+                        });
+                    }
+
+                    // Now use sortedCategories to build your dropdown
+                    let allCategoriesData = sortedCategories;
+
+                    // 3. Fill the dropdown
+                    allCategoriesData.forEach((category, i) => {
+                        const li = document.createElement("li");
+                        const categorySlug = category.slug.toLowerCase().replace(/\s+/g, "-");
+                        if (categorySlug) li.classList.add(categorySlug);
+                        li.innerText = replacePL(category.name).toUpperCase();
+                        li.style = `--delay: ${i + 1}`;
+
+                        li.addEventListener("click", function (event) {
+                            if (categorySlug === "all") {
+                                // Show all events
+                                allEvents.forEach(eventItem => eventItem.classList.remove("dont-show"));
+                            } else if (categorySlug === "premier-edition") {
+                                allEvents.forEach(eventItem => {
+                                    const editionText = eventItem.querySelector(".pwe-calendar__edition p")?.innerText.toLowerCase() || "";
+                                    const isPremier = editionText.includes("'. self::multi_translation("premier_edition") .'".toLowerCase());
+                                    eventItem.classList.toggle("dont-show", !isPremier);
+                                });
+                            } else {
+                                allEvents.forEach(eventItem => {
+                                    const eventCategories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
+                                    const eventCategorySlug = eventCategories.map(cat => cat.toLowerCase().replace(/\s+/g, "-"));
+                                    const isCategoryMatched = eventCategorySlug.includes(categorySlug);
+                                    eventItem.classList.toggle("dont-show", !isCategoryMatched);
+                                });
+                            }
+
+                            // Update dropdown button text
+                            dropdownBtn.innerHTML = `<span>${event.target.innerText}</span><span class="arrow"></span>`;
+                            dropdownBtn.click(); // Close dropdown
+                        });
+
+                        dropdownMenu?.appendChild(li);
+                    });
+
+                    // Hide B2C elements
+                    const b2cElements = dropdownMenu?.querySelectorAll("[class*=\'b2c-\']");
+                    b2cElements.forEach(element => element.style.display = "none");
+
+                    // Search functionality
+                    inputSearchElement?.addEventListener("input", () => {
+                        const query = inputSearchElement.value.toLowerCase().trim();
+                        allEvents.forEach(eventItem => {
+                            const fairName = eventItem.getAttribute("search_engine")?.toLowerCase().trim() || "";
+                            const shortName = eventItem.querySelector(".pwe-calendar__short-name")?.innerText.toLowerCase().trim() || "";
+                            const match = eventItem.classList.contains(query) || fairName.includes(query) || shortName.includes(query);
+                            eventItem.classList.toggle("dont-show", !match);
+                        });
+                    });
+
+                    // Handle dropdown open/close
                     dropdownBtn?.addEventListener("click", () => {
                         let isExpanded = dropdownBtn.getAttribute("aria-expanded") === "true";
                         dropdownBtn.setAttribute("aria-expanded", !isExpanded);
@@ -1050,82 +1153,6 @@ class PWECalendar extends PWECommonFunctions {
                         dropdownContent?.classList.toggle("dropdown-delay", isExpanded);
                     });
 
-                    // Sorting categories to display "all", followed by other categories, and "other" and "premier_editions_class" last
-                    if (Array.isArray(allCategoriesData)) {
-                        // Sort categories with "all" first, then "other", "premier_editions_class", followed by others
-                        const sortedCategories = allCategoriesData.sort((a, b) => {
-                            if (a.slug === "'. self::multi_translation("all") .'") return -1;
-                            if (b.slug === "'. self::multi_translation("all") .'") return 1;
-                            if (a.slug === "'. self::multi_translation("other") .'") return 1;
-                            if (b.slug === "'. self::multi_translation("other") .'") return -1;
-                            return a.name.localeCompare(b.name);
-                        });
-
-                        // Manually add "Premier editions" at the end
-                        sortedCategories.push({
-                            name: "'. self::multi_translation("premier_edition") .'",
-                            slug: "premier-edition"
-                        });
-
-                        // Generate dropdown list with categories from sorted allCategoriesData
-                        sortedCategories.forEach((category, i) => {
-                            // Create the list item for each category
-                            const li = document.createElement("li");
-                            const categorySlug = category.slug.toLowerCase().replace(/\s+/g, "-");
-                            li.classList.add(categorySlug);  // Add class based on slug
-                            li.innerText = replacePL(category.name).toUpperCase();  // Set inner text as category name
-                            li.style = `--delay: ${i + 1}`;
-
-                            // Adding click event to filter the events based on the selected category
-                            li.addEventListener("click", function () {
-                                const selectedCategorySlug = categorySlug;
-                                if (selectedCategorySlug === "premier-edition") {
-                                    // Show only events with "premier edycja"
-                                    allEvents.forEach(eventItem => {
-                                        const editionText = eventItem.querySelector(".pwe-calendar__edition p")?.innerText.toLowerCase() || "";
-                                        const isPremier = editionText.includes("'. self::multi_translation("premier_edition") .'".toLowerCase());
-                                        eventItem.classList.toggle("dont-show", !isPremier);
-                                    });
-                                } else {
-                                    // Show events based on the selected category
-                                    allEvents.forEach(eventItem => {
-                                        const eventCategories = eventItem.getAttribute("search_category")?.split(/\s+/) || [];
-                                        const eventCategorySlug = eventCategories.map(cat => cat.toLowerCase().replace(/\s+/g, "-"));
-                                        const isCategoryMatched = eventCategorySlug.includes(selectedCategorySlug);
-
-                                        eventItem.classList.toggle("dont-show", !isCategoryMatched);
-                                    });
-                                }
-
-                                // Update dropdown button text
-                                dropdownBtn.innerHTML = `<span>${event.target.innerText}</span><span class="arrow"></span>`;
-                                dropdownBtn.click(); // Close dropdown after selection
-                            });
-
-                            // Append the list item to the dropdown menu
-                            dropdownMenu?.appendChild(li);
-                        });
-                    }
-
-                    const b2cElements = dropdownMenu?.querySelectorAll("[class*=\'b2c-\']");
-                    b2cElements.forEach(element => {
-                        element.style.display = "none";
-                    });
-
-                    // Search engine support
-                    inputSearchElement?.addEventListener("input", () => {
-                        const query = inputSearchElement.value.toLowerCase().trim();
-
-                        allEvents.forEach(eventItem => {
-                            const fairName = eventItem.getAttribute("search_engine")?.toLowerCase().trim() || "";
-                            const shortName = eventItem.querySelector(".pwe-calendar__short-name")?.innerText.toLowerCase().trim() || "";
-                            const match = eventItem.classList.contains(query)
-                                || fairName.includes(query)
-                                || shortName.includes(query);
-
-                            eventItem.classList.toggle("dont-show", !match);
-                        });
-                    });
                 });
             </script>';
         }
