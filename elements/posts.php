@@ -589,6 +589,12 @@ class PWElementPosts extends PWElements {
                         display: flex;
                         align-items: center; /* Opcjonalnie, jeśli chcesz wyśrodkować zawartość */
                     }
+                    .pwelement_'. self::$rnd_id .' .pwe-post-thumbnail {
+                        width:100%;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-post {
+                        flex-direction:column;
+                    }
                 </style>
                 ';
             }
