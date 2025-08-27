@@ -122,9 +122,9 @@ trait PWEConferenceShortInfoFunctions {
         return false;
     }
 
+
     /** PARSOWANIE DATY Z KLUCZA */
     public static function parse_conference_key_to_date($key, $conf_slug = '') {
-
         $candidates = [];
 
         foreach (explode(';;', (string)$key) as $piece) {
@@ -135,36 +135,62 @@ trait PWEConferenceShortInfoFunctions {
             $candidates[] = trim(html_entity_decode(strip_tags((string)$key)));
         }
 
+        // Regexy dla różnych formatów
         $date_patterns = [
-            '\b\d{4}/\d{1,2}/\d{1,2}\b',   // Y/m/d
-            '\b\d{1,2}/\d{1,2}/\d{4}\b',   // d/m/Y
-            '\b\d{1,2}\.\d{1,2}\.\d{4}\b', // d.m.Y
-            '\b\d{4}-\d{1,2}-\d{1,2}\b',   // Y-m-d
+            'dmy_slash' => '\b\d{1,2}/\d{1,2}/\d{4}\b',
+            'dmy_dot'   => '\b\d{1,2}\.\d{1,2}\.\d{4}\b',
+            'ymd_dash'  => '\b\d{4}-\d{1,2}-\d{1,2}\b',
+            'ymd_slash' => '\b\d{4}/\d{1,2}/\d{1,2}\b',
+            'range'     => '\b\d{1,2}-\d{1,2}[\.\/-]\d{1,2}[\.\/-]\d{4}\b',
         ];
-        $regex   = '~(' . implode('|', $date_patterns) . ')~u';
-        $formats = ['Y/m/d', 'd/m/Y', 'd.m.Y', 'Y-m-d'];
+
+        $formats_map = [
+            'dmy_slash' => 'd/m/Y',
+            'dmy_dot'   => 'd.m.Y',
+            'ymd_dash'  => 'Y-m-d',
+            'ymd_slash' => 'Y/m/d',
+        ];
 
         foreach ($candidates as $raw) {
-            if (preg_match($regex, $raw, $m)) {
-                $found = $m[0];
-                foreach ($formats as $fmt) {
-                    $dt = DateTime::createFromFormat($fmt, $found);
-                    $errors = DateTime::getLastErrors();
-                    if ($dt && $errors['warning_count'] === 0 && $errors['error_count'] === 0) {
-                        [$Y, $mth, $d] = explode('-', $dt->format('Y-m-d'));
-                        if (checkdate((int)$mth, (int)$d, (int)$Y)) {
+            $raw = trim(preg_replace('/[^\x20-\x7E]/', '', $raw)); // usuń dziwne znaki
+
+            foreach ($date_patterns as $type => $pattern) {
+                if (preg_match("~$pattern~u", $raw, $m)) {
+                    $found = $m[0];
+
+                    if ($type === 'range') {
+                        if (preg_match('~^(\d{1,2})-(\d{1,2})([\.\/-]\d{1,2}[\.\/-]\d{4})$~', $found, $parts)) {
+                            $found = $parts[1] . $parts[3];
+                            $type = (strpos($parts[3], '.') !== false) ? 'dmy_dot' : 'dmy_slash';
+                        }
+                    }
+
+                    if (isset($formats_map[$type])) {
+                        $fmt = $formats_map[$type];
+                        $dt = DateTime::createFromFormat($fmt, $found);
+                        $errors = DateTime::getLastErrors();
+
+                        if ($dt && (empty($errors['error_count']) || $errors['error_count'] == 0)) {
                             return $dt->format('Y-m-d');
                         }
+                    }
+
+                    // Jeśli createFromFormat zawiodło → fallback na strtotime()
+                    $ts = strtotime($found);
+                    if ($ts !== false) {
+                        return date('Y-m-d', $ts);
                     }
                 }
             }
         }
 
-        if (function_exists('current_user_can') && current_user_can('manage_options')) {
-            echo "<script>console.log('Nieparsowalna data | slug: " . addslashes($conf_slug) . " | key: " . addslashes((string)$key) . "');</script>";
-        }
+        echo "<script>console.log('Nieparsowalna data | slug: "
+            . addslashes($conf_slug) . " | key: " . addslashes((string)$key) . "');</script>";
         return null;
     }
+
+
+
 
     /** ORGANIZATOR KONFERENCJI (logo + opis) */
     public static function getConferenceOrganizer($conf_id, $conf_slug, $lang) {
