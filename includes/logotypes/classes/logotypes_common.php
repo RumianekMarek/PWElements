@@ -662,14 +662,14 @@ class PWElementAdditionalLogotypes {
                     $files = [];
 
                     foreach ($cap_logotypes_data as $logo_data) {
-                        if ($logo_data->logos_type === "partner-targow" ||
+                        if ($logo_data->logos_type === "partner-honorowy" ||
+                            $logo_data->logos_type === "partner-merytoryczny" ||
+                            $logo_data->logos_type === "partner-targow" ||
                             $logo_data->logos_type === "patron-medialny" ||
-                            $logo_data->logos_type === "partner-strategiczny" ||
-                            $logo_data->logos_type === "partner-honorowy" ||
-                            $logo_data->logos_type === "principal-partner" ||
-                            $logo_data->logos_type === "industry-media-partner" ||
                             $logo_data->logos_type === "partner-branzowy" ||
-                            $logo_data->logos_type === "partner-merytoryczny") {
+                            $logo_data->logos_type === "industry-media-partner" ||
+                            $logo_data->logos_type === "partner-strategiczny" ||
+                            $logo_data->logos_type === "principal-partner") {
                             $saving_paths($files, $logo_data);
                         }
                     }

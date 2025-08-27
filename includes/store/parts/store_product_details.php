@@ -79,16 +79,36 @@ $output .= '
                         </style>';
                     }
 
+                    $url_domain   = str_replace(".", "-", $current_domain);
+                    $url_custom_pl = 'https://cap.warsawexpo.eu/public/uploads/domains/'. $url_domain .'/shop/'. $product->prod_slug .'/header_pl.webp';
+                    $url_custom_en = 'https://cap.warsawexpo.eu/public/uploads/domains/'. $url_domain .'/shop/'. $product->prod_slug .'/header_en.webp';
+
+                    if (self::lang_pl()) {
+                        if (self::image_exists($url_custom_pl)) {
+                            $img_url = $url_custom_pl;
+                        } else {
+                            $img_url = 'https://cap.warsawexpo.eu/public/uploads/shop/'. $product->prod_image_pl;
+                        }
+                    } else {
+                        if (self::image_exists($url_custom_en)) {
+                            $img_url = $url_custom_en;
+                        } elseif (self::image_exists($url_custom_pl)) {
+                            $img_url = $url_custom_pl;
+                        } else {
+                            $img_url = 'https://cap.warsawexpo.eu/public/uploads/shop/'. (!empty($product->prod_image_en) ? $product->prod_image_en : $product->prod_image_pl);
+                        }
+                    }
+
                     $output .= '
                     <!-- Desc item -->
                     <div id="'. $product->prod_slug .'" class="pwe-store__featured-service pwe-store__featured-service-'. $product->prod_slug .' pwe-store__service '. $sold_out . ' ' . $status .'" category="'. $category .'" data-slug="'. $product->prod_slug .'">
                         <div class="pwe-store__featured-content">
                             <div class="pwe-store__featured-image">
-                                <img  
-                                    class="pwe-store__featured-single-image"
-                                    src="https://cap.warsawexpo.eu/public/uploads/shop/'. ( self::lang_pl() ? $product->prod_image_pl : (!empty($product->prod_image_en) ? $product->prod_image_en : $product->prod_image_pl)) .'" 
+                                <img
+                                    src="'. $img_url .'" 
                                     alt="'. ( self::lang_pl() ? $product->prod_title_short_pl : $product->prod_title_short_en ) .'"
                                 >';
+
                                 if (!empty($product->prod_image_gallery)) {
                                     $output .= '
                                     <div class="pwe-store__featured-gallery">';

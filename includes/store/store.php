@@ -183,6 +183,13 @@ class PWEStore extends PWECommonFunctions {
             return round($price);
         }
     }
+
+    public function image_exists($url) {
+        $headers = @get_headers($url, 1);
+        return ($headers && strpos($headers[0], '200') !== false 
+                && isset($headers["Content-Type"]) 
+                && strpos($headers["Content-Type"], "image/") === 0);
+    }
     
     public function PWEStoreOutput() {  
         $pwe_store_data = self::get_database_store_data(); 
