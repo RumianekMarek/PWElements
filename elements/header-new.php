@@ -256,11 +256,11 @@ class PWElementHeaderNew extends PWElements {
             <div class="pwe-header-new-wrapper">
                 <div class="pwe-header-new-left">
                     <div class="pwe-header-new-left-img-desktop">
-                        <img src="/wp-content/plugins/PWElements/media/colors.webp">
+                        <img src="/wp-content/plugins/pwe-media/media/colors.webp">
                     </div>
                     <div class="pwe-header-new-left-content">
                         <div class="pwe-header-new-left-img-mobile-left">
-                            <img src="/wp-content/plugins/PWElements/media/colors_horizontal.webp">
+                            <img src="/wp-content/plugins/pwe-media/media/colors_horizontal.webp">
                         </div>
                         <div class="pwe-header-new-left-content-wrapper">
                             <img class="pwe-header-new-logo" src="/doc/logo-color.webp">
@@ -273,8 +273,8 @@ class PWElementHeaderNew extends PWElements {
                 </div>
                 <div class="pwe-header-new-right">
                     <div class="pwe-header-new-right-img">
-                        <img class="pwe-header-new-right-img-desktop" src="/wp-content/plugins/PWElements/media/hall_desktop.webp">
-                        <img class="pwe-header-new-right-img-mobile" src="/wp-content/plugins/PWElements/media/hall_mobile.webp">
+                        <img class="pwe-header-new-right-img-desktop" src="/wp-content/plugins/pwe-media/media/hall_desktop.webp">
+                        <img class="pwe-header-new-right-img-mobile" src="/wp-content/plugins/pwe-media/media/hall_mobile.webp">
                     </div>
                     <div class="pwe-header-new-right-btn">
                         <a href="#">WEŹ UDZIAŁ</a>

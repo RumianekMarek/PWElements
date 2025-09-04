@@ -493,7 +493,7 @@ class PWElementTwoCols extends PWElements {
 
         $colas_text = PWECommonFunctions::decode_clean_content($pwe_two_cols_text);
 
-        $pwe_two_cols_img_src = (!empty($pwe_two_cols_img_src)) ? $pwe_two_cols_img_src : '/wp-content/plugins/PWElements/media/poznaj-targi.jpg';
+        $pwe_two_cols_img_src = (!empty($pwe_two_cols_img_src)) ? $pwe_two_cols_img_src : '/wp-content/plugins/pwe-media/media/poznaj-targi.jpg';
 
         $pwe_two_cols_button_left_color = (!empty($pwe_two_cols_button_left_color)) ? $pwe_two_cols_button_left_color : self::$fair_colors['Accent'];
 

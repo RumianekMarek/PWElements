@@ -178,8 +178,8 @@ class PWElementAbout extends PWElements {
 
         if($about_select =='orginal'){
 
-            $pwe_about_left_img_src = (!empty($pwe_about_left_img_src)) ? $pwe_about_left_img_src : '/wp-content/plugins/PWElements/media/poznaj-targi.jpg';
-            $pwe_about_right_img_src = (!empty($pwe_about_right_img_src)) ? $pwe_about_right_img_src : '/wp-content/plugins/PWElements/media/poznaj-konferencje.jpg';
+            $pwe_about_left_img_src = (!empty($pwe_about_left_img_src)) ? $pwe_about_left_img_src : '/wp-content/plugins/pwe-media/media/poznaj-targi.jpg';
+            $pwe_about_right_img_src = (!empty($pwe_about_right_img_src)) ? $pwe_about_right_img_src : '/wp-content/plugins/pwe-media/media/poznaj-konferencje.jpg';
 
             $output = '
             <style>
@@ -397,11 +397,11 @@ class PWElementAbout extends PWElements {
             }
 
             .about-us_container .about-us_container-left::before {
-                background-image: url(/wp-content/plugins/PWElements/media/poznaj-targi.jpg);
+                background-image: url(/wp-content/plugins/pwe-media/media/poznaj-targi.jpg);
             }
 
             .about-us_container .about-us_container-right::before {
-                background-image: url(/wp-content/plugins/PWElements/media/poznaj-konferencje.jpg);
+                background-image: url(/wp-content/plugins/pwe-media/media/poznaj-konferencje.jpg);
             }
 
             .about-us_container_image {

@@ -33,7 +33,7 @@ class PWElementTest1 extends PWElements {
                 align-items: center;
                 width: 100%;
                 min-height: 100vh;
-                background-image: url(/wp-content/plugins/PWElements/media/ticket-activation1.jpg);
+                background-image: url(/wp-content/plugins/pwe-media/media/ticket-activation1.jpg);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: cover;
@@ -195,7 +195,7 @@ class PWElementTest1 extends PWElements {
                         <h2>PREPARATE YOUR QR CODE</h2>
                     EN
                 ).'
-                <img src="/wp-content/plugins/PWElements/media/phone-qr.png">
+                <img src="/wp-content/plugins/pwe-media/media/phone-qr.png">
                 <div class="pwe-ticket-activation-1-3-footer">
                     <div class="pwe-ticket-activation-1-3-info">'.
                         self::languageChecker(

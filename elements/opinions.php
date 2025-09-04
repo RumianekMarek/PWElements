@@ -777,8 +777,8 @@ class PWElementOpinions extends PWElements {
             $default_opinions = [
 
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jerzy_Romanski.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/ofmisp-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Jerzy_Romanski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/ofmisp-logo.webp',
                     'opinions_company' => 'Ogólnopolska Federacja Małych i Średnich Przedsiębiorców',
                     'opinions_name' => 'Jerzy Romański',
                     'opinions_desc' => self::languageChecker('Wiceprezes', 'Vice President'),
@@ -787,8 +787,8 @@ class PWElementOpinions extends PWElements {
                         'Building a friendly relationship between the trade fair organizer, the exhibiting company, and supporting organizations is key to avoiding mistakes and fully utilizing the potential of the event.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Krzysztof-Niczyporczuk.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pio-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Krzysztof-Niczyporczuk.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/pio-logo.webp',
                     'opinions_company' => 'Polska Izba Opakowań',
                     'opinions_name' => 'Mgr inż. Krzysztof Niczyporuk',
                     'opinions_desc' => '',
@@ -797,8 +797,8 @@ class PWElementOpinions extends PWElements {
                         'PTAK Warsaw Expo is a high-quality organizer of trade fairs and conferences. The Polish Packaging Chamber positively evaluates cooperation with Ptak Warsaw Expo as a reliable partner.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Piotr-Fiejkiewicz.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/pts-logo.webp',
                     'opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
                     'opinions_name' => 'Piotr Flejszar',
                     'opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
@@ -807,8 +807,8 @@ class PWElementOpinions extends PWElements {
                         'PTAK Warsaw Expo is the largest exhibition center we work with. The company invests in infrastructure development, which enhances the quality of organized events.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Pawel_Babski.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/kit-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Pawel_Babski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/kit-logo.webp',
                     'opinions_company' => self::languageChecker('Krajowa Izba Targowa','National Chamber of Trade Fairs'),
                     'opinions_name' => 'Paweł Babski',
                     'opinions_desc' => self::languageChecker('Prezes', 'President'),
@@ -822,8 +822,8 @@ class PWElementOpinions extends PWElements {
                 if (strpos(strtolower($edition) , "premier") !== false) {
                     $premiere_edition_opinions = [
                         [
-                            'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Marlena-Wronkowska.webp',
-                            'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/wprost-logo.webp',
+                            'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Marlena-Wronkowska.webp',
+                            'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/wprost-logo.webp',
                             'opinions_company' => 'Wprost',
                             'opinions_name' => 'Marlena Wronkowska',
                             'opinions_desc' => self::languageChecker('Dyrektor Projektów Biznesowych', 'Director of Business Projects'),
@@ -840,8 +840,8 @@ class PWElementOpinions extends PWElements {
                 } else {
                     $no_premiere_edition_opinions = [
                         [
-                            'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
-                            'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
+                            'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Radoslaw-Dziuba.webp',
+                            'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/lukasiewicz-logo.webp',
                             'opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
                             'opinions_name' => 'dr Radosław Dziuba',
                             'opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
@@ -1700,8 +1700,8 @@ class PWElementOpinions extends PWElements {
             $default_opinions = [
 
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Jerzy_Romanski.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/ofmisp-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Jerzy_Romanski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/ofmisp-logo.webp',
                     'opinions_company' => 'Ogólnopolska Federacja Małych i Średnich Przedsiębiorców',
                     'opinions_name' => 'Jerzy Romański',
                     'opinions_desc' => self::languageChecker('Wiceprezes', 'Vice President'),
@@ -1710,8 +1710,8 @@ class PWElementOpinions extends PWElements {
                         'Building a friendly relationship between the trade fair organizer, the exhibiting company, and supporting organizations is key to avoiding mistakes and fully utilizing the potential of the event.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Krzysztof-Niczyporczuk.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pio-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Krzysztof-Niczyporczuk.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/pio-logo.webp',
                     'opinions_company' => 'Polska Izba Opakowań',
                     'opinions_name' => 'Mgr inż. Krzysztof Niczyporuk',
                     'opinions_desc' => '',
@@ -1720,8 +1720,8 @@ class PWElementOpinions extends PWElements {
                         'PTAK Warsaw Expo is a high-quality organizer of trade fairs and conferences. The Polish Packaging Chamber positively evaluates cooperation with Ptak Warsaw Expo as a reliable partner.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Piotr-Fiejkiewicz.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/pts-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Piotr-Fiejkiewicz.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/pts-logo.webp',
                     'opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
                     'opinions_name' => 'Piotr Flejszar',
                     'opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
@@ -1730,8 +1730,8 @@ class PWElementOpinions extends PWElements {
                         'PTAK Warsaw Expo is the largest exhibition center we work with. The company invests in infrastructure development, which enhances the quality of organized events.')
                 ],
                 [
-                    'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Pawel_Babski.webp',
-                    'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/kit-logo.webp',
+                    'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Pawel_Babski.webp',
+                    'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/kit-logo.webp',
                     'opinions_company' => self::languageChecker('Krajowa Izba Targowa','National Chamber of Trade Fairs'),
                     'opinions_name' => 'Paweł Babski',
                     'opinions_desc' => self::languageChecker('Prezes', 'President'),
@@ -1745,8 +1745,8 @@ class PWElementOpinions extends PWElements {
                 if (strpos(strtolower($edition) , "premier") !== false) {
                     $premiere_edition_opinions = [
                         [
-                            'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Marlena-Wronkowska.webp',
-                            'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/wprost-logo.webp',
+                            'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Marlena-Wronkowska.webp',
+                            'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/wprost-logo.webp',
                             'opinions_company' => 'Wprost',
                             'opinions_name' => 'Marlena Wronkowska',
                             'opinions_desc' => self::languageChecker('Dyrektor Projektów Biznesowych', 'Director of Business Projects'),
@@ -1763,8 +1763,8 @@ class PWElementOpinions extends PWElements {
                 } else {
                     $no_premiere_edition_opinions = [
                         [
-                            'opinions_face_img' => '/wp-content/plugins/PWElements/media/default-opinions/Radoslaw-Dziuba.webp',
-                            'opinions_company_img' => '/wp-content/plugins/PWElements/media/default-opinions/lukasiewicz-logo.webp',
+                            'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Radoslaw-Dziuba.webp',
+                            'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/lukasiewicz-logo.webp',
                             'opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
                             'opinions_name' => 'dr Radosław Dziuba',
                             'opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),

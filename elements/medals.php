@@ -49,20 +49,20 @@ class PWElementMedals extends PWElements {
 
         $medals = [
             'innowacyjnosc' => [
-                'pl' => '/wp-content/plugins/PWElements/media/medals/innowacyjnosc.webp',
-                'en' => '/wp-content/plugins/PWElements/media/medals/innowacyjnosc-en.webp'
+                'pl' => '/wp-content/plugins/pwe-media/media/medals/innowacyjnosc.webp',
+                'en' => '/wp-content/plugins/pwe-media/media/medals/innowacyjnosc-en.webp'
             ],
             'premiera-targowa' => [
-                'pl' => '/wp-content/plugins/PWElements/media/medals/premiera-targowa.webp',
-                'en' => '/wp-content/plugins/PWElements/media/medals/premiera-targowa-en.webp'
+                'pl' => '/wp-content/plugins/pwe-media/media/medals/premiera-targowa.webp',
+                'en' => '/wp-content/plugins/pwe-media/media/medals/premiera-targowa-en.webp'
             ],
             'produkt-targowy' => [
-                'pl' => '/wp-content/plugins/PWElements/media/medals/produkt-targowy.webp',
-                'en' => '/wp-content/plugins/PWElements/media/medals/produkt-targowy-en.webp'
+                'pl' => '/wp-content/plugins/pwe-media/media/medals/produkt-targowy.webp',
+                'en' => '/wp-content/plugins/pwe-media/media/medals/produkt-targowy-en.webp'
             ],
             'ekspozycja-targowa' => [
-                'pl' => '/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa.webp',
-                'en' => '/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa-en.webp'
+                'pl' => '/wp-content/plugins/pwe-media/media/medals/ekspozycja-targowa.webp',
+                'en' => '/wp-content/plugins/pwe-media/media/medals/ekspozycja-targowa-en.webp'
             ]
         ];
 
@@ -175,7 +175,7 @@ class PWElementMedals extends PWElements {
                         .'</div>
                         <div class="pwe-medals__items-container">
                             <div class="pwe-medals__items">
-                                <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/premier-fair.webp', '/wp-content/plugins/PWElements/media/medals/premier-fair-en.webp') .'"/></div>
+                                <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/medals/premier-fair.webp', '/wp-content/plugins/pwe-media/media/medals/premier-fair-en.webp') .'"/></div>
                             </div>
                             <div class="pwe-medals__items-text">
                                 <p>'. self::languageChecker('Dla Izb i Stowarzyszeń:<br><strong>„Kluczowy Partner Targów”</strong>', 'For Chambers and Associations:<br><strong>“Key Partner of the Fair”</strong>') .'</p>
@@ -384,10 +384,10 @@ class PWElementMedals extends PWElements {
                         )
                     .'</div>
                     <div class="pwe-medals__items">
-                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/innowacyjnosc.webp', '/wp-content/plugins/PWElements/media/medals/innowacyjnosc-en.webp') .'"/></div>
-                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/premiera-targowa.webp', '/wp-content/plugins/PWElements/media/medals/premiera-targowa-en.webp') .'"/></div>
-                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/produkt-targowy.webp', '/wp-content/plugins/PWElements/media/medals/produkt-targowy-en.webp') .'"/></div>
-                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa.webp', '/wp-content/plugins/PWElements/media/medals/ekspozycja-targowa-en.webp') .'"/></div>
+                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/medals/innowacyjnosc.webp', '/wp-content/plugins/pwe-media/media/medals/innowacyjnosc-en.webp') .'"/></div>
+                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/medals/premiera-targowa.webp', '/wp-content/plugins/pwe-media/media/medals/premiera-targowa-en.webp') .'"/></div>
+                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/medals/produkt-targowy.webp', '/wp-content/plugins/pwe-media/media/medals/produkt-targowy-en.webp') .'"/></div>
+                        <div class="pwe-medals__item"><img src="'. self::languageChecker('/wp-content/plugins/pwe-media/media/medals/ekspozycja-targowa.webp', '/wp-content/plugins/pwe-media/media/medals/ekspozycja-targowa-en.webp') .'"/></div>
                     </div>';
 
                     $output .= '<div class="pwe-medals__items_mobile pwe-slides">';

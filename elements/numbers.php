@@ -272,7 +272,7 @@ class PWElementNumbers extends PWElements {
                 }
                 .pwe-numbers__img {
                     flex: .5;
-                    background-image: url(/wp-content/plugins/PWElements/media/bg-object.jpg);
+                    background-image: url(/wp-content/plugins/pwe-media/media/bg-object.jpg);
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
@@ -338,18 +338,18 @@ class PWElementNumbers extends PWElements {
                 <div class="pwe-numbers__wrapper">
                     <div class="pwe-numbers__container">
                         <div class="pwe-numbers__container-ufi">
-                            <img src="/wp-content/plugins/PWElements/media/numbers-el/certifed.webp" />
-                            <img src="/wp-content/plugins/PWElements/media/numbers-el/ufi.webp" />
+                            <img src="/wp-content/plugins/pwe-media/media/numbers-el/certifed.webp" />
+                            <img src="/wp-content/plugins/pwe-media/media/numbers-el/ufi.webp" />
                         </div>
 
                         <div class="pwe-numbers__container-numbers">
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/exhibitors.webp" />
+                                <img src="/wp-content/plugins/pwe-media/media/numbers-el/exhibitors.webp" />
                                 <h3>20000</h3>
                                 <p>'. self::languageChecker('Wystawców<br>rocznie', 'Exhibitors<br>per year') .'</p>
                             </div>
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/visitors.webp" />
+                                <img src="/wp-content/plugins/pwe-media/media/numbers-el/visitors.webp" />
                                 <h3>1mln+</h3>
                                 <p>'. self::languageChecker('Odwiedzających<br>rocznie', 'Visitors<br>per year') .'</p>
                             </div>
@@ -357,12 +357,12 @@ class PWElementNumbers extends PWElements {
 
                         <div class="pwe-numbers__container-numbers">
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" />
+                                <img src="/wp-content/plugins/pwe-media/media/numbers-el/fairs.webp" />
                                 <h3>140+</h3>
                                 <p>'. self::languageChecker('Targów B2B<br>rocznie', 'B2B trade fairs <br>per year') .'</p>
                             </div>
                             <div>
-                                <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" />
+                                <img src="/wp-content/plugins/pwe-media/media/numbers-el/area.webp" />
                                 <h3>153k</h3>
                                 <p>'. self::languageChecker('Powierzchni m<sup>2</sup>', 'Surface area m<sup>2</sup>') .'</p>
                             </div>
@@ -556,13 +556,13 @@ class PWElementNumbers extends PWElements {
                 <div class="footer__top">
 
                     <div class="footer__logos">
-                        <img class="icon-info" src="/wp-content/plugins/PWElements/media/numbers-el/info-icon.webp"/>
-                        <img src="/wp-content/plugins/PWElements/media/numbers-el/certifed.webp" alt="Certifed" class="footer__logo" />
-                        <img src="/wp-content/plugins/PWElements/media/numbers-el/ufi.webp" alt="Ufi" class="footer__logo" />
+                        <img class="icon-info" src="/wp-content/plugins/pwe-media/media/numbers-el/info-icon.webp"/>
+                        <img src="/wp-content/plugins/pwe-media/media/numbers-el/certifed.webp" alt="Certifed" class="footer__logo" />
+                        <img src="/wp-content/plugins/pwe-media/media/numbers-el/ufi.webp" alt="Ufi" class="footer__logo" />
                     </div>
 
                     <div class="footer__info">
-                    <img src="/wp-content/plugins/PWElements/media/stolica.webp" alt="Stolica" class="footer__info-bg" />
+                    <img src="/wp-content/plugins/pwe-media/media/stolica.webp" alt="Stolica" class="footer__info-bg" />
 
                     <div class="footer__info-overlay">
                         <div class="footer__info-item">
@@ -579,22 +579,22 @@ class PWElementNumbers extends PWElements {
 
                 <div class="footer__stats">
                     <div class="footer__stat">
-                        <img src="/wp-content/plugins/PWElements/media/numbers-el/exhibitors.webp" alt="Ikona wystawców" class="footer__stat-icon" />
+                        <img src="/wp-content/plugins/pwe-media/media/numbers-el/exhibitors.webp" alt="Ikona wystawców" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">20000</h2>
                         <p class="footer__stat-description">'. self::languageChecker('Wystawców rocznie', 'Exhibitors per year') .'</p>
                     </div>
                     <div class="footer__stat">
-                        <img src="/wp-content/plugins/PWElements/media/numbers-el/visitors.webp" alt="Ikona odwiedzających" class="footer__stat-icon" />
+                        <img src="/wp-content/plugins/pwe-media/media/numbers-el/visitors.webp" alt="Ikona odwiedzających" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">2mln+</h2>
                         <p class="footer__stat-description">'. self::languageChecker('Odwiedzających rocznie', 'Visitors per year') .'</p>
                     </div>
                     <div class="footer__stat">
-                        <img src="/wp-content/plugins/PWElements/media/numbers-el/fairs.webp" alt="Ikona targów" class="footer__stat-icon" />
+                        <img src="/wp-content/plugins/pwe-media/media/numbers-el/fairs.webp" alt="Ikona targów" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">140+</h2>
                         <p class="footer__stat-description">'. self::languageChecker('Targów B2B rocznie', 'B2B trade fairs <br>per year') .'</p>
                     </div>
                     <div class="footer__stat">
-                        <img src="/wp-content/plugins/PWElements/media/numbers-el/area.webp" alt="Ikona powierzchni" class="footer__stat-icon" />
+                        <img src="/wp-content/plugins/pwe-media/media/numbers-el/area.webp" alt="Ikona powierzchni" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">153k</h2>
                         <p class="footer__stat-description">'. self::languageChecker('Powierzchni wystawienniczej m²', 'Exhibition space m²') .'</p>
                     </div>
@@ -608,7 +608,7 @@ class PWElementNumbers extends PWElements {
                 let closeIcon = footer.querySelector(".icon-close");
                 if (!closeIcon) {
                     closeIcon = document.createElement("img");
-                    closeIcon.src = "/wp-content/plugins/PWElements/media/numbers-el/close-icon.svg"; // <- podmień na swoją ikonę X
+                    closeIcon.src = "/wp-content/plugins/pwe-media/media/numbers-el/close-icon.svg"; // <- podmień na swoją ikonę X
                     closeIcon.alt = "Zamknij";
                     closeIcon.className = "icon-close";
                     footer.insertBefore(closeIcon, infoIcon.nextSibling);

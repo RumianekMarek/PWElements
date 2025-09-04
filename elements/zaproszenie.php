@@ -130,14 +130,14 @@ class PWElementInvite extends PWElements {
 
             $htmlhead_to_pdf = '
                 <div style="width:1200px; height:1750px;">
-                    <img style="border-bottom: 4px solid goldenrod;" src="/wp-content/plugins/PWElements/media/zap_head.jpg">
+                    <img style="border-bottom: 4px solid goldenrod;" src="/wp-content/plugins/pwe-media/media/zap_head.jpg">
                 </div>';
 
             $htmlcont_to_pdf = '
                 <div style="width:1200px; height:1750px; text-align:center;">
                 <br><br><br><br>
                     <div style="padding-top: 100px; width: 600px; display:flex; align-items: center; justify-content: center; gap: 40px;">
-                        <img style="width: 60px; height:60px;" src="/wp-content/plugins/PWElements/media/logo_pwe_black.png">
+                        <img style="width: 60px; height:60px;" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.png">
                         <span style="font-size: 50px; color: goldenrod; font-weight: 600; align-self:middle;">&</span>
                         <img style="widht: 0; height:70px; " src="' . $upload['url'] . '">
                     </div>
@@ -166,7 +166,7 @@ class PWElementInvite extends PWElements {
                     , o godz. <strong>20:00</strong>
                     </p>
                     <br>
-                    <img style="width:0; height: 80px" src="/wp-content/plugins/PWElements/media/logo_sen.png">
+                    <img style="width:0; height: 80px" src="/wp-content/plugins/pwe-media/media/logo_sen.png">
                     <br>
                     <p style="width:600px; font-size: 16px; text-align: center; line-height:3">
                         ul. Wioślarska 6, 00-411 Warszawa

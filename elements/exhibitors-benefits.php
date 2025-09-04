@@ -126,7 +126,7 @@ class PWElementExhibitors extends PWElements {
                         <div class="pwe-benefits" style="justify-content: center;">
                             <div class="pwe-benefit-item">
                                 <div class="pwe-benefit-img">
-                                    <img src="/wp-content/plugins/PWElements/media/ulga_pl.png" alt="Strefa Networkingu">
+                                    <img src="/wp-content/plugins/pwe-media/media/ulga_pl.png" alt="Strefa Networkingu">
                                 </div>
                                 <div class="pwe-btn-container" style="padding: 18px;">
                                     <span>
@@ -146,10 +146,10 @@ class PWElementExhibitors extends PWElements {
                             <div class="pwe-benefit-img">'.
                                 self::languageChecker(
                                     <<<PL
-                                    <img src="/wp-content/plugins/PWElements/media/Strefa_Networkingu.png" alt="Strefa Networkingu">
+                                    <img src="/wp-content/plugins/pwe-media/media/Strefa_Networkingu.png" alt="Strefa Networkingu">
                                     PL,
                                     <<<EN
-                                    <img src="/wp-content/plugins/PWElements/media/Networking_Zone.png" alt="Networking Zone">
+                                    <img src="/wp-content/plugins/pwe-media/media/Networking_Zone.png" alt="Networking Zone">
                                     EN
                                 )
                             .'</div>
@@ -172,10 +172,10 @@ class PWElementExhibitors extends PWElements {
                             <div class="pwe-benefit-img">'.
                                 self::languageChecker(
                                     <<<PL
-                                    <img src="/wp-content/plugins/PWElements/media/Panel_Edukacyjny.png" alt="Panel Edukacyjny">
+                                    <img src="/wp-content/plugins/pwe-media/media/Panel_Edukacyjny.png" alt="Panel Edukacyjny">
                                     PL,
                                     <<<EN
-                                    <img src="/wp-content/plugins/PWElements/media/Educational_Panel.png" alt="Educational Panel">
+                                    <img src="/wp-content/plugins/pwe-media/media/Educational_Panel.png" alt="Educational Panel">
                                     EN
                                 )
                             .'</div>
@@ -198,10 +198,10 @@ class PWElementExhibitors extends PWElements {
                             <div class="pwe-benefit-img">'.
                                 self::languageChecker(
                                     <<<PL
-                                    <img src="/wp-content/plugins/PWElements/media/Pakiety_Powitalne.png" alt="Pakiety Powitalne">
+                                    <img src="/wp-content/plugins/pwe-media/media/Pakiety_Powitalne.png" alt="Pakiety Powitalne">
                                     PL,
                                     <<<EN
-                                    <img src="/wp-content/plugins/PWElements/media/Welcome_Package.png" alt="Welcome Package">
+                                    <img src="/wp-content/plugins/pwe-media/media/Welcome_Package.png" alt="Welcome Package">
                                     EN
                                 )
                             .'</div>

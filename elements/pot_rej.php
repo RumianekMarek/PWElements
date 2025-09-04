@@ -433,7 +433,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                     background-position: center;
                     background-size: cover;
                     background-repeat: no-repeat;
-                    background-image: url(/wp-content/plugins/PWElements/media/background-vip.webp);
+                    background-image: url(/wp-content/plugins/pwe-media/media/background-vip.webp);
                 }
                 .pwelement_'. self::$rnd_id .' .vip_options {
                     margin: 50px 0;
@@ -757,7 +757,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                     .'</h3>
                                     <div class="vip_options">
                                         <div>
-                                            <img src="/wp-content/plugins/PWElements/media/vip_diament.webp">
+                                            <img src="/wp-content/plugins/pwe-media/media/vip_diament.webp">
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
@@ -770,7 +770,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             .'</span>
                                         </div>
                                         <div>
-                                            <img src="/wp-content/plugins/PWElements/media/vip_ludzik.webp">
+                                            <img src="/wp-content/plugins/pwe-media/media/vip_ludzik.webp">
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
@@ -783,7 +783,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             .'</span>
                                         </div>
                                         <div>
-                                            <img src="/wp-content/plugins/PWElements/media/vip_wejscie-vip.webp">
+                                            <img src="/wp-content/plugins/pwe-media/media/vip_wejscie-vip.webp">
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
@@ -796,7 +796,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             .'</span>
                                         </div>
                                         <div>
-                                            <img src="/wp-content/plugins/PWElements/media/vip_ulotka.webp">
+                                            <img src="/wp-content/plugins/pwe-media/media/vip_ulotka.webp">
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
@@ -809,7 +809,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             .'</span>
                                         </div>
                                         <div>
-                                            <img src="/wp-content/plugins/PWElements/media/vip_wifi.webp">
+                                            <img src="/wp-content/plugins/pwe-media/media/vip_wifi.webp">
                                             <span class="opis_vip">'.
                                                 self::languageChecker(
                                                     <<<PL
@@ -1353,7 +1353,7 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                 .row-container:has(.confirmation-vip) {
                     display: flex;
                     width: 100%;
-                    background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                    background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/gen-bg.jpg);
                     background-repeat: no-repeat;
                     background-position: center;
                     background-size: cover;
@@ -1614,16 +1614,16 @@ class PWElementPotwierdzenieRejestracji extends PWElements {
                                             <<<PL
                                                 <div class="confirmation-vip-logotypes">
                                                     <div class="confirmation-vip-logotypes-column">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/inpost.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dhl.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/ups.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/pocztex.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/inpost.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/dhl.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/ups.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/pocztex.png">
                                                     </div>
                                                     <div class="confirmation-vip-logotypes-column">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/fedex.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/poczta-polska.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/gls.png">
-                                                        <img src="/wp-content/plugins/PWElements/media/firmy-kurierskie/dpd.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/fedex.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/poczta-polska.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/gls.png">
+                                                        <img src="/wp-content/plugins/pwe-media/media/firmy-kurierskie/dpd.png">
                                                     </div>
                                                 </div>
                                                 PL,

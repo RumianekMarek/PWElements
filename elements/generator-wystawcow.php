@@ -492,14 +492,14 @@ class PWElementGenerator extends PWElements {
                 background-repeat: no-repeat;
             }
             .pwe-generator-wystawcow .form-item-element-left {
-                background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/badgevip.jpg);
+                background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/badgevip.jpg);
                 border-radius: 20px 0 0 20px;
             }
             .pwe-generator-wystawcow .form-item-element-left-wyst {
-               background-image: url( /wp-content/plugins/PWElements/media/generator-wystawcow/badgevipmockup-wys.webp);
+               background-image: url( /wp-content/plugins/pwe-media/media/generator-wystawcow/badgevipmockup-wys.webp);
             }
             .pwe-generator-wystawcow .form-item-element-right {
-                background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/gen-bg.jpg);
                 border-radius: 0 20px 20px 0;
             }
             .pwe-generator-wystawcow .form-item-element-right h2 {
@@ -581,18 +581,18 @@ class PWElementGenerator extends PWElements {
             input[placeholder="NAME AND SURNAME (GUEST)"],
             input[placeholder="NAME AND SURNAME (EMPLOYEE)"],
             input[placeholder="NAME AND SURNAME"]) {
-                background-image: url("/wp-content/plugins/PWElements/media/generator-wystawcow/name.png");
+                background-image: url("/wp-content/plugins/pwe-media/media/generator-wystawcow/name.png");
             }
             .pwe-generator-wystawcow input[placeholder="FIRMA ZAPRASZAJĄCA"],
             .pwe-generator-wystawcow input[placeholder="FIRMA"],
             .pwe-generator-wystawcow input[placeholder="INVITING COMPANY"],
             .pwe-generator-wystawcow input[placeholder="COMPANY"] {
-                background-image: url("/wp-content/plugins/PWElements/media/generator-wystawcow/box.png");
+                background-image: url("/wp-content/plugins/pwe-media/media/generator-wystawcow/box.png");
             }
             .pwe-generator-wystawcow input[placeholder="E-MAIL OSOBY ZAPRASZANEJ"],
             .pwe-generator-wystawcow input[placeholder="E-MAIL OF THE INVITED PERSON"],
             .pwe-generator-wystawcow input[placeholder="E-MAIL"] {
-                background-image: url("/wp-content/plugins/PWElements/media/generator-wystawcow/email.png");
+                background-image: url("/wp-content/plugins/pwe-media/media/generator-wystawcow/email.png");
             }
             .pwe-generator-wystawcow input:-webkit-autofill,
             .pwe-generator-wystawcow input:-webkit-autofill:hover,
@@ -729,10 +729,10 @@ class PWElementGenerator extends PWElements {
                 padding: 0;
             }
             .modal__elements .mass-send-name:empty{
-                background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/generator-imiona.webp);
+                background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/generator-imiona.webp);
             }
             .modal__elements .mass-send-email:empty{
-                background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/geneartor-emaile.webp);
+                background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/geneartor-emaile.webp);
             }
             .modal__elements tr table{
                 text-align: center;
@@ -787,7 +787,7 @@ class PWElementGenerator extends PWElements {
             .file-selctor select{
                 padding-right: 30px;
                 cursor: pointer;
-                background: #fff url(/wp-content/plugins/PWElements/media/arrow-down.png) no-repeat right 5px top 55%;
+                background: #fff url(/wp-content/plugins/pwe-media/media/arrow-down.png) no-repeat right 5px top 55%;
                 background-size: 20px 20px;
             }
             .wyslij.btn-gold{
@@ -885,7 +885,7 @@ class PWElementGenerator extends PWElements {
                     margin: 36px 0 !important;
                 }
                 .pwe-generator-wystawcow .form-item-element-left {
-                    background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                    background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/gen-bg.jpg);
                 }
                 .pwe-generator-wystawcow .guest-info {
                     width: 100% !important;
@@ -994,7 +994,7 @@ class PWElementGenerator extends PWElements {
                                                 <div class="guest-info-icons">
 
                                                     <div class="guest-info-icon-block">
-                                                        <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico1.png" alt="icon1">
+                                                        <img src="/wp-content/plugins/pwe-media/media/generator-wystawcow/ico1.png" alt="icon1">
                                                         <p>'.
                                                         self::languageChecker(
                                                             <<<PL
@@ -1008,7 +1008,7 @@ class PWElementGenerator extends PWElements {
                                                     </div>
 
                                                     <div class="guest-info-icon-block">
-                                                        <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico3.png" alt="icon3">
+                                                        <img src="/wp-content/plugins/pwe-media/media/generator-wystawcow/ico3.png" alt="icon3">
                                                         <p>'.
                                                         self::languageChecker(
                                                             <<<PL
@@ -1022,7 +1022,7 @@ class PWElementGenerator extends PWElements {
                                                     </div>
 
                                                     <div class="guest-info-icon-block">
-                                                        <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico4.png" alt="icon4">
+                                                        <img src="/wp-content/plugins/pwe-media/media/generator-wystawcow/ico4.png" alt="icon4">
                                                         <p>'.
                                                         self::languageChecker(
                                                             <<<PL
@@ -1036,7 +1036,7 @@ class PWElementGenerator extends PWElements {
                                                     </div>
 
                                                     <div class="guest-info-icon-block">
-                                                        <img src="/wp-content/plugins/PWElements/media/generator-wystawcow/ico2.png" alt="icon2">
+                                                        <img src="/wp-content/plugins/pwe-media/media/generator-wystawcow/ico2.png" alt="icon2">
                                                         <p>'.
                                                         self::languageChecker(
                                                             <<<PL
@@ -1072,10 +1072,10 @@ class PWElementGenerator extends PWElements {
                                             <div class="gen-btn-img" style="background-image: url('.
                                                 self::languageChecker(
                                                     <<<PL
-                                                        /wp-content/plugins/PWElements/media/generator-wystawcow/gen-pl.png
+                                                        /wp-content/plugins/pwe-media/media/generator-wystawcow/gen-pl.png
                                                     PL,
                                                     <<<EN
-                                                        /wp-content/plugins/PWElements/media/generator-wystawcow/gen-en.png
+                                                        /wp-content/plugins/pwe-media/media/generator-wystawcow/gen-en.png
                                                     EN
                                                 )
                                             .');">
@@ -1171,10 +1171,10 @@ class PWElementGenerator extends PWElements {
                                             <div class="gen-btn-img" style="background-image: url('.
                                                 self::languageChecker(
                                                     <<<PL
-                                                        /wp-content/plugins/PWElements/media/generator-wystawcow/gen-pl.png
+                                                        /wp-content/plugins/pwe-media/media/generator-wystawcow/gen-pl.png
                                                     PL,
                                                     <<<EN
-                                                        /wp-content/plugins/PWElements/media/generator-wystawcow/gen-en.png
+                                                        /wp-content/plugins/pwe-media/media/generator-wystawcow/gen-en.png
                                                     EN
                                                 )
                                             .');">

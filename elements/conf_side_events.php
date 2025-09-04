@@ -184,7 +184,7 @@ class PWElementConfSideEvents extends PWElements {
                 .'</h4>
                 <div class="conf-side-row">
                     <div class="side-event-image">
-                        <img src="/wp-content/plugins/PWElements/media/kafelek-medale2.webp">
+                        <img src="/wp-content/plugins/pwe-media/media/kafelek-medale2.webp">
                     </div>
                     <div class="side-event-text">
                         <h5>'. 
@@ -242,7 +242,7 @@ class PWElementConfSideEvents extends PWElements {
                 <div class="conf-side-row">';
                     if ($mobile){
                         $output .= '<div class="side-event-image">
-                            <img src="/wp-content/plugins/PWElements/media/'. 
+                            <img src="/wp-content/plugins/pwe-media/media/'. 
                                 self::languageChecker(
                                     <<<PL
                                     kafelek-studio-pl
@@ -285,7 +285,7 @@ class PWElementConfSideEvents extends PWElements {
                     </div>';
                     if (!$mobile){
                         $output .= '<div class="side-event-image">
-                            <img src="/wp-content/plugins/PWElements/media/'. 
+                            <img src="/wp-content/plugins/pwe-media/media/'. 
                                 self::languageChecker(
                                     <<<PL
                                     kafelek-studio-pl
@@ -300,7 +300,7 @@ class PWElementConfSideEvents extends PWElements {
                 $output .= '</div>
                 <div class="conf-side-row">
                     <div class="side-event-image">
-                        <img src="/wp-content/plugins/PWElements/media/'. 
+                        <img src="/wp-content/plugins/pwe-media/media/'. 
                             self::languageChecker(
                                 <<<PL
                                 kafelek-networking-pl
@@ -351,7 +351,7 @@ class PWElementConfSideEvents extends PWElements {
                                     <div class="side-event-footer-text">
                                         <h5 class="side-event-heading-text">Chcesz współtworzyć program merytoryczny? Zobacz naszą ofertę i skontaktuj się z nami!</h5>
                                     </div>
-                                    <a href="/wp-content/plugins/PWElements/media/oferta-konferencje.pdf" target="blank" class="btn btn-accent custom-link btn-flat side-event-footer-btn" >Pobierz ofertę</a>
+                                    <a href="/wp-content/plugins/pwe-media/media/oferta-konferencje.pdf" target="blank" class="btn btn-accent custom-link btn-flat side-event-footer-btn" >Pobierz ofertę</a>
                                 </div>
                             PL,
                         )

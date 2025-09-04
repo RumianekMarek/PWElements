@@ -256,11 +256,11 @@ class PWElementFooter extends PWElements {
         <div id="pweFooter" class="pwe-footer">';
 
             $output .= '
-            <div class="pwe-footer-bg" style="background-image: url(/wp-content/plugins/PWElements/media/footer.webp)">
+            <div class="pwe-footer-bg" style="background-image: url(/wp-content/plugins/pwe-media/media/footer.webp)">
                 <div class="pwe-footer-bg-wrapper">
                     <div class="pwe-footer-bg-limit">
                         <div class="pwe-footer-logo-pwe">
-                            <img src="/wp-content/plugins/PWElements/media/logo_pwe.webp" alt="pwe logo">
+                            <img src="/wp-content/plugins/pwe-media/media/logo_pwe.webp" alt="pwe logo">
                         </div>
                         <div class="pwe-footer-title-section">'. 
                             self::languageChecker(
@@ -296,7 +296,7 @@ class PWElementFooter extends PWElements {
 
             $output .= '
             <div class="pwe-footer-images-bg">
-                <img src="/wp-content/plugins/PWElements/media/footer-images.webp" alt="footer background">
+                <img src="/wp-content/plugins/pwe-media/media/footer-images.webp" alt="footer background">
             </div>';
 
             $menus = wp_get_nav_menus();
@@ -329,7 +329,7 @@ class PWElementFooter extends PWElements {
                     <div class="pwe-footer-nav-wrapper">
                         <div class="pwe-footer-nav-left-column">
                             <div class="pwe-footer-nav-logo-column">
-                                <div class="pwe-footer-nav-logo-top"><a href="' . $page_url . '"><img src="/wp-content/plugins/PWElements/media/logo_pwe_ufi.webp" alt="logo pwe & ufi"></a></div>
+                                <div class="pwe-footer-nav-logo-top"><a href="' . $page_url . '"><img src="/wp-content/plugins/pwe-media/media/logo_pwe_ufi.webp" alt="logo pwe & ufi"></a></div>
                                 <div class="pwe-footer-nav-logo-bottom text-centered">
                                     <a href="' . $page_url . '">
                                         <span class="' . $logo_class . '"><img src="' . $logo_url . '" alt="logo-[trade_fair_name]"></span>

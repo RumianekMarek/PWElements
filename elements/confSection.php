@@ -332,7 +332,7 @@ class PWElementConfSection extends PWElements {
             ';
 
             $output .= '
-                <div id="pweConfSection" class="pwe-container-conference-section" style="background-image: url(/wp-content/plugins/PWElements/media/conference-background.webp);">
+                <div id="pweConfSection" class="pwe-container-conference-section" style="background-image: url(/wp-content/plugins/pwe-media/media/conference-background.webp);">
                     <div class="pwe-conference-section-columns">
                         <div class="pwe-conference-section-column pwe-conference-info-column">
                             <h4 class="pwe-conference-name pwe-uppercase">'. $pwe_conference_section_title .'</h4>
@@ -359,16 +359,16 @@ class PWElementConfSection extends PWElements {
 
             $images_url = array(
                 array(
-                    "src_mini" => "/wp-content/plugins/PWElements/media/events-mini/event_1.webp",
+                    "src_mini" => "/wp-content/plugins/pwe-media/media/events-mini/event_1.webp",
                 ),
                 array(
-                    "src_mini" => "/wp-content/plugins/PWElements/media/events-mini/event_2.webp",
+                    "src_mini" => "/wp-content/plugins/pwe-media/media/events-mini/event_2.webp",
                 ),
                 array(
-                    "src_mini" => "/wp-content/plugins/PWElements/media/events-mini/event_3.webp",
+                    "src_mini" => "/wp-content/plugins/pwe-media/media/events-mini/event_3.webp",
                 ),
                 array(
-                    "src_mini" => "/wp-content/plugins/PWElements/media/events-mini/event_4.webp",
+                    "src_mini" => "/wp-content/plugins/pwe-media/media/events-mini/event_4.webp",
                 ),
             );
 
@@ -408,7 +408,7 @@ class PWElementConfSection extends PWElements {
                     }
                 </style>
 
-                <div id="pweConfSection" class="pwe-container-conference-section" style="background-image: url(/wp-content/plugins/PWElements/media/conference-background.webp);">
+                <div id="pweConfSection" class="pwe-container-conference-section" style="background-image: url(/wp-content/plugins/pwe-media/media/conference-background.webp);">
                     <div class="pwe-conference-section-columns">
                         <div class="pwe-conference-section-column pwe-conference-gallery-column">
                             <div class="pwe-gallery-thumbs">';   

@@ -34,7 +34,7 @@ class PWElementOrganizer extends PWElements {
         $video_src = 'https://www.youtube.com/embed/-RmRpZN1mHA?autoplay=1';
         $video_iframe_html = '<iframe class="pwe-iframe" src="' . $video_src . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
         $video_default_html = '<div class="pwe-video-default" style="background-image: url(' . $video_plug . ');">
-                                    <img src="/wp-content/plugins/PWElements/media/youtube-button.webp" alt="youtube play button">
+                                    <img src="/wp-content/plugins/pwe-media/media/youtube-button.webp" alt="youtube play button">
                             </div>';
 
         $output = '';
@@ -248,7 +248,7 @@ class PWElementOrganizer extends PWElements {
                         .'</h4>
                     </div>
                     
-                    <a href="https://warsawexpo.eu/" target="_blank"><img class="image-ptak" src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp"></a> 
+                    <a href="https://warsawexpo.eu/" target="_blank"><img class="image-ptak" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.webp"></a> 
                     
                 </div>
 

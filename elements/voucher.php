@@ -67,7 +67,7 @@ class PWElementVoucher extends PWElements {
 
             <div id="PWEvoucher"class="pwe-container-voucher">
                 <div class="uncode-single-media-wrapper half-block-padding pwe-min-media-wrapper" style="flex:1;">
-                    <img style="vertical-align: bottom;" src="/wp-content/plugins/PWElements/media/voucher.webp" alt="grafika przykładowego vouchera"/>
+                    <img style="vertical-align: bottom;" src="/wp-content/plugins/pwe-media/media/voucher.webp" alt="grafika przykładowego vouchera"/>
                 </div>
 
                 <div class="half-block-padding" style="flex:1;">

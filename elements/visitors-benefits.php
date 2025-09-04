@@ -80,7 +80,7 @@ class PWElementVisitorsBenefits extends PWElements {
 
                         <div class="pwe-visitors-benefits-item">
                             <div class="pwe-visitors-benefits-item-img">
-                                <img src="/wp-content/plugins/PWElements/media/lamp-b-150x150.webp" alt="lamp">
+                                <img src="/wp-content/plugins/pwe-media/media/lamp-b-150x150.webp" alt="lamp">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
                                 <h4 class="pwe-line-height">'.
@@ -97,7 +97,7 @@ class PWElementVisitorsBenefits extends PWElements {
                         </div>
                         <div class="pwe-visitors-benefits-item">
                             <div class="pwe-visitors-benefits-item-img">
-                                <img src="/wp-content/plugins/PWElements/media/hands-b-150x150.webp" alt="handshake">
+                                <img src="/wp-content/plugins/pwe-media/media/hands-b-150x150.webp" alt="handshake">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
                                 <h4 class="pwe-line-height">'.
@@ -114,7 +114,7 @@ class PWElementVisitorsBenefits extends PWElements {
                         </div>
                         <div class="pwe-visitors-benefits-item">
                             <div class="pwe-visitors-benefits-item-img">
-                                <img src="/wp-content/plugins/PWElements/media/head-b-150x150.webp" alt="head">
+                                <img src="/wp-content/plugins/pwe-media/media/head-b-150x150.webp" alt="head">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
                                 <h4 class="pwe-line-height">'.

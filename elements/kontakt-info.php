@@ -157,7 +157,7 @@ class PWElementContactInfo extends PWElements {
                                     } elseif ($contact['img']){
                                         $output .= '<img class="contact-info-img-pwe" src="'.wp_get_attachment_url($contact['img']).'" alt="zdjęcie">';
                                     } else {
-                                        $output .= '<img class="contact-info-img-pwe" src="/wp-content/plugins/PWElements/media/WystawcyO.jpg" alt="grafika wystawcy">';
+                                        $output .= '<img class="contact-info-img-pwe" src="/wp-content/plugins/pwe-media/media/WystawcyO.jpg" alt="grafika wystawcy">';
                                     }
                                 $output .= '</div>
                                 <div class="uncode_text_column">';
@@ -174,7 +174,7 @@ class PWElementContactInfo extends PWElements {
             
             if(strpos($atts['contact_content'], 'wystawca') === false){
                 $output .= '<div class="raw-pwe-container half-block-padding image-shadow">
-                                <img src="/wp-content/plugins/PWElements/media/WystawcyZ.jpg" alt="grafika wystawcy">
+                                <img src="/wp-content/plugins/pwe-media/media/WystawcyZ.jpg" alt="grafika wystawcy">
                                 <div class="uncode_text_column">
                                     <p>'.
                                     self::languageChecker(
@@ -192,7 +192,7 @@ class PWElementContactInfo extends PWElements {
             
             if(strpos($atts['contact_content'], 'odwiedzajacy') === false){
                 $output .= '<div class="raw-pwe-container half-block-padding image-shadow">
-                                <img src="/wp-content/plugins/PWElements/media/Odwiedzajacy.jpg" alt="grafika odwiedzajacy">
+                                <img src="/wp-content/plugins/pwe-media/media/Odwiedzajacy.jpg" alt="grafika odwiedzajacy">
                                 <div class="uncode_text_column">
                                     <p>'.
                                         self::languageChecker(
@@ -210,7 +210,7 @@ class PWElementContactInfo extends PWElements {
             
             if(strpos($atts['contact_content'], 'media') === false){
                 $output .= '<div class="raw-pwe-container half-block-padding image-shadow">
-                                <img src="/wp-content/plugins/PWElements/media/Media.jpg"  alt="grafika media">
+                                <img src="/wp-content/plugins/pwe-media/media/Media.jpg"  alt="grafika media">
                                 <div class="uncode_text_column">
                                     <p>'.
                                         self::languageChecker(
@@ -228,7 +228,7 @@ class PWElementContactInfo extends PWElements {
             
             if(strpos($atts['contact_content'], 'ob_wystawcy') === false){
                 $output .= '<div class="raw-pwe-container half-block-padding image-shadow">
-                                <img src="/wp-content/plugins/PWElements/media/WystawcyO.jpg" alt="grafika obsluga">
+                                <img src="/wp-content/plugins/pwe-media/media/WystawcyO.jpg" alt="grafika obsluga">
                                 <div class="uncode_text_column">
                                     <p>'.
                                         self::languageChecker(
@@ -246,7 +246,7 @@ class PWElementContactInfo extends PWElements {
             
             if(strpos($atts['contact_content'], 'technicy') === false){
                 $output .= '<div class="raw-pwe-container half-block-padding image-shadow">
-                                <img src="/wp-content/plugins/PWElements/media/Technicy.jpg" alt="grafika technicy">
+                                <img src="/wp-content/plugins/pwe-media/media/Technicy.jpg" alt="grafika technicy">
                                 <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                                     <p>'.
                                         self::languageChecker(

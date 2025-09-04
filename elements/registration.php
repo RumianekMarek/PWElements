@@ -580,7 +580,7 @@ class PWElementRegistration extends PWElements {
                     $output .= '
                     <style>
                         .pwelement_' .self::$rnd_id. ' .pwe-mockup-column {
-                            background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                            background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/gen-bg.jpg);
                         }
                     </style>';
                 }
@@ -1016,7 +1016,7 @@ class PWElementRegistration extends PWElements {
             <div id="'. $element_unique_id .'" class="pwe-registration">
                 <div class="pwe-registration-wrapper">
                     <div class="pwe-registration-column iframe-column">
-                        <img class="logo-pwe" src="/wp-content/plugins/PWElements/media/logo_pwe.webp">
+                        <img class="logo-pwe" src="/wp-content/plugins/pwe-media/media/logo_pwe.webp">
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/49KljiYGLA0?si=rDFQfo6rApq_fbZJ&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&playlist=49KljiYGLA0"
                             title="YouTube video player" frameborder="0"

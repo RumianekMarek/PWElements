@@ -138,10 +138,10 @@ class PWElementRoute extends PWElements {
                 </div>
                 <div class="pwe-route-transport-wrapper pwe-align-left single-top-padding pwe-full-gap">
                     <div class="pwe-route-map-block pwe-half-width">
-                        <img class="pwe-full-width" src="/wp-content/plugins/PWElements/media/mapka-wawa.png">
+                        <img class="pwe-full-width" src="/wp-content/plugins/pwe-media/media/mapka-wawa.png">
                         <div class="pwe-route-area-wrapper pwe-align-left">
                             <div class="pwe-route-image-bg-block">
-                                <div style="background-image: url(/wp-content/plugins/PWElements/media/ptak.jpg);" class="pwe-route-image-bg shadow-black">
+                                <div style="background-image: url(/wp-content/plugins/pwe-media/media/ptak.jpg);" class="pwe-route-image-bg shadow-black">
                                     <h3>'.
                                         self::languageChecker(
                                             <<<PL
@@ -157,7 +157,7 @@ class PWElementRoute extends PWElements {
                             <div class="pwe-route-area-block pwe-route">
                                 <div class="pwe-route-area-item pwe-flex">
                                     <div class="pwe-route-area-item-img">
-                                        <img src="/wp-content/plugins/PWElements/media/entry.png">
+                                        <img src="/wp-content/plugins/pwe-media/media/entry.png">
                                     </div>
                                     <div class="pwe-route-area-item-text pwe-flex">
                                         <h5>'.
@@ -175,7 +175,7 @@ class PWElementRoute extends PWElements {
 
                                 <div class="pwe-route-area-item pwe-flex">
                                     <div class="pwe-route-area-item-img">
-                                        <img src="/wp-content/plugins/PWElements/media/leave.png">
+                                        <img src="/wp-content/plugins/pwe-media/media/leave.png">
                                     </div>
                                     <div class="pwe-route-area-item-text pwe-flex">
                                         <h5>'.
@@ -198,7 +198,7 @@ class PWElementRoute extends PWElements {
                     <div class="pwe-route-transport-block pwe-half-width pwe-route">
                         <div class="pwe-route-transport-item pwe-flex">
                             <div class="pwe-route-transport-item-img">
-                                <img class="pwe-full-width" src="/wp-content/plugins/PWElements/media/samolot.png">
+                                <img class="pwe-full-width" src="/wp-content/plugins/pwe-media/media/samolot.png">
                             </div>
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
@@ -215,7 +215,7 @@ class PWElementRoute extends PWElements {
                         </div>
                         <div class="pwe-route-transport-item pwe-flex">
                             <div class="pwe-route-transport-item-img">
-                                <img class="pwe-full-width" src="/wp-content/plugins/PWElements/media/train.png">
+                                <img class="pwe-full-width" src="/wp-content/plugins/pwe-media/media/train.png">
                             </div>
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
@@ -233,7 +233,7 @@ class PWElementRoute extends PWElements {
 
                         <div class="pwe-route-transport-item pwe-flex">
                             <div class="pwe-route-transport-item-img">
-                                <img class="pwe-full-width" src="/wp-content/plugins/PWElements/media/bus.png">
+                                <img class="pwe-full-width" src="/wp-content/plugins/pwe-media/media/bus.png">
                             </div>
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(
@@ -251,7 +251,7 @@ class PWElementRoute extends PWElements {
 
                         <div class="pwe-route-transport-item pwe-flex">
                             <div class="pwe-route-transport-item-img">
-                                <img class="pwe-full-width" src="/wp-content/plugins/PWElements/media/sedan.png">
+                                <img class="pwe-full-width" src="/wp-content/plugins/pwe-media/media/sedan.png">
                             </div>
                             <div class="pwe-route-transport-item-text">'.
                                 self::languageChecker(

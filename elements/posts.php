@@ -931,7 +931,7 @@ class PWElementPosts extends PWElements {
                                                 <h4 class="pwe-post-title">'. $title .'</h4>
                                                 <p>' . self::languageChecker('Więcej', 'More') . '
                                                     <span class="arrow-wrapper" style="font-size:30px; margin-left:10px; line-height: 0;">
-                                                        <img style="display:block; margin: 0px; padding:0;width:24px; height:24px;" src="/wp-content/plugins/PWElements/media/arrow_forward_color.webp"/>
+                                                        <img style="display:block; margin: 0px; padding:0;width:24px; height:24px;" src="/wp-content/plugins/pwe-media/media/arrow_forward_color.webp"/>
                                                     </span>
                                                 </p>
                                             </div>

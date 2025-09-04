@@ -164,7 +164,7 @@ class PWElementHeaderConference extends PWElements {
                 }
             </style>
             
-            <div id="PWEHeaderConference-'. $id_rnd .'" class="pwe-header-conference" style="background-image: url(/wp-content/plugins/PWElements/media/conference-background.webp)">
+            <div id="PWEHeaderConference-'. $id_rnd .'" class="pwe-header-conference" style="background-image: url(/wp-content/plugins/pwe-media/media/conference-background.webp)">
                 <div class="pwe-header-conference-wrapper">
                     <div class="pwe-header-conference-content">
                         <h4 class="pwe-header-conference-title">'. $pwe_header_conference_title .'</h4>

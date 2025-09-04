@@ -150,7 +150,21 @@ class PWElementForVisitors extends PWElements {
                             $output .= '</p>
                         </div>
                         <div class="pwe-btn-container">
-                            <span>
+                            <span>';
+                            if (do_shortcode('[trade_fair_group]') === 'b2c') {
+                                $output .= '
+                                <a class="pwe-link btn border-width-0 shadow-black btn-accent btn-flat pwe-btn" href='.
+                                    self::languageChecker(
+                                        <<<PL
+                                            "/bilety/">KUP BILET
+                                        PL,
+                                        <<<EN
+                                            "/en/tickets/">BUY A TICKET
+                                        EN
+                                    )
+                                .'</a>';
+                            } else {
+                                $output .= '
                                 <a class="pwe-link btn border-width-0 shadow-black btn-accent btn-flat pwe-btn" href='.
                                     self::languageChecker(
                                         <<<PL
@@ -160,7 +174,9 @@ class PWElementForVisitors extends PWElements {
                                             "/en/registration/">REGISTER<span style="display: block; font-weight: 300;">GET A FREE TICKET
                                         EN
                                     )
-                                .'</a>
+                                .'</a>';
+                            }
+                            $output .= '
                             </span>
                         </div>
                     </div>

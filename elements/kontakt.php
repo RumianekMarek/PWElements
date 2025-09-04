@@ -170,7 +170,7 @@ class PWElementContact extends PWElements {
             <div class="pwe-container-contact-items">
 
                 <div class="pwe-contact-icon-item">
-                    <img src="/wp-content/plugins/PWElements/media/Phone.jpg" alt="grafika słuchawka">
+                    <img src="/wp-content/plugins/pwe-media/media/Phone.jpg" alt="grafika słuchawka">
                     <div class="uncode_text_column">
                         <p>
                             <b>'. self::languageChecker('Biuro obsługi', 'Customer Service Office') .'</b>';
@@ -188,7 +188,7 @@ class PWElementContact extends PWElements {
                 if (!empty($consultant_email)) {
                     $output .= '
                     <div class="pwe-contact-icon-item">
-                        <img src="/wp-content/plugins/PWElements/media/WystawcyZ.jpg" alt="grafika wystawcy">
+                        <img src="/wp-content/plugins/pwe-media/media/WystawcyZ.jpg" alt="grafika wystawcy">
                         <div class="uncode_text_column">
                             <p>
                                 <b>'.self::languageChecker('Obsługa techniczna wystawców<br>', 'Technical support for exhibitors<br>').'</b>
@@ -212,7 +212,7 @@ class PWElementContact extends PWElements {
                 if (!empty($marketing_email)) {
                     $output .= '
                     <div class="pwe-contact-icon-item">
-                        <img src="/wp-content/plugins/PWElements/media/Marketing.jpg" alt="grafika technicy">
+                        <img src="/wp-content/plugins/pwe-media/media/Marketing.jpg" alt="grafika technicy">
                         <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                             <p>
                                 <b>'. self::languageChecker('Obsługa marketingowa i media', 'Marketing and media services').'</b>
@@ -227,7 +227,7 @@ class PWElementContact extends PWElements {
                 if (!empty($contact_person_name) && (!empty($contact_person_email) || !empty($contact_person_phone))) {
                     $output .= '
                     <div class="pwe-contact-icon-item">
-                        <img src="/wp-content/plugins/PWElements/media/Person.jpg" alt="grafika osoby">
+                        <img src="/wp-content/plugins/pwe-media/media/Person.jpg" alt="grafika osoby">
                         <div class="uncode_text_column" style="overflow-wrap: anywhere;">
                             <p>
                                 <b>'. $contact_person_name .'</b>';

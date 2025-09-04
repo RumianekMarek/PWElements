@@ -596,7 +596,7 @@ class PWElementStepTwoExhibitor extends PWElements {
 
                 $output .= '
                 <div class="form-right">
-                    <img class="img-stand" src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
+                    <img class="img-stand" src="/wp-content/plugins/pwe-media/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
                     <h5>'.
                         self::languageChecker(
                             <<<PL

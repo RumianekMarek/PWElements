@@ -21,17 +21,18 @@ class PWECountdown {
     private static function countingDown($timer, $target_id = '',  $options = []) {
 
         $showShort = !empty($options['show_short_name_data']);
+        $hide_seconds = !empty($options['hide_seconds']);
 
         $mobile = preg_match('/Mobile|Android|iPhone/i', $_SERVER['HTTP_USER_AGENT']);
         $local = get_locale();
         $timer_seconds = '';
-        if(!$mobile && !$showShort){
+        if(!$mobile && !$showShort && !$hide_seconds){
             if($local == 'pl_PL'){
                 $timer_seconds = ' + " " + pluralizePolish(seconds, "sekunda", "sekundy", "sekund").trim()';
             } else {
                 $timer_seconds = ' + " " + pluralizeEnglish(seconds, "second").trim()';
             }
-        } else if(!$mobile){
+        } else if(!$mobile && !$hide_seconds){
             $timer_seconds = ' + " " + pluralizePolish(seconds, "s", "s", "s").trim()';
         }
         if(!$showShort && $target_id != "") {

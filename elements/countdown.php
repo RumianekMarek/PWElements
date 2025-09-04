@@ -175,6 +175,18 @@ class PWElementMainCountdown extends PWElements {
                 'save_always' => true,
                 'admin_label' => true
             ),
+            array(
+                'type' => 'checkbox',
+                'group' => 'PWE Element',
+                'heading' => __('Hide seconds', 'pwelement'),
+                'param_name' => 'hide_seconds',
+                'dependency' => array(
+                    'element' => 'pwe_element',
+                    'value' => 'PWElementMainCountdown',
+                ),
+                'save_always' => true,
+                'admin_label' => true
+            ),
         );
 
         return $element_output;
@@ -286,6 +298,7 @@ class PWElementMainCountdown extends PWElements {
             'turn_off_timer_bg' => '',
             'countdowns' => '',
             'show_short_name_data' => '',
+            'hide_seconds' => '',
         ), $atts ));
 
         $show_short = isset($atts['show_short_name_data']) && $atts['show_short_name_data'] === 'true';
@@ -687,7 +700,7 @@ class PWElementMainCountdown extends PWElements {
                     if (get_locale() == "pl_PL") {
                         $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
                                     ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
-                                    if(!$mobile){
+                                    if(!$mobile && !$hide_seconds){
                                         $output .= $date_dif->s . ' sekund
                                                 </p>';
                                     } else {
@@ -696,7 +709,7 @@ class PWElementMainCountdown extends PWElements {
                     } else {
                         $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
                                     ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
-                                    if(!$mobile){
+                                    if(!$mobile && !$hide_seconds){
                                         $output .= $date_dif->s . ' seconds
                                                 </p>';
                                     } else {
@@ -706,7 +719,7 @@ class PWElementMainCountdown extends PWElements {
                 } else {
                     $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
                                     ' . $date_dif->days . ' d ' . $date_dif->h . ' h ' . $date_dif->i . ' min ';
-                                    if(!$mobile){
+                                    if(!$mobile && !$hide_seconds){
                                         $output .= $date_dif->s . ' s
                                                 </p>';
                                     } else {
@@ -720,7 +733,7 @@ class PWElementMainCountdown extends PWElements {
                 };
                 $output .='</div>';
 
-                PWECountdown::output($right_countdown, self::$countdown_rnd_id, array('show_short_name_data' => $show_short,));
+                PWECountdown::output($right_countdown, self::$countdown_rnd_id, array('show_short_name_data' => $show_short, 'hide_seconds' => $hide_seconds,));
 
             } else {
                 $output .= '</style>';

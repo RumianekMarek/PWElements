@@ -55,12 +55,12 @@ class PWAppleCalendarElement extends PWElements {
                 'END:VEVENT' . PHP_EOL .
                 'END:VCALENDAR' . PHP_EOL;
     
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/Iphone.ics';
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/pwe-media/media/Iphone.ics';
         $fileSaved = file_put_contents($filePath, $data);
 
         $output = '<div id="calendar-apple" class="pwe-container-calendar-add text-centered">
-                        <a class="apple" alt="link do kalendarza apple" href="/wp-content/plugins/PWElements/media/Iphone.ics">
-                            <img alt="ikonka apple" src="/wp-content/plugins/PWElements/media/apple.png"/>
+                        <a class="apple" alt="link do kalendarza apple" href="/wp-content/plugins/pwe-media/media/Iphone.ics">
+                            <img alt="ikonka apple" src="/wp-content/plugins/pwe-media/media/apple.png"/>
                             <p class="calendar-icon font-weight-700">'.
                             self::languageChecker(
                                 <<<PL

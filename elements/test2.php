@@ -33,7 +33,7 @@ class PWElementTest2 extends PWElements {
                 align-items: center;
                 width: 100%;
                 min-height: 100vh;
-                background-image: url(/wp-content/plugins/PWElements/media/ticket-activation3.jpg);
+                background-image: url(/wp-content/plugins/pwe-media/media/ticket-activation3.jpg);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: cover;

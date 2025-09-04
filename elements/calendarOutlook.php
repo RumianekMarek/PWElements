@@ -56,13 +56,13 @@ class PWOutlookCalendarElement extends PWElements {
                 'END:VEVENT' . PHP_EOL .
                 'END:VCALENDAR' . PHP_EOL;
 
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/Outlook.ics';
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/pwe-media/media/Outlook.ics';
         $fileSaved = file_put_contents($filePath, $data);
 
         $output = '
         <div id="calendar-outlook" class="pwe-container-calendar-add text-centered">
-            <a class="outlook" alt="link do kalendarza outlook" href="/wp-content/plugins/PWElements/media/Outlook.ics">
-                <img alt="ikonka outlook" src="/wp-content/plugins/PWElements/media/outlook.png"/>
+            <a class="outlook" alt="link do kalendarza outlook" href="/wp-content/plugins/pwe-media/media/Outlook.ics">
+                <img alt="ikonka outlook" src="/wp-content/plugins/pwe-media/media/outlook.png"/>
                 <p class="calendar-icon font-weight-700">'.
                 self::languageChecker(
                     <<<PL

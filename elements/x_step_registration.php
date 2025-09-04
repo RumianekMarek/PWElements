@@ -860,12 +860,12 @@ class PWElementXForm extends PWElements {
             </style>
             
             <div id="xForm">
-                <img class="form-1-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
+                <img class="form-1-badge-top" src="/wp-content/plugins/pwe-media/media/badge_top.png">
                 <div class="form-1-top pwe-registration">
-                    <img class="form-1-badge-left" src="/wp-content/plugins/PWElements/media/badge_left.png">
-                    <img class="form-1-badge-bottom" src="/wp-content/plugins/PWElements/media/badge_bottom.png">
-                    <img class="form-1-badge-right" src="/wp-content/plugins/PWElements/media/badge_right.png">
-                    <img class="form-1-image-qr" src="/wp-content/plugins/PWElements/media/badge_qr.png">
+                    <img class="form-1-badge-left" src="/wp-content/plugins/pwe-media/media/badge_left.png">
+                    <img class="form-1-badge-bottom" src="/wp-content/plugins/pwe-media/media/badge_bottom.png">
+                    <img class="form-1-badge-right" src="/wp-content/plugins/pwe-media/media/badge_right.png">
+                    <img class="form-1-image-qr" src="/wp-content/plugins/pwe-media/media/badge_qr.png">
                     <div class="form-1">';
                         if ($pwe_header_modes == "conference_mode") {
                             $reg_output .= '<h2>'.
@@ -1521,7 +1521,7 @@ class PWElementXForm extends PWElements {
 
                 $yes_output .= '
                 <div class="form-3-right">
-                    <img class="img-stand" src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
+                    <img class="img-stand" src="/wp-content/plugins/pwe-media/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
                     <h5>'. 
                         self::languageChecker(
                             <<<PL

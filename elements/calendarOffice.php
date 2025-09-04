@@ -56,12 +56,12 @@ class PWOfficeCalendarElement extends PWElements {
                 'END:VEVENT' . PHP_EOL .
                 'END:VCALENDAR' . PHP_EOL;
 
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/Office.ics';
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/pwe-media/media/Office.ics';
         $fileSaved = file_put_contents($filePath, $data);
         
         $output = '<div id="calendar-office" class="pwe-container-calendar-add text-centered">
-                    <a class="office" alt="link do kalendarza office" href="/wp-content/plugins/PWElements/media/Office.ics">
-                        <img src="/wp-content/plugins/PWElements/media/office.png" alt="ikonka office calendar"/>
+                    <a class="office" alt="link do kalendarza office" href="/wp-content/plugins/pwe-media/media/Office.ics">
+                        <img src="/wp-content/plugins/pwe-media/media/office.png" alt="ikonka office calendar"/>
                         <p class="calendar-icon font-weight-700">'.
                         self::languageChecker(
                             <<<PL

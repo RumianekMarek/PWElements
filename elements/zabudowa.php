@@ -116,7 +116,7 @@ class PWElementStand extends PWElements {
                 </div>
 
                 <div class="pwe-block-2 single-media-wrapper half-block-padding pwe-min-media-wrapper" style="flex:1;">
-                    <img src="/wp-content/plugins/PWElements/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
+                    <img src="/wp-content/plugins/pwe-media/media/zabudowa.webp" alt="zdjęcie przykładowej zabudowy"/>
                 </div>
             </div>';
 

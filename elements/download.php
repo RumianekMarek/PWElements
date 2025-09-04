@@ -53,7 +53,7 @@ class PWElementDonwload extends PWElements {
         
         <div id="download" class="pwe-download-container style-accent-bg single-block-padding">
             <div class="single-media-wrapper wpb_column t-m-display-none half-block-padding" style="flex:1;">
-                <img src="/wp-content/plugins/PWElements/media/download-icon.png" alt="ikonka pobierania"/>
+                <img src="/wp-content/plugins/pwe-media/media/download-icon.png" alt="ikonka pobierania"/>
             </div>
             
             <div style="flex:5">

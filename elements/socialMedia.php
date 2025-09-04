@@ -97,7 +97,7 @@ class PWElementSocials extends PWElements {
                     .'</h4>
 
                     <div class="pwe-block-socialMedia">
-                        <img class="absolute-facebook-Img" src="/wp-content/plugins/PWElements/media/facebookIcon.png" alt="facebookIcon"/>
+                        <img class="absolute-facebook-Img" src="/wp-content/plugins/pwe-media/media/facebookIcon.png" alt="facebookIcon"/>
                         <ul class="list-style-none" style="padding-left:0 !important;">'.
                             self::languageChecker(
                                 <<<PL

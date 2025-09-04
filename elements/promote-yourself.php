@@ -563,7 +563,7 @@ class PWElementPromot extends PWElements {
                                     EN
                                 )
                             .'</h3>
-                            <img src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp" alt="PWE-logo"/>
+                            <img src="/wp-content/plugins/pwe-media/media/logo_pwe_black.webp" alt="PWE-logo"/>
                             <div>
                                 <span class="btn-container">
                                     <a href="https://warsawexpo.eu/docs/Logo_PWE.zip" class="pwe-link btn pwe-btn" target="_blank" rel="nofollow" title="PWE-logo">'.
