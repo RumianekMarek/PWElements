@@ -237,6 +237,16 @@ class PWElementConfSideEvents extends PWElements {
                                 EN
                             )
                         .'</p>
+                        <p>'. 
+                            self::languageChecker(
+                                <<<PL
+                                    <strong>Produkt Targowy:</strong> Nagroda dla wystawców, których produkt wyróżnia się jakością, funkcjonalnością i znaczeniem dla rozwoju branży, zyskując uznanie odwiedzających oraz ekspertów.
+                                PL,
+                                <<<EN
+                                    <strong>Trade Fair Product:</strong> An award for exhibitors whose product stands out for its quality, functionality, and significance for the industry’s development, earning recognition from both visitors and experts.
+                                EN
+                            )
+                        .'</p>
                     </div>
                 </div>
                 <div class="conf-side-row">';
