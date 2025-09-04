@@ -158,16 +158,24 @@ class PWEExhibitorVisitorGenerator extends PWEExhibitorGenerator {
             case 'gr1':
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr1.php';
                 return render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite);
+
             case 'gr2':
+            case 'b2c': // 👈 dodany case b2c
                 $all_partners = PWECommonFunctions::get_database_logotypes_data();
                 $all_conferences = PWECommonFunctions::get_database_conferences_data();
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr2.php';
-                return render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pweGeneratorWebsite, $domain);
+                return render_gr2(
+                    $atts,
+                    $all_exhibitors,
+                    $all_partners,
+                    $all_conferences,
+                    $pweGeneratorWebsite,
+                    $domain
+                );
+
             case 'gr3':
                 require_once plugin_dir_path(__DIR__) . 'assets/visitors_gr3.php';
                 return render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite);
         }
-
-
     }
 }
