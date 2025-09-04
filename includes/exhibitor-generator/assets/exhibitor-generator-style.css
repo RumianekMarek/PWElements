@@ -171,7 +171,7 @@
 #exhibitors_selector{
     background-image:
         url("/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/box.png"),
-        url("/wp-content/plugins/PWElements/media/arrow-down.png");
+        url("/wp-content/plugins/pwe-media/media/arrow-down.png");
     background-repeat: no-repeat, no-repeat;
     background-position: 8px center, right 10px center;
     background-size: 30px 25px, 20px,20px;
@@ -411,11 +411,11 @@
 }
 
 .modal__element .mass-send-name:empty {
-    background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/generator-imiona.webp);
+    background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/generator-imiona.webp);
 }
 
 .modal__element .mass-send-email:empty {
-    background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/geneartor-emaile.webp);
+    background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/geneartor-emaile.webp);
 }
 
 .modal__element tr table {
@@ -486,7 +486,7 @@
 .file-selector select {
     padding-right: 30px;
     cursor: pointer;
-    background: #fff url(/wp-content/plugins/PWElements/media/arrow-down.png) no-repeat right 5px top 55%;
+    background: #fff url(/wp-content/plugins/pwe-media/media/arrow-down.png) no-repeat right 5px top 55%;
     background-size: 20px 20px;
 }
 
@@ -495,8 +495,7 @@
 }
 
 .modal__element,
-.file-size-error,
-.file-size-info{
+.file-size-error{
     display: none;
 }
 
@@ -520,13 +519,14 @@
 .file-size-info {
     text-align: left;
     margin-top: 10px;
+    margin-bottom: 10px;
     padding: 10px;
     background: white;
     border: 2px solid black;
     border-radius: 20px;
     left: 50%;
     transform: translateX(-50%);
-    position: fixed;
+    position: relative;
     width: 400px;
 }
 

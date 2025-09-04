@@ -184,10 +184,10 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                         <p class="under-label">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp;
                             PL,
                             <<<EN
-                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp;
                             EN
                         )
                         .'</p>
@@ -200,7 +200,7 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
                                 File is to big &nbsp;&nbsp;&nbsp;
                                 EN
                             )
-                        .'<span class="info-box-sign border-red">i</span></p>
+                        .'</p>
                         <div class="file-size-info">
                             <h5 style="margin-top: 0">
                                 '.

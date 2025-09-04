@@ -699,7 +699,7 @@ class PWEConferenceCap {
                                 }
                             }else {
                                 $output .= '
-                                <div class="conference_cap__conf-slug-default-header" style="background-image: url(/wp-content/plugins/PWElements/media/conference-background.webp)">
+                                <div class="conference_cap__conf-slug-default-header" style="background-image: url(/wp-content/plugins/pwe-media/media/conference-background.webp)">
                                         <div class="conference_cap__conf-slug-default-content">
                                             <h4 class="conference_cap__conf-slug-default-title">' . $conf_name . '</h4>
                                         </div>

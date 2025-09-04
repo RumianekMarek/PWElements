@@ -81,11 +81,11 @@ jQuery(document).ready(function($){
 
     // Show info box for file size on mouseover
     // Hide info box for file size on mouseleave
-    $('.info-box-sign').on('mouseenter', function(){
-        $('.file-size-info').show();
-    }).on('mouseleave', function(){
-        $('.file-size-info').hide();
-    });
+    // $('.info-box-sign').on('mouseenter', function(){
+    //     $('.file-size-info').show();
+    // }).on('mouseleave', function(){
+    //     $('.file-size-info').hide();
+    // });
 
     // Function to decode uploaded file on change
     // Creating two select fields for name and email

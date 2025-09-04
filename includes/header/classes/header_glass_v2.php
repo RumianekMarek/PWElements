@@ -4,23 +4,8 @@ $btn_text_color = self::findColor($atts['btn_text_color_manual_hidden'], $atts['
 $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
 $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
-$trade_fair_date_start = do_shortcode('[trade_fair_datetotimer]');
-$trade_fair_date_end = do_shortcode('[trade_fair_enddata]');
-
-// Zamiana na obiekt daty
-$start = DateTime::createFromFormat('Y/m/d H:i', $trade_fair_date_start);
-$end = DateTime::createFromFormat('Y/m/d H:i', $trade_fair_date_end);
-
-// Sprawdzenie, czy miesiąc i rok są takie same
-if ($start->format('mY') === $end->format('mY')) {
-    // Format: 15–17 | 09 | 2027
-    $trade_fair_date = $start->format('d') . '–' . $end->format('d') . ' | ' . $end->format('m') . ' | ' . $end->format('Y');
-} else {
-    // Format: 15.01 – 11.09 | 2027
-    $trade_fair_date = $start->format('d.m') . ' – ' . $end->format('d.m') . ' | ' . $end->format('Y');
-}
-
-$start_date = do_shortcode('[trade_fair_datetotimer]');
+$trade_fair_dates = do_shortcode('[trade_fair_date_custom_format]');
+$trade_fair_dates = str_replace("|", " | ", $trade_fair_dates);
 
 $output .= '
     <style>
@@ -28,17 +13,28 @@ $output .= '
             padding: 36px;
             position: relative;
         }
+        .pwelement_'. $el_id .' .pwe-header-wrapper { 
+            z-index:1; 
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            align-items: end;
+            gap: 36px;
+        }
         .pwelement_'. $el_id .' .pwe-header-column.pwe-header-content-column {
-            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
-        .pwelement_'. $el_id .' .pwe-header-text h1 {
+        .pwelement_'. $el_id .' .pwe-header-content-wrapper {
+            display: flex;
+            justify-content: end;
+        }
+        .pwelement_'. $el_id .' .pwe-header-tile h1 {
             font-size: 32px;
         }
-        .pwelement_'. $el_id .' .pwe-header-text {
-            background: #5b2e8540;
+        .pwelement_'. $el_id .' .pwe-header-tile {
+            background: #ffffff87;
             max-width: 450px;
             backdrop-filter: blur(10px);
             padding: 36px;
@@ -48,35 +44,37 @@ $output .= '
             justify-content: center;
         }
         .pwelement_'. $el_id .' .pwe-header-title h1, 
-        .pwelement_'. $el_id .' .pwe-header-title h3 {
+        .pwelement_'. $el_id .' .pwe-header-title p {
             text-align: left;
             margin-top: 18px;
             text-transform: unset;
+            color: black;
         }
+        .pwelement_'. $el_id .' .pwe-header-edition {
+            text-align: center;
+        }  
         .pwelement_'. $el_id .' .pwe-header-edition span {
             background: var(--main2-color);
-            color: var(--accent-color);
-            padding: 12px 32px;
+            color: #fff;
+            padding: 8px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 20px;
         }
         .pwelement_'. $el_id .' .pwe-header-date-block {
             display: flex;
             align-items: center;
-            justify-content: center;
             margin-top: 18px;
         }
-        .pwelement_'. $el_id .' .pwe-header-date-block h2{
+        .pwelement_'. $el_id .' .pwe-header-date-block h2 {
             margin: 0;
             font-size: 20px;
             text-transform: unset;
-        }
-        .pwelement_'. $el_id .' .pwe-header-partners__title h3 {
-            text-transform: capitalize;
+            color: black;
         }
         .pwelement_'. $el_id .' .pwe-header-date-block i {
-            color: white;
+            color: black;
+            font-size: 22px;
         }
         .pwelement_'. $el_id .' .pwe-header-bottom {
             background: var(--accent-color);
@@ -94,9 +92,11 @@ $output .= '
             width: 100%;
             display: flex;
             align-items: center;
+            margin-top: 18px;
         }
         .pwelement_'. $el_id .' #pweBtnRegistration .pwe-btn {
-            background: white;
+            background: '. $btn_color .';
+            color: '. $btn_text_color .';
             padding: 13px 31px !important;
             border-radius: 24px !important;
             font-weight: 600;
@@ -104,7 +104,9 @@ $output .= '
             text-align: center;
             min-width: 240px !important;
         }
-
+        .pwelement_'. $el_id .' #pweBtnRegistration .pwe-btn:hover {
+            background: '. $darker_btn_color .';
+        }
         .pwelement_'. $el_id .' #countdownCustom {
             display: flex;
             flex-direction: column;
@@ -139,25 +141,23 @@ $output .= '
         .pwelement_'. $el_id .' #trade-fair-date-custom {
             display: none;
         }
-
         .pwelement_'. $el_id .' .pwe-header .pwe-header-logotypes {
             opacity: 1 !important;
         }
         .pwelement_'. $el_id .' .pwe-header-partners {
-            position: absolute;
-            top: 50%;
+            position: static;
             height: auto;
-            transform: translate(0, -50%);
-            right: 0;
             display: flex;
             justify-content: center;
-            flex-direction: column;
-            background: #5b2e8540;
+            flex-direction: row;
+            transform: unset;
+            background: #ffffff;
             backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 10px;
+            border-radius: 18px 18px 0 0;
+            padding: 6px 18px 18px;
             gap: 18px;
-            z-index: 2;
+            margin-top: 0;
+            margin-bottom: -38px;
         }
         .pwelement_'. $el_id .' .pwe-header-container { 
             position: relative; 
@@ -176,12 +176,10 @@ $output .= '
         .pwelement_'. $el_id .' .pwe-bg-image.is-active { 
             opacity:1; 
         }
-        .pwelement_'. $el_id .' .pwe-header-wrapper { 
-            z-index:1; 
-        }
+        
         @media(max-width:970px){
-            .pwelement_'. $el_id .' .pwe-header-bottom-content {
-                flex-direction: column-reverse;
+            .pwelement_'. $el_id .' .pwe-header-wrapper { 
+                flex-direction: column;
                 align-items: center;
             }
             .pwelement_'. $el_id .' .pwe-header-partners {
@@ -197,14 +195,12 @@ $output .= '
                 max-width: 450px !important;
                 width: 100%;
             }  
+            .pwe-header-partners__items {
+                flex-wrap: wrap !important;
+            }
             .pwelement_'. $el_id .' .pwe-header-partners-container,
             .pwelement_'. $el_id .' .pwe-header-partners__title h3 {
                 max-width: 100% !important;
-            }
-            .pwelement_'. $el_id .' #countdownCustom {
-                position: static;
-                margin-top: -46px;
-                align-items: center;
             }
         }
         @media(max-width:570px) {
@@ -214,7 +210,7 @@ $output .= '
             .pwelement_'. $el_id .' .pwe-header-date-block {
                 justify-content: flex-start;
             }
-            .pwelement_'. $el_id .' .pwe-header-text h1 {
+            .pwelement_'. $el_id .' .pwe-header-tile h1 {
                 font-size: 22px;
             }
             .pwelement_'. $el_id .' .pwe-header-logo {
@@ -224,7 +220,7 @@ $output .= '
                 padding: 7px 21px;
                 font-size: 14px;
             }
-            .pwelement_'. $el_id .' .pwe-header-text {
+            .pwelement_'. $el_id .' .pwe-header-tile {
                 padding: 18px;
             }
             .pwelement_'. $el_id .' .pwe-header-date-block h2 {
@@ -235,13 +231,6 @@ $output .= '
             }
             .pwelement_'. $el_id .' .pwe-header-bottom-timer {
                 width: 100%;
-            }
-            .pwelement_'. $el_id .' #countdownCustom .countdown-text, 
-            .pwelement_'. $el_id .' #countdownCustom .countdown-number {
-                font-size: 16px;
-            }
-            .pwelement_'. $el_id .' .countdown-seconds {
-                display: none;
             }
         }
     </style>
@@ -256,89 +245,40 @@ $output .= '
         <div class="pwe-header-wrapper">
 
             <div class="pwe-header-column pwe-header-content-column">
-                <div class="pwe-header-text">
-                    <div class="pwe-header-main-content-block">
-                        <img class="pwe-header-logo" src="'. $logo_url .'" alt="logo-'. $trade_fair_name .'">
-                        <div class="pwe-header-title">
-                            <h1>'. $trade_fair_desc .'</h1>
-                            <h3 class="pwe-header-edition"><span>'. $trade_fair_edition .'</span></h3>
+                <div class="pwe-header-content-wrapper">
+                    <div class="pwe-header-tile">
+                        <div class="pwe-header-main-content-block">
+                            <img class="pwe-header-logo" src="'. self::languageChecker('/doc/logo-color.webp', '/doc/logo-color-en.webp') .'" alt="logo-'. $trade_fair_name .'">
+                            <div class="pwe-header-edition"><p><span>'. $trade_fair_edition .'</span></p></div>
+                            <div class="pwe-header-title">
+                                <h1>'. $trade_fair_desc .'</h1>
+                            </div>
+                        </div>
+                        <div class="pwe-header-date-block">
+                            <i class="fa fa-location-outline fa-2x fa-fw"></i>
+                            <h2>'. $trade_fair_dates . self::languageChecker(' Warszawa', ' Warsaw') .'</h2>
+                            <p></p>
+                        </div>
+                        <div id="pweBtnRegistration" class="pwe-btn-container header-button">
+                            <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" alt="'. self::languageChecker('link do rejestracji', 'link to registration') .'">
+                                '. self::languageChecker('Zarejestruj się', 'Register') .'
+                            </a>
                         </div>
                     </div>
-                    <div class="pwe-header-date-block">
-                        <i class="fa fa-location-outline fa-2x fa-fw"></i>
-                        <h2>'. $trade_fair_date . self::languageChecker(' Warszawa', ' Warsaw') .'</h2>
-                        <p></p>
-                    </div>
                 </div>
-                <div class="pwe-header-logotypes">';
-                    // $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
-                    // if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
-                    if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
-                        require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
-                    }
+            </div>
+            <div class="pwe-header-logotypes">';
+                // $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
+                // if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
+                if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
+                    require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
+                }
                 $output .= '
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="pwe-header-bottom">
-        <div class="pwe-header-bottom-content">
-            <div id="pweBtnRegistration" class="pwe-btn-container header-button">
-                <a class="pwe-link pwe-btn" href="'. $pwe_header_register_button_link .'" alt="'. self::languageChecker('link do rejestracji', 'link to registration') .'">
-                    '. self::languageChecker('Zarejestruj się', 'Register') .'
-                </a>
-            </div>
-            <div class="pwe-header-bottom-timer">
-                <p id="trade-fair-date-custom" data-trade-fair="[trade_fair_datetotimer]">[trade_fair_datetotimer]</p>
-                <div id="countdownCustom"></div>
             </div>
         </div>
     </div>
 </div>
-<script>
-    const tradeFairElement = document.querySelector("[data-trade-fair]");
 
-    const tradeFairDateText = tradeFairElement.textContent.trim(); // Pobranie tekstu
-    const tradeFairDate = new Date(tradeFairDateText); // Parsowanie daty
-
-    function updateCountdown() {
-      const now = new Date(); // Aktualny czas
-      const timeDifference = tradeFairDate - now; // Różnica czasu w ms
-
-      if (timeDifference <= 0) {
-        document.getElementById("countdownCustom").innerHTML = "Wydarzenie już trwa lub minęło!";
-        return;
-      }
-
-      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-      document.getElementById("countdownCustom").innerHTML = `
-          <div class="countdown-text">'. self::languageChecker('Do targów pozostało', 'The fair is still to come') .'</div>
-          <div class="countdown-container">
-              <div class="countdown-days countdown-number">
-                  <span class="time">${days}</span>'. self::languageChecker('dni', 'days') .'
-              </div>
-              <div class="countdown-hours countdown-number">
-                  <span class="time">${hours}</span>'. self::languageChecker('godzin', 'hours') .'
-              </div>
-              <div class="countdown-minutes countdown-number">
-                  <span class="time">${minutes}</span>'. self::languageChecker('minut', 'minutes') .'
-              </div>
-              <div class="countdown-seconds countdown-number">
-                  <span class="time">${seconds}</span>'. self::languageChecker('sekund', 'seconds') .'
-              </div>
-          </div>
-      `;
-    }
-    setInterval(updateCountdown, 1000);
-
-    document.addEventListener("DOMContentLoaded", function () {
-        updateCountdown();
-    });
-</script>
 <script>
 (function(){
   // --- KONFIG ---

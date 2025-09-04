@@ -1351,6 +1351,10 @@ if ($event_type === "week") {
             border-radius: 20px;
         }
 
+
+        footer {
+            display: inline !important;
+        }
         
     </style>';
 
@@ -3502,10 +3506,10 @@ if ($event_type === "week") {
                             <meta itemprop="telephone" content="'. get_post_meta($post_id, 'organizer_phone', true) .'">';
                             if ($organizer === "warsaw") {
                                 $output .= '
-                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
+                                <img class="wp-image-95078 ptak-logo-item" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
                             }  else if (strpos(mb_strtolower($organizer), "łódź") !== false) {
                                 $output .= '
-                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
+                                <img class="wp-image-95078 ptak-logo-item" src="/wp-content/plugins/pwe-media/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
                             }
                         $output .= '
                         </div>

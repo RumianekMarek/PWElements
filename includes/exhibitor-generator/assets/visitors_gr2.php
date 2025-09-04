@@ -592,6 +592,14 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
 
         }
     }
+    $org_hash = substr(sha1('PWE' . $domain), 0, 12);
+    $all_senders[$org_hash] = array(
+        'name' => 'Ptak Warsaw Expo',
+        'logo' => '/wp-content/plugins/pwe-media/media/logo_pwe_black.png',
+        'pass' => 'PWE',
+        'desc' => $org_hash,
+        'type' => 'gr2',
+    );
     // dodanie konferencji aby można było wysyłać zaproszenia hasło nazwa konferencji np. "Konferencja PIME HEATING TECH"
     foreach($all_conferences as $conf) {
 
@@ -1120,7 +1128,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
     <div class="exhibitor-generator gr2" data-group="' . $gr_data . '">
         <div class="exhibitor-generator__wrapper">
             <div class="exhibitor-generator__left-badge">
-                <img class="exhibitor-generator__form-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
+                <img class="exhibitor-generator__form-badge-top" src="/wp-content/plugins/pwe-media/media/badge_top.png">
                 <div class="exhibitor-generator__left-content">
                     <div class="exhibitor-generator__left-header-badge">
                         <img class="exhibitor-generator__badge-logo" src="/doc/logo-color.webp" alt="Logo targów">
@@ -1153,9 +1161,9 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                     <div class="exhibitor-generator__left-footer-badge">
                         <img class="exhibitor-generator__badge-logo-pwe" src="/wp-content/plugins/pwe-media/media/ptak_black.png" alt="Logo PTAK WARSAW EXPO">
                     </div>
-                    <img class="exhibitor-generator__form-badge-left" src="/wp-content/plugins/PWElements/media/badge_left.png">
-                    <img class="exhibitor-generator__form-badge-right" src="/wp-content/plugins/PWElements/media/badge_right.png">
-                    <img class="exhibitor-generator__form-badge-bottom" src="/wp-content/plugins/PWElements/media/badge_bottom.png">
+                    <img class="exhibitor-generator__form-badge-left" src="/wp-content/plugins/pwe-media/media/badge_left.png">
+                    <img class="exhibitor-generator__form-badge-right" src="/wp-content/plugins/pwe-media/media/badge_right.png">
+                    <img class="exhibitor-generator__form-badge-bottom" src="/wp-content/plugins/pwe-media/media/badge_bottom.png">
                 </div>
             </div>
             <div class="exhibitor-generator__right">
@@ -1198,7 +1206,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                     </div>
                     <h5 class="exhibitor-generator__right-logotypes-title">' . PWECommonFunctions::languageChecker('Partnerzy PTAK WARSAW EXPO', 'PTAK WARSAW EXPO Partners') . '</h5>
                     <div class="exhibitor-generator__right-logotypes">';
-                    $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/wspieraja-nas/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
+                    $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/pwe-media/media/wspieraja-nas/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
                     foreach ($files as $file_path) {
                         $file_url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $file_path);
                         $output .= '
@@ -1513,10 +1521,10 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                     <p class="under-label">'.
                     PWECommonFunctions::languageChecker(
                         <<<PL
-                        Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp; <span class="info-box-sign">i</span>
+                        Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp;
                         PL,
                         <<<EN
-                        Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp; <span class="info-box-sign">i</span>
+                        Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp;
                         EN
                     )
                     .'</p>
@@ -1529,7 +1537,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                             File is to big &nbsp;&nbsp;&nbsp;
                             EN
                         )
-                    .'<span class="info-box-sign border-red">i</span></p>
+                    .'</p>
                     <div class="file-size-info">
                         <h5 style="margin-top: 0">
                             '.

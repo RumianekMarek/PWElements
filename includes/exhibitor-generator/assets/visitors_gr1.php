@@ -7,7 +7,7 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
         'generator_catalog' => '',
         'generator_patron' => '',
     ), $atts ));
-    
+
     $output = '';
     $output .= '
         <div class="exhibitor-generator gr1" data-group="gr1">
@@ -53,7 +53,7 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                         <div class="exhibitor-generator__right-form">
                             [gravityform id="'. $generator_form_id .'" title="false" description="false" ajax="false"]
                         </div>';
-                        
+
                         // Add a mass invite send button if not on a personal exhibitor page
                         if(get_locale() == "pl_PL" && (!isset($company_array['exhibitor_name'])  && PWEExhibitorVisitorGenerator::fairStartDateCheck()) || current_user_can('administrator')){
                             $output .= '<button type="button" class="tabela-masowa btn-gold">' . PWECommonFunctions::languageChecker('Wysyłka zbiorcza', 'Collective send') . '</button>';
@@ -183,7 +183,7 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                     //     $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Firma Zapraszająca (wybierz z listy)</option>';
                     //     foreach($all_exhibitors as $cat_id => $cat_value){
                     //         $output .='<option class="cat-exhibitor" val="' . $cat_value['Nazwa_wystawcy'] . '">' . $cat_value['Nazwa_wystawcy'] . '</option>';
-                    //     }  
+                    //     }
                     //     $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Patron</option>
                     //     </select>';
                     $output .='
@@ -213,7 +213,7 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                             .'</p>
                         </div>
                     </div>
-                    
+
                     <label class="mass_checkbox_label" style="display:none;">
                         <input type="checkbox" id="mass_exhibitor_badge" name="mass_exhibitor_badge" class="mass_checkbox">
                         Brak uwzględnienia nazwy firmy na identyfikatorze
@@ -224,23 +224,23 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                         <p class="under-label">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp;
                             PL,
                             <<<EN
-                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp;
                             EN
                         )
                         .'</p>
                         <p class="file-size-error error-color"">'.
                             PWECommonFunctions::languageChecker(
                                 <<<PL
-                                Zbyt duży plik &nbsp;&nbsp;&nbsp; 
+                                Zbyt duży plik &nbsp;&nbsp;&nbsp;
                                 PL,
                                 <<<EN
                                 File is to big &nbsp;&nbsp;&nbsp;
                                 EN
                             )
-                        .'<span class="info-box-sign border-red">i</span></p>
+                        .'</p>
                         <div class="file-size-info">
                             <h5 style="margin-top: 0">
                                 '.
@@ -281,7 +281,7 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                                 </a>
                             ';
                         }
-                        
+
                     $output .='
                     </div>
                     <button class="wyslij btn-gold">'.
@@ -307,10 +307,10 @@ function render_gr1($atts, $all_exhibitors, $pweGeneratorWebsite){
                     <h3 style="margin-top: 45px;">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: 
+                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem:
                             PL,
                             <<<EN
-                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at: 
+                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at:
                             EN
                         )
                     .'<a href="mailto:generator.wystawcow@warsawexpo.eu" style="text-decoration:underline; color:blue;">generator.wystawcow@warsawexpo.eu</a></h3>

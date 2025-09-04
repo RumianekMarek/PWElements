@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 /**
  * Class PWEMassVipSender
- * 
+ *
  * This class add html of mass generator for exhibitors
  */
 class PWEMassVipSender extends PWEExhibitorGenerator {
@@ -18,7 +18,7 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
     /**
      * Static method to generate the HTML output.
      * Creating modal form to upload file with visitors data
-     * 
+     *
      * @param array @atts options
      * @return string html output
      */
@@ -26,11 +26,11 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
         global $wpdb;
         $table_name = $wpdb->prefix . 'mass_exhibitors_invite_query';
         if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") == $table_name) {
-            $count_new = $wpdb->get_var( 
-                $wpdb->prepare( 
-                    "SELECT COUNT(*) FROM $table_name WHERE status = %s", 
+            $count_new = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT COUNT(*) FROM $table_name WHERE status = %s",
                     'new'
-                ) 
+                )
             );
         } else {
             return true;
@@ -38,30 +38,30 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
 
         $today_date = new DateTime();
         $fair_start_date = new DateTime(do_shortcode('[trade_fair_datetotimer]'));
-        
+
         $date_diffarance = $today_date->diff($fair_start_date);
 
         if($date_diffarance->invert == 0){
             $hours_remaining = ($date_diffarance->days * 24 + $date_diffarance->h) - 34;
             $total_email_capacity = $hours_remaining * 100;
-    
+
             $canSend = $total_email_capacity - $count_new;
-            
+
             if($canSend < -2000 || $canSend > 0){
                 echo '<script>console.log('.$canSend.')</script>';
             }
-            
+
             if($total_email_capacity > $count_new){
                 return true;
-            } 
-        } 
+            }
+        }
         return false;
     }
 
     /**
      * Static method to generate the HTML output,
      * Creating modal form to upload file with visitors data,
-     * 
+     *
      * @param array @atts options
      * @return string html output
      */
@@ -75,7 +75,7 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
 
         $output = '';
 
-        // Check if there is more space for email send, 
+        // Check if there is more space for email send,
         // 2400 per day until day before starts of the fair minus mails already in queue,
         if(self::senderFlowChecker() || current_user_can('administrator')){
             $output .='
@@ -128,8 +128,8 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                         $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Firma Zapraszająca (wybierz z listy)</option>';
                         foreach($all_exhibitors as $cat_id => $cat_value){
                             $output .='<option class="cat-exhibitor" val="' . $cat_value['Nazwa_wystawcy'] . '">' . $cat_value['Nazwa_wystawcy'] . '</option>';
-                        }  
-                        $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Patron</option>'; 
+                        }
+                        $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">Patron</option>';
                     $output .='</select>
                     <label class="mass_checkbox_label" style="display:none;">
                         <input type="checkbox" id="mass_exhibitor_badge" name="mass_exhibitor_badge" class="mass_checkbox" >
@@ -141,23 +141,25 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                         <p class="under-label">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            Dozwolone rozszerzenia .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Rozmiar ~1MB &nbsp;
                             PL,
                             <<<EN
-                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp; <span class="info-box-sign">i</span>
+                            Allowed extensions: .csv, .xls, .xlsx;&nbsp;&nbsp;&nbsp; Size ~1MB &nbsp;
                             EN
                         )
                         .'</p>
                         <p class="file-size-error error-color"">'.
                             PWECommonFunctions::languageChecker(
                                 <<<PL
-                                Zbyt duży plik &nbsp;&nbsp;&nbsp; 
+                                Zbyt duży plik &nbsp;&nbsp;&nbsp;
                                 PL,
                                 <<<EN
                                 File is to big &nbsp;&nbsp;&nbsp;
                                 EN
                             )
-                        .'<span class="info-box-sign border-red">i</span></p>
+                        .'
+
+                        </p>
                         <div class="file-size-info">
                             <h5 style="margin-top: 0">
                                 '.
@@ -198,7 +200,7 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                                 </a>
                             ';
                         }
-                        
+
                     $output .='
                     </div>
                     <button class="wyslij btn-gold">'.
@@ -224,10 +226,10 @@ class PWEMassVipSender extends PWEExhibitorGenerator {
                     <h3 style="margin-top: 45px;">'.
                         PWECommonFunctions::languageChecker(
                             <<<PL
-                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem: 
+                            Przekroczono możliwości wysyłki zbiorczej dla danych targów, po więcej informacji proszę o kontakt pod adresem:
                             PL,
                             <<<EN
-                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at: 
+                            We have exceeded the capacity of bulk shipping for the fair data, for more information, please contact me at:
                             EN
                         )
                     .'<a href="mailto:generator.wystawcow@warsawexpo.eu" style="text-decoration:underline; color:blue;">generator.wystawcow@warsawexpo.eu</a></h3>

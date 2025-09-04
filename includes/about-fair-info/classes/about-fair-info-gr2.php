@@ -6,13 +6,8 @@ class PWEAboutFairInfoGr2 {
         return [];
     }
 
-    public static function output($atts, $rnd_class, $fair_group, $title, $desc, $img, $exhibitorsData = []) {
+    public static function output($atts, $rnd_class, $fair_group, $title, $desc, $img) {
         $output = '';
-
-        $bg_image = '/doc/new_template/logo-long.webp';
-
-        $hasMany = !empty($exhibitorsData['has_many']);
-        $logos   = is_array($exhibitorsData['logos'] ?? null) ? $exhibitorsData['logos'] : [];
 
         // Styl
         $output .= '<style>
@@ -21,6 +16,8 @@ class PWEAboutFairInfoGr2 {
                 align-items: stretch;
                 gap: 36px;
                 border-radius: 18px;
+                background: #f2f2f2;
+                padding: 36px;
             }
             .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__left-column, 
             .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__right-column {
@@ -32,27 +29,31 @@ class PWEAboutFairInfoGr2 {
                 align-items: center;
                 gap: 18px;
             }
-            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__left-column h3 {
-                display: block;
-                margin: 10px auto;
-                font-size: 20px;
-                text-transform: uppercase;
+            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__title-general {
+                margin: 0;
+                font-size: 36px;
+                font-weight: 900;
             }
             .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__title {
-                font-size: 29px;
-            }
-            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__subtitle {
+                margin: 20px 0 0;
                 font-size: 20px;
-                font-weight: 800;
-                margin: 0;
+                font-weight: 700;
+            }
+            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__desc p {
+                line-height: 1.3;
+                font-weight: 500;
+            }
+            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__btn-container {
+                width: 100%;
+                margin-top: 18px;
             }
             .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__btn {
                 color: white !important;
                 min-width: 200px;
-                padding: 10px 20px;
+                width: fit-content;
+                padding: 18px;
                 display: block;
-                margin: 0 auto;
-                border-radius: 10px;
+                border-radius: 50px;
                 text-align: center;
                 transition: all 0.3s ease-in-out;
                 font-weight: 500;
@@ -66,33 +67,9 @@ class PWEAboutFairInfoGr2 {
             }
             .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__img {
                 border-radius: 18px;
-                width: 100%;
-                height: 100%;
                 object-fit: cover;
-                margin: auto;
-            }
-            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__logos-container {
-                border-radius: 30px;
-                padding: 15px;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                -webkit-box-shadow: 4px 17px 30px -7px rgba(66, 68, 90, 1);
-                -moz-box-shadow: 4px 17px 30px -7px rgba(66, 68, 90, 1);
-                box-shadow: 4px 17px 30px -7px rgba(66, 68, 90, 1);
-            }
-            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__logos {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-            }
-            .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__logo {
-                aspect-ratio: 3/2;
-                object-fit: contain;
-                width: calc(30% - 6px);
-                height: auto;
+                height: 100%;
+                aspect-ratio: 16 / 9;
             }
             @media(max-width:760px) {
                 .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__container {
@@ -100,63 +77,36 @@ class PWEAboutFairInfoGr2 {
                 }
             }
             @media(max-width:570px) {
-                .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__left-column {
-                    align-items: center;
-                }
-                .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__logos {
-                    justify-content: center;
-                }
                 .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__title {
                     text-align: center;
                     font-size: 24px;
                     width: 100%;
                 }
-                .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__subtitle {
-                    font-size: 18px;
-                    width: 100%;
-                    text-align: left;
-                }
-                .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__subtitle {
-                    font-size: 18px;
-                }
-                .' . $rnd_class . ' .pwe-about-fair-' . $fair_group . '__logo {
-                    width: calc(48% - 6px);
-                }
             }
         </style>';
 
         // Layout
-        $output .= '<div id="pwe-about-fair-' . $fair_group . '">';
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $bg_image)) {
-                $output .= '
-                    <div class="background-image">
-                        <img src="'. $bg_image .'" alt="Logo [trade_fair_name]"/>
-                    </div>';
-            }
-            $output .= '<div class="pwe-about-fair-' . $fair_group . '__container">
-                <div class="pwe-about-fair-' . $fair_group . '__left-column">';
-                    if ($hasMany && !empty($logos)) {
-                        $output .= '<div class="pwe-about-fair-' . $fair_group . '__logos-container">
-                            <h3>' . PWECommonFunctions::languageChecker('Wystawcy', 'Exhibitors') . '</h3>
-                            <div class="pwe-about-fair-' . $fair_group . '__logos">';
-                                foreach ($logos as $logo) {
-                                    $alt = $logo['name'] ?: 'Exhibitor logo';
-                                    $output .= '<img class="pwe-about-fair-' . $fair_group . '__logo" data-no-lazy="1" src="' . esc_url($logo['url']) . '" alt="' . esc_attr($alt) . '">';
-                                }
-                            $output .= '</div>
-                        </div>';
-                    } else {
-                        $output .= $img;
-                    }
-                    $output .= '<a class="pwe-about-fair-' . $fair_group . '__btn pwe-btn accent" href="' . PWECommonFunctions::languageChecker('/galeria/', '/en/galerry/') . '" class="pwe-conf-short-info-default__btn">' . PWECommonFunctions::languageChecker('Galeria targów', 'Trade fair gallery') . '</a>';
-                $output .= '</div>
+        $output .= '
+        <div id="pwe-about-fair-' . $fair_group . '">
+            <div class="pwe-about-fair-' . $fair_group . '__container">
+
                 <div class="pwe-about-fair-' . $fair_group . '__right-column">
                     <div class="pwe-about-fair-' . $fair_group . '__right-column-content">
-                        <h2 class="pwe-about-fair-' . $fair_group . '__title">' . $title . '</h2>
-                        <p class="pwe-about-fair-' . $fair_group . '__desc">' . $desc . '</p>
+                        <h2 class="pwe-about-fair-' . $fair_group . '__title-general">O targach</h2>
+                        <h3 class="pwe-about-fair-' . $fair_group . '__title">' . $title . '</h3>
+                        <div class="pwe-about-fair-' . $fair_group . '__desc">' . $desc . '</div>
                     </div>
-                    <a class="pwe-about-fair-' . $fair_group . '__btn pwe-btn main2" href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-default__btn">' . PWECommonFunctions::languageChecker('Dołacz do nas', 'Join us') . '</a>
+                    <div class="pwe-about-fair-' . $fair_group . '__btn-container">
+                        <a 
+                            class="pwe-about-fair-' . $fair_group . '__btn pwe-btn main2" 
+                            href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" >
+                            ' . PWECommonFunctions::languageChecker('Zarejestruj się', 'Register') . '
+                        </a>
+                    </div>
                 </div>
+
+                <div class="pwe-about-fair-' . $fair_group . '__left-column">'. $img .'</div>
+
             </div>
         </div>';
 

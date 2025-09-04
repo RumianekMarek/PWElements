@@ -78,6 +78,7 @@ class PWEHeader extends PWECommonFunctions {
             'pwe_header_without_bg' => '',
             'new_main_logotype' => '',
             'pwe_header_counter' => '',
+            'pwe_header_cap_auto_partners_off' => '',
             'pwe_header_partners_position' => '',
             'pwe_header_partners_title' => '',
             'pwe_header_partners_items' => '',
@@ -278,7 +279,7 @@ class PWEHeader extends PWECommonFunctions {
             $actually_date = $formatted_date;
         }
 
-        $background_congress = $base_url . '/wp-content/plugins/PWElements/media/conference-background.webp';
+        $background_congress = $base_url . '/wp-content/plugins/pwe-media/media/conference-background.webp';
         $background_header = ($pwe_header_modes == "conference_mode") ? $background_congress : $file_url;
 
         // Html of header
@@ -294,6 +295,8 @@ class PWEHeader extends PWECommonFunctions {
             require_once plugin_dir_path(__FILE__) . 'classes/header_video.php';
         } else if ($pwe_header_modes == "glass_mode") {
             require_once plugin_dir_path(__FILE__) . 'classes/header_glass.php';
+        } else if ($pwe_header_modes == "glass_mode_v2") {
+            require_once plugin_dir_path(__FILE__) . 'classes/header_glass_v2.php';
         }
 
         $output = do_shortcode($output);

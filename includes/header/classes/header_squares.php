@@ -203,11 +203,11 @@ $output .= '
             z-index: 1;
         }
         .pwelement_'. $el_id .' .pwe-bg-image2 {
-            background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_2.webp");
+            background-image: url("/wp-content/plugins/pwe-media/media/bg_mobile_2.webp");
             z-index: 2;
         }
         .pwelement_'. $el_id .' .pwe-bg-image3 {
-            background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_3.webp");
+            background-image: url("/wp-content/plugins/pwe-media/media/bg_mobile_3.webp");
             z-index: 3;
         }
         .pwelement_'. $el_id .' .pwe-header-background .visible {

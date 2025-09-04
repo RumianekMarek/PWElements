@@ -17,7 +17,7 @@ trait PWEConferenceShortInfoFunctions {
             'warsawhomekitchen.com'   => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
             'warsawhomebathroom.com'  => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
             'warsawbuild.eu'          => ['conference-short-info-home.php',  'PWEConferenceShortInfoHome'],
-            'mr.glasstec.pl'         => ['conference-short-info-solar.php', 'PWEConferenceShortInfoSolar'],
+            'mr.glasstec.pll'         => ['conference-short-info-solar.php', 'PWEConferenceShortInfoSolar'],
             'remadays.com'            => ['conference-short-info-rema.php', 'PWEConferenceShortInfoRema'],
             'warsawhvacexpo.com'      => ['conference-short-info-hvac.php', 'PWEConferenceShortInfoHvac'],
             'warsawpack.pl'           => ['conference-short-info-pack.php', 'PWEConferenceShortInfoPack'],

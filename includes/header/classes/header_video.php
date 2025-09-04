@@ -362,11 +362,11 @@ $output .= '
             z-index: 1;
         }
         .pwelement_'. $el_id .' .pwe-bg-image2 {
-            background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_2.webp");
+            background-image: url("/wp-content/plugins/pwe-media/media/bg_mobile_2.webp");
             z-index: 2;
         }
         .pwelement_'. $el_id .' .pwe-bg-image3 {
-            background-image: url("/wp-content/plugins/PWElements/media/bg_mobile_3.webp");
+            background-image: url("/wp-content/plugins/pwe-media/media/bg_mobile_3.webp");
             z-index: 3;
         }
         .pwelement_'. $el_id .' .pwe-header-background .visible {
@@ -574,6 +574,8 @@ $output .= '
                     }
 
                     // Partners widget --------------------------------------------------------------------------------------<
+                    // $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
+                    // if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
                     if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
                         require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
                     }

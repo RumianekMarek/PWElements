@@ -368,7 +368,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                                     $output .= '
                                     <tr class="pwe-conf-short-info-default__row-link" data-href="/' . PWECommonFunctions::languageChecker('wydarzenia', 'en/conferences') . '/?konferencja=' . esc_attr($conf['slug']) . '">
                                         <td><img src="' . esc_url($conf['logo']) . '" alt="" class="pwe-conf-short-info-default__org-logo"></td>
-                                        <td><strong>' . esc_html($conf['title']) . '</strong><br><small>' . esc_html($conf['organizer']) . '</small></td>';
+                                        <td><strong>' . esc_html(str_replace('<br>', '', $conf['title'])) . '</strong><br><small>' . esc_html($conf['organizer']) . '</small></td>';
 
                                         for ($i = 0; $i < $total_days; $i++) {
                                             if ($i === $conf['start_index']) {
