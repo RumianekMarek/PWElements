@@ -3,82 +3,84 @@
 $unique_id = PWECommonFunctions::id_rnd();
 
 $pwe_header_partners_title_color = !empty($pwe_header_partners_title_color) ? $pwe_header_partners_title_color : 'black';
-$pwe_header_partners_background_color = !empty($pwe_header_partners_background_color) ? $pwe_header_partners_background_color : 'rgb(190 190 190 / 80%)';
+$pwe_header_partners_background_color = !empty($pwe_header_partners_background_color) ? $pwe_header_partners_background_color : 'white';
 
 $pwe_header_partners_items = explode(',', $pwe_header_partners_items);
 
 $output .= '
-    <style>
+<style>
+    .pwe-header-partners {
+        position: absolute;';
+        if ($pwe_header_partners_position === 'top') {
+            $output .= 'top: 18px;';
+        } else if ($pwe_header_partners_position === 'bottom') {
+            $output .= 'bottom: 18px;';
+        } else {
+            $output .= '
+            top: 50%;
+            transform: translate(0, -50%);';
+        } $output .= '
+        right: 18px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        background-color: '. $pwe_header_partners_background_color .';
+        border-radius: 18px;
+        padding: 10px;
+        gap: 18px;
+        z-index: 2;
+    }
+    .pwe-header-partners__container {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .pwe-header-partners__title {
+        margin: 0 auto;
+    }
+    .pwe-header-partners__title h3 {
+        color: '. $pwe_header_partners_title_color .' !important;
+        text-transform: uppercase;
+        max-width: 250px;
+        text-align: center;
+        margin: 16px auto 0;
+        font-size: 18px;
+    }
+    .pwe-header-partners__items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 18px;
+    }
+    .pwe-header-partners__item {
+        max-width: 160px;
+    }
+    @media(max-width: 1100px) {
         .pwe-header-partners {
-            position: absolute;';
-            if ($pwe_header_partners_position === 'top') {
-                $output .= 'top: 18px;';
-            } else if ($pwe_header_partners_position === 'bottom') {
-                $output .= 'bottom: 18px;';
-            } else {
-                $output .= '
-                top: 50%;
-                transform: translate(0, -50%);';
-            } $output .= '
-            right: 18px;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            background-color: '. $pwe_header_partners_background_color .';
-            border-radius: 18px;
-            padding: 10px;
-            gap: 18px;
-            z-index: 2;
-        }
-        .pwe-header-partners-container {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-        .pwe-header-partners__title {
-            margin: 0 auto;
-        }
-        .pwe-header-partners__title h3 {
-            color: '. $pwe_header_partners_title_color .' !important;
-            text-transform: uppercase;
-            max-width: 250px;
-            text-align: center;
-            margin: 16px auto 0;
-            font-size: 18px;
+            position: static;
+            top: unset;
+            right: unset;
+            transform: unset;
+            margin: 18px auto 0;
+            flex-direction: row;
+            flex-wrap: wrap;
         }
         .pwe-header-partners__items {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+    }
+    @media(max-width: 650px) {
+        .pwe-header-partners {
             flex-direction: column;
-            gap: 18px;
         }
-        .pwe-header-partners__item {
-            max-width: 160px;
-        }
-        @media(max-width: 1100px) {
-            .pwe-header-partners {
-                position: static;
-                top: unset;
-                right: unset;
-                transform: unset;
-                margin: 18px auto 0;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            .pwe-header-partners__items {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-        }
-        @media(max-width: 650px) {
-            .pwe-header-partners {
-                flex-direction: column;
-            }
-        }
-    </style>';
+    }
+</style>';
 
-    $files = [];
+$files = [];
+
+// if ($pwe_header_cap_auto_partners_off) {
 
     if (!empty($pwe_header_partners_items)) {
         foreach ($pwe_header_partners_items as $item) {
@@ -120,7 +122,7 @@ $output .= '
     };
 
     $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data();
-    if (!empty($cap_logotypes_data) && !empty($pwe_header_partners_catalog)) {
+    if (!empty($cap_logotypes_data) && !empty($pwe_header_partners_catalog)) { 
         $logotypes_catalogs_array = explode(',', $pwe_header_partners_catalog);
         foreach ($cap_logotypes_data as $logo_data) {
             if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
@@ -132,7 +134,7 @@ $output .= '
     if (count($files) > 1) {
         $output .= '
         <style>
-            .pwe-header-partners-container.partners-'. $unique_id .' {
+            .pwe-header-partners__container.partners-'. $unique_id .' {
                 max-width: 280px;
             }
             .partners-'. $unique_id .' .pwe-header-partners__items {
@@ -144,7 +146,7 @@ $output .= '
                 max-width: 120px;
             }
             @media(max-width: 1200px) {
-                .pwe-header-partners-container.partners-'. $unique_id .' {
+                .pwe-header-partners__container.partners-'. $unique_id .' {
                     max-width: 240px;
                 }
                 .partners-'. $unique_id .' .pwe-header-partners__items {
@@ -157,7 +159,7 @@ $output .= '
                 }
             }
             @media(max-width: 1100px) {
-                .pwe-header-partners-container.partners-'. $unique_id .' {
+                .pwe-header-partners__container.partners-'. $unique_id .' {
                     max-width: 280px;
                 }
                 .partners-'. $unique_id .' .pwe-header-partners__item {
@@ -169,7 +171,7 @@ $output .= '
 
     $output .= ' 
     <div class="pwe-header-partners">
-        <div class="pwe-header-partners-container partners-'. $unique_id .'">
+        <div class="pwe-header-partners__container partners-'. $unique_id .'">
             <div class="pwe-header-partners__title">
                 <h3>'. $pwe_header_partners_title .'</h3>
             </div>
@@ -241,7 +243,7 @@ $output .= '
                 if (count($other_files) > 1) {
                     $output .= '
                     <style>
-                        .pwe-header-partners-container.partners-'. $unique_id .' {
+                        .pwe-header-partners__container.partners-'. $unique_id .' {
                             max-width: 280px;
                         }
                         .partners-'. $unique_id .' .pwe-header-partners__items {
@@ -253,7 +255,7 @@ $output .= '
                             max-width: 120px;
                         }
                         @media(max-width: 1200px) {
-                            .pwe-header-partners-container.partners-'. $unique_id .' {
+                            .pwe-header-partners__container.partners-'. $unique_id .' {
                                 max-width: 240px;
                             }
                             .partners-'. $unique_id .' .pwe-header-partners__items {
@@ -266,7 +268,7 @@ $output .= '
                             }
                         }
                         @media(max-width: 1100px) {
-                            .pwe-header-partners-container.partners-'. $unique_id .' {
+                            .pwe-header-partners__container.partners-'. $unique_id .' {
                                 max-width: 280px;
                             }
                             .partners-'. $unique_id .' .pwe-header-partners__item {
@@ -275,35 +277,179 @@ $output .= '
                         }
                     </style>';
                 }
-
-                $output .= '
-                <div class="pwe-header-partners-container partners-'. $unique_id .'">
-                    <div class="pwe-header-partners__title">
-                        <h3>' . $pwe_header_other_partner_title . '</h3>
-                    </div>
-                    <div class="pwe-header-partners__items">';
-                        foreach ($other_files as $item) {
-                            if (!empty($item["url"])) {
-                                if (!empty($item["link"])) {
-                                    $output .= '
-                                    <div class="pwe-header-partners__item">
-                                        <a href="'. $item["link"] .'" target="_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
-                                    </div>';
-                                } else {
-                                    $output .= '
-                                    <div class="pwe-header-partners__item">
-                                        <img src="'. $item["url"] .'" alt="partner logo">
-                                    </div>';
+                
+                if (count($other_files) > 0) {
+                    $output .= '
+                    <div class="pwe-header-partners__container partners-'. $unique_id .'">
+                        <div class="pwe-header-partners__title">
+                            <h3>' . $pwe_header_other_partner_title . '</h3>
+                        </div>
+                        <div class="pwe-header-partners__items">';
+                            foreach ($other_files as $item) {
+                                if (!empty($item["url"])) {
+                                    if (!empty($item["link"])) {
+                                        $output .= '
+                                        <div class="pwe-header-partners__item">
+                                            <a href="'. $item["link"] .'" target="_blank"><img src="'. $item["url"] .'" alt="partner logo"></a>
+                                        </div>';
+                                    } else {
+                                        $output .= '
+                                        <div class="pwe-header-partners__item">
+                                            <img src="'. $item["url"] .'" alt="partner logo">
+                                        </div>';
+                                    }
                                 }
                             }
-                        }
-                    $output .= '
-                    </div>
-                </div>';  
+                        $output .= '
+                        </div>
+                    </div>'; 
+                } 
             }
         }
         $output .= '
     </div>';
+// } else {
+    
+//     if (!empty($cap_logotypes_data)) {
+//         // Grupujemy logotypy według logos_type, które zaczynają się na "header-"
+//         $grouped_logos = [];
 
+//         foreach ($cap_logotypes_data as $logo_data) {
+//             if (strpos($logo_data->logos_type, 'header-') === 0) {
+//                 $meta = json_decode($logo_data->meta_data, true);
+//                 $desc_pl = $meta["desc_pl"] ?? '';
+//                 $desc_en = $meta["desc_en"] ?? '';
+//                 $link    = $logo_data->logos_link;
+//                 $url     = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+
+//                 $element = [
+//                     'url' => $url,
+//                     'desc_pl' => $desc_pl,
+//                     'desc_en' => $desc_en,
+//                     'link' => $link
+//                 ];
+
+//                 $grouped_logos[$logo_data->logos_type][] = $element;
+//             }
+//         }
+
+//         // Mapowanie odmian
+//         $plural_map_pl = [
+//             "Partner Targów" => "Partnerzy Targów",
+//             "Partner Merytoryczny" => "Partnerzy Merytoryczni",
+//             "Partner Branżowy" => "Partnerzy Branżowi",
+//             "Partner targów i konferencji" => "Partnerzy Targów i Konferencji",
+//             "Patronat Honorowy" => "Patronaty Honorowe",
+//             "Partner Organizacyjny" => "Partnerzy Organizacyjni"
+//         ];
+
+//         $plural_map_en = [
+//             "Fair Partner" => "Fair Partners",
+//             "Content Partner" => "Content Partners",
+//             "Industry Partner" => "Industry Partners",
+//             "Trade and Conference Partner" => "Trade and Conference Partners",
+//             "Honorary Patronage" => "Honorary Patronages",
+//             "Organizational partner" => "Organizational partners"
+//         ];
+
+//         if (count($grouped_logos) > 0) {
+
+//             $output .= '
+//             <div class="pwe-header-partners">';
+//                 // Generating containers for each group
+//                 foreach ($grouped_logos as $logos_type => $files) {
+
+//                     if (count($files) > 0) {
+//                         $unique_id = uniqid();
+
+//                         // Group Title
+//                         $title_single = PWECommonFunctions::lang_pl() ? $files[0]["desc_pl"] : $files[0]["desc_en"];
+
+//                         // Automatic pluralization
+//                         if (count($files) > 1) {
+//                             // plural
+//                             if (PWECommonFunctions::lang_pl()) {
+//                                 $title = $plural_map_pl[$title_single] ?? $title_single;
+//                             } else {
+//                                 $title = $plural_map_en[$title_single] ?? $title_single;
+//                             }
+//                         } else {
+//                             // singular
+//                             $title = $title_single;
+//                         }
+
+//                         if (count($grouped_logos) > 1) {
+//                             $output .= '
+//                             <style>
+//                                 .pwe-header-partners__container.partners-'. $unique_id .' {
+//                                     max-width: 280px;
+//                                 }
+//                                 .partners-'. $unique_id .' .pwe-header-partners__items {
+//                                     flex-wrap: wrap;
+//                                     flex-direction: row;
+//                                     gap: 8px;
+//                                 }
+//                                 .partners-'. $unique_id .' .pwe-header-partners__item {
+//                                     max-width: 120px;
+//                                 }
+//                                 @media(max-width: 1200px) {
+//                                     .pwe-header-partners__container.partners-'. $unique_id .' {
+//                                         max-width: 240px;
+//                                     }
+//                                     .partners-'. $unique_id .' .pwe-header-partners__items {
+//                                         flex-wrap: wrap;
+//                                         flex-direction: row;
+//                                         gap: 8px;
+//                                     }
+//                                     .partners-'. $unique_id .' .pwe-header-partners__item {
+//                                         max-width: 100px;
+//                                     }
+//                                 }
+//                                 @media(max-width: 1100px) {
+//                                     .pwe-header-partners__container.partners-'. $unique_id .' {
+//                                         max-width: 280px;
+//                                     }
+//                                     .partners-'. $unique_id .' .pwe-header-partners__item {
+//                                         max-width: 120px;
+//                                     }
+//                                 }
+//                             </style>';
+//                         }
+
+//                         $output .= '
+//                         <div class="pwe-header-partners__container '. $logos_type .' partners-'. $unique_id .'">
+//                             <div class="pwe-header-partners__title">
+//                                 <h3>'. $title .'</h3>
+//                             </div>
+//                             <div class="pwe-header-partners__items">';
+
+//                                 foreach ($files as $item) {
+//                                     if (!empty($item["url"])) {
+//                                         if (!empty($item["link"])) {
+//                                             $output .= '
+//                                             <div class="pwe-header-partners__item">
+//                                                 <a href="'. $item["link"] .'" target="_blank">
+//                                                     <img src="'. $item["url"] .'" alt="partner logo">
+//                                                 </a>
+//                                             </div>';
+//                                         } else {
+//                                             $output .= '
+//                                             <div class="pwe-header-partners__item">
+//                                                 <img src="'. $item["url"] .'" alt="partner logo">
+//                                             </div>';
+//                                         }
+//                                     }
+//                                 }
+//                             $output .= '
+//                             </div> 
+//                         </div>';
+//                     }
+//                 }
+//             $output .= '
+//             </div>';
+
+//         }
+//     }
+// }
 
 return $output;

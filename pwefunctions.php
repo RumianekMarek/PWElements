@@ -194,6 +194,47 @@ class PWECommonFunctions {
         return $results;
     }
 
+    public static function get_database_premieres_data($fair_domain = null) {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+
+        // Build column list
+        $sql = "
+            SELECT
+                f.id,
+                f.fair_domain,
+                p.slug,
+                p.data
+            FROM fairs f
+            LEFT JOIN fair_premieres p ON p.fair_id = f.id
+        ";
+
+        if (!isset($fair_domain)) {
+            $results = $cap_db->get_results($sql);
+        } else {
+            $sql .= " WHERE f.fair_domain = %s";
+            $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
+        }
+
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+    
+        return $results;
+    }
+
     public static function get_database_fairs_data_adds($fair_domain = null) {
         // Database connection
         $cap_db = self::connect_database();
@@ -224,7 +265,6 @@ class PWECommonFunctions {
             FROM fairs f
         ";
 
-        // Jeśli chcesz dodać warunek po domenie:
         if (!isset($fair_domain)) {
             $results = $cap_db->get_results($sql);
         } else {

@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.9.7
+ * Version: 2.9.8
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -71,7 +71,42 @@ class PWElementsPlugin {
             return array_merge((array) $defer_files, $excluded_js_files);
         }, 10, 1);
 
-        add_filter( 'the_content', array($this, 'add_date_to_post') );
+        // Get count post views
+        add_action('template_redirect', array($this, 'get_count_views') );
+
+        // Display post views
+        // Only works on a single post in the main loop and main query
+        add_action('the_content', array($this, 'display_views'), 20 );
+    }
+
+    public function get_count_views() {
+        if(is_admin() || !is_single() ) return; // nie licz adminow
+
+        $post_id = get_queried_object_id(); // zapytanie o id biezacego posta
+        if (!$post_id) return;
+
+        $cookie = 'vc_post_' .$post_id; // nazwa cookie - do blokowania pozniej ponownego naliczenia
+        if(isset($_COOKIE[$cookie])) return; // jesli juz jest to nic nie rob
+
+        $views = (int) get_post_meta($post_id, 'vc_views', true); // pobranie aktualnych wyswietlen i rzutownie ich na integer
+        update_post_meta($post_id, 'vc_views', $views + 1); // zapisanie wyswietlen + 1
+
+        setcookie($cookie, 
+            '1', // ustawienie zycia ciastka
+            time() + 7200, // czas wygasniecia ciastka
+            COOKIEPATH ?: '/', // sciezka cookie dostepna na calej domenie
+            COOKIE_DOMAIN, // cookie dostepne na calej domenie
+            is_ssl(), // wysylane przez ssl
+            true //http true - ciasteczka nie beda dostepne dla JS
+        );
+    }
+
+    public function display_views($content) {
+        if(!is_singular('post') || !in_the_loop() || !is_main_query()) return $content;
+
+        // Doklejenie paragrafu ze sformatowana liczba wg Wordpress (number_format_i18n)
+        $views = (int) get_post_meta(get_the_ID(), 'vc_views', true);
+        return $content . '<p class="vc_views">'. (PWECommonFunctions::lang_pl() ? "Wyświetlenia: " : "Views: ") . number_format_i18n($views) . '</p>';
     }
 
     public function add_date_to_post( $content ) {
@@ -199,6 +234,9 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/about-fair-info/about-fair-info.php';
         $this->PWEAboutFairInfo = new PWEAboutFairInfo();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/premieres/premieres.php';
+        $this->PWEPremieres = new PWEPremieres();
     }
 
     // Czyszczenie pamięci wp_rocket

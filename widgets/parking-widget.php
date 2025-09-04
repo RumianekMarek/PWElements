@@ -30,7 +30,7 @@ $output .= '
         <div class="pwe-widget-info-header">
             <div>
                 <div style="display:flex; align-items:center; margin:8px 0 0 0; opacity: 100%;">
-                    <img src="/wp-content/plugins/PWElements/media/car-white.png" alt="car white" width="30" height="30" />
+                    <img src="/wp-content/plugins/pwe-media/media/car-white.png" alt="car white" width="30" height="30" />
                     <p style="margin:0 0 0 10px;">
                         <span style="font-weight: bold; font-size:18px; color:white;">'. 
                             self::languageChecker(
@@ -45,7 +45,7 @@ $output .= '
                     </p>
                 </div>
                 <div style="display:flex; align-items:center; margin:8px 0 0 0; opacity: 100%;">
-                    <img src="/wp-content/plugins/PWElements/media/timer-white.png" alt="clock" width="30" height="30" />
+                    <img src="/wp-content/plugins/pwe-media/media/timer-white.png" alt="clock" width="30" height="30" />
                     <p style="margin:0 0 0 10px; font-size:18px;">
                         <span style="font-weight: bold;">'. 
                             self::languageChecker(
