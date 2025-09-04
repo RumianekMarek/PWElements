@@ -215,7 +215,7 @@ if (
             $output .= '
             <style>
                 #pweRegistration .pwe-mockup-column {
-                    background-image: url(/wp-content/plugins/PWElements/media/generator-wystawcow/gen-bg.jpg);
+                    background-image: url(/wp-content/plugins/pwe-media/media/generator-wystawcow/gen-bg.jpg);
                 }
             </style>';
         }

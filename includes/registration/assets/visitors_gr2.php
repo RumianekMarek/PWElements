@@ -83,16 +83,16 @@ function render_gr2($atts, $source_utm){
             <div id="pweRegistration" class="pwe-registration">
                 <div class="pwe-registration-column">
                     <div id="pweForm">
-                        <img class="form-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
+                        <img class="form-badge-top" src="/wp-content/plugins/pwe-media/media/badge_top.png">
                         <div class="form-container pwe-registration">
                             <div class="form-badge-header">
                                 <h2 class="form-header-title">'. PWECommonFunctions::languageChecker('Twój bilet<br>na targi', 'Your ticket<br>to the fair') .'</h2>
-                                <a href="https://warsawexpo.eu/" target="_blank"><img class="form-header-image-qr" src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp"></a>
+                                <a href="https://warsawexpo.eu/" target="_blank"><img class="form-header-image-qr" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.webp"></a>
                             </div>
-                            <img class="form-badge-left" src="/wp-content/plugins/PWElements/media/badge_left.png">
-                            <img class="form-badge-bottom" src="/wp-content/plugins/PWElements/media/badge_bottom.png">
-                            <img class="form-badge-right" src="/wp-content/plugins/PWElements/media/badge_right.png">
-                            <a href="https://warsawexpo.eu/" target="_blank"><img class="form-image-qr" src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp"></a>
+                            <img class="form-badge-left" src="/wp-content/plugins/pwe-media/media/badge_left.png">
+                            <img class="form-badge-bottom" src="/wp-content/plugins/pwe-media/media/badge_bottom.png">
+                            <img class="form-badge-right" src="/wp-content/plugins/pwe-media/media/badge_right.png">
+                            <a href="https://warsawexpo.eu/" target="_blank"><img class="form-image-qr" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.webp"></a>
                             <div class="form">
                                 <h2 class="form-title">'. PWECommonFunctions::languageChecker('Twój bilet<br>na targi', 'Your ticket<br>to the fair') .'</h2>
                                 <div class="pwe-registration-form">

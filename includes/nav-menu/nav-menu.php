@@ -88,7 +88,7 @@ class pweNavMenu extends PWECommonFunctions {
             <div class="pwe-menu__wrapper">
                 <div class="pwe-menu__main-logo">
                     <a class="pwe-menu__main-logo-ptak ' . (file_exists($_SERVER['DOCUMENT_ROOT'] . self::languageChecker('/doc/logo-x-pl.webp', '/doc/logo-x-en.webp')) ? "hidden-mobile" : "") . '" target="_blank" href="https://warsawexpo.eu'. self::languageChecker('/', '/en/') .'">
-                        <img data-no-lazy="1" src="/wp-content/plugins/PWElements/media/logo_pwe.webp" alt="logo ptak">
+                        <img data-no-lazy="1" src="/wp-content/plugins/pwe-media/media/logo_pwe.webp" alt="logo ptak">
                     </a>
                     <a class="pwe-menu__main-logo-fair" href="'. self::languageChecker('/', '/en/') .'">';
                         if (self::lang_pl()) {

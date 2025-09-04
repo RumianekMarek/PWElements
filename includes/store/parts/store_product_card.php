@@ -134,7 +134,7 @@ $output .= '
                                 <div class="pwe-store__service-image">
                                     <img
                                         src="'. ( self::lang_pl() ? $package->packs_img_pl : (!empty($package->packs_img_en) ? $package->packs_img_en : $package->packs_img_pl)) .'" 
-                                        alt="'. ( self::lang_pl() ? $package->packs_title_short_pl : $package->packs_title_short_en ) .'"
+                                        alt="'. ( self::lang_pl() ? $package->packs_name_pl : $package->packs_name_en ) .'"
                                     >
                                 </div>
                                 <div class="pwe-store__service-content">
@@ -148,10 +148,10 @@ $output .= '
                                         
                                             foreach ($products as $product_slug_with_quantity) {
                                                 // Separating the product into slug and quantity
-                                                list($product_slug, $quantity) = explode('*', $product_slug_with_quantity);
-                                                // If quantity is not specified, set default to 1
-                                                $quantity = isset($quantity) ? (int)$quantity : 1;
-                                            
+                                                $parts = explode('*', $product_slug_with_quantity);
+                                                $product_slug = $parts[0];
+                                                $quantity = isset($parts[1]) ? (int)$parts[1] : 1;
+
                                                 foreach ($pwe_store_data as $product) {
                                                     if ($product->prod_slug === $product_slug) {   
                                                         $product_price = self::price($product, $store_options, $pwe_meta_data, $category, $current_domain, $num_only = true);
@@ -160,6 +160,7 @@ $output .= '
                                                     }
                                                 }
                                             }
+
 
                                             if ($package->packs_discount != null) {
                                                 $discount = $total_price * ($package->packs_discount / 100);

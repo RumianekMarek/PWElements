@@ -3,7 +3,7 @@
 $output .= '
 <div class="pwe-store__main-section">
     <div class="pwe-store__main-section-header">
-        <img src="/wp-content/plugins/PWElements/media/store/'. (self::lang_pl() ? 'header_store_pl.webp' : 'header_store_en.webp') .'" alt="Header">
+        <img src="/wp-content/plugins/pwe-media/media/store/'. (self::lang_pl() ? 'header_store_pl.webp' : 'header_store_en.webp') .'" alt="Header">
     </div>
     
     <span class="pwe-store__anchor"></span>';

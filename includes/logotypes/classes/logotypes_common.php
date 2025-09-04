@@ -498,9 +498,9 @@ class PWElementAdditionalLogotypes {
             $files = [];
 
             if ($logotypes_catalog == "partnerzy obiektu") {
-                $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/partnerzy-obiektu/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
+                $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/pwe-media/media/partnerzy-obiektu/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
             } else if ($logotypes_catalog == "wspierają nas") {
-                $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/PWElements/media/wspieraja-nas/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
+                $files = glob($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/pwe-media/media/wspieraja-nas/*.{jpeg,jpg,png,webp,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
 
                 $output .= '
                     <style>
@@ -661,16 +661,31 @@ class PWElementAdditionalLogotypes {
                 if (strpos($logotypes_catalog, 'Rotator 2') !== false) {
                     $files = [];
 
+                    $order = [
+                        "partner-honorowy",
+                        "partner-merytoryczny",
+                        "partner-targow",
+                        "patron-medialny",
+                        "partner-branzowy",
+                        "industry-media-partner",
+                        "partner-strategiczny",
+                        "principal-partner"
+                    ];
+
+                    // Group by logos_type
+                    $grouped = [];
                     foreach ($cap_logotypes_data as $logo_data) {
-                        if ($logo_data->logos_type === "partner-honorowy" ||
-                            $logo_data->logos_type === "partner-merytoryczny" ||
-                            $logo_data->logos_type === "partner-targow" ||
-                            $logo_data->logos_type === "patron-medialny" ||
-                            $logo_data->logos_type === "partner-branzowy" ||
-                            $logo_data->logos_type === "industry-media-partner" ||
-                            $logo_data->logos_type === "partner-strategiczny" ||
-                            $logo_data->logos_type === "principal-partner") {
-                            $saving_paths($files, $logo_data);
+                        if (in_array($logo_data->logos_type, $order)) {
+                            $grouped[$logo_data->logos_type][] = $logo_data;
+                        }
+                    }
+
+                    // Add in the specified order
+                    foreach ($order as $type) {
+                        if (!empty($grouped[$type])) {
+                            foreach ($grouped[$type] as $logo_data) {
+                                $saving_paths($files, $logo_data);
+                            }
                         }
                     }
                 }

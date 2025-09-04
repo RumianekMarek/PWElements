@@ -144,7 +144,7 @@ if (map_type === 'PWEMap3D' || map_dynamic_3d || map_dynamic_preset === 'preset_
 
     // Loading the GLTF model using GLTFLoader
     const loader = new THREE.GLTFLoader();
-    loader.load("/wp-content/plugins/PWElements/media/mapa.gltf", function(gltf) {
+    loader.load("/wp-content/plugins/pwe-media/media/mapa.gltf", function(gltf) {
         const model = gltf.scene;
 
         // Create group as pivot

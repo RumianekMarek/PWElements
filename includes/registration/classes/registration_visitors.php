@@ -183,7 +183,7 @@ class PWERegistrationVisitors extends PWERegistration {
                         </div>
 
                         <div class="registration-ticket__option registration-ticket__option--business">
-                          <img src="/wp-content/plugins/PWElements/media/fast-track.webp">
+                          <img src="/wp-content/plugins/pwe-media/media/fast-track.webp">
                           <div class="ticket-card__name">'. self::languageChecker('Business Priority Pass', 'Business Priority Pass') .'</div>
                           <div class="ticket-card">
                             <div class="ticket-card__price">
@@ -275,16 +275,16 @@ class PWERegistrationVisitors extends PWERegistration {
             <div id="pweRegistration" class="pwe-registration for-visitors">
                 <div class="pwe-registration-column">
                     <div id="pweForm">
-                        <img class="form-badge-top" src="/wp-content/plugins/PWElements/media/badge_top.png">
+                        <img class="form-badge-top" src="/wp-content/plugins/pwe-media/media/badge_top.png">
                         <div class="form-container pwe-registration">
                             <div class="form-badge-header">
                                 <h1 class="form-header-title">'. self::languageChecker('Twój bilet<br>na targi', 'Your ticket<br>to the fair') .'</h1>
-                                <a href="https://warsawexpo.eu/" target="_blank"><img class="form-header-image-qr" src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp" alt="Logo Ptak Warsaw Expo"></a>
+                                <a href="https://warsawexpo.eu/" target="_blank"><img class="form-header-image-qr" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.webp" alt="Logo Ptak Warsaw Expo"></a>
                             </div>
-                            <img class="form-badge-left" src="/wp-content/plugins/PWElements/media/badge_left.png">
-                            <img class="form-badge-bottom" src="/wp-content/plugins/PWElements/media/badge_bottom.png">
-                            <img class="form-badge-right" src="/wp-content/plugins/PWElements/media/badge_right.png">
-                            <a href="https://warsawexpo.eu/" target="_blank"><img class="form-image-qr" src="/wp-content/plugins/PWElements/media/logo_pwe_black.webp" alt="Logo Ptak Warsaw Expo"></a>
+                            <img class="form-badge-left" src="/wp-content/plugins/pwe-media/media/badge_left.png">
+                            <img class="form-badge-bottom" src="/wp-content/plugins/pwe-media/media/badge_bottom.png">
+                            <img class="form-badge-right" src="/wp-content/plugins/pwe-media/media/badge_right.png">
+                            <a href="https://warsawexpo.eu/" target="_blank"><img class="form-image-qr" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.webp" alt="Logo Ptak Warsaw Expo"></a>
                             <div class="form">
                                 <h2 id="main-content" class="form-title">'. self::languageChecker('Twój bilet<br>na targi', 'Your ticket<br>to the fair') .'</h2>
                                 <div class="pwe-registration-form">

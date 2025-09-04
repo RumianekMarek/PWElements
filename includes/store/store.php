@@ -158,6 +158,8 @@ class PWEStore extends PWECommonFunctions {
                 $updated_price_en = self::round_price($updated_price_en);
             }
 
+            $final_price = "";
+
             if (!empty($updated_price_pl)) {
                 $eur_price = $updated_price_pl / $pwe_meta_data[0]->meta_data;
                 $eur_price = self::round_price($eur_price);
