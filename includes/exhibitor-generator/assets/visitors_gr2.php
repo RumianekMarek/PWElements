@@ -1124,6 +1124,21 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
     $exhibitor_id = $_GET['wystawca'] ?? '';
     $gr_data = $all_senders[$exhibitor_id]['type'] ?? 'gr2';
 
+    $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+    $current_domain = $_SERVER['HTTP_HOST'];
+    $current_fair_group = null;
+
+    foreach ($pwe_groups_data as $item) {
+        if ($item->fair_domain === $current_domain) {
+            $current_fair_group = $item->fair_group;
+            break;
+        }
+    }
+
+
+
+
+
     $output .= '
     <div class="exhibitor-generator gr2" data-group="' . $gr_data . '">
         <div class="exhibitor-generator__wrapper">
@@ -1177,8 +1192,13 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                         <h5>' . PWECommonFunctions::languageChecker('Identyfikator VIP uprawnia do:', 'The VIP invitation entitles you to:') . '</h5>
                         <div class="exhibitor-generator__right-icons-wrapper">
                             <div class="exhibitor-generator__right-icon">
-                                <img src="/wp-content/plugins/pwe-media/media/generator-gosci-wystawcow/gr2/fast-track-icon.webp" alt="icon3">
-                                <p>' . PWECommonFunctions::languageChecker('Fast track - szybkie wejście na targi dedykowaną bramką przez 3 dni', 'Fast track - fast entry to the fair through a dedicated gate for 3 days') . '</p>
+                                <img src="/wp-content/plugins/pwe-media/media/generator-gosci-wystawcow/gr2/fast-track-icon.webp" alt="icon3">';
+                                if($current_fair_group == 'gr2'){
+                                    $output .=' <p>' . PWECommonFunctions::languageChecker('Fast track - szybkie wejście na targi dedykowaną bramką przez 3 dni', 'Fast track - fast entry to the fair through a dedicated gate for 3 days') . '</p>';
+                                } else {
+                                    $output .=' <p>' . PWECommonFunctions::languageChecker('Fast Track – szybkie wejście na targi dedykowaną bramką w dniu branżowym.', 'Fast Track – quick entry to the trade fair through a dedicated gate on the trade day.') . '</p>';
+                                }
+                                $output .='
                             </div>
                             <div class="exhibitor-generator__right-icon">
                                 <img src="/wp-content/plugins/pwe-media/media/generator-gosci-wystawcow/gr2/vip-room-icon.webp" alt="icon1">

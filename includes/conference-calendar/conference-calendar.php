@@ -487,8 +487,6 @@ class PWEConferenceCalendar {
         <div id="pweConferenceCalendar" class="pwe-conference-calendar">
             <div class="pwe-conference-calendar__wrapper">';
 
-            $startMemory = memory_get_usage();
-
             $categories = [];
             $raw_categories = [];
             foreach ($conferences as $conference) {
@@ -568,11 +566,7 @@ class PWEConferenceCalendar {
                     ];
                 }
             }
-            $endMemory = memory_get_usage();
-
-            if (current_user_can('administrator')) {
-                echo '<script>console.log("Calendar memory size loop - '. ($endMemory - $startMemory) / 1024 .'kb")</script>';
-            }
+            
 
             $output .= '
             </div>

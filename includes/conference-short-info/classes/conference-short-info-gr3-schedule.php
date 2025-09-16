@@ -353,7 +353,7 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
 
                                  ($content_logo ? '<img class="pwe-conf-short-info-gr3-schedule__info-box-logo" src="' . $content_logo . '" alt="Logo - ' . $content_alt . '">' : '') . '
                                 <div class="pwe-conf-short-info-gr3-schedule__info-box-title">' . $content_title . '</div>
-                                <a class="pwe-conf-short-info-gr3-schedule__info-box-btn btn" href="' . $content_url . '" target="_blank" rel="noopener">' .
+                                <a class="pwe-conf-short-info-gr3-schedule__info-box-btn btn" href="' . $content_url . '">' .
                                     PWECommonFunctions::languageChecker('Zobacz więcej', 'See more') .
                                 '</a>
                             </div>';
