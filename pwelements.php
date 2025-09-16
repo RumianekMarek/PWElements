@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 2.9.9
+ * Version: 3.0.0
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -70,6 +70,8 @@ class PWElementsPlugin {
         add_filter('rocket_exclude_defer_js', function ($defer_files) use ($excluded_js_files) {
             return array_merge((array) $defer_files, $excluded_js_files);
         }, 10, 1);
+
+        add_filter( 'the_content', array($this, 'add_date_to_post') );
 
         // Get count post views
         add_action('template_redirect', array($this, 'get_count_views') );

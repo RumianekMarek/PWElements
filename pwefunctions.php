@@ -584,6 +584,93 @@ class PWECommonFunctions {
             
         return $results;
     }
+
+    public static function get_database_fairs_data_profiles($fair_domain = null) {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+            return [];
+        }
+
+        $fair_domain = ($fair_domain == null) ? $_SERVER['HTTP_HOST'] : $fair_domain;
+
+        // Build column list
+        $sql = "
+            SELECT 
+                f.id,
+                f.fair_domain,
+                fp.data
+            FROM fairs f
+            LEFT JOIN fair_profiles fp 
+                ON fp.fair_id = f.id 
+            AND fp.slug = f.fair_domain
+        ";
+
+        if (!isset($fair_domain)) {
+            $results = $cap_db->get_results($sql);
+        } else {
+            $sql .= " WHERE f.fair_domain = %s";
+            $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
+        }
+
+        // SQL error checking
+        if ($cap_db->last_error) {
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+            return [];
+        }
+    
+        return $results;
+    }
+
+    public static function get_database_fairs_data_opinions($fair_domain = null) {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+            return [];
+        }
+
+        $fair_domain = ($fair_domain == null) ? $_SERVER['HTTP_HOST'] : $fair_domain;
+
+        // Build column list
+        $sql = "
+            SELECT 
+                f.id,
+                f.fair_domain,
+                fp.data,
+                fp.slug,
+                fp.order
+            FROM fairs f
+            LEFT JOIN fair_opinions fp 
+                ON fp.fair_id = f.id
+        ";
+
+        if (!isset($fair_domain)) {
+            $results = $cap_db->get_results($sql);
+        } else {
+            $sql .= " WHERE f.fair_domain = %s";
+            $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
+        }
+
+        // SQL error checking
+        if ($cap_db->last_error) {
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+            return [];
+        }
+    
+        return $results;
+    }
     
     
 

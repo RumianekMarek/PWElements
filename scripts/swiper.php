@@ -195,7 +195,6 @@ class PWESwiperScripts {
                         ' . $pwe_element . ' .swiper-button-prev {
                             color: var(--accent-color);
                         }';
-
                 }
 
                 if ($dots_display === 'true') {
