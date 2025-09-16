@@ -546,6 +546,11 @@ class PWElementAdditionalLogotypes {
                             $exhibitors_catalog[] = $exhibitors_logotype['img'];
                         }
 
+                         // Add exhibitors only if >= 10
+                        if (count($exhibitors_catalog) >= 10 && !in_array('wystawcy', $logotypes_catalogs)) {
+                            array_unshift($logotypes_catalogs, 'wystawcy');
+                        }
+
                         if ($logotypes_display_random_top_20 == true) {
                             if (count($exhibitors_catalog) >= 20) {
                                 // Split the array: first 20 elements + the rest
@@ -591,7 +596,7 @@ class PWElementAdditionalLogotypes {
                     }
 
                     // Check if 'catalog' was added and if so, add $exhibitors_catalog to $files
-                    if ($logotypes_exhibitors_on == true && in_array('wystawcy', $logotypes_catalogs)) {
+                    if ($logotypes_exhibitors_on == true && in_array('wystawcy', $logotypes_catalogs) && count($exhibitors_catalog) >= 10) {
                         foreach ($exhibitors_catalog as $catalog_img) {
                             $files[] = $catalog_img;
                         }

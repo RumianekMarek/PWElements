@@ -102,7 +102,46 @@ function render_gr2($atts, $source_utm){
                         </div>
                     </div>
                 </div>
-            </div>';
+            </div>
+            <div class="pwe-registration-grupy style-accent-bg">
+                <div>
+                    <h4>
+                    '. PWECommonFunctions::languageChecker('Kontakt dla grup zorganizowanych', 'Contact for organized groups') .'
+                    </h4>
+                </div>
+                <div>
+                    <p>
+                    '. PWECommonFunctions::languageChecker('W celu zapewnienia Państwu komfortowego udziału w naszych wydarzeniach, wstęp dla grup zorganizowanych możliwy jest tylko ostatniego dnia targów po wcześniejszej zgodzie Organizatora. W tym celu zachęcamy do kontaktu przez formularz dostępny na stronie: <a id="pweGroupsLink" href="https://warsawexpo.eu/grupy" alt="link do rejestracji grup zorganizowanych" target="_blank">warsawexpo.eu/grupy</a>. Pozostawienie plecaków oraz walizek w szatni jest obligatoryjne. Na targach obowiązuje business dress code.', 'To ensure a comfortable participation in our events, admission for organized groups is only possible on the last day of the fair, subject to prior approval by the Organizer. For this purpose, we encourage you to use the contact form available at: <a id="pweGroupsLink" href="https://warsawexpo.eu/en/groups" alt="link to group registration" target="_blank">warsawexpo.eu/en/groups</a>. Leaving backpacks and suitcases in the cloakroom is mandatory. A business dress code is required at the fair.') .'
+                    </p>
+                </div>
+                <div class="pwe-btn-container">
+                  '. PWECommonFunctions::languageChecker('<a class="pwe-btn" href="https://warsawexpo.eu/grupy/" target="_blank">Formularz kontaktowy</a>', '<a class="pwe-btn" href="https://warsawexpo.eu/en/groups/" target="_blank">Contact form</a>') .'
+                </div>
+            </div>
+            <style>
+            body .row-container:has(.pwe-registration) :is(.wpb_column, .uncol, .uncoltable, .uncont, .exhibitors-catalog, .custom-catalog) {
+              height: auto !important;
+            }
+            .pwe-registration-grupy {
+              margin: 20px 12px;
+              border-radius:30px;
+              padding:20px;
+            }
+            .pwe-registration-grupy h4,.pwe-registration-grupy p {
+              color:white;
+            }
+            .pwe-registration-grupy p #pweGroupsLink {
+              color:white !important;
+              text-decoration:underline;
+            }
+            .pwe-registration-grupy .pwe-btn-container a {
+              background-color: white !important;
+              text-align: center;
+              align-items: center;
+              padding: 10px 5px;
+              font-weight: 600;
+            }
+            </style>';
         }
 
   return $output;

@@ -59,10 +59,11 @@ class PWEPremieres extends PWECommonFunctions {
             }
             .pwe-premieres__title span {
                 color: #0000002b;
-                font-size: 98px;
+                font-size: 90px;
                 font-weight: 900;
                 text-transform: uppercase;
                 text-align: center;
+                line-height: 1;
             }
             @media(max-width:1100px) {
                 .pwe-premieres__title span {
@@ -135,13 +136,20 @@ class PWEPremieres extends PWECommonFunctions {
                 width: 100%;
                 height: 100%;
                 background: black;
-                opacity: 0.4;
+                opacity: 0.6;
             }
-            .pwe-premieres__overlay {
+            .pwe-premieres__bg-fullscreen-icon {
                 position: absolute;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.35);
-                z-index: 2;
+                top: 18px;
+                right: 18px;
+                width: 40px;
+                height: auto;
+                filter: brightness(0) invert(1);
+                cursor: pointer;
+                transition: .3s ease;
+            }
+            .pwe-premieres__bg-fullscreen-icon:hover {
+                transform: scale(1.2);
             }
             .pwe-premieres__logo {
                 position: absolute;
@@ -164,7 +172,7 @@ class PWEPremieres extends PWECommonFunctions {
                 text-align: left;
             }
             .pwe-premieres__content h2 {
-                font-size: 48px;
+                font-size: 30px;
                 letter-spacing: 2px;
                 line-height: 1.1;
                 transition: opacity .5s ease, transform .5s ease;
@@ -351,6 +359,35 @@ class PWEPremieres extends PWECommonFunctions {
                     transform: rotate(90deg);
                 }
             }
+
+            .pwe-premieres__fullscreen {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
+            }
+
+            .pwe-premieres__fullscreen-image {
+                max-width: 90%;
+                max-height: 90%;
+                object-fit: contain;
+                border-radius: 20px;
+            }
+            .pwe-premieres__fullscreen-close {
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                font-size: 50px;
+                font-weight: bold;
+                color: #fff;
+                cursor: pointer;
+                z-index: 999;
+                user-select: none;
+            }
+
         </style>';
 
         $output .= '
@@ -371,7 +408,7 @@ class PWEPremieres extends PWECommonFunctions {
                 $item = $data[$premiere->slug];
 
                 $slides[] = [
-                    'name'      => PWECommonFunctions::lang_pl() ? $item['name_pl'] : ($item['name_en'] ?? $item['name_pl']),
+                    'name'      => PWECommonFunctions::lang_pl() ? $item['name_pl'] : (!empty($item['name_en']) ? $item['name_en'] : $item['name_pl']),
                     'desc'      => PWECommonFunctions::lang_pl() ? trim($item['desc_pl']) : (trim($item['desc_en']) ?? trim($item['desc_pl'])),
                     'exhibitor' => $item['exhibitor'] ?? '',
                     'stand'     => (!empty($item['stand']) ? (PWECommonFunctions::lang_pl() ? 'Stoisko: ' : 'Stand: ') . $item['stand'] : ''),
@@ -382,14 +419,15 @@ class PWEPremieres extends PWECommonFunctions {
 
             $output .= '
             <div class="pwe-premieres__title">
-                <span>'. (PWECommonFunctions::lang_pl() ? "Premiery Branżowe" : "Industry Premieres") .'</span>
+                <span>'. (PWECommonFunctions::lang_pl() ? "Co zobaczysz na [trade_fair_name]" : "What you'll see at [trade_fair_name_eng]") .'</span>
             </div>
 
             <div class="pwe-premieres__hero loading">
                 <div class="pwe-premieres__bg-stack">
-                    <div class="pwe-premieres__bg-layer" id="bgLayer"></div>
+                    <div class="pwe-premieres__bg-layer" id="bgLayer">
+                        <img class="pwe-premieres__bg-fullscreen-icon" src="/wp-content/plugins/pwe-media/media/fullscreen-icon.png" alt="fullscreen">
+                    </div>
                 </div>
-                <div class="pwe-premieres__overlay"></div>
                 <div class="pwe-premieres__logo">
                     <img id="logoImg" src="" alt="Logo" style="max-height:80px;">
                 </div>
@@ -561,6 +599,51 @@ class PWEPremieres extends PWECommonFunctions {
                     hero.classList.add("loaded");
                 });
 
+                const fullscreenIcon = document.querySelector(".pwe-premieres__bg-fullscreen-icon");
+                const bgLayer = document.getElementById("bgLayer");
+
+                fullscreenIcon.addEventListener("click", () => {
+                    const bgImage = bgLayer.style.backgroundImage;
+
+                    const urlMatch = bgImage.match(/url\\(["\']?(.*?)["\']?\\)/);
+                    if (!urlMatch) return;
+                    const imgUrl = urlMatch[1];
+
+                    const fullscreen = document.createElement("div");
+                    fullscreen.id = "pwePremieresFullscreen";
+                    fullscreen.className = "pwe-premieres__fullscreen";
+
+                    const img = document.createElement("img");
+                    img.className = "pwe-premieres__fullscreen-image";
+                    img.src = imgUrl;
+
+                    const closeBtn = document.createElement("span");
+                    closeBtn.className = "pwe-premieres__fullscreen-close";
+                    closeBtn.innerHTML = "&times;";
+
+                    const closeFullscreen = () => {
+                        fullscreen.remove();
+                        document.removeEventListener("keydown", escHandler);
+                    };
+
+                    fullscreen.addEventListener("click", (e) => {
+                        if (e.target === fullscreen || e.target === closeBtn) {
+                            closeFullscreen();
+                        }
+                    });
+
+                    const escHandler = (e) => {
+                        if (e.key === "Escape") {
+                            closeFullscreen();
+                        }
+                    };
+                    document.addEventListener("keydown", escHandler);
+
+                    fullscreen.appendChild(img);
+                    fullscreen.appendChild(closeBtn);
+                    document.body.appendChild(fullscreen);
+                });
+                
             </script>';
         }
 
@@ -573,7 +656,7 @@ class PWEPremieres extends PWECommonFunctions {
                 .row-container:has(.pwe-premieres) {
                     display: none;
                 }
-            <style>'; 
+            </style>'; 
         }
 
         $output = do_shortcode($output);  

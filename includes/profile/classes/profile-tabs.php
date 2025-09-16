@@ -472,58 +472,58 @@ class PWEProfileTabs extends PWEProfile {
         
         $output .= '
         <script>
-        // Function to open the selected tab
-        function openTab(evt, name) {
-            var i, tabcontent, tab;
-            tabcontent = document.getElementsByClassName("pwe-profiles__tab-content");
+            // Function to open the selected tab
+            function openTab(evt, name) {
+                var i, tabcontent, tab;
+                tabcontent = document.getElementsByClassName("pwe-profiles__tab-content");
 
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active"); // Usuń klasę active, aby ukryć zawartość
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].classList.remove("active"); // Usuń klasę active, aby ukryć zawartość
+                }
+
+                tab = document.getElementsByClassName("pwe-profiles__tab");
+                for (i = 0; i < tab.length; i++) {
+                    tab[i].className = tab[i].className.replace(" active", "");
+                }
+
+                // Dodaj klasę active do aktywnego taba
+                var activeTab = document.getElementById(name);
+                activeTab.classList.add("active");
+                evt.currentTarget.className += " active"; // Dodaj klasę active do klikniętej zakładki
             }
 
-            tab = document.getElementsByClassName("pwe-profiles__tab");
-            for (i = 0; i < tab.length; i++) {
-                tab[i].className = tab[i].className.replace(" active", "");
-            }
+            // Automatically open the first tab on page load
+            document.addEventListener("DOMContentLoaded", function() {
+                var firsttab = document.querySelector(".pwe-profiles__tab");
+                var firstTabContent = document.querySelector(".pwe-profiles__tab-content");
 
-            // Dodaj klasę active do aktywnego taba
-            var activeTab = document.getElementById(name);
-            activeTab.classList.add("active");
-            evt.currentTarget.className += " active"; // Dodaj klasę active do klikniętej zakładki
-        }
-
-        // Automatically open the first tab on page load
-        document.addEventListener("DOMContentLoaded", function() {
-            var firsttab = document.querySelector(".pwe-profiles__tab");
-            var firstTabContent = document.querySelector(".pwe-profiles__tab-content");
-
-            // Ensure the first tab and its content are displayed and marked as active
-            if (firsttab && firstTabContent) {
-                firsttab.classList.add("active");
-                firstTabContent.classList.add("active");
-            }        
-        });
-
-
-        const tabHeads = document.querySelectorAll(".pwe-profiles__tab-head");
-
-        function updateTabPositions() {
-            let previousWidth = 0;
-
-            tabHeads.forEach((tab) => {
-                // Ustaw "left" dla każdego elementu
-                tab.style.left = `${previousWidth}px`;
-
-                // Zaktualizuj szerokość dla następnego elementu
-                previousWidth += tab.offsetWidth;
+                // Ensure the first tab and its content are displayed and marked as active
+                if (firsttab && firstTabContent) {
+                    firsttab.classList.add("active");
+                    firstTabContent.classList.add("active");
+                }        
             });
-        }
 
-        // Wywołaj funkcję przy pierwszym załadowaniu strony
-        updateTabPositions();
 
-        // Nasłuchuj zmian rozmiaru okna
-        window.addEventListener("resize", updateTabPositions);
+            const tabHeads = document.querySelectorAll(".pwe-profiles__tab-head");
+
+            function updateTabPositions() {
+                let previousWidth = 0;
+
+                tabHeads.forEach((tab) => {
+                    // Ustaw "left" dla każdego elementu
+                    tab.style.left = `${previousWidth}px`;
+
+                    // Zaktualizuj szerokość dla następnego elementu
+                    previousWidth += tab.offsetWidth;
+                });
+            }
+
+            // Wywołaj funkcję przy pierwszym załadowaniu strony
+            updateTabPositions();
+
+            // Nasłuchuj zmian rozmiaru okna
+            window.addEventListener("resize", updateTabPositions);
 
         </script>';
     
