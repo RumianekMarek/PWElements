@@ -73,12 +73,12 @@ class PWElementsPlugin {
 
         add_filter( 'the_content', array($this, 'add_date_to_post') );
 
-        // Get count post views
-        add_action('template_redirect', array($this, 'get_count_views') );
+        // // Get count post views
+        // add_action('template_redirect', array($this, 'get_count_views') );
 
-        // Display post views
-        // Only works on a single post in the main loop and main query
-        add_action('the_content', array($this, 'display_views'), 20 );
+        // // Display post views
+        // // Only works on a single post in the main loop and main query
+        // add_action('the_content', array($this, 'display_views'), 20 );
     }
 
     public function get_count_views() {
