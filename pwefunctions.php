@@ -156,6 +156,7 @@ class PWECommonFunctions {
                 f.fair_visitors,
                 f.fair_exhibitors,
                 f.fair_countries,
+                f.estimations,
                 f.fair_facebook,
                 f.fair_instagram,
                 f.fair_linkedin,
@@ -671,8 +672,6 @@ class PWECommonFunctions {
     
         return $results;
     }
-    
-    
 
     /**
      * Colors (accent or main2)
@@ -699,8 +698,11 @@ class PWECommonFunctions {
         return $result_color;
     }
 
-    public static function generate_fair_data($fair) {
-        return [
+    public static function generate_fair_data($fair) { 
+        // Decode JSON estimations
+        $estimations = !empty($fair->estimations) ? json_decode($fair->estimations, true) : [];
+
+        $data = [
             "domain" => $fair->fair_domain,
             "date_start" => $fair->fair_date_start ?? "",
             "date_start_hour" => $fair->fair_date_start_hour ?? "",
@@ -732,6 +734,15 @@ class PWECommonFunctions {
             "category_pl" => $fair->category_pl ?? "",
             "category_en" => $fair->category_en ?? ""
         ];
+
+        // Add estimations to data
+        if (!empty($estimations)) {
+            foreach ($estimations as $key => $val) {
+                $data[$key] = $val;
+            }
+        }
+
+        return $data;
     }
 
     public static function generate_fair_translation_data($fair) {
