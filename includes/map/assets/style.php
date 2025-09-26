@@ -1,9 +1,9 @@
-<?php  
+<?php
 
 if ($map_type === 'PWEMapDynamic') {
 
     $lighter_accent_color = self::adjustBrightness(self::$accent_color, +70);
-    
+
     if ($map_dynamic_3d == true && $map_dynamic_preset == 'preset_1') {
         $output = '
         <style>
@@ -70,7 +70,7 @@ if ($map_type === 'PWEMapDynamic') {
                 max-width: 260px;
                 z-index: 1;
                 background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 1) 100%);
-            }   
+            }
             .pwe-map__logo-container {
                 max-width: 260px;
                 display: flex;
@@ -138,10 +138,10 @@ if ($map_type === 'PWEMapDynamic') {
                     padding: 10px;
                 }
                 .pwe-map__stats-element-55 {
-                    width: 55%; 
+                    width: 55%;
                 }
                 .pwe-map__stats-element-45 {
-                    width: 45%; 
+                    width: 45%;
                 }
                 .pwe-map__stats-element-title,
                 .pwe-map__stats-element-desc {
@@ -149,8 +149,8 @@ if ($map_type === 'PWEMapDynamic') {
                 }
                 // .pwe-map__staticts {
                 //     background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
-                // } 
-                
+                // }
+
                 .pwe-map__container-3d {
                     position: relative;
                     max-width: auto;
@@ -158,12 +158,12 @@ if ($map_type === 'PWEMapDynamic') {
                     left: auto;
                     transform: none;
                 }
-            } 
+            }
             @media (max-width: 600px) {
                 .pwe-map__staticts {
                     padding: 0;
                     gap: 18px;
-                }        
+                }
             }
             @media (max-width: 450px) {
                 .pwe-map__staticts {
@@ -309,12 +309,12 @@ if ($map_type === 'PWEMapDynamic') {
                 }
                 .pwe-map__stats-diagram-countries h2 {
                     min-width: unset;
-                }  
+                }
                 .pwe-map__stats-diagram-countries h2 span {
                     color: '. self::$accent_color .';
                     font-size: 40px;
                     font-weight: 800;
-                } 
+                }
 
             }
 
@@ -325,7 +325,7 @@ if ($map_type === 'PWEMapDynamic') {
         //         display: flex;
         //     }
         //     .pwe-map__stats-diagram.mobile {
-                
+
         //         display: flex;
         //         flex-direction: column;
         //         align-items: center;
@@ -455,12 +455,12 @@ if ($map_type === 'PWEMapDynamic') {
         //     }
         //     .pwe-map__stats-diagram-countries h2 {
         //         min-width: unset;
-        //     }  
+        //     }
         //     .pwe-map__stats-diagram-countries h2 span {
         //         color: '. self::$accent_color .';
         //         font-size: 40px;
         //         font-weight: 800;
-        //     }  
+        //     }
 
         // }
 
@@ -667,7 +667,7 @@ if ($map_type === 'PWEMapDynamic') {
                 display: flex;
                 align-items: flex-end;
                 justify-content: space-between;
-                position: relative; 
+                position: relative;
                 z-index: 1;
                 padding: 18px 0;
             }
@@ -797,18 +797,18 @@ if ($map_type === 'PWEMapDynamic') {
             }
             .pwe-map__stats-diagram-countries h2 {
                 min-width: unset;
-            }  
+            }
             .pwe-map__stats-diagram-countries h2 span {
                 color: '. self::$accent_color .';
                 font-size: 40px;
                 font-weight: 800;
-            }  
+            }
             .pwe-map__stats-number-container {
                 width: 42%;
                 display: flex;
                 flex-direction: column;
                 gap: 36px;
-            }  
+            }
             .pwe-map__stats-number-container .pwe-map__stats-number-box {
                 display: flex;
                 align-items: center;
@@ -852,7 +852,7 @@ if ($map_type === 'PWEMapDynamic') {
                     align-items: center;
                     min-width: 360px;
                 }
-                .pwe-map__stats-diagram-container { 
+                .pwe-map__stats-diagram-container {
                     width: 100%;
                 }
                 .pwe-map__stats-number-container {
@@ -864,7 +864,7 @@ if ($map_type === 'PWEMapDynamic') {
                 .pwe-map__stats-number-container .pwe-map__stats-number-box h2 {
                     min-width: 160px;
                     font-size: 30px;
-                } 
+                }
             }
             @media(max-width:760px){
                 .pwe-map__stats-section {
@@ -1005,13 +1005,13 @@ if ($map_type === 'PWEMapDynamic') {
                     padding: 24px;
                 }
 
-                .pwe-map__title, 
-                .pwe-map__edition, 
+                .pwe-map__title,
+                .pwe-map__edition,
                 .pwe-map__year {
                     margin: 0;
                 }
 
-                .pwe-map__edition, 
+                .pwe-map__edition,
                 .pwe-map__year {
                     font-size: 20px
                 }
@@ -1068,7 +1068,7 @@ if ($map_type === 'PWEMapDynamic') {
                 .pwe-map__button-link:hover svg {
                     margin-left: 6px;
                 }
-                    
+
                 .pwe-map__stats-number-card h2 {
                     font-size: 32px;
                     font-weight: 800;

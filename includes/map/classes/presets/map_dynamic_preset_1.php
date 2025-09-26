@@ -1,11 +1,11 @@
-<?php  
+<?php
 
 if ($map_dynamic_3d == true) {
 
     $output .= '
     <div id="pweMap" class="pwe-map">
         <div class="pwe-map__wrapper">
-            <div class="pwe-map__staticts"> 
+            <div class="pwe-map__staticts">
                 <h3 class="pwe-map__title text-accent-color">'. $map_custom_title .'</h3>
                 <div class="pwe-map__rounded-stat">
                     <div class="pwe-map__rounded-element text-accent-color">
@@ -24,14 +24,14 @@ if ($map_dynamic_3d == true) {
                 <div class="pwe-map__stats-container desktop">
                     <div class="pwe-map__stats-element">
                         <p class="text-accent-color pwe-map__stats-element-title">'.
-                            self::languageChecker('Polska -', 'Poland -') .' 
+                            self::languageChecker('Polska -', 'Poland -') .'
                             <span class="countup" data-count="'. floor($map_number_visitors / 100 * $map_percent_polish_visitors) .'">0</span>
                         </p>
                         <p class="pwe-map__stats-element-desc"><span class="countup" data-count="'. $map_percent_polish_visitors .'">0</span> %</p>
                     </div>
                     <div class="pwe-map__stats-element">
                         <p class="text-accent-color pwe-map__stats-element-title">'.
-                            self::languageChecker('Zagranica -', 'Abroad -').' 
+                            self::languageChecker('Zagranica -', 'Abroad -').'
                             <span class="countup" data-count="'. ($map_number_visitors - floor($map_number_visitors / 100 * $map_percent_polish_visitors)) .'">0</span>
                         </p>
                         <p class="pwe-map__stats-element-desc">
@@ -57,7 +57,7 @@ if ($map_dynamic_3d == true) {
             <div class="pwe-map__stats-container mobile">
                 <div class="pwe-map__stats-element pwe-map__stats-element-55">
                     <p class="text-accent-color pwe-map__stats-element-title">'.
-                        self::languageChecker('Polska -', 'Poland -') .' 
+                        self::languageChecker('Polska -', 'Poland -') .'
                         <span class="countup" data-count="'. floor($map_number_visitors / 100 * $map_percent_polish_visitors) .'">0</span>
                     </p>
                     <p class="pwe-map__stats-element-desc"><span class="countup" data-count="'. $map_percent_polish_visitors .'">0</span> %</p>
@@ -70,7 +70,7 @@ if ($map_dynamic_3d == true) {
                 </div>
                 <div class="pwe-map__stats-element pwe-map__stats-element-55">
                     <p class="text-accent-color pwe-map__stats-element-title">'.
-                        self::languageChecker('Zagranica -', 'Abroad -').' 
+                        self::languageChecker('Zagranica -', 'Abroad -').'
                         <span class="countup" data-count="'. ($map_number_visitors - floor($map_number_visitors / 100 * $map_percent_polish_visitors)) .'">0</span>
                     </p>
                     <p class="pwe-map__stats-element-desc">
@@ -81,8 +81,8 @@ if ($map_dynamic_3d == true) {
                         <span class="countup" data-count="'. $map_exhibition_space .'">0</span> m<sup>2</sup>
                     </p>
                     <p class="pwe-map__stats-element-desc">'. self::languageChecker('powierzchni<br>wystawienniczej', 'exhibition<br>space') .'</p>
-                </div> 
-                
+                </div>
+
             </div>
 
             <div class="pwe-map__logotypes">
@@ -115,7 +115,7 @@ if ($map_dynamic_3d == true) {
                             </div>
 
                             <!-- Bars -->
-                            <div class="pwe-map__stats-diagram-bars-container"> 
+                            <div class="pwe-map__stats-diagram-bars-container">
                                 <!-- Bar 1 -->
                                 <div class="pwe-map__stats-diagram-bars">
                                     <div class="pwe-map__stats-diagram-bars-wrapper">
@@ -169,7 +169,7 @@ if ($map_dynamic_3d == true) {
                             </div>
                         </div>';
                     }
-                    
+
             $output .= '
             </div>
         </div>';
@@ -189,7 +189,7 @@ if ($map_dynamic_3d == true) {
         //     </div>
 
         //     <!-- Bars -->
-        //     <div class="pwe-map__stats-diagram-bars-container"> 
+        //     <div class="pwe-map__stats-diagram-bars-container">
         //         <!-- Bar 1 -->
         //         <div class="pwe-map__stats-diagram-bars">
         //             <div class="pwe-map__stats-diagram-bars-wrapper">
@@ -284,7 +284,7 @@ if ($map_dynamic_3d == true) {
                 </div>
             </div>
         </div>';
-        
+
         $output .= '
         <div class="pwe-mapa-right">
             <div class="pwe-mapa-logo-container">'.

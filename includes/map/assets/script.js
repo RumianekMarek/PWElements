@@ -8,12 +8,12 @@ const hex_color_water = map_water_color !== '' ? map_water_color : "#" + accent_
 
 function animateCount(element) {
     const targetValue = parseInt(element.getAttribute("data-count"), 10);
-    const duration = 3000; 
+    const duration = 3000;
 
     const startTime = performance.now();
     const update = (currentTime) => {
         const elapsedTime = currentTime - startTime;
-        const progress = Math.min(elapsedTime / duration, 1); 
+        const progress = Math.min(elapsedTime / duration, 1);
         const currentValue = Math.floor(progress * targetValue);
 
         element.textContent = currentValue;

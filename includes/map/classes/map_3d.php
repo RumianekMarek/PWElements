@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 /**
  * Class PWEMap3D
@@ -17,7 +17,7 @@ class PWEMap3D extends PWEMap {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -35,7 +35,7 @@ class PWEMap3D extends PWEMap {
         require_once plugin_dir_path(dirname( __FILE__ )) . 'assets/style.php';
 
         $map_image_src = !empty($atts['map_image']) ? wp_get_attachment_url($atts['map_image']) : '/doc/numbers.webp';
-        $map_image_availible = (!empty($atts['map_image']) || file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/numbers.webp')) ? true : false; 
+        $map_image_availible = (!empty($atts['map_image']) || file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/numbers.webp')) ? true : false;
 
         $output .= '
             <div id="pweMap" class="pwe-map">

@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 $svg_icon_growth = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m136-240-56-56 296-298 160 160 208-206H640v-80h240v240h-80v-104L536-320 376-480 136-240Z"/></svg>';
 
@@ -16,16 +16,16 @@ $output .= '
 <div id="pweMap" class="pwe-map">
     <div class="pwe-map__wrapper">
 
-        <div class="pwe-map__stats-section">            
+        <div class="pwe-map__stats-section">
             <div class="pwe-map__stats-number-container">
 
               <div class="pwe-map__stats-number-card">
                 <div class="pwe-map__title-section">
                     <h2 class="pwe-map__title">'. $map_custom_title .'</h2>
                     <strong><p class="pwe-map__edition">' . $map_custom_current_edition . '</p></strong>
-                    <p class="pwe-map__year">' . $map_year . '</p> 
+                    <p class="pwe-map__year">' . $map_year . '</p>
                     '. self::languageChecker(
-                        '<a href="/rejestracja/" class="pwe-map__button-link pwe-button-link">Zarejestruj się ' . $svg_icon_arrow_right . '</a>', 
+                        '<a href="/rejestracja/" class="pwe-map__button-link pwe-button-link">Zarejestruj się ' . $svg_icon_arrow_right . '</a>',
                         '<a href="/en/registration/" class="pwe-map__button-link pwe-button-link">Registration ' . $svg_icon_arrow_right . '</a>') .'
                 </div>
                 <div class="pwe-map__stats-number-box">
@@ -59,11 +59,11 @@ $output .= '
                     ' . $svg_icon_visitors . '
                 </div>
               </div>
-                
+
               <div class="pwe-map__stats-number-card">
                 <div class="pwe-map__logo-section">
                     '. self::languageChecker(
-                        '<img src="/doc/logo-x-pl.webp" alt="Logo targów">', 
+                        '<img src="/doc/logo-x-pl.webp" alt="Logo targów">',
                         '<img src="/doc/logo-x-en.webp" alt="Fair logo">') .'
                 </div>
                 <div class="pwe-map__stats-number-box">
