@@ -193,16 +193,22 @@ class PWEConferenceShortInfoDefault extends PWEConferenceShortInfo {
                     $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data();
 
                     if (!empty($cap_logotypes_data)) {
-                        $dozwolone_typy = [
-                            'partner-targow',
-                            'patron-medialny',
-                            'partner-strategiczny',
-                            'partner-honorowy',
-                            'principal-partner',
-                            'industry-media-partner',
-                            'partner-branzowy',
-                            'partner-merytoryczny'
-                        ];
+                        if (do_shortcode('[trade_fair_group]') === 'gr2') {
+                            $dozwolone_typy = [
+                                'partner-merytoryczny'
+                            ];
+                        } else {
+                            $dozwolone_typy = [
+                                'partner-targow',
+                                'patron-medialny',
+                                'partner-strategiczny',
+                                'partner-honorowy',
+                                'principal-partner',
+                                'industry-media-partner',
+                                'partner-branzowy',
+                                'partner-merytoryczny'
+                            ];
+                        }
 
                         foreach ($cap_logotypes_data as $logo_data) {
                             if (in_array($logo_data->logos_type, $dozwolone_typy)) {

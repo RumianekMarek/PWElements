@@ -263,256 +263,255 @@ class PWECalendar extends PWECommonFunctions {
             $shortcodes_active = empty(get_option('pwe_general_options', [])['pwe_dp_shortcodes_unactive']);
             
             $output = '
-                <style>
+            <style>
+                .pwe-calendar__wrapper {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 24px;
+                    margin-top: 36px;
+                }
+                .pwe-calendar__item {
+                    background-color: #e9e9e9;
+                    text-align: -webkit-center;
+                    border-radius: 30px;
+                    box-shadow: unset;
+                    transition: .3s ease;
+                }
+                .pwe-calendar__item:hover {
+                    transform: scale(1.05);
+                }
+                .pwe-calendar__wrapper:after {
+                    content:none !important;
+                }
+                .pwe-calendar__link {
+                    position: relative;
+                    z-index: 1;
+                    text-decoration: none;
+                }
+                .pwe-calendar__tile {
+                    position: relative;
+                    aspect-ratio: 1 / 1;
+                    background-size: cover;
+                    background-position: center;
+                    border-radius: 0;
+                    border-top-left-radius: 15px;
+                    border-top-right-radius: 15px;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                }
+                .pwe-calendar__short-name {
+                    position: absolute;
+                    top: 65%;
+                    left: 50%;
+                    transform: translate(-50%, -65%);
+                    z-index: 1;
+                    width: 300px;
+                    max-width: 90%;
+                }
+                .pwe-calendar__short-name h4 {
+                    color: white !important;
+                    font-size: 17px;
+                    font-weight: 600;
+                    text-shadow: 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black;
+                    text-transform: uppercase;
+                    text-align: center;
+                }
+                .pwe-calendar__statistics-word {
+                    font-size: 13px;
+                    color: grey;
+                    margin: 0;
+                    font-weight: 600;
+                }
+                .pwe-calendar_strip {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    margin: 6px;
+                }
+                .pwe-calendar__button-check {
+                    width: 40%;
+                }
+                .pwe-calendar__button-check p {
+                    width: fit-content;
+                    line-height: 1;
+                    color: white;
+                    font-size: 12px;
+                    font-weight: 700;
+                    margin: 0;
+                    text-transform: uppercase;
+                    background-color: grey;
+                    padding: 9px;
+                    border-radius: 12px;
+                }
+                .pwe-calendar__edition {
+                    width: 60%;
+                }
+                .pwe-calendar__edition p {
+                    margin: 0 0 0 2px;
+                    line-height: 1;
+                    color: white;
+                    font-size: 15px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                }
+                .pwe-calendar__date {
+                    padding: 6px;
+                }
+                .pwe-calendar__date h5 {
+                    margin: 0;
+                    line-height: 1.2;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    display: flex;
+                    justify-content: space-evenly;
+                } 
+                .pwe-calendar_statistics {
+                    padding: 10px;
+                }
+                .pwe-calendar__statistics-item {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .pwe-calendar__statistics-name {
+                    width: 76%;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 10px;
+                }
+                .pwe-calendar__statistics-name p {
+                    margin: 0;
+                    line-height: 1;
+                    text-align: start;
+                }
+                .pwe-calendar__statistics-icon {
+                    width: 20%;
+                }
+                .pwe-calendar__statistics-icon img {
+                    max-width: 30px;
+                    vertical-align: middle;
+                }
+                .pwe-calendar__statistics-label {
+                    width: 65%;
+                    font-size: 14px;
+                    margin: 0;
+                    line-height: 1;
+                    color: black;
+                }
+                .pwe-calendar__statistics-value {
+                    width: 35%;
+                    font-size: 14px;
+                    color: grey;
+                    margin: 0;
+                    font-weight: 800;
+                    display: flex;
+                    white-space: nowrap;
+                    align-items: center;
+                }
+                @media (min-width: 960px){
+                    .row-parent:has(.pwe-calendar__item){
+                        max-width: unset !important;
+                    } 
+                }
+                @media (max-width: 1200px){
                     .pwe-calendar__wrapper {
-                        max-width: 1400px;
-                        margin: 0 auto;
-                        display: grid;
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 24px;
-                        margin-top: 36px;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 18px;
                     }
-                    .pwe-calendar__item {
-                        background-color: #e9e9e9;
-                        text-align: -webkit-center;
-                        border-radius: 30px;
-                        box-shadow: unset;
-                        transition: .3s ease;
+                }
+                @media (max-width: 960px){
+                    .pwe-calendar__short-name h4 {
+                        font-size: 14px;
                     }
                     .pwe-calendar__item:hover {
-                        transform: scale(1.05);
+                        transform: scale(1.02);
                     }
-                    .pwe-calendar__wrapper:after {
-                        content:none !important;
+                }
+                @media (max-width: 768px) {
+                    .pwe-calendar__wrapper {
+                        grid-template-columns: repeat(2, 1fr);
                     }
-                    .pwe-calendar__link {
-                        position: relative;
-                        z-index: 1;
-                        text-decoration: none;
-                    }
-                    .pwe-calendar__tile {
-                        position: relative;
-                        aspect-ratio: 1 / 1;
-                        background-size: cover;
-                        background-position: center;
-                        border-radius: 0;
-                        border-top-left-radius: 15px;
-                        border-top-right-radius: 15px;
-                        display: flex;
-                        align-items: flex-end;
-                        justify-content: center;
-                    }
-                    .pwe-calendar__short-name {
-                        position: absolute;
-                        top: 65%;
-                        left: 50%;
-                        transform: translate(-50%, -65%);
-                        z-index: 1;
-                        width: 300px;
-                        max-width: 90%;
-                    }
-                    .pwe-calendar__short-name h4 {
-                        color: white !important;
-                        font-size: 17px;
-                        font-weight: 600;
-                        text-shadow: 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black, 0.1em 0.1em 0.2em black;
-                        text-transform: uppercase;
-                        text-align: center;
-                    }
-                    .pwe-calendar__statistics-word {
-                        font-size: 13px;
-                        color: grey;
-                        margin: 0;
-                        font-weight: 600;
-                    }
-                    .pwe-calendar_strip {
-                        width: 100%;
-                        display: flex;
-                        align-items: center;
-                        margin: 6px;
-                    }
-                    .pwe-calendar__button-check {
-                        width: 40%;
-                    }
-                    .pwe-calendar__button-check p {
-                        width: fit-content;
-                        line-height: 1;
-                        color: white;
-                        font-size: 12px;
-                        font-weight: 700;
-                        margin: 0;
-                        text-transform: uppercase;
-                        background-color: grey;
-                        padding: 9px;
-                        border-radius: 12px;
-                    }
-                    .pwe-calendar__edition {
-                        width: 60%;
-                    }
-                    .pwe-calendar__edition p {
-                        margin: 0 0 0 2px;
-                        line-height: 1;
-                        color: white;
-                        font-size: 15px;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                    }
-                    .pwe-calendar__date {
-                        padding: 6px;
-                    }
-                    .pwe-calendar__date h5 {
-                        margin: 0;
-                        line-height: 1.2;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        display: flex;
-                        justify-content: space-evenly;
-                    } 
-                    .pwe-calendar_statistics {
+                }
+                @media (max-width: 569px) {
+                    .main-container .row-parent:has(.pwe-calendar__item) {
                         padding: 10px;
                     }
-                    .pwe-calendar__statistics-item {
-                        display: flex;
-                        justify-content: space-between;
-                    }
-                    .pwe-calendar__statistics-name {
-                        width: 76%;
-                        display: flex;
-                        justify-content: space-between;
+                    .pwe-calendar__wrapper {
                         gap: 10px;
                     }
-                    .pwe-calendar__statistics-name p {
-                        margin: 0;
-                        line-height: 1;
-                        text-align: start;
+                    .pwe-calendar__short-name h4 {
+                        font-size: 12px;
                     }
-                    .pwe-calendar__statistics-icon {
-                        width: 20%;
-                    }
-                    .pwe-calendar__statistics-icon img {
-                        max-width: 30px;
-                        vertical-align: middle;
-                    }
-                    .pwe-calendar__statistics-label {
-                        width: 65%;
-                        font-size: 14px;
-                        margin: 0;
-                        line-height: 1;
-                        color: black;
-                    }
-                    .pwe-calendar__statistics-value {
-                        width: 35%;
-                        font-size: 14px;
-                        color: grey;
-                        margin: 0;
-                        font-weight: 800;
-                        display: flex;
-                        white-space: nowrap;
-                        align-items: center;
-                    }
-                    @media (min-width: 960px){
-                        .row-parent:has(.pwe-calendar__item){
-                            max-width: unset !important;
-                        } 
-                    }
-                    @media (max-width: 1200px){
-                        .pwe-calendar__wrapper {
-                            grid-template-columns: repeat(3, 1fr);
-                            gap: 18px;
-                        }
-                    }
-                    @media (max-width: 960px){
-                        .pwe-calendar__short-name h4 {
-                            font-size: 14px;
-                        }
-                        .pwe-calendar__item:hover {
-                            transform: scale(1.02);
-                        }
-                    }
-                    @media (max-width: 768px) {
-                        .pwe-calendar__wrapper {
-                            grid-template-columns: repeat(2, 1fr);
-                        }
-                    }
-                    @media (max-width: 569px) {
-                        .main-container .row-parent:has(.pwe-calendar__item) {
-                            padding: 10px;
-                        }
-                        .pwe-calendar__wrapper {
-                            gap: 10px;
-                        }
-                        .pwe-calendar__short-name h4 {
-                            font-size: 12px;
-                        }
-                        .pwe-calendar__date h5 {
-                            font-size: 15px;
-                        } 
-                        .pwe-calendar_strip {
-                            width: 100%;
-                            margin: 0;
-                            height: 20%;
-                        }
-                        .pwe-calendar__button-check p, 
-                        .pwe-calendar__edition p {
-                            font-size: 10px !important;
-                            padding: 4px !important;
-                        }
-                        .pwe-calendar_statistics {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 6px;   
-                        }
-                        .pwe-calendar__statistics-name {
-                            flex-direction: column;
-                            gap: 5px;
-                        }
-                    }
-
-
-
-
-
-
-
-                    .week .pwe-calendar__short-name {
-                        top: 50%;
-                    }
-                    .week .pwe-calendar__short-name h4 {
-                        margin: 0;
-                    }
-                    .week .pwe-calendar__count-events {
-                        width: 60%;
-                    }
-                    .week .pwe-calendar__count-events p {
-                        font-size: 14px;
-                        margin: 0;
-                        color: white;
+                    .pwe-calendar__date h5 {
                         font-size: 15px;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                    }
-                    .week .pwe-calendar_info p {
-                        color: black;
+                    } 
+                    .pwe-calendar_strip {
+                        width: 100%;
                         margin: 0;
+                        height: 20%;
                     }
+                    .pwe-calendar__button-check p, 
+                    .pwe-calendar__edition p {
+                        font-size: 10px !important;
+                        padding: 4px !important;
+                    }
+                    .pwe-calendar_statistics {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 6px;   
+                    }
+                    .pwe-calendar__statistics-name {
+                        flex-direction: column;
+                        gap: 5px;
+                    }
+                }
+
+
+
+
+
+
+
+                .week .pwe-calendar__short-name {
+                    top: 50%;
+                }
+                .week .pwe-calendar__short-name h4 {
+                    margin: 0;
+                }
+                .week .pwe-calendar__count-events {
+                    width: 60%;
+                }
+                .week .pwe-calendar__count-events p {
+                    font-size: 14px;
+                    margin: 0;
+                    color: white;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                }
+                .week .pwe-calendar_info p {
+                    color: black;
+                    margin: 0;
+                }
+                .week .pwe-calendar_info-list {
+                    text-align: left;
+                    padding: 0px 12px 12px !important;
+                    margin: 0;
+                }
+                .week .pwe-calendar_info-list li {
+                    color: black;
+                    line-height: 1.4;
+                    font-size: 14px;
+                    list-style: none;
+                }
+                @media (max-width: 569px) {
                     .week .pwe-calendar_info-list {
-                        text-align: left;
-                        padding: 0px 18px 12px 18px !important;
-                        margin: 0;
+                        max-height: 150px;
+                        overflow: scroll;
                     }
-                    .week .pwe-calendar_info-list li {
-                        color: black;
-                        line-height: 1.4;
-                        font-size: 14px;
-                        list-style: none;
-                    }
-                    @media (max-width: 569px) {
-                        .week .pwe-calendar_info-list {
-                            max-height: 150px;
-                            overflow: scroll;
-                        }
-                    }
-                </style>
+                }
+            </style>
             ';
 
             $event_posts = [];
@@ -1160,7 +1159,7 @@ class PWECalendar extends PWECommonFunctions {
         $output = do_shortcode($output);
         // Zwracamy HTML z dodanym wrapperem
         return '<div id="pweCalendar" class="pwe-calendar">' . $output . '</div>';
-    }
+    } 
 
     public function render_calendar_event_card($event, $shortcodes_active, $lang_pl = true) {
         $locale = get_locale();

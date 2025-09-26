@@ -8,11 +8,13 @@ function render_gr3($atts, $all_exhibitors, $pweGeneratorWebsite){
         'generator_patron' => '',
     ), $atts ));
 
+    $badgevip = file_exists($_SERVER['DOCUMENT_ROOT'] . '/doc/badgevip.webp') ? 'badgevip' : '';
+
     $output = '';
     $output .= '
         <div class="exhibitor-generator gr3" data-group="gr3">
             <div class="exhibitor-generator__wrapper">
-                <div class="exhibitor-generator__left"></div>
+                <div class="exhibitor-generator__left '. $badgevip .'"></div>
                 <div class="exhibitor-generator__right">
                     <div class="exhibitor-generator__right-wrapper">
                         <div class="exhibitor-generator__right-title">

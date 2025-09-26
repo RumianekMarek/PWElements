@@ -349,15 +349,6 @@ add_action('add_meta_boxes_event', function($post) {
             'normal',
             'high'
         );
-        // Headers Slider
-        add_meta_box(
-            'header_slider',
-            'Headers (Slider)',
-            'events_week_header_slider_callback',
-            'event',
-            'normal',
-            'high'
-        );
         // Metabox for other fields
         add_meta_box(
             'events_week_halls',
@@ -391,6 +382,15 @@ add_action('add_meta_boxes_event', function($post) {
             'Secondary Image',
             'secondary_image_meta_box_callback',
             'event', 
+            'side',
+            'high'
+        );
+        // Metabox for header image
+        add_meta_box(
+            'header_image',
+            'Header Image',
+            'header_image_callback',
+            'event',
             'side',
             'high'
         );
@@ -551,35 +551,208 @@ add_action('admin_menu', function() {
     }, 'event', 'side', 'core');
 });
 
+// GENERAL metaboxes <----------------------------------<
+
+function featured_image_meta_box_callback($post) {
+    wp_nonce_field('save_featured_image', 'featured_image_nonce');
+    $halls_image_url = get_post_meta($post->ID, '_featured_image_url', true);
+    
+    echo '
+    <label for="featured_image_url">Featured Image URL:</label>
+    <div class="featured-image-url-container">
+        <input type="text" id="featured_image_url" name="featured_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' . esc_attr($halls_image_url) . '" />
+    </div>
+    <br>
+    <input type="button" class="button-secondary" value="Select Image" id="featured_image_button" />
+    <div id="featured_image_preview" style="margin-top: 10px;">';
+        if (!empty($halls_image_url)) {
+            echo '<img src="' . esc_url($halls_image_url) . '" style="max-width: 250px; width: 100%;" />';
+        }
+    echo '
+    </div>';
+    
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        var mediaUploader;
+        
+        $('#featured_image_button').click(function(e) {
+            e.preventDefault();
+
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+
+            // Initialization uploader
+            mediaUploader = wp.media.frames.file_frame = wp.media({
+                title: 'Select Featured Image',
+                button: {
+                    text: 'Select Image'
+                },
+                multiple: false
+            });
+            
+            // After selecting the image, insert the URL into the field
+            mediaUploader.on('select', function() {
+                var attachment = mediaUploader.state().get('selection').first().toJSON();
+
+                $('.featured-image-url-container').html('<input type="text" id="featured_image_url" name="featured_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' + attachment.url + '" />');
+                $('#featured_image_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />');
+            });
+
+            mediaUploader.open();
+        });
+    });
+    </script>
+    <?php
+}
+
+function secondary_image_meta_box_callback($post) {
+    wp_nonce_field('save_secondary_image', 'secondary_image_nonce');
+    $secondary_image_url = get_post_meta($post->ID, '_secondary_image_url', true);
+    
+    echo '
+    <label for="secondary_image_url">Secondary Image URL:</label>
+    <div class="secondary-image-url-container">
+        <input type="text" id="secondary_image_url" name="secondary_image_url" class="secondary-image-url pwe-calendar-full-width-input" value="' . esc_attr($secondary_image_url) . '" />
+    </div>
+    <br>
+    <input type="button" class="button-secondary" value="Select Image" id="secondary_image_button" />
+    <div id="secondary_image_preview" style="margin-top: 10px;">';
+        if (!empty($secondary_image_url)) {
+            echo '<img src="' . esc_url($secondary_image_url) . '" style="max-width: 250px; width: 100%;" />';
+        }
+    echo '
+    </div>';
+    
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        var mediaUploader;
+        
+        $('#secondary_image_button').click(function(e) {
+            e.preventDefault();
+            
+            // Jeśli uploader istnieje, otwieramy go
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+
+            // Initialization uploader
+            mediaUploader = wp.media.frames.file_frame = wp.media({
+                title: 'Select Secondary Image',
+                button: {
+                    text: 'Select Image'
+                },
+                multiple: false
+            });
+
+            // After selecting the image, insert the URL into the field
+            mediaUploader.on('select', function() {
+                var attachment = mediaUploader.state().get('selection').first().toJSON();
+                $('.secondary-image-url-container').html('<input type="text" id="secondary_image_url" name="secondary_image_url" class="secondary-image-url pwe-calendar-full-width-input" value="' + attachment.url + '" />');
+                $('#secondary_image_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />'); // Wyświetlamy podgląd
+            });
+
+            mediaUploader.open();
+        });
+    });
+    </script>
+    <?php
+}
+
+function header_image_callback($post) {
+    wp_nonce_field('save_header_image', 'header_image_nonce');
+    $header_image_url = !empty(get_post_meta($post->ID, '_header_image', true)) ? get_post_meta($post->ID, '_header_image', true) : '';
+    
+    echo '
+    <div class="pwe-calendar-input">
+        <label for="header_image">Upload Header Image:</label>
+        <div class="header-image-url-container">
+            <input type="text" id="header_image" name="header_image" value="' . esc_attr($header_image_url) . '" style="width:100%;" />
+        </div>
+        <input type="button" class="button-secondary" value="Select Image" id="header_image_button" />
+        <div id="header_image_preview" style="margin-top: 10px;">';
+            if (!empty($header_image_url)) {
+                echo '<img src="' . esc_url($header_image_url) . '" style="max-width: 250px; width: 100%;" />';
+            }
+        echo '
+        </div>
+    </div>';
+
+    ?>
+    <script>
+        jQuery(document).ready(function($) {
+            var mediaUploader;
+
+            $('#header_image_button').click(function(e) {
+                e.preventDefault();
+
+                if (mediaUploader) {
+                    mediaUploader.open();
+                    return;
+                }
+
+                // Initializing the uploader
+                mediaUploader = wp.media.frames.file_frame = wp.media({
+                    title: 'Select Header Image',
+                    button: {
+                        text: 'Select Image'
+                    },
+                    multiple: false
+                });
+
+                // After selecting the image, insert the URL into the field
+                mediaUploader.on('select', function() {
+                    var attachment = mediaUploader.state().get('selection').first().toJSON();
+
+                    $('.header-image-url-container').html('<input type="text" id="header_image" name="header_image" value="' + attachment.url + '" style="width:100%;" />');
+                    $('#header_image_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />');
+                });
+
+                mediaUploader.open();
+            });
+        });
+    </script>
+    <?php 
+}
+
 // WEEK metaboxes <----------------------------------<
 
 function events_week_fairs_callback($post) {
     wp_nonce_field('save_events_week_fairs', 'events_week_fairs_nonce');
     $lang = ICL_LANGUAGE_CODE;
     $date_start = get_post_meta($post->ID, 'fair_date_start', true);
-    $date_end = get_post_meta($post->ID, 'fair_date_end', true);
-    if (!empty($date_start) && !empty($date_end)) {
+    $date_end   = get_post_meta($post->ID, 'fair_date_end', true);
 
+    // Get the current meta value
+    $saved_events = get_post_meta($post->ID, 'events_week_fairs', true);
+
+    $events = $saved_events;
+    if (empty($saved_events) && !empty($date_start) && !empty($date_end)) {
+        // Only if textarea empty -> generate automatically
         $trade_fair_start_timestamp = strtotime($date_start);
-        $trade_fair_end_timestamp = strtotime($date_end);
+        $trade_fair_end_timestamp   = strtotime($date_end);
 
         $fairs_json = PWECommonFunctions::json_fairs();
-
-        $events = "";
         $event_names = [];
+
         foreach ($fairs_json as $fair) {
             $event_date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
-            $event_date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
-            $event_name = $lang === "pl" ? $fair["name_pl"] : $fair["name_en"];
+            $event_date_end   = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
+            $event_name       = $lang === "pl" ? $fair["name_pl"] : $fair["name_en"];
 
             if ($event_date_start && $event_date_end) {
-                $isStartInside = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
-                $isEndInside = $event_date_end >= $trade_fair_start_timestamp && $event_date_end <= $trade_fair_end_timestamp;
+                $isStartInside    = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
+                $isEndInside      = $event_date_end >= $trade_fair_start_timestamp && $event_date_end <= $trade_fair_end_timestamp;
                 $isNotFastTextile = strpos($fair['domain'], "fasttextile.com") === false;
-                $isNotExpoTrends = strpos($fair['domain'], "expotrends.eu") === false;
+                $isNotExpoTrends  = strpos($fair['domain'], "expotrends.eu") === false;
                 $isNotFabricsExpo = strpos($fair['domain'], "fabrics-expo.eu") === false;
+                $isNotTest = strpos($fair['domain'], "mr.glasstec.pl") === false;
 
-                if (($isStartInside || $isEndInside) && $isNotFastTextile && $isNotExpoTrends && $isNotFabricsExpo) {
+                if (($isStartInside || $isEndInside) && $isNotFastTextile && $isNotExpoTrends && $isNotFabricsExpo && $isNotTest) {
                     $event_names[] = $event_name;
                 }
             }
@@ -587,21 +760,23 @@ function events_week_fairs_callback($post) {
 
         $events = implode(", ", $event_names);
     }
-    
+
     echo '
     <div class="pwe-calendar-inputs-container">
         <div class="pwe-calendar-input">';
-            if (!empty(get_post_meta($post->ID, 'events_week_fairs', true))) {
+            if (!empty($saved_events)) {
                 echo '<span style="color: green;">Dane są zapisane!</span>';
+                echo '<span style="color: red;">Usuń targi które chcesz wykluczyć z Warszawskiego Tygodnia. Jeżeli chcesz pobrać targi na nowo, usuń całe pole.</span>';
+            } else if (empty($saved_events) && !empty($events)) {
+                echo '<span style="color: red;">Dane jeszcze nie są zapisane. Zaktualizuj post!!!</span>';
             }
             echo '
             <textarea 
                 id="events_week_fairs" 
                 name="events_week_fairs" 
                 class="pwe-calendar-full-width-input" 
-                style="height: 60px; background-color: #e0e0e0; cursor: not-allowed;" 
-                readonly
-                placeholder="'. $events .'">'. $events .'</textarea>
+                style="height: 60px;"
+                placeholder="'. esc_attr($events) .'">'. esc_textarea($events) .'</textarea>
         </div>
     </div>';
 }
@@ -618,138 +793,8 @@ function events_week_dates_callback($post) {
         <div class="pwe-calendar-input one-third-width">
             <label for="fair_date_end">Fairs Date End: </label>
             <input type="text" id="fair_date_end" name="fair_date_end" class="pwe-calendar-full-width-input" placeholder="Data końcowa" value="'. get_post_meta($post->ID, 'fair_date_end', true) .'" />
-        </div>';
-}
-
-function events_week_header_slider_callback($post) {
-    wp_nonce_field('save_header_slider', 'header_slider_nonce');
-    $header_slider = get_post_meta($post->ID, 'header_slider', true);
-    $header_slider = !empty($header_slider) && is_array($header_slider) ? $header_slider : array(array());
-
-    echo '<div id="headers-slider-repeatable">';
-    foreach ($header_slider as $index => $header) {
-        $text = esc_attr($header['text'] ?? '');
-        $category = esc_attr($header['category'] ?? '');
-        $image_id = isset($header['image_id']) ? intval($header['image_id']) : '';
-        $image_url = $image_id ? wp_get_attachment_url($image_id) : '';
-
-        $categories = get_terms([
-            'taxonomy' => 'event_category',
-            'hide_empty' => false,
-        ]);
-
-        echo '
-        <div class="header-slider-item" style="border:1px solid #ccc;padding:10px;margin-bottom:10px;">
-            <label>Title:<br>
-                <input type="text" name="header_slider['.$index.'][text]" value="'.$text.'" style="width:100%;" />
-            </label><br>
-            <label>Trade Fair Categories:<br>
-                <select name="header_slider['.$index.'][category]" style="width:100%;">
-                    <option value="">-- wybierz kategorię --</option>';
-                    foreach ($categories as $cat) {
-                        $selected = ($category == $cat->name) ? 'selected' : '';
-                        echo '<option value="' . esc_attr($cat->name) . '" ' . $selected . '>' . esc_html($cat->name) . '</option>';
-                    }
-                echo '</select>
-            </label><br>
-            <label>Obrazek:<br>
-                <input type="hidden" class="header-image-id" name="header_slider['.$index.'][image_id]" value="'.$image_id.'" />
-                <img class="header-image-preview" src="'.esc_url($image_url).'" style="max-width:120px;max-height:80px;display:'.($image_url?'block':'none').';margin-bottom:5px;" />
-                <button type="button" class="select-header-image button">Wybierz obrazek</button>
-                <button type="button" class="remove-header-image button" style="display:'.($image_url?'inline-block':'none').'">Usuń</button>
-                <input type="text" class="header-image-url" name="header_slider['.$index.'][image_url]" value="'.esc_url($image_url).'" style="width:100%;margin-top:8px;" readonly placeholder="Link do obrazka" />
-            </label>
-            <div class="header-slider-button" style="margin-top:8px;">
-                <button class="remove-header-slider button">Usuń header</button>
-            </div>
-        </div>';
-    }
-    echo '</div>';
-    echo '<button type="button" class="add-header-slider button button-primary">Dodaj Header</button>';
-
-    // Skrypt JS
-    ?>
-     <script>
-    (function($){
-        $(document).ready(function(){
-            let i = $('#headers-slider-repeatable .header-slider-item').length;
-            const eventCategories = <?php echo json_encode($categories); ?>;
-
-            $('.add-header-slider').on('click', function(e){
-                e.preventDefault();
-                let newItem = `
-                <div class="header-slider-item" style="border:1px solid #ccc;padding:10px;margin-bottom:10px;">
-                    <label>Title:<br>
-                        <input type="text" name="header_slider[`+i+`][text]" value="" style="width:100%;" />
-                    </label><br>
-                    <label>Trade Fair Categories:<br>
-                        <select name="header_slider[`+i+`][category]" style="width:100%;">
-                            <option value="">-- wybierz kategorię --</option>
-                            ${
-                                eventCategories.map(cat =>
-                                    `<option value="${cat.name}">${cat.name}</option>`
-                                ).join('')
-                            }
-                        </select>
-                    </label><br>
-                    <label>Obrazek:<br>
-                        <input type="hidden" class="header-image-id" name="header_slider[`+i+`][image_id]" value="" />
-                        <img class="header-image-preview" src="" style="max-width:120px;max-height:80px;display:none;margin-bottom:5px;" />
-                        <button type="button" class="select-header-image button">Wybierz obrazek</button>
-                        <button type="button" class="remove-header-image button" style="display:none;">Usuń</button>
-                        <input type="text" class="header-image-url" name="header_slider[`+i+`][image_url]" value="" style="width:100%;margin-top:8px;" readonly placeholder="Link do obrazka" />
-                    </label>
-                    <div class="header-slider-button" style="margin-top:8px;">
-                        <button class="remove-header-slider button">Usuń header</button>
-                    </div>
-                </div>
-                `;
-                $('#headers-slider-repeatable').append(newItem);
-                i++;
-            });
-
-            $(document).on('click', '.remove-header-slider', function(e){
-                e.preventDefault();
-                $(this).closest('.header-slider-item').remove();
-            });
-
-            // Obsługa mediów
-            let media_frame;
-            $(document).on('click', '.select-header-image', function(e){
-                e.preventDefault();
-                let btn = $(this);
-                let parent = btn.closest('.header-slider-item');
-                if (media_frame) {
-                    media_frame.close();
-                }
-                media_frame = wp.media({
-                    title: 'Wybierz obrazek',
-                    library: { type: 'image' },
-                    multiple: false
-                });
-                media_frame.on('select', function(){
-                    let attachment = media_frame.state().get('selection').first().toJSON();
-                    parent.find('.header-image-id').val(attachment.id);
-                    parent.find('.header-image-preview').attr('src', attachment.url).show();
-                    parent.find('.header-image-url').val(attachment.url); // <-- tutaj wstawiamy URL do inputa!
-                    parent.find('.remove-header-image').show();
-                });
-                media_frame.open();
-            });
-
-            // Usuwanie obrazka
-            $(document).on('click', '.remove-header-image', function(e){
-                e.preventDefault();
-                let parent = $(this).closest('.header-slider-item');
-                parent.find('.header-image-id').val('');
-                parent.find('.header-image-preview').attr('src','').hide();
-                parent.find('.header-image-url').val('');
-                $(this).hide();
-            });
-        });
-    })(jQuery);
-    </script>
-    <?php
+        </div>
+    </div>';
 }
 
 function events_week_halls_callback($post) {
@@ -813,11 +858,26 @@ function events_week_other_callback($post) {
 
     $percent = !empty(get_post_meta($post->ID, 'events_week_percent', true)) ? get_post_meta($post->ID, 'events_week_percent', true) : '';
     $area = !empty(get_post_meta($post->ID, 'events_week_area', true)) ? get_post_meta($post->ID, 'events_week_area', true) : '';
+    $visitors = !empty(get_post_meta($post->ID, 'events_week_visitors', true)) ? get_post_meta($post->ID, 'events_week_visitors', true) : '';
+    $visitors_foreign = !empty(get_post_meta($post->ID, 'events_week_visitors_foreign', true)) ? get_post_meta($post->ID, 'events_week_visitors_foreign', true) : '';
+    $exhibitors = !empty(get_post_meta($post->ID, 'events_week_exhibitors', true)) ? get_post_meta($post->ID, 'events_week_exhibitors', true) : '';
     $color_1 = !empty(get_post_meta($post->ID, 'events_week_color_1', true)) ? get_post_meta($post->ID, 'events_week_color_1', true) : '';
     $color_2 = !empty(get_post_meta($post->ID, 'events_week_color_2', true)) ? get_post_meta($post->ID, 'events_week_color_2', true) : '';
 
     echo '
     <div class="pwe-calendar-inputs-container">
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_visitors">Visitors: </label>
+            <input type="number" id="events_week_visitors" name="events_week_visitors" class="pwe-calendar-full-width-input" value="'. $visitors .'" />
+        </div>
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_visitors_foreign">Visitors foreign: </label>
+            <input type="number" id="events_week_visitors_foreign" name="events_week_visitors_foreign" class="pwe-calendar-full-width-input" value="'. $visitors_foreign .'" />
+        </div>
+        <div class="pwe-calendar-input half-width">
+            <label for="events_week_exhibitors">Exhibitors: </label>
+            <input type="number" id="events_week_exhibitors" name="events_week_exhibitors" class="pwe-calendar-full-width-input" value="'. $exhibitors .'" />
+        </div>
         <div class="pwe-calendar-input half-width">
             <label for="events_week_percent">Increase since last year (%): </label>
             <input type="number" id="events_week_percent" name="events_week_percent" class="pwe-calendar-full-width-input" value="'. $percent .'" />
@@ -870,6 +930,9 @@ function save_events_week_meta($post_id) {
 
     if (isset($_POST['events_week_other_nonce']) && wp_verify_nonce($_POST['events_week_other_nonce'], 'save_events_week_other')) {
         update_post_meta($post_id, 'events_week_percent', sanitize_text_field($_POST['events_week_percent']));
+        update_post_meta($post_id, 'events_week_visitors', sanitize_text_field($_POST['events_week_visitors']));
+        update_post_meta($post_id, 'events_week_visitors_foreign', sanitize_text_field($_POST['events_week_visitors_foreign']));
+        update_post_meta($post_id, 'events_week_exhibitors', sanitize_text_field($_POST['events_week_exhibitors']));
         update_post_meta($post_id, 'events_week_area', sanitize_text_field($_POST['events_week_area']));
         update_post_meta($post_id, 'events_week_color_1', sanitize_text_field($_POST['events_week_color_1']));
         update_post_meta($post_id, 'events_week_color_2', sanitize_text_field($_POST['events_week_color_2']));
@@ -890,7 +953,14 @@ function save_events_week_meta($post_id) {
             update_post_meta($post_id, '_secondary_image_url', sanitize_text_field($_POST['secondary_image_url']));
         }
     }
+
+    if (isset($_POST['header_image_nonce']) && wp_verify_nonce($_POST['header_image_nonce'], 'save_header_image')) {
+        if (isset($_POST['header_image'])) {
+            update_post_meta($post_id, '_header_image', sanitize_text_field($_POST['header_image']));
+        }
+    }
 }
+
 add_action('save_post', 'save_events_week_meta');
 
 add_action('admin_enqueue_scripts', function($hook) {
@@ -1157,64 +1227,6 @@ function event_other_callback($post) {
     </div>';
 }
 
-function header_image_callback($post) {
-    wp_nonce_field('save_header_image', 'header_image_nonce');
-    $website = get_post_meta($post->ID, 'web_page_link', true);
-    if ($website) {
-        $header_image_url = !empty(get_post_meta($post->ID, '_header_image', true)) ? get_post_meta($post->ID, '_header_image', true) : '';
-    }
-    echo '
-    <div class="pwe-calendar-input">
-        <label for="header_image">Upload Header Image:</label>
-        <div class="header-image-url-container">
-            <input type="text" id="header_image" name="header_image" value="' . esc_attr($header_image_url) . '" style="width:100%;" />
-        </div>
-        <input type="button" class="button-secondary" value="Select Image" id="header_image_button" />
-        <div id="header_image_preview" style="margin-top: 10px;">';
-            if (!empty($header_image_url)) {
-                echo '<img src="' . esc_url($header_image_url) . '" style="max-width: 250px; width: 100%;" />';
-            }
-        echo '
-        </div>
-    </div>';
-
-    ?>
-    <script>
-        jQuery(document).ready(function($) {
-            var mediaUploader;
-
-            $('#header_image_button').click(function(e) {
-                e.preventDefault();
-
-                if (mediaUploader) {
-                    mediaUploader.open();
-                    return;
-                }
-
-                // Initializing the uploader
-                mediaUploader = wp.media.frames.file_frame = wp.media({
-                    title: 'Select Header Image',
-                    button: {
-                        text: 'Select Image'
-                    },
-                    multiple: false
-                });
-
-                // After selecting the image, insert the URL into the field
-                mediaUploader.on('select', function() {
-                    var attachment = mediaUploader.state().get('selection').first().toJSON();
-
-                    $('.header-image-url-container').html('<input type="text" id="header_image" name="header_image" value="' + attachment.url + '" style="width:100%;" />');
-                    $('#header_image_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />');
-                });
-
-                mediaUploader.open();
-            });
-        });
-    </script>
-    <?php 
-}
-
 function logo_image_callback($post) {
     wp_nonce_field('save_logo_image', 'logo_image_nonce');
     $website = get_post_meta($post->ID, 'web_page_link', true);
@@ -1385,116 +1397,6 @@ function partners_gallery_callback($post) {
                 $(this).closest('.partner-image').remove();
             });
         });
-    </script>
-    <?php
-}
-
-function featured_image_meta_box_callback($post) {
-    wp_nonce_field('save_featured_image', 'featured_image_nonce');
-    $halls_image_url = get_post_meta($post->ID, '_featured_image_url', true);
-    
-    echo '
-    <label for="featured_image_url">Featured Image URL:</label>
-    <div class="featured-image-url-container">
-        <input type="text" id="featured_image_url" name="featured_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' . esc_attr($halls_image_url) . '" />
-    </div>
-    <br>
-    <input type="button" class="button-secondary" value="Select Image" id="featured_image_button" />
-    <div id="featured_image_preview" style="margin-top: 10px;">';
-        if (!empty($halls_image_url)) {
-            echo '<img src="' . esc_url($halls_image_url) . '" style="max-width: 250px; width: 100%;" />';
-        }
-    echo '
-    </div>';
-    
-    ?>
-    <script>
-    jQuery(document).ready(function($) {
-        var mediaUploader;
-        
-        $('#featured_image_button').click(function(e) {
-            e.preventDefault();
-
-            if (mediaUploader) {
-                mediaUploader.open();
-                return;
-            }
-
-            // Initialization uploader
-            mediaUploader = wp.media.frames.file_frame = wp.media({
-                title: 'Select Featured Image',
-                button: {
-                    text: 'Select Image'
-                },
-                multiple: false
-            });
-            
-            // After selecting the image, insert the URL into the field
-            mediaUploader.on('select', function() {
-                var attachment = mediaUploader.state().get('selection').first().toJSON();
-
-                $('.featured-image-url-container').html('<input type="text" id="featured_image_url" name="featured_image_url" class="featured-image-url pwe-calendar-full-width-input" value="' + attachment.url + '" />');
-                $('#featured_image_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />');
-            });
-
-            mediaUploader.open();
-        });
-    });
-    </script>
-    <?php
-}
-
-function secondary_image_meta_box_callback($post) {
-    wp_nonce_field('save_secondary_image', 'secondary_image_nonce');
-    $secondary_image_url = get_post_meta($post->ID, '_secondary_image_url', true);
-    
-    echo '
-    <label for="secondary_image_url">Secondary Image URL:</label>
-    <div class="secondary-image-url-container">
-        <input type="text" id="secondary_image_url" name="secondary_image_url" class="secondary-image-url pwe-calendar-full-width-input" value="' . esc_attr($secondary_image_url) . '" />
-    </div>
-    <br>
-    <input type="button" class="button-secondary" value="Select Image" id="secondary_image_button" />
-    <div id="secondary_image_preview" style="margin-top: 10px;">';
-        if (!empty($secondary_image_url)) {
-            echo '<img src="' . esc_url($secondary_image_url) . '" style="max-width: 250px; width: 100%;" />';
-        }
-    echo '
-    </div>';
-    
-    ?>
-    <script>
-    jQuery(document).ready(function($) {
-        var mediaUploader;
-        
-        $('#secondary_image_button').click(function(e) {
-            e.preventDefault();
-            
-            // Jeśli uploader istnieje, otwieramy go
-            if (mediaUploader) {
-                mediaUploader.open();
-                return;
-            }
-
-            // Initialization uploader
-            mediaUploader = wp.media.frames.file_frame = wp.media({
-                title: 'Select Secondary Image',
-                button: {
-                    text: 'Select Image'
-                },
-                multiple: false
-            });
-
-            // After selecting the image, insert the URL into the field
-            mediaUploader.on('select', function() {
-                var attachment = mediaUploader.state().get('selection').first().toJSON();
-                $('.secondary-image-url-container').html('<input type="text" id="secondary_image_url" name="secondary_image_url" class="secondary-image-url pwe-calendar-full-width-input" value="' + attachment.url + '" />');
-                $('#secondary_image_preview').html('<img src="' + attachment.url + '" style="max-width: 250px; width: 100%;" />'); // Wyświetlamy podgląd
-            });
-
-            mediaUploader.open();
-        });
-    });
     </script>
     <?php
 }
@@ -1705,6 +1607,7 @@ function load_admin_styles($hook) {
     <style>
         .pwe-calendar-inputs-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin-top: 10px;
         }

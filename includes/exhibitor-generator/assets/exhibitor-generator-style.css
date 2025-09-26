@@ -34,6 +34,10 @@
     background-image: url(/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/badgevip.jpg);
 }
 
+#pweExhibitorVisitorGenerator:has(.exhibitor-generator[data-group="gr3"] ) .exhibitor-generator__left.badgevip {
+    background-image: url(/doc/badgevip.webp);
+}
+
 .pwe-exhibitor-worker-generator .exhibitor-generator__left {
     background-image: url(/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/badgevipmockup-wys.webp);
 }

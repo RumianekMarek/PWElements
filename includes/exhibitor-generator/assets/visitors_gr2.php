@@ -1135,10 +1135,6 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
         }
     }
 
-
-
-
-
     $output .= '
     <div class="exhibitor-generator gr2" data-group="' . $gr_data . '">
         <div class="exhibitor-generator__wrapper">

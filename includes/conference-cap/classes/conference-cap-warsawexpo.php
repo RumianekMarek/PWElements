@@ -362,8 +362,8 @@ class PWEConferenceCapWarsawExpo {
 
                                             $output .= '<div class="conference-cap-warsawexpo__event" style="top:' . intval($startOffset) . 'px; height:' . intval($height) . 'px;">';
                                                 $event_title = $s['title'];
-                                                if ($duration <= 30 && mb_strlen($event_title) > 30) {
-                                                    $event_title = mb_substr($event_title, 0, 37) . '...';
+                                                if ($duration <= 75 && mb_strlen($event_title) > 75) {
+                                                    $event_title = mb_substr($event_title, 0, 75) . '...';
                                                 }
                                                 $output .= '<div class="title">' . esc_html($event_title) . '</div>';
                                                 $output .= '<div class="time">' . esc_html($s['hour']) . '</div>';

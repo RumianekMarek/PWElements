@@ -263,11 +263,13 @@ if ($event_type === "week") {
     $trade_fair_start_timestamp = strtotime($start_date);
     $trade_fair_end_timestamp = strtotime($end_date);
 
+    $fairs_week = get_post_meta($post_id, 'events_week_fairs', true);
+    $fairs_week = !empty($fairs_week) ? explode(", ", $fairs_week) : [];
+
     // Get JSON
     $fairs_json = PWECommonFunctions::json_fairs();
 
-    $all_events_json = [];
-    $catalog_ids = [];
+    $events_map = [];
 
     foreach ($fairs_json as $fair) {
         // Getting start and end dates
@@ -276,6 +278,7 @@ if ($event_type === "week") {
         $category_pl = isset($fair['category_pl']) ? $fair['category_pl'] : null;
         $category_en = isset($fair['category_en']) ? $fair['category_en'] : null;
         $event_desc = $lang_pl ? $fair["desc_pl"] : $fair["desc_en"];
+        $event_name = $lang_pl ? $fair["name_pl"] : (isset($fair["name_en"]) ? $fair["name_en"] : $fair["name_pl"]);
 
         // Checking if the date is in the range
         if ($event_date_start && $event_date_end) {
@@ -285,58 +288,34 @@ if ($event_type === "week") {
             $isNotFastTextile = strpos($fair['domain'], "fasttextile.com") === false;
             $isNotExpoTrends = strpos($fair['domain'], "expotrends.eu") === false;
             $isNotFabricsExpo = strpos($fair['domain'], "fabrics-expo.eu") === false;
+            $isNotTest = strpos($fair['domain'], "mr.glasstec.pl") === false;
 
             if (
                 ($isStartInside || $isEndInside) &&
                 $isOtherDomain &&
                 $isNotFastTextile &&
                 $isNotExpoTrends &&
-                $isNotFabricsExpo
+                $isNotFabricsExpo &&
+                $isNotTest
             ) {
-                $all_events_json[] = [
+                $events_map[$event_name] = [
                     "domain" => $fair["domain"],
+                    "name" => $event_name,
                     "desc" => $event_desc,
-                    "category" => ($lang_pl ? $category_pl : $category_en),
+                    "category" => $lang_pl ? $fair['category_pl'] : $fair['category_en'],
                     "visitors" => $fair["visitors"],
                     "exhibitors" => $fair["exhibitors"],
                     "area" => $fair["area"],
                     "catalog" => isset($fair['catalog']) ? $fair['catalog'] : ''
                 ];
-
-                $catalog_ids[] = isset($fair['catalog']) ? $fair['catalog'] : '';
             }
         }
     }
 
-    $header_slider = get_post_meta($post_id, 'header_slider', true);
-    $header_slider_array = [];
-
-    if (is_array($header_slider)) {
-        foreach ($header_slider as $slide) {
-            $logos = [];
-            $slide_category = isset($slide['category']) ? $slide['category'] : '';
-
-            // Sprawdź dla każdego eventu, czy zawiera tę kategorię (albo jej fragment)
-            foreach ($all_events_json as $event) {
-                // Zamień event category (może być: "Budownictwo, Przemysł") na tablicę
-                $event_categories = array_map('trim', explode(',', $event['category']));
-
-                // Sprawdź, czy kategoria slajdu pasuje do którejkolwiek kategorii eventu
-                foreach ($event_categories as $event_cat) {
-                    // Porównanie nie musi być identyczne (może być slug, ID, lub nazwa)
-                    if ($slide_category && stripos($slide_category, $event_cat) !== false) {
-                        $logos[] = "https://" . $event['domain'] . "/doc/logo-color.webp";
-                        // Jeśli chcesz tylko **jeden** logo na kategorię — break;
-                    }
-                }
-            }
-
-            $header_slider_array[] = [
-                'text' => isset($slide['text']) ? $slide['text'] : '',
-                'category' => $slide_category,
-                'img' => isset($slide['image_id']) ? wp_get_attachment_url($slide['image_id']) : '',
-                'logos' => $logos
-            ];
+    $all_events_json = [];
+    foreach ($fairs_week as $week_event_name) {
+        if (isset($events_map[$week_event_name])) {
+            $all_events_json[] = $events_map[$week_event_name];
         }
     }
 
@@ -344,10 +323,10 @@ if ($event_type === "week") {
 
     foreach ($all_events_json as $event) {
         $exhibitors = CatalogFunctions::logosChecker($event['catalog'], 'PWECatalogCombined', false, null, false);
-
+                
         if (is_array($exhibitors)) {
             foreach ($exhibitors as $exhibitor) {
-                $exhibitor['id_katalogu'] = $id;
+                $exhibitor['id_katalogu'] = $event['catalog'];
                 $merge_exhibitors[] = [
                     'domain' => $event['domain'],
                     'exhibitor' => $exhibitor
@@ -361,7 +340,17 @@ if ($event_type === "week") {
     $exhibitors_logotypes = array_column($merge_exhibitors, 'exhibitor');
     $front_logos = array_slice($exhibitors_logotypes, 0, 19);
     $remaining_logos = array_slice($exhibitors_logotypes, 19);
-    $catalog_count = ceil(count($exhibitors_logotypes) / 100) * 100;
+
+    $duplicates = [];
+    $unique_logotypes = [];
+
+    foreach ($merge_exhibitors as $item) {
+        $logo = $item['exhibitor']['URL_logo_wystawcy'];
+        if (!isset($duplicates[$logo])) {
+            $duplicates[$logo] = true;
+            $unique_logotypes[] = $item;
+        }
+    }
 
     $visitors = 0;
     $exhibitors = 0;
@@ -373,215 +362,154 @@ if ($event_type === "week") {
         $area += (int)$event['area'];
     }
 
-    // Zaokrąglanie do dziesiątek w górę
-    $visitors = ceil($visitors / 1000) * 1000;
-    $exhibitors = ceil($exhibitors / 10) * 10;
-    $area = !empty(get_post_meta($post_id, 'events_week_area', true)) ? get_post_meta($post->ID, 'events_week_area', true) : ceil($area / 10) * 10;
+    $visitors = !empty(get_post_meta($post_id, 'events_week_visitors', true)) ? get_post_meta($post_id, 'events_week_visitors', true) : ceil($visitors / 1000) * 1000;
+    $visitors_foreign = !empty(get_post_meta($post_id, 'events_week_visitors_foreign', true)) ? get_post_meta($post_id, 'events_week_visitors_foreign', true) : ceil(($visitors * 0.09) / 10) * 10;
+    $exhibitors = !empty(get_post_meta($post_id, 'events_week_exhibitors', true)) ? get_post_meta($post_id, 'events_week_exhibitors', true) : ceil($exhibitors / 10) * 10;
+    $area = !empty(get_post_meta($post_id, 'events_week_area', true)) ? get_post_meta($post_id, 'events_week_area', true) : ceil($area / 10) * 10;
 
-    // Obliczenie 9% odwiedzających jako liczba zagranicznych
-    $foreign_visitors = ceil(($visitors * 0.09) / 10) * 10;
+    $increase_percent = !empty(get_post_meta($post_id, 'events_week_percent', true)) ? get_post_meta($post_id, 'events_week_percent', true) : 30;
 
-    $increase_percent = !empty(get_post_meta($post_id, 'events_week_percent', true)) ? get_post_meta($post->ID, 'events_week_percent', true) : 30;
+    $color_1 = !empty(get_post_meta($post_id, 'events_week_color_1', true)) ? get_post_meta($post_id, 'events_week_color_1', true) : 'black';
+    $color_2 = !empty(get_post_meta($post_id, 'events_week_color_2', true)) ? get_post_meta($post_id, 'events_week_color_2', true) : 'black';
 
-    $color_1 = !empty(get_post_meta($post_id, 'events_week_color_1', true)) ? get_post_meta($post->ID, 'events_week_color_1', true) : 'black';
-    $color_2 = !empty(get_post_meta($post_id, 'events_week_color_2', true)) ? get_post_meta($post->ID, 'events_week_color_2', true) : 'black';
-
-    $events_week_halls_image_url = !empty(get_post_meta($post->ID, 'events_week_halls_image_url', true)) ? get_post_meta($post->ID, 'events_week_halls_image_url', true) : '';
+    $events_week_halls_image_url = !empty(get_post_meta($post_id, 'events_week_halls_image_url', true)) ? get_post_meta($post_id, 'events_week_halls_image_url', true) : '';
     
+    $header_image_url = !empty(get_post_meta($post_id, '_header_image', true)) ? get_post_meta($post_id, '_header_image', true) : '';
+    $header_bg = !empty($header_image_url) ? 'url('. $header_image_url .')' : '#464646';
+
+    $rotate_logo = (count($all_events_json) < 4) ? 'inherit' : 'rotate(-90deg)';
+    $width_logo = (count($all_events_json) < 4) ? '300px' : '200px';
+
     $output .= '
     <style>
         .dont-show {
             display: none !important;
         }
-        .single-event__slider-header {
+
+        .single-event__header {
             position: relative;
-            width: 100vw;
-            max-width: 100vw;
-            height: 500px;
             overflow: hidden;
-            font-family: "Montserrat", Arial, sans-serif;
-            background: #151515;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px;
+            background: '. $header_bg .';
         }
-        .single-event__slider-header-track {
+
+        .single-event__header .single-event__header-stripes {
             display: flex;
             height: 100%;
-            transition: transform 0.7s cubic-bezier(.4,0,.2,1);
-            will-change: transform;
+            width: 100%;
         }
-        .single-event__slider-header-slide {
-            width: 100vw;
-            flex-shrink: 0;
-            height: 100%;
-            position: relative;
-        }
-        .single-event__slider-header-slide-bg {
-            position: absolute;
-            inset: 0;
+
+        .single-event__header .single-event__header-stripe {
+            flex: 1;
             background-size: cover;
             background-position: center;
-            z-index: 1;
+            position: relative;
+            transform: skew(-15deg);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            padding-top: 100px;
+            margin: 0;
+            border-left: 2px solid #fb5607;
+            box-shadow:
+                inset 20px 0 40px rgba(0,0,0,0.6),
+                20px 0 40px rgba(0,0,0,0.6);
         }
-        .single-event__slider-header-slide-content {
-            position: absolute;
-            z-index: 2;
-            left: 0;
-            top: 0;
+        .single-event__header .single-event__header-stripe:last-child {
+            border-right: 2px solid #fb5607;
+        }
+        .single-event__header-stripe-container {
             width: 100%;
             height: 100%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 36px 8vw 36px 8vw;
-            box-sizing: border-box;
+            justify-content: center;
+            align-items: self-start;
         }
-        .single-event__slider-header-slide-box {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            background: rgb(22 22 22 / 40%);
-            border-radius: 20px;
-            box-shadow: 0 8px 36px 0 rgba(0,0,0,0.18);
-            color: #fff;
-            padding: 54px 32px 54px 36px;
-            max-width: 650px;
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
-        }
-        .single-event__slider-header-slide-box h2 {
-            font-size: 2.1rem;
-            font-weight: 800;
-            margin: 0;
-            color: white;
-            text-align: left;
-            text-transform: uppercase;
-        }
-        .single-event__slider-header-slide-box .single-event__slider-header-slide-date {
-            display: flex;
-            align-items: center;
-            font-size: 20px;
-            margin: 0;
-            background: #ffffff;
-            width: fit-content;
-            padding: 10px;
-            color: black;
-            border-radius: 4px;
-            font-weight: 500;
-
-        }
-        .single-event__slider-header-slide-box .single-event__slider-header-slide-date::before {
-            content: "";
-            display: inline-block;
-            width: 21px; height: 21px;
-            background: url("https://fonts.gstatic.com/s/i/materialicons/location_on/v6/24px.svg") no-repeat center;
-            filter: brightness(1) invert(0);
-            background-size: contain;
-            margin-right: 7px;
-        }
-        .single-event__slider-header-slide-box a {
-            width: fit-content;
-            background: #fff;
-            color: #171717;
-            padding: 12px 26px;
-            font-weight: 700;
-            border-radius: 13px;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 14px 0 rgba(0,0,0,0.08);
-            transition: background 0.2s;
-        }
-        .single-event__slider-header-slide-box a:hover {
-            background: #f6f6f6;
-        }
-        .single-event__slider-header-slide-logos {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-left: 16px;
-        }
-        .single-event__slider-header-slide-logos img {
-            background: #fff;
-            border-radius: 13px;
-            padding: 13px;
-            width: 140px;
-            aspect-ratio: 3/2;
-            object-fit: contain;
-            box-shadow: 0 3px 16px 0 rgba(0,0,0,0.10);
-        }
-        .single-event__slider-header-dots {
-            position: absolute;
-            left: 50%;
-            bottom: 27px;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 9px;
-            z-index: 1;
-        }
-        .single-event__slider-header-dots button {
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.55);
-            border: none;
-            cursor: default;
-            outline: none;
-            transition: background 0.2s;
-            pointer-events: none;
-        }
-        .single-event__slider-header-dots .active {
-            background: #fff;
-            pointer-events: none;
-        }
-
-        @media (max-width: 900px) {
-            .single-event__slider-header-slide-content { flex-direction: column; align-items: flex-start; padding: 30px 6vw; justify-content: center; }
-            .single-event__slider-header-slide-logos { flex-direction: row; margin: 20px auto 0; justify-content: center; }
-            .single-event__slider-header-slide-box { max-width: 100%; padding: 26px 18px; }
-            .single-event__slider-header-slide-logos img { width: 120px; }
-        }
-        @media (max-width: 600px) {
-            .single-event__slider-header, .single-event__slider-header-slide { height: 400px; }
-            .single-event__slider-header-slide-content { padding: 18px 4vw; }
-            .single-event__slider-header-slide-box h2 { font-size: 1.22rem; }
-            .single-event__slider-header-slide-logos img { width: 85px; padding: 6px; }
-            .single-event__slider-header-slide-date { font-size: 16px !important; }
-        }
-
-
-        .single-event__events-logotypes {
-            box-shadow: 0 4px 16px #0002;
-        }
-        .single-event__events-logotypes-wrapper {
-            display: flex;
-            flex-direction: column;
-            max-width: 1200px;
-            padding: 36px 18px;
-            margin: 0 auto;
-            gap: 18px;
-            max-height: 250px;
-            overflow: hidden;
-        }
-        .single-event__events-logotypes-title h3 {
-            margin: 0;
-            font-weight: 700;
-        }
-        .single-event__events-logotypes-items {
-  
-        }
-        .single-event__events-logotypes-logo {
-            margin: 0 18px;
-        }
-        .single-event__events-logotypes-logo img {
-            max-width: 160px;
+        .single-event__header .single-event__header-stripe-logo {
+            transform: '. $rotate_logo .';
+            max-width: '. $width_logo .';
             aspect-ratio: 3 / 2;
+            display: flex;
+            transition: .3s ease;
+            align-items: center;
+        }
+        .single-event__header-stripe:hover .single-event__header-stripe-logo {
+            transform: '. $rotate_logo .' scale(1.1);
+        }
+        .single-event__header .single-event__header-stripe img {
+            width: 100%;
+            max-height: 90%;
             object-fit: contain;
         }
-        .single-event__events-logotypes-logo p {
-            margin: 6px 0 0;
+        .single-event__header .single-event__header-title {
+            background-image:url(https://rfl.warsawexpo.eu/wp-content/uploads/2025/09/bg_stripe_title_events-week.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: absolute;
             text-align: center;
-            line-height: 1.3;
-            font-weight: 600;
-            font-size: 14px;
-            color: black;
+            color: #fff;
+            z-index: 5;
+            bottom: 10%;
+            width: 100%;
+            padding: 30px;
+            border-top: 2px solid #c8c8c8;
+            border-bottom: 2px solid #c8c8c8;
+        }
+        .single-event__header .single-event__header-title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 auto;
+        }
+        .single-event__header .single-event__header-date {
+            font-size: 30px;
+            margin: 0;
+        }
+        @media(min-width: 1800px) {
+            .single-event__header .single-event__header-stripe-logo {
+                max-width: 260px;
+            }
+        }
+        @media(max-width: 960px) {
+            .single-event__header {
+                height: 400px;
+            }
+            .single-event__header .single-event__header-stripe {
+                transform: inherit !important;
+                box-shadow: inherit;
+                border: none !important;
+                padding-top: 0;
+            }
+            .single-event__header .single-event__header-stripe-logo {
+                transform: inherit !important;
+                max-width: 350px;
+                padding: 18px;
+            }
+            .single-event__header .slick-track {
+                height: 100%;
+            }
+            .single-event__header .single-event__header-title h1,
+            .single-event__header .single-event__header-date {
+                font-size: 18px;
+                max-width: 280px;
+                margin: 0 auto;
+            }
+        }
+        @media(max-width: 570px) {
+            .single-event__header {
+                height: 300px;
+            }
+            .single-event__header .single-event__header-stripe-logo {
+                max-width: 300px;
+            }
+            .single-event__header .single-event__header-title {
+                padding: 8px;
+            }
         }
 
 
@@ -651,8 +579,9 @@ if ($event_type === "week") {
             background: #fff;
             border-radius: 32px;
             box-shadow: 0 4px 16px #0002;
-            padding: 36px 38px;
+            padding: 36px;
             gap: 32px;
+            margin-top: 18px;
         }
         .single-event__stats-text {
             flex: 1 1 310px;
@@ -799,13 +728,9 @@ if ($event_type === "week") {
                 margin: 0 auto; 
             }
         }
-
-
-
-
-
-
-
+        .single-event__catalog {
+            margin-top: 36px;
+        }
         .single-event__catalog-columns {
             display: flex;
             gap: 18px;
@@ -815,7 +740,7 @@ if ($event_type === "week") {
             margin: 32px auto;
         }
         .single-event__catalog-title h3 {
-            margin: 36px 0 0;
+            margin: 0;
             text-transform: uppercase;
             text-align: center;
         }
@@ -977,6 +902,8 @@ if ($event_type === "week") {
         }
         .single-event__fairs-item-bg img {
             width: 70%;
+            max-height: 70%;
+            object-fit: contain;
         }
         .single-event__fairs-item-info {
             width: 70%;
@@ -1157,6 +1084,7 @@ if ($event_type === "week") {
         }
         .single-event__exhibitors-fairs-button img {
             width: 80%;
+            max-height: 80%;
             object-fit: contain;
         }
         .single-event__exhibitors-fairs-button.single-event__exhibitors-showall {
@@ -1313,7 +1241,7 @@ if ($event_type === "week") {
 
 
         .single-event__catalog-header {
-            background-image: url('. $header_slider_array[0]['img'] .');
+            background-image: url('. $header_image_url .');
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1351,11 +1279,9 @@ if ($event_type === "week") {
             border-radius: 20px;
         }
 
-
         footer {
             display: inline !important;
         }
-        
     </style>';
 
     while (have_posts()):
@@ -1364,30 +1290,35 @@ if ($event_type === "week") {
         $output .= '
         <div data-parent="true" class="vc_row row-container boomapps_vcrow '. $title .'" data-section="21" itemscope itemtype="http://schema.org/Event">
             <div class="single-event" data-imgready="true">
-                <div class="single-event__wrapper">
+                <div class="single-event__wrapper">';
 
-                    <div id="singleEventSliderHeader" class="single-event__slider-header">
-                        <div class="single-event__slider-header-track"></div>
-                        <div class="single-event__slider-header-dots"></div>
-                    </div>
+                    $output .= '
+                    <div id="singleEventHeader" class="single-event__header">
+                        <div class="single-event__header-stripes">';
 
-                    <div id="singleEventEventsLogotypes" class="single-event__events-logotypes">
-                        <div class="single-event__events-logotypes-wrapper">
-                            <div class="single-event__events-logotypes-items">';
-                            foreach ($all_events_json as $event) {
-                                    $output .= '
-                                    <a target="_blank" href="https://' . $event['domain'] . '/">
-                                        <div class="single-event__events-logotypes-logo">
-                                            <img src="https://' . $event['domain'] . '/doc/logo-color.webp" alt="Trade fair logo ('. $event['domain'] .')">
-                                            <p>' . $event['desc'] . '</p>
-                                        </div>
-                                    </a>';
-                            }
+                        foreach ($all_events_json as $event) {
+                            $domain = $event['domain'];
+                            $name   = $event['name'];
+
                             $output .= '
-                            </div>
-                        </div>
-                    </div>
+                            <div class="single-event__header-stripe" style="background-image:url(https://' . $domain . '/doc/background.webp)">
+                                <a class="single-event__header-stripe-container" href="https://' . $domain . '/" target="_blank">
+                                    <div class="single-event__header-stripe-logo">
+                                        <img src="https://' . $domain . '/doc/logo.webp" alt="' . esc_attr($name) . '">
+                                    </div>
+                                </a>             
+                            </div>';
+                        }
 
+                        $output .= '
+                        </div>
+                        <div class="single-event__header-title">
+                            <h1>' . get_the_title() . '</h1>
+                            <p class="single-event__header-date">'. $custom_format_date .' Poland, Warsaw</p>
+                        </div>
+                    </div>';
+
+                    $output .= '
                     <div class="single-event__main-content">
 
                         <div id="singleEventDescription" class="single-event__description">
@@ -1401,62 +1332,13 @@ if ($event_type === "week") {
                                 <div class="single-event__description-text">
                                     <p>'. get_the_content() .'</p>    
                                 </div>
-                                <div class="single-event__description-additional">
-                                    <div class="single-event__description-additional-item">
-                                        <div class="single-event__description-additional-item-icon">
-                                            <img src="/wp-content/plugins/PWElements/includes/calendar/assets/ikona_synergia_branz.png">
-                                            <h5>'. ($lang_pl ? "SYNERGIA BRANŻ" : "INDUSTRY SYNERGY") .'</h5>
-                                        </div>
-                                        <div class="single-event__description-additional-item-text">
-                                            <p>'. ($lang_pl ? "Równoległe wydarzenia tematyczne umożliwiają wymianę wiedzy między różnorodnymi sektorami." : "Parallel thematic events enable the exchange of knowledge between various sectors.") .'</p>
-                                        </div>
-                                    </div>
-                                    <div class="single-event__description-additional-item">
-                                        <div class="single-event__description-additional-item-icon">
-                                            <img src="/wp-content/plugins/PWElements/includes/calendar/assets/ikona_nowoczesna_przestrzen.png">
-                                            <h5>'. ($lang_pl ? "NOWOCZESNA PRZESTRZEŃ" : "MODERN SPACE") .'</h5>
-                                        </div>
-                                        <div class="single-event__description-additional-item-text">
-                                            <p>'. ($lang_pl ? "Równoległe wydarzenia tematyczne umożliwiają wymianę wiedzy między różnorodnymi sektorami." : "Parallel thematic events enable the exchange of knowledge between various sectors.") .'</p>
-                                        </div>
-                                    </div>
-                                    <div class="single-event__description-additional-item">
-                                        <div class="single-event__description-additional-item-icon">
-                                            <img src="/wp-content/plugins/PWElements/includes/calendar/assets/ikona_networking_bez_granic.png">
-                                            <h5>'. ($lang_pl ? "NETWORKING BEZ GRANIC" : "NETWORKING WITHOUT BORDERS") .'</h5>
-                                        </div>
-                                        <div class="single-event__description-additional-item-text">
-                                            <p>'. ($lang_pl ? "Równoległe wydarzenia tematyczne umożliwiają wymianę wiedzy między różnorodnymi sektorami." : "Parallel thematic events enable the exchange of knowledge between various sectors.") .'</p>
-                                        </div>
-                                    </div>
-                                    <div class="single-event__description-additional-item">
-                                        <div class="single-event__description-additional-item-icon">
-                                            <img src="/wp-content/plugins/PWElements/includes/calendar/assets/ikona_innowacje_na_wyciagniecie_reki.png">
-                                            <h5>'. ($lang_pl ? "INNOWACJE NA WYCIĄGNIĘCIE RĘKI" : "INNOVATION AT YOUR FINGERTIPS") .'</h5>
-                                        </div>
-                                        <div class="single-event__description-additional-item-text">
-                                            <p>'. ($lang_pl ? "Równoległe wydarzenia tematyczne umożliwiają wymianę wiedzy między różnorodnymi sektorami." : "Równoległe wydarzenia tematyczne umożliwiają wymianę wiedzy między różnorodnymi sektorami.") .'</p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div> 
                         </div>';
-
-                        if (!empty($events_week_halls_image_url)) {
-                            $output .= '
-                            <div id="singleEventHalls" class="single-event__halls">
-                                <div class="single-event__halls-wrapper">
-                                    <div class="single-event__halls-image">
-                                        <img src="'. $events_week_halls_image_url .'" alt="Halls">
-                                    </div>
-                                </div> 
-                            </div>';
-                        }
 
                         $output .= '
                         <div id="singleEventStats" class="single-event__stats">
                             <div class="single-event__stats-text">
-                                <h3>'. ($lang_pl ? "Statystyki wydarzeń z poprzednich edycji" : "Event statistics from previous editions") .'</h3>
+                                <h3>'. ($lang_pl ? "Statystyki wydarzeń" : "Event statistics") .'</h3>
                                 <p>'. ($lang_pl ? "Łączne przedstawienie kluczowych kategorii, które definiują skalę wydarzenia" : "A combined representation of the key categories that define the scale of the event") .'</p>
                             </div>
                             <div class="single-event__stats-diagram" id="diagram-block">
@@ -1513,7 +1395,7 @@ if ($event_type === "week") {
                                     <img src="/wp-content/plugins/PWElements/includes/calendar/assets/globus-icon.png">
                                 </span>
                                 <div>
-                                    <span class="single-event__stats-count-up" data-target="'. $foreign_visitors .'">0</span>
+                                    <span class="single-event__stats-count-up" data-target="'. $visitors_foreign .'">0</span>
                                     <div class="single-event__stats-caption">'. ($lang_pl ? "W tym z zagranicy" : "Including from abroad") .'</div>
                                 </div>
                                 </div>
@@ -1527,52 +1409,66 @@ if ($event_type === "week") {
                                 </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>';
 
-                        <div id="singleEventCatalog" class="single-event__catalog">
-                            <div class="single-event__catalog-title">
-                                <h3>'. ($lang_pl ? "Wszyscy wystawcy" : "All exhibitors") .'</h3>
-                            </div>
-                            <div class="single-event__catalog-columns">';
-
-                            // Number of logos in each column
-                            $column_logo_counts = [2, 3, 3, 3, 3, 3, 2];
-                            $index = 0;
-
-                            for ($col = 0; $col < 7; $col++) {
-                                $output .= '<div class="single-event__catalog-logo-column col-' . ($col+1) . '">';
-                                for ($j = 0; $j < $column_logo_counts[$col]; $j++) {
-                                    $img = htmlspecialchars($front_logos[$index]['URL_logo_wystawcy']);
-                                    $name = htmlspecialchars($front_logos[$index]['Nazwa_wystawcy']);
-                                    $output .= '
-                                    <div class="single-event__catalog-logo-tile" data-index="'.$index.'">
-                                        <div class="single-event__catalog-flip-card">
-                                            <div class="single-event__catalog-flip-card-inner">
-                                                <div class="single-event__catalog-flip-card-front">
-                                                    <img src="'. $img .'" alt="'. $name .'">
-                                                </div>
-                                                <div class="single-event__catalog-flip-card-back"></div>
-                                            </div>
-                                        </div>
-                                    </div>';
-                                    $index++;
-                                }
-                                $output .= '</div>';
-                            }
+                        if (!empty($exhibitors_logotypes) && count($exhibitors_logotypes) > 40) {
 
                             $output .= '
-                            </div>
+                            <div id="singleEventCatalog" class="single-event__catalog">
+                                <div class="single-event__catalog-title">
+                                    <h3>'. ($lang_pl ? "Wszyscy wystawcy" : "All exhibitors") .'</h3>
+                                </div>
+                                <div class="single-event__catalog-columns">';
 
-                            <div class="single-event__catalog-button">
-                                <button>'. ($lang_pl ? "Zobacz wszystkich<br>wystawców" : "See all<br>exhibitors") .' '. $catalog_count .'+</button>
-                            </div>
+                                // Number of logos in each column
+                                $column_logo_counts = [2, 3, 3, 3, 3, 3, 2];
+                                $index = 0;
 
-                        </div>
+                                for ($col = 0; $col < 7; $col++) {
+                                    $output .= '<div class="single-event__catalog-logo-column col-' . ($col+1) . '">';
+                                    for ($j = 0; $j < $column_logo_counts[$col]; $j++) {
+                                        $img = htmlspecialchars($front_logos[$index]['URL_logo_wystawcy']);
+                                        $name = htmlspecialchars($front_logos[$index]['Nazwa_wystawcy']);
+                                        $output .= '
+                                        <div class="single-event__catalog-logo-tile" data-index="'.$index.'">
+                                            <div class="single-event__catalog-flip-card">
+                                                <div class="single-event__catalog-flip-card-inner">
+                                                    <div class="single-event__catalog-flip-card-front">
+                                                        <img src="'. $img .'" alt="'. $name .'">
+                                                    </div>
+                                                    <div class="single-event__catalog-flip-card-back"></div>
+                                                </div>
+                                            </div>
+                                        </div>';
+                                        $index++;
+                                    }
+                                    $output .= '</div>';
+                                }
+
+                                $output .= '
+                                </div>
+
+                                <div class="single-event__catalog-button">
+                                    <button>'. ($lang_pl ? "Zobacz wszystkich<br>wystawców" : "See all<br>exhibitors") .' '. (ceil(count($unique_logotypes) / 100) * 100) .'+</button>
+                                </div>
+
+                            </div>';
+
+                        }
+
+                        if (!empty($events_week_halls_image_url)) {
+                            $output .= '
+                            <div id="singleEventHalls" class="single-event__halls">
+                                <div class="single-event__halls-wrapper">
+                                    <div class="single-event__halls-image">
+                                        <img src="'. $events_week_halls_image_url .'" alt="Halls">
+                                    </div>
+                                </div> 
+                            </div>';
+                        }
                     
+                        $output .= '
                         <div id="singleEventFairs" class="single-event__fairs">';
-
-                            $fairs_week = get_post_meta($post_id, 'events_week_fairs', true);
-                            $fairs_week = explode(", ", $fairs_week);
 
                             if (count($all_events_json) == 1) {
                                 $events_word_declination = "wydarzenie";
@@ -1737,10 +1633,10 @@ if ($event_type === "week") {
 
                             $atts['conference_cap_domains'] = $domains_string;
 
-                            if (strpos($_SERVER['HTTP_HOST'], 'warsawexpo.eu') !== false || strpos($_SERVER['HTTP_HOST'], 'rfl.warsawexpo.eu') !== false) {
-                                require_once plugin_dir_path(dirname( __DIR__ )) . 'conference-cap/classes/conference-cap-warsawexpo.php';
-                                $output .= PWEConferenceCapWarsawExpo::output($atts, $lang);
-                            }
+                            // if (strpos($_SERVER['HTTP_HOST'], 'warsawexpo.eu') !== false || strpos($_SERVER['HTTP_HOST'], 'rfl.warsawexpo.eu') !== false) {
+                            //     require_once plugin_dir_path(dirname( __DIR__ )) . 'conference-cap/classes/conference-cap-warsawexpo.php';
+                            //     $output .= PWEConferenceCapWarsawExpo::output($atts, $lang);
+                            // }
 
                             $output .= '            
                         </div>
@@ -1844,90 +1740,221 @@ if ($event_type === "week") {
         
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                // HEADER <-----------------------------------------------------------------< 
-                const slides = '. wp_json_encode($header_slider_array) .';
 
-                const track = document.querySelector(".single-event__slider-header-track");
-                const slideCount = slides.length;
-                let currentSlide = 1;
-                let isAnimating = false;
-                let autoSlideInterval = null;
+                // Exhibitors logotypes <-----------------------------------------------------------------< 
+                const tileCount = 19;
+                const allLogos = '.json_encode($remaining_logos).';
 
-                function renderSlides() {
-                    let slidesHtml = "";
-                    slidesHtml += slideHTML(slides[slideCount - 1]);
-                    for (const s of slides) slidesHtml += slideHTML(s);
-                    slidesHtml += slideHTML(slides[0]);
-                    track.innerHTML = slidesHtml;
-                    track.style.transform = "translateX(-100vw)";
-                }
+                // Table of tiles and their current logos
+                const tiles = document.querySelectorAll(".single-event__catalog-logo-tile");
+                let displayedLogos = []; // logo wyświetlane na kafelkach
+                let availableLogos = [...allLogos]; // logo do podmiany
 
-                function slideHTML(s) {
-                    const logos = s.logos.map(function(src) {
-                        return \'<img src="\' + src + \'" alt="logo" />\';
-                    }).join("");
-                    return (
-                        \'<div class="single-event__slider-header-slide">\' +
-                            \'<div class="single-event__slider-header-slide-bg" style="background-image:url(\\\'\' + s.img + \'\\\')"></div>\' +
-                            \'<div class="single-event__slider-header-slide-content">\' +
-                                \'<div class="single-event__slider-header-slide-box">\' +
-                                    \'<h2>\' + s.text + \'</h2>\' +
-                                    \'<div class="single-event__slider-header-slide-date">'. $custom_format_date .' Poland, Warsaw</div>\' +
-                                \'</div>\' +
-                                \'<div class="single-event__slider-header-slide-logos">\' + logos + \'</div>\' +
-                            \'</div>\' +
-                        \'</div>\'
-                    );
-                }
-
-                function renderDots() {
-                    const dotsDiv = document.querySelector(".single-event__slider-header-dots");
-                    let html = "";
-                    for (let i = 0; i < slides.length; i++) {
-                        html += \'<button class="\' + (i + 1 === currentSlide ? "active" : "") + \'" disabled></button>\';
+                // Choose 19 unique logos to start with
+                function pickUniqueLogos(source, n) {
+                    const copy = [...source];
+                    const picked = [];
+                    for(let i=0; i<n && copy.length; i++) {
+                        const idx = Math.floor(Math.random() * copy.length);
+                        picked.push(copy.splice(idx, 1)[0]);
                     }
-                    dotsDiv.innerHTML = html;
+                    return picked;
                 }
 
-                function nextSlide() {
-                    if (isAnimating) return;
-                    currentSlide++;
-                    updateSlide();
-                }
+                // Jeżeli nie ma logotypów → wychodzimy i nic nie robimy
+                if (allLogos.length === 0) {
+                    console.warn("Brak logotypów do wyświetlenia.");
+                } else {
+                    displayedLogos = pickUniqueLogos(availableLogos, tileCount);
+                    // Remove the displayed logo from the available ones
+                    displayedLogos.forEach(logo => {
+                        const idx = availableLogos.findIndex(l => l.URL_logo_wystawcy === logo.URL_logo_wystawcy);
+                        if(idx !== -1) availableLogos.splice(idx, 1);
+                    });
 
-                function updateSlide() {
-                    isAnimating = true;
-                    track.style.transition = "transform 0.7s cubic-bezier(.4,0,.2,1)";
-                    track.style.transform = "translateX(-" + (currentSlide * 100) + "vw)";
-                    renderDots();
-                    setTimeout(function() {
-                        isAnimating = false;
-                        if (currentSlide === slideCount + 1) {
-                            track.style.transition = "none";
-                            currentSlide = 1;
-                            track.style.transform = "translateX(-" + (currentSlide * 100) + "vw)";
-                            renderDots();
+                    // Insert the logo onto the tiles
+                    tiles.forEach((tile, idx) => {
+                        let logo = displayedLogos[idx];
+                        tile.querySelector(".single-event__catalog-flip-card-front").innerHTML = `<img src="${logo.URL_logo_wystawcy}" alt="${logo.Nazwa_wystawcy}">`;
+                        // Losujemy pierwsze back z puli (mogą być już wyczerpane – wtedy znowu miksujemy całość)
+                        let backLogo = pickUniqueLogos(availableLogos, 1)[0] || allLogos[Math.floor(Math.random() * allLogos.length)];
+                        tile.querySelector(".single-event__catalog-flip-card-back").innerHTML = `<img src="${backLogo.URL_logo_wystawcy}" alt="${backLogo.Nazwa_wystawcy}">`;
+                    });
+
+                    let isFlipping = false;
+                    let flipState = Array(tiles.length).fill(false); // zapamiętuje stan kafelków
+
+                    function flipRandomTiles() {
+                        if(isFlipping) return;
+                        isFlipping = true;
+
+                        // Get the indexes of all tiles
+                        const tileIndices = Array.from({length: tiles.length}, (_, i) => i);
+
+                        // Randomly select a unique tile index
+                        const shuffled = tileIndices.sort(() => 0.5 - Math.random());
+                        const selected = shuffled.slice(0, 1);
+
+                        selected.forEach(tileIdx => {
+                            const tile = tiles[tileIdx];
+                            const frontDiv = tile.querySelector(".single-event__catalog-flip-card-front");
+                            const backDiv = tile.querySelector(".single-event__catalog-flip-card-back");
+
+                            // Randomize new logo on back (unique)
+                            let unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
+                            if(unused.length === 0) {
+                                availableLogos.push(displayedLogos[tileIdx]);
+                                unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
+                            }
+                            let newBackLogo = pickUniqueLogos(unused, 1)[0] || displayedLogos[tileIdx];
+
+                            // Change the logo on the "other side"
+                            if (!flipState[tileIdx]) {
+                                backDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
+                                tile.classList.add("flipped");
+                            } else {
+                                frontDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
+                                tile.classList.remove("flipped");
+                            }
+                            flipState[tileIdx] = !flipState[tileIdx];
+
+                            // After the animation is finished, replace the logo from the pool (asynchronously)
+                            setTimeout(() => {
+                                availableLogos.push(displayedLogos[tileIdx]);
+                                displayedLogos[tileIdx] = newBackLogo;
+                                const idxToRemove = availableLogos.findIndex(l => l.URL_logo_wystawcy === newBackLogo.URL_logo_wystawcy);
+                                if(idxToRemove !== -1) availableLogos.splice(idxToRemove, 1);
+
+                                // Nie ustawiaj isFlipping=false tutaj, bo może być kilka setTimeoutów!
+                            }, 700);
+                        });
+
+                        // Unlock the flip after 0.7s (when the longest flip ends)
+                        setTimeout(() => {
+                            isFlipping = false;
+                        }, 700);
+                    }
+
+                    // Function to flip a specific tile
+                    function flipTile(tileIdx) {
+                        const tile = tiles[tileIdx];
+                        const frontDiv = tile.querySelector(".single-event__catalog-flip-card-front");
+                        const backDiv = tile.querySelector(".single-event__catalog-flip-card-back");
+
+                        // Randomize new logo on back (unique)
+                        let unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
+                        if(unused.length === 0) {
+                            availableLogos.push(displayedLogos[tileIdx]);
+                            unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
                         }
-                    }, 720);
+                        let newBackLogo = pickUniqueLogos(unused, 1)[0] || displayedLogos[tileIdx];
+
+                        // Change the logo on the "other side"
+                        if (!flipState[tileIdx]) {
+                            backDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
+                            tile.classList.add("flipped");
+                        } else {
+                            frontDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
+                            tile.classList.remove("flipped");
+                        }
+                        flipState[tileIdx] = !flipState[tileIdx];
+
+                        setTimeout(() => {
+                            availableLogos.push(displayedLogos[tileIdx]);
+                            displayedLogos[tileIdx] = newBackLogo;
+                            const idxToRemove = availableLogos.findIndex(l => l.URL_logo_wystawcy === newBackLogo.URL_logo_wystawcy);
+                            if(idxToRemove !== -1) availableLogos.splice(idxToRemove, 1);
+                        }, 700);
+                    }
+
+                    // Click handling
+                    tiles.forEach((tile, idx) => {
+                        tile.addEventListener("click", function() {
+                            flipTile(idx);
+                        });
+                    });
+                    
+                    setInterval(flipRandomTiles, 2500);
+
                 }
 
-                function resetAutoSlide() {
-                    clearInterval(autoSlideInterval);
-                    autoSlideInterval = setInterval(nextSlide, 5000);
+                // Slick slider (Header mobile) <-----------------------------------------------------------------<
+                const fairsLogotypesSlider = document.querySelector(".single-event__header-stripes");
+
+                if (fairsLogotypesSlider) {
+                    jQuery(document).ready(function($) {
+                        const mediaQuery = window.matchMedia("(max-width: 960px)");
+
+                        function initOrDestroySlider(e) {
+                            if (e.matches) {
+                                // Jeśli szerokość okna <= 960px i slick nie jest jeszcze zainicjowany
+                                if (!$(".single-event__header-stripes").hasClass("slick-initialized")) {
+                                    $(".single-event__header-stripes").slick({
+                                        infinite: true,
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1,
+                                        autoplay: true,
+                                        autoplaySpeed: 2000,
+                                        swipeToSlide: true,
+                                        cssEase: "linear",
+                                        fade: true
+                                    });
+                                }
+                            } else {
+                                // Jeśli powyżej 960px i slick już działa → wyłącz
+                                if ($(".single-event__header-stripes").hasClass("slick-initialized")) {
+                                    $(".single-event__header-stripes").slick("unslick");
+                                }
+                            }
+                        }
+
+                        // Wywołaj przy starcie
+                        initOrDestroySlider(mediaQuery);
+                        // Nasłuchuj zmian szerokości
+                        mediaQuery.addListener(initOrDestroySlider);
+                    });
                 }
 
-                renderSlides();
-                renderDots();
-                resetAutoSlide();
-
-                window.addEventListener("load", function() {
-                    track.style.transition = "none";
-                    track.style.transform = "translateX(-" + (currentSlide * 100) + "vw)";
-                    renderDots();
-                });
-
-                window.addEventListener("blur", function() { clearInterval(autoSlideInterval); });
-                window.addEventListener("focus", resetAutoSlide);
+                // Slick slider (partners) <-----------------------------------------------------------------< 
+                const fairsItemSlider = document.querySelector(".single-event__fairs-item-slider");
+                if (fairsItemSlider) {
+                    jQuery(document).ready(function($) {
+                        $(".single-event__fairs-item-slider").slick({
+                            infinite: true,
+                            slidesToShow: 10,
+                            slidesToScroll: 1,
+                            autoplay: true,
+                            autoplaySpeed: 2000,
+                            swipeToSlide: true,
+                            responsive: [
+                                {
+                                    breakpoint: 1024,
+                                    settings: {
+                                        slidesToShow: 9,
+                                    }
+                                },
+                                {
+                                    breakpoint: 768,
+                                    settings: {
+                                        slidesToShow: 8,
+                                    }
+                                },
+                                {
+                                    breakpoint: 600,
+                                    settings: {
+                                        slidesToShow: 6,
+                                    }
+                                },
+                                {
+                                    breakpoint: 480,
+                                    settings: {
+                                        slidesToShow: 4,
+                                    }
+                                }
+                            ]
+                        });
+                    });
+                }
 
                 // COUNTER ANIMATION
                 function animateCounter(element, target, duration = 1100) {
@@ -1980,234 +2007,17 @@ if ($event_type === "week") {
                 window.addEventListener("scroll", triggerStatsAnimations);
                 window.addEventListener("load", triggerStatsAnimations);
 
-
-                // Exhibitors logotypes <-----------------------------------------------------------------< 
-                const tileCount = 19;
-                const allLogos = '.json_encode($remaining_logos).';
-
-                // Table of tiles and their current logos
-                const tiles = document.querySelectorAll(".single-event__catalog-logo-tile");
-                let displayedLogos = []; // logo wyświetlane na kafelkach
-                let availableLogos = [...allLogos]; // logo do podmiany
-
-                // Choose 19 unique logos to start with
-                function pickUniqueLogos(source, n) {
-                    const copy = [...source];
-                    const picked = [];
-                    for(let i=0; i<n && copy.length; i++) {
-                        const idx = Math.floor(Math.random() * copy.length);
-                        picked.push(copy.splice(idx, 1)[0]);
-                    }
-                    return picked;
-                }
-
-                displayedLogos = pickUniqueLogos(availableLogos, tileCount);
-                // Remove the displayed logo from the available ones
-                displayedLogos.forEach(logo => {
-                    const idx = availableLogos.findIndex(l => l.URL_logo_wystawcy === logo.URL_logo_wystawcy);
-                    if(idx !== -1) availableLogos.splice(idx, 1);
-                });
-
-                // Insert the logo onto the tiles
-                tiles.forEach((tile, idx) => {
-                    let logo = displayedLogos[idx];
-                    tile.querySelector(".single-event__catalog-flip-card-front").innerHTML = `<img src="${logo.URL_logo_wystawcy}" alt="${logo.Nazwa_wystawcy}">`;
-                    // Losujemy pierwsze back z puli (mogą być już wyczerpane – wtedy znowu miksujemy całość)
-                    let backLogo = pickUniqueLogos(availableLogos, 1)[0] || allLogos[Math.floor(Math.random() * allLogos.length)];
-                    tile.querySelector(".single-event__catalog-flip-card-back").innerHTML = `<img src="${backLogo.URL_logo_wystawcy}" alt="${backLogo.Nazwa_wystawcy}">`;
-                });
-
-                let isFlipping = false;
-                let flipState = Array(tiles.length).fill(false); // zapamiętuje stan kafelków
-
-                function flipRandomTiles() {
-                    if(isFlipping) return;
-                    isFlipping = true;
-
-                    // Get the indexes of all tiles
-                    const tileIndices = Array.from({length: tiles.length}, (_, i) => i);
-
-                    // Randomly select a unique tile index
-                    const shuffled = tileIndices.sort(() => 0.5 - Math.random());
-                    const selected = shuffled.slice(0, 1);
-
-                    selected.forEach(tileIdx => {
-                        const tile = tiles[tileIdx];
-                        const frontDiv = tile.querySelector(".single-event__catalog-flip-card-front");
-                        const backDiv = tile.querySelector(".single-event__catalog-flip-card-back");
-
-                        // Randomize new logo on back (unique)
-                        let unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
-                        if(unused.length === 0) {
-                            availableLogos.push(displayedLogos[tileIdx]);
-                            unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
-                        }
-                        let newBackLogo = pickUniqueLogos(unused, 1)[0] || displayedLogos[tileIdx];
-
-                        // Change the logo on the "other side"
-                        if (!flipState[tileIdx]) {
-                            backDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
-                            tile.classList.add("flipped");
-                        } else {
-                            frontDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
-                            tile.classList.remove("flipped");
-                        }
-                        flipState[tileIdx] = !flipState[tileIdx];
-
-                        // After the animation is finished, replace the logo from the pool (asynchronously)
-                        setTimeout(() => {
-                            availableLogos.push(displayedLogos[tileIdx]);
-                            displayedLogos[tileIdx] = newBackLogo;
-                            const idxToRemove = availableLogos.findIndex(l => l.URL_logo_wystawcy === newBackLogo.URL_logo_wystawcy);
-                            if(idxToRemove !== -1) availableLogos.splice(idxToRemove, 1);
-
-                            // Nie ustawiaj isFlipping=false tutaj, bo może być kilka setTimeoutów!
-                        }, 700);
-                    });
-
-                    // Unlock the flip after 0.7s (when the longest flip ends)
-                    setTimeout(() => {
-                        isFlipping = false;
-                    }, 700);
-                }
-
-                // Function to flip a specific tile
-                function flipTile(tileIdx) {
-                    const tile = tiles[tileIdx];
-                    const frontDiv = tile.querySelector(".single-event__catalog-flip-card-front");
-                    const backDiv = tile.querySelector(".single-event__catalog-flip-card-back");
-
-                    // Randomize new logo on back (unique)
-                    let unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
-                    if(unused.length === 0) {
-                        availableLogos.push(displayedLogos[tileIdx]);
-                        unused = availableLogos.filter(l => !displayedLogos.find(d => d.URL_logo_wystawcy === l.URL_logo_wystawcy));
-                    }
-                    let newBackLogo = pickUniqueLogos(unused, 1)[0] || displayedLogos[tileIdx];
-
-                    // Change the logo on the "other side"
-                    if (!flipState[tileIdx]) {
-                        backDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
-                        tile.classList.add("flipped");
-                    } else {
-                        frontDiv.innerHTML = `<img src="${newBackLogo.URL_logo_wystawcy}" alt="${newBackLogo.Nazwa_wystawcy}">`;
-                        tile.classList.remove("flipped");
-                    }
-                    flipState[tileIdx] = !flipState[tileIdx];
-
-                    setTimeout(() => {
-                        availableLogos.push(displayedLogos[tileIdx]);
-                        displayedLogos[tileIdx] = newBackLogo;
-                        const idxToRemove = availableLogos.findIndex(l => l.URL_logo_wystawcy === newBackLogo.URL_logo_wystawcy);
-                        if(idxToRemove !== -1) availableLogos.splice(idxToRemove, 1);
-                    }, 700);
-                }
-
-                // Click handling
-                tiles.forEach((tile, idx) => {
-                    tile.addEventListener("click", function() {
-                        flipTile(idx);
-                    });
-                });
-                
-                setInterval(flipRandomTiles, 2500);
-
-                // Slick slider (fairs) <-----------------------------------------------------------------< 
-                const fairsLogotypesSlider = document.querySelector(".single-event__events-logotypes-items");
-                if (fairsLogotypesSlider) {
-                    jQuery(document).ready(function($) {
-                        $(".single-event__events-logotypes-items").slick({
-                            infinite: true,
-                            slidesToShow: 6,
-                            slidesToScroll: 1,
-                            autoplay: true,
-                            autoplaySpeed: 2000,
-                            swipeToSlide: true,
-                            responsive: [
-                                {
-                                    breakpoint: 1024,
-                                    settings: {
-                                        slidesToShow: 5,
-                                    }
-                                },
-                                {
-                                    breakpoint: 768,
-                                    settings: {
-                                        slidesToShow: 4,
-                                    }
-                                },
-                                {
-                                    breakpoint: 600,
-                                    settings: {
-                                        slidesToShow: 3,
-                                    }
-                                },
-                                {
-                                    breakpoint: 480,
-                                    settings: {
-                                        slidesToShow: 2,
-                                    }
-                                }
-                            ]
-                        });
-                    });
-                }
-
-                // Slick slider (partners) <-----------------------------------------------------------------< 
-                const fairsItemSlider = document.querySelector(".single-event__fairs-item-slider");
-                if (fairsItemSlider) {
-                    jQuery(document).ready(function($) {
-                        $(".single-event__fairs-item-slider").slick({
-                            infinite: true,
-                            slidesToShow: 10,
-                            slidesToScroll: 1,
-                            autoplay: true,
-                            autoplaySpeed: 2000,
-                            swipeToSlide: true,
-                            responsive: [
-                                {
-                                    breakpoint: 1024,
-                                    settings: {
-                                        slidesToShow: 9,
-                                    }
-                                },
-                                {
-                                    breakpoint: 768,
-                                    settings: {
-                                        slidesToShow: 8,
-                                    }
-                                },
-                                {
-                                    breakpoint: 600,
-                                    settings: {
-                                        slidesToShow: 6,
-                                    }
-                                },
-                                {
-                                    breakpoint: 480,
-                                    settings: {
-                                        slidesToShow: 4,
-                                    }
-                                }
-                            ]
-                        });
-                    });
-                }
-
                 // Exhibitors logotypes (all) <-----------------------------------------------------------------< 
                 const catalogButton = document.querySelector(".single-event__catalog-button");
                 const mainContent = document.querySelector(".single-event__main-content");
-                const eventsLogotypes = document.querySelector(".single-event__events-logotypes");
                 const exhibitorsCotainer = document.querySelector(".single-event__exhibitors");
-                const sliderHeader = document.querySelector(".single-event__slider-header");
-                
-                const hideAllExhibitorsButton = document.querySelector("#hideAllExhibitors button");
+                const header = document.querySelector(".single-event__header");
+                const hideAllExhibitorsButton = document.querySelector(".single-event__exhibitors-hideall");
 
                 // Sprawdzenie, czy URL zawiera parametr ?catalog
                 if (window.location.search.includes("catalog")) {
                     mainContent.style.display = "none";
-                    eventsLogotypes.style.display = "none";
-                    sliderHeader.style.display = "none";
+                    header.style.display = "none";
                     exhibitorsCotainer.style.display = "block";
 
                     // Przewijanie do góry strony
@@ -2225,8 +2035,7 @@ if ($event_type === "week") {
 
                         // Ukrycie głównej treści i pokazanie kontenera wystawców
                         mainContent.style.display = "none";
-                        eventsLogotypes.style.display = "none";
-                        sliderHeader.style.display = "none";
+                        header.style.display = "none";
                         exhibitorsCotainer.style.display = "block";
 
                         // Przewijanie do góry strony
@@ -2239,15 +2048,14 @@ if ($event_type === "week") {
                         // Ukrycie katalogu i przywrócenie wcześniejszej zawartości
                         exhibitorsCotainer.style.display = "none";
                         mainContent.style.display = "block";
-                        sliderHeader.style.display = "block";
-                        eventsLogotypes.style.display = "block";
+                        header.style.display = "block";
 
                         // Usunięcie parametru ?catalog z URL
-                        const currentUrl = window.location.href;
-                        const newUrl = currentUrl.replace(/[\?&]catalog/, ""); // Usuwanie parametru "catalog"
-                        
+                        const url = new URL(window.location.href);
+                        url.searchParams.delete("catalog"); // usuwa parametr
+
                         // Zmiana URL w przeglądarce bez przeładowania strony
-                        window.history.pushState({ path: newUrl }, "", newUrl);
+                        window.history.pushState({ path: url.href }, "", url.href);
                     });
                 }
 
@@ -2280,11 +2088,6 @@ if ($event_type === "week") {
                     // // Ukryj przycisk po kliknięciu!
                     // this.style.display = "none";
                 });
-
-
-
-
-
 
                 // Find all exhibitor cards
                 const exhibitorCards = document.querySelectorAll(".single-event__exhibitors-card");
@@ -3506,10 +3309,10 @@ if ($event_type === "week") {
                             <meta itemprop="telephone" content="'. get_post_meta($post_id, 'organizer_phone', true) .'">';
                             if ($organizer === "warsaw") {
                                 $output .= '
-                                <img class="wp-image-95078 ptak-logo-item" src="/wp-content/plugins/pwe-media/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
+                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
                             }  else if (strpos(mb_strtolower($organizer), "łódź") !== false) {
                                 $output .= '
-                                <img class="wp-image-95078 ptak-logo-item" src="/wp-content/plugins/pwe-media/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
+                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
                             }
                         $output .= '
                         </div>
