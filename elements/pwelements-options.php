@@ -106,6 +106,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'two_cols.php';
         require_once plugin_dir_path(__FILE__) . 'timeline-stats.php';
         require_once plugin_dir_path(__FILE__) . 'popup.php';
+        require_once plugin_dir_path(__FILE__) . 'news-summary.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -284,6 +285,7 @@ class PWElements {
                         ...PWElementMedals::initElements(),
                         ...PWElementTimelineStats::initElements(),
                         ...PWElementPopup::initElements(),
+                        ...PWElementNewsSummary::initElements(),
                         array(
                             'type' => 'param_group',
                             'group' => 'Replace Strings',
@@ -391,6 +393,7 @@ class PWElements {
             'Why its worth'                  => 'PWElementWhyItsWorth',
             'Qr checker'                     => 'PWElementQRChekcer',
             'Popup'                          => 'PWElementPopup',
+            'News Summary'                          => 'PWElementNewsSummary',
         );
     }
 
@@ -473,6 +476,7 @@ class PWElements {
             'PWElementTwoCols'          => 'two_cols.php',
             'PWElementTimelineStats'    => 'timeline-stats.php',
             'PWElementPopup'            => 'popup.php',
+            'PWElementNewsSummary'      => 'news-summary.php',
         );
     }
 

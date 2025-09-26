@@ -27,14 +27,12 @@ class PWElementVoucher extends PWElements {
         $btn_border = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], self::$accent_color) . '!important';
         $darker_btn_color = self::adjustBrightness($btn_color, -20);
 
-        $domain = parse_url(site_url(), PHP_URL_HOST);
-        $fair_data = PWECommonFunctions::get_database_fairs_data($domain);
-        $fair_group = strtolower($fair_data[0]->fair_group ?? 'fallback');
+        $fair_group = do_shortcode('[trade_fair_group]');
 
-        if($fair_group === 'gr2') {
+        if($fair_group === 'gr2' || $fair_group === 'gr3') {
             return;
         }
-
+        
         $output = '
             <style>
                 .pwelement_'. self::$rnd_id .' .pwe-btn {

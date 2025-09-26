@@ -542,19 +542,28 @@ class PWElementTwoCols extends PWElements {
           if (!empty($cap_logotypes_data)) {
             if (strpos($base_directory, 'Rotator 2') !== false) {
               $logotypy = [];
-              foreach ($cap_logotypes_data as $logo_data) {
-                if ($logo_data->logos_type === "partner-targow" ||
-                    $logo_data->logos_type === "patron-medialny" ||
-                    $logo_data->logos_type === "partner-strategiczny" ||
-                    $logo_data->logos_type === "partner-honorowy" ||
-                    $logo_data->logos_type === "principal-partner" ||
-                    $logo_data->logos_type === "industry-media-partner" ||
-                    $logo_data->logos_type === "partner-branzowy" ||
-                    $logo_data->logos_type === "partner-merytoryczny") {
-                  $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+              if (do_shortcode('[trade_fair_group]') === 'gr2') {
+                foreach ($cap_logotypes_data as $logo_data) {
+                  if ($logo_data->logos_type === "partner-merytoryczny") {
+                    $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+                  }
+                }
+              } else {
+                foreach ($cap_logotypes_data as $logo_data) {
+                  if ($logo_data->logos_type === "partner-targow" ||
+                      $logo_data->logos_type === "patron-medialny" ||
+                      $logo_data->logos_type === "partner-strategiczny" ||
+                      $logo_data->logos_type === "partner-honorowy" ||
+                      $logo_data->logos_type === "principal-partner" ||
+                      $logo_data->logos_type === "industry-media-partner" ||
+                      $logo_data->logos_type === "partner-branzowy" ||
+                      $logo_data->logos_type === "partner-merytoryczny") {
+                    $logotypy[] = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+                  }
                 }
               }
             }
+            
             $logotypes_catalogs_array = explode(',', $base_directory);
             foreach ($cap_logotypes_data as $logo_data) {
                 if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {

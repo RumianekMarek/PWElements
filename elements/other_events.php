@@ -755,8 +755,13 @@ class PWElementOtherEvents extends PWElements {
 
             foreach ($fairs_json as $fair) {
                 // Getting start and end dates
-                $date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
-                $date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
+                $date_start = !empty($fair['date_start'])
+                    ? DateTime::createFromFormat('Y/m/d', $fair['date_start'])->getTimestamp()
+                    : null;
+
+                $date_end = !empty($fair['date_end'])
+                    ? DateTime::createFromFormat('Y/m/d', $fair['date_end'])->getTimestamp()
+                    : null;
 
                 // Checking if the date is in the range
                 if ($date_start && $date_end) {
