@@ -27,46 +27,70 @@ class CatalogFunctions {
      * @return array
      */
     public static function logosChecker($katalog_id, $PWECatalogFull = 'PWECatalogFull', $pwe_catalog_random = false, $file_changer = null, $catalog_display_duplicate = false){
-        $today = new DateTime();
-        $formattedDate = $today->format('Y-m-d');
-        $token = md5("#22targiexpo22@@@#".$formattedDate);
-        $exh_catalog_address = PWECommonFunctions::get_database_meta_data('exh_catalog_address');
-        $canUrl = $exh_catalog_address . $token . '&id_targow=' . $katalog_id;
+        
+        $basic_wystawcy = [];
+        $data = [];
 
-        if ( current_user_can( 'administrator' ) ) {
-            if (!empty($katalog_id)) {
-                echo '<script>console.log("'.$canUrl.'")</script>';
-            } else {
+        // Budowanie URL
+        $today = new DateTime();
+        $formatted_date = $today->format('Y-m-d');
+        $token = md5("#22targiexpo22@@@#" . $formatted_date);
+        $exh_catalog_address = PWECommonFunctions::get_database_meta_data('exh_catalog_address');
+        $can_url = $exh_catalog_address . $token . '&id_targow=' . $katalog_id;
+
+        if (current_user_can('administrator')) {
+            if (empty($katalog_id)) {
                 echo '<script>console.error("Brak ID katalogu wystawców")</script>';
             }
         }
 
-        if (!empty($katalog_id)) {
+        // Try local file first
+        $local_file = $_SERVER['DOCUMENT_ROOT'] . '/doc/pwe-exhibitors.json';
+
+        if (file_exists($local_file)) {
+            $json = file_get_contents($local_file);
+            $data = json_decode($json, true);
+
+            if (is_array($data) && isset($data[$katalog_id]['Wystawcy'])) {
+                $basic_wystawcy = $data[$katalog_id]['Wystawcy'];
+
+                if (current_user_can('administrator')) {
+                    echo '<script>console.log("Dane pobrane z lokalnego pliku (https://'.  $_SERVER['HTTP_HOST'] .'/doc/pwe-exhibitors.json) dla katalogu ' . $katalog_id . '")</script>';
+                };
+            }
+        } 
+
+        // If local missing/invalid → get external JSON
+        if (empty($basic_wystawcy) && !empty($katalog_id)) {
             try {
-                $json = @file_get_contents($canUrl);
+                $json = @file_get_contents($can_url);
+
                 if ($json === false) {
-                    throw new Exception('Nie można pobrać danych JSON.');
+                    throw new Exception('Nie można pobrać danych JSON z zewnętrznego źródła.');
                 }
 
                 $data = json_decode($json, true);
-                if ($data === null) {
+                if (!is_array($data)) {
                     throw new Exception('Błąd dekodowania danych JSON.');
                 }
 
-                $basic_wystawcy = reset($data)['Wystawcy'];
+                $basic_wystawcy = reset($data)['Wystawcy'] ?? [];
+
+                if (current_user_can('administrator')) {
+                    echo '<script>console.log("Dane pobrane z zewnętrznego API '. $can_url .'")</script>';
+                }
+
             } catch (Exception $e) {
-                // echo '<script>console.error("Błąd w logosChecker: ' . addslashes($e->getMessage()) . '")</script>';
+                error_log("[" . date('Y-m-d H:i:s') . "] logosChecker błąd: " . $e->getMessage());
                 $basic_wystawcy = [];
             }
-        } else {
-            $basic_wystawcy = [];
         }
 
         $logos_array = array();
 
         $basic_wystawcy = (!empty($file_changer)) ? self::orderChanger($file_changer, $basic_wystawcy) : $basic_wystawcy;
 
-        if($basic_wystawcy != '') {
+        if(!empty($basic_wystawcy)) {
             if(!$catalog_display_duplicate){
                 $basic_wystawcy = array_reduce($basic_wystawcy, function($acc, $curr) {
                 $name = $curr['Nazwa_wystawcy'];
@@ -109,9 +133,6 @@ class CatalogFunctions {
                     if($wystawca['URL_logo_wystawcy']){
                         $logos_array[] = $wystawca;
                         $i++;
-                        // if($i >=21){
-                        //     break;
-                        // }
                     }
                 }
                 break;

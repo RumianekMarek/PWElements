@@ -83,31 +83,46 @@ class PWEMapDynamic extends PWEMap {
         $pwe_statistics_year_prev = do_shortcode('[pwe_statistics_year_prev]');
         $map_year_previous        = !empty($pwe_statistics_year_prev) ? $pwe_statistics_year_prev : $map_year_previous;
 
+        $polish_visitors = $map_number_visitors - $map_number_abroad_visitors;
+        $percent_polish = ($polish_visitors / $map_number_visitors) * 100;
+        $percent_abroad = ($map_number_abroad_visitors / $map_number_visitors) * 100;
+        
         $map_number_visitors            = !empty($map_number_visitors) ? $map_number_visitors : 0;
-        $map_percent_polish_visitors    = !empty($map_percent_polish_visitors) ? $map_percent_polish_visitors : 0;
+        $map_percent_polish_visitors    = round($percent_polish);
         $map_number_countries           = !empty($map_number_countries) ? $map_number_countries : 15;
 
         $map_more_logotypes = (isset($atts['map_more_logotypes'])) ? explode(';', $atts['map_more_logotypes']) : '';
 
-        $trade_fair_edition = do_shortcode('[trade_fair_edition]');
-        $map_custom_edition = !empty($trade_fair_edition) ? $trade_fair_edition : $map_custom_current_edition;
+        $map_custom_edition = do_shortcode('[trade_fair_edition]');
 
-        $trade_fair_edition = do_shortcode('[trade_fair_edition]');
+        // if (!empty($map_dynamic_preset) && $map_dynamic_preset === 'preset_3') {
+        //     if (!empty($map_year_previous) && !empty($map_custom_previous_edition)) {
+        //         $map_custom_edition = $map_custom_previous_edition;
+        //     }
+        // }
 
-        $map_custom_edition = !empty($trade_fair_edition) ? $trade_fair_edition : $map_custom_current_edition;
+        $map_custom_title = self::lang_pl() ? 'Statystyki' : 'Statistics';
 
-        if (!empty($map_dynamic_preset) && $map_dynamic_preset === 'preset_3') {
-            if (!empty($map_year_previous) && !empty($map_custom_previous_edition)) {
-                $map_custom_edition = $map_custom_previous_edition;
+        if (!empty($map_custom_edition) && $map_custom_edition != 1) {
+            if (self::lang_pl()) {
+                $map_custom_title = 'Branżowi odwiedzający ' . ($map_custom_edition - 1) . '. edycji';
+            } else {
+                if ($map_custom_edition == 2) {
+                    $map_custom_title = 'Industry visitors of the 1st edition';
+                } if ($map_custom_edition == 3) {
+                    $map_custom_title = 'Industry visitors of the 2nd edition';
+                } else if ($map_custom_edition == 4) {
+                    $map_custom_title = 'Industry visitors of the 3rd edition';
+                } else {
+                    $map_custom_title = 'Industry visitors of the ' . ($map_custom_edition - 1) . 'th edition';
+                }
             }
-        }
-
-        if (!empty($map_custom_edition) && !in_array(strtolower($map_custom_edition), ['premierowa', 'premier'])
-        ) {
-            $map_custom_title = self::languageChecker(
-                'Branżowi odwiedzający ' . $map_custom_edition . ' edycji',
-                'Industry visitors of the ' . $map_custom_edition . 'nd edition'
-            );
+        } else if (!empty($map_custom_edition) && $map_custom_edition == 1) {
+            if (self::lang_pl()) {
+                $map_custom_title = 'Estymacje 1. edycji';
+            } else {
+                $map_custom_title = 'estimates of the 1st edition';
+            }
         }
 
         if (!empty($map_number_visitors_previous)) {
