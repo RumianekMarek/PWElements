@@ -69,6 +69,24 @@
     font-weight: 500;
 }
 
+.conference_cap__conf-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 36px;
+}
+
+.conference_cap__conf-button a {
+    background: var(--accent-color);
+    color: white !important;
+    padding: 13px 31px;
+    border-radius: 12px;
+    transition: .3s ease;
+}
+.conference_cap__conf-button a:hover {
+    background: var(--accent_darker_color);
+}
+
 /* ------------------ Org Logo ------------------ */
 
 .conference_cap__conf-organizer-wrapper {

@@ -718,7 +718,11 @@ class PWEConferenceCap {
                                     $output .= `<div class='conference_cap__conf-main-desc'>` . wp_kses($main_desc_clean, $allowed_tags) . `</div>`;
                                 }
                                 break; 
-                            }                            
+                            }
+                            $output .= '
+                                <div class="conference_cap__conf-button">
+                                    <a href="'. PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') .'">'. PWECommonFunctions::languageChecker('Odbierz darmowy bilet', 'Receive a free ticket') .'</a>
+                                </div>';
                             
                         $output .= '</div>'; // Zamknięcie nagłówka
                 
