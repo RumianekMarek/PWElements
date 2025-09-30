@@ -115,7 +115,7 @@ class PWEActiveQR extends PWElements {
                         display:none !important;
                     }
                     .vc_row:has(#active_qr){
-                        background-image: url("https://[trade_fair_domainadress]/wp-content/plugins/PWElements/media/ticket-activation2.jpg");
+                        background-image: url("https://[trade_fair_domainadress]/wp-content/plugins/pwe-media/media/ticket-activation2.jpg");
                         height:90vh;
                         min-height: 900px;
                         display: flex;

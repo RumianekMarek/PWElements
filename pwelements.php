@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 3.0.1
+ * Version: 3.0.2
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -150,6 +150,10 @@ class PWElementsPlugin {
 
         // Shortcodes from CAP
         require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
+
+        // GF Mailing 
+        // require_once plugin_dir_path(__FILE__) . 'includes/mailing/mailing.php';
+        // $this->PWEMailing = new PWEMailing();
 
         if (is_admin()) {
             // Admin menu

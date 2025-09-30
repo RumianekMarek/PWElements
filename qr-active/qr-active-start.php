@@ -39,7 +39,7 @@ class PWElementQRActiveStart extends PWEQRActive {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-image: url(/wp-content/plugins/PWElements/media/bg-qr-white.png);
+                background-image: url(/wp-content/plugins/pwe-media/media/bg-qr-white.png);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: cover;
@@ -50,7 +50,7 @@ class PWElementQRActiveStart extends PWEQRActive {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-image: url(/wp-content/plugins/PWElements/media/bg-qr-blue.png);
+                background-image: url(/wp-content/plugins/pwe-media/media/bg-qr-blue.png);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: cover;
