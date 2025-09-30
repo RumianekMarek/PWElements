@@ -355,31 +355,51 @@ class PWElementNewsSummary extends PWElements {
         $pwe_news_summary_conf_desc = PWECommonFunctions::decode_clean_content($pwe_news_summary_conf_desc);
 
         // ODWIEDZAJĄCY
-        $pwe_news_summary_stats_visitors_max = max($pwe_news_summary_stats_visitors, $pwe_news_summary_stats_visitors_previous);
-        $pwe_news_summary_stats_visitors_percentage =
-            ($pwe_news_summary_stats_visitors / $pwe_news_summary_stats_visitors_max) * 100;
-        $pwe_news_summary_stats_visitors_previous_percentage =
-            ($pwe_news_summary_stats_visitors_previous / $pwe_news_summary_stats_visitors_max) * 100;
-        $pwe_news_summary_stats_visitors_increase =
-            round(100 - $pwe_news_summary_stats_visitors_previous_percentage);
+        $vis_curr = $pwe_news_summary_stats_visitors;
+        $vis_prev = $pwe_news_summary_stats_visitors_previous;
+
+        if ($vis_prev > 0) {
+            $max = max($vis_curr, $vis_prev);
+            $pwe_news_summary_stats_visitors_previous_percentage = ($vis_prev / $max) * 100;
+            $pwe_news_summary_stats_visitors_percentage          = ($vis_curr / $max) * 100;
+            $pwe_news_summary_stats_visitors_increase            = round(100 - $pwe_news_summary_stats_visitors_previous_percentage);
+        } else {
+            $pwe_news_summary_stats_visitors_previous_percentage = 0;
+            $pwe_news_summary_stats_visitors_percentage          = $vis_curr > 0 ? 100 : 0;
+            $pwe_news_summary_stats_visitors_increase            = null;
+        }
 
         // WYSTAWCY
-        $pwe_news_summary_stats_exhibitors_max = max($pwe_news_summary_stats_exhibitors, $pwe_news_summary_stats_exhibitors_previous);
-        $pwe_news_summary_stats_exhibitors_percentage =
-            ($pwe_news_summary_stats_exhibitors / $pwe_news_summary_stats_exhibitors_max) * 100;
-        $pwe_news_summary_stats_exhibitors_previous_percentage =
-            ($pwe_news_summary_stats_exhibitors_previous / $pwe_news_summary_stats_exhibitors_max) * 100;
-        $pwe_news_summary_stats_exhibitors_increase =
-            round(100 - $pwe_news_summary_stats_exhibitors_previous_percentage);
+        $exh_curr = $pwe_news_summary_stats_exhibitors;
+        $exh_prev = $pwe_news_summary_stats_exhibitors_previous;
+
+        if ($exh_prev > 0) {
+            $max = max($exh_curr, $exh_prev);
+            $pwe_news_summary_stats_exhibitors_previous_percentage = ($exh_prev / $max) * 100;
+            $pwe_news_summary_stats_exhibitors_percentage          = ($exh_curr / $max) * 100;
+            $pwe_news_summary_stats_exhibitors_increase            = round(100 - $pwe_news_summary_stats_exhibitors_previous_percentage);
+            $pwe_news_summary_stats_exhibitors_growth_percent      = round((($exh_curr - $exh_prev)/$exh_prev)*100);
+        } else {
+            $pwe_news_summary_stats_exhibitors_previous_percentage = 0;
+            $pwe_news_summary_stats_exhibitors_percentage          = $exh_curr > 0 ? 100 : 0;
+            $pwe_news_summary_stats_exhibitors_increase            = null;
+            $pwe_news_summary_stats_exhibitors_growth_percent      = 0;
+        }
 
         // POWIERZCHNIA
-        $pwe_news_summary_stats_space_max = max($pwe_news_summary_stats_space, $pwe_news_summary_stats_space_previous);
-        $pwe_news_summary_stats_space_percentage =
-            ($pwe_news_summary_stats_space / $pwe_news_summary_stats_space_max) * 100;
-        $pwe_news_summary_stats_space_previous_percentage =
-            ($pwe_news_summary_stats_space_previous / $pwe_news_summary_stats_space_max) * 100;
-        $pwe_news_summary_stats_space_increase =
-            round(100 - $pwe_news_summary_stats_space_previous_percentage);
+        $spc_curr = $pwe_news_summary_stats_space;
+        $spc_prev = $pwe_news_summary_stats_space_previous;
+
+        if ($spc_prev > 0) {
+            $max = max($spc_curr, $spc_prev);
+            $pwe_news_summary_stats_space_previous_percentage = ($spc_prev / $max) * 100;
+            $pwe_news_summary_stats_space_percentage          = ($spc_curr / $max) * 100;
+            $pwe_news_summary_stats_space_increase            = round(100 - $pwe_news_summary_stats_space_previous_percentage);
+        } else {
+            $pwe_news_summary_stats_space_previous_percentage = 0;
+            $pwe_news_summary_stats_space_percentage          = $spc_curr > 0 ? 100 : 0;
+            $pwe_news_summary_stats_space_increase            = null;
+        }
 
         // WZOST WYSTAWCÓW
         $pwe_news_summary_stats_exhibitors_growth_percent = 0;
@@ -485,6 +505,9 @@ class PWElementNewsSummary extends PWElements {
             .pwe-news-summary__btn--black:hover {
                 color: black !important;
                 background-color: transparent;
+            }
+            .pwe-news-summary__header {
+                width: 100%;
             }
             .pwe-news-summary__title {
                 font-size: 32px !important;
@@ -867,6 +890,7 @@ class PWElementNewsSummary extends PWElements {
                 flex: .4;
                 max-width: 320px !important;
                 aspect-ratio: 1/1;
+                object-fit: cover;
                 border-radius: 18px;
                 box-shadow: 0px 30px 60px -30px rgba(0,0,0,.45);
             }
@@ -991,8 +1015,12 @@ class PWElementNewsSummary extends PWElements {
         </style>';
 
         $output .= '
-        <div class="pwe-news-summary" id="PWENewsSummary">
-            <img src="' . $thumbnail_url . '" alt="'. self::languageChecker('Grafika nagłówkowa artykułu', 'Article header graphic') .'">
+        <div class="pwe-news-summary" id="PWENewsSummary">';
+            if (!$is_warsawexpo) {
+                $output .= '
+                <img class="pwe-news-summary__header" src="' . $thumbnail_url . '" alt="'. self::languageChecker('Grafika nagłówkowa artykułu', 'Article header graphic') .'">';
+            }
+            $output .= '
             <h1 class="pwe-news-summary__title">' . $pwe_news_summary_title . '</h1>
             <hr class="pwe-news-summary__hr">
             <p class="pwe-news-summary__desc">' . $pwe_news_summary_desc . '</p>
@@ -1011,11 +1039,15 @@ class PWElementNewsSummary extends PWElements {
                         <div class="pwe-news-summary-stats__stats-diagram">
                             <div class="pwe-news-summary-stats__stats-diagram-container">
                                 <!-- Years -->
-                                <div class="pwe-news-summary-stats__stats-diagram-years-container">
-                                    <div class="pwe-news-summary-stats__stats-diagram-year">
-                                        <div class="pwe-news-summary-stats__stats-diagram-year-box"></div>
-                                        <span>'. $pwe_news_summary_stats_year_previous .'</span>
-                                    </div>
+                                <div class="pwe-news-summary-stats__stats-diagram-years-container">';
+                                    if ($vis_prev > 0 || $exh_prev > 0 || $spc_prev > 0) {
+                                        $output .= '
+                                        <div class="pwe-news-summary-stats__stats-diagram-year">
+                                            <div class="pwe-news-summary-stats__stats-diagram-year-box"></div>
+                                            <span>'. $pwe_news_summary_stats_year_previous .'</span>
+                                        </div>';
+                                    }
+                                    $output .= '
                                     <div class="pwe-news-summary-stats__stats-diagram-year">
                                         <div class="pwe-news-summary-stats__stats-diagram-year-box"></div>
                                         <span>'. $pwe_news_summary_stats_year .'</span>
@@ -1026,12 +1058,16 @@ class PWElementNewsSummary extends PWElements {
                                 <div class="pwe-news-summary-stats__stats-diagram-bars-container"> 
                                     <!-- Bar 1 -->
                                     <div class="pwe-news-summary-stats__stats-diagram-bars">
-                                        <div class="pwe-news-summary-stats__stats-diagram-bars-wrapper">
-                                            <div class="pwe-news-summary-stats__stats-diagram-bar">
-                                                <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_visitors_previous_percentage .'">
-                                                    <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_visitors_previous .'">0</span></div>
-                                                </div>
-                                            </div>
+                                        <div class="pwe-news-summary-stats__stats-diagram-bars-wrapper">';
+                                            if ($vis_prev > 0) {
+                                                $output .= '
+                                                <div class="pwe-news-summary-stats__stats-diagram-bar">
+                                                    <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_visitors_previous_percentage .'">
+                                                        <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_visitors_previous .'">0</span></div>
+                                                    </div>
+                                                </div>';
+                                            }
+                                            $output .= '
                                             <div class="pwe-news-summary-stats__stats-diagram-bar">
                                                 <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_visitors_percentage .'">
                                                     <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_visitors .'">0</span></div>
@@ -1043,12 +1079,16 @@ class PWElementNewsSummary extends PWElements {
 
                                     <!-- Bar 2 -->
                                     <div class="pwe-news-summary-stats__stats-diagram-bars">
-                                        <div class="pwe-news-summary-stats__stats-diagram-bars-wrapper">
-                                            <div class="pwe-news-summary-stats__stats-diagram-bar">
-                                                <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_exhibitors_previous_percentage .'">
-                                                    <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_exhibitors_previous .'">0</span></div>
-                                                </div>
-                                            </div>
+                                        <div class="pwe-news-summary-stats__stats-diagram-bars-wrapper">';
+                                            if ($exh_prev > 0) {
+                                                $output .= '
+                                                <div class="pwe-news-summary-stats__stats-diagram-bar">
+                                                    <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_exhibitors_previous_percentage .'">
+                                                        <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_exhibitors_previous .'">0</span></div>
+                                                    </div>
+                                                </div>';
+                                            }
+                                            $output .= '
                                             <div class="pwe-news-summary-stats__stats-diagram-bar">
                                                 <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_exhibitors_percentage .'">
                                                     <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_exhibitors .'">0</span></div>
@@ -1060,12 +1100,16 @@ class PWElementNewsSummary extends PWElements {
 
                                     <!-- Bar 3 -->
                                     <div class="pwe-news-summary-stats__stats-diagram-bars">
-                                        <div class="pwe-news-summary-stats__stats-diagram-bars-wrapper">
-                                            <div class="pwe-news-summary-stats__stats-diagram-bar">
-                                                <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_space_previous_percentage .'">
-                                                    <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_space_previous .'">0</span> m<sup>2</sup></div>
-                                                </div>
-                                            </div>
+                                        <div class="pwe-news-summary-stats__stats-diagram-bars-wrapper">';
+                                            if ($spc_prev > 0) {
+                                                $output .= '
+                                                <div class="pwe-news-summary-stats__stats-diagram-bar">
+                                                    <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_space_previous_percentage .'">
+                                                        <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_space_previous .'">0</span> m<sup>2</sup></div>
+                                                    </div>
+                                                </div>';
+                                            }
+                                            $output .= '
                                             <div class="pwe-news-summary-stats__stats-diagram-bar">
                                                 <div class="pwe-news-summary-stats__stats-diagram-bar-item" data-count="'. $pwe_news_summary_stats_space_percentage .'">
                                                     <div class="pwe-news-summary-stats__stats-diagram-bar-number"><span class="countup" data-count="'. $pwe_news_summary_stats_space .'">0</span> m<sup>2</sup></div>
@@ -1119,8 +1163,15 @@ class PWElementNewsSummary extends PWElements {
                         <p>'. self::languageChecker('Całkowita powierzchnia:', 'Total area:') .' <span style="color: #00b050;">' . $pwe_news_summary_stats_space . '</span> m².</p>
                     </div>
                     <div class="pwe-news-summary-stats__card">
-                        <h5>'. self::languageChecker('Wystawcy:', 'Exhibitors:') .'</h5>
-                        <p><span style="color: #00b050;">' . $pwe_news_summary_stats_exhibitors . '</span> '. self::languageChecker('prezentujących swoje rozwiązania. Wzrost o', 'companies presenting their solutions. An increase of') .' <span style="color: #00b050;">' . $pwe_news_summary_stats_exhibitors_growth_percent . '%</span> '. self::languageChecker('w porównaniu do 2024 roku.', 'compared to 2024.') .'</p>
+                        <h5>'. self::languageChecker('Wystawcy:', 'Exhibitors:') .'</h5>';
+                        if ($exh_prev > 0 && !empty($pwe_news_summary_stats_year_previous)) {
+                            $output .='
+                            <p><span style="color: #00b050;">' . $pwe_news_summary_stats_exhibitors . '</span> '. self::languageChecker('prezentujących swoje rozwiązania. Wzrost o', 'companies presenting their solutions. An increase of') .' <span style="color: #00b050;">' . $pwe_news_summary_stats_exhibitors_growth_percent . '%</span> '. self::languageChecker('w porównaniu do 2024 roku.', 'compared to 2024.') .'</p>';
+                        } else {
+                            $output .='
+                            <p><span style="color: #00b050;">' . $pwe_news_summary_stats_exhibitors . '</span> '. self::languageChecker('firm z różnych branż zaprezentowało podczas wydarzenia swoje innowacyjne rozwiązania, produkty i technologie.', 'companies from various sectors presented their innovative solutions, products, and technologies during the event.', 'companies from various sectors presented their innovative solutions, products, and technologies during the event.') .'</p>';
+                        }
+                    $output .='
                     </div>
                     <div class="pwe-news-summary-stats__card">
                         <h5>'. self::languageChecker('Kraje uczestniczące:', 'Participating countries:') .'</h5>
