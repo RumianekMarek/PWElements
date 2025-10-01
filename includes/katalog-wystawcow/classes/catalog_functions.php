@@ -55,7 +55,7 @@ class CatalogFunctions {
                 $basic_wystawcy = $data[$katalog_id]['Wystawcy'];
 
                 if (current_user_can('administrator')) {
-                    echo '<script>console.log("Dane pobrane z lokalnego pliku (https://'.  $_SERVER['HTTP_HOST'] .'/doc/pwe-exhibitors.json) dla katalogu ' . $katalog_id . '")</script>';
+                    echo '<script>console.log("Dane pobrane z lokalnego pliku (https://'.  $_SERVER['HTTP_HOST'] .'/doc/pwe-exhibitors.json) dla katalogu ' . $katalog_id . '. Link do katalogu expoplanner: '. $can_url .'")</script>';
                 };
             }
         } 
