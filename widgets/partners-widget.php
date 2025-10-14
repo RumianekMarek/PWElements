@@ -33,7 +33,7 @@ $output .= '
     .pwe-header-partners__container {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 8px;
     }
     .pwe-header-partners__title {
         margin: 0 auto;
@@ -41,9 +41,9 @@ $output .= '
     .pwe-header-partners__title h3 {
         color: '. $pwe_header_partners_title_color .' !important;
         text-transform: uppercase;
-        max-width: 250px;
+        max-width: 280px;
         text-align: center;
-        margin: 16px auto 0;
+        margin: 0 auto;
         font-size: 18px;
     }
     .pwe-header-partners__items {
@@ -56,7 +56,7 @@ $output .= '
     .pwe-header-partners__item {
         max-width: 160px;
     }
-    @media(max-width: 1100px) {
+    @media(max-width: 960px) {
         .pwe-header-partners {
             position: static;
             top: unset;
@@ -80,7 +80,7 @@ $output .= '
 
 $files = [];
 
-// if ($pwe_header_cap_auto_partners_off) {
+if ($pwe_header_cap_auto_partners_off) {
 
     if (!empty($pwe_header_partners_items)) {
         foreach ($pwe_header_partners_items as $item) {
@@ -308,148 +308,148 @@ $files = [];
         }
         $output .= '
     </div>';
-// } else {
+} else {
     
-//     if (!empty($cap_logotypes_data)) {
-//         // Grupujemy logotypy według logos_type, które zaczynają się na "header-"
-//         $grouped_logos = [];
+    if (!empty($cap_logotypes_data)) {
+        // Grupujemy logotypy według logos_type, które zaczynają się na "header-"
+        $grouped_logos = [];
 
-//         foreach ($cap_logotypes_data as $logo_data) {
-//             if (strpos($logo_data->logos_type, 'header-') === 0) {
-//                 $meta = json_decode($logo_data->meta_data, true);
-//                 $desc_pl = $meta["desc_pl"] ?? '';
-//                 $desc_en = $meta["desc_en"] ?? '';
-//                 $link    = $logo_data->logos_link;
-//                 $url     = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+        foreach ($cap_logotypes_data as $logo_data) {
+            if (strpos($logo_data->logos_type, 'header-') === 0) {
+                $meta = json_decode($logo_data->meta_data, true);
+                $desc_pl = $meta["desc_pl"] ?? '';
+                $desc_en = $meta["desc_en"] ?? '';
+                $link    = $logo_data->logos_link;
+                $url     = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
 
-//                 $element = [
-//                     'url' => $url,
-//                     'desc_pl' => $desc_pl,
-//                     'desc_en' => $desc_en,
-//                     'link' => $link
-//                 ];
+                $element = [
+                    'url' => $url,
+                    'desc_pl' => $desc_pl,
+                    'desc_en' => $desc_en,
+                    'link' => $link
+                ];
 
-//                 $grouped_logos[$logo_data->logos_type][] = $element;
-//             }
-//         }
+                $grouped_logos[$logo_data->logos_type][] = $element;
+            }
+        }
 
-//         // Mapowanie odmian
-//         $plural_map_pl = [
-//             "Partner Targów" => "Partnerzy Targów",
-//             "Partner Merytoryczny" => "Partnerzy Merytoryczni",
-//             "Partner Branżowy" => "Partnerzy Branżowi",
-//             "Partner targów i konferencji" => "Partnerzy Targów i Konferencji",
-//             "Patronat Honorowy" => "Patronaty Honorowe",
-//             "Partner Organizacyjny" => "Partnerzy Organizacyjni"
-//         ];
+        // Mapowanie odmian
+        $plural_map_pl = [
+            "Partner Targów" => "Partnerzy Targów",
+            "Partner Merytoryczny" => "Partnerzy Merytoryczni",
+            "Partner Branżowy" => "Partnerzy Branżowi",
+            "Partner targów i konferencji" => "Partnerzy Targów i Konferencji",
+            "Patronat Honorowy" => "Patronaty Honorowe",
+            "Partner Organizacyjny" => "Partnerzy Organizacyjni"
+        ];
 
-//         $plural_map_en = [
-//             "Fair Partner" => "Fair Partners",
-//             "Content Partner" => "Content Partners",
-//             "Industry Partner" => "Industry Partners",
-//             "Trade and Conference Partner" => "Trade and Conference Partners",
-//             "Honorary Patronage" => "Honorary Patronages",
-//             "Organizational partner" => "Organizational partners"
-//         ];
+        $plural_map_en = [
+            "Fair Partner" => "Fair Partners",
+            "Content Partner" => "Content Partners",
+            "Industry Partner" => "Industry Partners",
+            "Trade and Conference Partner" => "Trade and Conference Partners",
+            "Honorary Patronage" => "Honorary Patronages",
+            "Organizational partner" => "Organizational partners"
+        ];
 
-//         if (count($grouped_logos) > 0) {
+        if (count($grouped_logos) > 0) {
 
-//             $output .= '
-//             <div class="pwe-header-partners">';
-//                 // Generating containers for each group
-//                 foreach ($grouped_logos as $logos_type => $files) {
+            $output .= '
+            <div class="pwe-header-partners">';
+                // Generating containers for each group
+                foreach ($grouped_logos as $logos_type => $files) {
 
-//                     if (count($files) > 0) {
-//                         $unique_id = uniqid();
+                    if (count($files) > 0) {
+                        $unique_id = uniqid();
 
-//                         // Group Title
-//                         $title_single = PWECommonFunctions::lang_pl() ? $files[0]["desc_pl"] : $files[0]["desc_en"];
+                        // Group Title
+                        $title_single = PWECommonFunctions::lang_pl() ? $files[0]["desc_pl"] : $files[0]["desc_en"];
 
-//                         // Automatic pluralization
-//                         if (count($files) > 1) {
-//                             // plural
-//                             if (PWECommonFunctions::lang_pl()) {
-//                                 $title = $plural_map_pl[$title_single] ?? $title_single;
-//                             } else {
-//                                 $title = $plural_map_en[$title_single] ?? $title_single;
-//                             }
-//                         } else {
-//                             // singular
-//                             $title = $title_single;
-//                         }
+                        // Automatic pluralization
+                        if (count($files) > 1) {
+                            // plural
+                            if (PWECommonFunctions::lang_pl()) {
+                                $title = $plural_map_pl[$title_single] ?? $title_single;
+                            } else {
+                                $title = $plural_map_en[$title_single] ?? $title_single;
+                            }
+                        } else {
+                            // singular
+                            $title = $title_single;
+                        }
 
-//                         if (count($grouped_logos) > 1) {
-//                             $output .= '
-//                             <style>
-//                                 .pwe-header-partners__container.partners-'. $unique_id .' {
-//                                     max-width: 280px;
-//                                 }
-//                                 .partners-'. $unique_id .' .pwe-header-partners__items {
-//                                     flex-wrap: wrap;
-//                                     flex-direction: row;
-//                                     gap: 8px;
-//                                 }
-//                                 .partners-'. $unique_id .' .pwe-header-partners__item {
-//                                     max-width: 120px;
-//                                 }
-//                                 @media(max-width: 1200px) {
-//                                     .pwe-header-partners__container.partners-'. $unique_id .' {
-//                                         max-width: 240px;
-//                                     }
-//                                     .partners-'. $unique_id .' .pwe-header-partners__items {
-//                                         flex-wrap: wrap;
-//                                         flex-direction: row;
-//                                         gap: 8px;
-//                                     }
-//                                     .partners-'. $unique_id .' .pwe-header-partners__item {
-//                                         max-width: 100px;
-//                                     }
-//                                 }
-//                                 @media(max-width: 1100px) {
-//                                     .pwe-header-partners__container.partners-'. $unique_id .' {
-//                                         max-width: 280px;
-//                                     }
-//                                     .partners-'. $unique_id .' .pwe-header-partners__item {
-//                                         max-width: 120px;
-//                                     }
-//                                 }
-//                             </style>';
-//                         }
+                        if (count($grouped_logos) > 1 || count($grouped_logos) == 1 && count($files) > 3) {
+                            $output .= '
+                            <style>
+                                .pwe-header-partners__container.partners-'. $unique_id .' {
+                                    max-width: 280px;
+                                }
+                                .partners-'. $unique_id .' .pwe-header-partners__items {
+                                    flex-wrap: wrap;
+                                    flex-direction: row;
+                                    gap: 8px;
+                                }
+                                .partners-'. $unique_id .' .pwe-header-partners__item {
+                                    max-width: 120px;
+                                }
+                                @media(max-width: 1200px) {
+                                    .pwe-header-partners__container.partners-'. $unique_id .' {
+                                        max-width: 240px;
+                                    }
+                                    .partners-'. $unique_id .' .pwe-header-partners__items {
+                                        flex-wrap: wrap;
+                                        flex-direction: row;
+                                        gap: 8px;
+                                    }
+                                    .partners-'. $unique_id .' .pwe-header-partners__item {
+                                        max-width: 100px;
+                                    }
+                                }
+                                @media(max-width: 1100px) {
+                                    .pwe-header-partners__container.partners-'. $unique_id .' {
+                                        max-width: 280px;
+                                    }
+                                    .partners-'. $unique_id .' .pwe-header-partners__item {
+                                        max-width: 120px;
+                                    }
+                                }
+                            </style>';
+                        }
 
-//                         $output .= '
-//                         <div class="pwe-header-partners__container '. $logos_type .' partners-'. $unique_id .'">
-//                             <div class="pwe-header-partners__title">
-//                                 <h3>'. $title .'</h3>
-//                             </div>
-//                             <div class="pwe-header-partners__items">';
+                        $output .= '
+                        <div class="pwe-header-partners__container '. $logos_type .' partners-'. $unique_id .'">
+                            <div class="pwe-header-partners__title">
+                                <h3>'. $title .'</h3>
+                            </div>
+                            <div class="pwe-header-partners__items">';
 
-//                                 foreach ($files as $item) {
-//                                     if (!empty($item["url"])) {
-//                                         if (!empty($item["link"])) {
-//                                             $output .= '
-//                                             <div class="pwe-header-partners__item">
-//                                                 <a href="'. $item["link"] .'" target="_blank">
-//                                                     <img src="'. $item["url"] .'" alt="partner logo">
-//                                                 </a>
-//                                             </div>';
-//                                         } else {
-//                                             $output .= '
-//                                             <div class="pwe-header-partners__item">
-//                                                 <img src="'. $item["url"] .'" alt="partner logo">
-//                                             </div>';
-//                                         }
-//                                     }
-//                                 }
-//                             $output .= '
-//                             </div> 
-//                         </div>';
-//                     }
-//                 }
-//             $output .= '
-//             </div>';
+                                foreach ($files as $item) {
+                                    if (!empty($item["url"])) {
+                                        if (!empty($item["link"])) {
+                                            $output .= '
+                                            <div class="pwe-header-partners__item">
+                                                <a href="'. $item["link"] .'" target="_blank">
+                                                    <img src="'. $item["url"] .'" alt="partner logo">
+                                                </a>
+                                            </div>';
+                                        } else {
+                                            $output .= '
+                                            <div class="pwe-header-partners__item">
+                                                <img src="'. $item["url"] .'" alt="partner logo">
+                                            </div>';
+                                        }
+                                    }
+                                }
+                            $output .= '
+                            </div> 
+                        </div>';
+                    }
+                }
+            $output .= '
+            </div>';
 
-//         }
-//     }
-// }
+        }
+    }
+}
 
 return $output;

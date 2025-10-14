@@ -4,7 +4,7 @@
  * Plugin Name: PWE Elements
  * Plugin URI: https://github.com/RumianekMarek/PWElements
  * Description: Adding a PWE elements to the website.
- * Version: 3.0.3
+ * Version: 3.0.4
  * Author: Marek Rumianek
  * Author URI: github.com/RumianekMarek
  * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
@@ -31,6 +31,7 @@ class PWElementsPlugin {
     public $PWEConferenceShortInfo;
     public $PWEAboutFairInfo;
     public $PWEAttractions;
+    public $PWENews;
     // public $PWELogoFetcher;
 
     public function __construct() {
@@ -152,8 +153,8 @@ class PWElementsPlugin {
         require_once plugin_dir_path(__FILE__) . 'backend/shortcodes.php';
 
         // GF Mailing 
-        // require_once plugin_dir_path(__FILE__) . 'includes/mailing/mailing.php';
-        // $this->PWEMailing = new PWEMailing();
+        require_once plugin_dir_path(__FILE__) . 'includes/mailing/mailing.php';
+        $this->PWEMailing = new PWEMailing();
 
         if (is_admin()) {
             // Admin menu
@@ -247,6 +248,9 @@ class PWElementsPlugin {
 
         require_once plugin_dir_path(__FILE__) . 'includes/attractions/attractions.php';
         $this->PWEAttractions = new PWEAttractions();
+
+        require_once plugin_dir_path(__FILE__) . 'includes/news/news.php';
+        $this->PWENews = new PWENews();
     }
 
     // Czyszczenie pamięci wp_rocket
