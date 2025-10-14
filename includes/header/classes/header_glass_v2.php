@@ -268,9 +268,9 @@ $output .= '
                 </div>
             </div>
             <div class="pwe-header-logotypes">';
-                // $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
-                // if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
-                if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
+                $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
+                if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
+                // if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
                     require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
                 }
                 $output .= '

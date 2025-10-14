@@ -420,6 +420,9 @@ $output .= '
             padding: 0;
             text-align: center;
         }
+        .pwelement_'. $el_id .' .pwe-header-column {
+            margin: 18px auto;
+        }
         .pwelement_'. $el_id .' .pwe-header-content-column {
             padding: 36px 18px;
         }
@@ -573,14 +576,16 @@ $output .= '
                         require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/counter-to-fair.php';
                     }
 
-                    // Partners widget --------------------------------------------------------------------------------------<
-                    // $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
-                    // if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
-                    if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
-                        require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
-                    }
                     $output .= '
-                </div>
+                </div>';
+
+                // Partners widget --------------------------------------------------------------------------------------<
+                $cap_logotypes_data = ($pwe_header_cap_auto_partners_off != true) ? PWECommonFunctions::get_database_logotypes_data() : "";
+                if (!empty($cap_logotypes_data) || !empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
+                // if (!empty($pwe_header_partners_items) || !empty($pwe_header_partners_catalog)) { 
+                    require_once plugin_dir_path(dirname(dirname(dirname(__FILE__)))) . 'widgets/partners-widget.php';
+                }
+                $output .= '
             </div>
 
             <div class="video-background">

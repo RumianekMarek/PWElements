@@ -657,15 +657,15 @@ function initVCMapHeader() {
                         'save_always' => true,
                         'value' => array(__('True', 'pwe_header') => 'true',),
                     ),
-                    // array(
-                    //     'type' => 'checkbox',
-                    //     'group' => 'Partners/Patrons',
-                    //     'heading' => __('Turn off automatically get partners from CAP', 'pwe_header'),
-                    //     'param_name' => 'pwe_header_cap_auto_partners_off',
-                    //     'description' => __('Check if you want to turn off automatically retrieve partners from the database.', 'pwe_header'),
-                    //     'save_always' => true,
-                    //     'value' => array(__('True', 'pwe_header') => 'true',),
-                    // ),
+                    array(
+                        'type' => 'checkbox',
+                        'group' => 'Partners/Patrons',
+                        'heading' => __('Turn off automatically get partners from CAP', 'pwe_header'),
+                        'param_name' => 'pwe_header_cap_auto_partners_off',
+                        'description' => __('Check if you want to turn off automatically retrieve partners from the database.', 'pwe_header'),
+                        'save_always' => true,
+                        'value' => array(__('True', 'pwe_header') => 'true',),
+                    ),
                     array(
                         'type' => 'dropdown',
                         'group' => 'Partners/Patrons',
@@ -700,10 +700,10 @@ function initVCMapHeader() {
                         'heading' => __('Title widget', 'pwe_header'),
                         'param_name' => 'pwe_header_partners_title',
                         'save_always' => true,
-                        // 'dependency' => array(
-                        //     'element' => 'pwe_header_cap_auto_partners_off',
-                        //     'value' => array('true'),
-                        // ),
+                        'dependency' => array(
+                            'element' => 'pwe_header_cap_auto_partners_off',
+                            'value' => array('true'),
+                        ),
                     ),
                     array(
                         'type' => 'attach_images',
@@ -711,10 +711,10 @@ function initVCMapHeader() {
                         'heading' => __('Select Partners/Patrons from media gallery', 'pwe_header'),
                         'param_name' => 'pwe_header_partners_items',
                         'save_always' => true,
-                        // 'dependency' => array(
-                        //     'element' => 'pwe_header_cap_auto_partners_off',
-                        //     'value' => array('true'),
-                        // ),
+                        'dependency' => array(
+                            'element' => 'pwe_header_cap_auto_partners_off',
+                            'value' => array('true'),
+                        ),
                     ),
                     array(
                         'type' => 'textfield',
@@ -722,10 +722,10 @@ function initVCMapHeader() {
                         'heading' => __('Partners/Patrons catalog', 'pwe_header'),
                         'param_name' => 'pwe_header_partners_catalog',
                         'save_always' => true,
-                        // 'dependency' => array(
-                        //     'element' => 'pwe_header_cap_auto_partners_off',
-                        //     'value' => array('true'),
-                        // ),
+                        'dependency' => array(
+                            'element' => 'pwe_header_cap_auto_partners_off',
+                            'value' => array('true'),
+                        ),
                     ),
                     array(
                         'type' => 'param_group',
@@ -753,10 +753,10 @@ function initVCMapHeader() {
                                 'save_always' => true,
                             ),
                         ),
-                        // 'dependency' => array(
-                        //     'element' => 'pwe_header_cap_auto_partners_off',
-                        //     'value' => array('true'),
-                        // ),
+                        'dependency' => array(
+                            'element' => 'pwe_header_cap_auto_partners_off',
+                            'value' => array('true'),
+                        ),
                     ),
                     array(
                         'type' => 'param_group',

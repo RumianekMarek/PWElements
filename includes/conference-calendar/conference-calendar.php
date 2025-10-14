@@ -37,7 +37,7 @@ class PWEConferenceCalendar {
         }
 
         $conferences = $cap_db->get_results("
-            SELECT conf_name_pl, conf_name_en, conf_slug, conf_img_pl, conf_img_en, conf_site_link, deleted_at
+            SELECT conf_date_range, conf_name_pl, conf_name_en, conf_slug, conf_img_pl, conf_img_en, conf_site_link, deleted_at
             FROM conferences
         ");
         if ($cap_db->last_error) {
@@ -99,6 +99,7 @@ class PWEConferenceCalendar {
                         'conf_name_pl' => $conf->conf_name_pl,
                         'conf_name_en' => $conf->conf_name_en,
                         'conf_slug' => $conf->conf_slug,
+                        'conf_date_range' => $conf->conf_date_range,
                         'conf_img_pl' => $conf->conf_img_pl,
                         'conf_img_en' => $conf->conf_img_en,
                         'conf_site_link' => $conf->conf_site_link,
@@ -432,24 +433,50 @@ class PWEConferenceCalendar {
             }
         </style>';
 
-        $conferences = self::get_database_conferences_data();
+        $conferences = self::get_database_conferences_data(); 
 
         $lang = PWECommonFunctions::lang_pl();
 
-        usort($conferences, function ($a, $b) {
-            // Convert dates to YYYY-MM-DD format
-            $date_start_a = DateTime::createFromFormat('Y/m/d', $a->conf_fair_date_start);
-            $date_start_b = DateTime::createFromFormat('Y/m/d', $b->conf_fair_date_start);
+        // First filter conferences - only future or today
+        $today = new DateTime('today');
+        $conferences = array_filter($conferences, function($conference) use ($today) {
+            if (empty($conference->conf_date_range)) return false;
 
-            // First compare the dates
+            // Extract the first date from the range
+            $parts = explode(' to ', trim($conference->conf_date_range));
+            $date_str = trim($parts[0]);
+
+            $date = DateTime::createFromFormat('Y/m/d', $date_str);
+            if (!$date) return false;
+
+            // Leave only today's or future dates
+            return $date >= $today;
+        });
+
+        // Sort by start date (as before)
+        usort($conferences, function ($a, $b) {
+            $extract_start_date = function($range) {
+                if (empty($range)) return null;
+
+                $parts = explode(' to ', trim($range));
+                $date_str = trim($parts[0]);
+                $date = DateTime::createFromFormat('Y/m/d', $date_str);
+                return $date ?: null;
+            };
+
+            $date_start_a = $extract_start_date($a->conf_date_range);
+            $date_start_b = $extract_start_date($b->conf_date_range);
+
+            // If dates are equal - sort by domain
             if ($date_start_a == $date_start_b) {
-                // If the dates are the same, compare by domain
                 return strcmp($a->conf_fair_domain, $b->conf_fair_domain);
             }
 
-            // Otherwise, compare by date
+            // Sort ascending by date
             return ($date_start_a < $date_start_b) ? -1 : 1;
         });
+
+
 
         $output .= '
         <div class="pwe-conference-calendar__filter">
@@ -507,6 +534,7 @@ class PWEConferenceCalendar {
                 $link = 'https://' . $domain . ($lang ? '/wydarzenia/' : '/en/conferences/') . '?konferencja=' . $slug;
                 $img_url = esc_url(($lang ? $conference->conf_img_pl : $conference->conf_img_en));
                 $conf_name = $lang ? $conference->conf_name_pl : $conference->conf_name_en;
+                $conf_date = $conference->conf_date_range;
                 $fair_name = $lang ? $conference->conf_fair_name_pl : $conference->conf_fair_name_en;
                 $fair_desc = $lang ? $conference->conf_fair_desc_pl : $conference->conf_fair_desc_en;
                 $fair_category = $lang ? $conference->conf_fair_category_pl : $conference->conf_fair_category_en;
@@ -542,6 +570,7 @@ class PWEConferenceCalendar {
                         data-fair-date-start="'. $fair_date_start .'" 
                         data-fair-date-end="'. $fair_date_end .'" 
                         data-conf-name="'. $conf_name .'"
+                        data-conf-date="'. $conf_date .'"
                     >
                         <a href="'. $link . '&utm_source=warsawexpo&utm_medium=refferal&utm_campaign=pwekonf" target="_blank">
                         <div class="pwe-conference-calendar__item-image" style="background-image: url(' . $img_url . ')">

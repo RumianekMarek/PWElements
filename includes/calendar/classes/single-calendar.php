@@ -378,7 +378,7 @@ if ($event_type === "week") {
     $header_bg = !empty($header_image_url) ? 'url('. $header_image_url .')' : '#464646';
 
     $rotate_logo = (count($all_events_json) < 4) ? 'inherit' : 'rotate(-90deg)';
-    $width_logo = (count($all_events_json) < 4) ? '300px' : '200px';
+    $width_logo = (count($all_events_json) < 4) ? '280px' : '200px';
 
     $output .= '
     <style>
@@ -442,7 +442,7 @@ if ($event_type === "week") {
         }
         .single-event__header .single-event__header-stripe img {
             width: 100%;
-            max-height: 90%;
+            aspect-ratio: 3/2;
             object-fit: contain;
         }
         .single-event__header .single-event__header-title {
@@ -502,7 +502,7 @@ if ($event_type === "week") {
         }
         @media(max-width: 570px) {
             .single-event__header {
-                height: 300px;
+                height: 320px;
             }
             .single-event__header .single-event__header-stripe-logo {
                 max-width: 300px;
@@ -2867,8 +2867,10 @@ if ($event_type === "week") {
         }
     </style>';
 
-    while (have_posts()):
+     while (have_posts()):
         the_post();
+
+        $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data($domain); 
 
         $output .= '
         <div data-parent="true" class="vc_row limit-width row-container boomapps_vcrow '. $title .'" data-section="21" itemscope itemtype="http://schema.org/Event">
@@ -2998,15 +3000,17 @@ if ($event_type === "week") {
                         </div>
                     </div>'; 
 
-                    // Partners section
-                    $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data($domain); 
+                    // Partners section                    
                     if (!empty($cap_logotypes_data)) {
 
                         $saving_paths = function (&$files, $logo_data) {
                             $link = $logo_data->logos_link;
+                            $alt = $logo_data->logos_alt;
+
                             $element = [
                                 'url' => 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url,
-                                'link' => $link
+                                'link' => $link,
+                                'alt' => $alt
                             ];
 
                             // Adding logos_url to $files only if it is not already there
@@ -3047,22 +3051,6 @@ if ($event_type === "week") {
                             </div>
                         </div>';
                         
-                    } else if (!empty($api_media["partnerzy"])) {
-                        $output .= '
-                        <div class="single-event__container-partners">
-                            <div class="single-event__partners-title">
-                                <h4>'. multi_translation("patrons_and_partners") .'</h4>
-                            </div>
-                            <div class="single-event__partners-logotypes single-event__logotypes-slider">';
-                                foreach ($api_media["partnerzy"] as $logo) {
-                                    $output .= '
-                                    <div class="single-event__partners-logo">
-                                        <img src="'. $logo["path"] .'" alt="Partner\'s logo"/>
-                                    </div>'; 
-                                } 
-                            $output .= '
-                            </div>
-                        </div>';
                     } else if (!empty(get_post_meta($post_id, 'partners_gallery', true))) {
                         $seperated_logotypes = get_post_meta($post_id, 'partners_gallery', true);
                         
@@ -3210,7 +3198,92 @@ if ($event_type === "week") {
                     }
 
                     // Events section
-                    if (!empty($api_media["wydarzenia"])) {
+                    if (!empty($cap_logotypes_data)) {
+
+                        $saving_paths = function (&$europe_events_logotypes, $logo_data) {
+                            $link = $logo_data->logos_link;
+                            $alt = $logo_data->logos_alt;
+
+                            $element = [
+                                'url' => 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url,
+                                'link' => $link,
+                                'alt' => $alt
+                            ];
+
+                            // Adding logos_url to $europe_events_logotypes only if it is not already there
+                            if (!in_array($element, $europe_events_logotypes)) {
+                                $europe_events_logotypes[] = $element;
+                            }
+                        };
+
+
+                        $files = [];
+
+                        foreach ($cap_logotypes_data as $logo_data) {
+                            if ($logo_data->logos_type === "europe-event") {
+                                $saving_paths($europe_events_logotypes, $logo_data);
+                            }
+                        }
+
+                        function format_title($title) {
+                            return preg_replace('/\((.*?)\)/', '<br><span style="color: #888;">($1)</span>', $title);
+                        }
+
+                        $output .= '
+                        <div class="single-event__container-events">
+                            <div class="single-event__events-title">
+                                <h4>'. multi_translation("most_important_industry_events_in_europe") .'</h4>
+                            </div>
+                            <div class="single-event__events-logotypes single-event__logotypes-slider">';
+                                $non_warsaw = [];
+                                $warsaw_logos = [];
+                                
+                                // Division of logos into two groups
+                                foreach ($europe_events_logotypes as $logo) {
+                                    // Get file alt
+                                    $filename_events = $logo["alt"];
+                                    
+                                    // Check if name contains "warsaw" or "warsawa" (case-insensitive)
+                                    if (stripos($filename_events, "warsaw") !== false || stripos($filename_events, "warszawa") !== false) {
+                                        $warsaw_logos[] = $logo;
+                                    } else {
+                                        $non_warsaw[] = $logo;
+                                    }
+                                } 
+                                
+                                // Merge the boards – the ones with warsaw at the end
+                                $sorted_logos = array_merge($non_warsaw, $warsaw_logos);
+                                
+                                foreach ($sorted_logos as $logo) {
+                                    // Get file name without extension
+                                    $filename_events = $logo["alt"];
+                                
+                                    // Matching name in format "Europe/IPM (Essen, Germany) - IPM (Essen, Germany)"
+                                    if (preg_match('/^(.*) - (.*)$/', $filename_events, $matches)) {
+                                        // Polish name before " - "
+                                        $title_pl = trim($matches[1]); 
+                                        // English name after " - "
+                                        $title_en = trim($matches[2]); 
+                                    } else {
+                                        // If no match, use full name
+                                        $title_pl = $filename_events; 
+                                        $title_en = $filename_events;
+                                    }
+                                
+                                    $formatted_title_pl = format_title($title_pl ?? '');
+                                    $formatted_title_en = format_title($title_en ?? '');
+                                                                                            
+                                    $output .= '
+                                    <div class="single-event__events-logo">
+                                        <img src="'. $logo["url"] .'" alt="'. (PWECommonFunctions::lang_pl() ? $title_pl : $title_en) .'"/>
+                                        <div class="single-event__events-logo-title"><span>'. (PWECommonFunctions::lang_pl() ? $formatted_title_pl : $formatted_title_en) .'</span></div>
+                                    </div>'; 
+                                } 
+                            $output .= '
+                            </div>
+                        </div>';
+                    
+                    } else if (!empty($api_media["wydarzenia"])) {
 
                         $api_media_events = $api_media["wydarzenia"];
                         $api_media_doc = $api_media["doc"];
