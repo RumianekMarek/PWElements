@@ -132,7 +132,6 @@ class PWBadgeElement extends PWElements {
             
             // Collect all form inputs
             foreach ($_POST as $key => $value) {
-                
                 if (strpos(strtolower($key), 'input') !== false) {
                     preg_match_all('/\d+/', $key, $id);
                     $filed = $id[0][0];
@@ -147,46 +146,37 @@ class PWBadgeElement extends PWElements {
                     const urlMessage = gfMessage.eq(0).attr("href")+"?parametr=masowy&qrcode=only";
                     gfMessage.eq(0).attr("href", urlMessage)
                     gfMessage.eq(1).hide();
-
-                    const orginalUrl = new URL(gfMessage.eq(1).attr("href"));
-                    const qrcode = orginalUrl.searchParams.get("qrcode");
-
-                    const link = document.createElement("a");
-                    link.href = qrcode;
-                    
-                    link.download = "";
-                    link.click();
                 }
             });
             </script>';
 
+            $zip = new ZipArchive();
+            $upload_dir = wp_upload_dir();
+            $zip_path = $upload_dir['basedir'] . '/tmp_qr_only.zip';
+
             // 4. Generates multiple badges adding to forms and opens each badge URL in a new window for download.
-            for($i=1; $i<$_POST['multi_send']; $i++){  
-                echo '<script>console.log("'.$i.'")</script>';
-                
-                // Adding entry to Gravity form
-                $entry_id = GFAPI::add_entry($multi_badge);
+            if ($zip->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+                for($i=0; $i<$_POST['multi_send']; $i++){  
+                    echo '<script>console.log("'.$i.'")</script>';
+                    
+                    // Adding entry to Gravity form
+                    $entry_id = GFAPI::add_entry($multi_badge);
 
-                // Getting QR-code url
-                $meta_key = '';
-                for ($j=0; $j<=300; $j++){
-                    if(gform_get_meta($entry_id , 'qr-code_feed_' . $j . '_url') != ''){
-                        $meta_key = 'qr-code_feed_' . $j . '_url';
-                        break;
+                    // Getting QR-code url
+                    $meta_key = '';
+                    for ($j=0; $j<=300; $j++){
+                        if(gform_get_meta($entry_id , 'qr-code_feed_' . $j . '_file') != ''){
+                            $meta_key = 'qr-code_feed_' . $j . '_file';
+                            break;
+                        }
                     }
+                    $file_path = gform_get_meta($entry_id, $meta_key);
+                    $zip->addFile($file_path, basename($file_path));
                 }
-
-                $qr_code_url = (gform_get_meta($entry_id, $meta_key));
-                echo '<script>console.log("const - '.$qr_code_url.'")</script>';
-                
+                $zip->close();
+    
                 echo '<script>
-                    jQuery(function ($) {
-                        const link = document.createElement("a");
-                        link.href = "' . $qr_code_url .'";
-                        
-                        link.download = "";
-                        link.click();
-                    });
+                    const newTab = window.open("' . $upload_dir['baseurl'] . '/tmp_qr_only.zip", "_blank");
                 </script>';
             }
         }
@@ -272,7 +262,7 @@ class PWBadgeElement extends PWElements {
 
         // 4. Cheking if $_GET parametr=masowy.
         if (isset($_GET['parametr']) && $_GET['parametr'] == 'masowy') {
-            if (isset($_GET['qrcode']) && $_GET['qrcode'] == 'only'){                
+            if (isset($_POST["gform_submit"]) && isset($_GET['qrcode']) && $_GET['qrcode'] == 'only'){                
                 self::qrOnlyDownload($atts['badge_form_id']);
             } else {
                 // 5. Adding input for multi use same data and new function for mass form.

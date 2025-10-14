@@ -300,7 +300,6 @@ class PWElementHale extends PWElements {
                                 }
                                 .st8 {
                                     fill: #fff;
-                                    font-family: cursive;
                                     font-size: 24px;
                                     font-weight: 500;
                                 }
@@ -839,7 +838,7 @@ class PWElementHale extends PWElements {
                                 <stop offset=".4" stop-color="#f593b4"/>
                                 <stop offset=".6" stop-color="#ba1a3b"/>
                             </linearGradient>
-                        </defs>
+                        </defs> 
 
                         <g id="drogi">
                             <g>
@@ -874,7 +873,7 @@ class PWElementHale extends PWElements {
                                     <g id="numer_hali_F" class="st9">
                                         <g class="st9">
                                             <g class="st9">
-                                                <text class="st8" transform="translate(2775.6 588.9)"><tspan x="0" y="0">F</tspan></text>
+                                                <text class="st8" transform="translate(2775.6 588.9)"><tspan x="-6" y="6">F</tspan></text>
                                             </g>
                                         </g>
                                     </g>
@@ -949,7 +948,7 @@ class PWElementHale extends PWElements {
                                     <g id="numer_hali_E" class="st9">
                                         <g class="st9">
                                             <g class="st9">
-                                                <text class="st8" transform="translate(2215 735.4)"><tspan x="0" y="0">E</tspan></text>
+                                                <text class="st8" transform="translate(2215 735.4)"><tspan x="-6" y="6">E</tspan></text>
                                             </g>
                                         </g>
                                     </g>
@@ -998,7 +997,7 @@ class PWElementHale extends PWElements {
                             </g>
 
                             <a target="_blank" class="pwe-halls__link pwe-halls__element-logo-link full">
-                                <image class="pwe-halls__element-logo" href="" width="350" height="300" x="1020" y="1820"/>
+                                <image class="pwe-halls__element-logo" href="" width="330" height="290" x="1020" y="1830"/>
                             </a>
                         </g>
 
@@ -1060,7 +1059,7 @@ class PWElementHale extends PWElements {
                                     <g id="numer_hali_D" class="st9">
                                         <g class="st9">
                                             <g class="st9">
-                                                <text class="st8" transform="translate(1619.9 823.8)"><tspan x="0" y="0">D</tspan></text>
+                                                <text class="st8" transform="translate(1619.9 823.8)"><tspan x="-6" y="6">D</tspan></text>
                                             </g>
                                         </g>
                                     </g>
@@ -1161,7 +1160,7 @@ class PWElementHale extends PWElements {
                                     <g id="numer_hali_C" class="st9">
                                         <g class="st9">
                                             <g class="st9">
-                                                <text class="st8" transform="translate(1323.8 911.8)"><tspan x="0" y="0">C</tspan></text>
+                                                <text class="st8" transform="translate(1323.8 911.8)"><tspan x="-6" y="6">C</tspan></text>
                                             </g>
                                         </g>
                                     </g>
@@ -1262,7 +1261,7 @@ class PWElementHale extends PWElements {
                                     <g id="numer_hali_B" class="st9">
                                         <g class="st9">
                                             <g class="st9">
-                                                <text class="st8" transform="translate(1026.8 998.9)"><tspan x="0" y="0">B</tspan></text>
+                                                <text class="st8" transform="translate(1026.8 998.9)"><tspan x="-6" y="6">B</tspan></text>
                                             </g>
                                         </g>
                                     </g>
@@ -1353,7 +1352,7 @@ class PWElementHale extends PWElements {
                                     <g id="numer_hali_A" class="st9">
                                         <g class="st9">
                                             <g class="st9">
-                                                <text class="st8" transform="translate(733.7 1084.8)"><tspan x="0" y="0">A</tspan></text>
+                                                <text class="st8" transform="translate(733.7 1084.8)"><tspan x="-6" y="6">A</tspan></text>
                                             </g>
                                         </g>
                                     </g>
