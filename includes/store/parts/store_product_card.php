@@ -80,7 +80,7 @@ $output .= '
                                 $img_url = 'https://cap.warsawexpo.eu/public/uploads/shop/'. (!empty($product->prod_image_en) ? $product->prod_image_en : $product->prod_image_pl);
                             }
                         }
-
+ 
                         $output .= '
                         <!-- Card item -->
                         <div class="pwe-store__service-card pwe-store__service-card-'. $product->prod_slug .' pwe-store__service '. $sold_out . ' ' . $status .'" category="'. $category .'" data-slug="'. $product->prod_slug .'">
@@ -160,7 +160,6 @@ $output .= '
                                                     }
                                                 }
                                             }
-
 
                                             if ($package->packs_discount != null) {
                                                 $discount = $total_price * ($package->packs_discount / 100);

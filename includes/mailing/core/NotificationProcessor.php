@@ -3,6 +3,9 @@ if ( ! defined('ABSPATH') ) exit;
 
 class PWE_NotificationProcessor {
 
+    private static $versionChanged = false;
+    public static function setVersionChanged(bool $v): void { self::$versionChanged = $v; }
+
     public static function mailing_log(string $message) : void {
         $uploadDir = wp_upload_dir();
         $logDir    = $uploadDir['basedir'] . '/pwe-element/mailing';
@@ -21,72 +24,33 @@ class PWE_NotificationProcessor {
         @chmod($logFile, 0640);
     }
 
-    private static function period_token(array $p): string {
-        // Domyślnie: miesięcznie
+    /** Zwraca cooldown w sekundach na podstawie $p['period'] */
+    private static function period_seconds(array $p) : int {
         $spec = isset($p['period']) ? strtolower(trim((string)$p['period'])) : 'monthly';
 
-        // Czas wg strefy WordPressa
-        $now = current_time('timestamp');
-
-        // Predefiniowane okresy
-        if ($spec === 'monthly') return wp_date('Y-m', $now);
-        if ($spec === 'weekly')  return wp_date('o-\WW', $now);     // ISO tydzień, np. 2025-W39
-        if ($spec === 'daily')   return wp_date('Y-m-d', $now);
-        if ($spec === 'hourly')  return wp_date('Y-m-d-H', $now);
-
-        // Minuty/godziny/TTL w sekundach, np. "minutes:10", "hours:6", "ttl:900"
-        if (preg_match('/^minutes:(\d+)$/', $spec, $m)) {
-            $n = max(1, (int)$m[1]);
-            $bucket = (int) floor($now / ($n * 60));
-            return "min:$n:$bucket";
-        }
-        if (preg_match('/^hours:(\d+)$/', $spec, $m)) {
-            $n = max(1, (int)$m[1]);
-            $bucket = (int) floor($now / ($n * 3600));
-            return "hr:$n:$bucket";
-        }
-        if (preg_match('/^ttl:(\d+)$/', $spec, $m)) {
-            $ttl = max(1, (int)$m[1]);
-            $bucket = (int) floor($now / $ttl);
-            return "ttl:$ttl:$bucket";
+        // liczba bezpośrednio → sekundy (np. '2592000')
+        if (ctype_digit($spec)) {
+            return (int)$spec;
         }
 
-        // Fallback: miesięcznie
-        return wp_date('Y-m', $now);
-    }
+        // 'ttl:900' | 'minutes:10' | 'hours:6' | 'days:30'
+        if (preg_match('/^ttl:(\d+)$/', $spec, $m))     return max(1, (int)$m[1]);
+        if (preg_match('/^minutes:(\d+)$/', $spec, $m)) return max(1, (int)$m[1]) * MINUTE_IN_SECONDS;
+        if (preg_match('/^hours:(\d+)$/', $spec, $m))   return max(1, (int)$m[1]) * HOUR_IN_SECONDS;
+        if (preg_match('/^days:(\d+)$/', $spec, $m))    return max(1, (int)$m[1]) * DAY_IN_SECONDS;
 
-    /**
-     * Główne wejście: przyjmuje kompletny zestaw parametrów (z presetów)
-     * i wykonuje całą procedurę na formularzach „Rejestracja PL/EN”.
-     */
-    public static function apply(array $p) : void {
-        // Walidacja kluczowych pól
-        foreach (['target_titles','notification','to','qr','option_key_prefix','template_dir'] as $req) {
-            if (empty($p[$req])) { self::mailing_log("GF: Brak klucza parametrów: {$req}"); return; }
-        }
-        foreach (['name','subject','template','isActive','event','from','fromName','match_by','overwrite_if_exists'] as $k) {
-            if (!array_key_exists($k, $p['notification'])) {
-                self::mailing_log("GF: Brak notification['{$k}']."); return;
-            }
-        }
+        // skróty: daily/weekly/hourly/monthly (miesiąc ≈ 30 dni umownie)
+        if ($spec === 'hourly')  return HOUR_IN_SECONDS;
+        if ($spec === 'daily')   return DAY_IN_SECONDS;
+        if ($spec === 'weekly')  return 7 * DAY_IN_SECONDS;
+        if ($spec === 'monthly') return 30 * DAY_IN_SECONDS; // jeżeli chcesz „do końca miesiąca”, to inna logika, ale tu cooldown
 
-        // 1) Zbierz kandydatów (PL/EN po tytule) i odfiltruj po done_option_key dla BIEŻĄCEGO OKRESU
-        $periodToken = self::period_token($p);
-        $notFollowedBy = isset($p['not_followed_by']) && is_array($p['not_followed_by']) ? $p['not_followed_by'] : [];
-        $candidates  = self::pickCandidatesByTitleMap($p['target_titles'], $p['option_key_prefix'], $periodToken, $notFollowedBy);
-
-        if (empty($candidates)) {
-            return;
-        }
-
-        // 2) Przetwórz każdy formularz
-        foreach ($candidates as $form_id => $lang) {
-            self::processOne((int)$form_id, (string)$lang, $p);
-        }
+        // fallback
+        return 30 * DAY_IN_SECONDS;
     }
 
     /** Krok 1: wybór formularzy po tytule + wczesny done_option_key */
-    private static function pickCandidatesByTitleMap(array $title_map, $option_key_prefix, $periodToken, array $not_followed_by = []) : array {
+    private static function pickCandidatesByTitleMap(array $title_map, $option_key_prefix, array $p, array $not_followed_by = []) : array {
         if (!method_exists('GFAPI','get_forms')) {
             self::mailing_log('GF: Brak GFAPI::get_forms().');
             return [];
@@ -94,33 +58,40 @@ class PWE_NotificationProcessor {
 
         $forms      = GFAPI::get_forms();
         $candidates = [];
+        $cooldown   = self::period_seconds($p);
 
         foreach ($forms as $f) {
             $title = $f['title'] ?? ($f->title ?? '');
             $id    = $f['id']    ?? ($f->id ?? null);
             if (!$id || !is_string($title)) { continue; }
 
+            // dopasowanie języka po tytule
             $lang = null;
             foreach ($title_map as $needle => $lng) {
                 if (stripos($title, $needle) !== false) { $lang = $lng; break; }
             }
             if (!$lang) { continue; }
 
+            // wykluczenia
             $denyList = array_filter(array_map('strval', $not_followed_by));
             $denyHit  = false;
             foreach ($denyList as $deny) {
                 $deny = trim($deny);
                 if ($deny !== '' && stripos($title, $deny) !== false) {
-                    $denyHit = true;
-                    break;
+                    $denyHit = true; break;
                 }
             }
             if ($denyHit) { continue; }
 
-            $done_key = $option_key_prefix . $id;
-            $last = get_option($done_key, '');
-            if (is_string($last) && $last === $periodToken) { continue; }
-            // delete_option($done_key);
+            // cooldown per formularz
+            $done_key = $option_key_prefix . (int)$id;
+            $last     = (int) get_option($done_key, 0);
+            $now      = (int) current_time('timestamp');
+            if (!self::$versionChanged) {
+                if ($last && ($now - $last) < $cooldown) {
+                    continue;
+                }
+            }
 
             $candidates[(int)$id] = $lang;
         }
@@ -130,18 +101,15 @@ class PWE_NotificationProcessor {
 
     /** Krok 2: przetworzenie pojedyńczego formularza */
     private static function processOne(int $form_id, string $lang, array $p) : void {
-        $done_key    = $p['option_key_prefix'] . $form_id;
-        $periodToken = self::period_token($p);
-        $lock_key    = $done_key;
-        $option = get_option($lock_key, '');
-        $option_ts = strtotime($option);
-        var_dump($option_ts);
+        $done_key  = $p['option_key_prefix'] . $form_id;
+        $now       = (int) current_time('timestamp');
+        $cooldown  = self::period_seconds($p);
 
-        $date = strtotime(date('Y-m-d H:i:s'));
-
-        var_dump(!$option_ts , $option_ts + (30 * DAY_IN_SECONDS) >= $date, '<br>');
-        if (!$option_ts || $option_ts + (30 * DAY_IN_SECONDS) >= $date) {
-            return;
+        $last = (int) get_option($done_key, 0);
+        if (!self::$versionChanged) {
+            if ($last && ($now - $last) < $cooldown) {
+                return;
+            }
         }
 
         $form = GFAPI::get_form($form_id);
@@ -170,7 +138,7 @@ class PWE_NotificationProcessor {
             }
         }
         if ($existing_id && empty($p['notification']['overwrite_if_exists'])) {
-            update_option($done_key, $date);
+            update_option($done_key, $now);
             $form_title = is_array($form) && isset($form['title']) ? $form['title'] : 'unknown';
             self::mailing_log('GF: Formularz "' . $form_title . '" został zrobiony wcześniej.');
             return;
@@ -244,7 +212,7 @@ class PWE_NotificationProcessor {
         // Zaznacz WSZYSTKIE feedy QR
         if (!empty($qr_feed_ids)) {
             foreach ($qr_feed_ids as $fid) {
-                $payload['spgfqrcode_notification_feed_' . $fid] = '1';
+                $payload['spgfqrcode_notification_feed_' . $fid] = true;
             }
         }
 
@@ -263,7 +231,6 @@ class PWE_NotificationProcessor {
         $result = GFAPI::update_form($form);
         if (is_wp_error($result)) {
             self::mailing_log('GF: Błąd zapisu formularza ID ' . $form_id . ' – ' . $result->get_error_message());
-            delete_option($lock_key);
             return;
         } else {
             $action = $existing_id ? 'updated' : 'created';
@@ -280,12 +247,11 @@ class PWE_NotificationProcessor {
             self::mailing_log('GF OK: ' . json_encode($ctx, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         }
 
-        if ($option === null) {
-            add_option($done_key, $date, '', 'no');
+        if (false === get_option($done_key, false)) {
+            add_option($done_key, $now, '', 'no');
         } else {
-            update_option($done_key, $date);
+            update_option($done_key, $now);
         }
-        delete_option($lock_key);
     }
 
     /** Pomocniczo: wybór ID pola e-mail wg prostej strategii (na razie tylko first/by_admin_label/by_id) */
@@ -316,4 +282,35 @@ class PWE_NotificationProcessor {
                 return null;
         }
     }
+
+    /**
+     * Główne wejście: przyjmuje kompletny zestaw parametrów (z presetów)
+     * i wykonuje całą procedurę na formularzach „Rejestracja PL/EN”.
+     */
+    public static function apply(array $p) : void {
+        // Walidacja kluczowych pól
+        foreach (['target_titles','notification','to','qr','option_key_prefix','template_dir'] as $req) {
+            if (empty($p[$req])) { self::mailing_log("GF: Brak klucza parametrów: {$req}"); return; }
+        }
+        foreach (['name','subject','template','isActive','event','from','fromName','match_by','overwrite_if_exists'] as $k) {
+            if (!array_key_exists($k, $p['notification'])) {
+                self::mailing_log("GF: Brak notification['{$k}']."); return;
+            }
+        }
+
+        // 1) Zbierz kandydatów (PL/EN po tytule) i odfiltruj po done_option_key dla BIEŻĄCEGO OKRESU
+        $notFollowedBy = isset($p['not_followed_by']) && is_array($p['not_followed_by']) ? $p['not_followed_by'] : [];
+        $candidates  = self::pickCandidatesByTitleMap($p['target_titles'], $p['option_key_prefix'], $p, $notFollowedBy);
+
+        if (empty($candidates)) {
+            return;
+        }
+
+        // 2) Przetwórz każdy formularz
+        foreach ($candidates as $form_id => $lang) {
+            self::processOne((int)$form_id, (string)$lang, $p);
+        }
+    }
+
+
 }

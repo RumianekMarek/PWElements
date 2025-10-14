@@ -454,7 +454,7 @@ if (
             #pweForm input[type="checkbox"]  {
                 min-width: 16px !important;
                 height: 16px !important;
-                border-radius: 50% !important;
+                border-radius: 0px !important;
             }
             #pweForm .form-required::after {
                 content: "" !important;
@@ -965,6 +965,10 @@ if (
         }
         #pweRegistrationTicket input {
             border-radius:18px;
+        }
+        #pweRegistrationTicket input[type="checkbox"] {
+            border: 2px solid black;
+            border-radius:0px;
         }
         #pweRegistrationTicket .ticket-card__cta, #pweRegistrationTicket input[type="submit"], .popup_katalog {
             background-color: '. $btn_color .' !important;

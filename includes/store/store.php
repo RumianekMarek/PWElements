@@ -176,7 +176,7 @@ class PWEStore extends PWECommonFunctions {
 
     public function round_price($price) {
         if ($price >= 1000) {
-            return round($price, -2);
+            return round($price, -1);
         } else if ($price < 1000 && $price >= 100) {
             return round($price, -1);
         } else if ($price >= 50 && $price < 100) {
