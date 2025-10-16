@@ -1,6 +1,7 @@
 <?php
 
 $unique_id = PWECommonFunctions::id_rnd();
+$meta_data = PWECommonFunctions::get_database_meta_data('header_order');
 
 $pwe_header_partners_title_color = !empty($pwe_header_partners_title_color) ? $pwe_header_partners_title_color : 'black';
 $pwe_header_partners_background_color = !empty($pwe_header_partners_background_color) ? $pwe_header_partners_background_color : 'white';
@@ -54,7 +55,14 @@ $output .= '
         gap: 18px;
     }
     .pwe-header-partners__item {
-        max-width: 160px;
+        max-width: 160px; 
+    }
+    .pwe-header-partners__item, 
+    .pwe-header-partners__item a {
+        text-align: center;
+    }
+    .pwe-header-partners__item span {
+        font-weight: 600;
     }
     @media(max-width: 960px) {
         .pwe-header-partners {
@@ -77,6 +85,10 @@ $output .= '
         }
     }
 </style>';
+
+// echo '<pre>';
+// var_dump($cap_logotypes_data);
+// echo '</pre>';
 
 $files = [];
 
@@ -309,6 +321,10 @@ if ($pwe_header_cap_auto_partners_off) {
         $output .= '
     </div>';
 } else {
+
+    if (!empty($meta_data)) {
+        $header_order = $meta_data[0]->meta_data;
+    }
     
     if (!empty($cap_logotypes_data)) {
         // Grupujemy logotypy według logos_type, które zaczynają się na "header-"
@@ -321,12 +337,16 @@ if ($pwe_header_cap_auto_partners_off) {
                 $desc_en = $meta["desc_en"] ?? '';
                 $link    = $logo_data->logos_link;
                 $url     = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+                $name    = $logo_data->logos_exh_name;
+                $order   = isset($logo_data->logos_order) ? (int)$logo_data->logos_order : PHP_INT_MAX;
 
                 $element = [
                     'url' => $url,
                     'desc_pl' => $desc_pl,
                     'desc_en' => $desc_en,
-                    'link' => $link
+                    'link' => $link,
+                    'name' => $name,
+                    'order' => $order,
                 ];
 
                 $grouped_logos[$logo_data->logos_type][] = $element;
@@ -335,6 +355,7 @@ if ($pwe_header_cap_auto_partners_off) {
 
         // Mapowanie odmian
         $plural_map_pl = [
+            "Prelegent" => "Prelegenci",
             "Partner Targów" => "Partnerzy Targów",
             "Partner Merytoryczny" => "Partnerzy Merytoryczni",
             "Partner Branżowy" => "Partnerzy Branżowi",
@@ -344,6 +365,7 @@ if ($pwe_header_cap_auto_partners_off) {
         ];
 
         $plural_map_en = [
+            "Speaker" => "Speakers",
             "Fair Partner" => "Fair Partners",
             "Content Partner" => "Content Partners",
             "Industry Partner" => "Industry Partners",
@@ -354,10 +376,40 @@ if ($pwe_header_cap_auto_partners_off) {
 
         if (count($grouped_logos) > 0) {
 
+            // Apply group based on $header_order
+            $ordered_types = [];
+
+            if (!empty($header_order)) {
+                // Explode and remove empty elements/spaces
+                $parts = array_filter(array_map('trim', explode(',', $header_order)));
+
+                // Keep original values, but only those that start with "header-"
+                foreach ($parts as $p) {
+                    if ($p !== '') $ordered_types[] = $p;
+                }
+            } else {
+                // Default: wszystkie typy w kolejności, w jakiej są w $grouped_logos
+                $ordered_types = array_keys($grouped_logos);
+            }
+
             $output .= '
             <div class="pwe-header-partners">';
-                // Generating containers for each group
-                foreach ($grouped_logos as $logos_type => $files) {
+
+                // Iterate through $ordered_types in order
+                foreach ($ordered_types as $logos_type) {
+                    if (!isset($grouped_logos[$logos_type])) {
+                        continue;
+                    }
+
+                    $files = $grouped_logos[$logos_type];
+
+                    // Sort files by logos_order (ascending). If missing, order -> at the end.
+                    usort($files, function($a, $b) {
+                        $oa = $a['order'] ?? PHP_INT_MAX;
+                        $ob = $b['order'] ?? PHP_INT_MAX;
+                        if ($oa === $ob) return 0;
+                        return ($oa < $ob) ? -1 : 1;
+                    });
 
                     if (count($files) > 0) {
                         $unique_id = uniqid();
@@ -430,12 +482,14 @@ if ($pwe_header_cap_auto_partners_off) {
                                             <div class="pwe-header-partners__item">
                                                 <a href="'. $item["link"] .'" target="_blank">
                                                     <img src="'. $item["url"] .'" alt="partner logo">
+                                                    '. (!empty($item["name"]) ? '<span>'. $item["name"] .'</span>' : '') .'
                                                 </a>
                                             </div>';
                                         } else {
                                             $output .= '
                                             <div class="pwe-header-partners__item">
                                                 <img src="'. $item["url"] .'" alt="partner logo">
+                                                '. (!empty($item["name"]) ? '<span>'. $item["name"] .'</span>' : '') .'
                                             </div>';
                                         }
                                     }

@@ -358,6 +358,39 @@ class PWECommonFunctions {
         return $results;
     }    
 
+    public static function get_database_associates_data($fair_domain = null) {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+            return [];
+        }
+
+        $fair_domain = ($fair_domain == null) ? $_SERVER['HTTP_HOST'] : $fair_domain;
+    
+        // Retrieving filtered data directly from database
+        $query = $cap_db->prepare("
+            SELECT *
+            FROM associates
+            WHERE FIND_IN_SET(%s, fair_associates)
+        ", $fair_domain);
+
+        $results = $cap_db->get_results($query);
+    
+        // SQL error checking
+        if ($cap_db->last_error) {
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+            return [];
+        }
+    
+        return $results;
+    }
+
     public static function get_database_store_data() {
         // Database connection
         $cap_db = self::connect_database();
@@ -374,10 +407,10 @@ class PWECommonFunctions {
     
         // SQL error checking
         if ($cap_db->last_error) {
-            return [];
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
+            return [];
         }
     
         return $results;
@@ -413,27 +446,42 @@ class PWECommonFunctions {
         $cap_db = self::connect_database();
         // If connection failed, return empty array
         if (!$cap_db) {
-            return [];
             if (current_user_can('administrator') && !is_admin()) {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
+            return [];
         }
+
+        $domain = $_SERVER['HTTP_HOST'] ?? '';
+        $domain = preg_replace('/:\d+$/', '', $domain);
         
         if($data_id === null){
             // Retrieving data from the database
             $results = $cap_db->get_results("SELECT * FROM meta_data");
         } else {
-            $results = $cap_db->get_var(
-                $cap_db->prepare("SELECT meta_data FROM meta_data WHERE slug = %s", $data_id)
-            );
+            if ($data_id === 'header_order') {
+                $query = "
+                    SELECT m.meta_data
+                    FROM meta_data AS m
+                    INNER JOIN fairs AS f ON m.rights = f.id
+                    WHERE m.slug = 'header_order'
+                    AND f.fair_domain = %s
+                ";
+
+                $results = $cap_db->get_results($cap_db->prepare($query, $domain));
+            } else {
+                $results = $cap_db->get_var(
+                    $cap_db->prepare("SELECT meta_data FROM meta_data WHERE slug = %s", $data_id)
+                );
+            }
         }
 
         // SQL error checking
         if ($cap_db->last_error) {
-            return [];
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
+            return []; 
         }
     
         return $results;
@@ -502,7 +550,7 @@ class PWECommonFunctions {
     
         // Get current domain
         if ($fair_domain == null) {
-            $domain = $_SERVER['HTTP_HOST'];
+            $domain = $_SERVER['HTTP_HOST']; 
         } else {
             $domain = $fair_domain;
         }
