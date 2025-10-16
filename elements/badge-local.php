@@ -152,7 +152,7 @@ class PWBadgeElement extends PWElements {
 
             $zip = new ZipArchive();
             $upload_dir = wp_upload_dir();
-            $zip_path = $upload_dir['basedir'] . '/tmp_qr_only.zip';
+            $zip_path = $upload_dir['basedir'] . '/' . do_shortcode('[trade_fair_badge]') . '_qr_only.zip';
 
             // 4. Generates multiple badges adding to forms and opens each badge URL in a new window for download.
             if ($zip->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
@@ -176,7 +176,8 @@ class PWBadgeElement extends PWElements {
                 $zip->close();
     
                 echo '<script>
-                    const newTab = window.open("' . $upload_dir['baseurl'] . '/tmp_qr_only.zip", "_blank");
+                     const url = "' . $upload_dir['baseurl'] . '/' . do_shortcode('[trade_fair_badge]') . '_qr_only.zip?ts=" + Date.now();
+                    const newTab = window.open(url, "_blank");
                 </script>';
             }
         }
