@@ -41,7 +41,7 @@ class PWECommonFunctions {
         // Limit the number of connection attempts
         if (self::$connection_attempts >= self::$max_connection_attempts) {
             // End attempt after 2 failed attempts
-            return false; 
+            return false;
         }
 
         // Initialize connection variables
@@ -52,7 +52,7 @@ class PWECommonFunctions {
         }
 
         $database_host = $database_name = $database_user = $database_password = '';
-        
+
         // Set connection data depending on the server
         switch ($_SERVER['SERVER_ADDR']) {
             case '94.152.207.180':
@@ -87,7 +87,7 @@ class PWECommonFunctions {
         if (!empty($database_user) && !empty($database_password) && !empty($database_name) && !empty($database_host)) {
             try {
                 $cap_db = new wpdb($database_user, $database_password, $database_name, $database_host);
-                
+
                 // Check if the connection was successful
                 if ($cap_db->dbh) {
                     self::$cached_db_connection = $cap_db; // Cache the connection if successful
@@ -108,7 +108,7 @@ class PWECommonFunctions {
                 error_log("Nieprawidłowe dane połączenia z bazą danych.");
             }
         }
-    
+
         // Check for connection errors
         if (!$cap_db || !$cap_db->dbh || mysqli_connect_errno()) {
             self::$connection_attempts++;
@@ -120,10 +120,10 @@ class PWECommonFunctions {
 
         // error_log("connected to database");
         return $cap_db;
-    } 
+    }
 
     /**
-     * Get data from CAP databases  
+     * Get data from CAP databases
      */
     public static function get_database_fairs_data($fair_domain = null) {
         // Database connection
@@ -183,7 +183,7 @@ class PWECommonFunctions {
             $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
         }
 
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -191,7 +191,7 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
         return $results;
     }
 
@@ -224,7 +224,7 @@ class PWECommonFunctions {
             $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
         }
 
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -232,7 +232,7 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
         return $results;
     }
 
@@ -273,7 +273,7 @@ class PWECommonFunctions {
             $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
         }
 
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -281,10 +281,10 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
         return $results;
     }
-    
+
     public static function get_database_translations_data($fair_domain = null) {
         $cap_db = self::connect_database();
         if (!$cap_db) return [];
@@ -356,7 +356,7 @@ class PWECommonFunctions {
         }
 
         return $results;
-    }    
+    }
 
     public static function get_database_associates_data($fair_domain = null) {
         // Database connection
@@ -370,7 +370,7 @@ class PWECommonFunctions {
         }
 
         $fair_domain = ($fair_domain == null) ? $_SERVER['HTTP_HOST'] : $fair_domain;
-    
+
         // Retrieving filtered data directly from database
         $query = $cap_db->prepare("
             SELECT *
@@ -379,7 +379,7 @@ class PWECommonFunctions {
         ", $fair_domain);
 
         $results = $cap_db->get_results($query);
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             if (current_user_can("administrator") && !is_admin()) {
@@ -387,7 +387,7 @@ class PWECommonFunctions {
             }
             return [];
         }
-    
+
         return $results;
     }
 
@@ -401,10 +401,10 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
+
         // Retrieving data from the database
         $results = $cap_db->get_results("SELECT * FROM shop");
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             if (current_user_can("administrator") && !is_admin()) {
@@ -412,7 +412,7 @@ class PWECommonFunctions {
             }
             return [];
         }
-    
+
         return $results;
     }
 
@@ -426,10 +426,10 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
+
         // Retrieving data from the database
         $results = $cap_db->get_results("SELECT * FROM shop_packs");
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -437,9 +437,9 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
         return $results;
-    } 
+    }
 
     public static function get_database_meta_data($data_id = null) {
         // Database connection
@@ -454,7 +454,7 @@ class PWECommonFunctions {
 
         $domain = $_SERVER['HTTP_HOST'] ?? '';
         $domain = preg_replace('/:\d+$/', '', $domain);
-        
+
         if($data_id === null){
             // Retrieving data from the database
             $results = $cap_db->get_results("SELECT * FROM meta_data");
@@ -481,11 +481,11 @@ class PWECommonFunctions {
             if (current_user_can("administrator") && !is_admin()) {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
-            return []; 
+            return [];
         }
-    
+
         return $results;
-    } 
+    }
 
     public static function get_database_groups_contacts_data() {
         // Database connection
@@ -497,10 +497,10 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
-        // Retrieving data from the database 
+
+        // Retrieving data from the database
         $results = $cap_db->get_results("SELECT * FROM groups");
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -508,7 +508,32 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
+        return $results;
+    }
+
+    public static function get_database_groups_callcenter_data() {
+        // Database connection
+        $cap_db = self::connect_database();
+        // If connection failed, return empty array
+        if (!$cap_db) {
+            return [];
+            if (current_user_can('administrator') && !is_admin()) {
+                echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
+            }
+        }
+
+        // Retrieving data from the database
+        $results = $cap_db->get_results("SELECT * FROM form_senders");
+
+        // SQL error checking
+        if ($cap_db->last_error) {
+            return [];
+            if (current_user_can("administrator") && !is_admin()) {
+                echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
+            }
+        }
+
         return $results;
     }
 
@@ -522,10 +547,10 @@ class PWECommonFunctions {
                 echo '<script>console.error("Brak połączenia z bazą danych.")</script>';
             }
         }
-    
+
         // Retrieving data from the database
         $results = $cap_db->get_results("SELECT fair_domain, fair_group FROM fairs");
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -533,9 +558,9 @@ class PWECommonFunctions {
                 echo '<script>console.error("Błąd SQL: '. addslashes($cap_db->last_error) .'")</script>';
             }
         }
-    
+
         return $results;
-    } 
+    }
 
     public static function get_database_logotypes_data($fair_domain = null) {
         // Database connection
@@ -547,28 +572,28 @@ class PWECommonFunctions {
             }
             return [];
         }
-    
+
         // Get current domain
         if ($fair_domain == null) {
-            $domain = $_SERVER['HTTP_HOST']; 
+            $domain = $_SERVER['HTTP_HOST'];
         } else {
             $domain = $fair_domain;
         }
-    
+
         // SQL query to fetch logos with the matching fair_id and fair_domain
         $query = "
-            SELECT logos.*, 
-                meta_data.meta_data AS meta_data 
+            SELECT logos.*,
+                meta_data.meta_data AS meta_data
             FROM logos
             INNER JOIN fairs ON logos.fair_id = fairs.id
-            LEFT JOIN meta_data ON meta_data.slug = 'patrons' 
+            LEFT JOIN meta_data ON meta_data.slug = 'patrons'
                                 AND JSON_UNQUOTE(JSON_EXTRACT(meta_data.meta_data, '$.slug')) = logos.logos_type
             WHERE fairs.fair_domain = %s
         ";
-    
+
         // Retrieve data from the database
         $results = $cap_db->get_results($cap_db->prepare($query, $domain));
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             if (current_user_can("administrator") && !is_admin()) {
@@ -576,9 +601,9 @@ class PWECommonFunctions {
             }
             return [];
         }
-    
+
         return $results;
-    } 
+    }
 
     public static function get_database_conferences_data($domain = null) {
         // Database connection
@@ -600,7 +625,7 @@ class PWECommonFunctions {
                 '%' . $domain . '%'
             )
         );
-    
+
         // SQL error checking
         if ($cap_db->last_error) {
             return [];
@@ -612,7 +637,7 @@ class PWECommonFunctions {
         foreach ($results as &$row) {
             if (!empty($row->conf_data)) {
                 $decoded = html_entity_decode($row->conf_data);
-        
+
                 // Czyścimy WSZYSTKIE wystąpienia font-family z atrybutów style (w tym wieloliniowe!)
                 $decoded = preg_replace_callback('/style="([^"]+)"/is', function ($match) {
                     $style = $match[1];
@@ -620,7 +645,7 @@ class PWECommonFunctions {
                     $style = trim(preg_replace('/\s*;\s*/', '; ', $style), '; ');
                     return $style ? 'style="' . $style . '"' : '';
                 }, $decoded);
-        
+
                 // Sprawdzamy poprawność JSON
                 $test = json_decode($decoded, true);
                 if (json_last_error() === JSON_ERROR_NONE) {
@@ -630,7 +655,7 @@ class PWECommonFunctions {
                 }
             }
         }
-            
+
         return $results;
     }
 
@@ -649,13 +674,13 @@ class PWECommonFunctions {
 
         // Build column list
         $sql = "
-            SELECT 
+            SELECT
                 f.id,
                 f.fair_domain,
                 fp.data
             FROM fairs f
-            LEFT JOIN fair_profiles fp 
-                ON fp.fair_id = f.id 
+            LEFT JOIN fair_profiles fp
+                ON fp.fair_id = f.id
             AND fp.slug = f.fair_domain
         ";
 
@@ -673,7 +698,7 @@ class PWECommonFunctions {
             }
             return [];
         }
-    
+
         return $results;
     }
 
@@ -692,14 +717,14 @@ class PWECommonFunctions {
 
         // Build column list
         $sql = "
-            SELECT 
+            SELECT
                 f.id,
                 f.fair_domain,
                 fp.data,
                 fp.slug,
                 fp.order
             FROM fairs f
-            LEFT JOIN fair_opinions fp 
+            LEFT JOIN fair_opinions fp
                 ON fp.fair_id = f.id
         ";
 
@@ -717,7 +742,7 @@ class PWECommonFunctions {
             }
             return [];
         }
-    
+
         return $results;
     }
 
@@ -727,12 +752,12 @@ class PWECommonFunctions {
     public static function pwe_color($color) {
         $fair_colors = self::findPalletColorsStatic();
         $result_color = null;
-    
-        // Handling color 'accent' 
+
+        // Handling color 'accent'
         if (strtolower($color) === 'accent' && isset($fair_colors['Accent'])) {
             $result_color = $fair_colors['Accent'];
         }
-    
+
         // Handling color 'main2'
         if (strtolower($color) === 'main2') {
             foreach ($fair_colors as $color_key => $color_value) {
@@ -742,11 +767,11 @@ class PWECommonFunctions {
                 }
             }
         }
-    
+
         return $result_color;
     }
 
-    public static function generate_fair_data($fair) { 
+    public static function generate_fair_data($fair) {
         // Decode JSON estimations
         $estimations = !empty($fair->estimations) ? json_decode($fair->estimations, true) : [];
 
@@ -830,40 +855,98 @@ class PWECommonFunctions {
     /**
      * JSON all trade fairs
      */
-    public static function json_fairs() {
+    public static function json_fairs() { 
         $pwe_fairs = self::get_database_fairs_data();
+        $pwe_fairs_desc_translations = self::get_database_translations_data();
 
         static $console_logged = false;
 
-        if (!empty($pwe_fairs)) {
+        // Check if data is already in global variable
+        if (!empty($pwe_fairs) && is_array($pwe_fairs)) {
+            global $fairs_data;
             $fairs_data = ["fairs" => []];
 
+            // Add data about the fair
             foreach ($pwe_fairs as $fair) {
-                if (!isset($fair->fair_domain) || empty($fair->fair_domain)) {
+                if (!isset($fair->fair_domain) || empty($fair->fair_domain)) { 
                     continue;
                 }
-    
+
                 $domain = $fair->fair_domain;
-    
+
+                // Save data about the fair in the table
                 $fairs_data["fairs"][$domain] = self::generate_fair_data($fair);
             }
+
+            // Add translations to the fair data
+            foreach ($pwe_fairs_desc_translations as $translation) {
+                if (!isset($translation['fair_domain']) || empty($translation['fair_domain'])) {
+                    continue;
+                }
+
+                $domain = $translation['fair_domain'];
+
+                $translation_data = self::generate_fair_translation_data($translation);
+
+                // Merge data
+                if (isset($fairs_data["fairs"][$domain])) {
+                    $fairs_data["fairs"][$domain] = array_merge(
+                        $fairs_data["fairs"][$domain],
+                        $translation_data
+                    );
+                }
+            }
+
+            // $current_user = wp_get_current_user();
+            // if ($current_user && $current_user->user_login === 'Anton') {
+            //     var_dump($fairs_data);
+            // }
         } else {
+            // URL to JSON file
             $json_file = 'https://mr.glasstec.pl/doc/pwe-data.json';
-            $json_data = @file_get_contents($json_file);
+            
+            // Getting data from JSON file
+            $json_data = @file_get_contents($json_file); // Use @ to ignore PHP warnings on failure
+
+            // Checking if data has been downloaded
+            if ($json_data === false) {
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Failed to fetch data from JSON file: ' . $json_file . '")</script>';
+                }
+                return null;
+            }
+
+            global $fairs_data;
+            // Decoding JSON data
             $fairs_data = json_decode($json_data, true);
+
+            // Checking JSON decoding correctness
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Error decoding JSON: ' . json_last_error_msg() . '")</script>';
+                }
+                return null;
+            }
+
+            // Checking if the data has the correct structure
+            if (!isset($fairs_data['fairs']) || !is_array($fairs_data['fairs'])) {
+                if (current_user_can("administrator") && !is_admin()) {
+                    echo '<script>console.error("Invalid fairs data format in JSON file.")</script>';
+                }
+                return null;
+            }
 
             if (!$console_logged) {
                 if (current_user_can("administrator") && !is_admin()) {
-                    echo '<script>console.error("Dane CAP są pobrane z pliku backupowego!!!")</script>';
+                    echo '<script>console.error("Brak danych o targach w globalnej zmiennej (dane CAP DB), dane są pobrane z pwe-data.json")</script>';
                 }
                 $console_logged = true;
             }
-
         }
 
-        return $fairs_data['fairs'];  
+        return $fairs_data['fairs'];
     }
-    
+
     /**
      * Function to transform the date
      */
@@ -873,7 +956,7 @@ class PWECommonFunctions {
         // Convert date strings to DateTime objects
         $start_date_obj = DateTime::createFromFormat($format, $start_date);
         $end_date_obj = DateTime::createFromFormat($format, $end_date);
-    
+
         // Check if the conversion was correct
         if ($start_date_obj && $end_date_obj) {
             // Get the day, month and year from DateTime objects
@@ -882,20 +965,20 @@ class PWECommonFunctions {
             $start_month = $start_date_obj->format("m");
             $end_month = $end_date_obj->format("m");
             $year = $start_date_obj->format("Y");
-    
+
             // Check if months are the same
             if ($start_month === $end_month) {
                 $formatted_date = "{$start_day}-{$end_day}|{$start_month}|{$year}";
             } else {
                 $formatted_date = "{$start_day}|{$start_month}-{$end_day}|{$end_month}|{$year}";
             }
-    
+
             return $formatted_date;
         } else {
             return "Invalid dates";
         }
     }
-    
+
 
     /**
      * Decoding Base64
@@ -942,7 +1025,7 @@ class PWECommonFunctions {
 
         if (isset($uncode_options["_uncode_custom_colors_list"]) && is_array($uncode_options["_uncode_custom_colors_list"])) {
             $custom_colors_list = $uncode_options["_uncode_custom_colors_list"];
-      
+
             foreach ($custom_colors_list as $color) {
                 $title = $color['title'];
                 $color_value = $color["_uncode_custom_color"];
@@ -972,7 +1055,7 @@ class PWECommonFunctions {
 
         if (isset($uncode_options["_uncode_custom_colors_list"]) && is_array($uncode_options["_uncode_custom_colors_list"])) {
             $custom_colors_list = $uncode_options["_uncode_custom_colors_list"];
-      
+
             foreach ($custom_colors_list as $color) {
                 $title = $color['title'];
                 $color_value = $color["_uncode_custom_color"];
@@ -992,7 +1075,7 @@ class PWECommonFunctions {
 
     /**
      * Checking if the location is PL
-     * 
+     *
      * @return bool
      */
     public static function lang_pl() {
@@ -1001,10 +1084,10 @@ class PWECommonFunctions {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param string $pl text in Polish.
      * @param string $pl text in English.
-     * @return string 
+     * @return string
      */
     public static function languageChecker($pl, $en = '') {
         return get_locale() == 'pl_PL' ? $pl : $en;
@@ -1055,12 +1138,12 @@ class PWECommonFunctions {
             }
         }
         return $pwe_forms_array;
-    }  
+    }
 
     /**
      * Finding all target form id
      *
-     * @param string $form_name 
+     * @param string $form_name
      * @return string
      */
     public static function findFormsID($form_name) {
@@ -1079,7 +1162,7 @@ class PWECommonFunctions {
 
     /**
      * Mobile displayer check
-     * 
+     *
      * @return bool
      */
     public static function checkForMobile(){
@@ -1088,7 +1171,7 @@ class PWECommonFunctions {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param bool $logo_color schould logo be in color.
      * @return string
      */
@@ -1107,7 +1190,7 @@ class PWECommonFunctions {
         switch (true){
             case(get_locale() == 'pl_PL'):
                 if($logo_color){
-                    foreach ($filePaths as $path) {    
+                    foreach ($filePaths as $path) {
                         if (strpos($path, '-en.') === false && file_exists(ABSPATH . $path)) {
                             return '<img src="' . $path . '"/>';
                         }
@@ -1144,7 +1227,7 @@ class PWECommonFunctions {
      */
     public static function findAllImages($firstPath, $image_count = false, $secondPath = '/doc/galeria') {
         $firstPath = $_SERVER['DOCUMENT_ROOT'] . $firstPath;
-        
+
         if (is_dir($firstPath) && !empty(glob($firstPath . '/*.{jpeg,jpg,png,webp,svg,JPEG,JPG,PNG,WEBP}', GLOB_BRACE))) {
             $exhibitorsImages = glob($firstPath . '/*.{jpeg,jpg,png,webp,svg,JPEG,JPG,PNG,WEBP}', GLOB_BRACE);
         } else {
@@ -1166,7 +1249,7 @@ class PWECommonFunctions {
 
     /**
      * Laguage check for text
-     * 
+     *
      * @param bool $logo_color schould logo be in color.
      * @return string
      */
@@ -1186,7 +1269,7 @@ class PWECommonFunctions {
 
     /**
      * Trade fair date existance check
-     * 
+     *
      * @return bool
      */
     public static function isTradeDateExist() {

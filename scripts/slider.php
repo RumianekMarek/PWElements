@@ -222,12 +222,13 @@ class PWESliderScripts {
                     $get_initial_slides_to_show = $breakpoints_raw;
                 } else {
                     $get_initial_slides_to_show = '
-                    return  elementWidth < 400 ? 1 :
-                            elementWidth < 600 ? 2 :
-                            elementWidth < 900 ? 3 :
-                            elementWidth < 1100 ? 4 :
-                            slidesToShowSetting;
-                    ';
+                    return (
+                        elementWidth < 400 ? 1 :
+                        elementWidth < 600 ? 2 :
+                        elementWidth < 900 ? 3 :
+                        elementWidth < 1100 ? 4 :
+                        slidesToShowSetting
+                    );';
                 }
             } else if ($id == 'other-events') { // other-events.php <-------------------------------------------------------------<
                 if ($options[0]["other_events_preset"] == 'preset_1') {
