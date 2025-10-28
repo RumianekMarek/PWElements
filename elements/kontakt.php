@@ -18,7 +18,7 @@ class PWElementContact extends PWElements {
      * Returns an array of parameters for the Visual Composer element.
      */
     public static function initElements() {
-            $element_output[] = 
+            $element_output[] =
                 array(
                     'type' => 'checkbox',
                     'group' => 'PWE Element',
@@ -32,19 +32,20 @@ class PWElementContact extends PWElements {
                 );
         return $element_output;
     }
-    
+
     /**
      * Static method to generate the HTML output for the PWE Element.
     * Returns the HTML output as a string.
-    * 
-    * @return string @output 
+    *
+    * @return string @output
     */
-    public static function output($atts) {        
+    public static function output($atts) {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
-        $pwe_groups_data = PWECommonFunctions::get_database_groups_data(); 
-        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data();  
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data();
 
+        $source_utm = (isset($_SERVER['argv'][0])) ? $_SERVER['argv'][0] : '';
         // Get domain address
         $current_domain = $_SERVER['HTTP_HOST'];
 
@@ -71,15 +72,15 @@ class PWElementContact extends PWElements {
                             $contact_person_name = trim($contact_person_data->name);
                             $contact_person_email = trim($contact_person_data->email);
                             $contact_person_phone = trim($contact_person_data->tel);
-                        }  
-                    } 
+                        }
+                    }
                 }
             }
-        }  
-        
+        }
+
         $service_email = !empty($service_email) ? $service_email : "zgloszenia@warsawexpo.eu";
         // $service_email = "anton.melnychuk@warsawexpo.eu";
-        
+
         $output = '
         <style>
             .pwelement_'. self::$rnd_id .' .pwe-container-contact {
@@ -88,13 +89,13 @@ class PWElementContact extends PWElements {
                 border-radius: 18px;
             }
             .pwelement_'. self::$rnd_id .' .pwe-container-contact-items {
-                display:flex; 
+                display:flex;
                 flex-direction: column;
                 gap: 18px;
                 margin-top: 18px;
             }
             .pwelement_'. self::$rnd_id .' .pwe-contact-icon-item {
-                display:flex; 
+                display:flex;
                 align-items: center;
                 gap: 18px;
             }
@@ -137,7 +138,7 @@ class PWElementContact extends PWElements {
                     width: 100%;
                     margin-bottom: 10px;
                 }
-                .pwelement_'. self::$rnd_id .' .pwe-contact-icon-item p { 
+                .pwelement_'. self::$rnd_id .' .pwe-contact-icon-item p {
                     min-width: 160px;
                 }
             }';
@@ -145,7 +146,7 @@ class PWElementContact extends PWElements {
             if (isset($atts["horizontal"]) && $atts["horizontal"] == "true") {
                 $output .= '
                 .pwelement_'. self::$rnd_id .' .pwe-container-contact-items {
-                    display: flex; 
+                    display: flex;
                     flex-wrap: wrap;
                     justify-content: space-evenly;
                 }
@@ -237,26 +238,43 @@ class PWElementContact extends PWElements {
                                 if (!empty($contact_person_email)) {
                                     $output .= '<a href="mailto:'. $contact_person_email .'">'. $contact_person_email .'</a>';
                                 }
-                            $output .= '    
+                            $output .= '
                             </p>
                         </div>
                     </div>';
-                }             
-                
+                }
+
                 $output .= '
             </div>
 
         </div>';
 
-        // $output .= '
-        // <script>
-        //     document.addEventListener("DOMContentLoaded", function () {
-        //         const emailAdminInput = document.querySelector(".email-admin-input input");
-        //         if (emailAdminInput) {
-        //             emailAdminInput.value = "'. str_replace(" ", "", $service_email) .'";
-        //         }
-        //     });
-        // </script>';         
+        $output .= '
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+               const utm = "'. $source_utm .'";
+
+               function getCookie(name) {
+                  let value = "; " + document.cookie;
+                  let parts = value.split("; " + name + "=");
+                  if (parts.length === 2) return parts.pop().split(";").shift();
+                  return null;
+                }
+
+                function deleteCookie(name) {
+                    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                }
+
+                let utmPWE = utm;
+                let utmCookie = getCookie("utm_params");
+                let utmInput = document.querySelector(".utm-class input");
+
+                if (utmInput) {
+                    utmInput.value = utmPWE;
+                }
+
+            });
+        </script>';
 
     return $output;
     }

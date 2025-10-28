@@ -391,7 +391,7 @@ class PWElementMainCountdown extends PWElements {
 
                     // Adding halls to $all_halls without numbers
                     $clean_hall = preg_replace('/\d/', '', $hall);
-                    if (!str_contains($all_halls, $clean_hall)) {
+                    if (strpos($all_halls, $clean_hall) === false) {
                         $all_halls .= $clean_hall . ', ';
                     }
                 }

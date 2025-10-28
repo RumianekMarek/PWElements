@@ -363,45 +363,51 @@ class PWElementFooter extends PWElements {
 
         $output .= '</div>';
 
-        if (get_locale() == "en_US") {
-            $output .= '
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const uncodeNavMenu = document.querySelector("#masthead");
-                    const pweNavMenu = document.querySelector("#pweMenu");
+        $output .= '
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const uncodeNavMenu = document.querySelector("#masthead");
+                const pweNavMenu = document.querySelector("#pweMenu");
 
-                    // Top main menu "For exhibitors"
-                    const mainMenu = pweNavMenu ? document.querySelector(".pwe-menu__nav") : document.querySelector("ul.menu-primary-inner");
-                    const secondChild = mainMenu.children[1];
-                    const dropMenu = pweNavMenu ? secondChild.querySelector(".pwe-menu__submenu") : secondChild.querySelector("ul.drop-menu");
+                // Top main menu "For exhibitors"
+                const mainMenu = pweNavMenu ? document.querySelector(".pwe-menu__nav") : document.querySelector("ul.menu-primary-inner");
+                const secondChild = mainMenu.children[1];
+                const dropMenu = pweNavMenu ? secondChild.querySelector(".pwe-menu__submenu") : secondChild.querySelector("ul.drop-menu");
 
-                    // Create new element li
-                    const newMenuItem = document.createElement("li");
-                    newMenuItem.id = pweNavMenu ? "" : "menu-item-99999";
-                    newMenuItem.className = pweNavMenu ? "pwe-menu__submenu-item" : "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
-                    newMenuItem.innerHTML = `<a title="Become an agent" target="_blank" href="https://warsawexpo.eu/en/forms-for-agents/">Become an agent</a>`;
+                // Create new element li
+                const newMenuItem = document.createElement("li");
+                newMenuItem.id = pweNavMenu ? "" : "menu-item-99999";
+                newMenuItem.className = pweNavMenu ? "pwe-menu__submenu-item" : "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
+                newMenuItem.innerHTML = `<a title="'. (get_locale() == "pl_PL" ? 'Zostań agentem' : 'Become an agent') .'" target="_blank" href="https://warsawexpo.eu'. (get_locale() == "pl_PL" ? '/formularz-dla-agentow/' : '/en/forms-for-agents/') .'">'. (get_locale() == "pl_PL" ? 'Zostań agentem' : 'Become an agent') .'</a>`;
 
-                    // Add new element
+                // Add new element as second in the list
+                if (dropMenu && dropMenu.children.length > 1) {
+                    dropMenu.insertBefore(newMenuItem, dropMenu.children[1]);
+                } else {
                     dropMenu.appendChild(newMenuItem);
+                }
 
-                    // --------------------------------------------
+                // --------------------------------------------
 
-                    // Bottom main menu "For exhibitors"
-                    const footerMenu = document.querySelector(".pwe-footer-nav-right-column");
-                    const footerThirdChild = footerMenu.children[2];
-                    const footerMenuChild = footerThirdChild.querySelector(".pwe-footer-nav-column .menu");
+                // Bottom main menu "For exhibitors"
+                const footerMenu = document.querySelector(".pwe-footer-nav-right-column");
+                const footerThirdChild = footerMenu.children[2];
+                const footerMenuChild = footerThirdChild.querySelector(".pwe-footer-nav-column .menu");
 
-                    // Create new element li
-                    const newFooterMenuItem = document.createElement("li");
-                    newFooterMenuItem.id = "menu-item-99999";
-                    newFooterMenuItem.className = "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
-                    newFooterMenuItem.innerHTML = `<a title="Become an agent" target="_blank" href="https://warsawexpo.eu/en/forms-for-agents/">Become an agent</a>`;
+                // Create new element li
+                const newFooterMenuItem = document.createElement("li");
+                newFooterMenuItem.id = "menu-item-99999";
+                newFooterMenuItem.className = "menu-item menu-item-type-custom menu-item-object-custom menu-item-99999";
+                newFooterMenuItem.innerHTML = `<a title="'. (get_locale() == "pl_PL" ? 'Zostań agentem' : 'Become an agent') .'" target="_blank" href="https://warsawexpo.eu'. (get_locale() == "pl_PL" ? '/formularz-dla-agentow/' : '/en/forms-for-agents/') .'">'. (get_locale() == "pl_PL" ? 'Zostań agentem' : 'Become an agent') .'</a>`;
 
-                    // Add new element
+                // Add new element as second in the footer list
+                if (footerMenuChild && footerMenuChild.children.length > 1) {
+                    footerMenuChild.insertBefore(newFooterMenuItem, footerMenuChild.children[1]);
+                } else {
                     footerMenuChild.appendChild(newFooterMenuItem);
-                });
-            </script>';
-        }
+                }
+            });
+        </script>';
 
         if ($_SERVER['REQUEST_URI'] == '/' && get_locale() == "pl_PL") {
             $output .= '
