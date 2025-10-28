@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (e.target.classList.contains('active')) {
                     const domainAttr = e.target.getAttribute('domain');
                     const submit = potentialExhibitorsElement.querySelector(".gform_footer .gform_button");
-                    if (domainAttr !== null && domainAttr !== '') {   
+                    if (domainAttr !== null && domainAttr !== '') {
                         submit.classList.add('active');
                     } else submit.classList.remove('active');
                 }

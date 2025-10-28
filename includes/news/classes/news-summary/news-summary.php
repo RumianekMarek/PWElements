@@ -142,6 +142,14 @@ class PWENewsSummary extends PWENews {
                 'dependency' => $dep,
             ),
             array(
+                'type' => 'textarea',
+                'group' => 'News',
+                'heading' => __('News iframe title', 'pwelement'),
+                'param_name' => 'pwe_news_summary_iframe_title',
+                'save_always' => true,
+                'dependency' => $dep,
+            ),
+            array(
                 'type' => 'textfield',
                 'group' => 'News',
                 'heading' => __('News iframe link', 'pwelement'),
@@ -257,6 +265,7 @@ class PWENewsSummary extends PWENews {
             'pwe_news_summary_stats_exhibitors_previous' => '',
             'pwe_news_summary_stats_space'          => '',
             'pwe_news_summary_stats_space_previous' => '',
+            'pwe_news_summary_iframe_title'         => '',
             'pwe_news_summary_iframe_link'          => '',
             'pwe_news_summary_iframe_desc'          => '',
             'pwe_news_summary_images'               => '',
@@ -589,11 +598,27 @@ class PWENewsSummary extends PWENews {
         // Iframe + galeria
         if (!empty($pwe_news_summary_iframe_link) || !empty($pwe_news_summary_iframe_desc) || !empty($gallery_html)) {
             $output .= '
-                <div class="pwe-news-summary__iframe" id="PWENewsSummaryIframe">
+                <div class="pwe-news-summary__iframe" id="PWENewsSummaryIframe">';
+                    if (!empty($pwe_news_summary_iframe_title)) {
+                        $output .= '
+                        <div class="pwe-news-summary__iframe-title">' . $pwe_news_summary_iframe_title . '</div>';
+                    }
+                    $output .= '
                     <div class="pwe-news-summary__iframe-container">';
                         if (!empty($pwe_news_summary_iframe_link)) {
-                            $output .= '
-                            <iframe width="560" height="315" src="' . $pwe_news_summary_iframe_link . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+                            // Extract the video ID from the URL
+                            preg_match('/embed\/([^?]+)/', $pwe_news_summary_iframe_link, $match);
+                            $video_id = $match[1];
+
+                            $video_plug = 'https://i.ytimg.com/vi/' . $video_id . '/sddefault.jpg';
+                            $video_src = 'https://www.youtube.com/embed/' . $video_id;
+                            $video_iframe_html = '<iframe class="pwe-iframe" src="' . $video_src . '?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+                            $video_default_html = '<div class="pwe-news-summary__iframe-default" style="background-image: url(' . $video_plug . ');">
+                                                        <img src="/wp-content/plugins/pwe-media/media/youtube-button.webp" alt="youtube play button">
+                                                </div>';
+
+                            $output .= '<div class="pwe-news-summary__iframe-box">' . $video_default_html . '</div>';
+
                         }
                         if (!empty($pwe_news_summary_iframe_desc)) {
                             $output .= '
@@ -675,6 +700,25 @@ class PWENewsSummary extends PWENews {
                 </div>
             </div>
         </div>';
+
+        $output .= '
+            <script>
+                jQuery(function ($) {
+                    // Zmienna z HTML-em iframe (wstrzyknięta z PHP)
+                    const iframeHtml = ' . json_encode($video_iframe_html) . ';
+
+                    const defaultImage = document.querySelector(".pwe-news-summary__iframe-default");
+
+                    if (defaultImage) {
+                        defaultImage.addEventListener("click", function () {
+                            const container = defaultImage.parentElement;
+                            if (container) {
+                                container.innerHTML = `<div class="pwe-news-summary__iframe-video">${iframeHtml}</div>`;
+                            }
+                        });
+                    }
+                });
+            </script>';
 
         return $output;
     }

@@ -77,6 +77,13 @@ class PWECatalog {
      * @return string
      */
     public function PWECatalogOutput($atts, $content = null) {
+
+        $exh_catalog_cron_pass = PWECommonFunctions::get_database_meta_data('cron_secret_pass');
+
+        if (current_user_can('administrator')) {
+            echo '<script>console.log("Link do odświeżenia katalogu: https://'. do_shortcode('[trade_fair_domainadress]') .'/wp-content/plugins/custom-element/other/mass_vip_cron.php?pass=' . $exh_catalog_cron_pass . '")</script>';
+        };
+
         $btn_text_color = PWECommonFunctions::findColor($atts['btn_text_color_manual_hidden'], $atts['btn_text_color'], 'white') . '!important';
         $btn_color = PWECommonFunctions::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$accent_color) . '!important';
         $btn_shadow_color = PWECommonFunctions::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important';

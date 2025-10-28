@@ -156,15 +156,15 @@ class PWENewsUpcoming extends PWENews {
 
                         $output .= '
                         <div class="pwe-news-upcoming__single-fair">
-                            <a class="pwe-news-upcoming__single-fair-logo-container" style="background-image: url(https://' . $fair_domain . '/doc/header_mobile.webp);" href="https://' . $fair_domain . '/?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">
+                            <a class="pwe-news-upcoming__single-fair-logo-container" style="background-image: url(https://' . $fair_domain . '/doc/header_mobile.webp);" href="https://' . $fair_domain . self::languageChecker('', '/en') .'/?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">
                                 <img class="pwe-news-upcoming__single-fair-logo" src="https://' . $fair_domain . '/doc/logo.webp">
                             </a>
                             <div class="pwe-news-upcoming__single-fair-text-container">
                                 <h2 class="pwe-news-upcoming__single-fair-text-title">' . $fair_title . '</h2>
                                 <div class="pwe-news-upcoming__single-fair-text-desc">' . $fair_desc . '</div>
                                 <div class="pwe-news-upcoming__single-fair-text-btn-container">
-                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_accent_color . ';" href="https://' . $fair_domain . '/rejestracja/?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">Zarejestruj się</a>
-                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_main2_color . ';" href="https://' . $fair_domain . '/wydarzenia/?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">Sprawdź agendę wydarzenia</a>
+                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_accent_color . ';" href="https://' . $fair_domain . self::languageChecker('/rejestracja/', '/en/registration/') .'?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">Zarejestruj się</a>
+                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_main2_color . ';" href="https://' . $fair_domain . self::languageChecker('/wydarzenia/', '/en/conferences/') .'?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">Sprawdź agendę wydarzenia</a>
                                 </div>
                             </div>
                         </div>

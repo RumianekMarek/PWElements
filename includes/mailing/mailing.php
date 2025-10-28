@@ -92,7 +92,7 @@ class PWEMailing extends PWECommonFunctions {
 
             if ($currVer !== null) {
                 $savedVer = (string) get_option($verKey, '');
-                if (empty($savedVer) || version_compare($currVer, $savedVer, '>')) {
+                if ($savedVer === '' || version_compare($currVer, $savedVer, '>')) {
                     $versionChanged = true;
                     $shouldRun = true;
                 }
