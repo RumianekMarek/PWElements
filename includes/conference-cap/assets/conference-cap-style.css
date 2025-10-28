@@ -198,7 +198,7 @@
 
 .conference_cap__conf-slug-navigation-days {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin: 10px;
   justify-content: center;
   border-bottom: 1px solid #eaeaea;
@@ -213,6 +213,8 @@
   cursor: pointer;
   min-width: 15%;;
   font-weight: 500;
+  flex: 1 1 24%;
+  max-width: 30%;
 }
 
 .conference_cap__conf-slug-navigation-day.active-day {

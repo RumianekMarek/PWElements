@@ -3035,21 +3035,25 @@ if ($event_type === "week") {
                             }
                         }
 
-                        $output .= '
-                        <div class="single-event__container-partners">
-                            <div class="single-event__partners-title">
-                                <h4>'. multi_translation("patrons_and_partners") .'</h4>
-                            </div>
-                            <div class="single-event__partners-logotypes single-event__logotypes-slider">';
-                                foreach ($files as $logo) {
-                                    $output .= '
-                                    <div class="single-event__partners-logo">
-                                        <img src="'. $logo["url"] .'" alt="Partner\'s logo"/>
-                                    </div>'; 
-                                } 
+                        if (count($files) > 0) {
+
                             $output .= '
-                            </div>
-                        </div>';
+                            <div class="single-event__container-partners">
+                                <div class="single-event__partners-title">
+                                    <h4>'. multi_translation("patrons_and_partners") .'</h4>
+                                </div>
+                                <div class="single-event__partners-logotypes single-event__logotypes-slider">';
+                                    foreach ($files as $logo) {
+                                        $output .= '
+                                        <div class="single-event__partners-logo">
+                                            <img src="'. $logo["url"] .'" alt="Partner\'s logo"/>
+                                        </div>'; 
+                                    } 
+                                $output .= '
+                                </div>
+                            </div>';
+
+                        }
                         
                     } else if (!empty(get_post_meta($post_id, 'partners_gallery', true))) {
                         $seperated_logotypes = get_post_meta($post_id, 'partners_gallery', true);

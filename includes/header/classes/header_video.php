@@ -590,7 +590,9 @@ $output .= '
 
             <div class="video-background">
                 <div class="video-overlay"></div>
-                <video autoplay="" muted="" loop="" preload="auto" class="bg-video" src="/doc/header.mp4"></video>
+                <video autoplay muted loop preload="auto" class="bg-video">
+                    <source src="/doc/header.mp4" media="(min-width: 961px)">
+                </video>
             </div>
 
         </div>
