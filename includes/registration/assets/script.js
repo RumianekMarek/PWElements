@@ -115,10 +115,11 @@ window.onload = function () {
     }
 }
 
-// Potential exhibitors form
+// Potential exhibitors form & Accreditations
 document.addEventListener("DOMContentLoaded", function() {
     const potentialExhibitorsElement = document.querySelector(".pwe-registration.potential-exhibitors");
-    if (potentialExhibitorsElement) {
+    const accreditationsElement = document.querySelector(".pwe-registration.accreditations");
+    if (potentialExhibitorsElement || accreditationsElement) {
         const customSelect = document.getElementById("fairSelect");
         const optionsContainer = customSelect.querySelector(".pwe-registration-fairs-options-container");
         const searchInput = customSelect.querySelector("#searchInput");
@@ -166,9 +167,18 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
 
-        const inputFairName = document.querySelector(".potential-exhibitors-input-fair-name input");
-        const inputFairDomain = document.querySelector(".potential-exhibitors-input-fair-domain input");
-        const inputFairDate = document.querySelector(".potential-exhibitors-input-fair-date input");
+        const inputFairName =
+            document.querySelector(".accreditations-input-fair-name input") ||
+            document.querySelector(".potential-exhibitors-input-fair-name input");
+
+        const inputFairDomain =
+            document.querySelector(".accreditations-input-fair-domain input") ||
+            document.querySelector(".potential-exhibitors-input-fair-domain input");
+
+        const inputFairDate =
+            document.querySelector(".accreditations-input-fair-date input") ||
+            document.querySelector(".potential-exhibitors-input-fair-date input");
+
         const inputFairLang = document.querySelector(".potential-exhibitors-input-fair-lang input");
 
         const radioInputsLang = document.querySelectorAll(".pwe-registration-fairs-radio-buttons input");
@@ -245,7 +255,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 if (e.target.classList.contains('active')) {
                     const domainAttr = e.target.getAttribute('domain');
-                    const submit = potentialExhibitorsElement.querySelector(".gform_footer .gform_button");
+                    let submit = '';
+                    if (potentialExhibitorsElement) {
+                        submit = potentialExhibitorsElement.querySelector(".gform_footer .gform_button");
+                    } else if (accreditationsElement) {
+                        submit = accreditationsElement.querySelector(".gform_footer .gform_button");
+                    }
+                    
                     if (domainAttr !== null && domainAttr !== '') {
                         submit.classList.add('active');
                     } else submit.classList.remove('active');

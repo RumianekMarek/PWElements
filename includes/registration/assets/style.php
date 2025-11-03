@@ -845,6 +845,200 @@ if (
             opacity: 1 !important;
         }
     </style>';
+} else if ($registration_type == 'PWERegistrationAccreditations') {
+    $btn_color = self::findColor($atts['btn_color_manual_hidden'], $atts['btn_color'], self::$main2_color);
+    $darker_btn_color = self::adjustBrightness($btn_color, -20);
+
+    $output = '
+    <style>
+        #pweRegistration.accreditations {
+            max-width: 750px !important;
+        }
+        #pweRegistration.accreditations .pwe-registration-title h3 {
+            font-size: 36px;
+        }
+        #pweRegistration.accreditations .pwe-registration-form {
+            margin-top: 36px;
+        }
+        #pweRegistration.accreditations .gform_validation_errors {
+            border:none !important;
+        }
+        #pweRegistration.accreditations input,
+        #pweRegistration.accreditations select {
+            border: 1px solid #564949 !important;
+            box-shadow: none !important;
+        }
+        #pweRegistration.accreditations :is(label, label span, .gform_legacy_markup_wrapper .gfield_required, .gfield_description) {
+            color: black !important;
+        }
+        #pweRegistration.accreditations select {
+            border-radius: 4px !important;
+        }
+        #pweRegistration.accreditations .gfield_checkbox {
+            padding: 0;
+        }
+        #pweRegistration.accreditations input[type=submit] {
+            background-color: '. $btn_color .' !important;
+            border: 2px solid '. $btn_color .' !important;
+            color: white;
+            text-transform: uppercase;
+        }
+        #pweRegistration.accreditations input[type=submit]:hover {
+            background-color: '. $darker_btn_color.' !important;
+            border: 2px solid '. $darker_btn_color .' !important;
+        }
+        #pweRegistration.accreditations .gform_wrapper input[type=text],
+        #pweRegistration.accreditations .gform_wrapper select {
+            padding: 10px 15px !important;
+        }
+        #pweRegistration.accreditations .gform_fields {
+            padding-left: 0 !important;
+        }
+        #pweRegistration.accreditations .gform-field-label {
+            display: inline !important;
+        }
+        #pweRegistration.accreditations .gform-field-label .show-consent,
+        #pweRegistration.accreditations .gform-field-label .gfield_required_asterisk {
+            display: inline !important;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        #pweRegistration.accreditations .gfield_required {
+            display: none !important;
+        }
+        /*ROZWIJANE ZGODY*/
+        #pweRegistration.accreditations .gfield_consent_description {
+            overflow: hidden !important;
+            max-height: auto !important;
+            border: none !important;
+            display: none;
+        }
+        #pweRegistration.accreditations .show-consent:hover{
+            cursor: pointer;
+        }
+        #pweRegistration.accreditations .ginput_container input {
+            margin: 0 !important;
+        }
+        #pweRegistration.accreditations .gfield_label {
+            font-size: 14px !important;
+        }
+        #pweRegistration.accreditations .gfield_consent_label {
+            padding-left: 5px;
+        }
+        @media (max-width:650px) {
+            #pweRegistration.accreditations .gform_legacy_markup_wrapper .gform_footer {
+                margin: 0 auto !important;
+                padding: 0 !important;
+                text-align: center;
+            }
+        }
+        @media (max-width:400px) {
+            #pweRegistration.accreditations input[type="submit"] {
+                font-size: 12px !important;
+            }
+        }
+
+
+        #pweRegistration.accreditations .pwe-registration-fairs-select-container {
+            position: relative;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-select {
+            position: relative;
+            width: 70%;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-select-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #564949 !important;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-search-input {
+            width: 0;
+            padding: 0;
+            border: 1px solid #ccc;
+            margin-top: 0;
+            visibility: hidden;
+            opacity: 0;
+            height: 0;
+            transition: .3s ease;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-select.open .pwe-registration-fairs-search-input {
+            width: 100%;
+            padding: 5px;
+            margin-top: 10px;
+            visibility: visible;
+            opacity: 1;
+            height: auto;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-options-container {
+            visibility: hidden;
+            opacity: 0;
+            height: 0;
+            transition: .3s ease;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            top: 106%;
+            width: 0;
+            background: #fff;
+            border: 2px solid #564949;
+            z-index: 10;
+            border-radius: 8px;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-select.open .pwe-registration-fairs-options-container {
+            visibility: visible;
+            opacity: 1;
+            height: auto;
+            width: 100%;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-option {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #pweRegistration.accreditations .pwe-registration-fairs-option:hover {
+            background-color: #f0f0f0;
+        }
+        #pweRegistration.accreditations .arrow-down {
+            font-size: 16px;
+            color: #333;
+        }
+
+        #pweRegistration.accreditations ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+        #pweRegistration.accreditations ::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Kolor tła toru */
+            border-radius: 8px;  /* Zaokrąglenie rogów toru */
+        }
+        #pweRegistration.accreditations ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 8px;
+        }
+        #pweRegistration.accreditations ::-webkit-scrollbar-thumb:hover {
+            background: #555; /* Zmiana koloru rączki podczas najechania */
+        }
+
+        #pweRegistration.accreditations .gform_footer .gform_button {
+            pointer-events: none !important;
+            opacity: 0.5 !important;
+            transition: .3s ease;
+        }
+        #pweRegistration.accreditations .gform_footer .gform_button.active {
+            pointer-events: all !important;
+            opacity: 1 !important;
+        }
+    </style>';
 } else if ($register_show_ticket === "true" && $domain_gr == "gr3" && (strpos($source_utm, 'utm_source=byli') === false || strpos($source_utm, 'utm_source=premium') === false || strpos($source_utm, 'utm_source=platyna') === false )) {
     $background_color = self::$accent_color;
 

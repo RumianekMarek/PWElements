@@ -92,6 +92,7 @@ public function initVCMapPWERegistration() {
     require_once plugin_dir_path(__FILE__) . 'classes/registration_visitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_exhibitors.php';
     require_once plugin_dir_path(__FILE__) . 'classes/registration_potential_exhibitors.php';
+    require_once plugin_dir_path(__FILE__) . 'classes/registration_accreditations.php';
     // Check if Visual Composer is available
     if (class_exists('Vc_Manager')) {
         vc_map( array(
@@ -112,6 +113,7 @@ public function initVCMapPWERegistration() {
                             'Visitors' => 'PWERegistrationVisitors',
                             'Exhibitors' => 'PWERegistrationExhibitors',
                             'Potential exhibitors' => 'PWERegistrationPotentialExhibitors',
+                            'Accreditations' => 'PWERegistrationAccreditations',
                             'Ticket' => 'PWERegistrationTicket',
                         ),
                         'std' => 'PWERegistrationVisitors',
@@ -301,6 +303,7 @@ public function initVCMapPWERegistration() {
             'PWERegistrationVisitors'               => 'classes/registration_visitors.php',
             'PWERegistrationExhibitors'             => 'classes/registration_exhibitors.php',
             'PWERegistrationPotentialExhibitors'    => 'classes/registration_potential_exhibitors.php',
+            'PWERegistrationAccreditations'         => 'classes/registration_accreditations.php',
         );
     }
 
