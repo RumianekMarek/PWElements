@@ -171,7 +171,9 @@ class PWECommonFunctions {
                 f.fair_shop,
                 f.fair_group,
                 (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_pl' ORDER BY id ASC LIMIT 1) AS category_pl,
-                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_en' ORDER BY id ASC LIMIT 1) AS category_en
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_en' ORDER BY id ASC LIMIT 1) AS category_en,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_name' ORDER BY id ASC LIMIT 1) AS konf_name,
+                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'fair_kw_new' ORDER BY id ASC LIMIT 1) AS fair_kw_new
             FROM fairs f
         ";
 
@@ -803,9 +805,11 @@ class PWECommonFunctions {
             "youtube" => $fair->fair_youtube ?? "",
             "badge" => $fair->fair_badge ?? "",
             "catalog" => $fair->fair_kw ?? "",
+            "catalog_id" => $fair->fair_kw_new ?? "",
             "shop" => $fair->fair_shop ?? "",
             "category_pl" => $fair->category_pl ?? "",
-            "category_en" => $fair->category_en ?? ""
+            "category_en" => $fair->category_en ?? "",
+            "conference_name" => $fair->konf_name ?? "",
         ];
 
         // Add estimations to data
