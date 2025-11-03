@@ -98,6 +98,21 @@ class PWElementStepTwoExhibitor extends PWElements {
             'registration_form_step2_exhibitor_www2' => '',
         ), $atts ));
 
+
+        $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        $pwe_groups_contacts_data = PWECommonFunctions::get_database_groups_contacts_data();
+
+        $source_utm = (isset($_SERVER['argv'][0])) ? $_SERVER['argv'][0] : '';
+        // Get domain address
+        $current_domain = $_SERVER['HTTP_HOST'];
+
+        foreach ($pwe_groups_data as $group) {
+            if ($current_domain == $group->fair_domain) {
+                $current_group = $group->fair_group;
+            }
+        }
+
+
         $confirmation_button_text = (get_locale() == 'pl_PL') ? "Wygeneruj ofertę" : "Generate an offer" ;
         $main_page_text_btn = (get_locale() == 'pl_PL') ? "Powrót do strony głównej" : "Back to main page" ;
 
@@ -726,8 +741,25 @@ class PWElementStepTwoExhibitor extends PWElements {
 
 
                     jQuery(document).ready(function($){
+
+                        let userGroup = "'. $current_group .'";
+
+                        document.querySelectorAll("label.gfield_label").forEach(label => {
+
+                            if (label.textContent.trim().toLowerCase() === "patron") {
+
+                                const inputId = label.getAttribute("for");
+                                const input = document.getElementById(inputId);
+
+                                if (input) {
+                                input.value = userGroup;
+                                }
+                            }
+                        });
+
                         const buttonSubmit = document.querySelector(".pwelement_'. self::$rnd_id .' .gform_footer input[type=submit]");
                         let userArea = localStorage.getItem("user_area");
+
                         if (userArea && userArea.trim() !== "") {
                             $(".con-area").hide();
                         }
@@ -736,6 +768,10 @@ class PWElementStepTwoExhibitor extends PWElements {
                             let userEmail = "'. $userSessionEmail .'" || localStorage.getItem("user_email");
                             let userTel = "'. $userSessionPhone .'" || localStorage.getItem("user_tel");
                             let userDirection = localStorage.getItem("user_direction");
+
+                            if (userGroup) {
+                                $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userGroup);
+                            }
 
                             if (userEmail) {
                                 $(".pwelement_'. self::$rnd_id .' .ginput_container_email").find("input").val(userEmail);

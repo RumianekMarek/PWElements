@@ -664,7 +664,72 @@ class PWElementGenerator extends PWElements {
             .pwe-generator-wystawcow .gen-text .gen-date {
                 white-space: nowrap;
             }
+            .pwe-generator-wystawcow .gfield--type-radio {
+                display: flex;
+                background-color: #D2D2D2 !important;
+                border-radius: 5px !important;
+                border: none !important;
+                font-weight: 700;
+                color: #323232;
+                padding: 0px 7px;
+                height: 39px;
+                align-items: center;
+            }
+            @media(min-width:960px){
+                .pwe-generator-wystawcow .gfield--type-radio {
+                    margin-right: 15px;
+                }
+            }
+            .pwe-generator-wystawcow .gfield--type-radio  .gfield_radio {
+                display: flex;
+                margin: 0px !important;
+                justify-content: space-around;
+            }
+            .pwe-generator-wystawcow .gfield--type-radio .gfield_label {
+                font-size: 17px !important;
+                font-weight: 700 !important;
+                color: #323232;
+                text-transform: uppercase;
+                margin: 0px;
+                margin-top: 2px;
+            }
+            .pwe-generator-wystawcow .gfield--type-radio .gchoice {
+                margin: 0px 5px !important;
+                display:flex  !important;
+            }
+            .pwe-generator-wystawcow .gfield--type-radio .gchoice input {
+                margin-top: 2px !important;
+                padding: 10px !important;
+                cursor: pointer;
+            }
+            .pwe-generator-wystawcow .gfield--type-radio .gfield_label {
+                position: relative;
+                padding-left: 40px; /* odsunięcie tekstu w prawo, dopasuj w razie potrzeby */
+            }
 
+            .pwe-generator-wystawcow .gfield--type-radio .gfield_label::before {
+                content: "";
+                position: absolute;
+                left: -1px;
+                top: 35%;
+                transform: translateY(-50%);
+                width: 30px;
+                height: 30px;
+                background-image: url(/wp-content/uploads/2025/10/ico-hala.svg);
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            .pwe-generator-wystawcow .gfield--type-radio .gchoice label {
+                margin-left: 0px !important;
+                padding-left: 5px !important;
+                margin-top: 3px !important;
+            }
+            @media(max-width:640px){
+                .pwe-generator-wystawcow .gfield--type-radio {
+                    height: 50px;
+                }
+            }
             /* Modal */
             @media (max-width: 961px){
                 .tabela-masowa{

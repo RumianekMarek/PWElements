@@ -107,6 +107,7 @@ class PWElements {
         require_once plugin_dir_path(__FILE__) . 'timeline-stats.php';
         require_once plugin_dir_path(__FILE__) . 'popup.php';
         require_once plugin_dir_path(__FILE__) . 'news-summary.php';
+        require_once plugin_dir_path(__FILE__) . 'medal-form.php';
 
         // Check if Visual Composer is available
         if (class_exists('Vc_Manager')) {
@@ -249,6 +250,7 @@ class PWElements {
                         ...PWElementForExhibitors::initElements(),
                         ...PWElementForVisitors::initElements(),
                         ...PWElementContact::initElements(),
+                        ...PWElementMedalForm::initElements(),
                         ...PWElementContactInfo::initElements(),
                         ...PWElementPromot::initElements(),
                         ...PWElementConferences::initElements(),
@@ -349,11 +351,12 @@ class PWElements {
             'Kontakt'                        => 'PWElementContact',
             'Main Page About'                => 'PWElementAbout',
             'Main Page Gallery - mini'       => 'PWElementHomeGallery',
-            'Map'                           => 'PWElementMapa',
-            'Map test'                      => 'PWElementMapaTest',
+            'Map'                            => 'PWElementMapa',
+            'Map test'                       => 'PWElementMapaTest',
             'Medals'                         => 'PWElementMedals',
             'Mapka dojazdu'                  => 'PWElementRoute',
-            'Numbers'                         => 'PWElementNumbers',
+            'Medale formularz'               => 'PWElementMedalForm',
+            'Numbers'                        => 'PWElementNumbers',
             'Nie przegap'                    => 'PWElementDontMiss',
             'Organizator'                    => 'PWElementOrganizer',
             'Opinions'                       => 'PWElementOpinions',
@@ -431,7 +434,8 @@ class PWElements {
             'PWElementGroups'           => 'grupy.php',
             'PWElementMapa'             => 'mapa.php',
             'PWElementMapaTest'         => 'mapa-test.php',
-            'PWElementMedals'          => 'medals.php',
+            'PWElementMedals'           => 'medals.php',
+            'PWElementMedalForm'        => 'medal-form.php',
             'PWElementOrgInfo'          => 'org-information.php',
             'PWElementOpinions'         => 'opinions.php',
             'PWElementOtherEvents'      => 'other_events.php',
