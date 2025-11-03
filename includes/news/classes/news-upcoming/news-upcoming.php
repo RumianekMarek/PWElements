@@ -67,9 +67,31 @@ class PWENewsUpcoming extends PWENews {
                     ),
                     array(
                         'type' => 'textarea_raw_html',
-                        'heading' => __('Fair Description', 'pwelement'),
-                        'param_name' => 'pwe_news_upcoming_fair_desc',
+                        'heading' => __('Fair Teaser Description', 'pwelement'),
+                        'param_name' => 'pwe_news_upcoming_fair_desc_teaser',
                         'save_always' => true,
+                        'description' => __('Krótki wstęp. Wyświetla się nad blokami tematyki/konferencji/celu.', 'pwelement'),
+                    ),
+                    array(
+                        'type' => 'textarea_raw_html',
+                        'heading' => __('Fair Theme Description', 'pwelement'),
+                        'param_name' => 'pwe_news_upcoming_fair_desc_theme',
+                        'save_always' => true,
+                        'description' => __('Treść bez uwzględnienia "Tematyka Targów:"', 'pwelement'),
+                    ),
+                    array(
+                        'type' => 'textarea_raw_html',
+                        'heading' => __('Fair Conference Description', 'pwelement'),
+                        'param_name' => 'pwe_news_upcoming_fair_desc_conference',
+                        'save_always' => true,
+                        'description' => __('Treść po etykiecie nazwy konferencji.', 'pwelement'),
+                    ),
+                    array(
+                        'type' => 'textarea_raw_html',
+                        'heading' => __('Fair Target Description', 'pwelement'),
+                        'param_name' => 'pwe_news_upcoming_fair_desc_target',
+                        'save_always' => true,
+                        'description' => __('Treść po etykiecie „Cel wydarzenia:”.', 'pwelement'),
                     ),
                 ),
             ),
@@ -133,7 +155,13 @@ class PWENewsUpcoming extends PWENews {
 
         $default_svgs = array($icon_svg_handshake, $icon_svg_bulb, $icon_svg_book);
 
-        $output  = '';
+        $output  = '
+        <style>
+            .site-footer .limit-width {
+                max-width: 100% !important;
+            }
+        </style>';
+
         $output .= '
         <div class="pwe-news-upcoming" id="PWENewsUpcoming">
             <div class="pwe-news-upcoming__header">
@@ -150,9 +178,47 @@ class PWENewsUpcoming extends PWENews {
 
                         $fair_domain = isset($fair['pwe_news_upcoming_fair_domain']) ? $fair['pwe_news_upcoming_fair_domain'] : '';
                         $fair_title  = isset($fair['pwe_news_upcoming_fair_title'])  ? $fair['pwe_news_upcoming_fair_title']  : '';
-                        $fair_desc   = isset($fair['pwe_news_upcoming_fair_desc'])   ? PWECommonFunctions::decode_clean_content($fair['pwe_news_upcoming_fair_desc']) : '';
+                        
+                        $fair_teaser = isset($fair['pwe_news_upcoming_fair_desc_teaser']) ? PWECommonFunctions::decode_clean_content($fair['pwe_news_upcoming_fair_desc_teaser']) : '';
+                        $fair_theme  = isset($fair['pwe_news_upcoming_fair_desc_theme'])  ? PWECommonFunctions::decode_clean_content($fair['pwe_news_upcoming_fair_desc_theme']) : '';
+                        $fair_conference = isset($fair['pwe_news_upcoming_fair_desc_conference']) ? PWECommonFunctions::decode_clean_content($fair['pwe_news_upcoming_fair_desc_conference']) : '';
+                        $fair_target = isset($fair['pwe_news_upcoming_fair_desc_target']) ? PWECommonFunctions::decode_clean_content($fair['pwe_news_upcoming_fair_desc_target']) : '';                       
+                        
                         $fair_accent_color = do_shortcode('[pwe_color_accent domain="' . $fair_domain . '"]');
                         $fair_main2_color = do_shortcode('[pwe_color_main2 domain="' . $fair_domain . '"]');
+                        $fair_conference_title = do_shortcode('[pwe_conference_name domain="' . $fair_domain . '"]');
+                        
+                        // Dodanie bloku opisu z opisami "na twardo"
+                        $desc_html = '<div class="pwe-news-upcoming__single-fair-text-desc">';
+
+                        if (!empty($fair_teaser)) {
+                            $desc_html .= '<div class="pwe-news-upcoming__desc-teaser">'.$fair_teaser.'</div>';
+                        }
+
+                        if (!empty($fair_theme)) {
+                            $desc_html .= '<div class="pwe-news-upcoming__desc-block" style="--pwe-accent: '.$fair_accent_color.';">
+                                <span class="pwe-news-upcoming__desc-label">'. self::languageChecker('Tematyka targów', 'The trade fair’s theme') .'</span>
+                                <span class="pwe-news-upcoming__desc-value">'.$fair_theme.'</span>
+                            </div>';
+                        }
+
+                        if (!empty($fair_conference)) {
+                            $desc_html .= '<div class="pwe-news-upcoming__desc-block" style="--pwe-accent: '.$fair_accent_color.';">
+                                <span class="pwe-news-upcoming__desc-label">'.$fair_conference_title.'</span>
+                                <span class="pwe-news-upcoming__desc-value">'.$fair_conference.'</span>
+                            </div>';
+                        }
+
+                        if (!empty($fair_target)) {
+                            $desc_html .= '<div class="pwe-news-upcoming__desc-block" style="--pwe-accent: '.$fair_accent_color.';">
+                                <span class="pwe-news-upcoming__desc-label">'. self::languageChecker('Cel wydarzenia', 'The goal of the event') .'</span>
+                                <span class="pwe-news-upcoming__desc-value">'.$fair_target.'</span>
+                            </div>';
+                        }
+
+$desc_html .= '</div>';
+
+
 
                         $output .= '
                         <div class="pwe-news-upcoming__single-fair">
@@ -161,10 +227,10 @@ class PWENewsUpcoming extends PWENews {
                             </a>
                             <div class="pwe-news-upcoming__single-fair-text-container">
                                 <h2 class="pwe-news-upcoming__single-fair-text-title">' . $fair_title . '</h2>
-                                <div class="pwe-news-upcoming__single-fair-text-desc">' . $fair_desc . '</div>
+                                ' . $desc_html . '
                                 <div class="pwe-news-upcoming__single-fair-text-btn-container">
-                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_accent_color . ';" href="https://' . $fair_domain . self::languageChecker('/rejestracja/', '/en/registration/') .'?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">Zarejestruj się</a>
-                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_main2_color . ';" href="https://' . $fair_domain . self::languageChecker('/wydarzenia/', '/en/conferences/') .'?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">Sprawdź agendę wydarzenia</a>
+                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_accent_color . ';" href="https://' . $fair_domain . self::languageChecker('/rejestracja/', '/en/registration/') .'?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">'. self::languageChecker('Zarejestruj się', 'Registration') .'</a>
+                                    <a class="pwe-news-upcoming__single-fair-text-btn" style="--fair-accent-color: ' . $fair_main2_color . ';" href="https://' . $fair_domain . self::languageChecker('/wydarzenia/', '/en/conferences/') .'?utm_source=warsawexpo&utm_medium=news&utm_campaign=refferal" target="_blank">'. self::languageChecker('Sprawdź agendę wydarzenia', 'Check the event agenda') .'</a>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +243,7 @@ class PWENewsUpcoming extends PWENews {
             $output .= '<div class="pwe-news-upcoming__worth">';
                 if (!empty($worth) && is_array($worth)) {
                     $i = 0;
-                    $output .= '<h2 class="pwe-news-upcoming__worth-heading">Dlaczego warto?</h2>
+                    $output .= '<h2 class="pwe-news-upcoming__worth-heading">'. self::languageChecker('Dlaczego warto?', 'Why is it worth it?') .'</h2>
                     <div class="pwe-news-upcoming__worth-card-container">';
                     foreach ($worth as $card) {
                         $card_title = isset($card['pwe_news_upcoming_worth_title']) ? esc_html($card['pwe_news_upcoming_worth_title']) : '';
@@ -210,12 +276,12 @@ class PWENewsUpcoming extends PWENews {
             $output .= '
             <div class="pwe-news-upcoming__map">
                 <div class="pwe-news-upcoming__map-content">
-                    <h2 class="pwe-news-upcoming__map-heading">Praktyczne informacje</h2>
+                    <h2 class="pwe-news-upcoming__map-heading">'. self::languageChecker('Praktyczne informacje', 'Practical information') .'</h2>
                     <p class="pwe-news-upcoming__map-desc">
-                        <strong>Data:</strong> ' . $pwe_news_upcoming_date . '<br>
-                        <strong>Miejsce:</strong> Ptak Warsaw Expo, Nadarzyn k. Warszawy<br>
-                        <strong>Godziny otwarcia:</strong> 10:00–17:00<br>
-                        <strong>Hale wystawowe:</strong> Szczegółowe informacje o halach i wejściach dostępne są na stronie każdego wydarzenia.<br>
+                        <strong>'. self::languageChecker('Data:', 'Date:') .'</strong> ' . $pwe_news_upcoming_date . '<br>
+                        <strong>'. self::languageChecker('Miejsce:', 'Place:') .'</strong> Ptak Warsaw Expo, Nadarzyn k. Warszawy<br>
+                        <strong>'. self::languageChecker('Godziny otwarcia:', 'Opening hours:') .'</strong> 10:00–17:00<br>
+                        <strong>'. self::languageChecker('Hale wystawowe:', 'Exhibition halls:') .'</strong> '. self::languageChecker('Szczegółowe informacje o halach i wejściach dostępne są na stronie każdego wydarzenia', 'Detailed information about the halls and entrances is available on each event`s website.') .'.<br>
                     </p>
                 </div>
                 <div class="pwe-news-upcoming__map-img-container">

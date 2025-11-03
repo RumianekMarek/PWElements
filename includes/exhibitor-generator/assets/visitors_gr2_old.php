@@ -708,6 +708,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
 
             .exhibitor-generator.gr2 .gfield:has(input[placeholder^="Firma"]),
             .exhibitor-generator.gr2 .gfield:has(input[placeholder^="Inviting"]) {
+                display: none;
             }
 
             .exhibitor-generator.gr2 .exhibitor-generator__wrapper {
@@ -772,7 +773,6 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
 
             .exhibitor-generator.gr2 .exhibitors-logo {
                 width: 100%;
-                max-height: 100%;
                 object-fit: contain;
             }
             .exhibitor-generator.gr2 .exhibitor-selector__container:has(.exhibitors-logo[src*="/uploads/conf/"]) {
@@ -787,8 +787,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                 object-fit: cover;
                 object-position: center;
             }
-            .exhibitor-generator.gr2 .exhibitor-generator__left-badge input,
-            .exhibitor-generator.gr2 .exhibitor-generator__left-badge select {
+            .exhibitor-generator.gr2 .exhibitor-generator__left-badge input {
                 border-radius: 36px;
                 text-align: center;
                 border: 0;
@@ -815,15 +814,11 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                 max-width: 100%;
             }
 
-            .exhibitor-generator .exhibitors_selector-select {
-                max-width: 90%;
-                margin: 0 auto;
-            }
-
             .exhibitor-generator.gr2 #exhibitors_selector {
                 border-radius: 36px !important;
                 background-color: white !important;
                 box-shadow: 2px 2px 6px -3px black !important;
+                margin: 0 !important;
             }
 
             .exhibitor-generator.gr2 .exhibitor-generator__left-badge input::placeholder {
@@ -1036,6 +1031,7 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
             }
 
             .exhibitor-generator.gr2 .gform_footer .tabela-masowa.hidden-important {
+                display: none !important;
             }
 
             @media(max-width:960px) {
@@ -1089,6 +1085,8 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
                 border-width: 0;
             }
             .exhibitor-generator.gr2 .gfield--type-consent .gfield_label {
+                display: none !important;
+                margin: 0;
             }
             .exhibitor-generator.gr2 .gfield--type-consent .gfield_consent_description {
                 padding: 6px 8px;
@@ -1136,7 +1134,6 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
             break;
         }
     }
-echo '<script>console.log("'.$generator_form_id.'")</script>';
 
     $output .= '
     <div class="exhibitor-generator gr2" data-group="' . $gr_data . '">
@@ -1147,25 +1144,30 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
                     <div class="exhibitor-generator__left-header-badge">
                         <img class="exhibitor-generator__badge-logo" src="/doc/logo-color.webp" alt="Logo targów">
                         <span class="exhibitor-generator__vip-text">Vip Gold</span>
-                    </div>';
-
-                    $output .='<div class="exhibitor-selector__container" style="display:none;">
-                        <div class="company-logo_add" style="max-width: 100px; align-content: center; cursor: pointer; text-align:center;">
-                        </div>
-                    </div>';
-
-                    $output .= '<div class="exhibitors_selector-select">
-                        <select id="exhibitors_selector" name="exhibitor_id">
-                            <option class="cat-exhibitor" value="" data-id="' . $cat_id . '">' . PWECommonFunctions::languageChecker('Firma Zapraszająca', 'Inviting Comapny') . '</option>
-                            <option class="cat-exhibitor" value="new_exhibitor" data-id="new">' . PWECommonFunctions::languageChecker('Inna firma (wpisz ręcznie)', 'Other company (type manually)') . '</option>';
-                            foreach($all_senders as $cat_id => $cat_value){
-                                if (!is_array($cat_value)) continue;
-                                $output .='<option class="cat-exhibitor" value="' . $cat_id . '">' . $cat_value["name"] . '</option>';
-                            }
-                    $output .='</select></div>';
-
-
-                    $output .='
+                    </div>
+                    <div class="exhibitor-selector__container">';
+                        if(isset($_GET['wystawca'])){
+                            $output .='<img class="exhibitors-logo" src="' . $all_senders[$_GET['wystawca']]['logo'] . '">';
+                        }
+                        else {
+                            $output .='
+                                <form id="exhibitors-login-form" method="post" action="">
+                                <select id="exhibitors_selector" name="exhibitor_id">';
+                                    $output .='<option class="cat-exhibitor" val="" data-id="' . $cat_id . '">' . PWECommonFunctions::languageChecker('Firma Zapraszająca', 'Inviting Comapny') . '</option>';
+                                    foreach($all_senders as $cat_id => $cat_value){
+                                        if (!is_array($cat_value)) continue;
+                                        $output .='<option class="cat-exhibitor" value="' . $cat_id . '" " data-type="' . $cat_value['type'] . '" data-id="' . $cat_id . '" data-nip="' . $cat_value["pass"] . '">' . $cat_value["name"] . '</option>';
+                                    }
+                                $output .='</select>
+                                <input type="password" id="exhibitors_password" name="password" placeholder="' . PWECommonFunctions::languageChecker('Hasło', 'Password') . '" required />';
+                                if (isset($_SESSION['login_error'])) {
+                                    $output .= '<div id="login-error-message" style="color:red; text-align:center; font-weight:bold;">' . $_SESSION['login_error'] . '</div>';
+                                    unset($_SESSION['login_error']);
+                                }
+                                $output .='<button type="submit" class="login-button btn-gold">' . PWECommonFunctions::languageChecker('Zatwierdź', 'Confirm') . '</button>
+                                </form>';
+                        }
+                    $output .='</div>
                     [gravityform id="'. $generator_form_id .'" title="false" description="false" ajax="false"]
                     <div class="exhibitor-generator__left-footer-badge">
                         <img class="exhibitor-generator__badge-logo-pwe" src="/wp-content/plugins/pwe-media/media/ptak_black.png" alt="Logo PTAK WARSAW EXPO">
@@ -1205,10 +1207,6 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
                             <div class="exhibitor-generator__right-icon">
                                 <img src="/wp-content/plugins/pwe-media/media/generator-gosci-wystawcow/gr2/concierge-icon.webp" alt="icon4">
                                 <p>' . PWECommonFunctions::languageChecker('Obsługa concierge`a', 'Concierge service') . '</p>
-                            </div>
-                            <div class="exhibitor-generator__right-icon">
-                                <img src="/wp-content/plugins/PWElements/includes/exhibitor-generator/assets/media/parking.webp" alt="icon4">
-                                <p>' . PWECommonFunctions::languageChecker('Bezpłatne miejsce parkingowe dla gości', 'Free parking for guests') . '</p>
                             </div>';
 
                             if($pweGeneratorWebsite){
@@ -1261,57 +1259,6 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
     $output .= '
     <script>
         jQuery(document).ready(function($){
-            const allSenders = ' . json_encode($all_senders) . ';
-
-            $(`form .gfield--type-phone`).addClass("gfield_visibility_hidden");
-
-            const exhibitorCompany = $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield");
-            const exhibitorLogo = $(`.exhibitor-selector__container`);
-
-            exhibitorCompany.hide();
-            $("#exhibitors_selector").on("change", function() {
-                const exhId = $(this).val();
-                const exhibitorName = allSenders?.[exhId]?.name ?? "";
-                const exhibitorLogoUrl = allSenders?.[exhId]?.logo ?? "";
-
-                switch ($(this).val()) {
-                    case "":
-                        exhibitorCompany.hide();
-                        exhibitorLogo.hide();
-
-                        // wyczyść pola
-                        exhibitorCompany.find("input").val("");
-                        $(".gform_wrapper").find(`.exhibitor_logo input`).val("");
-                        $(".company-logo_add").html(`<img class="exhibitors-logo"><span>Miejsce na twój logotyp</span>`);
-
-                        exhibitorCompany.addClass("gfield_visibility_hidden");
-                        break;
-
-                    case "new_exhibitor":
-                        exhibitorCompany.show();
-                        exhibitorLogo.show();
-
-                        $(".company-logo_add").html(`
-                            <img class="exhibitors-logo">
-                            <span>Miejsce na twój logotyp</span><br>
-                            <span style="font-weight:700; font-size:22px; text-align:center;">Kliknij</span>
-                        `);
-                        exhibitorCompany.find("input").val("");
-                        $(".gform_wrapper").find(`.exhibitor_logo input`).val("");
-                        exhibitorCompany.removeClass("gfield_visibility_hidden");
-                        break;
-
-                    default:
-                        exhibitorLogo.show();
-
-                        exhibitorCompany.find("input").val(exhibitorName);
-                        $(".gform_wrapper").find(`.exhibitor_logo input`).val(exhibitorLogoUrl);
-                        $(".company-logo_add").html(`<img class="exhibitors-logo" src="${exhibitorLogoUrl}">`);
-
-                        exhibitorCompany.addClass("gfield_visibility_hidden");
-                }
-            });
-
 
             let exhibitor_name = $(".exhibitors-name").data("ex") ?? ' . json_encode($all_senders[$_GET['wystawca']]['name']) . ';
             let exhibitor_desc = `' . PWEExhibitorVisitorGenerator::$exhibitor_desc . '`;
@@ -1319,84 +1266,51 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
             let submitBtn = $(`input[type="submit"]`);
             let massTable = $(".tabela-masowa");
             console.log("Typ nadawcy: ' . $gr_data . '");
+            $(`input[placeholder="patron"]`).val("' . $gr_data . '");
+            if ($("#exhibitors_selector").length) {
+                submitBtn.addClass("button-blocked");
+                massTable.addClass("123");
 
-            $(".company-logo_add").on("click", function () {
-                $(".gform_wrapper").find(`input[type="file"]`).first().trigger("click");
-            });
+                $("#exhibitors_selector").on("change",function(){
+                    switch($(this).val()){
+                        case "Firma Zapraszająca":
+                            $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").hide();
+                            $(`input[placeholder="Inviting Company"]`).closest(".gfield").hide();
+                            submitBtn.addClass("button-blocked");
+                            break;
+                        case "Patron":
+                            submitBtn.removeClass("button-blocked");
+                            $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").show();
+                            $(`input[placeholder="Inviting Company"]`).closest(".gfield").show();
+                            $(`input[placeholder="Firma Zapraszająca"]`).val("");
+                            $(`input[placeholder="Inviting Company"]`).val("");
+                            $(`input[placeholder="patron"]`).val("patron");
+                            break;
+                        default:
+                            $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").hide();
+                            $(`input[placeholder="Inviting Company"]`).closest(".gfield").hide();
+                            $(`input[placeholder="Firma Zapraszająca"]`).val($(this).val());
+                            $(`input[placeholder="Inviting Company"]`).val($(this).val());
+                            $(`input[placeholder="patron"]`).val("gr2");
+                            submitBtn.removeClass("button-blocked");
+                    }
+                });
+            }
 
-            $(".gform_wrapper").find(`input[type="file"]`).on("change", function(){
-                const file = this.files && this.files[0];
-                console.log(file);
-                if(file == undefined){
-                    return;
-                };
+            if ($("#exhibitors_selector").length) {
+                $(".gform_body .gfield").hide();
+                $(".gform_footer").hide();
 
-                const $form = $(this).closest("form");
-                const $preview = $(".company-logo_add").first();
-                $preview.empty();
-
-                const url = URL.createObjectURL(file);
-                const img = new Image();
-
-                img.classList.add("exhibitors-logo");
-
-                img.onload = () => {
-                    URL.revokeObjectURL(url);
-                    $preview.append(img);
-                };
-
-                img.src = url;
-            })
-
-            // $(`input[placeholder="patron"]`).val("' . $gr_data . '");
-            // if ($("#exhibitors_selector").length) {
-            //     submitBtn.addClass("button-blocked");
-            //     massTable.addClass("123");
-
-            //     $("#exhibitors_selector").on("change",function(){
-            //     console.log($("#exhibitors_selector"));
-            //         switch($(this).val()){
-            //             case "Firma Zapraszająca":
-            //                 $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").hide();
-            //                 $(`input[placeholder="Inviting Company"]`).closest(".gfield").hide();
-            //                 submitBtn.addClass("button-blocked");
-            //                 break;
-            //             case "Patron":
-            //                 submitBtn.removeClass("button-blocked");
-            //                 $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").show();
-            //                 $(`input[placeholder="Inviting Company"]`).closest(".gfield").show();
-            //                 $(`input[placeholder="Firma Zapraszająca"]`).val("");
-            //                 $(`input[placeholder="Inviting Company"]`).val("");
-            //                 $(`input[placeholder="patron"]`).val("patron");
-            //                 break;
-            //             default:
-            //                 $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield").hide();
-            //                 $(`input[placeholder="Inviting Company"]`).closest(".gfield").hide();
-            //                 $(`input[placeholder="Firma Zapraszająca"]`).val($(this).val());
-            //                 $(`input[placeholder="Inviting Company"]`).val($(this).val());
-            //                 $(`input[placeholder="patron"]`).val("gr2");
-            //                 submitBtn.removeClass("button-blocked");
-            //         }
-            //     });
-            // }
+                let checkInterval = setInterval(function() {
+                    if ($(".gform_wrapper").length > 0) {
+                        $(".gform_wrapper").hide();
+                        clearInterval(checkInterval);
+                    }
+                }, 100); // sprawdzaj co 100 ms
 
 
-            /*
-                if ($("#exhibitors_selector").length) {
-                    $(".gform_body .gfield").hide();
-                    $(".gform_footer").hide();
-
-                    let checkInterval = setInterval(function() {
-                        if ($(".gform_wrapper").length > 0) {
-                            $(".gform_wrapper").hide();
-                            clearInterval(checkInterval);
-                        }
-                    }, 100); // sprawdzaj co 100 ms
-
-
-                    $("#exhibitors_selector").closest(".gfield").show();
-                }
-            */
+                $("#exhibitors_selector").closest(".gfield").show();
+            }
 
             $(".exhibitor_logo input").val("' . PWEExhibitorVisitorGenerator::$exhibitor_logo_url . '");
             $(".exhibitors_name input").val(exhibitor_name);
@@ -1464,14 +1378,9 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
                         }
                     });
 
-                if ($(".validation_message:not(.validation_message--hidden-on-empty)").length === 0 &&
-                    ($(".gfield--type-phone").hasClass("gfield_visibility_hidden") ||
-                    $(".pwe-phone-number").hasClass("gfield_visibility_hidden") ||
-                    $(".pwe-phone-number").is(".gfield_visibility_visible[data-conditional-logic=\'hidden\']")))
-                    {
-                    console.log(event.target);
-                        $(event.target).closest("form").submit();
-                    }
+                if ($(".validation_message:not(.validation_message--hidden-on-empty)").length === 0 && ($(".gfield--type-phone").hasClass("gfield_visibility_hidden") || $(".pwe-phone-number").hasClass("gfield_visibility_hidden") || $(".pwe-phone-number").is(".gfield_visibility_visible[data-conditional-logic=\'hidden\']"))) {
+                    $(event.target).closest("form").submit();
+                }
             }
 
             $("form").has(".gfield_visibility_visible").find(".gform_button").on("click", function (event) {
@@ -1495,33 +1404,42 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
                 observer.observe(target, { childList: true, subtree: true });
             }
         });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            function getParamFromURL(param) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-
-            const patronValue = getParamFromURL("p");
-
-            if (patronValue) {
-                const labels = document.querySelectorAll("label");
-
-                labels.forEach(function(label) {
-
-                if (label.textContent.trim().toLowerCase() === "patron") {
-                    const inputId = label.getAttribute("for");
-                    if (inputId) {
-                    const inputElement = document.getElementById(inputId);
-                    if (inputElement) {
-                        inputElement.value = patronValue;
-                    }
-                    }
+    </script>
+    ';
+    if($generator_patron){
+        $output .= '
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                function getParamFromURL(param) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(param);
                 }
-                });
-            }
-        });
 
+                const patronValue = getParamFromURL("p");
+
+                if (patronValue) {
+                    const labels = document.querySelectorAll("label");
+
+                    labels.forEach(function(label) {
+
+                    if (label.textContent.trim().toLowerCase() === "patron") {
+                        const inputId = label.getAttribute("for");
+                        if (inputId) {
+                        const inputElement = document.getElementById(inputId);
+                        if (inputElement) {
+                            inputElement.value = patronValue;
+                        }
+                        }
+                    }
+                    });
+                }
+            });
+        </script>
+        ';
+    }
+    if($pweGeneratorWebsite){
+        $output .= '
+        <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Funkcja do pobierania parametru z URL
             function getURLParameter(name) {
@@ -1540,36 +1458,35 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
             }
             }
         });
-    </script>
+        </script>
+        <style>
+            .exhibitor-generator-tech-support {
+                display:none !important;
+            }
+        </style>';
+    }
 
-    <style>
-        .exhibitor-generator-tech-support {
-            display:none !important;
-        }
-    </style>';
+    if ( current_user_can('administrator') ) {
+        $output .= '
+        <script>
+            jQuery(document).ready(function($){
+                $("#exhibitors_selector").on("change", function(){
+                    const selected = $(this).find(":selected");
+                    const pass = selected.data("nip") ?? "";
+                    const passwordField = $("#exhibitors_password");
 
-
-    // if ( current_user_can('administrator') ) {
-    //     $output .= '
-    //     <script>
-    //         jQuery(document).ready(function($){
-    //             $("#exhibitors_selector").on("change", function(){
-    //                 const selected = $(this).find(":selected");
-    //                 const pass = selected.data("nip") ?? "";
-    //                 const passwordField = $("#exhibitors_password");
-
-    //                 if ($(this).val() === "Firma Zapraszająca") {
-    //                     passwordField.val("").prop("readonly", false).show();
-    //                 } else if ($(this).val() === "Patron") {
-    //                     passwordField.val("").prop("readonly", false).show();
-    //                 } else {
-    //                     passwordField.val(pass).prop("readonly", true).show();
-    //                 }
-    //             });
-    //         });
-    //     </script>
-    //     ';
-    // }
+                    if ($(this).val() === "Firma Zapraszająca") {
+                        passwordField.val("").prop("readonly", false).show();
+                    } else if ($(this).val() === "Patron") {
+                        passwordField.val("").prop("readonly", false).show();
+                    } else {
+                        passwordField.val(pass).prop("readonly", true).show();
+                    }
+                });
+            });
+        </script>
+        ';
+    }
 
     if(PWEExhibitorVisitorGenerator::senderFlowChecker() || current_user_can('administrator')){
         $output .='

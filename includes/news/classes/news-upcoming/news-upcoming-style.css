@@ -217,6 +217,29 @@
     background-color: transparent;
 }
 
+/* Style dla opisów fair tych "na twardo" */
+.pwe-news-upcoming__desc-teaser {
+  margin: 8px 0 14px;
+  line-height: 1.55;
+}
+
+.pwe-news-upcoming__desc-block {
+  margin: 8px 0;
+  line-height: 1.5;
+  font-size: 1.06em;   
+}
+
+.pwe-news-upcoming__desc-label {
+  font-weight: 700;            
+  color: var(--pwe-accent);    
+  white-space: nowrap;
+}
+.pwe-news-upcoming__desc-value p {
+  display: inline;
+  margin: 0;
+}
+
+
 @media(max-width: 960px) {
     .pwe-news-upcoming__single-fair {
         flex-direction: column;
