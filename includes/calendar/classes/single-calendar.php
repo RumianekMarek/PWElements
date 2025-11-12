@@ -263,8 +263,9 @@ if ($event_type === "week") {
     $trade_fair_start_timestamp = strtotime($start_date);
     $trade_fair_end_timestamp = strtotime($end_date);
 
-    $fairs_week = get_post_meta($post_id, 'events_week_fairs', true);
-    $fairs_week = !empty($fairs_week) ? explode(", ", $fairs_week) : [];
+    // Pobierz zapisane wykluczone targi (domeny)
+    $excluded_events = get_post_meta($post_id, 'events_week_fairs_excluded', true);
+    $excluded_events_array = !empty($excluded_events) ? array_map('trim', explode(', ', $excluded_events)) : [];
 
     // Get JSON
     $fairs_json = PWECommonFunctions::json_fairs();
@@ -274,21 +275,22 @@ if ($event_type === "week") {
     foreach ($fairs_json as $fair) {
         // Getting start and end dates
         $event_date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
-        $event_date_end = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
-        $category_pl = isset($fair['category_pl']) ? $fair['category_pl'] : null;
-        $category_en = isset($fair['category_en']) ? $fair['category_en'] : null;
-        $event_desc = $lang_pl ? $fair["desc_pl"] : $fair["desc_en"];
-        $event_name = $lang_pl ? $fair["name_pl"] : (isset($fair["name_en"]) ? $fair["name_en"] : $fair["name_pl"]);
+        $event_date_end   = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
+        $category_pl      = isset($fair['category_pl']) ? $fair['category_pl'] : null;
+        $category_en      = isset($fair['category_en']) ? $fair['category_en'] : null;
+        $event_desc       = $lang_pl ? (isset($fair["desc_pl"]) ? $fair["desc_pl"] : '') : (isset($fair["desc_en"]) ? $fair["desc_en"] : '');
+        $event_name       = $lang_pl ? $fair["name_pl"] : (isset($fair["name_en"]) ? $fair["name_en"] : $fair["name_pl"]);
+        $event_domain     = isset($fair['domain']) ? $fair['domain'] : '';
 
         // Checking if the date is in the range
         if ($event_date_start && $event_date_end) {
-            $isStartInside = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
-            $isEndInside = $event_date_end >= $trade_fair_start_timestamp && $event_date_end <= $trade_fair_end_timestamp;
-            $isOtherDomain = strpos($fair['domain'], $current_domain) === false;
-            $isNotFastTextile = strpos($fair['domain'], "fasttextile.com") === false;
-            $isNotExpoTrends = strpos($fair['domain'], "expotrends.eu") === false;
-            $isNotFabricsExpo = strpos($fair['domain'], "fabrics-expo.eu") === false;
-            $isNotTest = strpos($fair['domain'], "mr.glasstec.pl") === false;
+            $isStartInside     = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
+            $isEndInside       = $event_date_end >= $trade_fair_start_timestamp && $event_date_end <= $trade_fair_end_timestamp;
+            $isOtherDomain     = strpos($event_domain, $current_domain) === false;
+            $isNotFastTextile  = strpos($event_domain, "fasttextile.com") === false;
+            $isNotExpoTrends   = strpos($event_domain, "expotrends.eu") === false;
+            $isNotFabricsExpo  = strpos($event_domain, "fabrics-expo.eu") === false;
+            $isNotTest         = strpos($event_domain, "mr.glasstec.pl") === false;
 
             if (
                 ($isStartInside || $isEndInside) &&
@@ -298,31 +300,36 @@ if ($event_type === "week") {
                 $isNotFabricsExpo &&
                 $isNotTest
             ) {
-                $events_map[$event_name] = [
-                    "domain" => $fair["domain"],
-                    "name" => $event_name,
-                    "desc" => $event_desc,
-                    "category" => $lang_pl ? $fair['category_pl'] : $fair['category_en'],
-                    "visitors" => $fair["visitors"],
-                    "exhibitors" => $fair["exhibitors"],
-                    "area" => $fair["area"],
-                    "catalog" => isset($fair['catalog']) ? $fair['catalog'] : ''
-                ];
+                // Skip events whose domain is on the exclusion list
+                if (!in_array(trim($event_domain), $excluded_events_array, true)) {
+                    // Key by event name
+                    $events_map[$event_name] = [
+                        "domain"     => $event_domain,
+                        "name"       => $event_name,
+                        "desc"       => $event_desc,
+                        "category"   => $lang_pl ? $fair['category_pl'] : $fair['category_en'],
+                        "visitors"   => isset($fair['visitors']) ? $fair['visitors'] : null,
+                        "exhibitors" => isset($fair['exhibitors']) ? $fair['exhibitors'] : null,
+                        "area"       => isset($fair['area']) ? $fair['area'] : null,
+                        "catalog"    => isset($fair['catalog']) ? $fair['catalog'] : ''
+                    ];
+                }
             }
         }
     }
 
-    $all_events_json = [];
-    foreach ($fairs_week as $week_event_name) {
-        if (isset($events_map[$week_event_name])) {
-            $all_events_json[] = $events_map[$week_event_name];
-        }
-    }
+    // Now $fairs_week should contain the list of fairs after exclusions
+    $fairs_week = array_keys($events_map);
+
+    // The final array with event data
+    $all_events_json = array_values($events_map); // wartości (bez kluczy) — już po wykluczeniach
 
     $merge_exhibitors = [];
+    $conferences = [];
 
     foreach ($all_events_json as $event) {
         $exhibitors = CatalogFunctions::logosChecker($event['catalog'], 'PWECatalogCombined', false, null, false);
+        $conferences[] = PWECommonFunctions::get_database_fairs_data_adds($event['domain']);
                 
         if (is_array($exhibitors)) {
             foreach ($exhibitors as $exhibitor) {
@@ -378,7 +385,7 @@ if ($event_type === "week") {
     $header_bg = !empty($header_image_url) ? 'url('. $header_image_url .')' : '#464646';
 
     $rotate_logo = (count($all_events_json) < 4) ? 'inherit' : 'rotate(-90deg)';
-    $width_logo = (count($all_events_json) < 4) ? '280px' : '200px';
+    $width_logo = (count($all_events_json) < 4) ? '300px' : '200px';
 
     $output .= '
     <style>
@@ -1060,7 +1067,8 @@ if ($event_type === "week") {
         .single-event__exhibitors-fairs-button-container {
             margin: 8px 0 0;
         }
-        .single-event__exhibitors-fairs-button {
+        .single-event__exhibitors-fairs-button,
+        .single-event__exhibitors-fairs-button a {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1643,95 +1651,176 @@ if ($event_type === "week") {
 
                     </div>
 
-                    <div id="singleEventExhibitors" class="single-event__exhibitors">
+                    <div id="singleEventExhibitors" class="single-event__exhibitors">';
 
-                        <div id="singleEventCatalogHeader" class="single-event__catalog-header">
-                            <div class="single-event__catalog-header-wrapper">
-                                <h3>'. ($lang_pl ? "Katalog wystawców" : "Exhibitor catalog") .'</h3>
-                                <h4>'. get_the_title() .'</h4>
-                                <input id="searchInput" placeholder="'. ($lang_pl ? "Wyszukaj wystawców" : "Search for exhibitors") .'"/>
-                            </div> 
+                        $catalog_ids = '';
 
-                            <div id="hideAllExhibitors" class="single-event__exhibitors-hideall">
-                                <button>'. ($lang_pl ? "Zamknij katalog" : "Close catalog") .'</button>
-                            </div>
-                        </div>
-                        
-                        <div class="single-event__exhibitors-fairs">';
+                        foreach ($all_events_json as $event) {
+                            $domain = $event['domain'];
+                            $catalog_id = do_shortcode('[pwe_catalog_id domain="' . $domain . '"]');
 
-                            $domains_with_logos = [];
-                            foreach ($merge_exhibitors as $exhibitor) {
-                                if (!empty($exhibitor['exhibitor']['URL_logo_wystawcy'])) {
-                                    $domains_with_logos[$exhibitor['domain']] = true;
-                                }
+                            if ($catalog_ids !== '') {
+                                $catalog_ids .= ',';
                             }
+                            $catalog_ids .= (string)$catalog_id;
+                        }
+
+                        $catalog_ids = implode(',', array_unique(array_map('trim', explode(',', $catalog_ids))));
+
+                        if (!empty($catalog_ids)) {
+                            $output .= '
+                            <style>
+                                .exhibitor-catalog__header {
+                                    display: none !important;
+                                }
+                                .exhibitor-catalog__main-columns {
+                                    height: auto !important;
+                                }
+                            </style>';
 
                             $output .= '
-                            <div class="single-event__exhibitors-fairs-button-container">
-                                <div id="showAllExhibitors" class="single-event__exhibitors-fairs-button single-event__exhibitors-showall active" data-domain="all" style="background: linear-gradient(to right, '. $color_1 .', '. $color_2 .');">';
-                                    foreach ($all_events_json as $event) {
-                                        if (!isset($domains_with_logos[$event['domain']])) continue;
-                                        $output .= '<img src="https://'. $event['domain'] .'/doc/logo.webp" alt="' . $event['domain'] . '">';
-                                    }
-                                    $output .= '
+                            <div id="singleEventCatalogHeader" class="single-event__catalog-header">
+                                <div class="single-event__catalog-header-wrapper">
+                                    <h3>'. ($lang_pl ? "Katalog wystawców" : "Exhibitor catalog") .'</h3>
+                                    <h4>'. get_the_title() .'</h4>
+                                </div> 
+
+                                <div id="hideAllExhibitors" class="single-event__exhibitors-hideall">
+                                    <button>'. ($lang_pl ? "Zamknij katalog" : "Close catalog") .'</button>
                                 </div>
-                                <p>'. ($lang_pl ? "Wszystkie wydarzenia" : "All events") .'</p>
                             </div>';
 
-                            foreach ($all_events_json as $event) {
-                                if (!isset($domains_with_logos[$event['domain']])) continue;
+                            $output .= '
+                            <div class="single-event__exhibitors-fairs">';
+
+                                $domains_with_logos = [];
+                                foreach ($merge_exhibitors as $exhibitor) {
+                                    if (!empty($exhibitor['exhibitor']['URL_logo_wystawcy'])) {
+                                        $domains_with_logos[$exhibitor['domain']] = true;
+                                    }
+                                }
 
                                 $output .= '
                                 <div class="single-event__exhibitors-fairs-button-container">
-                                    <div class="single-event__exhibitors-fairs-button" data-domain="' . $event['domain'] . '" style="background-image: url(https://'. $event['domain'] .'/doc/background.webp)">
-                                        <img src="https://'. $event['domain'] .'/doc/logo.webp" alt="' . $event['domain'] . '">
+                                    <div id="showAllExhibitors" class="single-event__exhibitors-fairs-button single-event__exhibitors-showall active" data-domain="all" style="background: linear-gradient(to right, '. $color_1 .', '. $color_2 .');">';
+                                        foreach ($all_events_json as $event) {
+                                            if (!isset($domains_with_logos[$event['domain']])) continue;
+                                            $output .= '<img src="https://'. $event['domain'] .'/doc/logo.webp" alt="' . $event['domain'] . '">';
+                                        }
+                                        $output .= '
                                     </div>
-                                    <p>'. $event['desc'] .'</p>
+                                    <p>'. ($lang_pl ? "Wszystkie wydarzenia" : "All events") .'</p>
                                 </div>';
-                            }
+
+                                foreach ($all_events_json as $event) {
+                                    if (!isset($domains_with_logos[$event['domain']])) continue;
+
+                                    $output .= '
+                                    <div class="single-event__exhibitors-fairs-button-container">
+                                        <div class="single-event__exhibitors-fairs-button" data-domain="' . $event['domain'] . '" style="background-image: url(https://'. $event['domain'] .'/doc/background.webp)">
+                                            <a href="https://'. $event['domain'] .''. ($lang_pl ? "/katalog-wystawcow/" : "/en/exhibitors-catalog/") .'" target="_blank">
+                                                <img src="https://'. $event['domain'] .'/doc/logo.webp" alt="' . $event['domain'] . '">
+                                            </a>
+                                        </div>
+                                        <p>'. $event['desc'] .'</p>
+                                    </div>';
+                                }
+                                
+                                $output .= '
+                            </div>';
                             
+                            $output .= do_shortcode('[pwe-elements-auto-switch-page-catalog archive_catalog_id="'. $catalog_ids .'"]');
+                        } else {
                             $output .= '
-                        </div> 
-                        
-                        <div class="single-event__exhibitors-catalog">';
+                            <div id="singleEventCatalogHeader" class="single-event__catalog-header">
+                                <div class="single-event__catalog-header-wrapper">
+                                    <h3>'. ($lang_pl ? "Katalog wystawców" : "Exhibitor catalog") .'</h3>
+                                    <h4>'. get_the_title() .'</h4>
+                                    <input id="searchInput" placeholder="'. ($lang_pl ? "Wyszukaj wystawców" : "Search for exhibitors") .'"/>
+                                </div> 
 
-                            $already_shown_logos = [];
-                            foreach ($merge_exhibitors as $exhibitor) {
-                                $logo_url = $exhibitor['exhibitor']['URL_logo_wystawcy']; 
-                                if (empty($logo_url)) continue;
+                                <div id="hideAllExhibitors" class="single-event__exhibitors-hideall">
+                                    <button>'. ($lang_pl ? "Zamknij katalog" : "Close catalog") .'</button>
+                                </div>
+                            </div>
+                            
+                            <div class="single-event__exhibitors-fairs">';
 
-                                $is_duplicate = isset($already_shown_logos[$logo_url]);
-                                if (!$is_duplicate) $already_shown_logos[$logo_url] = true;
+                                $domains_with_logos = [];
+                                foreach ($merge_exhibitors as $exhibitor) {
+                                    if (!empty($exhibitor['exhibitor']['URL_logo_wystawcy'])) {
+                                        $domains_with_logos[$exhibitor['domain']] = true;
+                                    }
+                                }
 
                                 $output .= '
-                                <div class="single-event__exhibitors-card' . ($is_duplicate ? ' is-duplicate' : ' is-main') . '" 
-                                    data-domain="' . htmlspecialchars($exhibitor['domain']) . '" 
-                                    data-logo="' . htmlspecialchars($logo_url) . '" 
-                                    data-name="' . htmlspecialchars($exhibitor['exhibitor']['Nazwa_wystawcy']) . '"
-                                    data-booth="' . htmlspecialchars($exhibitor['exhibitor']['Numer_stoiska']) . '" 
-                                    data-website="' . htmlspecialchars($exhibitor['exhibitor']['www']) . '" 
-                                    style="display:' . ($is_duplicate ? 'none' : 'block') . ';">
-                                    <img src="' . htmlspecialchars($logo_url) . '" alt="' . htmlspecialchars($exhibitor['exhibitor']['Nazwa_wystawcy']) . '">
-                                    <p>' . htmlspecialchars($exhibitor['exhibitor']['Numer_stoiska']) . '</p>
+                                <div class="single-event__exhibitors-fairs-button-container">
+                                    <div id="showAllExhibitors" class="single-event__exhibitors-fairs-button interactive single-event__exhibitors-showall active" data-domain="all" style="background: linear-gradient(to right, '. $color_1 .', '. $color_2 .');">';
+                                        foreach ($all_events_json as $event) {
+                                            if (!isset($domains_with_logos[$event['domain']])) continue;
+                                            $output .= '<img src="https://'. $event['domain'] .'/doc/logo.webp" alt="' . $event['domain'] . '">';
+                                        }
+                                        $output .= '
+                                    </div>
+                                    <p>'. ($lang_pl ? "Wszystkie wydarzenia" : "All events") .'</p>
                                 </div>';
-                            }
 
-                        $output .= '  
-                        </div>  
-                        
-                        <!-- Modal -->
-                        <div id="exhibitor-modal" class="single-event__exhibitor-modal">
-                            <div class="single-event__exhibitor-modal-content">
-                                <span class="single-event__exhibitor-modal-close-btn">&times;</span>
-                                <div class="single-event__exhibitor-modal-logo-container">
-                                    <img class="single-event__exhibitor-modal-logo" src="" alt="Logo exhibitor" />
+                                foreach ($all_events_json as $event) {
+                                    if (!isset($domains_with_logos[$event['domain']])) continue;
+
+                                    $output .= '
+                                    <div class="single-event__exhibitors-fairs-button-container">
+                                        <div class="single-event__exhibitors-fairs-button interactive" data-domain="' . $event['domain'] . '" style="background-image: url(https://'. $event['domain'] .'/doc/background.webp)">
+                                            <img src="https://'. $event['domain'] .'/doc/logo.webp" alt="' . $event['domain'] . '">
+                                        </div>
+                                        <p>'. $event['desc'] .'</p>
+                                    </div>';
+                                }
+                                
+                                $output .= '
+                            </div> 
+                            
+                            <div class="single-event__exhibitors-catalog">';
+
+                                $already_shown_logos = [];
+                                foreach ($merge_exhibitors as $exhibitor) {
+                                    $logo_url = $exhibitor['exhibitor']['URL_logo_wystawcy']; 
+                                    if (empty($logo_url)) continue;
+
+                                    $is_duplicate = isset($already_shown_logos[$logo_url]);
+                                    if (!$is_duplicate) $already_shown_logos[$logo_url] = true;
+
+                                    $output .= '
+                                    <div class="single-event__exhibitors-card' . ($is_duplicate ? ' is-duplicate' : ' is-main') . '" 
+                                        data-domain="' . htmlspecialchars($exhibitor['domain']) . '" 
+                                        data-logo="' . htmlspecialchars($logo_url) . '" 
+                                        data-name="' . htmlspecialchars($exhibitor['exhibitor']['Nazwa_wystawcy']) . '"
+                                        data-booth="' . htmlspecialchars($exhibitor['exhibitor']['Numer_stoiska']) . '" 
+                                        data-website="' . htmlspecialchars($exhibitor['exhibitor']['www']) . '" 
+                                        style="display:' . ($is_duplicate ? 'none' : 'block') . ';">
+                                        <img src="' . htmlspecialchars($logo_url) . '" alt="' . htmlspecialchars($exhibitor['exhibitor']['Nazwa_wystawcy']) . '">
+                                        <p>' . htmlspecialchars($exhibitor['exhibitor']['Numer_stoiska']) . '</p>
+                                    </div>';
+                                }
+
+                                $output .= '  
+                            </div>  
+                            
+                            <!-- Modal -->
+                            <div id="exhibitor-modal" class="single-event__exhibitor-modal">
+                                <div class="single-event__exhibitor-modal-content">
+                                    <span class="single-event__exhibitor-modal-close-btn">&times;</span>
+                                    <div class="single-event__exhibitor-modal-logo-container">
+                                        <img class="single-event__exhibitor-modal-logo" src="" alt="Logo exhibitor" />
+                                    </div>
+                                    <h4 class="single-event__exhibitor-modal-name"></h4>
+                                    <p class="single-event__exhibitor-modal-stand"></p>
+                                    <a class="single-event__exhibitor-modal-website" href="#" target="_blank">'. ($lang_pl ? "Odwiedź stronę" : "Visit the website") .'</a>
                                 </div>
-                                <h4 class="single-event__exhibitor-modal-name"></h4>
-                                <p class="single-event__exhibitor-modal-stand"></p>
-                                <a class="single-event__exhibitor-modal-website" href="#" target="_blank">'. ($lang_pl ? "Odwiedź stronę" : "Visit the website") .'</a>
-                            </div>
-                        </div>
+                            </div>';
+                        }
 
+                        $output .= '
                     </div>
 
                 </div>
@@ -2059,7 +2148,7 @@ if ($event_type === "week") {
                     });
                 }
 
-                document.querySelectorAll(".single-event__exhibitors-fairs-button").forEach(btn => {
+                document.querySelectorAll(".single-event__exhibitors-fairs-button.interactive").forEach(btn => {
                     btn.addEventListener("click", function() {
                         var domain = this.getAttribute("data-domain");
                         document.querySelectorAll(".single-event__exhibitors-card").forEach(card => {
@@ -2074,7 +2163,7 @@ if ($event_type === "week") {
                             showAllBtn.style.display = "flex";
                         }
                         // Klasa active na wybranym kafelku
-                        document.querySelectorAll(".single-event__exhibitors-fairs-button").forEach(btn2 => btn2.classList.remove("active"));
+                        document.querySelectorAll(".single-event__exhibitors-fairs-button.interactive").forEach(btn2 => btn2.classList.remove("active"));
                         this.classList.add("active");
                         showAllBtn.classList.remove("active");
                     });
@@ -2083,7 +2172,7 @@ if ($event_type === "week") {
                     document.querySelectorAll(".single-event__exhibitors-card").forEach(card => {
                         card.style.display = "flex";
                     });
-                    document.querySelectorAll(".single-event__exhibitors-fairs-button").forEach(btn => btn.classList.remove("active"));
+                    document.querySelectorAll(".single-event__exhibitors-fairs-button.interactive").forEach(btn => btn.classList.remove("active"));
                     this.classList.add("active");
                     // // Ukryj przycisk po kliknięciu!
                     // this.style.display = "none";

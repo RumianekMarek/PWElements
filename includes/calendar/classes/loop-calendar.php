@@ -1327,17 +1327,78 @@ class PWECalendar extends PWECommonFunctions {
                 </a>
             </div>';
         } else {
-            $fairs_week = get_post_meta($post_id, 'events_week_fairs', true);
-            $fairs_week = explode(", ", $fairs_week);
+            $date_start = get_post_meta($post_id, 'fair_date_start', true);
+            $date_end   = get_post_meta($post_id, 'fair_date_end', true);
 
-            if (count($fairs_week) == 1) {
+            // Download saved excluded fairs
+            $excluded_events = get_post_meta($post_id, 'events_week_fairs_excluded', true);
+            $excluded_events_array = !empty($excluded_events) ? array_map('trim', explode(', ', $excluded_events)) : [];
+
+            $events_map = [];
+            if (!empty($date_start) && !empty($date_end)) {
+                $trade_fair_start_timestamp = strtotime($date_start);
+                $trade_fair_end_timestamp   = strtotime($date_end);
+
+                $fairs_json = PWECommonFunctions::json_fairs();
+
+                foreach ($fairs_json as $fair) {
+                    $event_date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
+                    $event_date_end   = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
+                    $event_domain     = $fair["domain"];
+                    $event_name       = PWECommonFunctions::lang_pl() ? $fair["name_pl"] : $fair["name_pl"];
+
+                    if ($event_date_start && $event_date_end) {
+                        $isStartInside    = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
+                        $isEndInside      = $event_date_end >= $trade_fair_start_timestamp && $event_date_end <= $trade_fair_end_timestamp;
+                        $isNotFastTextile = strpos($event_domain, "fasttextile.com") === false;
+                        $isNotExpoTrends  = strpos($event_domain, "expotrends.eu") === false;
+                        $isNotFabricsExpo = strpos($event_domain, "fabrics-expo.eu") === false;
+                        $isNotTest        = strpos($event_domain, "mr.glasstec.pl") === false;
+
+                        if (($isStartInside || $isEndInside) && $isNotFastTextile && $isNotExpoTrends && $isNotFabricsExpo && $isNotTest) {
+                            $events_map[] = [
+                                "domain"     => $event_domain,
+                                "name"     => $event_name,
+                                "visitors"   => isset($fair["visitors"]) ? $fair["visitors"] : null,
+                                "exhibitors" => isset($fair["exhibitors"]) ? $fair["exhibitors"] : null,
+                                "area"       => isset($fair["area"]) ? $fair["area"] : null
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Filtering the event map by exclusions and reindexing
+            $filtered_events = array_values(array_filter($events_map, function($event) use ($excluded_events_array) {
+                return !in_array(trim($event['domain']), $excluded_events_array, true);
+            }));
+
+            $cap_visitors = 0;
+            $cap_exhibitors = 0;
+            $cap_area = 0;
+
+            foreach ($filtered_events as $event) {
+                $cap_visitors += $event['visitors'];
+                $cap_exhibitors += $event['exhibitors'];
+                $cap_area += $event['area'];
+            }
+
+            $meta_visitors = get_post_meta($post_id, 'events_week_visitors', true);
+            $meta_exhibitors = get_post_meta($post_id, 'events_week_exhibitors', true);
+            $meta_area = get_post_meta($post_id, 'events_week_area', true);
+
+            $week_visitors   = !empty($meta_visitors) ? $meta_visitors  : ceil($cap_visitors / 1000) * 1000;
+            $week_exhibitors = !empty($meta_exhibitors) ? $meta_exhibitors  : ceil($cap_exhibitors / 10) * 10;
+            $week_area       = !empty($meta_area) ? $meta_area : ceil($cap_area / 10) * 10;
+
+            if (count($filtered_events) == 1) {
                 $events_word_declination = "wydarzenie";
-            } else if (count($fairs_week) > 1 && count($fairs_week) < 5) {
+            } else if (count($filtered_events) > 1 && count($filtered_events) < 5) {
                 $events_word_declination = "wydarzenia";
             } else {
                 $events_word_declination = "wydarzeń";
             }
-            
+
             $output = '
             <div class="pwe-calendar__item '. $event_type .'" search_engine="'. $event['post_title'] .' '. $post_meta['keywords'][0] .' " search_category="' . $category_classes . '">
                 <a class="pwe-calendar__link" href="'. $permalink .'">
@@ -1347,7 +1408,7 @@ class PWECalendar extends PWECommonFunctions {
                         </div>
                         <div class="pwe-calendar_strip">
                             <div class="pwe-calendar__button-check"><p>' . self::multi_translation("check_out") . ' ❯</p></div>
-                            <div class="pwe-calendar__count-events"><p>'. count($fairs_week) . ' ' . $events_word_declination .'</p></div>
+                            <div class="pwe-calendar__count-events"><p>'. count($filtered_events) . ' ' . $events_word_declination .'</p></div>
                         </div>
                     </div>
                     <div class="pwe-calendar_info">
@@ -1355,8 +1416,8 @@ class PWECalendar extends PWECommonFunctions {
                             <h5>' . $fair_date . '</h5>
                         </div>
                         <ul class="pwe-calendar_info-list">';
-                            foreach ($fairs_week as $fair) {
-                                $output .= '<li>&#8226; '. $fair .'</li>';
+                            foreach ($filtered_events as $event) {
+                                $output .= '<li>&#8226; '. $event['name'] .'</li>';
                             }
                         $output .= '
                         </ul>

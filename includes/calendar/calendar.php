@@ -727,22 +727,21 @@ function events_week_fairs_callback($post) {
     $date_start = get_post_meta($post->ID, 'fair_date_start', true);
     $date_end   = get_post_meta($post->ID, 'fair_date_end', true);
 
-    // Get the current meta value
-    $saved_events = get_post_meta($post->ID, 'events_week_fairs', true);
+    // Pobierz zapisane wykluczone targi
+    $excluded_events = get_post_meta($post->ID, 'events_week_fairs_excluded', true);
+    $excluded_events_array = !empty($excluded_events) ? explode(', ', $excluded_events) : [];
 
-    $events = $saved_events;
-    if (empty($saved_events) && !empty($date_start) && !empty($date_end)) {
-        // Only if textarea empty -> generate automatically
+    $events_list = [];
+    if (!empty($date_start) && !empty($date_end)) {
         $trade_fair_start_timestamp = strtotime($date_start);
         $trade_fair_end_timestamp   = strtotime($date_end);
 
         $fairs_json = PWECommonFunctions::json_fairs();
-        $event_names = [];
 
         foreach ($fairs_json as $fair) {
             $event_date_start = isset($fair['date_start']) ? strtotime($fair['date_start']) : null;
             $event_date_end   = isset($fair['date_end']) ? strtotime($fair['date_end']) : null;
-            $event_name       = $lang === "pl" ? $fair["name_pl"] : $fair["name_en"];
+            $event_domain     = $fair["domain"];
 
             if ($event_date_start && $event_date_end) {
                 $isStartInside    = $event_date_start >= $trade_fair_start_timestamp && $event_date_start <= $trade_fair_end_timestamp;
@@ -750,35 +749,42 @@ function events_week_fairs_callback($post) {
                 $isNotFastTextile = strpos($fair['domain'], "fasttextile.com") === false;
                 $isNotExpoTrends  = strpos($fair['domain'], "expotrends.eu") === false;
                 $isNotFabricsExpo = strpos($fair['domain'], "fabrics-expo.eu") === false;
-                $isNotTest = strpos($fair['domain'], "mr.glasstec.pl") === false;
+                $isNotTest        = strpos($fair['domain'], "mr.glasstec.pl") === false;
 
                 if (($isStartInside || $isEndInside) && $isNotFastTextile && $isNotExpoTrends && $isNotFabricsExpo && $isNotTest) {
-                    $event_names[] = $event_name;
+                    $events_list[] = $event_domain;
                 }
             }
         }
-
-        $events = implode(", ", $event_names);
     }
 
-    echo '
-    <div class="pwe-calendar-inputs-container">
-        <div class="pwe-calendar-input">';
-            if (!empty($saved_events)) {
-                echo '<span style="color: green;">Dane są zapisane!</span>';
-                echo '<span style="color: red;">Usuń targi które chcesz wykluczyć z Warszawskiego Tygodnia. Jeżeli chcesz pobrać targi na nowo, usuń całe pole.</span>';
-            } else if (empty($saved_events) && !empty($events)) {
-                echo '<span style="color: red;">Dane jeszcze nie są zapisane. Zaktualizuj post!!!</span>';
-            }
-            echo '
-            <textarea 
-                id="events_week_fairs" 
-                name="events_week_fairs" 
-                class="pwe-calendar-full-width-input" 
-                style="height: 60px;"
-                placeholder="'. esc_attr($events) .'">'. esc_textarea($events) .'</textarea>
-        </div>
-    </div>';
+    echo '<span style="color: red;">Wykluczone targi:</span>' . $excluded_events;
+
+    // Display all fairs in a div (for preview only)
+    echo '<div class="pwe-calendar-inputs-container">
+            <div class="pwe-calendar-input">
+                <span style="color: green;">Wszystkie targi przypadające w terminie od '. esc_html($date_start) .' do '. esc_html($date_end) .'</span>
+                <div style="pointer-events: none; opacity: 0.5; margin-bottom: 10px;">';
+                    echo esc_html(implode(', ', $events_list));
+    echo '      </div>
+            </div>
+          </div>';
+
+    // Display checkboxes for selecting exclusions
+    if (!empty($events_list)) {
+        echo '<div class="pwe-calendar-inputs-container">
+                <span style="color: blue;">Wybierz targi do wykluczenia:</span>
+                <div class="pwe-calendar-input" style="display: flex; flex-wrap: wrap; flex-direction: inherit; margin-top: 8px;">';
+                    foreach ($events_list as $event) {
+                        $checked = in_array($event, $excluded_events_array) ? 'checked' : '';
+                        echo '
+                        <label style="display:block; margin-bottom: 4px;">
+                            <input type="checkbox" name="events_week_fairs_checkbox[]" value="'. esc_attr($event) .'" '. $checked .'> '. esc_html($event) .'
+                        </label>';
+                    }
+        echo '</div>
+        </div>';
+    }
 }
 
 function events_week_dates_callback($post) {
@@ -899,7 +905,7 @@ function events_week_other_callback($post) {
     </div>';
 }
 
-// Function of saving data from metaboxes
+// Function of saving data from metaboxes 
 function save_events_week_meta($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return $post_id;
 
@@ -939,7 +945,9 @@ function save_events_week_meta($post_id) {
     }
 
     if (isset($_POST['events_week_fairs_nonce']) && wp_verify_nonce($_POST['events_week_fairs_nonce'], 'save_events_week_fairs')) {
-        update_post_meta($post_id, 'events_week_fairs', sanitize_text_field($_POST['events_week_fairs']));
+        $excluded_events = isset($_POST['events_week_fairs_checkbox']) ? $_POST['events_week_fairs_checkbox'] : [];
+        $excluded_events_string = implode(', ', array_map('sanitize_text_field', $excluded_events));
+        update_post_meta($post_id, 'events_week_fairs_excluded', $excluded_events_string);
     }
     
     if (isset($_POST['featured_image_nonce']) && wp_verify_nonce($_POST['featured_image_nonce'], 'save_featured_image')) {
