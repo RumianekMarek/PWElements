@@ -42,12 +42,12 @@ class PWERegistrationAccreditations extends PWERegistration {
                     <div class="pwe-registration-fairs-select-container">
                         <div class="pwe-registration-fairs-select" id="fairSelect">
                             <div class="pwe-registration-fairs-select-box">
-                                <span class="pwe-registration-fairs-selected-text">Wybierz Targi</span>
+                                <span class="pwe-registration-fairs-selected-text">'. self::languageChecker('Wybierz Targi', 'Select Fair') .'</span>
                                 <i class="arrow-down">&#9660;</i>
                             </div>
                             <input type="text" id="searchInput" class="pwe-registration-fairs-search-input" placeholder="Wyszukaj..." />
                             <div class="pwe-registration-fairs-options-container">
-                                <div class="pwe-registration-fairs-option" domain="">Wybierz Targi</div>';
+                                <div class="pwe-registration-fairs-option" domain="">'. self::languageChecker('Wybierz Targi', 'Select Fair') .'</div>';
                                 foreach ($fairs_json as $fair) {
                                     if (!empty($fair["name_pl"])) {
                                         $output .= '

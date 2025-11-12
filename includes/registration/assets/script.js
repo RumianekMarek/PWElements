@@ -188,6 +188,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (inputFairLang) {
             inputFairLang.value = "PL";
             lang = (inputFairLang.value === "PL") ? "pl-PL" : "en-US";
+        } else {
+            lang = htmlLang;
         }
 
         // Add event listeners to radio buttons
