@@ -172,7 +172,7 @@ class PWElementPosts extends PWElements {
         wp_enqueue_script('slick-slider-js', plugins_url('../assets/slick-slider/slick.min.js', __FILE__), array('jquery'), null, true);
 
         $output ='
-            <style>
+        <style>
             .posts_slider_syncing__container {
                 display: flex;
                 gap: 18px;
@@ -310,7 +310,7 @@ class PWElementPosts extends PWElements {
                     font-size: 14px;
                 }
             }
-            </style>
+        </style>
 
             <div id="PostsSliderSyncing" class="posts_slider_syncing__main_container pwelement_' . self::$rnd_id . '">
                     <h2 class="posts_slider_syncing__title">' . $posts_title . '</h2>
@@ -645,29 +645,6 @@ class PWElementPosts extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-post  .description img {
                         // background-color: '. $darker_btn_color .';
                     }
-                    .pwelement_'. self::$rnd_id .' .arrow-wrapper {
-                        position: relative;
-                        display: inline-block;
-                    }
-                    .pwelement_'. self::$rnd_id .' .arrow-wrapper::before {
-                        content: "";
-                        position: absolute;
-                        width: 90%;
-                        height: 90%;
-                        top: 5%;
-                        left: 5%;
-                        background: '. $darker_btn_color .';
-                        z-index: 0;
-                    }
-
-                    .pwelement_'. self::$rnd_id .' .arrow-wrapper img {
-                        display: block;
-                        z-index: 1;
-                        width: 100%;
-                        height: auto;
-                        z-index: 1000;
-                        position: sticky;
-                    }
                     .pwelement_'. self::$rnd_id .' .slider-range_' . self::$rnd_id . ' {
                         width: 100%;
                         margin-top: 16px;
@@ -930,8 +907,8 @@ class PWElementPosts extends PWElements {
                                             <div class="description">
                                                 <h4 class="pwe-post-title">'. $title .'</h4>
                                                 <p>' . self::languageChecker('Więcej', 'More') . '
-                                                    <span class="arrow-wrapper" style="font-size:30px; margin-left:10px; line-height: 0;">
-                                                        <img style="display:block; margin: 0px; padding:0;width:24px; height:24px;" src="/wp-content/plugins/pwe-media/media/arrow_forward_color.webp"/>
+                                                    <span class="arrow-wrapper" style="font-size:18px; margin-left:6px;">
+                                                        🡲
                                                     </span>
                                                 </p>
                                             </div>
@@ -1050,36 +1027,40 @@ class PWElementPosts extends PWElements {
                     $posts_displayed = $query->post_count;
 
                     $post_image_urls = array();
+
                     if ($query->have_posts()) {
                         while ($query->have_posts()) : $query->the_post();
                             $post_id = get_the_ID();
                             $word_count = 10;
 
-                            // Get post content
+
                             $post_content = get_post_field('post_content', $post_id);
+                            $excerpt = '';
+                            $vc_content = '';
 
-                            // Extract content inside [vc_column_text] shortcode
-                            preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches);
-                            $vc_content = isset($matches[1]) ? $matches[1] : '';
+                            if (preg_match('/pwe_news_summary_desc="([^"]+)"/', $post_content, $matches)) {
 
-                            // Remove HTML
+                                $encoded = $matches[1];
+                                $decoded = wpb_js_remove_wpautop(urldecode(base64_decode($encoded)), true);
+                                $vc_content = $decoded;
+
+                            } elseif (preg_match('/pwe_news_upcoming_desc="([^"]+)"/', $post_content, $matches)) {
+
+                                $encoded = $matches[1];
+                                $decoded = wpb_js_remove_wpautop(urldecode(base64_decode($encoded)), true);
+                                $vc_content = $decoded;
+
+                            } elseif (preg_match('/\[vc_column_text.*?\](.*?)\[\/vc_column_text\]/s', $post_content, $matches)) {
+
+                                $vc_content = $matches[1];
+
+                            }
+
                             $vc_content = wp_strip_all_tags($vc_content);
 
-                            // Check if the content is not empty
                             if (!empty($vc_content)) {
-                                // Split content into words
-                                $words = explode(' ', $vc_content);
-
-                                // Extract the first $word_count words
-                                $excerpt = array_slice($words, 0, $word_count);
-
-                                // Combine words into one string
-                                $excerpt = implode(' ', $excerpt);
-
-                                // Add an ellipsis at the end
-                                $excerpt .= '...';
-                            } else {
-                                $excerpt = '';
+                                $words = preg_split('/\s+/', trim($vc_content));
+                                $excerpt = implode(' ', array_slice($words, 0, $word_count)) . '...';
                             }
 
                             $link = get_permalink();

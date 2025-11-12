@@ -283,6 +283,30 @@ class PWElementOpinions extends PWElements {
                     display: inline-block;
                     margin: 0;
                 }
+                .pwe-opinions__item-opinion-text {
+                    scrollbar-width: thin; /* Firefox */
+                    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+                    -webkit-overflow-scrolling: touch;
+                    background-color: rgba(255, 255, 255, 0.01);
+                }
+                /* Chrome, Edge, Safari */
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-track {
+                    background: transparent;
+                    border-radius: 10px;
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-thumb {
+                    background-color: rgba(0, 0, 0, 0.3);
+                    border-radius: 10px;
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-thumb:hover {
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-button {
+                    display: none;
+                }
             </style>';
 
             if ($opinions_preset == 'preset_1') {
@@ -342,11 +366,15 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
+                        
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
                         line-height: 1.4;
                         margin: 0;
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                 </style>';
             } else if ($opinions_preset == 'preset_2') {
@@ -407,11 +435,15 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
+                        
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
                         line-height: 1.2;
                         margin: 0;
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                 </style>';
             } else if ($opinions_preset == 'preset_3') {
@@ -496,6 +528,11 @@ class PWElementOpinions extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
                         text-align: center;
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text,
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text p {
@@ -640,6 +677,11 @@ class PWElementOpinions extends PWElements {
                         .pwelement_'. self::$rnd_id .' .slick-list {
                             overflow: visible;
                         }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
+                            max-height: 140px;
+                            overflow-y: auto;
+                            padding-right: 8px;
+                        }
                     }
                 </style>';
             } else if ($opinions_preset == 'preset_5') {
@@ -717,6 +759,9 @@ class PWElementOpinions extends PWElements {
                         font-size: 14px;
                         text-align: left;
                         display: inline-block;
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-see-more {
                         text-align: right;
@@ -888,10 +933,10 @@ class PWElementOpinions extends PWElements {
                                     $opinions_desc = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_person_position_pl'] : $opinion_item['opinion_person_position_en'];
                                     $opinions_text = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_text_pl'] : $opinion_item['opinion_text_en'];
 
-                                    $words = explode(' ', strip_tags($opinions_text));
-                                    if (count($words) > 30) {
-                                        $opinions_text = implode(' ', array_slice($words, 0, 30)) . '...';
-                                    }
+                                    // $words = explode(' ', strip_tags($opinions_text));
+                                    // if (count($words) > 30) {
+                                    //     $opinions_text = implode(' ', array_slice($words, 0, 30)) . '...';
+                                    // }
 
                                     $opinions_button = isset($opinion_item["opinions_button"]) ? $opinion_item["opinions_button"] : null;
 
@@ -923,7 +968,7 @@ class PWElementOpinions extends PWElements {
                                                 </div>
                                             </div>
                                             <div class="pwe-opinions__item-opinion">
-                                                <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                                <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                 (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                                 (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                             </div>
@@ -945,7 +990,7 @@ class PWElementOpinions extends PWElements {
                                                 <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
                                             </div>
                                             <div class="pwe-opinions__item-opinion">
-                                                <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                                <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                 (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                                 (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                             </div>
@@ -974,7 +1019,7 @@ class PWElementOpinions extends PWElements {
                                                     ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
                                                 </div>
                                                 <div class="pwe-opinions__item-opinion">
-                                                    <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                                    <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                                     (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                                 </div>
@@ -1010,7 +1055,7 @@ class PWElementOpinions extends PWElements {
                                                 </div>
                                                 <div class="pwe-opinions__item-opinion">
                                                     <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
-                                                    <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                                    <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                                     (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                                     <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
@@ -1173,6 +1218,31 @@ class PWElementOpinions extends PWElements {
                     display: inline-block;
                     margin: 0;
                 }
+
+                .pwe-opinions__item-opinion-text {
+                    scrollbar-width: thin; /* Firefox */
+                    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+                    -webkit-overflow-scrolling: touch; 
+                    background-color: rgba(255, 255, 255, 0.01);
+                }
+                /* Chrome, Edge, Safari */
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-track {
+                    background: transparent;
+                    border-radius: 10px;
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-thumb {
+                    background-color: rgba(0, 0, 0, 0.3);
+                    border-radius: 10px;
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-thumb:hover {
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+                .pwe-opinions__item-opinion-text::-webkit-scrollbar-button {
+                    display: none;
+                }
             </style>';
 
             if ($opinions_preset == 'preset_1') {
@@ -1232,11 +1302,15 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
+                        
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
                         line-height: 1.4;
                         margin: 0;
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                 </style>';
             } else if ($opinions_preset == 'preset_2') {
@@ -1297,11 +1371,15 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
+                        
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
                         line-height: 1.2;
                         margin: 0;
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                 </style>';
             } else if ($opinions_preset == 'preset_3') {
@@ -1386,6 +1464,12 @@ class PWElementOpinions extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
                         text-align: center;
+                        
+                    }
+                    .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text,
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text p {
@@ -1530,6 +1614,11 @@ class PWElementOpinions extends PWElements {
                         .pwelement_'. self::$rnd_id .' .slick-list {
                             overflow: visible;
                         }
+                        .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
+                            max-height: 140px;
+                            overflow-y: auto;
+                            padding-right: 8px;
+                        }
                     }
                 </style>';
             }else if ($opinions_preset == 'preset_5') {
@@ -1601,9 +1690,13 @@ class PWElementOpinions extends PWElements {
                         position: relative;
                         padding: 18px;
                         margin: auto;
+                        
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
+                        max-height: 140px;
+                        overflow-y: auto;
+                        padding-right: 8px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-see-more {
                         text-align: right;
@@ -1667,98 +1760,6 @@ class PWElementOpinions extends PWElements {
                     }
                 </style>';
             }
-
-            // $default_opinions = [
-
-            //     [
-            //         'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Jerzy_Romanski.webp',
-            //         'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/ofmisp-logo.webp',
-            //         'opinions_company' => 'Ogólnopolska Federacja Małych i Średnich Przedsiębiorców',
-            //         'opinions_name' => 'Jerzy Romański',
-            //         'opinions_desc' => self::languageChecker('Wiceprezes', 'Vice President'),
-            //         'opinions_text' => self::languageChecker(
-            //             'Zbudowanie przyjaznej więzi pomiędzy organizatorem targów, firmą wystawiającą się i organizacjami wspierającymi jest kluczowe, by uniknąć błędów i w pełni wykorzystać potencjał wydarzenia.',
-            //             'Building a friendly relationship between the trade fair organizer, the exhibiting company, and supporting organizations is key to avoiding mistakes and fully utilizing the potential of the event.')
-            //     ],
-            //     [
-            //         'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Krzysztof-Niczyporczuk.webp',
-            //         'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/pio-logo.webp',
-            //         'opinions_company' => 'Polska Izba Opakowań',
-            //         'opinions_name' => 'Mgr inż. Krzysztof Niczyporuk',
-            //         'opinions_desc' => '',
-            //         'opinions_text' => self::languageChecker(
-            //             'PTAK Warsaw Expo to wysokiej klasy organizator imprez targowych i konferencji. Polska Izba Opakowań pozytywnie ocenia współpracę z Ptak Warsaw Expo jako rzetelnym partnerem.',
-            //             'PTAK Warsaw Expo is a high-quality organizer of trade fairs and conferences. The Polish Packaging Chamber positively evaluates cooperation with Ptak Warsaw Expo as a reliable partner.')
-            //     ],
-            //     [
-            //         'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Piotr-Fiejkiewicz.webp',
-            //         'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/pts-logo.webp',
-            //         'opinions_company' => 'POLSKIE TOWARZYSTWO STOMATOLOGICZNE',
-            //         'opinions_name' => 'Piotr Flejszar',
-            //         'opinions_desc' => self::languageChecker('Dyrektor Biura Zarządu', 'Director of the Management Office'),
-            //         'opinions_text' => self::languageChecker(
-            //             'PTAK Warsaw Expo jest największym centrum wystawienniczym, z jakim współpracujemy. Firma inwestuje w rozwój infrastruktury, co zwiększa jakość organizowanych wydarzeń.',
-            //             'PTAK Warsaw Expo is the largest exhibition center we work with. The company invests in infrastructure development, which enhances the quality of organized events.')
-            //     ],
-            //     [
-            //         'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Pawel_Babski.webp',
-            //         'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/kit-logo.webp',
-            //         'opinions_company' => self::languageChecker('Krajowa Izba Targowa','National Chamber of Trade Fairs'),
-            //         'opinions_name' => 'Paweł Babski',
-            //         'opinions_desc' => self::languageChecker('Prezes', 'President'),
-            //         'opinions_text' => self::languageChecker(
-            //             'Nic nie zastąpi spotkania z producentem, wystawcą. Możliwość obserwowania i wpływania na kierunek, w którym rozwija się branża jest możliwa dzięki takim spotkaniom. Premierowe edycje targów dają właśnie taką możliwość.',
-            //             'Nothing can replace a meeting with a manufacturer, an exhibitor. The possibility of observing and influencing the direction in which the industry is developing is possible thanks to such meetings. Premiere editions of trade fairs offer exactly that opportunity.')
-            //     ]
-            // ];
-
-            // $edition = do_shortcode('[trade_fair_edition]');
-            //     if (strpos(strtolower($edition) , "premier") !== false) {
-            //         $premiere_edition_opinions = [
-            //             [
-            //                 'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Marlena-Wronkowska.webp',
-            //                 'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/wprost-logo.webp',
-            //                 'opinions_company' => 'Wprost',
-            //                 'opinions_name' => 'Marlena Wronkowska',
-            //                 'opinions_desc' => self::languageChecker('Dyrektor Projektów Biznesowych', 'Director of Business Projects'),
-            //                 'opinions_text' => self::languageChecker(
-            //                     'Tygodnik „Wprost” z uznaniem odnosi się do premierowych wydarzeń targowych organizowanych w 2025 roku przez Ptak Warsaw Expo. Nowe inicjatywy, takie jak Clean Tech Expo, Composite Poland czy Wire Tech Poland, nie tylko wzbogacają kalendarz targowy, ale również odpowiadają na aktualne potrzeby poszczególnych branż, oferując platformę do prezentacji innowacyjnych rozwiązań i nawiązywania wartościowych kontaktów biznesowych.​ Ptak Warsaw Expo, poprzez organizację tych premierowych wydarzeń, potwierdza swoją pozycję jako lidera wśród centrów targowych w Europie Środkowo-Wschodniej, oferując platformę sprzyjającą rozwojowi innowacji i współpracy międzybranżowej.',
-            //                     'The weekly magazine Wprost expresses appreciation for the premiere trade fair events organized in 2025 by Ptak Warsaw Expo. New initiatives such as Clean Tech Expo, Composite Poland, and Wire Tech Poland not only enrich the trade fair calendar but also respond to the current needs of specific industries by providing a platform for showcasing innovative solutions and fostering valuable business connections. By organizing these premiere events, Ptak Warsaw Expo reaffirms its position as a leader among trade fair centers in Central and Eastern Europe, offering an environment conducive to innovation and cross-industry collaboration.'
-            //                 )
-            //             ]
-            //         ];
-
-            //         $default_opinions = array_merge($default_opinions, $premiere_edition_opinions);
-
-            //         $max_opinions = 5 + count($premiere_edition_opinions);
-            //     } else {
-            //         $no_premiere_edition_opinions = [
-            //             [
-            //                 'opinions_face_img' => '/wp-content/plugins/pwe-media/media/default-opinions/Radoslaw-Dziuba.webp',
-            //                 'opinions_company_img' => '/wp-content/plugins/pwe-media/media/default-opinions/lukasiewicz-logo.webp',
-            //                 'opinions_company' => 'Łukasiewicz – Łódzki Instytut Technologiczny',
-            //                 'opinions_name' => 'dr Radosław Dziuba',
-            //                 'opinions_desc' => self::languageChecker('Dyrektor Sieci Badawczej Łukasiewicz', 'Director of the Łukasiewicz Research Network'),
-            //                 'opinions_text' => self::languageChecker(
-            //                     'Ptak Warsaw Expo to partner, z którym wymieniamy się wiedzą i doświadczeniem w dziedzinach związanych z działalnością obydwu instytucji. Centrum targowo-wystawienniczym Ptak Warsaw Expo pozwala na nawiązywanie kluczowych kontaktów biznesowych, budowanie relacji z klientami oraz poznanie nowych trendów.',
-            //                     'Ptak Warsaw Expo is a partner with whom we exchange knowledge and experience in areas related to the activities of both institutions. The Ptak Warsaw Expo exhibition center facilitates establishing key business contacts, building client relationships, and discovering new trends.'
-            //                 )
-            //             ]
-            //         ];
-
-            //         $default_opinions = array_merge($default_opinions, $no_premiere_edition_opinions);
-
-            //     }
-
-            //     $to_hide_raw = $opinions_to_hide ?? '';
-
-            //     $companies_to_hide = array_map(function($val) {
-            //         return mb_strtolower(trim($val));
-            //     }, explode(',', $to_hide_raw));
-
-            //     $default_opinions = array_filter($default_opinions, function ($opinion) use ($companies_to_hide) {
-            //         return !in_array(mb_strtolower(trim($opinion['opinions_company'])), $companies_to_hide);
-            //     });
 
             $edition = do_shortcode('[trade_fair_edition]');
 
@@ -1866,10 +1867,10 @@ class PWElementOpinions extends PWElements {
                         $opinions_desc = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_person_position_pl'] : $opinion_item['opinion_person_position_en'];
                         $opinions_text = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_text_pl'] : $opinion_item['opinion_text_en'];
 
-                        $words = explode(' ', strip_tags($opinions_text));
-                        if (count($words) > 30) {
-                            $opinions_text = implode(' ', array_slice($words, 0, 30)) . '...';
-                        }
+                        // $words = explode(' ', strip_tags($opinions_text));
+                        // if (count($words) > 30) {
+                        //     $opinions_text = implode(' ', array_slice($words, 0, 30)) . '...';
+                        // }
 
                         $opinions_button = isset($opinion_item["opinions_button"]) ? $opinion_item["opinions_button"] : null;
 
@@ -1901,12 +1902,12 @@ class PWElementOpinions extends PWElements {
                                     </div>
                                 </div>
                                 <div class="pwe-opinions__item-opinion">
-                                    <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                    <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                     (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                 </div>
                             </div>';
-                        } else if ($opinions_preset == 'preset_2') {
+                        } else if ($opinions_preset == 'preset_2') { 
                             $output .= '
                             <div class="pwe-opinions__item">
                                 <div class="pwe-opinions__item-media">
@@ -1923,7 +1924,7 @@ class PWElementOpinions extends PWElements {
                                     <h4 class="pwe-opinions__item-person-info-name">' . $opinions_name . '</h4>
                                 </div>
                                 <div class="pwe-opinions__item-opinion">
-                                    <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                    <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                     (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                 </div>
@@ -1952,7 +1953,7 @@ class PWElementOpinions extends PWElements {
                                         ' . (!empty($opinions_company) ? '<p class="pwe-opinions__item-company-name">' . $opinions_company . '</p>' : '<span></span>') . '
                                     </div>
                                     <div class="pwe-opinions__item-opinion">
-                                        <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                        <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                         (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                         (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                     </div>
@@ -1988,7 +1989,7 @@ class PWElementOpinions extends PWElements {
                                     </div>
                                     <div class="pwe-opinions__item-opinion">
                                         <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
-                                        <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                        <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                         (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                         (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                         <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
@@ -2017,7 +2018,7 @@ class PWElementOpinions extends PWElements {
                                 <div class="pwe-opinions__item-bottom">
                                     <div class="pwe-opinions__item-opinion">
                                         <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
-                                        <div style="display: inline;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
+                                        <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                         (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
                                         (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
                                         <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>

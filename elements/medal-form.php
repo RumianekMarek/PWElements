@@ -179,13 +179,13 @@ class PWElementMedalForm extends PWElements {
               <div class="fair-medal-content__color-box"></div>
               <div class="fair-medal-content_container">
                 <h1 class="fair-medal-content__title">
-                  Zgłoszenie do Konkursu Medalowego - Ptak Warsaw Expo!
+                  '.self::languageChecker('Zgłoszenie do Konkursu Medalowego - Ptak Warsaw Expo!', 'Application for the Medal Competition - Ptak Warsaw Expo!').'
                 </h1>
 
                 <p class="fair-medal-content__description">
-                  Zgłoś swój udział w konkursie medalowym organizowanym podczas targów w <strong>Ptak Warsaw Expo!</strong>
+                  '.self::languageChecker('Zgłoś swój udział w konkursie medalowym organizowanym podczas targów w <strong>Ptak Warsaw Expo!</strong>
                   Wyróżniamy innowacyjne, premierowe i wartościowe produkty oraz usługi prezentowane przez wystawców.
-                  Wypełnij formularz i zgłoś swój produkt do jednej z kategorii konkursowych!
+                  Wypełnij formularz i zgłoś swój produkt do jednej z kategorii konkursowych!', 'Submit your entry to the medal competition organized during the trade fair at <strong>Ptak Warsaw Expo!</strong> We recognize innovative, premiere, and valuable products and services presented by exhibitors. Fill out the form and enter your product in one of the competition categories!').'
                 </p>
               </div>
 
@@ -194,8 +194,8 @@ class PWElementMedalForm extends PWElements {
               [gravityform id="'. $medale_form_id .'" title="false" description="false" ajax="false"]
             </div>
             <div class="fair-rules">
-              Regulamin:<br/>
-              <a href="https://warsawexpo.eu/docs/Regulamin-Konkursu-Medalowego-Ptak-Warsaw-Expo.pdf"  target=_blank>Kliknij tutaj, aby przeczytać regulamin</a>
+             '.self::languageChecker('Regulamin', 'Terms and Conditions:').' :<br/>
+              <a href="'.self::languageChecker('https://warsawexpo.eu/docs/Regulamin-Konkursu-Medalowego-Ptak-Warsaw-Expo.pdf', 'https://warsawexpo.eu/docs/Rules-of-the-Medal-Competition-Ptak-Warsaw-Expo.pdf').'"  target=_blank>'.self::languageChecker('Kliknij tutaj, aby przeczytać regulamin', 'Click here to read the terms and conditions:').'</a>
             </div>
             <div class="fair-medal__footer">
               <img src="/wp-content/plugins/pwe-media/media/medal.webp" alt="fair-medal footer" class="fair-medal__footer-img" />
@@ -206,7 +206,6 @@ class PWElementMedalForm extends PWElements {
             document.addEventListener("DOMContentLoaded", function() {
               const fileInputs = document.querySelectorAll(".ginput_container_fileupload input[type=\'file\']");
 
-              // dozwolone rozszerzenia (małe litery)
               const allowedExtensions = ["jpg", "jpeg", "png", "gif", "pdf", "webp"];
               const maxFileSize = 1048576; // 1 MB
 
@@ -217,11 +216,11 @@ class PWElementMedalForm extends PWElements {
                 const label = document.createElement("label");
                 label.setAttribute("for", fileInput.id);
                 label.classList.add("custom-upload-label");
-                label.innerHTML = "📎 Dodaj plik";
+                label.innerHTML = "📎 '.self::languageChecker('Dodaj plik', 'Add file').'";
 
                 const fileNameSpan = document.createElement("span");
                 fileNameSpan.classList.add("custom-upload-filename");
-                fileNameSpan.textContent = "Brak wybranego pliku";
+                fileNameSpan.textContent = "'.self::languageChecker('Brak wybranego pliku', 'No file selected').'";
 
                 fileInput.parentNode.insertBefore(label, fileInput);
                 fileInput.parentNode.insertBefore(fileNameSpan, fileInput.nextSibling);
@@ -229,7 +228,7 @@ class PWElementMedalForm extends PWElements {
                 fileInput.addEventListener("change", function(event) {
                   const file = event.target.files[0];
                   if (!file) {
-                    fileNameSpan.textContent = "Brak wybranego pliku";
+                    fileNameSpan.textContent = "'.self::languageChecker('Brak wybranego pliku', 'No file selected').'";
                     fileNameSpan.classList.remove("error");
                     return;
                   }
@@ -240,7 +239,7 @@ class PWElementMedalForm extends PWElements {
 
 
                   if (!allowedExtensions.includes(fileExtension)) {
-                    fileNameSpan.textContent = "❌ Niedozwolony format pliku (" + fileExtension + ")";
+                    fileNameSpan.textContent = "❌ '.self::languageChecker('Niedozwolony format pliku', 'Invalid file format').' (" + fileExtension + ")";
                     fileNameSpan.classList.add("error");
                     fileInput.value = "";
                     return;
@@ -248,7 +247,7 @@ class PWElementMedalForm extends PWElements {
 
                   // walidacja rozmiaru
                   if (fileSize > maxFileSize) {
-                    fileNameSpan.textContent = "❌ Plik jest zbyt duży (maks. 1 MB)";
+                    fileNameSpan.textContent = "❌ '.self::languageChecker('Plik jest zbyt duży', 'The file is too large').' (maks. 1 MB)";
                     fileNameSpan.classList.add("error");
                     fileInput.value = "";
                     return;
