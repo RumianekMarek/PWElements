@@ -554,6 +554,25 @@ function render_gr2($atts, $all_exhibitors, $all_partners, $all_conferences, $pw
     add_field_phone_number( $generator_form_id );
     add_notification_conf_to_form( $generator_form_id );
 
+    add_filter( 'gform_pre_render_' . $generator_form_id, 'pwe_disable_marketing_consent' );
+    add_filter( 'gform_pre_validation_' . $generator_form_id, 'pwe_disable_marketing_consent' );
+    add_filter( 'gform_pre_submission_filter_' . $generator_form_id, 'pwe_disable_marketing_consent' );
+    add_filter( 'gform_admin_pre_render_' . $generator_form_id, 'pwe_disable_marketing_consent' );
+
+    function pwe_disable_marketing_consent( $form ) {
+        foreach ( $form['fields'] as &$field ) {
+            if (
+                stripos( $field->label, 'Zgoda marketingowa' ) !== false ||
+                stripos( $field->label, 'Marketing consent' ) !== false
+            ) {
+                $field->isRequired = false;
+                $field->visibility = 'hidden';
+                $field->cssClass .= ' hidden';
+            }
+        }
+        return $form;
+    }
+
     $code_count = strlen($_GET['wystawca']) ?? 0;
 
     $all_senders = array();
@@ -1265,7 +1284,7 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
 
             $(`form .gfield--type-phone`).addClass("gfield_visibility_hidden");
 
-            const exhibitorCompany = $(`input[placeholder="Firma Zapraszająca"]`).closest(".gfield");
+            const exhibitorCompany = $(`input[placeholder="Firma Zapraszająca"], input[placeholder="Inviting Company"]`).closest(".gfield");
             const exhibitorLogo = $(`.exhibitor-selector__container`);
 
             exhibitorCompany.hide();
@@ -1540,13 +1559,18 @@ echo '<script>console.log("'.$generator_form_id.'")</script>';
             }
             }
         });
+
+
     </script>
 
     <style>
         .exhibitor-generator-tech-support {
             display:none !important;
         }
-    </style>';
+    </style>
+';
+
+
 
 
     // if ( current_user_can('administrator') ) {

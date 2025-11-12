@@ -43,6 +43,7 @@ class PWEExhibitorGenerator{
 
         // Hook actions
         add_action('wp_enqueue_scripts', array($this, 'addingStyles'));
+
     }
 
     /**
