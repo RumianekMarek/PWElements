@@ -352,27 +352,27 @@ if ($event_type === "week") {
     $unique_logotypes = [];
 
     foreach ($merge_exhibitors as $item) {
-        $logo = $item['exhibitor']['URL_logo_wystawcy'];
+        $logo = $item['exhibitor']['Numer_stoiska'];
         if (!isset($duplicates[$logo])) {
             $duplicates[$logo] = true;
             $unique_logotypes[] = $item;
         }
     }
 
-    $visitors = 0;
-    $exhibitors = 0;
-    $area = 0;
+    $visitors_num = 0;
+    $exhibitors_num = 0;
+    $area_num = 0;
 
     foreach ($all_events_json as $event) {
-        $visitors += (int)$event['visitors'];
-        $exhibitors += (int)$event['exhibitors'];
-        $area += (int)$event['area'];
+        $visitors_num += (int)$event['visitors'];
+        $exhibitors_num += (int)$event['exhibitors'];
+        $area_num += (int)$event['area'];
     }
 
-    $visitors = !empty(get_post_meta($post_id, 'events_week_visitors', true)) ? get_post_meta($post_id, 'events_week_visitors', true) : ceil($visitors / 1000) * 1000;
-    $visitors_foreign = !empty(get_post_meta($post_id, 'events_week_visitors_foreign', true)) ? get_post_meta($post_id, 'events_week_visitors_foreign', true) : ceil(($visitors * 0.09) / 10) * 10;
-    $exhibitors = !empty(get_post_meta($post_id, 'events_week_exhibitors', true)) ? get_post_meta($post_id, 'events_week_exhibitors', true) : ceil($exhibitors / 10) * 10;
-    $area = !empty(get_post_meta($post_id, 'events_week_area', true)) ? get_post_meta($post_id, 'events_week_area', true) : ceil($area / 10) * 10;
+    $visitors_num = !empty(get_post_meta($post_id, 'events_week_visitors', true)) ? get_post_meta($post_id, 'events_week_visitors', true) : ceil($visitors_num / 1000) * 1000;
+    $visitors_foreign_num = !empty(get_post_meta($post_id, 'events_week_visitors_foreign', true)) ? get_post_meta($post_id, 'events_week_visitors_foreign', true) : ceil(($visitors_num * 0.09) / 10) * 10;
+    $exhibitors_num = !empty(get_post_meta($post_id, 'events_week_exhibitors', true)) ? get_post_meta($post_id, 'events_week_exhibitors', true) : ceil($exhibitors_num / 10) * 10;
+    $area_num = !empty(get_post_meta($post_id, 'events_week_area', true)) ? get_post_meta($post_id, 'events_week_area', true) : ceil($area_num / 10) * 10;
 
     $increase_percent = !empty(get_post_meta($post_id, 'events_week_percent', true)) ? get_post_meta($post_id, 'events_week_percent', true) : 30;
 
@@ -1067,6 +1067,10 @@ if ($event_type === "week") {
         .single-event__exhibitors-fairs-button-container {
             margin: 8px 0 0;
         }
+        .single-event__exhibitors-fairs-button {
+            background-position: center;
+            background-size: cover;
+        }
         .single-event__exhibitors-fairs-button,
         .single-event__exhibitors-fairs-button a {
             display: flex;
@@ -1351,7 +1355,7 @@ if ($event_type === "week") {
                             </div>
                             <div class="single-event__stats-diagram" id="diagram-block">
                                 <div class="single-event__stats-diagram-number">
-                                <span class="single-event__stats-count-up" data-target="'. $exhibitors .'">0</span>
+                                <span class="single-event__stats-count-up" data-target="'. $exhibitors_num .'">0</span>
                                 <div class="single-event__stats-caption">'. ($lang_pl ? "Wystawców" : "Exhibitors") .'</div>
                                 </div>
                                 <div class="single-event__stats-semicircle">
@@ -1394,7 +1398,7 @@ if ($event_type === "week") {
                                     <img src="/wp-content/plugins/PWElements/includes/calendar/assets/view-icon.png">
                                 </span>
                                 <div>
-                                    <span class="single-event__stats-count-up" data-target="'. $visitors .'">0</span>
+                                    <span class="single-event__stats-count-up" data-target="'. $visitors_num .'">0</span>
                                     <div class="single-event__stats-caption">'. ($lang_pl ? "Odwiedzających" : "Visitors") .'</div>
                                 </div>
                                 </div>
@@ -1403,7 +1407,7 @@ if ($event_type === "week") {
                                     <img src="/wp-content/plugins/PWElements/includes/calendar/assets/globus-icon.png">
                                 </span>
                                 <div>
-                                    <span class="single-event__stats-count-up" data-target="'. $visitors_foreign .'">0</span>
+                                    <span class="single-event__stats-count-up" data-target="'. $visitors_foreign_num .'">0</span>
                                     <div class="single-event__stats-caption">'. ($lang_pl ? "W tym z zagranicy" : "Including from abroad") .'</div>
                                 </div>
                                 </div>
@@ -1412,7 +1416,7 @@ if ($event_type === "week") {
                                     <img src="/wp-content/plugins/PWElements/includes/calendar/assets/area-icon.png">
                                 </span>
                                 <div>
-                                    <span class="single-event__stats-count-up" data-target="'. $area .'">0</span><span class="unit">m²</span>
+                                    <span class="single-event__stats-count-up" data-target="'. $area_num .'">0</span><span class="unit">m²</span>
                                     <div class="single-event__stats-caption">'. ($lang_pl ? "Powierzchni wystawienniczej" : "Exhibition space") .'</div>
                                 </div>
                                 </div>
@@ -3293,6 +3297,8 @@ if ($event_type === "week") {
                     // Events section
                     if (!empty($cap_logotypes_data)) {
 
+                        $europe_events_logotypes = [];
+
                         $saving_paths = function (&$europe_events_logotypes, $logo_data) {
                             $link = $logo_data->logos_link;
                             $alt = $logo_data->logos_alt;
@@ -3475,10 +3481,10 @@ if ($event_type === "week") {
                             <meta itemprop="telephone" content="'. get_post_meta($post_id, 'organizer_phone', true) .'">';
                             if ($organizer === "warsaw") {
                                 $output .= '
-                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
+                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/pwe-media/media/logo_pwe_black.png" width="155" height="135" alt="logo ptak">';
                             }  else if (strpos(mb_strtolower($organizer), "łódź") !== false) {
                                 $output .= '
-                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/PWElements/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
+                                <img class="wp-image-95078 ptak-logo-item" src="https://warsawexpo.eu/wp-content/plugins/pwe-media/media/ptak-expo-lodz-logo.webp" width="155" height="135" alt="logo lódź">';
                             }
                         $output .= '
                         </div>

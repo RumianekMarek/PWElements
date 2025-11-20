@@ -22,7 +22,7 @@ class PWEConferenceShortInfoGr1 {
                 flex: 1 1 50%;
                 z-index: 2;
             }
-                
+
             .' . $rnd_class . '  .pwe-conf-short-info-gr1__left img {
                 height: 100%;
                 border-radius: 22px;
@@ -157,12 +157,12 @@ class PWEConferenceShortInfoGr1 {
             </div>
             <div class="pwe-conf-short-info-gr1__right">
                 <div class="pwe-conf-short-info-gr1__right-content">
-                    <h2 class="pwe-conf-short-info-gr1__title">' . PWECommonFunctions::languageChecker('Konferencja', 'Conference') . '</h2>
+                    <h2 class="pwe-conf-short-info-gr1__title">' . PWEConferenceShortInfo::multi_translation("conference") . '</h2>
                     <h4 class="pwe-conf-short-info-gr1__name">' . $name . '</h4>
                     <div class="pwe-conf-short-info-gr1__desc">' . $desc . '</div>
                     <div class="pwe-conf-short-info-gr1__btn-container">
-                        <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-gr1__btn">' . PWECommonFunctions::languageChecker('Szczegóły', 'Details') . '</a>
-                        <a href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-gr1__btn pwe-conf-short-info-gr1__btn_accent">' . PWECommonFunctions::languageChecker('Zarejestruj się', 'Registration') . '</a>
+                        <a href="' . PWEConferenceShortInfo::multi_translation("conferences_link") . '" class="pwe-conf-short-info-gr1__btn">' . PWEConferenceShortInfo::multi_translation("details") . '</a>
+                        <a href="' . PWEConferenceShortInfo::multi_translation("registration_link") . '" class="pwe-conf-short-info-gr1__btn pwe-conf-short-info-gr1__btn_accent">' . PWEConferenceShortInfo::multi_translation("registration") . '</a>
                     </div>
                 </div>
                 <div class="pwe-conf-short-info-gr1__logo">

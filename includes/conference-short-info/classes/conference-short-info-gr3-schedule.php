@@ -2,6 +2,16 @@
 
 class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
 
+    public static function confLang($pl, $en) {
+        $current = get_locale();
+
+        if ($current === 'pl_PL') {
+            return $pl ?: $en;
+        }
+
+        return $en ?: $pl;
+    }
+
     public static function initElements() {
         return [];
     }
@@ -86,12 +96,15 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
             // Dodajemy konferencję ZAWSZE — data może być pusta
             $processed_conferences[] = [
                 'slug'  => $conf_slug,
-                'title' => PWECommonFunctions::languageChecker($conf->conf_name_pl, $conf->conf_name_en ?? $conf->conf_name_pl),
-                'img'   => PWECommonFunctions::languageChecker($conf->conf_img_pl, $conf->conf_img_en ?? $conf->conf_img_pl),
+                'title' => self::confLang($conf->conf_name_pl, $conf->conf_name_en),
+                'img' => self::confLang($conf->conf_img_pl, $conf->conf_img_en),
                 'logo'  => $logo,
                 'alt' => $logo_alt,
                 'date'  => $date_range,
-                'url'   => PWECommonFunctions::languageChecker('/wydarzenia', '/en/conferences') . '/?konferencja=' . $conf_slug,
+                'url' => self::confLang(
+                    '/wydarzenia/?konferencja=' . $conf_slug,
+                    '/en/conferences/?konferencja=' . $conf_slug
+                ),
             ];
         }
 
@@ -102,7 +115,8 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
         $output = '';
 
         // Styl
-        $output .= '<style>
+        $output .= '
+        <style>
 
             .row.limit-width.row-parent:has(#pwe-conf-short-info-gr3-schedule) {
                 padding: 36px 0 !important;
@@ -242,20 +256,45 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
             }
 
             .' . $rnd_class . ' .swiper {
-                max-width: 800px;
-                padding: 28px 10px !important;
-                user-select: none;
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 40px 20px !important;
             }
 
+            .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__link {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__tile {
+                transition: transform .45s ease;
+                border-radius:18px;
+            }
+
+            .' . $rnd_class . ' .swiper-slide:hover .pwe-conf-short-info-gr3-schedule__tile {
+                transform: scale(1.10);
+            }
             .' . $rnd_class . ' .swiper-slide {
                 aspect-ratio: 1/1;
                 border-radius: 18px;
-                overflow: hidden;
+            }
+            .' . $rnd_class . ' .swiper-wrapper {
+                    margin-bottom: 7px !important;
+            }
+            .' . $rnd_class . ' .swiper-button-next, .' . $rnd_class . ' .swiper-button-prev {
+                display: block;
+                font-weight: 700;
+                margin-top: -8px;
+            }
+            .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__column-container_swiper {
+                position: relative;
+                max-width: 1300px;
             }
 
             .' . $rnd_class . ' .swiper-pagination {
                 background: white;
-                padding: 2px 4px;
+                padding: 2px 4px !important;
                 bottom: 0px !important;
                 border-radius: 36px;
             }
@@ -270,9 +309,13 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
                 aspect-ratio: 1 / 1;
                 object-fit: cover;
             }
-
+            @media (max-width: 1050px) {
+                .' . $rnd_class . '  .swiper {
+                    max-width: 90vw;
+                }
+            }
             @media (max-width: 960px) {
-                .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__left, 
+                .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__left,
                 .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__right {
                     flex: 1 1 50%;
                 }
@@ -299,7 +342,7 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
                     background-image: url(/doc/header_mobile.webp);
                     padding: 36px 0;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__left, 
+                .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__left,
                 .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__right {
                     flex: 1 1 100%;
                     padding: 0 36px;
@@ -318,170 +361,116 @@ class PWEConferenceShortInfoGr3Schedule extends PWEConferenceShortInfo {
                 }
 
                 .' . $rnd_class . ' .swiper {
+                    position: relative;
                     padding: 0 10px 28px !important;
                     margin: 0 !important;
                 }
 
             }
+            @media(max-width:620px){
+                .' . $rnd_class . ' .swiper-button-next, .' . $rnd_class . ' .swiper-button-prev {
+                    display: none !important;
+                }
+                .' . $rnd_class . ' .pwe-conf-short-info-gr3-schedule__column-container {
+                    align-items: normal;
+                }
+            }
         </style>';
 
+        if (count($processed_conferences) < 5){
+            $output .= '
+            <style>
+                @media (min-width: 961px) {
+                    .' . $rnd_class . '  .swiper-wrapper {
+                        display: grid !important;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 10px;
+                        transform: none !important;
+                    }
+
+                    .' . $rnd_class . '  .swiper-slide {
+                        width: auto !important;
+                        min-height: auto !important;
+                        margin: 0 !important;
+                    }
+                        .' . $rnd_class . ' .swiper-button-next, .' . $rnd_class . ' .swiper-button-prev, .' . $rnd_class . ' .swiper-pagination {
+                        display: none !important;
+                        }
+                    }
+            </style>';
+        }
         // Layout
-        $output .= '<div id="pwe-conf-short-info-gr3-schedule">
+        $output .= '
+        <div id="pwe-conf-short-info-gr3-schedule">
             <div class="pwe-conf-short-info-gr3-schedule__wrapper">
                 <div class="pwe-conf-short-info-gr3-schedule__top-container">
                     <div class="pwe-conf-short-info-gr3-schedule__title-container">
-                        <div class="pwe-conf-short-info-gr3-schedule__title">' . PWECommonFunctions::languageChecker('Konferencje i wydarzenia towarzyszące', 'Conferences and accompanying events') . '</div>
+                        <div class="pwe-conf-short-info-gr3-schedule__title">' . PWEConferenceShortInfo::multi_translation("conferences_events") . '</div>
                         <div class="pwe-conf-short-info-gr3-schedule__subtitle">' . $name . '</div>
                     </div>
                     <img class="pwe-conf-short-info-gr3-schedule__congress-logo" src="/doc/kongres-color.webp" alt="Congress logo">
                 </div>
-                <div class="pwe-conf-short-info-gr3-schedule__column-container">
-                    <div class="pwe-conf-short-info-gr3-schedule__left">';
-                        $is_first_panel = true;
-                        foreach ($processed_conferences as $item) {
-                            $slug  = $item['slug'];
-                            $raw_title        = $item['title'] ?? '';
-                            $limited_title    = self::limit_words($raw_title, 20);
-                            $content_title    = htmlspecialchars($limited_title, ENT_QUOTES, 'UTF-8');
-                            $content_date     = $item['date'];
-                            $content_logo     = $item['logo'];
-                            $content_alt     = $item['alt'];
-                            $content_url      = $item['url'];
+                <div class="pwe-conf-short-info-gr3-schedule__column-container" style="position: relative;">
 
-                            $output .= '<div class="pwe-conf-short-info-gr3-schedule__info-box ' . $slug . '-content ' . ($is_first_panel ? ' is-active' : '') .'">'
-                                . ($content_date ? '<div class="pwe-conf-short-info-gr3-schedule__info-box-date">' . $content_date . '</div>' : '') .
+                    <div class="pwe-conf-short-info-gr3-schedule__column-container_swiper">
+                        <div class="swiper-button-prev"></div>
+                        <div class="pwe-conf-short-info-gr3-schedule__right swiper" style="position: relative;">
 
-                                 ($content_logo ? '<img class="pwe-conf-short-info-gr3-schedule__info-box-logo" src="' . $content_logo . '" alt="Logo - ' . $content_alt . '">' : '') . '
-                                <div class="pwe-conf-short-info-gr3-schedule__info-box-title">' . $content_title . '</div>
-                                <a class="pwe-conf-short-info-gr3-schedule__info-box-btn btn" href="' . $content_url . '">' .
-                                    PWECommonFunctions::languageChecker('Zobacz więcej', 'See more') .
-                                '</a>
-                            </div>';
-                            $is_first_panel = false;
-                        }
-                    $output .= '</div>
-                    <div class="pwe-conf-short-info-gr3-schedule__right swiper">
-                        <div class="swiper-wrapper">';
-                            foreach ($processed_conferences as $item) {
-                                if (empty($item["img"])) continue;
-                                $src = htmlspecialchars($item["img"], ENT_QUOTES, "UTF-8");
-                                $alt = htmlspecialchars(($item["title"] ?: $item["slug"]), ENT_QUOTES, "UTF-8");
-                                $id  = htmlspecialchars(($item["slug"] ?: pathinfo($src, PATHINFO_FILENAME)), ENT_QUOTES, "UTF-8");
 
-                                $output .= '
-                                <div class="swiper-slide ' . $item['slug'] . '-slide">
-                                    <img id="' . $id . '" class="pwe-conf-short-info-gr3-schedule__tile" data-no-lazy="1" src="' . $src . '" alt="' . PWECommonFunctions::languageChecker('Konferencja ', 'Conference') . $alt . '">
-                                </div>';
-                            }
-                        $output .= '</div>
-                    <div class="swiper-pagination"></div>
+                            <div class="swiper-wrapper">';
+
+                                foreach ($processed_conferences as $item) {
+                                    if (empty($item["img"])) continue;
+                                    $src = htmlspecialchars($item["img"], ENT_QUOTES, "UTF-8");
+                                    $alt = htmlspecialchars(($item["title"] ?: $item["slug"]), ENT_QUOTES, "UTF-8");
+                                    $id  = htmlspecialchars(($item["slug"] ?: pathinfo($src, PATHINFO_FILENAME)), ENT_QUOTES, "UTF-8");
+
+                                    $output .= '
+                                    <div class="swiper-slide ' . $item['slug'] . '-slide">
+                                    <a href="' . $item['url'] . '" class="pwe-conf-short-info-gr3-schedule__link">
+                                        <img id="' . $id . '" class="pwe-conf-short-info-gr3-schedule__tile" data-no-lazy="1" src="' . $src . '" alt="' .  PWEConferenceShortInfo::multi_translation("conference")  . $alt . '">
+                                        </a>
+                                    </div>';
+                                }
+                            $output .= '
+
+                            </div>
+
+                            <div class="swiper-pagination"></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
                     </div>
+
                 </div>
             </div>
         </div>';
 
+
         include_once plugin_dir_path(__FILE__) . '/../../../scripts/swiper.php';
-        $output .= PWESwiperScripts::swiperScripts('conf-short-info-gr3-schedule', '#pwe-conf-short-info-gr3-schedule', 'true', '', '', ['autoplay' => ['delay'=>6000, 'disableOnInteraction'=>true, 'pauseOnMouseEnter'=>false], 'slideToClickedSlide' => true, 'watchSlidesProgress' => true],
+        $output .= PWESwiperScripts::swiperScripts(
+            'conf-short-info-gr3-schedule',
+            '#pwe-conf-short-info-gr3-schedule',
+            'true',
+            'true',
+            '',
+            [
+                'autoplay' =>
+                ['delay'=>6000,
+                'disableOnInteraction'=>true,
+                'pauseOnMouseEnter'=>false],
+                'slideToClickedSlide' => false,
+                'watchSlidesProgress' => true,
+                'forceLoop' => true,
+                'allowTouchMove' => false,],
             rawurlencode(json_encode([
                 ['breakpoint_width' => 300, 'breakpoint_slides' => 1.5, 'centeredSlides' => true],
-                ['breakpoint_width' => 600, 'breakpoint_slides' => 2],
-                ['breakpoint_width' => 1024, 'breakpoint_slides' => 3],
+                ['breakpoint_width' => 600, 'breakpoint_slides' => 3],
+                ['breakpoint_width' => 1024, 'breakpoint_slides' => 4],
             ]))
         );
 
         $output .= '
-        <script>
-        jQuery(function($){
-        var $root = $("#pwe-conf-short-info-gr3-schedule");
-        if (!$root.length) return;
-
-        // --- GUARD: nie podpinaj kilka razy, jeśli skrypt wstrzyknięty wielokrotnie
-        if ($root.data("gr3Bound")) return;
-        $root.data("gr3Bound", true);
-
-        var $panels  = $root.find(".pwe-conf-short-info-gr3-schedule__info-box");
-        var $wrapper = $root.find(".swiper-wrapper");
-        var $slides  = $wrapper.find(".swiper-slide");
-        if (!$wrapper.length || !$slides.length) return;
-
-        // pseudo-elementy nie łapią klików (na wypadek, gdyby CSS się nie zaktualizował)
-        try {
-            var cc = $root.find(".pwe-conf-short-info-gr3-schedule__column-container")[0];
-            if (cc) {
-            cc.style.setProperty("--pe-none","1");
-            }
-        } catch(e){}
-
-        function slugFromSlideEl(el){
-            if (!el) return null;
-            var classes = (el.className || "").split(/\\s+/);
-            for (var i = 0; i < classes.length; i++) {
-            var c = classes[i];
-            if (c === "swiper-slide" || c.indexOf("swiper-") === 0) continue;
-            if (/-slide$/.test(c)) return c.replace(/-slide$/, "");
-            }
-            return null;
-        }
-
-        var lastSlug = null;
-        var suppressUntil = 0;
-
-        function activateBySlug(slug){
-            if (!slug) { // fallback
-            if (!$panels.filter(".is-active").length) $panels.first().addClass("is-active");
-            return;
-            }
-            if (slug === lastSlug) return; // nie rób nic, jeśli już jest aktywny
-
-            var $target = $panels.filter("." + slug + "-content");
-            if (!$target.length) {
-            // ostateczny fallback po indeksie
-            var idx = $slides.index($slides.filter(function(){ return slugFromSlideEl(this) === slug; })[0]);
-            if (idx >= 0) $target = $panels.eq(idx);
-            }
-            if (!$target.length) return;
-
-            $panels.removeClass("is-active");
-            $target.addClass("is-active");
-            lastSlug = slug;
-        }
-
-        function updateFromActive(){
-            // jeśli chwilę temu kliknęliśmy ręcznie, pomiń (żeby MO nie „cofnął”)
-            if (Date.now() < suppressUntil) return;
-            var active = $root.find(".swiper-slide.swiper-slide-active")[0];
-            var slug = active ? slugFromSlideEl(active) : null;
-            activateBySlug(slug);
-        }
-
-        // stan startowy
-        if (!$panels.filter(".is-active").length) $panels.first().addClass("is-active");
-        // inicjalna synchronizacja (bez logów)
-        updateFromActive();
-        setTimeout(updateFromActive, 200);
-
-        // OBSERWATOR – tylko 1 instancja, obserwuj zmiany klas slajdów
-        var mo = new MutationObserver(function(muts){
-            for (var i=0;i<muts.length;i++){
-            if (muts[i].attributeName === "class") { updateFromActive(); break; }
-            }
-        });
-        $slides.each(function(){
-            mo.observe(this, { attributes:true, attributeFilter:["class"] });
-        });
-
-        // HANDLERY – TYLKO JEDEN (click) i TYLKO na .swiper-slide
-        $root.off("click.gr3").on("click.gr3", ".swiper-slide", function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            var slug = slugFromSlideEl(this);
-            if (!slug) return;
-            suppressUntil = Date.now() + 350; // 350 ms ignoruj MO, żeby nie cofnął wyboru
-            activateBySlug(slug);
-        });
-
-        });
-        </script>';
+    ';
 
         return $output;
     }

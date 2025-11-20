@@ -43,10 +43,11 @@ class PWEConferenceShortInfo {
         if (class_exists('Vc_Manager')) {
             $domain     = parse_url(site_url(), PHP_URL_HOST);
             $fair_group = strtolower($fair_data[0]->fair_group ?? 'fallback');
+
             $renderer_class = $this->getConferenceRendererClass($domain, $fair_group);
 
-            $params = method_exists($renderer_class, 'initElements') 
-                ? $renderer_class::initElements() 
+            $params = method_exists($renderer_class, 'initElements')
+                ? $renderer_class::initElements()
                 : [];
 
             vc_map(array(
@@ -88,6 +89,20 @@ class PWEConferenceShortInfo {
         $domain     = parse_url(site_url(), PHP_URL_HOST);
         $fair_data  = PWECommonFunctions::get_database_fairs_data($domain);
         $fair_group = strtolower($fair_data[0]->fair_group ?? 'fallback');
+
+        // $pwe_groups_data = PWECommonFunctions::get_database_groups_data();
+        // $current_domain = $_SERVER['HTTP_HOST'];
+        // $fair_group = null;
+
+        // foreach ($pwe_groups_data as $item) {
+        //     if ($item->fair_domain === $current_domain) {
+        //         $fair_group = $item->fair_group;
+        //         break;
+        //     }
+        // }
+
+
+
 
         // 1) Zbierz konferencje + dni targowe
         $all_conferences = PWECommonFunctions::get_database_conferences_data();
@@ -140,5 +155,24 @@ class PWEConferenceShortInfo {
             return '<div id="PWEConferenceShortInfo" class="' . esc_attr($rnd_class) . '">' . $content . '</div>';
         }
         return '<!-- Renderer not found: ' . esc_html($renderer_class) . ' -->';
+    }
+
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../../translations/includes/conference-short-info.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
     }
 }

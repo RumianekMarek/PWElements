@@ -171,13 +171,14 @@ class PWEConferenceShortInfoDefault extends PWEConferenceShortInfo {
         </style>';
 
         // Tytuł
-        $output .= '<div class="pwe-conf-short-info-default__title">' . PWECommonFunctions::languageChecker('KONFERENCJA', 'Conference') . '</div>';
+        $output .= '<div class="pwe-conf-short-info-default__title">' . PWEConferenceShortInfo::multi_translation("conference") . '
+        </div>';
 
         // Layout
         $output .= '<div class="pwe-conf-short-info-default__wrapper">
             <div class="pwe-conf-short-info-default__left">
                 <img src="/doc/new_template/conference_img.webp" alt="Publiczność konferencji">
-                <a href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-default__btn">' . PWECommonFunctions::languageChecker('WEŹ UDZIAŁ', 'TAKE PART') . '</a>
+                <a href="' . PWEConferenceShortInfo::multi_translation("registration_link") . '" class="pwe-conf-short-info-default__btn">' . PWEConferenceShortInfo::multi_translation("take_part") . '</a>
             </div>
             <div class="pwe-conf-short-info-default__right">
                 <div class="pwe-conf-short-info-default__right-content">
@@ -218,7 +219,7 @@ class PWEConferenceShortInfoDefault extends PWEConferenceShortInfo {
                     }
 
                     if (!empty($logotypy)) {
-                        $output .= '<h6>' . PWECommonFunctions::languageChecker('PATRONI I PARTNERZY', 'PATRONS AND PARTNERS') . '</h6>';
+                        $output .= '<h6>' . PWEConferenceShortInfo::multi_translation("patrons") . '</h6>';
                         $output .= '<div class="conf-short-info-default">';
                         $output .= '<div class="swiper">';
                         $output .= '<div class="swiper-wrapper">';
@@ -246,7 +247,7 @@ class PWEConferenceShortInfoDefault extends PWEConferenceShortInfo {
 
                 $output .= '
                 </div>
-                <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-default__btn secondary">' . PWECommonFunctions::languageChecker('DOWIEDZ SIĘ WIĘCEJ', 'FIND OUT MORE') . '</a>
+                <a href="' . PWEConferenceShortInfo::multi_translation("conferences_link") . '" class="pwe-conf-short-info-default__btn secondary">' . PWEConferenceShortInfo::multi_translation("find_out_more") . '</a>
             </div>
         </div>';
 

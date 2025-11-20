@@ -1217,6 +1217,8 @@ class PWECalendar extends PWECommonFunctions {
             $fair_date = $formatted_date;
         }
 
+        $target_blank = $post_meta['web_page_link_target_blank'][0];
+
         $lang = ICL_LANGUAGE_CODE;
 
         // [pwe_short_desc_{lang}]
@@ -1262,7 +1264,7 @@ class PWECalendar extends PWECommonFunctions {
         if ($event_type === "" || $event_type === "event") {
             $output = '
             <div class="pwe-calendar__item" search_engine="'. $event['post_title'] .' '. $post_meta['keywords'][0] .' " search_category="' . $category_classes . '">
-                <a class="pwe-calendar__link" href="'. $permalink .'">
+                <a class="pwe-calendar__link" href="'. ($target_blank ? $website : $permalink) .'" '. ($target_blank ? 'target="_blank"' : '') .'>
                     <div class="pwe-calendar__tile" style="background-image:url(' . esc_url($secondary_image_url) . ');">';
                         if (!empty($short_desc)) {
                             $output .= '
@@ -1270,60 +1272,68 @@ class PWECalendar extends PWECommonFunctions {
                                 <h4>'. $short_desc .'</h4>
                             </div>';
                         };
+                        
                         $output .= '
                         <div class="pwe-calendar_strip">
-                            <div class="pwe-calendar__button-check"><p>' . self::multi_translation("check_out") . ' ❯</p></div>
-                            <div class="pwe-calendar__edition"><p>' . $edition . '</p></div>
-                        </div>
+                            <div class="pwe-calendar__button-check"><p>' . self::multi_translation("check_out") . ' ❯</p></div>';
+                            if (!empty($edition_num)) {
+                                $output .= '<div class="pwe-calendar__edition"><p>' . $edition . '</p></div>';
+                            }
+                        $output .= '
+                        </div>';
+                        
+                    $output .= '
                     </div>
                     <div class="pwe-calendar__date">
                         <h5>' . $fair_date . '</h5>
                     </div>';
-                    if ($edition == self::multi_translation("premier_edition")) {
-                        $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("estimates") .'</div>';
-                    } else {
-                        $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("statistics") . '</div>';
+                    if (!empty($visitors_num) && !empty($exhibitors_num) && !empty($area_num)) {
+                        if ($edition == self::multi_translation("premier_edition")) {
+                            $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("estimates") .'</div>';
+                        } else {
+                            $output .= '<div class="pwe-calendar__statistics-word">' . self::multi_translation("statistics") . '</div>';
+                        }
+                        $output .= '
+                        <div class="pwe-calendar_statistics">
+                            <div class="pwe-calendar__statistics-item">
+                                <div class="pwe-calendar__statistics-icon">
+                                    <img 
+                                        src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_odwiedzajacy.svg" 
+                                        alt="' . ($lang_pl ? "Ikona odwiedzający" : "Icon visitors") . '"
+                                    >
+                                </div>
+                                <div class="pwe-calendar__statistics-name">
+                                    <p class="pwe-calendar__statistics-label">' . self::multi_translation("visitors") . '</p>
+                                    <p class="pwe-calendar__statistics-value">' . $visitors_num . '</p>
+                                </div>
+                            </div>
+                            <div class="pwe-calendar__statistics-item">
+                                <div class="pwe-calendar__statistics-icon">
+                                    <img 
+                                        src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_wystawcy.svg" 
+                                        alt="' . ($lang_pl ? "Ikona wystawcy" : "Icon exhibitors") . '"
+                                    >
+                                </div>
+                                <div class="pwe-calendar__statistics-name">
+                                    <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibitors") . '</p>
+                                    <p class="pwe-calendar__statistics-value">' . $exhibitors_num . '</p>
+                                </div>
+                            </div>
+                            <div class="pwe-calendar__statistics-item">
+                                <div class="pwe-calendar__statistics-icon">
+                                    <img 
+                                        src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_powierzchnia.svg" 
+                                        alt="' . ($lang_pl ? "Ikona powierzchnia wystawiennicza" : "Icon exhibition area") . '"
+                                    >
+                                </div>
+                                <div class="pwe-calendar__statistics-name">
+                                    <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibition_area") . '</p>
+                                    <p class="pwe-calendar__statistics-value">' . $area_num . ' m<sup>2</sup></p>
+                                </div>
+                            </div>
+                        </div>';
                     }
-                    $output .= '
-
-                    <div class="pwe-calendar_statistics">
-                        <div class="pwe-calendar__statistics-item">
-                            <div class="pwe-calendar__statistics-icon">
-                                <img 
-                                    src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_odwiedzajacy.svg" 
-                                    alt="' . ($lang_pl ? "Ikona odwiedzający" : "Icon visitors") . '"
-                                >
-                            </div>
-                            <div class="pwe-calendar__statistics-name">
-                                <p class="pwe-calendar__statistics-label">' . self::multi_translation("visitors") . '</p>
-                                <p class="pwe-calendar__statistics-value">' . $visitors_num . '</p>
-                            </div>
-                        </div>
-                        <div class="pwe-calendar__statistics-item">
-                            <div class="pwe-calendar__statistics-icon">
-                                <img 
-                                    src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_wystawcy.svg" 
-                                    alt="' . ($lang_pl ? "Ikona wystawcy" : "Icon exhibitors") . '"
-                                >
-                            </div>
-                            <div class="pwe-calendar__statistics-name">
-                                <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibitors") . '</p>
-                                <p class="pwe-calendar__statistics-value">' . $exhibitors_num . '</p>
-                            </div>
-                        </div>
-                        <div class="pwe-calendar__statistics-item">
-                            <div class="pwe-calendar__statistics-icon">
-                                <img 
-                                    src="https://warsawexpo.eu/wp-content/uploads/2024/09/ikonka_powierzchnia.svg" 
-                                    alt="' . ($lang_pl ? "Ikona powierzchnia wystawiennicza" : "Icon exhibition area") . '"
-                                >
-                            </div>
-                            <div class="pwe-calendar__statistics-name">
-                                <p class="pwe-calendar__statistics-label">' . self::multi_translation("exhibition_area") . '</p>
-                                <p class="pwe-calendar__statistics-value">' . $area_num . ' m<sup>2</sup></p>
-                            </div>
-                        </div>
-                    </div>
+                $output .= '
                 </a>
             </div>';
         } else {

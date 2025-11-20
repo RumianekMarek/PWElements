@@ -983,6 +983,7 @@ function event_links_callback($post) {
     wp_nonce_field('save_event_links', 'event_links_nonce');
     $lang = ICL_LANGUAGE_CODE;
     $website = get_post_meta($post->ID, 'web_page_link', true);
+    $target_blank = get_post_meta($post->ID, 'web_page_link_target_blank', true);
     if (!empty($website)) {
         $host = parse_url($website, PHP_URL_HOST);
         $domain = preg_replace('/^www\./', '', $host);
@@ -1008,9 +1009,13 @@ function event_links_callback($post) {
 
     echo '
     <div class="pwe-calendar-inputs-container">
-        <div class="pwe-calendar-input">
+        <div class="pwe-calendar-input one-seventh-width">
             <label for="web_page_link">Web Page Link: <span style="font-weight: 700;">(ENTER TO GET DATA FROM CAP)</span></label>
             <input type="text" id="web_page_link" name="web_page_link" class="pwe-calendar-full-width-input" placeholder="'. 'https://domain/' . ($lang === "pl" ? '' : 'en/') .'" value="'. $website .'" />
+        </div>
+        <div class="pwe-calendar-input one-third-width checkbox">
+            <label for="web_page_link_target_blank">Open <strong>Web Page Link</strong><br>in a new window</label>
+            <input type="checkbox" id="web_page_link_target_blank" name="web_page_link_target_blank" '. checked($target_blank, true, false) .'/>
         </div>
     </div>
 
@@ -1423,6 +1428,9 @@ function save_event_meta($post_id) {
         update_post_meta($post_id, 'visitor_registration_link', sanitize_text_field($_POST['visitor_registration_link']));
         update_post_meta($post_id, 'exhibitor_registration_link', sanitize_text_field($_POST['exhibitor_registration_link']));
         update_post_meta($post_id, 'buy_ticket_link', sanitize_text_field($_POST['buy_ticket_link']));
+
+        $target_blank = isset($_POST['web_page_link_target_blank']) ? true : false;
+        update_post_meta($post_id, 'web_page_link_target_blank', $target_blank);
     }
 
     if (isset($_POST['event_dates_nonce']) && wp_verify_nonce($_POST['event_dates_nonce'], 'save_event_dates')) {
@@ -1560,12 +1568,13 @@ function load_datepicker_scripts($hook) {
         return;
     }
 
-    // Enqueue jQuery UI Datepicker
-    wp_enqueue_script('jquery-ui-datepicker');
-    wp_enqueue_style('jquery-ui-datepicker');
-
     // Enqueue jQuery (it may already be loaded, but this ensures it's loaded)
     wp_enqueue_script('jquery');
+
+    // Enqueue jQuery UI Datepicker
+    wp_enqueue_script('jquery-ui-datepicker');
+    wp_register_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css' );
+    wp_enqueue_style( 'jquery-ui' ); 
 
     // Add inline script to initialize Datepicker on specific inputs
     wp_add_inline_script('jquery-ui-datepicker', "
@@ -1627,7 +1636,8 @@ function load_admin_styles($hook) {
         }
         .pwe-calendar-input.checkbox {
             flex-direction: row-reverse;
-            justify-content: left;
+            justify-content: center;
+            align-items: center;
         }
         .pwe-calendar-input.checkbox input {
             width: 25px !important;
@@ -1637,6 +1647,9 @@ function load_admin_styles($hook) {
             margin: 0 !important;
             height: 100% !important;
             width: 100% !important;
+        }
+        .pwe-calendar-input.one-seventh-width {
+            width: 66%;
         }
         .pwe-calendar-input.half-width {
             width: 49%;

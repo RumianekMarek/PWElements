@@ -133,23 +133,23 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                     --border-color: #f2f2f2;
                 }
 
-                .' . $rnd_class . ' .pwe-conf-short-info-default__table { 
-                    width: 100%; 
-                    border-collapse: 
-                    collapse; margin: 0px; 
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table {
+                    width: 100%;
+                    border-collapse:
+                    collapse; margin: 0px;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-default__table th, 
+                .' . $rnd_class . ' .pwe-conf-short-info-default__table th,
                 .' . $rnd_class . ' .pwe-conf-short-info-default__table td {
                     border: 2px solid var(--border-color) !important;
                     padding: 6px;
                     text-align: center;
                     background: white !important;
                 }
-                .' . $rnd_class . ' .pwe-conf-short-info-default__timeline-bar { 
-                    height: 20px; 
-                    background-color: var(--accent-color); 
-                    animation: slide 1s ease-out; 
-                    position: relative; border-radius: 4px; 
+                .' . $rnd_class . ' .pwe-conf-short-info-default__timeline-bar {
+                    height: 20px;
+                    background-color: var(--accent-color);
+                    animation: slide 1s ease-out;
+                    position: relative; border-radius: 4px;
                 }
                 @keyframes slide { from { width: 0; } to { width: 100%; } }
 
@@ -170,7 +170,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                 .' . $rnd_class . ' .pwe-conf-short-info-default__org-logo {
                     max-height: 60px;
                 }
-                
+
                 .' . $rnd_class . ' .pwe-conf-short-info-default__buttons {
                     display: flex;
                     justify-content: space-around;
@@ -189,7 +189,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                     font-weight: 500;
                     font-size: 14px;
                 }
-                
+
                 .' . $rnd_class . ' .pwe-conf-short-info-default__row-link {
                     transition: 0.3s;
                 }
@@ -197,7 +197,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                 .' . $rnd_class . ' .pwe-conf-short-info-default__row-link:hover {
                     transform: scale(1.01);
                 }
-                    
+
                 .' . $rnd_class . ' .pwe-conf-short-info-default__row-link:hover td {
                     background-color: color-mix(in srgb, var(--accent-color) 10%, white 90%) !important;
                 }
@@ -208,8 +208,8 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                     color: black;
                 }
 
-                .' . $rnd_class . ' .swiper-horizontal>.swiper-pagination-bullets, 
-                .' . $rnd_class . ' .swiper-pagination-bullets.swiper-pagination-horizontal, 
+                .' . $rnd_class . ' .swiper-horizontal>.swiper-pagination-bullets,
+                .' . $rnd_class . ' .swiper-pagination-bullets.swiper-pagination-horizontal,
                 .' . $rnd_class . ' .swiper-pagination-custom, .swiper-pagination-fraction {
                     bottom: 10%;
                 }
@@ -221,7 +221,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                 .' . $rnd_class . ' .swiper-pagination-bullet {
                     width: 10px;
                     height: 10px;
-                } 
+                }
 
                 @media (min-width: 768px) {
                     .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-list-wrapper {
@@ -323,7 +323,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
 
                     .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card p {
                         font-size: 12px;
-                    }  
+                    }
 
                     .' . $rnd_class . ' .pwe-conf-short-info-default__mobile-card em {
                         background: var(--accent-color);
@@ -357,7 +357,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
                             $output .= '<div class="swiper-slide">';
                         }
                         $output .= '<table class="pwe-conf-short-info-default__table">';
-                            $output .= '<thead><tr><th>' . PWECommonFunctions::languageChecker('Organizator', 'Organizer') . '</th><th>' . PWECommonFunctions::languageChecker('Temat', 'Subject') . '</th>';
+                            $output .= '<thead><tr><th>' . PWEConferenceShortInfo::multi_translation("organizer") . '</th><th>' . PWEConferenceShortInfo::multi_translation("subject") . '</th>';
                             foreach ($fair_days as $date) {
                                 $output .= '<th>' . date('d.m', strtotime($date)) . '</th>';
                             }
@@ -366,7 +366,7 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
 
                                 foreach ($group as $conf) {
                                     $output .= '
-                                    <tr class="pwe-conf-short-info-default__row-link" data-href="/' . PWECommonFunctions::languageChecker('wydarzenia', 'en/conferences') . '/?konferencja=' . esc_attr($conf['slug']) . '">
+                                    <tr class="pwe-conf-short-info-default__row-link" data-href="/' . PWEConferenceShortInfo::multi_translation("conferences_link") . '/?konferencja=' . esc_attr($conf['slug']) . '">
                                         <td><img src="' . esc_url($conf['logo']) . '" alt="" class="pwe-conf-short-info-default__org-logo"></td>
                                         <td><strong>' . esc_html(str_replace('<br>', '', $conf['title'])) . '</strong><br><small>' . esc_html($conf['organizer']) . '</small></td>';
 
@@ -423,8 +423,8 @@ class PWEConferenceShortInfoDefaultSchedule extends PWEConferenceShortInfo {
 
         $output .= '
         <div class="pwe-conf-short-info-default__buttons">
-            <a href="' . PWECommonFunctions::languageChecker('/rejestracja/', '/en/registration/') . '" class="pwe-conf-short-info-default__btn">' . PWECommonFunctions::languageChecker('WEŹ UDZIAŁ', 'TAKE PART') . '</a>
-            <a href="' . PWECommonFunctions::languageChecker('/wydarzenia/', '/en/conferences/') . '" class="pwe-conf-short-info-default__btn secondary">' . PWECommonFunctions::languageChecker('DOWIEDZ SIĘ WIĘCEJ', 'FIND OUT MORE') . '</a>
+            <a href="' . PWEConferenceShortInfo::multi_translation("registration_link") . '" class="pwe-conf-short-info-default__btn">' . PWEConferenceShortInfo::multi_translation("take_part") . '</a>
+            <a href="' . PWEConferenceShortInfo::multi_translation("conferences_link") . '" class="pwe-conf-short-info-default__btn secondary">' . PWEConferenceShortInfo::multi_translation("find_out_more") . '</a>
         </div>';
 
         if ($use_swiper) {

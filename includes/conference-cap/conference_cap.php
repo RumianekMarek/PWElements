@@ -380,17 +380,33 @@ class PWEConferenceCap {
                     }
                 }
 
-                uksort($conf_slugs, function($a_slug, $b_slug) use ($database_data) {
-                    $getOrder = function($slug) use ($database_data) {
+                $domain = $_SERVER['HTTP_HOST']; // np. mr.glasstec.pl2
+
+                uksort($conf_slugs, function($a_slug, $b_slug) use ($database_data, $domain) {
+
+                    $getOrder = function($slug, $domain, $database_data) {
+
                         foreach ($database_data as $conf) {
-                            if ($conf->conf_slug === $slug) {
-                                return intval($conf->conf_order ?? 999);
+
+                            if ($conf->conf_slug !== $slug) {
+                                continue;
                             }
+
+                            $links = $conf->conf_site_link;
+
+                            $pattern = '/\b' . preg_quote($domain, '/') . '\b\s*\[(\d+)\]/';
+
+                            if (preg_match($pattern, $links, $m)) {
+                                return intval($m[1]);
+                            }
+
+                            return 999;
                         }
+
                         return 999;
                     };
 
-                    return $getOrder($a_slug) <=> $getOrder($b_slug);
+                    return $getOrder($a_slug, $domain, $database_data) <=> $getOrder($b_slug, $domain, $database_data);
                 });
 
                 // Przetwarzanie 'conference_cap_conference_display_slug'
