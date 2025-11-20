@@ -136,7 +136,6 @@ class PWECommonFunctions {
             }
         }
 
-        // Build column list
         $sql = "
             SELECT
                 f.id,
@@ -170,19 +169,30 @@ class PWECommonFunctions {
                 f.fair_domain,
                 f.fair_shop,
                 f.fair_group,
-                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_pl' ORDER BY id ASC LIMIT 1) AS category_pl,
-                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'category_en' ORDER BY id ASC LIMIT 1) AS category_en,
-                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'konf_name' ORDER BY id ASC LIMIT 1) AS konf_name,
-                (SELECT data FROM fair_adds WHERE fair_id = f.id AND slug = 'fair_kw_new' ORDER BY id ASC LIMIT 1) AS fair_kw_new
+
+                MAX(CASE WHEN fa.slug = 'category_pl' THEN fa.data END) AS category_pl,
+                MAX(CASE WHEN fa.slug = 'category_en' THEN fa.data END) AS category_en,
+                MAX(CASE WHEN fa.slug = 'konf_name' THEN fa.data END) AS konf_name,
+                MAX(CASE WHEN fa.slug = 'fair_kw_new' THEN fa.data END) AS fair_kw_new
+
             FROM fairs f
+            LEFT JOIN fair_adds fa ON fa.fair_id = f.id
         ";
 
-        // Jeśli chcesz dodać warunek po domenie:
-        if (!isset($fair_domain)) {
-            $results = $cap_db->get_results($sql);
-        } else {
+        $params = [];
+        if ($fair_domain !== null) {
             $sql .= " WHERE f.fair_domain = %s";
-            $results = $cap_db->get_results($cap_db->prepare($sql, $fair_domain));
+            $params[] = $fair_domain;
+        }
+
+        // Grouping
+        $sql .= " GROUP BY f.id";
+
+        // Execution of the query
+        if (!empty($params)) {
+            $results = $cap_db->get_results($cap_db->prepare($sql, $params));
+        } else {
+            $results = $cap_db->get_results($sql);
         }
 
 
@@ -1093,8 +1103,15 @@ class PWECommonFunctions {
      * @param string $pl text in English.
      * @return string
      */
-    public static function languageChecker($pl, $en = '') {
-        return get_locale() == 'pl_PL' ? $pl : $en;
+    public static function languageChecker($pl, $en = '', $de = '') {
+        if (get_locale() == 'pl_PL') {
+            return $pl;
+        } else if (get_locale() == 'en_US') {
+            return $en;
+        } else {
+            return $de;
+        }
+        
     }
 
     /**

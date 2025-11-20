@@ -148,14 +148,14 @@ class PWESwiperScripts {
                 }
 
             ';
-                if ($arrows_display === "true" && $scrollbar_display === "true") { 
+                if ($arrows_display === "true" && $scrollbar_display === "true") {
                     $output .= '
 
                         ' . $pwe_element . ' .swiper-scrollbar.swiper-scrollbar-horizontal {
                             position: inherit;
                             height: 8px;
                         }
-                        ' . $pwe_element . ' .swiper-button-prev, 
+                        ' . $pwe_element . ' .swiper-button-prev,
                         ' . $pwe_element . ' .swiper-button-next {
                             position: inherit;
                             background: var(--accent-color);
@@ -191,7 +191,7 @@ class PWESwiperScripts {
                 } else {
                     $output .= '
 
-                        ' . $pwe_element . ' .swiper-button-next, 
+                        ' . $pwe_element . ' .swiper-button-next,
                         ' . $pwe_element . ' .swiper-button-prev {
                             color: var(--accent-color);
                         }';
@@ -232,7 +232,7 @@ class PWESwiperScripts {
                         margin: 0 3px;
                     }';
                 }
-                
+
             $output .= '
             </style>';
 
@@ -280,7 +280,7 @@ class PWESwiperScripts {
                     let shouldLoop = totalSlides >= needForLoop;
 
                     if (centeredSlides && totalSlides <= 2) {
-                    shouldLoop = false;
+                    shouldLoop = true;
                     }
 
                     // Zapisz do configu również "rewind", żeby na mobile nadal dało się „zawinąć”

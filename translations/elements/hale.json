@@ -1,0 +1,20 @@
+{
+  "pl_PL": {
+    "hall": "Hala",
+    "halls": "Hale",
+    "parking":"DARMOWY PARKING",
+    "logo_link":"/doc/logo-color.webp"
+  },
+  "en_US": {
+    "hall": "Hall",
+    "halls": "Halls",
+    "parking":"FREE PARKING",
+    "logo_link":"/doc/logo-color-en.webp"
+  },
+  "de_DE": {
+    "hall": "Halle",
+    "halls": "Hallen",
+    "parking":"KOSTENLOSE PARKPLÄTZE",
+    "logo_link":"/doc/logo-color-en.webp"
+  }
+}

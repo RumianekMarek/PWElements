@@ -2,12 +2,13 @@
 
 /*
  * Plugin Name: PWE Elements
- * Plugin URI: https://github.com/RumianekMarek/PWElements
+ * Plugin URI: https://github.com/ptak-warsaw-expo-dev/pwe-elements
  * Description: Adding a PWE elements to the website.
- * Version: 3.0.8
+ * Version: 3.0.9
  * Author: Marek Rumianek
+ * Co-author: Anton Melnychuk, Piotr Krupniewski, Jakub Choła
  * Author URI: github.com/RumianekMarek
- * Update URI: https://api.github.com/repos/RumianekMarek/PWElements/releases/latest
+ * Update URI: https://api.github.com/repos/ptak-warsaw-expo-dev/pwe-elements/releases/latest
  */
 
 
@@ -290,9 +291,9 @@ class PWElementsPlugin {
         include( plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php');
 
         $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-            'https://github.com/RumianekMarek/PWElements',
+            'https://github.com/ptak-warsaw-expo-dev/pwe-elements',
             __FILE__,
-            'PWElements'
+            'pwe-elements'
         );
 
         if (self::getGithubKey()){

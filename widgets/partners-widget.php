@@ -55,9 +55,9 @@ $output .= '
         gap: 18px;
     }
     .pwe-header-partners__item {
-        max-width: 160px; 
+        max-width: 160px;
     }
-    .pwe-header-partners__item, 
+    .pwe-header-partners__item,
     .pwe-header-partners__item a {
         text-align: center;
     }
@@ -86,10 +86,6 @@ $output .= '
     }
 </style>';
 
-// echo '<pre>';
-// var_dump($cap_logotypes_data);
-// echo '</pre>';
-
 $files = [];
 
 if ($pwe_header_cap_auto_partners_off) {
@@ -110,7 +106,7 @@ if ($pwe_header_cap_auto_partners_off) {
                 'link' => ''
             ];
         }
-        unset($file); 
+        unset($file);
     }
 
     $saving_paths = function (&$files, $logo_data) {
@@ -134,7 +130,8 @@ if ($pwe_header_cap_auto_partners_off) {
     };
 
     $cap_logotypes_data = PWECommonFunctions::get_database_logotypes_data();
-    if (!empty($cap_logotypes_data) && !empty($pwe_header_partners_catalog)) { 
+
+    if (!empty($cap_logotypes_data) && !empty($pwe_header_partners_catalog)) {
         $logotypes_catalogs_array = explode(',', $pwe_header_partners_catalog);
         foreach ($cap_logotypes_data as $logo_data) {
             if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
@@ -181,7 +178,7 @@ if ($pwe_header_cap_auto_partners_off) {
         </style>';
     }
 
-    $output .= ' 
+    $output .= '
     <div class="pwe-header-partners">
         <div class="pwe-header-partners__container partners-'. $unique_id .'">
             <div class="pwe-header-partners__title">
@@ -201,10 +198,10 @@ if ($pwe_header_cap_auto_partners_off) {
                                 <img src="'. $item["url"] .'" alt="partner logo">
                             </div>';
                         }
-                    }  
+                    }
                 }
             $output .= '
-            </div> 
+            </div>
         </div>';
 
         // Check if $pwe_header_other_partners contains valid JSON
@@ -289,7 +286,7 @@ if ($pwe_header_cap_auto_partners_off) {
                         }
                     </style>';
                 }
-                
+
                 if (count($other_files) > 0) {
                     $output .= '
                     <div class="pwe-header-partners__container partners-'. $unique_id .'">
@@ -314,8 +311,8 @@ if ($pwe_header_cap_auto_partners_off) {
                             }
                         $output .= '
                         </div>
-                    </div>'; 
-                } 
+                    </div>';
+                }
             }
         }
         $output .= '
@@ -325,33 +322,79 @@ if ($pwe_header_cap_auto_partners_off) {
     if (!empty($meta_data)) {
         $header_order = $meta_data[0]->meta_data;
     }
-    
+
     if (!empty($cap_logotypes_data)) {
-        // Grupujemy logotypy według logos_type, które zaczynają się na "header-"
+
         $grouped_logos = [];
+        $currentLocale = get_locale();
+        $currentLang = substr($currentLocale, 0, 2);
 
         foreach ($cap_logotypes_data as $logo_data) {
+
             if (strpos($logo_data->logos_type, 'header-') === 0) {
+
                 $meta = json_decode($logo_data->meta_data, true);
+                $data = json_decode($logo_data->data ?? '{}', true);
+
                 $desc_pl = $meta["desc_pl"] ?? '';
                 $desc_en = $meta["desc_en"] ?? '';
-                $link    = $logo_data->logos_link;
-                $url     = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
-                $name    = $logo_data->logos_exh_name;
-                $order   = isset($logo_data->logos_order) ? (int)$logo_data->logos_order : PHP_INT_MAX;
+
+                $url   = 'https://cap.warsawexpo.eu/public' . $logo_data->logos_url;
+                $name  = $data['logos_exh_name'];
+                $order = isset($logo_data->logos_order) ? (int)$logo_data->logos_order : PHP_INT_MAX;
+
+                $visibilityFlags = array_filter($data, function ($key) {
+                    return preg_match('/^logos_[a-z]{2}_[A-Z]{2}$/', $key);
+                }, ARRAY_FILTER_USE_KEY);
+
+                if (empty($visibilityFlags)) {
+                    $showLogo = true;
+                } else {
+                    $flagKey = 'logos_' . $currentLocale;
+
+                    if (isset($visibilityFlags[$flagKey])) {
+                        $showLogo = ($visibilityFlags[$flagKey] === 'true');
+                    } else {
+                        $showLogo = false;
+                    }
+                }
+
+                if (!$showLogo) {
+                    continue;
+                }
+
+                $link_pl = $data['logos_link']     ?? null;
+                $link_en = $data['logos_link_en']  ?? null;
+
+                if (!empty($link_pl) && empty($link_en)) {
+                    $finalLink = $link_pl;
+
+                } elseif (!empty($link_pl) && !empty($link_en)) {
+                    if ($currentLang === 'pl') {
+                        $finalLink = $link_pl;
+                    } else {
+                        $finalLink = $link_en;
+                    }
+
+                } else {
+                    // brak linków
+                    $finalLink = null;
+                }
 
                 $element = [
-                    'url' => $url,
-                    'desc_pl' => $desc_pl,
-                    'desc_en' => $desc_en,
-                    'link' => $link,
-                    'name' => $name,
-                    'order' => $order,
+                    'url'      => $url,
+                    'desc_pl'  => $desc_pl,
+                    'desc_en'  => $desc_en,
+                    'link'     => $finalLink,
+                    'name'     => $name,
+                    'order'    => $order,
                 ];
 
                 $grouped_logos[$logo_data->logos_type][] = $element;
             }
         }
+
+
 
         // Mapowanie odmian
         $plural_map_pl = [
@@ -414,20 +457,18 @@ if ($pwe_header_cap_auto_partners_off) {
                     if (count($files) > 0) {
                         $unique_id = uniqid();
 
-                        // Group Title
-                        $title_single = PWECommonFunctions::lang_pl() ? $files[0]["desc_pl"] : $files[0]["desc_en"];
+                        $locale = get_locale();
+                        $lang = substr($locale, 0, 2);
+                        $field_name = "desc_" . $lang;
 
-                        // Automatic pluralization
+                        $title_single = $files[0][$field_name]
+                            ?? $files[0]["desc_en"]
+                            ?? reset($files[0]);
+
                         if (count($files) > 1) {
-                            // plural
-                            if (PWECommonFunctions::lang_pl()) {
-                                $title = $plural_map_pl[$title_single] ?? $title_single;
-                            } else {
-                                $title = $plural_map_en[$title_single] ?? $title_single;
-                            }
+                            $title = PWElementAdditionalLogotypes::multi_translation($title_single, true);
                         } else {
-                            // singular
-                            $title = $title_single;
+                            $title = PWElementAdditionalLogotypes::multi_translation($title_single);
                         }
 
                         if (count($grouped_logos) > 1 || count($grouped_logos) == 1 && count($files) > 3) {
@@ -475,6 +516,8 @@ if ($pwe_header_cap_auto_partners_off) {
                             </div>
                             <div class="pwe-header-partners__items">';
 
+
+
                                 foreach ($files as $item) {
                                     if (!empty($item["url"])) {
                                         if (!empty($item["link"])) {
@@ -495,7 +538,7 @@ if ($pwe_header_cap_auto_partners_off) {
                                     }
                                 }
                             $output .= '
-                            </div> 
+                            </div>
                         </div>';
                     }
                 }
