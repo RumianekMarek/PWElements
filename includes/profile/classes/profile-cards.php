@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWEProfileCards
@@ -13,7 +13,7 @@ class PWEProfileCards extends PWEProfile {
     public function __construct() {
         parent::__construct();
     }
- 
+
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.
@@ -29,7 +29,7 @@ class PWEProfileCards extends PWEProfile {
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
             ),
             array(
@@ -39,7 +39,7 @@ class PWEProfileCards extends PWEProfile {
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
             ),
             array(
@@ -49,7 +49,7 @@ class PWEProfileCards extends PWEProfile {
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
             ),
             array(
@@ -60,7 +60,7 @@ class PWEProfileCards extends PWEProfile {
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
             ),
             array(
@@ -72,7 +72,7 @@ class PWEProfileCards extends PWEProfile {
                 'value' => array(__('True', 'pwelement') => 'true',),
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
             ),
             array(
@@ -81,7 +81,7 @@ class PWEProfileCards extends PWEProfile {
                 'param_name' => 'profile_items_cards',
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
                 'params' => array(
                     array(
@@ -156,7 +156,7 @@ class PWEProfileCards extends PWEProfile {
                 'save_always' => true,
                 'dependency' => array(
                     'element' => 'profile_type',
-                    'value' => 'PWEProfileCards', 
+                    'value' => 'PWEProfileCards',
                 ),
             ),
         );
@@ -167,7 +167,7 @@ class PWEProfileCards extends PWEProfile {
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -217,7 +217,7 @@ class PWEProfileCards extends PWEProfile {
                 align-items: center;
                 gap: 18px;
                 flex: 0.5;
-            }   
+            }
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item {
                 width: 100%;
                 padding: 18px;
@@ -297,8 +297,8 @@ class PWEProfileCards extends PWEProfile {
                     .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-icon svg path{
                         fill: #ffffff;
                     }
-                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-title, 
-                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover li, 
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-profiles__cards-title,
+                    .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover li,
                     .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item:hover .pwe-see-more{
                         color: white !important;
                     }
@@ -311,7 +311,7 @@ class PWEProfileCards extends PWEProfile {
             if (!empty($profile_cards_custom_style)) {
                 $output .= ' ' . $clean_custom_style . ' ';
             }
-            
+
             $output .= '
             @media(max-width:600px){
             .profile-cards-'. self::$rnd_id .' .pwe-profiles__cards-item {
@@ -337,7 +337,7 @@ class PWEProfileCards extends PWEProfile {
           $profile_link_btn_cards = $profile_item["profile_link_btn_cards"];
 
           $profile_icon_nmb_cards = $profile_item["profile_icon_cards"];
-          $profile_icon_src_cards = wp_get_attachment_url($profile_icon_nmb_cards);  
+          $profile_icon_src_cards = wp_get_attachment_url($profile_icon_nmb_cards);
 
           $profile_cards = $profile_item["profile_cards"];
           $profile_content_cards = self::decode_clean_content($profile_cards);
@@ -347,19 +347,19 @@ class PWEProfileCards extends PWEProfile {
 
           if ($profile_item["profile_title_select_cards"] == 'profile_title_visitors') {
             $profile_id = "visitorProfile";
-            $profile_title = (get_locale() == 'pl_PL') ? "Profil odwiedzającego" : "Visitor profile"; 
+            $profile_title = self::multi_translation("visitor_profile");
           } else if ($profile_item["profile_title_select_cards"] == 'profile_title_exhibitors') {
             $profile_id = "exhibitorProfile";
-            $profile_title = (get_locale() == 'pl_PL') ? "Profil wystawcy" : "Exhibitor profile";
+            $profile_title = self::multi_translation("exhibitor_profile");
           } else if ($profile_item["profile_title_select_cards"] == 'profile_title_scope') {
             $profile_id = "industryScope";
-            $profile_title = (get_locale() == 'pl_PL') ? "Zakres branżowy" : "Industry scope";
+            $profile_title = self::multi_translation("industry_scope");
           } else {
             $profile_id = "customProfile-" . self::$rnd_id;
             $profile_title = $profile_item["profile_title_custom_cards"];
           }
 
-          
+
           if ($profile_title_select_cards == 'custom') {
             $profile_icons_cards_icon = '';
         } else {
@@ -367,7 +367,7 @@ class PWEProfileCards extends PWEProfile {
         }
 
           $text_color = 'black';
-          $showMore = get_locale() == "pl_PL" ? "więcej..." : "more...";
+          $showMore = self::multi_translation("more");
         $output .= '
             <div class="pwe-profiles__cards-item-container">
                 <div class="pwe-profiles__cards-item">
@@ -400,7 +400,7 @@ class PWEProfileCards extends PWEProfile {
         }
         $output .= '
         </div>
-                    <script>
+                <script>
                 jQuery(function ($) {
                     // Funkcja ustawiająca równą wysokość dla elementów w obrębie każdego wiersza
                     function setEqualHeightByRow() {

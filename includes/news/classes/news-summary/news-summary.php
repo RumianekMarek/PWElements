@@ -248,9 +248,10 @@ class PWENewsSummary extends PWENews {
         );
     }
 
-    public static function output($atts) {
+public static function output($atts) {
 
-        extract( shortcode_atts( array(
+        
+        $args = shortcode_atts( array(
             'pwe_news_summary_domain'               => '',
             'pwe_news_summary_title'                => '',
             'pwe_news_summary_desc'                 => '',
@@ -278,7 +279,10 @@ class PWENewsSummary extends PWENews {
             'pwe_news_summary_conf_button_link'     => '',
             'pwe_news_summary_next_title'           => '',
             'pwe_news_summary_next_desc'            => '',
-        ), $atts ));
+        ), $atts );
+
+        // mozna uzywac i $args['...'] i $pwe_news_summary_...
+        extract($args);
 
         // Skróty z rzutowaniem
         $domain = trim((string)$args['pwe_news_summary_domain']);
@@ -299,7 +303,7 @@ class PWENewsSummary extends PWENews {
 
         $id_rnd = PWECommonFunctions::id_rnd();
 
-        // Decode treści HTML z backendu
+        // Oczyszczone HTML
         $desc_html      = PWECommonFunctions::decode_clean_content($args['pwe_news_summary_desc']);
         $conf_desc_html = PWECommonFunctions::decode_clean_content($args['pwe_news_summary_conf_desc']);
 

@@ -172,6 +172,26 @@ class PWEProfile extends PWECommonFunctions {
         );
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../../translations/includes/profile.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -179,7 +199,7 @@ class PWEProfile extends PWECommonFunctions {
      * @param array @atts options
      */
     public function PWEProfileOutput($atts, $content = null) {
-        
+
         extract( shortcode_atts( array(
             'profile_type' => '',
         ), $atts ));

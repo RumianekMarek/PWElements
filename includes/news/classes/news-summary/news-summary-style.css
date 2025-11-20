@@ -57,7 +57,7 @@
 }
 .pwe-news-summary-stats__subtitle {
     margin-top: 0;
-    color: ' . $accent_color . ';
+    color: var(--accent-color);
 }
 .pwe-news-summary-stats__stats-section {
     display: flex;
@@ -96,10 +96,10 @@
 .pwe-news-summary-stats__stats-diagram-year-box {
     width: 20px;
     aspect-ratio: 1 / 1;
-    background: ' . $accent_color . ';
+    background: var(--accent-color);
 }
 .pwe-news-summary-stats__stats-diagram-year:first-of-type .pwe-news-summary-stats__stats-diagram-year-box {
-    background: color-mix(in srgb, ' . $accent_color . ', white 50%);
+    background: color-mix(in srgb, var(--accent-color), white 50%);
 }
 .pwe-news-summary-stats__stats-diagram-bars-container {
     width: 100%;
@@ -127,7 +127,7 @@
     height: 150px;
 }
 .pwe-news-summary-stats__stats-diagram-bar-item {
-    background: ' . $accent_color . ';
+    background: var(--accent-color);
     width: 42px;
     position: relative;
     display: flex;
@@ -135,7 +135,7 @@
     justify-content: center;
 }
 .pwe-news-summary-stats__stats-diagram-bar:first-of-type .pwe-news-summary-stats__stats-diagram-bar-item {
-    background: color-mix(in srgb, ' . $accent_color . ', white 50%);
+    background: color-mix(in srgb, var(--accent-color), white 50%);
 }
 .pwe-news-summary-stats__stats-diagram-bar-number {
     position: absolute;
@@ -184,7 +184,7 @@
     min-width: unset;
 }
 .pwe-news-summary-stats__stats-diagram-countries h2 span {
-    color: ' . $accent_color . ';
+    color: var(--accent-color);
     font-size: 40px;
     font-weight: 800;
 }
@@ -213,7 +213,7 @@
     font-weight: 800;
 }
 .pwe-news-summary-stats__stats-number-box-text span {
-    color: ' . $accent_color . ';
+    color: var(--accent-color);
     font-weight: 800;
 }
 .pwe-news-summary-stats__stats-number-box-text p {
@@ -224,7 +224,11 @@
 .pwe-news-summary-stats__stats-number-box *{
     margin: 0 !important;
 }
+.pwe-news-summary__iframe-title{
+    text-align:justify;
+}
 @media(max-width:960px){
+    
     .pwe-news-summary-stats__stats-section {
         align-items: center;
         gap: 36px;
@@ -252,6 +256,9 @@
     }
 }
 @media(max-width:760px){
+    .pwe-news-summary__iframe-title{
+    text-align:left;
+    }
     .pwe-news-summary-stats__stats-section {
         flex-direction: column-reverse;
     }
