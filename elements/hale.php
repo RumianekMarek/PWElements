@@ -56,6 +56,25 @@ class PWElementHale extends PWElements {
         return $element_output;
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/hale.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
     public static function output($atts) {
 
         extract( shortcode_atts( array(
@@ -140,8 +159,8 @@ class PWElementHale extends PWElements {
         $all_halls = rtrim($all_halls, ', ');
 
         $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1)
-            ? self::languageChecker('Hale', 'Halls')
-            : self::languageChecker('Hala', 'Hall');
+            ? self::multi_translation("halls")
+            : self::multi_translation("hall");
 
 
         // $current_day_timestamp = time();
@@ -191,12 +210,12 @@ class PWElementHale extends PWElements {
             <div id="pweHalls" class="pwe-halls">
                 <div class="pwe-halls__info">
                     <div class="pwe-halls__info-container">
-                        <img src="'. self::languageChecker('/doc/logo-color.webp', '/doc/logo-color-en.webp') .'"/>
+                        <img src="'. self::multi_translation("logo_link") .'"/>
                         <div class="pwe-halls__information">
-                            <p class="pwe-halls__dates"><strong>'. self::languageChecker('[trade_fair_date]', '[trade_fair_date_eng]') .'</strong></p>
+                            <p class="pwe-halls__dates"><strong>[trade_fair_date_multilang]</strong></p>
                             <p class="pwe-halls__letters">'. (!empty($hall_names) ? $hall_names : $halls_word .' '. $all_halls) .'</p>
                             <p class="pwe-halls__time">10:00-17:00</p>
-                            <p class="pwe-halls__parking">'. self::languageChecker('DARMOWY PARKING', 'FREE PARKING') .'</p>
+                            <p class="pwe-halls__parking">'. self::multi_translation("parking") .'</p>
                         </div>
                         <div class="pwe-halls__location">
                             <i class="fa fa-location2 fa-1x fa-fw"></i>
@@ -838,7 +857,7 @@ class PWElementHale extends PWElements {
                                 <stop offset=".4" stop-color="#f593b4"/>
                                 <stop offset=".6" stop-color="#ba1a3b"/>
                             </linearGradient>
-                        </defs> 
+                        </defs>
 
                         <g id="drogi">
                             <g>

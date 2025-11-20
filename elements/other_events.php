@@ -126,7 +126,7 @@ class PWElementOtherEvents extends PWElements {
                 ),
             ),
         );
-        
+
         $swiper_fields = array(
             array(
                 'type' => 'checkbox',
@@ -181,6 +181,42 @@ class PWElementOtherEvents extends PWElements {
         );
 
         return array_merge($element_output, $swiper_fields);
+    }
+
+    public static function getLangField($item, $base) {
+        $locale = get_locale();
+        $lang = substr($locale, 0, 2);
+
+        $field = $base . '_' . $lang;
+
+        if (!empty($item[$field])) {
+            return $item[$field];
+        }
+
+        if (!empty($item[$base . '_en'])) {
+            return $item[$base . '_en'];
+        }
+
+        return $item[$base . '_pl'] ?? '';
+    }
+
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/other_events.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
     }
 
     public static function outputOtherEventsSwiper($atts) {
@@ -241,7 +277,7 @@ class PWElementOtherEvents extends PWElements {
                         strpos($fair['domain'], $current_domain) === false && (strpos($fair['domain'], "fasttextile.com") === false && strpos($fair['domain'], "expotrends.eu") === false && strpos($fair['domain'], "fabrics-expo.eu") === false)) {
                         $other_events_items_json[] = [
                             "other_events_domain" => $fair["domain"],
-                            "other_events_text" => PWECommonFunctions::languageChecker($fair["desc_pl"], $fair["desc_en"])
+                            "other_events_text" => self::getLangField($fair, "desc")
                         ];
                     }
                 }
@@ -396,6 +432,8 @@ class PWElementOtherEvents extends PWElements {
                         text-align: left;
                         margin: 0;
                         text-transform: uppercase;
+                        overflow: hidden;
+                        font-size: 14px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic {
                         align-items: flex-start !important;
@@ -465,11 +503,13 @@ class PWElementOtherEvents extends PWElements {
                         text-align: center;
                         margin: 0;
                         text-transform: uppercase;
+                        overflow: hidden;
+                        font-size: 14px;
                     }
                 </style>';
             }
 
-            if ($other_events_scrollbar_display === 'true' && $other_events_arrows_display === 'true') { 
+            if ($other_events_scrollbar_display === 'true' && $other_events_arrows_display === 'true') {
 
                 $output .= '
                 <style>
@@ -477,7 +517,7 @@ class PWElementOtherEvents extends PWElements {
                         position: inherit;
                         height: 8px;
                     }
-                    .pwelement_'. self::$rnd_id .' .swiper-button-prev, 
+                    .pwelement_'. self::$rnd_id .' .swiper-button-prev,
                     .pwelement_'. self::$rnd_id .'.swiper-button-next {
                         position: inherit;
                         background: var(--accent-color);
@@ -487,7 +527,7 @@ class PWElementOtherEvents extends PWElements {
                         min-width: 100px;
                         margin: 0;
                     }
-                    .pwelement_'. self::$rnd_id .' .swiper-button-next:after, 
+                    .pwelement_'. self::$rnd_id .' .swiper-button-next:after,
                     .pwelement_'. self::$rnd_id .' .swiper-button-prev:after {
                         font-size: 22px;
                     }
@@ -504,7 +544,7 @@ class PWElementOtherEvents extends PWElements {
                 </style>';
             }
 
-            if ($other_events_scrollbar_display === 'true') { 
+            if ($other_events_scrollbar_display === 'true') {
 
                 $output .= '
                 <style>
@@ -524,7 +564,7 @@ class PWElementOtherEvents extends PWElements {
                 </style>';
             }
 
-            if ($other_show_more_btn === 'true') {  
+            if ($other_show_more_btn === 'true') {
                 $output .= '
                 <style>
                     .pwelement_'. self::$rnd_id .' .pwe-other-events__show-more-btn {
@@ -554,7 +594,7 @@ class PWElementOtherEvents extends PWElements {
             <div id="pweOtherEvents" class="pwe-other-events">
                 <div class="pwe-other-events__wrapper">
                     <div class="pwe-other-events__heading">
-                        <h4>'. PWECommonFunctions::languageChecker('Inne wydarzenia podczas targów', 'Other events during the fair') .'</h4>
+                        <h4>'.self::multi_translation("other_events").'</h4>
                     </div>
                     <div class="swiper pwe-other-events__items pwe-slides">
                         <div class="swiper-wrapper">';
@@ -571,7 +611,7 @@ class PWElementOtherEvents extends PWElements {
                                         <div class="pwe-other-events__item swiper-slide" style="'. $other_events_style .'">
                                             <a href="https://'. $other_events_domain .''. PWECommonFunctions::languageChecker('/', '/en/') .'" target="_blank">';
                                             if ($other_events_preset == 'preset_3') {
-                                                if ($other_full_background_version === 'true') { 
+                                                if ($other_full_background_version === 'true') {
                                                     $output .= '
                                                     <div class="pwe-other-events__item-logo" style="background-image: url(https://'. $other_events_domain .'/doc/background.webp);">
                                                         <img data-no-lazy="1" src="https://'. $other_events_domain .'/doc/logo.webp"/>
@@ -588,15 +628,17 @@ class PWElementOtherEvents extends PWElements {
                                                     <div class="pwe-other-events__item-statistic-numbers-block">
                                                         <div class="pwe-other-events__item-statistic-numbers">
                                                             <div class="pwe-other-events__item-statistic-number">[pwe_visitors domain="'. $other_events_domain .'"]</div>
-                                                            <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('odwiedzających', 'visitors') .'</div>
+                                                            <div class="pwe-other-events__item-statistic-name">
+                                                            '.self::multi_translation("visitors").'
+                                                            </div>
                                                         </div>
                                                         <div class="pwe-other-events__item-statistic-numbers">
                                                             <div class="pwe-other-events__item-statistic-number">[pwe_exhibitors domain="'. $other_events_domain .'"]</div>
-                                                            <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('wystawców', 'exhibitors') .'</div>
+                                                            <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibitors").'</div>
                                                         </div>
                                                         <div class="pwe-other-events__item-statistic-numbers">
                                                             <div class="pwe-other-events__item-statistic-number">[pwe_area domain="'. $other_events_domain .'"] m2</div>
-                                                            <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('powierzchni<br>wystawienniczej', 'exhibition space') .'</div>
+                                                            <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibition_space").'</div>
                                                         </div>
                                                     </div>
                                                 </div>';
@@ -609,24 +651,24 @@ class PWElementOtherEvents extends PWElements {
                                                     <div class="pwe-other-events__item-statistic-numbers-block">
                                                         <div class="pwe-other-events__item-statistic-numbers">
                                                             <div class="pwe-other-events__item-statistic-number">[pwe_visitors domain="'. $other_events_domain .'"]</div>
-                                                            <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('odwiedzających', 'visitors') .'</div>
+                                                            <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("visitors").'</div>
                                                         </div>
                                                         <div class="pwe-other-events__item-statistic-numbers">
                                                             <div class="pwe-other-events__item-statistic-number">[pwe_exhibitors domain="'. $other_events_domain .'"]</div>
-                                                            <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('wystawców', 'exhibitors') .'</div>
+                                                            <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibitors").'</div>
                                                         </div>
                                                         <div class="pwe-other-events__item-statistic-numbers">
                                                             <div class="pwe-other-events__item-statistic-number">[pwe_area domain="'. $other_events_domain .'"] m2</div>
-                                                            <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('powierzchni<br>wystawienniczej', 'exhibition space') .'</div>
+                                                            <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibition_space").'</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="pwe-other-events__item-text">'. $other_events_text_content .'</div>';
                                             }
-                                            if ($other_show_more_btn === 'true') { 
+                                            if ($other_show_more_btn === 'true') {
                                                 $output .= '
                                                     <div class="pwe-other-events__show-more-btn">
-                                                        <span class="pwe-other-events__show-more-text">'. PWECommonFunctions::languageChecker('Więcej', 'More') .'</span>
+                                                        <span class="pwe-other-events__show-more-text">'.self::multi_translation("more").'</span>
                                                         <span class="pwe-other-events__show-more-arrow">➜</span>
                                                     </div>
                                                 ';
@@ -767,14 +809,14 @@ class PWElementOtherEvents extends PWElements {
                 if ($date_start && $date_end) {
                     if ((($date_start >= $trade_fair_start_timestamp && $date_start <= $trade_fair_end_timestamp) ||
                         ($date_end >= $trade_fair_start_timestamp && $date_end <= $trade_fair_end_timestamp)) &&
-                        strpos($fair['domain'], $current_domain) === false && 
-                        (strpos($fair['domain'], "fasttextile.com") === false && 
-                        strpos($fair['domain'], "expotrends.eu") === false && 
-                        strpos($fair['domain'], "fabrics-expo.eu") === false && 
+                        strpos($fair['domain'], $current_domain) === false &&
+                        (strpos($fair['domain'], "fasttextile.com") === false &&
+                        strpos($fair['domain'], "expotrends.eu") === false &&
+                        strpos($fair['domain'], "fabrics-expo.eu") === false &&
                         strpos($fair['domain'], "mr.glasstec.pl") === false)) {
                         $other_events_items_json[] = [
                             "other_events_domain" => $fair["domain"],
-                            "other_events_text" => PWECommonFunctions::languageChecker($fair["desc_pl"], $fair["desc_en"])
+                            "other_events_text"   => self::getLangField($fair, "desc")
                         ];
                     }
                 }
@@ -936,6 +978,8 @@ class PWElementOtherEvents extends PWElements {
                         text-align: left;
                         margin: 0;
                         text-transform: uppercase;
+                        overflow: hidden;
+                        font-size: 14px;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-other-events__item-statistic {
                         align-items: flex-start !important;
@@ -982,6 +1026,8 @@ class PWElementOtherEvents extends PWElements {
                         text-align: center;
                         margin: 0;
                         text-transform: uppercase;
+                        overflow: hidden;
+                        font-size: 14px;
                     }
                 </style>';
             }
@@ -992,7 +1038,7 @@ class PWElementOtherEvents extends PWElements {
             <div id="pweOtherEvents" class="pwe-other-events">
                 <div class="pwe-other-events__wrapper">
                     <div class="pwe-other-events__heading">
-                        <h4>'. PWECommonFunctions::languageChecker('Inne wydarzenia podczas targów', 'Other events during the fair') .'</h4>
+                        <h4>'.self::multi_translation("other_events").'</h4>
                     </div>
                     <div class="pwe-other-events__items pwe-slides">';
 
@@ -1017,15 +1063,15 @@ class PWElementOtherEvents extends PWElements {
                                             <div class="pwe-other-events__item-statistic-numbers-block">
                                                 <div class="pwe-other-events__item-statistic-numbers">
                                                     <div class="pwe-other-events__item-statistic-number">[pwe_visitors domain="'. $other_events_domain .'"]</div>
-                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('odwiedzających', 'visitors') .'</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("visitors").'</div>
                                                 </div>
                                                 <div class="pwe-other-events__item-statistic-numbers">
                                                     <div class="pwe-other-events__item-statistic-number">[pwe_exhibitors domain="'. $other_events_domain .'"]</div>
-                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('wystawców', 'exhibitors') .'</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibitors").'</div>
                                                 </div>
                                                 <div class="pwe-other-events__item-statistic-numbers">
                                                     <div class="pwe-other-events__item-statistic-number">[pwe_area domain="'. $other_events_domain .'"] m2</div>
-                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('powierzchni<br>wystawienniczej', 'exhibition space') .'</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibition_space").'</div>
                                                 </div>
                                             </div>
                                         </div>';
@@ -1038,15 +1084,15 @@ class PWElementOtherEvents extends PWElements {
                                             <div class="pwe-other-events__item-statistic-numbers-block">
                                                 <div class="pwe-other-events__item-statistic-numbers">
                                                     <div class="pwe-other-events__item-statistic-number">[pwe_visitors domain="'. $other_events_domain .'"]</div>
-                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('odwiedzających', 'visitors') .'</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("visitors").'</div>
                                                 </div>
                                                 <div class="pwe-other-events__item-statistic-numbers">
                                                     <div class="pwe-other-events__item-statistic-number">[pwe_exhibitors domain="'. $other_events_domain .'"]</div>
-                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('wystawców', 'exhibitors') .'</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibitors").'</div>
                                                 </div>
                                                 <div class="pwe-other-events__item-statistic-numbers">
                                                     <div class="pwe-other-events__item-statistic-number">[pwe_area domain="'. $other_events_domain .'"] m2</div>
-                                                    <div class="pwe-other-events__item-statistic-name">'. PWECommonFunctions::languageChecker('powierzchni<br>wystawienniczej', 'exhibition space') .'</div>
+                                                    <div class="pwe-other-events__item-statistic-name">'.self::multi_translation("exhibition_space").'</div>
                                                 </div>
                                             </div>
                                         </div>

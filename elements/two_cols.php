@@ -451,6 +451,26 @@ class PWElementTwoCols extends PWElements {
         return $element_output;
     }
 
+
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/two_cols.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
     public static function output($atts) {
 
         extract( shortcode_atts( array(
@@ -504,19 +524,12 @@ class PWElementTwoCols extends PWElements {
         $unique_id = rand(10000, 99999);
         $element_unique_id = 'twocols-' . $unique_id;
 
-        if (PWECommonFunctions::lang_pl()) {
-            $pwe_two_cols_button_right = (!empty($pwe_two_cols_button_right)) ? $pwe_two_cols_button_right : 'DOŁĄCZ DO NAS';
-            $pwe_two_cols_button_left = (!empty($pwe_two_cols_button_left)) ? $pwe_two_cols_button_left : 'GALERIA';
 
-            $pwe_two_cols_link_left = (!empty($pwe_two_cols_link_left)) ? $pwe_two_cols_link_left : '/galeria/';
-            $pwe_two_cols_link_right = (!empty($pwe_two_cols_link_right)) ? $pwe_two_cols_link_right : '/rejestracja/';
-        } else {
-            $pwe_two_cols_button_right = (!empty($pwe_two_cols_button_right)) ? $pwe_two_cols_button_right : 'JOIN US';
-            $pwe_two_cols_button_left = (!empty($pwe_two_cols_button_left)) ? $pwe_two_cols_button_left : 'GALLERY';
+        $pwe_two_cols_button_right = (!empty($pwe_two_cols_button_right)) ? $pwe_two_cols_button_right : self::multi_translation("join");
+        $pwe_two_cols_button_left = (!empty($pwe_two_cols_button_left)) ? $pwe_two_cols_button_left : self::multi_translation("gallery");
+        $pwe_two_cols_link_left = (!empty($pwe_two_cols_link_left)) ? $pwe_two_cols_link_left : self::multi_translation("galeria_link");
+        $pwe_two_cols_link_right = (!empty($pwe_two_cols_link_right)) ? $pwe_two_cols_link_right : self::multi_translation("registration");
 
-            $pwe_two_cols_link_left = (!empty($pwe_two_cols_link_left)) ? $pwe_two_cols_link_left : '/en/gallery/';
-            $pwe_two_cols_link_right = (!empty($pwe_two_cols_link_right)) ? $pwe_two_cols_link_right : '/en/registration/';
-        }
 
         /* Patroni */
 
@@ -563,7 +576,7 @@ class PWElementTwoCols extends PWElements {
                 }
               }
             }
-            
+
             $logotypes_catalogs_array = explode(',', $base_directory);
             foreach ($cap_logotypes_data as $logo_data) {
                 if (in_array($logo_data->logos_type, $logotypes_catalogs_array)) {
@@ -941,7 +954,7 @@ class PWElementTwoCols extends PWElements {
               /* slider */
               if($pwe_two_cols_slider){
                 $output .= '
-                  <h6>'. self::languageChecker('PATRONI I PARTNERZY', 'PATRONS AND PARTNERS') .'</h6>
+                  <h6>'. self::multi_translation("patron_partners") .'</h6>
                   <div class="two-cols-logotypes pwe-slides">';
 
                 foreach ($logotypy as $logo) {
@@ -1014,7 +1027,7 @@ class PWElementTwoCols extends PWElements {
             if ($pwe_two_cols_show_exhibitors) {
                 $output .= '
                 <div class="logo-exhibitors">
-                    <h3>' . self::languageChecker('Wystawcy', 'Exhibitors') . '</h3>
+                    <h3>'. self::multi_translation("exhibitors") .'</h3>
                     <div id="logotypes-container" class="logotypes-container pwe-container-logotypes" data-logos=\'' . json_encode($logotypy) . '\'>';
 
                 // Tworzymy 9 pustych miejsc na logotypy
@@ -1028,7 +1041,7 @@ class PWElementTwoCols extends PWElements {
             /* Medialni */
             if($pwe_two_cols_show_mediapatrons){
               $output .= '<div class="logo-exhibitors">
-                <h3>'. self::languageChecker('Patroni', 'Patrons') .'</h3>
+                <h3>'. self::multi_translation("patrons") .'</h3>
                 <div class="logotypes-container pwe-container-logotypes">';
 
               foreach ($logotypy as $logo) {

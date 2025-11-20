@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementDonwload
@@ -14,10 +14,28 @@ class PWElementDonwload extends PWElements {
         parent::__construct();
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/dokumenty.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
-     * 
+     *
      * @param array @atts options
      */
     public static function output($atts) {
@@ -25,14 +43,14 @@ class PWElementDonwload extends PWElements {
 
         $filter = ($text_color != 'white') ? '.pwelement_'.self::$rnd_id.' #download img { filter: invert(100%); }' : '';
 
-        $output = '';   
+        $output = '';
 
         $output .= '
         <style>
             #download {
                 display:flex;
                 align-items: center;
-                color:white; 
+                color:white;
                 border: 0;
                 max-width: 500px;
                 margin: auto;
@@ -50,41 +68,25 @@ class PWElementDonwload extends PWElements {
                 }
             }
         </style>
-        
+
         <div id="download" class="pwe-download-container style-accent-bg single-block-padding">
             <div class="single-media-wrapper wpb_column t-m-display-none half-block-padding" style="flex:1;">
                 <img src="/wp-content/plugins/pwe-media/media/download-icon.png" alt="ikonka pobierania"/>
             </div>
-            
+
             <div style="flex:5">
-                <div class="heading-text el-text text-centered">'.
-                self::languageChecker(
-                    <<<PL
-                    <h3 class="pl_PL">Dokumenty do pobrania:</h3>
-                    PL,
-                    <<<EN
-                    <h3 class="en_US">Documents for Download</h3>
-                    EN
-                )
-                .'</div>
+                <div class="heading-text el-text text-centered">
+                    '. self::multi_translation("documents") .'
+                </div>
 
                 <div>
-                    <p class="text-centered">'.
-                    self::languageChecker(
-                        <<<PL
-                        <a href="https://warsawexpo.eu/docs/regulamin-targow-pl-2025.pdf" target="_blank" rel="noopener noreferrer">Regulamin targów</a><br>
-                        <a href="https://warsawexpo.eu/docs/regulamin_obiektu.pdf" target="_blank" rel="noopener noreferrer">Regulamin obiektu</a><br>
-                        <a href="https://warsawexpo.eu/docs/regulamin_zabudowy.pdf" target="_blank" rel="noopener noreferrer">Regulamin zabudowy</a><br>
-                        <a href="https://warsawexpo.eu/docs/Regulamin na Voucher_2023.pdf" target="_blank" rel="noopener noreferrer">Regulamin Voucherów</a>
-                        PL,
-                        <<<EN
-                        <a href="https://warsawexpo.eu/docs/regulamin-targow-en-2025.pdf" target="_blank" rel="noopener noreferrer">Fair regulations</a><br>
-                        <a href="https://warsawexpo.eu/docs/regulamin_obiektu_en.pdf" target="_blank" rel="noopener noreferrer">Facility regulations</a><br>
-                        <a href="https://warsawexpo.eu/docs/building_regulations.pdf" target="_blank" rel="noopener noreferrer">Building regulations</a>
-                        EN
-                    )
-                    .'</p> 
-                </div> 
+                    <p class="text-centered">
+                        '. self::multi_translation("fair_regulations") .'
+                        '. self::multi_translation("facility_regulations") .'
+                        '. self::multi_translation("building_regulations") .'
+                        '. self::multi_translation("voucher") .'
+                 </p>
+                </div>
             </div>
         </div>';
 

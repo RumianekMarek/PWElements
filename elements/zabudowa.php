@@ -14,6 +14,25 @@ class PWElementStand extends PWElements {
         parent::__construct();
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/zabudowa.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
     /**
      * Static method to generate the HTML output for the PWE Element.
      * Returns the HTML output as a string.
@@ -66,51 +85,19 @@ class PWElementStand extends PWElements {
             <div id="stand" class="pwe-container-stand">
                 <div class="pwe-block-1 half-block-padding" style="flex:1;">
                     <div class="heading-text el-text main-heading-text text-centered">
-                    <h4>'.
-                        self::languageChecker(
-                            <<<PL
-                            DEDYKOWANA ZABUDOWA TARGOWA
-                            PL,
-                            <<<EN
-                            DESIGNED EXHIBITION STANDS
-                            EN
-                        )
-                    .'</h4>
+                    <h4>
+                        '. self::multi_translation("stands") .'
+                    </h4>
                     </div>';
-                    $output .= '<p class="pwe-line-height hidden-mobile" style="color '. $text_color .';">'.
-                        self::languageChecker(
-                            <<<PL
-                            Zobacz katalog stoisk targowych i przygotuj się na udział w targach w sposób jeszcze bardziej efektywny. Dzięki temu katalogowi będziesz miał dostęp do gotowych projektów stoisk, które ułatwią Ci przygotowanie się do targów i zyskasz cenną oszczędność czasu i pieniędzy. Wybierając już gotowy projekt stoiska, będziesz mógł skupić się na innych ważnych aspektach przygotowań do targów, takich jak przygotowanie oferty, zorganizowanie transportu czy zaplanowanie działań marketingowych.
-                            PL,
-                            <<<EN
-                            Check out the trade show booth catalog and prepare for your trade show participation in an even more efficient way. With this catalog, you will have access to ready-made booth designs that will make it easier for you to prepare for the trade show and gain valuable savings in time and money. By choosing an already ready-made booth design, you will be able to focus on other important aspects of preparing for the fair, such as preparing your offer, arranging transportation or planning your marketing activities.
-                            EN
-                        )
-                        .'</p>';
+                    $output .= '<p class="pwe-line-height hidden-mobile" style="color '. $text_color .';">
+                        '. self::multi_translation("catalog") .'
+                    </p>';
                     $output .= '<div class="pwe-btn-container">
                         <span>
-                            <a class="pwe-link btn pwe-btn" target="_blank"'.
-                                self::languageChecker(
-                                    <<<PL
-                                    href="https://warsawexpo.eu/zabudowa-targowa">Zobacz Więcej
-                                    PL,
-                                    <<<EN
-                                    href="https://warsawexpo.eu/en/exhibition-stands">See more
-                                    EN
-                                )
-                            .'</a>
+                            <a class="pwe-link btn pwe-btn" target="_blank" href="'. self::multi_translation("stands_link") .'">'. self::multi_translation("stands_button") .'</a>
                         </span>
                         <span>
-                            <a class="pwe-link btn pwe-btn" target="_blank"'.
-                                self::languageChecker(
-                                    <<<PL
-                                    href="https://warsawexpo.eu/katalog-zabudowy">Katalog Zabudowy
-                                    PL,
-                                    <<<EN
-                                    href="https://warsawexpo.eu/en/katalog-zabudowy">Exhibition Stand
-                                    EN
-                                )
-                            .'</a>
+                            <a class="pwe-link btn pwe-btn" target="_blank" href="'. self::multi_translation("catalog_link") .'">'. self::multi_translation("catalog_button") .'</a>
                         </span>
                     </div>
                 </div>

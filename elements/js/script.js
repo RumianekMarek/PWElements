@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 observer.unobserve(PWEIframe);
             }
         });
-    }, 
-    
+    },
+
     {
         rootMargin: '100px 0px', // Increase the watchable area
         threshold: 0.1
@@ -29,19 +29,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 /* Show more/less */
-jQuery(function ($) {  
-    let hiddenContentPWE = true; 
+jQuery(function ($) {
+    let hiddenContentPWE = true;
 
-    $(".pwe-see-more").click(function(event) {
-        let currentText = $(event.target).text();
-        if (pweScriptData.locale === "pl_PL") {
-            $(event.target).text(currentText === "więcej..." ? "ukryj..." : "więcej...");
-        } else {
-            $(event.target).text(currentText === "more..." ? "hide..." : "more...");
+    // słownik tłumaczeń
+    const translations = {
+        "pl_PL": {
+            more: "więcej...",
+            hide: "ukryj..."
+        },
+        "en_EN": {
+            more: "more...",
+            hide: "hide..."
+        },
+        "de_DE": {
+            more: "mehr...",
+            hide: "verbergen..."
         }
-        hiddenContentPWE = !hiddenContentPWE;  
+    };
+
+    const locale = translations[pweScriptData.locale] || translations["en_EN"];
+
+    $(".pwe-see-more").click(function (event) {
+        let currentText = $(event.target).text();
+
+        if (currentText === locale.more) {
+            $(event.target).text(locale.hide);
+        } else {
+            $(event.target).text(locale.more);
+        }
+
+        hiddenContentPWE = !hiddenContentPWE;
         $(event.target).prev().slideToggle();
-    }); 
+    });
 });
 
 
@@ -62,21 +82,21 @@ jQuery('document').ready(function ($) {
 // function getLocationPath() {
 //     const urlParams = new URLSearchParams(window.location.search);
 //     const utmSource = urlParams.get('utm_source');
-    
+
 //     if (utmSource === 'byli') {
 //         return 'vip';
 //     } else if (utmSource === 'premium') {
 //         return 'platinum';
 //     } else {
 //         let urlPath = window.location.pathname;
-        
+
 //         if (urlPath.startsWith("/")) {
 //             urlPath = urlPath.substring(1);
 //         }
 //         if (urlPath.endsWith("/")) {
 //             urlPath = urlPath.slice(0, -1);
 //         }
-        
+
 //         return urlPath.length > 0 ? urlPath : "header";
 //     }
 // }

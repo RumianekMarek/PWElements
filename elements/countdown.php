@@ -192,7 +192,24 @@ class PWElementMainCountdown extends PWElements {
         return $element_output;
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/countdown.json';
 
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
     /**
      * Static private method to remove from JS out of date timer variables.
      *      *
@@ -223,26 +240,12 @@ class PWElementMainCountdown extends PWElements {
         $output_time_start_def = array(
             'countdown_start' => '',
             'countdown_end' => do_shortcode('[trade_fair_datetotimer]'),
-            'countdown_text' => self::languageChecker(
-                <<<PL
-                Do targów pozostało:
-                PL,
-                <<<EN
-                Until the start of the fair:
-                EN
-            )
+            'countdown_text' => self::multi_translation("until_the_fair")
         );
         $output_time_end_def = array(
             'countdown_start' => '',
             'countdown_end' => do_shortcode('[trade_fair_enddata]'),
-            'countdown_text' => self::languageChecker(
-                <<<PL
-                Do końca targów pozostało:
-                PL,
-                <<<EN
-                Until the end of the fair:
-                EN
-            )
+            'countdown_text' => self::multi_translation("until_the_fair_end")
         );
         $countdown_next_year = substr(trim(do_shortcode('[trade_fair_datetotimer]')), 0, 4) + 1;
         $countdown_next_year .=  substr(do_shortcode('[trade_fair_datetotimer]'), 4);
@@ -250,33 +253,12 @@ class PWElementMainCountdown extends PWElements {
         $output_time_start_next_year = array(
             'countdown_start' => '',
             'countdown_end' => $countdown_next_year,
-            'countdown_text' => self::languageChecker(
-                <<<PL
-                Do targów pozostało:
-                PL,
-                <<<EN
-                Until the start of the fair:
-                EN
-            )
+            'countdown_text' => self::multi_translation("until_the_fair")
         );
 
         $output_button = array(
-            'countdown_btn_text' => self::languageChecker(
-                <<<PL
-                Zostań wystawcą
-                PL,
-                <<<EN
-                Book a stand
-                EN
-            ),
-             'countdown_btn_url' => self::languageChecker(
-                <<<PL
-                /zostan-wystawca/
-                PL,
-                <<<EN
-                /en/become-an-exhibitor
-                EN
-            )
+            'countdown_btn_text' => self::multi_translation("countdown_btn_text"),
+            'countdown_btn_url' => self::multi_translation("countdown_btn_url")
         );
 
         $output_default[0] = array_merge($output_time_start_def, $output_button);
@@ -403,8 +385,8 @@ class PWElementMainCountdown extends PWElements {
 
         // Using the plural or singular form of a word
         $halls_word = (count(array_filter(array_map('trim', explode(',', $all_halls)))) > 1)
-            ? self::languageChecker('Hale', 'Halls')
-            : self::languageChecker('Hala', 'Hall');
+            ? self::multi_translation("halls")
+            : self::multi_translation("hall");
 
 
         $all_entries = '';
@@ -445,8 +427,8 @@ class PWElementMainCountdown extends PWElements {
 
         // Using the plural or singular form of a word
         $entries_word = (count(array_filter(array_map('trim', explode(',', $all_entries)))) > 1)
-            ? self::languageChecker('Wejścia', 'Entrances')
-            : self::languageChecker('Wejście', 'Entrance');
+            ? self::multi_translation("entrances")
+            : self::multi_translation("entrance");
 
         $diff_timestamp = ($trade_fair_start_date_timestamp - $current_timestamp);
         $time_to_end_timestamp = ($trade_fair_end_date_timestamp - $current_timestamp);
@@ -534,7 +516,7 @@ class PWElementMainCountdown extends PWElements {
 
             <div id="openingHours" class="opening-hours">
                 <div class="opening-hours__block">
-                    <p class="opening-hours__title">'. self::languageChecker('GODZINY OTWARCIA:', 'OPENING HOURS:') .'</p>
+                    <p class="opening-hours__title">'. self::multi_translation("hours") .'</p>
                     <p class="opening-hours__date pwe-uppercase">'. $trade_fair_start_date_week .' - '. $trade_fair_end_date_week .'<span class="hours">'. $trade_fair_start_date_hour .' - '. $trade_fair_end_date_hour .'</span></p>
                     <div class="opening-hours__hall">
                         <p>'. $halls_word .' <strong>'. $all_halls .'</strong></p>
@@ -697,25 +679,15 @@ class PWElementMainCountdown extends PWElements {
                     $output .='<p id="timer-header-text-' . self::$countdown_rnd_id . '" class="timer-header-text pwe-timer-text">' . $right_countdown[0]['countdown_text'] . '</p>';
                 };
                 if(!$show_short_name_data){
-                    if (get_locale() == "pl_PL") {
-                        $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                                    ' . $date_dif->days . ' dni ' . $date_dif->h . ' godzin ' . $date_dif->i . ' minut ';
-                                    if(!$mobile && !$hide_seconds){
-                                        $output .= $date_dif->s . ' sekund
-                                                </p>';
-                                    } else {
-                                        $output .= '</p>';
-                                    }
-                    } else {
-                        $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
-                                    ' . $date_dif->days . ' days ' . $date_dif->h . ' hours ' . $date_dif->i . ' minutes ';
-                                    if(!$mobile && !$hide_seconds){
-                                        $output .= $date_dif->s . ' seconds
-                                                </p>';
-                                    } else {
-                                        $output .= '</p>';
-                                    }
-                    }
+                    $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
+                        ' . $date_dif->days . ''. self::multi_translation("days") .'' . $date_dif->h . ''. self::multi_translation("hours_1") .'' . $date_dif->i . ''. self::multi_translation("minutes") .'';
+
+                        if(!$mobile && !$hide_seconds){
+                            $output .= $date_dif->s . ' '. self::multi_translation("seconds") .'
+                            </p>';
+                        } else {
+                            $output .= '</p>';
+                        }
                 } else {
                     $output .='<p id="pwe-countdown-timer-' . self::$countdown_rnd_id . '" class="pwe-countdown-timer pwe-timer-text">
                                     ' . $date_dif->days . ' d ' . $date_dif->h . ' h ' . $date_dif->i . ' min ';

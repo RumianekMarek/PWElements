@@ -146,6 +146,25 @@ class PWElementNumbers extends PWElements {
         return $element_output;
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/numbers.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
     public static function output($atts) {
         $pwe_number_color_icons_hidden = isset($atts['pwe_number_color_icons_hidden']) ? $atts['pwe_number_color_icons_hidden'] : null;
         $pwe_number_color_icons = self::findColor($pwe_number_color_icons_hidden, $atts['pwe_number_color_icons'], self::$accent_color);
@@ -163,15 +182,9 @@ class PWElementNumbers extends PWElements {
 
         if ($pwe_numbers_mode == "simple_mode") {
 
-            if (get_locale() == "pl_PL") {
-                $pwe_custom_title_first = (empty($pwe_custom_title_first)) ? 'dni konferencji' : $pwe_custom_title_first;
-                $pwe_custom_title_second = (empty($pwe_custom_title_second)) ? 'prelegentów' : $pwe_custom_title_second;
-                $pwe_custom_title_third = (empty($pwe_custom_title_third)) ? 'uczestników' : $pwe_custom_title_third;
-            } else {
-                $pwe_custom_title_first = (empty($pwe_custom_title_first)) ? 'conference days' : $pwe_custom_title_first;
-                $pwe_custom_title_second = (empty($pwe_custom_title_second)) ? 'speakers' : $pwe_custom_title_second;
-                $pwe_custom_title_third = (empty($pwe_custom_title_third)) ? 'participants' : $pwe_custom_title_third;
-            }
+            $pwe_custom_title_first = (empty($pwe_custom_title_first)) ? ''. self::multi_translation("days") .'' : $pwe_custom_title_first;
+            $pwe_custom_title_second = (empty($pwe_custom_title_second)) ? ''. self::multi_translation("speakers") .'' : $pwe_custom_title_second;
+            $pwe_custom_title_third = (empty($pwe_custom_title_third)) ? ''. self::multi_translation("participants") .'' : $pwe_custom_title_third;
 
             $output = '
             <style>
@@ -334,7 +347,7 @@ class PWElementNumbers extends PWElements {
             </style>
 
             <div id="pweNumbers" class="pwe-numbers">
-                <h2 class="pwe-numbers__title">'. self::languageChecker('NAJWIĘKSZE CENTRUM TARGOWE  W EUROPIE ŚRODKOWO-WSCHODNIEJ', 'THE LARGEST TRADE FAIR CENTER IN CENTRAL AND EASTERN EUROPE') .'</h2>
+                <h2 class="pwe-numbers__title">'. self::multi_translation("footer_text") .'</h2>
                 <div class="pwe-numbers__wrapper">
                     <div class="pwe-numbers__container">
                         <div class="pwe-numbers__container-ufi">
@@ -346,12 +359,12 @@ class PWElementNumbers extends PWElements {
                             <div>
                                 <img src="/wp-content/plugins/pwe-media/media/numbers-el/exhibitors.webp" />
                                 <h3>20000</h3>
-                                <p>'. self::languageChecker('Wystawców<br>rocznie', 'Exhibitors<br>per year') .'</p>
+                                <p>'. self::multi_translation("exhibitors") .'</p>
                             </div>
                             <div>
                                 <img src="/wp-content/plugins/pwe-media/media/numbers-el/visitors.webp" />
                                 <h3>1mln+</h3>
-                                <p>'. self::languageChecker('Odwiedzających<br>rocznie', 'Visitors<br>per year') .'</p>
+                                <p>'. self::multi_translation("visitors") .'</p>
                             </div>
                         </div>
 
@@ -359,12 +372,12 @@ class PWElementNumbers extends PWElements {
                             <div>
                                 <img src="/wp-content/plugins/pwe-media/media/numbers-el/fairs.webp" />
                                 <h3>140+</h3>
-                                <p>'. self::languageChecker('Targów B2B<br>rocznie', 'B2B trade fairs <br>per year') .'</p>
+                                <p>'. self::multi_translation("fair") .'</p>
                             </div>
                             <div>
                                 <img src="/wp-content/plugins/pwe-media/media/numbers-el/area.webp" />
                                 <h3>153k</h3>
-                                <p>'. self::languageChecker('Powierzchni m<sup>2</sup>', 'Surface area m<sup>2</sup>') .'</p>
+                                <p>'. self::multi_translation("surface") .'</p>
                             </div>
                         </div>
                     </div>
@@ -551,7 +564,7 @@ class PWElementNumbers extends PWElements {
 
             </style>
             <div id="newFooter" class=".pwelement_'. self::$rnd_id .'">
-                <h2 class="footer__headline">'. self::languageChecker('Ptak Warsaw Expo - łączymy świat biznesu', 'Ptak Warsaw Expo - we connect the world of business') .'</h2>
+                <h2 class="footer__headline">'. self::multi_translation("title") .'</h2>
 
                 <div class="footer__top">
 
@@ -566,11 +579,11 @@ class PWElementNumbers extends PWElements {
 
                     <div class="footer__info-overlay">
                         <div class="footer__info-item">
-                        <h2 class="footer__info-title">'. self::languageChecker('Stolica targów', 'The capital of trade fairs') .'</h2>
-                        <p class="footer__info-description">'. self::languageChecker('Targi / Konferencje / Eventy', 'Trade fairs / Conferences / Events') .'</p>
+                        <h2 class="footer__info-title">'. self::multi_translation("capital") .'</h2>
+                        <p class="footer__info-description">'. self::multi_translation("events") .'</p>
                         </div>
-                        <a href="'. self::languageChecker('https://warsawexpo.eu/kalendarz-targowy/', 'https://warsawexpo.eu/en/fair-calendar/') .'" target="_blank">
-                            <div class="footer__calendar-link">'. self::languageChecker('Kalendarz targowy', 'Trade show calendar') .'</div>
+                        <a href="'. self::multi_translation("calendar_link") .'" target="_blank">
+                            <div class="footer__calendar-link">'. self::multi_translation("calendar") .'</div>
                         </a>
                     </div>
                     </div>
@@ -581,22 +594,22 @@ class PWElementNumbers extends PWElements {
                     <div class="footer__stat">
                         <img src="/wp-content/plugins/pwe-media/media/numbers-el/exhibitors.webp" alt="Ikona wystawców" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">20000</h2>
-                        <p class="footer__stat-description">'. self::languageChecker('Wystawców rocznie', 'Exhibitors per year') .'</p>
+                        <p class="footer__stat-description">'. self::multi_translation("exhibitors") .'</p>
                     </div>
                     <div class="footer__stat">
                         <img src="/wp-content/plugins/pwe-media/media/numbers-el/visitors.webp" alt="Ikona odwiedzających" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">2mln+</h2>
-                        <p class="footer__stat-description">'. self::languageChecker('Odwiedzających rocznie', 'Visitors per year') .'</p>
+                        <p class="footer__stat-description">'. self::multi_translation("visitors") .'</p>
                     </div>
                     <div class="footer__stat">
                         <img src="/wp-content/plugins/pwe-media/media/numbers-el/fairs.webp" alt="Ikona targów" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">140+</h2>
-                        <p class="footer__stat-description">'. self::languageChecker('Targów B2B rocznie', 'B2B trade fairs <br>per year') .'</p>
+                        <p class="footer__stat-description">'. self::multi_translation("fair") .'</p>
                     </div>
                     <div class="footer__stat">
                         <img src="/wp-content/plugins/pwe-media/media/numbers-el/area.webp" alt="Ikona powierzchni" class="footer__stat-icon" />
                         <h2 class="footer__stat-value">153k</h2>
-                        <p class="footer__stat-description">'. self::languageChecker('Powierzchni wystawienniczej m²', 'Exhibition space m²') .'</p>
+                        <p class="footer__stat-description">'. self::multi_translation("surface") .'</p>
                     </div>
                 </div>
             </div>
@@ -620,7 +633,7 @@ class PWElementNumbers extends PWElements {
                     infoText = document.createElement("div");
                     infoText.className = "ufi-info-text";
                     infoText.innerHTML = `
-                    <p>'. self::languageChecker('<strong>Certyfikat UFI Member</strong> to oficjalne potwierdzenie, że firma <strong>PTAK WARSAW EXPO SP. z o.o.</strong> jest członkiem UFI – The Global Association of the Exhibition Industry (Światowego Stowarzyszenia Przemysłu Targowego). UFI (Union des Foires Internationales) to międzynarodowa organizacja branżowa, która zrzesza kluczowych graczy globalnego rynku targów i wystaw, w tym m.in: organizatorów targów i wystaw, zarządców centrów wystawienniczych.', '<strong>UFI Member Certificate</strong> is an official confirmation that <strong>PTAK WARSAW EXPO SP. z o.o.</strong> is a member of UFI – The Global Association of the Exhibition Industry. UFI (Union des Foires Internationales) is an international industry organization that brings together key players in the global trade fair and exhibition market, including: trade fair and exhibition organizers, exhibition center managers.') .'</p>
+                    <p>'. self::multi_translation("certificate") .'</p>
                     `;
                     footer.appendChild(infoText);
                 }

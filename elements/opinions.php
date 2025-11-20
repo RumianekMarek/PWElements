@@ -227,6 +227,39 @@ class PWElementOpinions extends PWElements {
         return array_merge($element_output, $swiper_fields);
     }
 
+    public static function getLangField(array $item, string $baseKey){
+        $locale = get_locale();
+        $lang = substr($locale, 0, 2);
+
+        $field = $baseKey . '_' . $lang;
+
+        if (!empty($item[$field])) {
+            return $item[$field];
+        }
+
+        $fallback = $baseKey . '_en';
+
+        return $item[$fallback] ?? '';
+    }
+
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/opinions.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
     public static function outputOpinionsSwiper($atts) {
         extract( shortcode_atts( array(
             'opinions_preset' => '',
@@ -366,7 +399,7 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
-                        
+
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
@@ -435,7 +468,7 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
-                        
+
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
@@ -594,7 +627,8 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc {
                         font-size: 12px !important;
-                         margin: 0;
+                        margin: 0;
+                        text-align: left;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-name {
                         font-size: 12px;
@@ -850,44 +884,50 @@ class PWElementOpinions extends PWElements {
             }
 
             // Get opinions from the database
-            $data = PWECommonFunctions::get_database_fairs_data_opinions(); 
+            $data = PWECommonFunctions::get_database_fairs_data_opinions();
             if (!empty($data)) {
                 // If there are 2 opinions in the summary – overwrite
                 if (count($data) >= 2) {
-                    $opinions_indexed = []; 
+                    $opinions_indexed = [];
                 }
+
+                $multilang_fields = [
+                    'opinion_company_name',
+                    'opinion_person_position',
+                    'opinion_text'
+                ];
 
                 foreach ($data as $row) {
                     if (!empty($row->data)) {
                         $decoded = json_decode($row->data, true);
 
                         if ($decoded) {
+
                             $opinion = [
-                                'opinions_slug'              => $row->slug ?? '',
-                                'opinion_person_img'         => !empty($decoded['opinion_person_img'])
+                                'opinions_slug'       => $row->slug ?? '',
+                                'opinion_person_img'  => !empty($decoded['opinion_person_img'])
                                     ? 'https://cap.warsawexpo.eu/public/uploads/domains/' . str_replace('.', '-', $_SERVER['HTTP_HOST']) . '/opinions/' . $row->slug . '/' . $decoded['opinion_person_img']
                                     : '',
-                                'opinion_company_img'        => !empty($decoded['opinion_company_img'])
+                                'opinion_company_img' => !empty($decoded['opinion_company_img'])
                                     ? 'https://cap.warsawexpo.eu/public/uploads/domains/' . str_replace('.', '-', $_SERVER['HTTP_HOST']) . '/opinions/' . $row->slug . '/' . $decoded['opinion_company_img']
                                     : '',
-                                'opinion_company_name_pl'    => $decoded['opinion_company_name_pl'] ?? '',
-                                'opinion_company_name_en'    => $decoded['opinion_company_name_en'] ?? '',
-                                'opinion_person_name'        => $decoded['opinion_person_name'] ?? '',
-                                'opinion_person_position_pl' => $decoded['opinion_person_position_pl'] ?? '',
-                                'opinion_person_position_en' => $decoded['opinion_person_position_en'] ?? '',
-                                'opinion_text_pl'            => $decoded['opinion_text_pl'] ?? '',
-                                'opinion_text_en'            => $decoded['opinion_text_en'] ?? '',
-                                'opinions_order'             => $row->order ?? ''
+                                'opinion_person_name' => $decoded['opinion_person_name'] ?? '',
+                                'opinions_order'      => $row->order ?? ''
                             ];
 
-                            $order = $opinion['opinions_order'];
-                            if (!empty($order)) {
-                                if ($order == 99) {
-                                    // dodaj na koniec tablicy (nie indeksowane po order)
+                            foreach ($multilang_fields as $field) {
+                                foreach ($decoded as $key => $val) {
+                                    if (strpos($key, $field . '_') === 0) {
+                                        $opinion[$key] = $val;
+                                    }
+                                }
+                            }
+
+                            if (!empty($opinion['opinions_order'])) {
+                                if ($opinion['opinions_order'] == 99) {
                                     $opinions_indexed[] = $opinion;
                                 } else {
-                                    // normalnie indeksujemy po order
-                                    $opinions_indexed[$order] = $opinion;
+                                    $opinions_indexed[$opinion['opinions_order']] = $opinion;
                                 }
                             }
                         }
@@ -918,20 +958,20 @@ class PWElementOpinions extends PWElements {
                 $output .= '
                 <div id="pweOpinions" class="pwe-opinions">
                     <div class="pwe-posts-title main-heading-text">
-                        <h4 class="pwe-opinions__title pwe-uppercase">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h4>
+                        <h4 class="pwe-opinions__title pwe-uppercase">'. self::multi_translation("recommendations") .'</h4>
                     </div>
                     <div class="pwe-opinions__wrapper">
-                        <div class="pwe-opinions__items swiper"> 
+                        <div class="pwe-opinions__items swiper">
                             <div class="swiper-wrapper">';
 
                                 foreach ($opinions_to_render as $opinion_item) {
 
                                     $opinions_face_img = $opinion_item['opinion_person_img'];
                                     $opinions_company_img = $opinion_item["opinion_company_img"];
-                                    $opinions_company = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_company_name_pl'] : $opinion_item['opinion_company_name_en'];
+                                    $opinions_company = self::getLangField($opinion_item, 'opinion_company_name');
                                     $opinions_name = $opinion_item['opinion_person_name'];
-                                    $opinions_desc = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_person_position_pl'] : $opinion_item['opinion_person_position_en'];
-                                    $opinions_text = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_text_pl'] : $opinion_item['opinion_text_en'];
+                                    $opinions_desc    = self::getLangField($opinion_item, 'opinion_person_position');
+                                    $opinions_text    = self::getLangField($opinion_item, 'opinion_text');
 
                                     // $words = explode(' ', strip_tags($opinions_text));
                                     // if (count($words) > 30) {
@@ -970,7 +1010,7 @@ class PWElementOpinions extends PWElements {
                                             <div class="pwe-opinions__item-opinion">
                                                 <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                 (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                                (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                                (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                             </div>
                                         </div>';
                                     } else if ($opinions_preset == 'preset_2') {
@@ -992,7 +1032,7 @@ class PWElementOpinions extends PWElements {
                                             <div class="pwe-opinions__item-opinion">
                                                 <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                 (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                                (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                                (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                             </div>
                                         </div>';
                                     } else if ($opinions_preset == 'preset_3') {
@@ -1021,13 +1061,13 @@ class PWElementOpinions extends PWElements {
                                                 <div class="pwe-opinions__item-opinion">
                                                     <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                                 </div>
                                             </div>';
                                             if (!empty($opinions_button)) {
                                                 $output .= '
                                                 <div class="pwe-opinions__item-btn">
-                                                    <a href="'. $opinions_button .'">'. self::languageChecker('ZOBACZ WIĘCEJ', 'SEE MORE') .'</a>
+                                                    <a href="'. $opinions_button .'">'. self::multi_translation("see_more") .'</a>
                                                 </div>';
                                             }
                                         $output .= '
@@ -1057,7 +1097,7 @@ class PWElementOpinions extends PWElements {
                                                     <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                                     <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                                     <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                                 </div>
                                             </div>
@@ -1086,7 +1126,7 @@ class PWElementOpinions extends PWElements {
                                                     <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                                     <div style="display: inline-block;" class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                                     <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                                 </div>
                                             </div>
@@ -1222,7 +1262,7 @@ class PWElementOpinions extends PWElements {
                 .pwe-opinions__item-opinion-text {
                     scrollbar-width: thin; /* Firefox */
                     scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-                    -webkit-overflow-scrolling: touch; 
+                    -webkit-overflow-scrolling: touch;
                     background-color: rgba(255, 255, 255, 0.01);
                 }
                 /* Chrome, Edge, Safari */
@@ -1302,7 +1342,7 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
-                        
+
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
@@ -1371,7 +1411,7 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
-                        
+
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
@@ -1464,7 +1504,7 @@ class PWElementOpinions extends PWElements {
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion {
                         padding: 10px 0;
                         text-align: center;
-                        
+
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         max-height: 140px;
@@ -1531,7 +1571,8 @@ class PWElementOpinions extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-desc {
                         font-size: 12px !important;
-                         margin: 0;
+                        margin: 0;
+                        text-align: left;
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-person-info-name {
                         font-size: 12px;
@@ -1690,7 +1731,7 @@ class PWElementOpinions extends PWElements {
                         position: relative;
                         padding: 18px;
                         margin: auto;
-                        
+
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-opinions__item-opinion-text {
                         font-size: 14px;
@@ -1785,44 +1826,51 @@ class PWElementOpinions extends PWElements {
             }
 
             // Get opinions from the database
-            $data = PWECommonFunctions::get_database_fairs_data_opinions(); 
+            $data = PWECommonFunctions::get_database_fairs_data_opinions();
             if (!empty($data)) {
                 // If there are 2 opinions in the summary – overwrite
                 if (count($data) >= 2) {
-                    $opinions_indexed = []; 
+                    $opinions_indexed = [];
                 }
+
+                $multilang_fields = [
+                    'opinion_company_name',
+                    'opinion_person_position',
+                    'opinion_text'
+                ];
+
 
                 foreach ($data as $row) {
                     if (!empty($row->data)) {
                         $decoded = json_decode($row->data, true);
 
                         if ($decoded) {
+
                             $opinion = [
-                                'opinions_slug'              => $row->slug ?? '',
-                                'opinion_person_img'         => !empty($decoded['opinion_person_img'])
+                                'opinions_slug'       => $row->slug ?? '',
+                                'opinion_person_img'  => !empty($decoded['opinion_person_img'])
                                     ? 'https://cap.warsawexpo.eu/public/uploads/domains/' . str_replace('.', '-', $_SERVER['HTTP_HOST']) . '/opinions/' . $row->slug . '/' . $decoded['opinion_person_img']
                                     : '',
-                                'opinion_company_img'        => !empty($decoded['opinion_company_img'])
+                                'opinion_company_img' => !empty($decoded['opinion_company_img'])
                                     ? 'https://cap.warsawexpo.eu/public/uploads/domains/' . str_replace('.', '-', $_SERVER['HTTP_HOST']) . '/opinions/' . $row->slug . '/' . $decoded['opinion_company_img']
                                     : '',
-                                'opinion_company_name_pl'    => $decoded['opinion_company_name_pl'] ?? '',
-                                'opinion_company_name_en'    => $decoded['opinion_company_name_en'] ?? '',
-                                'opinion_person_name'        => $decoded['opinion_person_name'] ?? '',
-                                'opinion_person_position_pl' => $decoded['opinion_person_position_pl'] ?? '',
-                                'opinion_person_position_en' => $decoded['opinion_person_position_en'] ?? '',
-                                'opinion_text_pl'            => $decoded['opinion_text_pl'] ?? '',
-                                'opinion_text_en'            => $decoded['opinion_text_en'] ?? '',
-                                'opinions_order'             => $row->order ?? ''
+                                'opinion_person_name' => $decoded['opinion_person_name'] ?? '',
+                                'opinions_order'      => $row->order ?? ''
                             ];
 
-                            $order = $opinion['opinions_order'];
-                            if (!empty($order)) {
-                                if ($order == 99) {
-                                    // dodaj na koniec tablicy (nie indeksowane po order)
+                            foreach ($multilang_fields as $field) {
+                                foreach ($decoded as $key => $val) {
+                                    if (strpos($key, $field . '_') === 0) {
+                                        $opinion[$key] = $val;
+                                    }
+                                }
+                            }
+
+                            if (!empty($opinion['opinions_order'])) {
+                                if ($opinion['opinions_order'] == 99) {
                                     $opinions_indexed[] = $opinion;
                                 } else {
-                                    // normalnie indeksujemy po order
-                                    $opinions_indexed[$order] = $opinion;
+                                    $opinions_indexed[$opinion['opinions_order']] = $opinion;
                                 }
                             }
                         }
@@ -1853,7 +1901,7 @@ class PWElementOpinions extends PWElements {
             $output .= '
             <div id="pweOpinions"class="pwe-opinions">
                 <div class="pwe-posts-title main-heading-text">
-                    <h3 class="pwe-opinions__title pwe-uppercase">'. self::languageChecker('REKOMENDACJE', 'RECOMMENDATIONS') .'</h3>
+                    <h3 class="pwe-opinions__title pwe-uppercase">'. self::multi_translation("recommendations") .'</h3>
                 </div>
                 <div class="pwe-opinions__wrapper">
                     <div class="pwe-opinions__items pwe-slides">';
@@ -1862,10 +1910,10 @@ class PWElementOpinions extends PWElements {
 
                         $opinions_face_img = $opinion_item['opinion_person_img'];
                         $opinions_company_img = $opinion_item["opinion_company_img"];
-                        $opinions_company = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_company_name_pl'] : $opinion_item['opinion_company_name_en'];
+                        $opinions_company = self::getLangField($opinion_item, 'opinion_company_name');
                         $opinions_name = $opinion_item['opinion_person_name'];
-                        $opinions_desc = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_person_position_pl'] : $opinion_item['opinion_person_position_en'];
-                        $opinions_text = PWECommonFunctions::lang_pl() ? $opinion_item['opinion_text_pl'] : $opinion_item['opinion_text_en'];
+                        $opinions_desc    = self::getLangField($opinion_item, 'opinion_person_position');
+                        $opinions_text    = self::getLangField($opinion_item, 'opinion_text');
 
                         // $words = explode(' ', strip_tags($opinions_text));
                         // if (count($words) > 30) {
@@ -1904,10 +1952,10 @@ class PWElementOpinions extends PWElements {
                                 <div class="pwe-opinions__item-opinion">
                                     <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                 </div>
                             </div>';
-                        } else if ($opinions_preset == 'preset_2') { 
+                        } else if ($opinions_preset == 'preset_2') {
                             $output .= '
                             <div class="pwe-opinions__item">
                                 <div class="pwe-opinions__item-media">
@@ -1926,7 +1974,7 @@ class PWElementOpinions extends PWElements {
                                 <div class="pwe-opinions__item-opinion">
                                     <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                     (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                    (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                 </div>
                             </div>';
                         } else if ($opinions_preset == 'preset_3') {
@@ -1955,13 +2003,13 @@ class PWElementOpinions extends PWElements {
                                     <div class="pwe-opinions__item-opinion">
                                         <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                         (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                     </div>
                                 </div>';
                                 if (!empty($opinions_button)) {
                                     $output .= '
                                     <div class="pwe-opinions__item-btn">
-                                        <a href="'. $opinions_button .'">'. self::languageChecker('ZOBACZ WIĘCEJ', 'SEE MORE') .'</a>
+                                        <a href="'. $opinions_button .'">'. self::multi_translation("see_more") .'</a>
                                     </div>';
                                 }
                             $output .= '
@@ -1991,7 +2039,7 @@ class PWElementOpinions extends PWElements {
                                         <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                         <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                         (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                         <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                     </div>
                                 </div>
@@ -2020,7 +2068,7 @@ class PWElementOpinions extends PWElements {
                                         <svg class="quote quote-right" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                         <div class="pwe-opinions__item-opinion-text">' . $opinions_text . ' </div>' .
                                         (!empty($remaining_text) ? '<span class="pwe-opinions__item-opinion-text pwe-hidden-content" style="display: none;"> ' . $remaining_text . '</span>' : '') .
-                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::languageChecker('więcej...', 'more...') .'</span>' : '') . '
+                                        (!empty($remaining_text) ? '<span style="display: block; margin-top: 6px; font-weight: 600;" class="pwe-opinions__item-opinion-text pwe-see-more">'. self::multi_translation("more") .'</span>' : '') . '
                                         <svg class="quote quote-left" height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path class="st0" d="M119.472,66.59C53.489,66.59,0,120.094,0,186.1c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.135,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.829-6.389 c82.925-90.7,115.385-197.448,115.385-251.8C238.989,120.094,185.501,66.59,119.472,66.59z"></path> <path class="st0" d="M392.482,66.59c-65.983,0-119.472,53.505-119.472,119.51c0,65.983,53.489,119.487,119.472,119.487 c0,0-0.578,44.392-36.642,108.284c-4.006,12.802,3.136,26.435,15.945,30.418c9.089,2.859,18.653,0.08,24.828-6.389 C479.539,347.2,512,240.452,512,186.1C512,120.094,458.511,66.59,392.482,66.59z"></path> </g> </g></svg>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Class PWElementVisitorsBenefits
@@ -14,11 +14,30 @@ class PWElementVisitorsBenefits extends PWElements {
         parent::__construct();
     }
 
-    public static function output($atts, $content = '') {        
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/for_visitors.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
+    public static function output($atts, $content = '') {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
 
         $output = '';
-        
+
         $output .='
             <style>
                 .pwelement_' . self::$rnd_id . ' #visitorsBenefits :is(h3, h4) {
@@ -55,25 +74,16 @@ class PWElementVisitorsBenefits extends PWElements {
                     }
                     .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item {
                         width: 100%;
-                    }  
+                    }
                     .pwelement_'. self::$rnd_id .' .pwe-visitors-benefits-item-heading h4 {
                         font-size: 20px;
                     }
-                } 
+                }
             </style>
 
             <div id="visitorsBenefits"class="pwe-container-visitors-benefits">
                 <div id="main-content" class="pwe-visitors-benefits-heading main-heading-text">
-                    <h3>'.
-                        self::languageChecker(
-                            <<<PL
-                                DLACZEGO WARTO?
-                            PL,
-                                <<<EN
-                                WHY IS IT WORTH IT?
-                            EN
-                        )
-                    .'</h3>
+                    <h3>'. self::multi_translation("why_it_worth") .'</h3>
                 </div>
                 <div class="pwe-visitors-benefits-row">
                     <div class="pwe-visitors-benefits">
@@ -83,16 +93,7 @@ class PWElementVisitorsBenefits extends PWElements {
                                 <img src="/wp-content/plugins/pwe-media/media/lamp-b-150x150.webp" alt="lamp">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
-                                <h4 class="pwe-line-height">'.
-                                     self::languageChecker(
-                                        <<<PL
-                                            POZNASZ NAJNOWSZE TRENDY BRANŻOWE
-                                        PL,
-                                        <<<EN
-                                            YOU WILL MEET THE LATEST INDUSTRY TRENDS
-                                        EN
-                                    )
-                                .'</h4>
+                                <h4 class="pwe-line-height"><h3>'. self::multi_translation("industry_trends") .'</h3></h4>
                             </div>
                         </div>
                         <div class="pwe-visitors-benefits-item">
@@ -100,16 +101,7 @@ class PWElementVisitorsBenefits extends PWElements {
                                 <img src="/wp-content/plugins/pwe-media/media/hands-b-150x150.webp" alt="handshake">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
-                                <h4 class="pwe-line-height">'.
-                                    self::languageChecker(
-                                        <<<PL
-                                            NAWIĄŻESZ NOWE KONTAKTY BIZNESOWE
-                                        PL,
-                                        <<<EN
-                                            YOU WILL MAKE NEW BUSINESS CONTACTS
-                                        EN
-                                    )
-                                .'</h4>
+                                <h4 class="pwe-line-height">'. self::multi_translation("business_contacts") .'</h4>
                             </div>
                         </div>
                         <div class="pwe-visitors-benefits-item">
@@ -117,16 +109,7 @@ class PWElementVisitorsBenefits extends PWElements {
                                 <img src="/wp-content/plugins/pwe-media/media/head-b-150x150.webp" alt="head">
                             </div>
                             <div class="pwe-visitors-benefits-item-heading">
-                                <h4 class="pwe-line-height">'.
-                                    self::languageChecker(
-                                        <<<PL
-                                            ZDOBĘDZIESZ CENNĄ WIEDZĘ I POZNASZ NOWOŚCI RYNKU
-                                        PL,
-                                        <<<EN
-                                            YOU WILL GAIN VALUABLE KNOWLEDGE AND LEARN ABOUT MARKET NEWS
-                                        EN
-                                    )
-                                .'</h4>
+                                <h4 class="pwe-line-height">'. self::multi_translation("valuable_knowledge") .'</h4>
                             </div>
                         </div>
                     </div>

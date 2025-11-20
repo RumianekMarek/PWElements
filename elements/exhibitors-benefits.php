@@ -13,17 +13,36 @@ class PWElementExhibitors extends PWElements {
         parent::__construct();
     }
 
+    public static function multi_translation($key) {
+        $locale = get_locale();
+        $translations_file = __DIR__ . '/../translations/elements/exhibitors-benefits.json';
+
+        // JSON file with translation
+        $translations_data = json_decode(file_get_contents($translations_file), true);
+
+        // Is the language in translations
+        if (isset($translations_data[$locale])) {
+            $translations_map = $translations_data[$locale];
+        } else {
+            // By default use English translation if no translation for current language
+            $translations_map = $translations_data['en_US'];
+        }
+
+        // Return translation based on key
+        return isset($translations_map[$key]) ? $translations_map[$key] : $key;
+    }
+
     /**
      * Static method to initialize Visual Composer elements.
      * Returns an array of parameters for the Visual Composer element.
      */
     public static function initElements() {
-        $element_output = 
+        $element_output =
         array(
             array(
                 'type' => 'checkbox',
                 'group' => 'PWE Element',
-                'heading' => __('Logo in color', 'pwelement'), 
+                'heading' => __('Logo in color', 'pwelement'),
                 'param_name' => 'logo_color',
                 'value' => '',
                 'dependency' => array(
@@ -34,12 +53,12 @@ class PWElementExhibitors extends PWElements {
         );
         return $element_output;
     }
-    
+
     /**
      * Static method to generate the HTML output for the PWE Element.
     * Returns the HTML output as a string.
-    * 
-    * @return string @output 
+    *
+    * @return string @output
     */
     public static function output($atts) {
         $text_color = 'color:' . self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black') . '!important;';
@@ -48,11 +67,11 @@ class PWElementExhibitors extends PWElements {
         $btn_shadow_color = 'box-shadow: 9px 9px 0px -5px ' . self::findColor($atts['btn_shadow_color_manual_hidden'], $atts['btn_shadow_color'], 'black') . '!important;';
 
         $border_color = self::findColor($atts['text_color_manual_hidden'], $atts['text_color'], 'black');
-        
+
         $output = '';
 
         $output .= '
-            <style>
+        <style>
 
             .pwelement_'. self::$rnd_id .' .image-shadow {
                 box-shadow: 9px 9px 0px -6px ' . self::$fair_colors['Accent'] . ';
@@ -83,8 +102,8 @@ class PWElementExhibitors extends PWElements {
                 ' . $text_color . '
             }
             .pwelement_'. self::$rnd_id .' .pwe-button {
-                '.$btn_text_color 
-                .$btn_color 
+                '.$btn_text_color
+                .$btn_color
                 .$btn_shadow_color.'
                 box-shadow: unset !important;
                 border-radius: 10px !important;
@@ -110,9 +129,9 @@ class PWElementExhibitors extends PWElements {
                 }
                 .pwelement_'. self::$rnd_id .' .pwe-benefit-item {
                     width: 100%;
-                }  
+                }
             }
-            </style>
+        </style>
 
             <div id="exhibitorsBenefits" class="pwe-container-exhibitors-benefits">
 
@@ -132,7 +151,7 @@ class PWElementExhibitors extends PWElements {
                                     <span>
                                         <a class="pwe-button btn btn-accent btn-flat" href="https://warsawexpo.eu/dla-organizatorow/#ulga"  target="_blank">Zobacz szczegóły</a>
                                     </span>
-                                </div>   
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,79 +162,37 @@ class PWElementExhibitors extends PWElements {
 
                     <!-- benefit-item -->
                         <div class="pwe-benefit-item">
-                            <div class="pwe-benefit-img">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    <img src="/wp-content/plugins/pwe-media/media/Strefa_Networkingu.png" alt="Strefa Networkingu">
-                                    PL,
-                                    <<<EN
-                                    <img src="/wp-content/plugins/pwe-media/media/Networking_Zone.png" alt="Networking Zone">
-                                    EN
-                                )
-                            .'</div>
+                            <div class="pwe-benefit-img">
+                                <img src="'. self::multi_translation("benefit_networking_img") .'" alt="'. self::multi_translation("benefit_networking_text") .'">
+                            </div>
                             <div class="pwe-benefit-text uncode_text_column pwe-align-left">
-                                <p class="pwe-line-height">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    Podczas targów dostępna będzie, specjalnie wydzielona <strong>strefa networkingu</strong> – przestrzeń do wymiany doświadczeń i zacieśnienia kontaktów. Spotkania branżowe to idealna okazja do poszerzenia grona potencjalnych partnerów biznesowych, a także zbudowania bazy odbiorców.
-                                    PL,
-                                    <<<EN
-                                    During the fair, a specially separated networking zone will be available - a space for exchanging experiences and strengthening contacts. Industry meetings are an ideal opportunity to expand the group of potential business partners, as well as build a pweer base.
-                                    EN
-                                )
-                                .'</p>
+                                <p class="pwe-line-height">
+                                    '. self::multi_translation("benefit_networking_text") .'
+                                </p>
                             </div>
                         </div>
 
                         <!-- benefit-item -->
                         <div class="pwe-benefit-item">
-                            <div class="pwe-benefit-img">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    <img src="/wp-content/plugins/pwe-media/media/Panel_Edukacyjny.png" alt="Panel Edukacyjny">
-                                    PL,
-                                    <<<EN
-                                    <img src="/wp-content/plugins/pwe-media/media/Educational_Panel.png" alt="Educational Panel">
-                                    EN
-                                )
-                            .'</div>
+                            <div class="pwe-benefit-img">
+                                <img src="'. self::multi_translation("benefit_panel_img") .'" alt="'. self::multi_translation("benefit_panel_alt") .'">
+                            </div>
                             <div class="pwe-benefit-text uncode_text_column pwe-align-left">
-                                <p class="pwe-line-height">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    Liczne wystąpienia i konferencja branżowa prowadzona przez uznanych prelegentów – doświadczonych praktyków i znawców branży.
-                                    PL,
-                                    <<<EN
-                                    Numerous speeches and an industry conference conducted by recognized speakers - experienced practitioners and industry experts.
-                                    EN
-                                )
-                                .'</p>
+                                <p class="pwe-line-height">
+                                    '. self::multi_translation("benefit_panel_text") .'
+                                </p>
                             </div>
                         </div>
 
                         <!-- benefit-item -->
                         <div class="pwe-benefit-item">
-                            <div class="pwe-benefit-img">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    <img src="/wp-content/plugins/pwe-media/media/Pakiety_Powitalne.png" alt="Pakiety Powitalne">
-                                    PL,
-                                    <<<EN
-                                    <img src="/wp-content/plugins/pwe-media/media/Welcome_Package.png" alt="Welcome Package">
-                                    EN
-                                )
-                            .'</div>
+                            <div class="pwe-benefit-img">
+                                <img src="'. self::multi_translation("benefit_welcome_img") .'" alt="'. self::multi_translation("benefit_welcome_alt") .'">
+                            </div>
                             <div class="pwe-benefit-text uncode_text_column pwe-align-left">
-                                <p class="pwe-line-height">'.
-                                self::languageChecker(
-                                    <<<PL
-                                    Przygotowanie identyfikatorów oraz indywidualnych pakietów powitalnych do wszystkich zarejestrowanych, które zostaną przesłane bezpośrednio pod adres podany w formularzu rejestracyjnym.
-                                    PL,
-                                    <<<EN
-                                    Preparation of badges and individual welcome packages for all registered, which will be sent directly to the address provided in the registration form.
-                                    EN
-                                )
-                                .'</p>
+                                <p class="pwe-line-height">
+                                    '. self::multi_translation("benefit_welcome_text") .'
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -224,7 +201,7 @@ class PWElementExhibitors extends PWElements {
                 <div class="pwe-row-border">
                     <div class="pwe-border-bottom-right"></div>
                 </div>
-                
+
             </div>';
 
     return $output;
